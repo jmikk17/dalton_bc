@@ -1534,7 +1534,12 @@ C but Polarizabilities
      &         //'polarizabilities'
                par_soppa_input_errors = .true.
             ENDIF
-C            
+            IF (.NOT. WRDSRC .EQ. '**PROPE') THEN
+                WRITE(LUPRI,'(3A)') '@ ', WRDSRC, ' parallel SOPPA can '
+     &          //'only be run via **PROPERTIES'
+                par_soppa_input_errors = .true.
+            ENDIF
+
 C Parallel soppa should be run using mp2 from the cc module
 C 
 C            IF (DOMP2) THEN
