@@ -189,12 +189,12 @@ detailed description of possible options.
 %Roos should be used during execution of the program.
 %The keyword is needed if one attempts an MCSCF, CI or MP2 (run through the \sir\ module and not using the Coupled Cluster module) with more than 255 basis functions.
 
-\item[\Key{PEQM}] Include environment effects by using the polarizable embedding (PE)
+\item[\Key{PELIB}] Include environment effects by using the polarizable embedding (PE)
 model~(See Ref.~\cite{pescf} for details on the PE-HF/DFT model, Ref.~\cite{pesoppa}
 for PE-MP2/SOPPA and Ref.~\cite{pecc} for PE-CC)\index{polarizable embedding}\index{PE}\index{environment model}\index{embedding model}\index{embedding}\index{QM/MM}.
 This will embed the core molecular system, as defined in the \molinp\ file, in a
 polarizable embedding potential given in the \potinp\ file. See further input options
-in the \Sec{PEQM} input section (see subsection~\ref{subsec:peqm}). See
+in the \Sec{PELIB} input section (see subsection~\ref{subsec:peqm}). See
 Chapter~\ref{ch:embedding} for an introduction to polarizable embedding calculations.
 
 \item[\Key{PRIERR}]\verb| |\newline
@@ -923,7 +923,7 @@ parallel efficiency\index{parallel efficiency}. A complete
 timing for all nodes will be given if the print level is 4 or higher.
 \end{description}
 
-\subsection{Polarizable embedding model: \Sec{PEQM}}
+\subsection{Polarizable embedding model: \Sec{PELIB}}
 \label{subsec:peqm} \index{polarizable embedding}\index{PE}\index{environment model}\index{embedding model}\index{embedding}\index{QM/MM}\index{multiscale model}\index{multiscale}\index{quantum mechanics / molecular mechanics}\index{solvent effects}\index{enviroment effects}
 
 This input section controls calculations using the polarizable
@@ -1058,7 +1058,7 @@ Debug output. Prints the total electric field and the induced dipole moments in 
 \subsection{QM/MM model: \Sec{QM3}}
 \label{sec:qm3}
 
-Not documented. Examples can be found by grepping for "QM3" in the "DALTON/test" directory in the distribution. See also \Key{PEQM} and \Sec{PEQM}
+Not documented. Examples can be found by grepping for "QM3" in the "DALTON/test" directory in the distribution. See also \Key{PELIB} and \Sec{PELIB}
 (introduction in Chapter~\ref{ch:embedding}) for a newer more general and efficient implementation with many of the same capabilities.
 
 \subsection{Polarizable continuum model: \Sec{PCM}}

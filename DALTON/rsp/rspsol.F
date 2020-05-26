@@ -1203,9 +1203,8 @@ C
          CALL DSPTSI(NASHT,RYAC,WRK(KURYAC))
 C        CALL DSCAL(N2ASHX,DM1,WRK(KURYAC),1)
          DO 18 ICSIM = 1,NCSIM
-            IF (USE_PELIB() .AND. TRPLET) THEN
-               ! do nothing because no contributions in this case
-            ELSE 
+            ! no contributions if PE/PDE and triplet
+            IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
                CALL DSPTSI(NASHT,RXAC(1,ICSIM),WRK(KURXAC))
 C              CALL DSCAL(N2ASHX,DM1,WRK(KURXAC),1)
 C rxac defined with opposite sign relative to SOLSC
@@ -1334,7 +1333,7 @@ C
 C                 FAC = - D2 * TRYAC
 C                 CALL DAXPY(KZCONF,FAC,BCVECS(1,ICSIM),1,SVECS(1,ICSIM),1)
                END IF
-           END IF ! (use_pelib() .and. trplet)
+            END IF
    18    CONTINUE
       END IF
       IF (NOSIM .GT. 0) THEN
@@ -1342,9 +1341,8 @@ C                 CALL DAXPY(KZCONF,FAC,BCVECS(1,ICSIM),1,SVECS(1,ICSIM),1)
          KW1    = KURXAC + N2ASHX
          LW1    = LWRK + 1 - KW1
          DO 22 IOSIM = 1,NOSIM
-            IF (USE_PELIB() .AND. TRPLET) THEN
-               ! do nothing because no contributions in this case
-            ELSE
+            ! no contributions if PE/PDE and triplet
+            IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
                IF (IPRRSP.GT.100) THEN
                   WRITE(LUPRI,*)' Z PART,RXAC MATRIX,
      *            IOSIM=', IOSIM
@@ -1380,19 +1378,19 @@ C              not needed because of this projection)
      *                           1,LUPRI)
                   END IF
                END IF
-            ENDIF ! use_pelib() .and. trplet
+            END IF
             IF (TRPLET) THEN
-               if (use_pelib()) then
-                  triplet_offset = 0
-               else
-                  triplet_offset = NOSIM
-               end if
+               IF (USE_PELIB()) THEN
+                  TRIPLET_OFFSET = 0
+               ELSE
+                  TRIPLET_OFFSET = NOSIM
+               END IF
 C              CALL DSCAL(N2ASHX,D2,RXAC(1,IOSIM+triplet_offset),1)
                IF (IPRRSP.GT.100) THEN
                   WRITE(LUPRI,*)' Z PART triplet, RXAC MATRIX, '//
      *            'IOSIM=', IOSIM
-                  CALL OUTPUT(RXAC(1,IOSIM+triplet_offset),1,NASHT,1,NASHT,
-     *                        NASHT,NASHT,-1,LUPRI)
+                  CALL OUTPUT(RXAC(1,IOSIM+triplet_offset),1,NASHT,1,
+     *                        NASHT,NASHT,NASHT,-1,LUPRI)
                END IF
 C
 C Z PART OF LINEAR TRANSFORMATION
@@ -1415,9 +1413,8 @@ C
 C
 C Y PART OF LINEAR TRANSFORMATION
 C
-            IF (USE_PELIB() .AND. TRPLET) THEN
-               ! do nothing because no contributions in this case
-            ELSE            
+            ! no contributions if PE/PDE and triplet
+            IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
                CALL DGETRN(RXAC(1,IOSIM),NASHT,NASHT)
                CALL DSCAL(N2ASHX,DM1,RXAC(1,IOSIM),1)
                IF (IPRRSP.GT.100) THEN
@@ -1455,7 +1452,7 @@ C              not needed because of this projection)
      *                           1,KZCONF,1,1,KZCONF,1,1,LUPRI)
                   END IF
                END IF
-            ENDIF ! use_pelib() .and. triplet
+            END IF
             IF (TRPLET) THEN
                CALL DGETRN(RXAC(1,IOSIM+triplet_offset),NASHT,NASHT)
                CALL DSCAL(N2ASHX,DM1,RXAC(1,IOSIM+triplet_offset),1)

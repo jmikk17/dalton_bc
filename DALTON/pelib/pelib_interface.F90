@@ -158,6 +158,9 @@ subroutine pelib_ifc_input_reader(word)
 
     call qenter('pelib_ifc_input_reader')
 
+    potfile = 'POTENTIAL.INP'
+    h5pdefile = 'standard.h5'
+
     do
         read(lucmd, '(a80)') option
         call chcase(option)
@@ -298,7 +301,8 @@ subroutine pelib_ifc_input_reader(word)
                 read(lucmd, *) ind_damp
             end if
             pelib_ind_damp = .true.
-            write(luout, *) 'INFO: the .DAMP option is deprecated, please use .DAMP INDUCED'
+            write(luout, *) 'WARNING: the .DAMP option is deprecated, please use .DAMP INDUCED'
+            write(luerr, *) 'WARNING: the .DAMP option is deprecated, please use .DAMP INDUCED'
         ! neglect dynamic response from environment
         else if (trim(option(2:7)) == 'GSPOL') then
             pelib_gspol = .true.
@@ -556,7 +560,7 @@ subroutine pelib_ifc_input_reader(word)
             cycle
         else
             write(luout, *) 'unknown option:', option
-            error stop 'unknown option in *PEQM section'
+            error stop 'unknown option in *PELIB section'
         end if
     end do
 

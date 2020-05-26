@@ -68,6 +68,7 @@
 - Allow basis set(s) after BASIS in line 1 of .mol file (instead of on second line). (H. J. Aa. Jensen)
 - Moved .SUPSYM and .THRSSY options to \*OPTIMIZATION from \*ORBITAL INPUT; updated Sirius part of manual (H. J. Aa. Jensen)
 - Removed .NOSUPSYM option (H. J. Aa. Jensen)
+- Renamed .PEQM and \*PEQM to .PELIB and \*PELIB, respectively. The former is still allowed but is deprecated.
 
 
 ## [2018.2] (2019-03-17)

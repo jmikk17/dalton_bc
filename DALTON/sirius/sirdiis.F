@@ -1000,7 +1000,7 @@ C            Now the PCM part ...
 C
          IF (USE_PELIB()) THEN
            IF (FLAG(16) .OR. PCM .OR. QMMM .OR. QMNPMM .OR. QM3) THEN
-            CALL QUIT('.PEQM incompatible with other embedding models')
+             CALL QUIT('.PELIB cannot be used with other embeddings')
            END IF
            ALLOCATE(PE_DENMAT(NNBASX), PE_FCKMAT(NNBASX))
            IF (NASHT == 0 .OR. HSROHF) THEN

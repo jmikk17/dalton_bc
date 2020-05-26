@@ -534,16 +534,14 @@ C
          END IF
 
          IF (QM3) WRITE(LUPRI,'(/A)')
-     &      ' QM/MM response calculation, type .QM3'
+     &      ' QM/MM response calculation (.QM3)'
 
          IF (QMMM) WRITE(LUPRI,'(/A)')
-     &      ' QM/MM response calculation, type .QMMM'
+     &      ' QM/MM response calculation (.QMMM)'
 
-         IF (use_pelib()) THEN
-            WRITE(LUPRI,'(/A/A)')
-     &      ' Polarizable embedding response calculation, type .PEQM',
-     &      ' Environment is modeled using'//
-     &         ' the polarizable embedding scheme (PE library)'
+         IF (USE_PELIB()) THEN
+            WRITE(LUPRI,'(/A)')
+     &         'Environment effects are included (.PELIB)'
          END IF
 
          IF (QMNPMM) THEN
@@ -1123,15 +1121,15 @@ C
          END IF
 
          IF (QM3) WRITE(LUPRI,'(/A)')
-     &      ' QM/MM response calculation, type .QM3'
+     &      ' QM/MM response calculation (.QM3)'
 
          IF (QMMM) WRITE(LUPRI,'(/A)')
-     &      ' QM/MM response calculation, type .QMMM'
+     &      ' QM/MM response calculation (.QMMM)'
 
-         IF (use_pelib()) WRITE(LUPRI,'(/A/A)')
-     &      ' Polarizable embedding response calculation, type .PEQM',
-     &      ' Environment is modeled using'//
-     &         ' the polarizable embedding scheme (PE library)'
+         IF (USE_PELIB()) THEN
+            WRITE(LUPRI,'(/A)')
+     &         'Environment effects are included (.PELIB)'
+         END IF
 
          IF (MCDCAL) THEN
             WRITE (LUPRI,'(A,L1)')
