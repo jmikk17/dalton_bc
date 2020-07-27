@@ -22,7 +22,7 @@
      &        TOTSYM, NMWALK, DKTRAN, GEOALL, WESTA,  SEGAUX,           &
      &        CHI1ST, DKHINT,                                           &
      &        EMBEDDING, QM3, QMMM,   QMNPMM, QFIT,   USE_LSLIB,        &
-     &        SIR_INPPRC, NEWGEO, DOFDE
+     &        SIR_INPPRC, NEWGEO, DOFDE, NOATMD
 
 ! srDFT variables
 !     ERFEXP() : which type of lr-sr operators
@@ -46,7 +46,7 @@
      &        TOTSYM, NMWALK, DKTRAN, GEOALL, WESTA,  SEGAUX,           &
      &        ERFEXP, DOSRIN, SRINTS, CHI1ST, DKHINT, COMLAM,           & ! srDFT
      &        EMBEDDING, QM3, QMMM,   QMNPMM, QFIT,                     & ! embedding & QFIT
-     &        USE_LSLIB, SIR_INPPRC, NEWGEO, DOFDE
+     &        USE_LSLIB, SIR_INPPRC, NEWGEO, DOFDE, NOATMD
       COMMON /GNRINF/ GNRINFlast
       ! Very important: Always keep GNRINFlast as the last variable in the common block.
       ! See GETBYTESPAN(firstvar, <name>last, SizeInBytes) for explanation.

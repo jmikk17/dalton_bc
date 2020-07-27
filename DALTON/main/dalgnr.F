@@ -1295,7 +1295,7 @@ Cholesky
 #include "ccdeco.h"
 #include "center.h"
 C
-      PARAMETER (NDIR = 15, NTABLE = 36, D0 = 0.D0)
+      PARAMETER (NDIR = 15, NTABLE = 37, D0 = 0.D0)
 #if defined (VAR_VECTOR)
       PARAMETER (IVECDF = 128)
 #else
@@ -1325,7 +1325,8 @@ C
      &            '.VECLEN', '.RUNERI', '.NEWTRA',
      &            '.RUN AL', '.NMDDRV', '.PARNMD', ! 30
      &            '.THRRED', '.DOUGLA', '.PEQM  ',
-     &            '.QFIT  ', '.LSLIB ', '.FDE   '/ ! 36
+     &            '.QFIT  ', '.LSLIB ', '.FDE   ', ! 36
+     &            '.NOATMD'/
 C
       CALL QENTER('DALTON_GNRLINP')
 C
@@ -1371,6 +1372,7 @@ C
       DOCCSD = .FALSE.
       WESTA  = .FALSE.
       QMNPMM = .FALSE.
+      NOATMD = .FALSE.
 
 C     FCKTRA_TYPE and NEWTRA are in /INFTRA/ for practical reasons
 C     NEWTRA and NEWTRA_USEDRC are in /INFTRA/ for practical reasons
@@ -1515,7 +1517,7 @@ C 16-20: '.PRESOR', '.WESTA ', '.CHOLES', '.EXTPCM', '.FCKTRA',
 C 21-25: '.2TRATY', 'xXXXXXX', '.OPTIMI', '.TOTSYM', '.VECLEN',
 C 26-30: '.RUNERI', '.NEWTRA', '.RUN AL', '.NMDDRV', '.PARNMD',
 C 31-35: '.THRRED', '.DOUGLA', '.PEQM  ', '.QFIT  ', '.LSLIB ',
-C 36-40: '.FDE   '.
+C 36-40: '.FDE   ', '.NOATMD'.
 C
       IPRSTAT = -10
   100 READ (LUCMD, '(A7)') WORD
@@ -1529,7 +1531,7 @@ C
                GO TO (101,102,103,104,105,106,107,108,109,110,
      &                111,112,113,114,115,116,117,118,119,120,
      &                121,122,123,124,125,126,127,128,129,129,
-     &                131,132,133,134,135,136), I
+     &                131,132,133,134,135,136,137), I
             END IF
    99    CONTINUE
             IF (WORD .EQ. '.OPTION') THEN
@@ -1696,6 +1698,9 @@ C
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal prompt in DALTON_GNRLINP.')
       END IF
+ 137     CONTINUE  ! .NOATMD
+            NOATMD = .TRUE.
+         GOTO 100
 C
 C
   999 CONTINUE
