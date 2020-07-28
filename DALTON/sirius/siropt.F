@@ -1142,7 +1142,7 @@ C CBN+JK 03.01.06
         KFCKAO = KFDTAO + NNBASX
         KWRKG = KFCKAO + NNBASX
         LWRKG = LFREE - KWRKG + 1
-        IF (LWRKG > LFREE) CALL ERRWRK('SIROPT-PEQM', -KWRKG, LFREE)
+        IF (LWRKG > LFREE) CALL ERRWRK('SIROPT-PELIB', -KWRKG, LFREE)
         CALL FCKDEN((NISHT>0), (NASHT>0), WRK(KDCAO), WRK(KDVAO),
      &              WRK(KCMO), WRK(KDV), WRK(KWRKG), LWRKG)
         IF (NISHT == 0) THEN
@@ -3061,7 +3061,7 @@ C Write qm/mm solvent part of the Fock matrix to interface file
          KFCKAO = KFDTAO + NNBASX
          KWRK2 = KFCKAO + NNBASX
          LWRK2 = LFREE - KWRK2 + 1
-         IF (LWRK2 > LFREE) CALL ERRWRK('WR_SIRIFC-PEQM', -KWRK2, LFREE)
+         IF (LWRK2 > LFREE) CALL ERRWRK('WR_SIRIFC-PELIB',-KWRK2,LFREE)
          CALL FCKDEN((NISHT>0), (NASHT>0), WRK(KDCAO), WRK(KDVAO),
      &               CMO, DV, WRK(KWRK2), LWRK2)
          IF (NISHT == 0) THEN

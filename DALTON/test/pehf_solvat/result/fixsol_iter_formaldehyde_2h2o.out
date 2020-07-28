@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2017.alpha (2017)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -52,8 +52,8 @@
      
     and
      
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2017.alpha (2017), see http://daltonprogram.org
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -67,13 +67,14 @@
   Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
   Ove Christiansen,         Aarhus University,            Denmark     (CC module)
   Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
   Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
   Paal Dahle,               University of Oslo,           Norway      (Parallelization)
   Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
   Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
   Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
   Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
   Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
   Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
   Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
@@ -91,6 +92,7 @@
   Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
   Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
   Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
   Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
@@ -108,10 +110,10 @@
   Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
   Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
   Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
   Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
   Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
   Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
   Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
@@ -129,7 +131,9 @@
   Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
   Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -138,53 +142,46 @@
   Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
   David P. Tew,             University of Bristol,        England     (CCSD(R12))
   Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
   David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Fri Mar 23 14:08:44 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:03:03 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/magnus/Projects/dalton_devel/dalton-foeroyingur/build_test/test/pehf_solvat
-   2) /home/magnus/Projects/dalton_devel/dalton-foeroyingur/build_test/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_solvat
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | magnus
- Host                     | foeroyar
- System                   | Linux-4.15.9-300.fc27.x86_64
+ Who compiled             | foeroyingur
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
- MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- BLAS                     | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_gf_lp64.
-                          | so;/home/magnus/Programs/intel/compilers_and_libra
-                          | ries_2018.1.163/linux/mkl/lib/intel64/libmkl_seque
-                          | ntial.so;/home/magnus/Programs/intel/compilers_and
-                          | _libraries_2018.1.163/linux/mkl/lib/intel64/libmkl
-                          | _core.so;/usr/lib64/libpthread.so;/usr/lib64/libm.
-                          | so
- LAPACK                   | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_lapack95
-                          | _lp64.a;/home/magnus/Programs/intel/compilers_and_
-                          | libraries_2018.1.163/linux/mkl/lib/intel64/libmkl_
-                          | gf_lp64.so
+ MPI                      | ON
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
+ C++ compiler version     | unknown
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 2a8051d4a52c96991fedc786e623936e2e7b814d
- Git branch               | pe/develop
- Configuration time       | 2018-03-23 14:06:50.704475
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
+
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
@@ -192,12 +189,10 @@ Compilation information
 
 **DALTON
 .RUN WAVE FUNCTION
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .VERBOSE
 .SOLVAT
-.FIXSOL
-.DIIS
 **WAVE FUNCTIONS
 .HF
 **END OF
@@ -228,10 +223,12 @@ H           -2.508043   -1.382001     .040282
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -255,7 +252,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/magnus/Projects/dalton_devel/dalton-foeroyingur/build_test/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -263,7 +260,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/magnus/Projects/dalton_devel/dalton-foeroyingur/build_test/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -271,7 +268,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/magnus/Projects/dalton_devel/dalton-foeroyingur/build_test/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -292,6 +289,7 @@ H           -2.508043   -1.382001     .040282
                        Natural abundance:  98.633 %
 
  Center-of-mass coordinates (a.u.):   -3.067740   -0.312997    0.018175
+ Center-of-mass coordinates (Angs):   -1.623378   -0.165631    0.009618
 
 
   Atoms and basis sets
@@ -425,9 +423,7 @@ H           -2.508043   -1.382001     .040282
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
- Calculation of one- and two-electron Hamiltonian integrals.
+ Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):     -3.067740315293     -0.312997395263      0.018174673399
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
@@ -451,13 +447,8 @@ H           -2.508043   -1.382001     .040282
       z      0.36129107         0.91831024         3.06315324
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:        2907 ( 94.4% )
- HERMIT - Megabytes written:                              0.034
-
-  Total CPU  time used in HERMIT:   0.03 seconds
-  Total wall time used in HERMIT:   0.03 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -491,8 +482,8 @@ H           -2.508043   -1.382001     .040282
  **********************************************************************
 
  
-     Date and time (Linux)  : Fri Mar 23 14:08:44 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:03:03 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Formaldehyde                                                            
@@ -502,6 +493,7 @@ H           -2.508043   -1.382001     .040282
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -556,31 +548,28 @@ H           -2.508043   -1.382001     .040282
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-
-Calculating AOSUPINT
-     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
-      Threshold for discarding integrals :  1.00D-12 )
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  6.54D-03  6.00D-03
       Induced dipole moments converged in  8 iterations.
       Induced dipole moments converged in  7 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
     Induced surface charges converged in 21 iterations.
 
       Info from polarizable embedding library:
@@ -594,27 +583,28 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00159578
 
-@  1  -112.196606133     -6.818042098077E-02    1.54208D+00   -1.12D+02
-      Virial theorem: -V/T =      2.002967
+@  1  -112.183221255     -5.479550230221E-02    1.54208D+00   -1.12D+02
+      Virial theorem: -V/T =      2.002848
 @    MULPOP   C       1.10; O      -0.82; H      -0.14; H      -0.14; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  3.52D-03  4.00D-03
+      Induced dipole moments converged in  8 iterations.
+      Induced dipole moments converged in  8 iterations.
+      Induced dipole moments converged in  8 iterations.
       Induced dipole moments converged in  7 iterations.
-      Induced dipole moments converged in  8 iterations.
-      Induced dipole moments converged in  8 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
-      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -632,27 +622,28 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00138306
 
-@  2  -112.385034846     -4.057432386031E-02    4.43016D-01   -1.88D-01
-      Virial theorem: -V/T =      2.009993
+@  2  -112.371650009     -2.718940470264E-02    4.43016D-01   -1.88D-01
+      Virial theorem: -V/T =      2.009873
 @    MULPOP   C      -0.13; O      -0.06; H       0.10; H       0.08; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  3.66D-03  4.00D-03
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  7 iterations.
-      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  3 iterations.
-      Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
     Induced surface charges converged in 17 iterations.
 
@@ -667,22 +658,23 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00134123
 
-@  3  -112.396656623     -4.473644768205E-02    6.41756D-02   -1.16D-02
-      Virial theorem: -V/T =      2.008501
+@  3  -112.383271744     -3.135152804602E-02    6.41757D-02   -1.16D-02
+      Virial theorem: -V/T =      2.008381
 @    MULPOP   C       0.07; O      -0.23; H       0.09; H       0.07; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  3.98D-03  4.00D-03
       Induced dipole moments converged in  6 iterations.
-      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -695,26 +687,27 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.19236336     0.49197440     0.23108999
+                 -0.19236335     0.49197440     0.23108998
 
     Sum of induced charges:     -0.00133633
 
-@  4  -112.396977681     -4.482833311650E-02    1.23403D-02   -3.21D-04
-      Virial theorem: -V/T =      2.008262
+@  4  -112.383592762     -3.144341430694E-02    1.23404D-02   -3.21D-04
+      Virial theorem: -V/T =      2.008142
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
-      Induced dipole moments converged in  6 iterations.
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  3.58D-03  4.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
       Induced dipole moments converged in  3 iterations.
     Induced surface charges converged in 14 iterations.
@@ -726,23 +719,24 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.19229672     0.49199904     0.23108171
+                 -0.19229672     0.49199903     0.23108171
 
     Sum of induced charges:     -0.00133882
 
-@  5  -112.396996447     -4.479424145493E-02    3.80991D-03   -1.88D-05
-      Virial theorem: -V/T =      2.008256
+@  5  -112.383611528     -3.140932343006E-02    3.80999D-03   -1.88D-05
+      Virial theorem: -V/T =      2.008136
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  3.65D-03  3.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
@@ -761,11 +755,14 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00133992
 
-@  6  -112.396999403     -4.476679395355E-02    4.94508D-04   -2.96D-06
-      Virial theorem: -V/T =      2.008268
+@  6  -112.383614484     -3.138187541372E-02    4.94537D-04   -2.96D-06
+      Virial theorem: -V/T =      2.008148
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  3.80D-03  3.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
@@ -773,8 +770,6 @@ Calculating AOSUPINT
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -792,11 +787,14 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00133960
 
-@  7  -112.396999447     -4.476712595125E-02    1.02612D-04   -4.45D-08
-      Virial theorem: -V/T =      2.008269
+@  7  -112.383614528     -3.138220721690E-02    1.02614D-04   -4.45D-08
+      Virial theorem: -V/T =      2.008148
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  4.54D-03  4.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
@@ -804,8 +802,6 @@ Calculating AOSUPINT
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -823,11 +819,14 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00133960
 
-@  8  -112.396999451     -4.476673090983E-02    5.68407D-05   -3.99D-09
-      Virial theorem: -V/T =      2.008269
+@  8  -112.383614532     -3.138181221969E-02    5.68410D-05   -3.99D-09
+      Virial theorem: -V/T =      2.008149
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  3.79D-03  4.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
@@ -835,8 +834,6 @@ Calculating AOSUPINT
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -854,11 +851,14 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00133959
 
-@  9  -112.396999453     -4.476680990133E-02    1.62621D-05   -1.98D-09
-      Virial theorem: -V/T =      2.008269
+@  9  -112.383614534     -3.138189125001E-02    1.62620D-05   -1.98D-09
+      Virial theorem: -V/T =      2.008149
 @    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  6 iterations.
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  3.65D-03  4.00D-03
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
       Induced dipole moments converged in  6 iterations.
@@ -866,8 +866,6 @@ Calculating AOSUPINT
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
       Induced dipole moments converged in  5 iterations.
-      Induced dipole moments converged in  4 iterations.
-      Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  4 iterations.
       Induced dipole moments converged in  3 iterations.
@@ -885,10 +883,10 @@ Calculating AOSUPINT
 
     Sum of induced charges:     -0.00133959
 
-@ 10  -112.396999453     -4.476682704384E-02    3.30531D-06   -1.47D-10
+@ 10  -112.383614535     -3.138190839083E-02    3.30830D-06   -1.47D-10
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:   -112.396999453281    3.31D-06
+@     Converged SCF energy, gradient:   -112.383614534570    3.31D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -900,7 +898,7 @@ Calculating AOSUPINT
 
  Sym       Hartree-Fock orbital energies
 
-1 A     -20.30327337   -11.12988319    -1.34965066    -0.80351963    -0.64107000
+1 A     -20.30327336   -11.12988319    -1.34965066    -0.80351963    -0.64107000
          -0.55582653    -0.45325538    -0.36098970     0.28099115     0.62927421
           0.74938557     0.91815605
 
@@ -917,24 +915,25 @@ Calculating AOSUPINT
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.208860379062
+            Electronic                -0.208860379099
             Nuclear                    0.196501001970
             Multipole                 -0.013384918679
-            Total                     -0.025744295771
+            Total                     -0.025744295808
 
        Polarization contributions:
-            Electronic                -0.043831211754
-            Nuclear                    0.041524508534
-            Multipole                 -0.005820339532
-            Total                     -0.008127042752
+            Electronic                -0.043831211771
+            Nuclear                    0.041524508546
+            Multipole                 -0.005820339521
+            Total                     -0.008127042746
 
        Continuum solvation contributions:
-            Electronic                 0.017429395399
-            Nuclear                   -0.017528768979
-            Multipole                 -0.010796114941
-            Total                     -0.010895488521
+            Electronic                 0.017429395930
+            Nuclear                   -0.017528769532
+            Multipole                 -0.010796114915
+            Total                     -0.010895488516
 
-       Total PE energy:            -0.044766827044
+       Total PE energy:               -0.031381908391
+            (excl. multipole-multipole interaction energy)
 
                Polarizable embedding information:
               ------------------------------------
@@ -954,8 +953,41 @@ Calculating AOSUPINT
 
 
  --- Writing SIRIFC interface file
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  7 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  3 iterations.
+      Induced dipole moments converged in  3 iterations.
+    Induced surface charges converged in 14 iterations.
 
- CPU and wall time for SCF :       1.741       1.745
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.19220949     0.49203436     0.23106762
+
+    Sum of induced charges:     -0.00133959
+
+
+
+                           +---------------------------+
+                           ! Writing FOCKMAT in siropt !
+                           +---------------------------+
+
+
+ CPU and wall time for SCF :       0.597       0.603
 
 
                        .-----------------------------------.
@@ -967,18 +999,18 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -112.396999453281                 
+@    Final HF energy:            -112.383614534570                 
 @    Nuclear repulsion:            31.249215315972
-@    Electronic energy:          -143.601447942209
-@    Embedding energy:             -0.044766827044
+@    Electronic energy:          -143.601447942152
+@    Embedding energy:             -0.031381908391
 
-@    Final gradient norm:           0.000003305313
+@    Final gradient norm:           0.000003308299
 
  
-     Date and time (Linux)  : Fri Mar 23 14:08:46 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:03:03 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  23Mar18   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -1013,21 +1045,21 @@ File label for MO orbitals:  23Mar18   FOCKDIIS
   11 H   :1s     0.3551   0.0004   0.8687   0.8781  -0.1332
   12 H   :1s    -0.3598  -0.0005   0.9206  -0.8178  -0.0596
 
-  Total CPU  time used in SIRIUS :   1.74 seconds
-  Total wall time used in SIRIUS :   1.75 seconds
+  Total CPU  time used in SIRIUS :   0.60 seconds
+  Total wall time used in SIRIUS :   0.61 seconds
 
  
-     Date and time (Linux)  : Fri Mar 23 14:08:46 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:03:03 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   1.78 seconds
-  Total wall time used in DALTON:   1.79 seconds
+  Total CPU  time used in DALTON:   0.62 seconds
+  Total wall time used in DALTON:   0.62 seconds
 
  
-     Date and time (Linux)  : Fri Mar 23 14:08:46 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:03:03 2020
+     Host name              : localhost.localdomain                   

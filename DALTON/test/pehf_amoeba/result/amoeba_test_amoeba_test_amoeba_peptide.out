@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2019.alpha (2019)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -53,7 +53,7 @@
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2019.alpha (2019), see http://daltonprogram.org
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -133,6 +133,7 @@
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
   Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -146,39 +147,41 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Wed Sep 25 16:32:10 2019
-     Host name              : tromso-ansatte2-dhcp331.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:02:25 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_test/test/pe_amoeba
-   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_test/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_amoeba
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
  Who compiled             | foeroyingur
- Host                     | tromso-ansatte2-dhcp331.wifi.uit.no
- System                   | Linux-5.2.11-200.fc30.x86_64
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- Explicit libs            | -lopenblas -llapack
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | a21a6b7a984935f6368d92b88593d4a9a8da6027
- Git branch               | pe/develop
- Configuration time       | 2019-09-25 15:20:31.161651
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
- * Sequential calculation.
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
@@ -186,8 +189,8 @@ Compilation information
 
 **DALTON
 .RUN WAVE FUNCTIONS
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .VERBOSE
 .DAMP AMOEBA
 **WAVE FUNCTIONS
@@ -216,10 +219,12 @@ H   51.0   50.0   50.0
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -243,7 +248,7 @@ H   51.0   50.0   50.0
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/foeroyingur/Projects/dalton_devel/dalton/build_test/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -262,6 +267,7 @@ H   51.0   50.0   50.0
                        Natural abundance:  99.970 %
 
  Center-of-mass coordinates (a.u.):   95.431169   94.486306   94.486306
+ Center-of-mass coordinates (Angs):   50.500000   50.000000   50.000000
 
 
   Atoms and basis sets
@@ -370,7 +376,7 @@ H   51.0   50.0   50.0
 
  Default print level:        1
 
- Calculation of one- and two-electron Hamiltonian integrals.
+ Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):     95.431169312176     94.486306249679     94.486306249679
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
@@ -393,11 +399,6 @@ H   51.0   50.0   50.0
       y    188.97261250       480.32044008      1602.17653000
       z    188.97261250       480.32044008      1602.17653000
 
-
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:           6 (100.0% )
- HERMIT - Megabytes written:                              0.007
 
   Total CPU  time used in HERMIT:   0.00 seconds
   Total wall time used in HERMIT:   0.00 seconds
@@ -432,8 +433,8 @@ H   51.0   50.0   50.0
  **********************************************************************
 
  
-     Date and time (Linux)  : Wed Sep 25 16:32:10 2019
-     Host name              : tromso-ansatte2-dhcp331.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:02:25 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Acrolein                                                                
@@ -443,6 +444,7 @@ H   51.0   50.0   50.0
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -497,10 +499,7 @@ H   51.0   50.0   50.0
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-
-Calculating AOSUPINT
-     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
-      Threshold for discarding integrals :  1.00D-12 )
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -4    1    F  1.63D-03  2.00D-03
       Induced dipole moments converged in 17 iterations.
 
       Info from polarizable embedding library:
@@ -517,6 +516,7 @@ Calculating AOSUPINT
 @    MULPOP   H      -0.00; H       0.00; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  2.27D-04  0.00D+00
       Induced dipole moments converged in  1 iterations.
 
       Info from polarizable embedding library:
@@ -533,6 +533,7 @@ Calculating AOSUPINT
 @    MULPOP   H       0.00; H      -0.00; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    F  2.47D-04  1.00D-03
       Induced dipole moments converged in  1 iterations.
 
       Info from polarizable embedding library:
@@ -650,7 +651,7 @@ Calculating AOSUPINT
                            +---------------------------+
 
 
- CPU and wall time for SCF :       0.042       0.042
+ CPU and wall time for SCF :       0.029       0.029
 
 
                        .-----------------------------------.
@@ -670,10 +671,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000001059573
 
  
-     Date and time (Linux)  : Wed Sep 25 16:32:10 2019
-     Host name              : tromso-ansatte2-dhcp331.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:02:25 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  25Sep19   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -684,21 +685,21 @@ File label for MO orbitals:  25Sep19   FOCKDIIS
    1 H   :1s     0.5780  -0.9965
    2 H   :1s     0.5781   0.9965
 
-  Total CPU  time used in SIRIUS :   0.04 seconds
-  Total wall time used in SIRIUS :   0.04 seconds
+  Total CPU  time used in SIRIUS :   0.03 seconds
+  Total wall time used in SIRIUS :   0.03 seconds
 
  
-     Date and time (Linux)  : Wed Sep 25 16:32:10 2019
-     Host name              : tromso-ansatte2-dhcp331.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:02:25 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.05 seconds
-  Total wall time used in DALTON:   0.05 seconds
+  Total CPU  time used in DALTON:   0.04 seconds
+  Total wall time used in DALTON:   0.04 seconds
 
  
-     Date and time (Linux)  : Wed Sep 25 16:32:10 2019
-     Host name              : tromso-ansatte2-dhcp331.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:02:25 2020
+     Host name              : localhost.localdomain                   

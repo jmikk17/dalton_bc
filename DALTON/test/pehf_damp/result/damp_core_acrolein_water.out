@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2017.alpha (2017)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -52,8 +52,8 @@
      
     and
      
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2017.alpha (2017), see http://daltonprogram.org
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -67,13 +67,14 @@
   Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
   Ove Christiansen,         Aarhus University,            Denmark     (CC module)
   Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
   Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
   Paal Dahle,               University of Oslo,           Norway      (Parallelization)
   Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
   Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
   Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
   Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
   Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
   Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
   Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
@@ -91,6 +92,7 @@
   Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
   Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
   Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
   Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
@@ -108,10 +110,10 @@
   Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
   Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
   Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
   Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
   Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
   Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
   Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
@@ -129,7 +131,9 @@
   Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
   Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -138,55 +142,46 @@
   Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
   David P. Tew,             University of Bristol,        England     (CCSD(R12))
   Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
   David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Apr 24 14:09:51 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:11 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/magnus/Projects/dalton_devel/dalton-private/build/test/pehf_damp
-   2) /home/magnus/Projects/dalton_devel/dalton-private/build/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_damp
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | magnus
- Host                     | foeroyar
- System                   | Linux-4.15.15-300.fc27.x86_64
+ Who compiled             | foeroyingur
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- BLAS                     | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_gf_lp64.
-                          | so;/home/magnus/Programs/intel/compilers_and_libra
-                          | ries_2018.1.163/linux/mkl/lib/intel64/libmkl_seque
-                          | ntial.so;/home/magnus/Programs/intel/compilers_and
-                          | _libraries_2018.1.163/linux/mkl/lib/intel64/libmkl
-                          | _core.so;/usr/lib64/libpthread.so;/usr/lib64/libm.
-                          | so
- LAPACK                   | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_lapack95
-                          | _lp64.a;/home/magnus/Programs/intel/compilers_and_
-                          | libraries_2018.1.163/linux/mkl/lib/intel64/libmkl_
-                          | gf_lp64.so
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 9055103dddfd9c6746ec240c40a8a01c46350288
- Git branch               | master
- Configuration time       | 2018-04-24 13:57:14.806869
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
- * Sequential calculation.
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
@@ -194,8 +189,8 @@ Compilation information
 
 **DALTON
 .RUN WAVE FUNCTION
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .DAMP CORE
 2.1304
 8
@@ -242,10 +237,12 @@ H              2.675323   -2.516779   -0.000673
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -269,7 +266,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    3
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -277,7 +274,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -285,7 +282,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    4
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -310,6 +307,7 @@ H              2.675323   -2.516779   -0.000673
                        Natural abundance:  96.446 %
 
  Center-of-mass coordinates (a.u.):    0.973773   -1.393790    0.000425
+ Center-of-mass coordinates (Angs):    0.515299   -0.737562    0.000225
 
 
   Atoms and basis sets
@@ -472,9 +470,7 @@ H              2.675323   -2.516779   -0.000673
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
- Calculation of one- and two-electron Hamiltonian integrals.
+ Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):      0.973773359129     -1.393789716280      0.000424788898
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
@@ -498,14 +494,8 @@ H              2.675323   -2.516779   -0.000673
       z      0.01223409         0.03109595         0.10372491
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:       43383 ( 96.1% )
- HERMIT - Megabytes written:                              0.502
-
-  Time used in TWOINT     is       0.20 seconds
-  Total CPU  time used in HERMIT:   0.25 seconds
-  Total wall time used in HERMIT:   0.25 seconds
+  Total CPU  time used in HERMIT:   0.02 seconds
+  Total wall time used in HERMIT:   0.02 seconds
 
 
                         .----------------------------------.
@@ -541,8 +531,8 @@ H              2.675323   -2.516779   -0.000673
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:52 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:11 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Acrolein                                                                
@@ -552,6 +542,7 @@ H              2.675323   -2.516779   -0.000673
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -606,10 +597,7 @@ H              2.675323   -2.516779   -0.000673
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-
-Calculating AOSUPINT
-     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
-      Threshold for discarding integrals :  1.00D-12 )
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  2.21D-02  2.30D-02
       Induced dipole moments converged in  4 iterations.
 
       Info from polarizable embedding library:
@@ -621,12 +609,13 @@ Calculating AOSUPINT
                        X              Y              Z
                  -0.03748930     0.04426553     0.00010056
 
-@  1  -187.942945048     -4.313219145704E-02    2.01969D+00   -1.88D+02
+@  1  -187.942950240     -4.313219145698E-02    2.01969D+00   -1.88D+02
       Virial theorem: -V/T =      2.003027
 @    MULPOP   C       0.93; C       0.24; C       0.42; O      -1.03; H      -0.16; H      -0.14; H      -0.12; H      -0.13; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  4 iterations.
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    2    F  1.97D-02  1.90D-02
+      Induced dipole moments converged in  5 iterations.
 
       Info from polarizable embedding library:
      ------------------------------------------
@@ -635,14 +624,15 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.01215037     0.00653982     0.00001592
+                 -0.01215022     0.00653952     0.00001592
 
-@  2  -188.274844923     -7.447205337072E-03    7.48280D-01   -3.32D-01
+@  2  -188.274843907     -7.447104395229E-03    7.48288D-01   -3.32D-01
       Virial theorem: -V/T =      2.009174
 @    MULPOP   C      -0.14; C      -0.12; C      -0.12; O       0.06; H       0.05; H       0.11; H       0.09; H       0.09; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  4 iterations.
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.95D-02  1.90D-02
+      Induced dipole moments converged in  5 iterations.
 
       Info from polarizable embedding library:
      ------------------------------------------
@@ -651,13 +641,14 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.02049908     0.02192287     0.00003568
+                 -0.02049907     0.02192292     0.00003568
 
-@  3  -188.313074451     -1.632335953689E-02    1.09389D-01   -3.82D-02
+@  3  -188.313074471     -1.632332107176E-02    1.09391D-01   -3.82D-02
       Virial theorem: -V/T =      2.007960
 @    MULPOP   C       0.15; C      -0.10; C      -0.11; O      -0.25; H       0.05; H       0.10; H       0.08; H       0.08; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  1.91D-02  1.90D-02
       Induced dipole moments converged in  4 iterations.
 
       Info from polarizable embedding library:
@@ -667,13 +658,14 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.01976538     0.02189502     0.00003667
+                 -0.01976539     0.02189503     0.00003667
 
-@  4  -188.314850448     -1.669469116022E-02    3.07721D-02   -1.78D-03
+@  4  -188.314850446     -1.669470350236E-02    3.07723D-02   -1.78D-03
       Virial theorem: -V/T =      2.007881
 @    MULPOP   C       0.13; C      -0.10; C      -0.09; O      -0.26; H       0.07; H       0.10; H       0.07; H       0.08; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  1.93D-02  1.90D-02
       Induced dipole moments converged in  4 iterations.
 
       Info from polarizable embedding library:
@@ -683,13 +675,14 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.01977814     0.02262597     0.00003572
+                 -0.01977814     0.02262599     0.00003572
 
-@  5  -188.315029008     -1.662113074827E-02    1.15384D-02   -1.79D-04
+@  5  -188.315029009     -1.662113007955E-02    1.15384D-02   -1.79D-04
       Virial theorem: -V/T =      2.007848
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.06; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  3 iterations.
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  1.95D-02  1.90D-02
+      Induced dipole moments converged in  4 iterations.
 
       Info from polarizable embedding library:
      ------------------------------------------
@@ -698,13 +691,14 @@ Calculating AOSUPINT
 
                         Total induced dipole moment
                        X              Y              Z
-                 -0.01979389     0.02248875     0.00003522
+                 -0.01979389     0.02248876     0.00003522
 
-@  6  -188.315048500     -1.662704343970E-02    2.97985D-03   -1.95D-05
+@  6  -188.315048500     -1.662704238026E-02    2.97981D-03   -1.95D-05
       Virial theorem: -V/T =      2.007849
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-      Induced dipole moments converged in  3 iterations.
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  1.97D-02  2.00D-02
+      Induced dipole moments converged in  4 iterations.
 
       Info from polarizable embedding library:
      ------------------------------------------
@@ -715,10 +709,11 @@ Calculating AOSUPINT
                        X              Y              Z
                  -0.01978527     0.02254378     0.00003491
 
-@  7  -188.315050267     -1.661615284979E-02    1.05624D-03   -1.77D-06
+@  7  -188.315050267     -1.661615229002E-02    1.05616D-03   -1.77D-06
       Virial theorem: -V/T =      2.007852
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  1.97D-02  2.00D-02
       Induced dipole moments converged in  3 iterations.
 
       Info from polarizable embedding library:
@@ -730,10 +725,11 @@ Calculating AOSUPINT
                        X              Y              Z
                  -0.01979425     0.02254800     0.00003469
 
-@  8  -188.315050446     -1.661394456438E-02    3.26780D-04   -1.79D-07
+@  8  -188.315050446     -1.661394464072E-02    3.26771D-04   -1.79D-07
       Virial theorem: -V/T =      2.007853
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  1.98D-02  2.00D-02
       Induced dipole moments converged in  3 iterations.
 
       Info from polarizable embedding library:
@@ -745,10 +741,11 @@ Calculating AOSUPINT
                        X              Y              Z
                  -0.01979632     0.02255173     0.00003457
 
-@  9  -188.315050471     -1.661245470393E-02    5.63046D-05   -2.50D-08
+@  9  -188.315050471     -1.661245463721E-02    5.63117D-05   -2.50D-08
       Virial theorem: -V/T =      2.007853
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  1.99D-02  2.00D-02
       Induced dipole moments converged in  3 iterations.
 
       Info from polarizable embedding library:
@@ -760,10 +757,10 @@ Calculating AOSUPINT
                        X              Y              Z
                  -0.01979660     0.02255224     0.00003457
 
-@ 10  -188.315050473     -1.661223012858E-02    9.06540D-06   -1.48D-09
+@ 10  -188.315050472     -1.661223012949E-02    9.06339D-06   -1.48D-09
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:   -188.315050472561    9.07D-06
+@     Converged SCF energy, gradient:   -188.315050472499    9.06D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -794,14 +791,14 @@ Calculating AOSUPINT
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.432285622667
+            Electronic                -0.432285622668
             Nuclear                    0.416357723102
             Multipole                  0.001021874749
             Total                     -0.014906024817
 
        Polarization contributions:
-            Electronic                -0.039189668078
-            Nuclear                    0.038387962645
+            Electronic                -0.039189668100
+            Nuclear                    0.038387962668
             Multipole                  0.000117374869
             Total                     -0.000684330563
 
@@ -830,8 +827,25 @@ Calculating AOSUPINT
 
 
  --- Writing SIRIFC interface file
+      Induced dipole moments converged in  1 iterations.
 
- CPU and wall time for SCF :       0.142       0.142
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.01979660     0.02255224     0.00003457
+
+
+
+                           +---------------------------+
+                           ! Writing FOCKMAT in siropt !
+                           +---------------------------+
+
+
+ CPU and wall time for SCF :       0.258       0.259
 
 
                        .-----------------------------------.
@@ -843,18 +857,18 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -188.315050472561                 
+@    Final HF energy:            -188.315050472499                 
 @    Nuclear repulsion:           102.664846860515
-@    Electronic energy:          -290.963285102948
+@    Electronic energy:          -290.963285102885
 @    Embedding energy:             -0.016612230129
 
-@    Final gradient norm:           0.000009065405
+@    Final gradient norm:           0.000009063388
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:52 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:11 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  24Apr18   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -957,21 +971,21 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
   23 H   :1s    -0.2209   0.5470   0.0474
   24 H   :1s     0.5318  -0.3789  -0.1526
 
-  Total CPU  time used in SIRIUS :   0.15 seconds
-  Total wall time used in SIRIUS :   0.15 seconds
+  Total CPU  time used in SIRIUS :   0.26 seconds
+  Total wall time used in SIRIUS :   0.26 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:52 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:11 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.40 seconds
-  Total wall time used in DALTON:   0.40 seconds
+  Total CPU  time used in DALTON:   0.29 seconds
+  Total wall time used in DALTON:   0.29 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:52 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:11 2020
+     Host name              : localhost.localdomain                   

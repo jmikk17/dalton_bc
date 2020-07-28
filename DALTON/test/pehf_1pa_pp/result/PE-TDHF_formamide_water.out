@@ -147,42 +147,41 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Wed Jun 10 16:21:27 2020
-     Host name              : loke                                    
+     Date and time (Linux)  : Tue Jul 28 10:07:49 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/reinholdt/work/ecp-test
-   2) /home/reinholdt/Programs/dalton/build/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_1pa_pp
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | reinholdt
- Host                     | loke
- System                   | Linux-5.6.15-arch1-1
+ Who compiled             | foeroyingur
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
- MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (GCC) 10.1.0
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (GCC) 10.1.0
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (GCC) 10.1.0
- BLAS                     | /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.so;/opt/
-                          | intel/mkl/lib/intel64/libmkl_sequential.so;/opt/in
-                          | tel/mkl/lib/intel64/libmkl_core.so;/usr/lib/libpth
-                          | read.so;/usr/lib/libm.so
- LAPACK                   | /opt/intel/mkl/lib/intel64/libmkl_lapack95_lp64.a;
-                          | /opt/intel/mkl/lib/intel64/libmkl_gf_lp64.so
+ MPI                      | ON
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
+ C++ compiler version     | unknown
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | efeffbb5e2ef350e451b43c82b76b8eed614f442
- Git branch               | pe-pseudopotential
- Configuration time       | 2020-06-10 15:33:42.941201
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
+
+ * Sequential calculation.
 
 
    Content of the .dal input file
@@ -190,8 +189,8 @@ Compilation information
 
 **DALTON INPUT
 .RUN RESPONSE
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .EEF
 **WAVE FUN
 .HF
@@ -213,7 +212,7 @@ Formamide and PPs from a water molecule
 AtomTypes=6 Charge=0 NoSymmetry Angstrom
 Charge=8 Atoms=1 Basis=3-21++G
 O     22.931000    21.390000    23.466000
-Charge=6.0 Atoms=1 Basis=3-21++G
+Charge=6 Atoms=1 Basis=3-21++G
 C     22.287000    21.712000    22.485000
 Charge=7 Atoms=1 Basis=3-21++G
 N     22.832000    22.453000    21.486000
@@ -240,7 +239,7 @@ H     22.267000    20.190000    28.899000
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
     Dynamic molecular response properties section will be executed (RESPONSE module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -265,7 +264,7 @@ H     22.267000    20.190000    28.899000
   Number of basis sets to read;    2
   The basis set is "3-21++G" from the basis set library.
   Basis set file used for this atomic type with Z =   8 :
-     "/home/reinholdt/Programs/dalton/build/basis/3-21++G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/3-21++G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21++G                                                                         
@@ -277,7 +276,7 @@ H     22.267000    20.190000    28.899000
   Number of basis sets to read;    2
   The basis set is "3-21++G" from the basis set library.
   Basis set file used for this atomic type with Z =   6 :
-     "/home/reinholdt/Programs/dalton/build/basis/3-21++G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/3-21++G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21++G                                                                         
@@ -289,7 +288,7 @@ H     22.267000    20.190000    28.899000
   Number of basis sets to read;    2
   The basis set is "3-21++G" from the basis set library.
   Basis set file used for this atomic type with Z =   7 :
-     "/home/reinholdt/Programs/dalton/build/basis/3-21++G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/3-21++G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21++G                                                                         
@@ -301,7 +300,7 @@ H     22.267000    20.190000    28.899000
   Number of basis sets to read;    2
   The basis set is "3-21++G" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/reinholdt/Programs/dalton/build/basis/3-21++G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/3-21++G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21++G                                                                         
@@ -311,7 +310,7 @@ H     22.267000    20.190000    28.899000
   Nuclear charge:   8.00000
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
-     "/home/reinholdt/Programs/dalton/build/basis/ecp_data/pe_pp"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/ecp_data/pe_pp"
      Pseudo potential parameters for ECP type  1.
      -----------------------------------------------
      Atomic charge  :  8.0
@@ -325,7 +324,7 @@ H     22.267000    20.190000    28.899000
   Nuclear charge:   1.00000
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
-     "/home/reinholdt/Programs/dalton/build/basis/ecp_data/pe_pp"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/ecp_data/pe_pp"
      Pseudo potential parameters for ECP type  2.
      -----------------------------------------------
      Atomic charge  :  1.0
@@ -516,6 +515,8 @@ H     22.267000    20.190000    28.899000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
+Calculation of 2-electron integrals are postoned until they are needed.
+
 
      ************************************************************************
      ************************** Output from HERINT **************************
@@ -547,13 +548,8 @@ H     22.267000    20.190000    28.899000
           6.58893017    -0.95854364     0.01248755
          -0.95854364     3.72098148     0.83888107
           0.01248755     0.83888107     4.72017872
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:      676604 ( 97.8% )
- HERMIT - Megabytes written:                              7.750
-
-  Total CPU  time used in HERMIT:   0.10 seconds
-  Total wall time used in HERMIT:   0.10 seconds
+  Total CPU  time used in HERMIT:   0.04 seconds
+  Total wall time used in HERMIT:   0.04 seconds
 
 
                         .----------------------------------.
@@ -590,8 +586,8 @@ PE-QM calculation includes effective external field effects.
  **********************************************************************
 
  
-     Date and time (Linux)  : Wed Jun 10 16:21:27 2020
-     Host name              : loke                                    
+     Date and time (Linux)  : Tue Jul 28 10:07:49 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Formamide and PPs from a water molecule                                 
@@ -659,6 +655,19 @@ PE-QM calculation includes effective external field effects.
  -----------------------------------------------------------------------------
 
 Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:      676604 ( 97.8% )
+ HERMIT - Megabytes written:                              7.750
+
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
 @  1  -167.531254704     -0.147847557000        3.13542D+00   -1.68D+02
@@ -717,10 +726,10 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      2.005799
 @    MULPOP   O      -0.96; C       0.19; N      -0.55; H       0.32; H       0.49; H       0.52; 
  -----------------------------------------------------------------------------
-@ 14  -168.147494986     -0.197074388329        7.65757D-06   -4.50D-10
+@ 14  -168.147494986     -0.197074388329        7.65757D-06   -4.51D-10
 
 @ *** DIIS converged in  14 iterations !
-@     Converged SCF energy, gradient:   -168.147494986446    7.66D-06
+@     Converged SCF energy, gradient:   -168.147494986447    7.66D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -777,7 +786,7 @@ Calculating AOSUPINT
                            +---------------------------+
 
 
- CPU and wall time for SCF :       0.112       0.112
+ CPU and wall time for SCF :       0.157       0.157
 
 
                        .-----------------------------------.
@@ -789,7 +798,7 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -168.147494986446                 
+@    Final HF energy:            -168.147494986447                 
 @    Nuclear repulsion:            71.340612602339
 @    Electronic energy:          -239.291033200457
 @    Embedding energy:             -0.197074388329
@@ -797,10 +806,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000007657566
 
  
-     Date and time (Linux)  : Wed Jun 10 16:21:27 2020
-     Host name              : loke                                    
+     Date and time (Linux)  : Tue Jul 28 10:07:49 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  10Jun20   FOCKDIIS
+File label for MO orbitals:  28Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -1002,12 +1011,12 @@ File label for MO orbitals:  10Jun20   FOCKDIIS
   45 H   :1s     0.9969
   48 H   :1s    -0.4863
 
-  Total CPU  time used in SIRIUS :   0.12 seconds
-  Total wall time used in SIRIUS :   0.12 seconds
+  Total CPU  time used in SIRIUS :   0.17 seconds
+  Total wall time used in SIRIUS :   0.17 seconds
 
  
-     Date and time (Linux)  : Wed Jun 10 16:21:27 2020
-     Host name              : loke                                    
+     Date and time (Linux)  : Tue Jul 28 10:07:49 2020
+     Host name              : localhost.localdomain                   
 
  NOTE:    1 warnings have been issued.
  Check output, result, and error files for "WARNING".
@@ -1059,13 +1068,13 @@ File label for MO orbitals:  10Jun20   FOCKDIIS
  - ICASE = 2: no MO integrals on MOTWOINT
  - ICASE = 3: transformation level on MOTWOINT not sufficient
 
- 2-el. integral transformation level 4: Total CPU and WALL times (sec)       0.147       0.147
+ 2-el. integral transformation level 4: Total CPU and WALL times (sec)       0.133       0.133
 
- Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.005       0.005
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.004       0.005
 
 
-   SCF energy         :     -168.147494986446361
- -- inactive part     :     -239.291033200456980
+   SCF energy         :     -168.147494986446645
+ -- inactive part     :     -239.291033200457264
  -- nuclear repulsion :       71.340612602339377
 
 
@@ -1089,7 +1098,7 @@ File label for MO orbitals:  10Jun20   FOCKDIIS
  Orbital variables.         KZWOPT:         432
  Configuration variables.   KZCONF:           0
  Total number of variables. KZVAR :         432
- Electrons in DFTMOMO:   23.99999742539817
+ Electrons in DFTMOMO:   23.99999742539812
 
 
 
@@ -1200,7 +1209,7 @@ File label for MO orbitals:  10Jun20   FOCKDIIS
          361        11(1)  13(1)        0.1008189463        0.0020272076        0.1425795213        0.0028669045
          397        12(1)  13(1)       -0.6808294489       -0.0115423232       -0.9628382403       -0.0163233100
 
-      428 elements with absolute value ≤ 9.63D-02 not printed.
+      428 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
@@ -1230,19 +1239,19 @@ Delta_R Diagnostic (Aa):     3.0441
 
 
 
- Time used in polarization propagator calculation is      2.52 CPU seconds for symmetry 1
+ Time used in polarization propagator calculation is      2.26 CPU seconds for symmetry 1
 
-  Total CPU  time used in RESPONSE:   2.67 seconds
-  Total wall time used in RESPONSE:   2.71 seconds
+  Total CPU  time used in RESPONSE:   2.39 seconds
+  Total wall time used in RESPONSE:   2.40 seconds
 
 
                    .-------------------------------------------.
                    | End of Dynamic Property Section (RESPONS) |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   2.91 seconds
-  Total wall time used in DALTON:   2.95 seconds
+  Total CPU  time used in DALTON:   2.61 seconds
+  Total wall time used in DALTON:   2.62 seconds
 
  
-     Date and time (Linux)  : Wed Jun 10 16:21:30 2020
-     Host name              : loke                                    
+     Date and time (Linux)  : Tue Jul 28 10:07:52 2020
+     Host name              : localhost.localdomain                   

@@ -5,7 +5,7 @@
 !
 !
 !     EMBEDDING : QM part is embedded in environment (solvent or e.g. protein)
-!                 May 2011/hjaaj: EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .or. use_pelib()
+!                 May 2011/hjaaj: EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .or. USE_PELIB()
 !                 (For now, EMBEDDING is defined in sirius/sirinp.F because this is
 !                 the first instance where all of FLAG(16), PCM, QM3, QMMM are set)
 !                 Dec 2017/hjaaj: also define in abaset.F(SETSIR) for restart in RESPONS without
