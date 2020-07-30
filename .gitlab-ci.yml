@@ -61,7 +61,7 @@ intel:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
     - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl
     - set +e
-    - . /opt/intel/inteloneapi/setvars.sh
+    - . /opt/intel/oneapi/setvars.sh
     - set -e
     - uname -a
     - lscpu
@@ -93,7 +93,7 @@ intel-mpi:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
     - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
     - set +e
-    - . /opt/intel/inteloneapi/setvars.sh
+    - . /opt/intel/oneapi/setvars.sh
     - set -e
     - uname -a
     - lscpu
