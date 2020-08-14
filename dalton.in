@@ -208,13 +208,13 @@ while [ -n "`echo $1 | grep '^-'`" ]; do
       -pcm ) pcmfil=$2; shift;;
       -m|-mw ) WRKMEM=$2; export WRKMEM; shift;;
       -M|-mb ) WRKMEM=`expr $2 \* 128000`; export WRKMEM; shift;;
-         -gb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
-         -nw ) NODE_WRKMEM=$2; export NODE_WRKMEM; shift;;
+       -gb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
+       -nw ) NODE_WRKMEM=$2; export NODE_WRKMEM; shift;;
        -nb|-nmb ) NODE_WRKMEM=`expr $2 "*" 128000`; export NODE_WRKMEM; shift;;
-         -ngb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
+       -ngb ) NODE_WRKMEM=`expr $2 \* 128000 \* 1024`; export NODE_WRKMEM; shift;;
        -v|--version ) echo "version: @DALTON_VERSION@"; exit 0;;
-      -x ) optx=1; gs=$2; ch=$3; shift;shift;;
-      * ) echo "Unrecognized option: $1"; usage; exit 1;;
+       -x ) optx=1; gs=$2; ch=$3; shift;shift;;
+        * ) echo "Unrecognized option: $1"; usage; exit 1;;
    esac
    shift
 done
