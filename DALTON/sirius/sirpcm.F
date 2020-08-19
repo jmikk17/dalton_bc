@@ -109,14 +109,14 @@ C
      &            CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',6)
                GO TO 100
             END IF
-            WRITE (6,'(/4A/)') ' Keyword ',WORD,
+            WRITE (LUPRI,'(/4A/)') ' Keyword ',WORD,
      *         ' not recognized for ',WORD1
          ELSE IF (PROMPT .EQ. '#' .OR. PROMPT .EQ. '!') THEN
             GO TO 100
          ELSE IF (PROMPT .EQ. '*') THEN
             GOTO 999
          ELSE
-            WRITE (6,'(/3A/2A/)')
+            WRITE (LUPRI,'(/3A/2A/)')
      *         ' Keyword ',WORD,' does not begin with',
      *         ' one of the four characters ".*!#" for ',WORD1
          END IF
@@ -488,14 +488,14 @@ C
      &            CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',6)
                GO TO 100
             END IF
-            WRITE (6,'(/4A/)') ' Keyword ',WORD,
+            WRITE (LUPRI,'(/4A/)') ' Keyword ',WORD,
      *         ' not recognized for ',WORD1
          ELSE IF (PROMPT .EQ. '#' .OR. PROMPT .EQ. '!') THEN
                GO TO 100
          ELSE IF (PROMPT .EQ. '*') THEN
             GOTO 999
          ELSE
-            WRITE (6,'(/3A/2A/)')
+            WRITE (LUPRI,'(/3A/2A/)')
      *         ' Keyword ',WORD,' does not begin with',
      *         ' one of the four characters ".*!#" for ',WORD1
          END IF
