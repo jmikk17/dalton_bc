@@ -1098,7 +1098,8 @@ C***********************************************************************
 #include "cbirea.h"
 #include "symmet.h"
       DIMENSION WORK(LWORK)
-      LOGICAL   SEG,ANG,NOORBTS,NOFITFS,ZMAT_INPUT,CNTBAS, MM_ATOMTYPE
+      LOGICAL   SEG,ANG,NOORBTS,NOFITFS,ZMAT_INPUT,CNTBAS
+      LOGICAL   MM_ATOMTYPE, GHOST_ATOMTYPE
       LOGICAL   ADDSYM
       INTEGER   INT_TEMP
       DIMENSION NONT(KATOM),IQM(KATOM,KSETS),JCO(KANG,KATOM,KSETS),
@@ -1233,6 +1234,16 @@ C           correctly if all QM atoms before any MM atom
      &            'READ_MOL: All QM atoms must come before any MM atom')
             END IF
          END IF
+
+! Ghost atoms - same basis as normal, but zero nuclear charge
+         IPOS = INDEX(BKPLIN, 'GHOST')
+         IF (IPOS .GT. 0) THEN
+            GHOST_ATOMTYPE = .TRUE.
+         ELSE
+            GHOST_ATOMTYPE = .FALSE.
+         END IF
+
+
 C
 C        New or old input style ?
 C
@@ -1702,7 +1713,14 @@ C
                GNUEXP(K+INUC) = D0
             ELSE
                ! .. reset charge to effective charge (different from Q for ECP)
-               CHARGE(K+INUC) = QEFF
+               IF (GHOST_ATOMTYPE) THEN
+                  CHARGE(K+INUC) = D0
+                  NQ = NINT(Q)
+                  IZATOM(K+INUC) = -NQ
+                  GNUEXP(K+INUC) = D0
+               ELSE
+                  CHARGE(K+INUC) = QEFF
+               END IF
                IF (IQM(I,1) .EQ. 0) THEN
                ! ... this is a point charge (no basis fu.) /hjaaj Nov 2003
                   IZATOM(K+INUC) = -1234567890
@@ -4149,7 +4167,7 @@ C
                   JTRAN(NSORB) = JKB ! number of AOs contributing to this SO
 
                   IF (IC .EQ. ISETHUCKEL) THEN
-                     NQ     = IZATOM(NCENT(IA))
+                     NQ     = MAX(0, IZATOM(NCENT(IA)))
 C                    ... atomic charge of this center
                    IF (NQ .GT. 0) THEN
 C                  ... skip point charges (code NQ=-1234567890),
