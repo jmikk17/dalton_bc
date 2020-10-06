@@ -65,7 +65,7 @@
 
       character*4 TYPE_TEXT
       integer JTRSIR, NTRLVL, IOSVAL, MX_NDMAT
-      integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J
+      integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J, K
       integer MISH_TEST(8), MASH_TEST(8), IDAMAX, L_H2CD
       integer, allocatable :: ICDTRA(:), ITRTYP(:)
       character*8 TABLE(3), LAB123(3), INT_LABEL
@@ -111,7 +111,7 @@ C     Test if MO integrals already available
       IF ( FNDLAB(INT_LABEL,LUINTM) ) THEN ! true iff existing MOTWOINT is created by .FCKTRA
          REWIND(LUINTM)
          READ  (LUINTM)
-         READ  (LUINTM) J,NTRLVL
+         READ  (LUINTM) J,NTRLVL ! originally LBINTM, JTRLVL
          IF (NTRLVL .EQ. 3 .AND. JTRSIR .EQ. 2) NTRLVL = -1 ! (aa|ii) and (ai|ai) missing
          IF (NTRLVL .EQ. 2 .AND. JTRSIR .EQ. 3) NTRLVL =  3
          IF (NTRLVL .EQ. 5 .AND. JTRSIR .EQ. 6) NTRLVL =  6
@@ -128,8 +128,8 @@ C           and subtract from input CMO matrix
             MISH_TEST(1:8) = MISH_TEST(1:8) - NISH(1:8)
             MASH_TEST(1:8) = MASH_TEST(1:8) - NASH(1:8)
             J = 0
-            DO I = 1,8
-               J = J + ABS(MISH_TEST(I)) + ABS(MASH_TEST(I))
+            DO K = 1,8
+               J = J + ABS(MISH_TEST(K)) + ABS(MASH_TEST(K))
             END DO
             IF (ABS(WORK(I)) .LE. THRZER .AND. J .EQ. 0) THEN
                IF (IPRTRA.GE.0) WRITE (LUPRI,'(/A)')
