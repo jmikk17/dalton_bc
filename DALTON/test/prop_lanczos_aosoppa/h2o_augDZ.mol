@@ -1,0 +1,10 @@
+BASIS
+aug-cc-pVDZ
+         h2o Vertical Excitation Energies
+         aug-cc-pVDZ
+Angstrom Atomtypes=2
+Charge=8.0 Atoms=1
+O      0.00000   0.00000          -0.065775570538
+Charge=1.0 Atoms=2
+H_a    0.00000   -0.759061990794   0.521953018295
+H_a    0.00000   0.759061990794    0.521953018295

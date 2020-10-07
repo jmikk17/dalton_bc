@@ -139,6 +139,7 @@ add_dalton_runtest(geoopt_freeze                 "dalton;runtest;geo;short;essen
 add_dalton_runtest(aba_prop_file                 "dalton;runtest;prop;short;essential")
 add_dalton_runtest(prop_ecd                      "dalton;runtest;prop;short")
 add_dalton_runtest(prop_exci                     "dalton;serial;runtest;prop;short")
+add_dalton_runtest(prop_lanczos_aosoppa          "dalton;serial;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_nolondon                 "dalton;serial;runtest;prop;short;essential")
 add_dalton_runtest(prop_spinspin1                "dalton;serial;runtest;prop;short")
 add_dalton_runtest(prop_spinspin2                "dalton;serial;runtest;prop;short")

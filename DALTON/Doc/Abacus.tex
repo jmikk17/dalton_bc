@@ -1733,6 +1733,29 @@ SOPPA implementation. This can be useful for calculation of excitation
 energies, since a subsequent calculation at a higher level of theory will 
 use the converged RPA vectors as a starting guess.
 
+\item[\Key{LANCZOS}]\verb| |\newline
+    \verb|READ (LUCMD,*) sop_lanczos_chain_len|
+
+    Runs block Lanczos RPA solver for calculating mean
+    excitation energy, \textit{I(0)}, in Lanczos basis. Dipole oscillator 
+    strength sums \textit{S(0)} and \textit{L(0)}, and dipole oscillator 
+    strengths are computed. Excitation energies can be printed as well when 
+    print level is $\geq$2. Only works in combination with .AORPA (under *SOPPA)
+    and requires *ABALNR (as called from ABACUS driver). Reads one more line 
+    specifying a number of Lanczos iterations to be run (corresponds to a number 
+    of excitation energies needed).
+
+\item[\Key{LANCON}]\verb| |\newline
+    \verb|READ (LUCMD,*) sop_lanc_conv_nr|
+
+    Perform intermediate diagonalization of the Lanczos matrix when block Lanczos 
+    RPA solver is used and (in the end) print the intermediate \textit{S(0)},
+    \textit{L(0)} and \textit{I(0)} values. Can be useful if one wishes to monitor 
+    convergence of these. Only works in combination with .AORPA and .LANCZOS 
+    (under *SOPPA) and requires *ABALNR (as called from ABACUS driver). Reads one 
+    more line specifying how many iterations to run before performing the intermediate 
+    calculation.
+
 \item[\Key{SOPCHK}] Request that the $E[2]$ and $S[2]$ matrices are
 calculated explicitly and written to the output. This is only for
 debugging purposes of the atomic integral direct implementation.
