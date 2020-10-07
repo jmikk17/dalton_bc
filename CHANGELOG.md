@@ -1,5 +1,12 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
+## [2021.0-dev]
+
+### New features added
+- SOPPA
+  - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called form ABACUS driver.
+
+
 ## [2020.0.beta] (scheduled for release 2020-04-??)
 
 ### Major new features added

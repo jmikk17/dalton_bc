@@ -1,0 +1,1996 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2020.alpha (2020)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
+       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
+       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.alpha (2020), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (major contribution(s) in parenthesis):
+
+  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
+  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
+  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
+  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
+  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
+  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
+  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
+  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
+  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
+  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
+  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
+  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
+  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
+  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
+  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
+  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
+  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
+  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
+  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
+  Kasper Hald,              Aarhus University,            Denmark     (CC module)
+  Asger Halkier,            Aarhus University,            Denmark     (CC module)
+  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
+  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
+  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
+  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
+  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
+  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
+  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
+  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
+  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
+  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
+  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
+  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
+  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
+  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
+  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
+  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
+  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
+  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
+  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
+  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
+  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
+  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
+  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
+  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
+  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
+  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
+  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
+  David P. Tew,             University of Bristol,        England     (CCSD(R12))
+  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
+  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
+  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+ --------------------------------------------------------------------------------
+
+     Date and time (Darwin) : Tue Sep 15 16:23:45 2020
+     Host name              : Spinor.local                            
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /Users/mothership/LanczosDalton-tests/h2o-sum-beforeMerge/tests-gfortran6
+   2) /Users/mothership/source/dalton/build/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | mothership
+ Host                     | Spinor.local
+ System                   | Darwin-19.2.0
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/local/Cellar/gcc@6/6.5.0_4/bin/gfortran-6
+ Fortran compiler version | unknown
+ C compiler               | /usr/local/Cellar/gcc@6/6.5.0_4/bin/gcc-6
+ C compiler version       | unknown
+ C++ compiler             | /usr/local/Cellar/gcc@6/6.5.0_4/bin/g++-6
+ C++ compiler version     | unknown
+ BLAS                     | /usr/lib/libblas.dylib
+ LAPACK                   | /usr/lib/liblapack.dylib
+ Static linking           | OFF
+ Last Git revision        | e6d820fdca4af937ef661f3b04a95aa5d535ae54
+ Git branch               | aosoppa_lanczos_SignedSealedDelivered
+ Configuration time       | 2020-09-15 16:22:52.793551
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+**DALTON INPUT
+.RUN PROPERTIES
+**WAVE FUNCTIONS
+.HF
+*SCF INPUT
+.THRESH
+ 1.0D-08
+**PROPERTIES
+.SOPPA
+.ALPHA
+.PRINT
+    2
+*ABALNR
+.FREQUE
+    1
+0.0
+*SOPPA
+.AORPA
+.LANCZOS
+    1400
+**END OF DALTON INPUT
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS
+aug-cc-pVDZ
+         h2o Vertical Excitation Energies
+         aug-cc-pVDZ
+Angstrom Atomtypes=2
+Charge=8.0 Atoms=1
+O      0.00000   0.00000          -0.065775570538
+Charge=1.0 Atoms=2
+H_a    0.00000   -0.759061990794   0.521953018295
+H_a    0.00000   0.759061990794    0.521953018295
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Static molecular property section will be executed (ABACUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    ------------------------------------------------------------------------
+ 1:          h2o Vertical Excitation Energies                               
+ 2:          aug-cc-pVDZ                                                    
+    ------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   8 :
+     "/Users/mothership/source/dalton/build/basis/aug-cc-pVDZ"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    2
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/Users/mothership/source/dalton/build/basis/aug-cc-pVDZ"
+
+
+                      SYMADD: Requested addition of symmetry
+                      --------------------------------------
+
+ Symmetry test threshold:  5.00E-06
+
+@   The molecule is centered at center of mass and rotated
+@   so principal axes of inertia are along coordinate axes.
+
+ Symmetry class found: C(2v)          
+
+ Symmetry Independent Centres             
+ ----------------------------
+O      8 :      0.00000000     0.00000000    -0.12429781  Isotope  1
+H_a    1 :      0.00000000     1.43441927     0.98634826  Isotope  1
+
+ The following symmetry elements were found:   X  Y     
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Full point group is: C(2v)          
+@    Represented as:      C2v
+
+@  * The irrep name for each symmetry:    1: A1     2: B1     3: B2     4: A2 
+
+   * The point group was generated by:
+
+      Reflection in the yz-plane
+      Reflection in the xz-plane
+
+   * Group multiplication table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+     E  |  E   C2z  Oxz  Oyz
+    C2z | C2z   E   Oyz  Oxz
+    Oxz | Oxz  Oyz   E   C2z
+    Oyz | Oyz  Oxz  C2z   E 
+
+   * Character table
+
+        |  E   C2z  Oxz  Oyz
+   -----+--------------------
+    A1  |   1    1    1    1
+    B1  |   1   -1    1   -1
+    B2  |   1   -1   -1    1
+    A2  |   1    1   -1   -1
+
+   * Direct product table
+
+        | A1   B1   B2   A2 
+   -----+--------------------
+    A1  | A1   B1   B2   A2 
+    B1  | B1   A1   A2   B2 
+    B2  | B2   A2   A1   B1 
+    A2  | A2   B2   B1   A1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H_a _1      1.007825
+                           H_a _2      1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000000
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    3
+
+  Basis set used is "aug-cc-pVDZ" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  O           1    8.0000    35    23      [10s5p2d|4s3p2d]                                   
+  H_          2    1.0000    11     9      [5s2p|3s2p]                                        
+  ----------------------------------------------------------------------
+  total:      3   10.0000    57    41
+  ----------------------------------------------------------------------
+  Spherical harmonic basis used.
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:    9
+  O       :     1  x   0.0000000000    2  y   0.0000000000    3  z  -0.1242978079
+  H_a / 1 :     4  x   0.0000000000    5  y   1.4344192745    6  z   0.9863482608
+  H_a / 2 :     7  x   0.0000000000    8  y  -1.4344192745    9  z   0.9863482608
+
+
+  Symmetry Coordinates
+  --------------------
+
+  Number of coordinates in each symmetry:     3    2    3    1
+
+  Symmetry  A1  ( 1)
+
+    1   O     z    3
+    2   H_a   y    [  5  -    8 ]/2
+    3   H_a   z    [  6  +    9 ]/2
+
+  Symmetry  B1  ( 2)
+
+    4   O     x    1
+    5   H_a   x    [  4  +    7 ]/2
+
+  Symmetry  B2  ( 3)
+
+    6   O     y    2
+    7   H_a   y    [  5  +    8 ]/2
+    8   H_a   z    [  6  -    9 ]/2
+
+  Symmetry  A2  ( 4)
+
+    9   H_a   x    [  4  -    7 ]/2
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H_a _1      H_a _2
+            ------      ------      ------
+ O     :    0.000000
+ H_a _1:    0.960000    0.000000
+ H_a _2:    0.960000    1.518124    0.000000
+
+
+  Max    interatomic separation is    1.5181 Angstrom (    2.8688 Bohr)
+  between atoms    3 and    2, "H_a _2" and "H_a _1".
+
+  Min HX interatomic separation is    0.9600 Angstrom (    1.8141 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H_a _1     O            0.960000
+  bond distance:  H_a _2     O            0.960000
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H_a _1     O          H_a _2       104.500
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.618334          0.000000    1.000000    0.000000
+   IB       1.161367          0.000000    0.000000    1.000000
+   IC       1.779702          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+         817323.2278         435158.6129         283968.3823 MHz
+           27.262968           14.515329            9.472166 cm-1
+
+
+@  Nuclear repulsion energy :    9.168193298678 Hartree
+
+
+  Symmetry Orbitals
+  -----------------
+
+  Number of orbitals in each symmetry:          18    7   12    4
+
+
+  Symmetry  A1 ( 1)
+
+    1     O        1s         1
+    2     O        1s         2
+    3     O        1s         3
+    4     O        1s         4
+    5     O        2pz        7
+    6     O        2pz       10
+    7     O        2pz       13
+    8     O        3d0       16
+    9     O        3d2+      18
+   10     O        3d0       21
+   11     O        3d2+      23
+   12     H_a      1s        24 +   25
+   13     H_a      1s        26 +   27
+   14     H_a      1s        28 +   29
+   15     H_a      2py       32 -   33
+   16     H_a      2pz       34 +   35
+   17     H_a      2py       38 -   39
+   18     H_a      2pz       40 +   41
+
+
+  Symmetry  B1 ( 2)
+
+   19     O        2px        5
+   20     O        2px        8
+   21     O        2px       11
+   22     O        3d1+      17
+   23     O        3d1+      22
+   24     H_a      2px       30 +   31
+   25     H_a      2px       36 +   37
+
+
+  Symmetry  B2 ( 3)
+
+   26     O        2py        6
+   27     O        2py        9
+   28     O        2py       12
+   29     O        3d1-      15
+   30     O        3d1-      20
+   31     H_a      1s        24 -   25
+   32     H_a      1s        26 -   27
+   33     H_a      1s        28 -   29
+   34     H_a      2py       32 +   33
+   35     H_a      2pz       34 -   35
+   36     H_a      2py       38 +   39
+   37     H_a      2pz       40 -   41
+
+
+  Symmetry  A2 ( 4)
+
+   38     O        3d2-      14
+   39     O        3d2-      19
+   40     H_a      2px       30 -   31
+   41     H_a      2px       36 -   37
+
+  Symmetries of electric field:  B1 (2)  B2 (3)  A1 (1)
+
+  Symmetries of magnetic field:  B2 (3)  B1 (2)  A2 (4)
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+ - Using defaults, no **INTEGRALS input found
+
+ Default print level:        1
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000     -0.000000000000
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000     -0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000     -0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z      0.97831406         2.48662615         8.29449200
+
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:       91307 ( 24.6% )
+ HERMIT - Megabytes written:                              1.051
+
+  Total CPU  time used in HERMIT:   0.05 seconds
+  Total wall time used in HERMIT:   0.05 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          F
+     Using EHT  model:          T
+     Number of Huckel orbitals each symmetry:    4    1    2    0
+
+ Huckel EHT eigenvalues for symmetry :  1
+          -20.705363      -1.505185      -0.670646      -0.293056
+
+ Huckel EHT eigenvalues for symmetry :  2
+           -0.616200
+
+ Huckel EHT eigenvalues for symmetry :  3
+           -0.731248      -0.258203
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:45 2020
+     Host name              : Spinor.local                            
+
+ Title lines from ".mol" input file:
+              h2o Vertical Excitation Energies                               
+              aug-cc-pVDZ                                                    
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, closed shell Hartree-Fock calculation.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EHT   " input option
+
+     Wave function specification
+     ============================
+@    Wave function type        --- HF ---
+@    Number of closed shell electrons          10
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 4 (point group: C2v)
+@    Reference state symmetry                   1 (irrep name : A1 )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1    2    3    4
+@                                          |  A1   B1   B2   A2 
+                                       --- |  ---  ---  ---  ---
+@    Total number of orbitals           41 |   18    7   12    4
+@    Number of basis functions          41 |   18    7   12    4
+
+      ** Automatic occupation of RHF orbitals **
+
+      -- Initial occupation of symmetries is determined from extended Huckel guess.           
+      -- Initial occupation of symmetries is :
+@    Occupied SCF orbitals               5 |    3    1    1    0
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-08
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Automatic occupation of symmetries with  10 electrons.
+
+ Iter     Total energy    Error norm  Delta(E)    SCF occupation
+ -----------------------------------------------------------------------------
+
+Calculating AOSUPINT
+     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
+      Threshold for discarding integrals :  1.00D-12 )
+@  1  -75.8102596604       2.34D+00  -7.58D+01     3   1   1   0
+      Virial theorem: -V/T =      1.997267
+@    MULPOP   O      -0.37; H_a _1  0.19; H_a _2  0.19; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+ -----------------------------------------------------------------------------
+@  2  -76.0271360239       4.00D-01  -2.17D-01     3   1   1   0
+      Virial theorem: -V/T =      2.002087
+@    MULPOP   O      -0.25; H_a _1  0.13; H_a _2  0.13; 
+   2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
+ -----------------------------------------------------------------------------
+@  3  -76.0399858155       1.05D-01  -1.28D-02     3   1   1   0
+      Virial theorem: -V/T =      2.001912
+@    MULPOP   O      -0.28; H_a _1  0.14; H_a _2  0.14; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+@  4  -76.0412080720       1.68D-02  -1.22D-03     3   1   1   0
+      Virial theorem: -V/T =      2.001537
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@  5  -76.0412528442       5.45D-03  -4.48D-05     3   1   1   0
+      Virial theorem: -V/T =      2.001685
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@  6  -76.0412561515       2.37D-03  -3.31D-06     3   1   1   0
+      Virial theorem: -V/T =      2.001600
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@  7  -76.0412566743       3.34D-04  -5.23D-07     3   1   1   0
+      Virial theorem: -V/T =      2.001644
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@  8  -76.0412566935       5.96D-05  -1.93D-08     3   1   1   0
+      Virial theorem: -V/T =      2.001644
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@  9  -76.0412566941       1.02D-05  -5.56D-10     3   1   1   0
+      Virial theorem: -V/T =      2.001645
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@ 10  -76.0412566941       2.38D-06  -1.58D-11     3   1   1   0
+      Virial theorem: -V/T =      2.001645
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@ 11  -76.0412566941       4.03D-07  -1.05D-12     3   1   1   0
+      Virial theorem: -V/T =      2.001645
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@ 12  -76.0412566941       4.40D-08  -2.84D-14     3   1   1   0
+      Virial theorem: -V/T =      2.001645
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@ 13  -76.0412566941       1.08D-08   1.42D-14     3   1   1   0
+      Virial theorem: -V/T =      2.001645
+@    MULPOP   O      -0.30; H_a _1  0.15; H_a _2  0.15; 
+ -----------------------------------------------------------------------------
+@ 14  -76.0412566941       3.34D-09  -2.84D-14     3   1   1   0
+
+@ *** DIIS converged in  14 iterations !
+@     Converged SCF energy, gradient:    -76.041256694113    3.34D-09
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Only the 20 lowest virtual orbital energies printed in each symmetry.
+
+ Number of electrons :   10
+ Orbital occupations :    3    1    1    0
+
+ Sym       Hartree-Fock orbital energies
+
+1 A1    -20.57773210    -1.35521933    -0.58513737     0.03538945     0.17403946
+          0.22245134     0.33110463     0.40367385     0.64794858     0.92897534
+          1.11539588     1.30687303     1.58293628     2.36704131     2.62236381
+          2.96589421     3.68978669     4.02374255
+
+2 B1     -0.50921594     0.19681240     0.43339068     1.10124500     1.48234933
+          2.10733544     3.67286440
+
+3 B2     -0.71775554     0.05791464     0.23152429     0.29001431     0.53881336
+          0.65810118     0.81055627     1.46624825     2.00155297     2.47734238
+          2.71425528     4.30326795
+
+4 A2      0.38560556     1.14864606     2.00998759     3.70244216
+
+    E(LUMO) :     0.03538945 au (symmetry 1)
+  - E(HOMO) :    -0.50921594 au (symmetry 2)
+  ------------------------------------------
+    gap     :     0.54460538 au
+
+ --- Writing SIRIFC interface file
+
+ CPU and wall time for SCF :       0.022       0.024
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A1  in C2v )
+@    Total charge of molecule:    0
+
+@    Final HF energy:             -76.041256694113                 
+@    Nuclear repulsion:             9.168193298678
+@    Electronic energy:           -85.209449992791
+
+@    Final gradient norm:           0.000000003337
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:45 2020
+     Host name              : Spinor.local                            
+
+File label for MO orbitals:  15Sep20   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s     1.0010  -0.0059  -0.0014   0.0039  -0.0300  -0.0231   0.0128
+   2 O   :1s     0.0043   0.8816  -0.2981  -0.1041  -0.1615  -0.3614   0.0144
+   3 O   :1s    -0.0071  -0.1282  -0.1470  -0.1615   0.4573   0.2035  -0.2356
+   4 O   :1s    -0.0045   0.0580  -0.0763  -1.5586   4.1038   2.8352  -4.3551
+   5 O   :2pz    0.0024   0.1137   0.7995  -0.0868  -0.2590  -0.0773  -0.1323
+   6 O   :2pz   -0.0026  -0.0705  -0.0436  -0.0919   0.1113   0.2051  -0.1756
+   7 O   :2pz   -0.0007   0.0113   0.0391  -0.2141   1.9175  -0.5065  -0.5924
+   8 O   :3d0    0.0000   0.0027   0.0146  -0.0026  -0.0115   0.0075  -0.0248
+   9 O   :3d2+  -0.0001  -0.0068  -0.0044   0.0001   0.0030  -0.0036  -0.0249
+  10 O   :3d0    0.0000  -0.0057   0.0161   0.0016   0.0395  -0.0423   0.0863
+  11 O   :3d2+   0.0003   0.0196   0.0114   0.0104  -0.0483  -0.0311   0.1044
+  12 H_a :1s     0.0006   0.3488   0.3605   0.0327  -0.0231   0.0726   0.1922
+  13 H_a :1s     0.0033  -0.2007  -0.1224   0.4614  -1.7600  -0.4798   2.2577
+  14 H_a :1s     0.0003  -0.0020   0.0036   0.8363  -0.6252  -0.6755   0.2553
+  15 H_a :2py    0.0004  -0.0370  -0.0308   0.0045   0.0338   0.0196  -0.0095
+  16 H_a :2pz    0.0003  -0.0224  -0.0009   0.0023   0.0237   0.0111  -0.0296
+  17 H_a :2py   -0.0012   0.0049  -0.0020  -0.0830   0.3307   0.4281   0.3711
+  18 H_a :2pz   -0.0010   0.0079   0.0132  -0.0773   0.1522   0.4795  -0.4657
+
+    Orbital         8        9       10       11       12       13
+   1 O   :1s    -0.0007  -0.1037  -0.0861  -0.0076  -0.1053  -0.1772
+   2 O   :1s    -0.0290   0.0637  -0.3874   0.0337  -0.4180  -1.0024
+   3 O   :1s     0.0029   2.7662   1.2858   0.5528   1.8254   0.8524
+   4 O   :1s     4.3904   5.8703   4.7406   0.8887   3.2368  -1.5947
+   5 O   :2pz    0.2751   0.2901  -0.1190  -0.1951  -0.7713   1.0305
+   6 O   :2pz    0.6493   0.4694   0.3201   0.1841   1.4985  -2.1384
+   7 O   :2pz    1.8223   0.6932   1.2153  -0.4900   0.7251  -0.1942
+   8 O   :3d0   -0.0198   0.0093  -0.0001   0.0177   0.0060  -0.0030
+   9 O   :3d2+  -0.0102  -0.0083  -0.0387  -0.0213  -0.0954  -0.0437
+  10 O   :3d0    0.1041  -0.0014   0.1042  -1.1403   0.3381  -0.1443
+  11 O   :3d2+   0.0213   0.0494  -0.7428  -0.0635   0.7955   0.7494
+  12 H_a :1s    -0.1033  -0.2554   0.8433   0.1765   0.8390   1.4703
+  13 H_a :1s    -2.2868  -3.3424  -3.6776  -0.7343  -2.8578  -0.2927
+  14 H_a :1s    -0.2855  -0.5590  -0.2031  -0.0573  -0.1514   0.1589
+  15 H_a :2py    0.0486  -0.0067   0.1813   0.0922   0.3320   0.0759
+  16 H_a :2pz    0.0043   0.0017   0.0914   0.0007   0.1876  -0.0581
+  17 H_a :2py    0.3493   1.3347   0.1697  -0.0699   0.6611  -0.0169
+  18 H_a :2pz   -0.7017   1.1595   0.3074   0.6658   0.0948   0.2396
+
+ Molecular orbitals for symmetry species 2  (B1 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2px    0.9159   0.2544   0.2194   0.2782  -1.4313   0.0285   0.0679
+   2 O   :2px    0.0285   0.1293   0.5527  -0.0959   2.2697   0.7527  -0.1898
+   3 O   :2px    0.0689  -1.4419   1.1654   0.7262   0.1174  -0.1680  -0.3044
+   4 O   :3d1+   0.0139   0.0171  -0.0234  -0.0211   0.0020  -0.0628   1.1932
+   5 O   :3d1+   0.0192  -0.0582   0.0720   1.1236   0.3965   0.6904  -0.6647
+   6 H_a :2px    0.0261  -0.0093  -0.0013   0.0167  -0.0122  -0.9919  -0.1077
+   7 H_a :2px    0.0159   0.2828  -1.1979  -0.5828  -0.5598   0.0864   0.2954
+
+ Molecular orbitals for symmetry species 3  (B2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2py    0.7275  -0.0967  -0.2454   0.3252   0.1168   0.3951  -0.3859
+   2 O   :2py   -0.1414  -0.0939   0.3718   0.1209   0.0769   1.6140   0.5639
+   3 O   :2py    0.0193  -0.8293   3.1059   0.9084   1.9367   2.5055   1.2092
+   4 O   :3d1-   0.0286  -0.0011  -0.0087  -0.0161   0.0178   0.0255   0.0570
+   5 O   :3d1-  -0.0310  -0.0186   0.0984   0.0710  -0.0425   0.1059   0.7104
+   6 H_a :1s     0.5946  -0.0015  -0.1340  -0.2178   0.0554  -0.1960   0.7158
+   7 H_a :1s    -0.2168   0.5486  -2.5914  -0.8641   1.4184  -8.3071  -3.2599
+   8 H_a :1s    -0.0046   2.9598  -2.6957   0.2974  -0.7584  -1.4189  -0.2037
+   9 H_a :2py   -0.0260   0.0006   0.0388   0.0137   0.0226   0.0257   0.1294
+  10 H_a :2pz   -0.0346   0.0042   0.0221  -0.0004  -0.0236   0.0434   0.1587
+  11 H_a :2py   -0.0045  -0.1021   0.5911  -0.4332  -2.3178   3.1838   0.4864
+  12 H_a :2pz   -0.0012  -0.1287   0.5583  -0.4804   1.0422   1.6852  -0.0537
+
+    Orbital         8        9       10       11
+   1 O   :2py   -0.8636  -0.3815  -1.4101  -0.1873
+   2 O   :2py    2.3614   0.9247   2.8282  -3.5667
+   3 O   :2py    1.0340   0.9924   0.5464  -1.1108
+   4 O   :3d1-   0.1127  -0.0614  -0.0451   0.3734
+   5 O   :3d1-  -0.7659   0.6384   0.7441  -1.9206
+   6 H_a :1s     0.5817  -0.7545  -1.2933   3.6884
+   7 H_a :1s    -4.6865  -0.3846  -2.2291   2.2906
+   8 H_a :1s    -0.2409  -0.4450  -0.3899   0.3691
+   9 H_a :2py    0.2839   0.5300  -0.6533  -0.4177
+  10 H_a :2pz    0.3019  -0.6383  -0.2091  -0.6465
+  11 H_a :2py    1.2251  -0.3737   1.2523  -1.2081
+  12 H_a :2pz    1.0500   0.6214   0.6383  -0.5651
+
+ Molecular orbitals for symmetry species 4  (A2 )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4
+   1 O   :3d2-  -0.0393   0.0181  -0.0744   1.2056
+   2 O   :3d2-   0.1303  -1.2359   0.8643  -0.6895
+   3 H_a :2px   -0.0025  -0.0365  -0.9469  -0.1300
+   4 H_a :2px   -1.1384   0.7347   0.0875   0.3199
+
+  Total CPU  time used in SIRIUS :   0.03 seconds
+  Total wall time used in SIRIUS :   0.03 seconds
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:45 2020
+     Host name              : Spinor.local                            
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+        *****************************************************************
+        ******** Output from **PROPE input processing for ABACUS ********
+        *****************************************************************
+
+
+
+      SOPPA : Second Order Polarization Propagator Approximation
+
+
+
+ The following molecular properties will be calculated in this run:
+ ------------------------------------------------------------------
+
+ Default print level:        2
+
+      Dynamic electric dipole polarizability
+      No mass-velocity energy correction calculated
+      No Darwin energy correction calculated
+      Natural orbital connection is used
+      for perturbation dependent basis sets.
+      Linear response properties
+
+
+ Changes of defaults for *ABALNR:
+ --------------------------------
+
+ Number of frequencies          :   1
+ Frequencies                    :  0.000000
+ Print level                    :   2
+ Lin Resp convergence threshold :  5.00D-05
+ Max. Lin Resp iterations       :  60
+
+
+ Changes of defaults in SOPPA:
+ -----------------------------
+
+ AO integral driven RPA
+ Lanczos Iteration for RPA eigenproblem turned on  
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H_a _1      1.007825
+                           H_a _2      1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000000
+
+ Center of mass dipole origin  :    0.000000    0.000000   -0.000000
+
+ Center of mass gauge origin   :    0.000000    0.000000   -0.000000
+
+
+                 .------------------------------------------------.
+                 | Starting in Static Property Section (ABACUS) - |
+                 `------------------------------------------------'
+
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:45 2020
+     Host name              : Spinor.local                            
+
+
+                            **************************
+                            *** Output from TROINV ***
+                            **************************
+
+
+
+  Translational and rotational coordinates
+  ----------------------------------------
+
+
+  Symmetry  1
+
+        Translation along Z axis
+
+  Symmetry  2
+
+        Translation along X axis
+        Rotation around Y axis
+
+  Symmetry  3
+
+        Translation along Y axis
+        Rotation around X axis
+
+  Symmetry  4
+
+        Rotation around Z axis
+ RP_INIT: file SIRIFC is already opened with unit number  11
+ RP_INIT: file SIRIFC was closed again
+
+
+     #######################################################################
+     ################## Solving Linear Response Equations ##################
+     #######################################################################
+
+
+ Maximum number of trial vectors for each property is  3
+
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       1
+ p-h + h-p variables       :     124
+ -----------------------------------
+
+ -------------------------------------------------------------
+                   RPA iterations, Property ZDIPLEN 
+ -------------------------------------------------------------
+ Iteration Frequency    Property (au)   Residual    Converged
+ -------------------------------------------------------------
+      1    0.000000   0.73940804D+01     5.7065D-01       no
+      2    0.000000   0.80049893D+01     1.5134D-01       no
+      3    0.000000   0.80778957D+01     4.4651D-02       no
+      4    0.000000   0.80829484D+01     8.5568D-03       no
+      5    0.000000   0.80831268D+01     1.5416D-03       no
+      6    0.000000   0.80831320D+01     2.7324D-04       no
+      7    0.000000   0.80831320D+01     3.0831D-05      yes
+ -------------------------------------------------------------
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       2
+ p-h + h-p variables       :      74
+ -----------------------------------
+
+ -------------------------------------------------------------
+                   RPA iterations, Property XDIPLEN 
+ -------------------------------------------------------------
+ Iteration Frequency    Property (au)   Residual    Converged
+ -------------------------------------------------------------
+      1    0.000000   0.68926321D+01     3.8240D-01       no
+      2    0.000000   0.73086525D+01     1.0103D-01       no
+      3    0.000000   0.73345255D+01     1.8684D-02       no
+      4    0.000000   0.73355102D+01     3.9365D-03       no
+      5    0.000000   0.73355460D+01     7.8062D-04       no
+      6    0.000000   0.73355464D+01     1.1066D-04       no
+      7    0.000000   0.73355464D+01     8.3967D-06      yes
+ -------------------------------------------------------------
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       3
+ p-h + h-p variables       :     104
+ -----------------------------------
+
+ -------------------------------------------------------------
+                   RPA iterations, Property YDIPLEN 
+ -------------------------------------------------------------
+ Iteration Frequency    Property (au)   Residual    Converged
+ -------------------------------------------------------------
+      1    0.000000   0.86124285D+01     4.1493D-01       no
+      2    0.000000   0.90707154D+01     7.8466D-02       no
+      3    0.000000   0.90871146D+01     1.6364D-02       no
+      4    0.000000   0.90876720D+01     2.0626D-03       no
+      5    0.000000   0.90876819D+01     4.4751D-04       no
+      6    0.000000   0.90876821D+01     4.1937D-05      yes
+ -------------------------------------------------------------
+
+ |=====================================================| 
+ |     Memory statistics for AO-SOPPA subroutines      |
+ |=====================================================| 
+ |   Routine                  in Words         in MB   |
+ |-----------------------------------------------------| 
+ |  START                            0           0.0   |
+ |  SO_LNRABA.1                     42           0.0   |
+ |  SO_PRPINT                    13543           0.1   |
+ |=====================================================| 
+
+ |=====================================================| 
+ |           Timings for AO-SOPPA subroutines          |
+ |=====================================================| 
+ |   Routine            cpu time   of total        sum |
+ |-----------------------------------------------------| 
+ |   CC_AOFOCK           0:00:00     15.3 %     15.3 % |
+ |   CCRDAO              0:00:00     15.2 %     30.4 % |
+ |   SO_INIT             0:00:00     13.6 %     44.0 % |
+ |   SO_INCRED           0:00:00     12.7 %     56.7 % |
+ |   SO_ERES             0:00:00     10.5 %     67.2 % |
+ |   SO_OPTVEC           0:00:00      9.1 %     76.3 % |
+ |   SO_TRIAL2           0:00:00      8.5 %     84.8 % |
+ |   SO_GETMO            0:00:00      2.7 %     87.5 % |
+ |   SO_TRIAL1           0:00:00      1.4 %     88.9 % |
+ |   SO_ORTH_TRN         0:00:00      0.9 %     89.8 % |
+ |   SO_DENSAI           0:00:00      0.8 %     90.6 % |
+ |   SO_DIAG             0:00:00      0.6 %     91.2 % |
+ |   CC_FCKMO            0:00:00      0.4 %     91.6 % |
+ |   SO_REDEV            0:00:00      0.4 %     92.0 % |
+ |   SO_AODENS           0:00:00      0.3 %     92.2 % |
+ |   SO_ROPT             0:00:00      0.2 %     92.4 % |
+ |   SO_MOENERGY         0:00:00      0.2 %     92.6 % |
+ |   SO_BCKTR            0:00:00      0.2 %     92.7 % |
+ |   SO_TWOFOCK          0:00:00      0.1 %     92.8 % |
+ |   SO_ONEFOCK          0:00:00      0.0 %     92.8 % |
+ |-----------------------------------------------------| 
+ |  Total CPU time       0:00:00                       |
+ |=====================================================| 
+
+ |-----------------------------------------------------| 
+ |   SO_READ             0: 0: 0      2.0 %            |
+ |   SO_WRITE            0: 0: 0      3.1 %            |
+ |   SO_OPEN             0: 0: 0     17.8 %            |
+ |   SO_CLOSE            0: 0: 0     13.1 %            |
+ |-----------------------------------------------------| 
+
+ |=====================================================| 
+ |        Wall timings for AO-SOPPA subroutines        |
+ |=====================================================| 
+ |   Routine           wall time   of total       sum  |
+ |-----------------------------------------------------| 
+ |   SO_ERES             0:00:00     45.0 %     45.0 % |
+ |   SO_SRES             0:00:00      0.0 %     45.0 % |
+ |   SO_REDEV            0:00:00     25.0 %     70.0 % |
+ |   SO_TRIAL2           0:00:00      8.3 %     78.3 % |
+ |-----------------------------------------------------| 
+ |   Total wall time     0: 0: 0                       |
+ |=====================================================| 
+
+
+          ##############################################################
+          ################## BLOCK LANCZOS RPA SOLVER ##################
+          ##############################################################
+
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       1
+ p-h + h-p variables       :     124
+ -----------------------------------
+
+ =============================================================
+       Lanczos iterations, Property ZDIPLEN 
+ =============================================================
+
+  
+ After Lanczos iteration #      62:  Eigenvalues in Lanczos basis 
+ --------------------------------------------------------------------------
+ - EIGENVALUE NO.   1 - EIGENVALUE (au)   -23.775783 - Im part     0.000000
+ - EIGENVALUE NO.   2 - EIGENVALUE (au)   -23.386755 - Im part     0.000000
+ - EIGENVALUE NO.   3 - EIGENVALUE (au)   -22.915402 - Im part     0.000000
+ - EIGENVALUE NO.   4 - EIGENVALUE (au)   -22.528943 - Im part     0.000000
+ - EIGENVALUE NO.   5 - EIGENVALUE (au)   -22.433304 - Im part     0.000000
+ - EIGENVALUE NO.   6 - EIGENVALUE (au)   -21.564752 - Im part     0.000000
+ - EIGENVALUE NO.   7 - EIGENVALUE (au)   -21.277971 - Im part     0.000000
+ - EIGENVALUE NO.   8 - EIGENVALUE (au)   -21.180699 - Im part     0.000000
+ - EIGENVALUE NO.   9 - EIGENVALUE (au)   -21.069698 - Im part     0.000000
+ - EIGENVALUE NO.  10 - EIGENVALUE (au)   -20.848293 - Im part     0.000000
+ - EIGENVALUE NO.  11 - EIGENVALUE (au)   -20.657199 - Im part     0.000000
+ - EIGENVALUE NO.  12 - EIGENVALUE (au)   -20.611539 - Im part     0.000000
+ - EIGENVALUE NO.  13 - EIGENVALUE (au)   -20.521965 - Im part     0.000000
+ - EIGENVALUE NO.  14 - EIGENVALUE (au)   -20.453708 - Im part     0.000000
+ - EIGENVALUE NO.  15 - EIGENVALUE (au)   -20.269203 - Im part     0.000000
+ - EIGENVALUE NO.  16 - EIGENVALUE (au)    -4.795026 - Im part     0.000000
+ - EIGENVALUE NO.  17 - EIGENVALUE (au)    -4.493827 - Im part     0.000000
+ - EIGENVALUE NO.  18 - EIGENVALUE (au)    -4.453725 - Im part     0.000000
+ - EIGENVALUE NO.  19 - EIGENVALUE (au)    -4.040869 - Im part     0.000000
+ - EIGENVALUE NO.  20 - EIGENVALUE (au)    -3.828885 - Im part     0.000000
+ - EIGENVALUE NO.  21 - EIGENVALUE (au)    -3.788812 - Im part     0.000000
+ - EIGENVALUE NO.  22 - EIGENVALUE (au)    -3.594643 - Im part     0.000000
+ - EIGENVALUE NO.  23 - EIGENVALUE (au)    -3.488143 - Im part     0.000000
+ - EIGENVALUE NO.  24 - EIGENVALUE (au)    -3.296991 - Im part     0.000000
+ - EIGENVALUE NO.  25 - EIGENVALUE (au)    -3.084993 - Im part     0.000000
+ - EIGENVALUE NO.  26 - EIGENVALUE (au)    -2.989940 - Im part     0.000000
+ - EIGENVALUE NO.  27 - EIGENVALUE (au)    -2.749205 - Im part     0.000000
+ - EIGENVALUE NO.  28 - EIGENVALUE (au)    -2.714227 - Im part     0.000000
+ - EIGENVALUE NO.  29 - EIGENVALUE (au)    -2.546383 - Im part     0.000000
+ - EIGENVALUE NO.  30 - EIGENVALUE (au)    -2.469619 - Im part     0.000000
+ - EIGENVALUE NO.  31 - EIGENVALUE (au)    -2.303864 - Im part     0.000000
+ - EIGENVALUE NO.  32 - EIGENVALUE (au)    -2.218750 - Im part     0.000000
+ - EIGENVALUE NO.  33 - EIGENVALUE (au)    -2.207880 - Im part     0.000000
+ - EIGENVALUE NO.  34 - EIGENVALUE (au)    -2.066826 - Im part     0.000000
+ - EIGENVALUE NO.  35 - EIGENVALUE (au)    -1.927854 - Im part     0.000000
+ - EIGENVALUE NO.  36 - EIGENVALUE (au)    -1.902373 - Im part     0.000000
+ - EIGENVALUE NO.  37 - EIGENVALUE (au)    -1.733118 - Im part     0.000000
+ - EIGENVALUE NO.  38 - EIGENVALUE (au)    -1.696615 - Im part     0.000000
+ - EIGENVALUE NO.  39 - EIGENVALUE (au)    -1.598896 - Im part     0.000000
+ - EIGENVALUE NO.  40 - EIGENVALUE (au)    -1.469400 - Im part     0.000000
+ - EIGENVALUE NO.  41 - EIGENVALUE (au)    -1.459864 - Im part     0.000000
+ - EIGENVALUE NO.  42 - EIGENVALUE (au)    -1.407465 - Im part     0.000000
+ - EIGENVALUE NO.  43 - EIGENVALUE (au)    -1.358234 - Im part     0.000000
+ - EIGENVALUE NO.  44 - EIGENVALUE (au)    -1.334742 - Im part     0.000000
+ - EIGENVALUE NO.  45 - EIGENVALUE (au)    -1.296226 - Im part     0.000000
+ - EIGENVALUE NO.  46 - EIGENVALUE (au)    -1.219721 - Im part     0.000000
+ - EIGENVALUE NO.  47 - EIGENVALUE (au)    -1.185198 - Im part     0.000000
+ - EIGENVALUE NO.  48 - EIGENVALUE (au)    -1.164332 - Im part     0.000000
+ - EIGENVALUE NO.  49 - EIGENVALUE (au)    -1.137736 - Im part     0.000000
+ - EIGENVALUE NO.  50 - EIGENVALUE (au)    -1.094126 - Im part     0.000000
+ - EIGENVALUE NO.  51 - EIGENVALUE (au)    -0.997219 - Im part     0.000000
+ - EIGENVALUE NO.  52 - EIGENVALUE (au)    -0.927141 - Im part     0.000000
+ - EIGENVALUE NO.  53 - EIGENVALUE (au)    -0.779174 - Im part     0.000000
+ - EIGENVALUE NO.  54 - EIGENVALUE (au)    -0.747792 - Im part     0.000000
+ - EIGENVALUE NO.  55 - EIGENVALUE (au)    -0.701722 - Im part     0.000000
+ - EIGENVALUE NO.  56 - EIGENVALUE (au)    -0.661301 - Im part     0.000000
+ - EIGENVALUE NO.  57 - EIGENVALUE (au)    -0.644679 - Im part     0.000000
+ - EIGENVALUE NO.  58 - EIGENVALUE (au)    -0.610895 - Im part     0.000000
+ - EIGENVALUE NO.  59 - EIGENVALUE (au)    -0.563095 - Im part     0.000000
+ - EIGENVALUE NO.  60 - EIGENVALUE (au)    -0.538548 - Im part     0.000000
+ - EIGENVALUE NO.  61 - EIGENVALUE (au)    -0.470185 - Im part     0.000000
+ - EIGENVALUE NO.  62 - EIGENVALUE (au)    -0.402648 - Im part     0.000000
+ - EIGENVALUE NO.  63 - EIGENVALUE (au)     0.402648 - Im part     0.000000
+ - EIGENVALUE NO.  64 - EIGENVALUE (au)     0.470185 - Im part     0.000000
+ - EIGENVALUE NO.  65 - EIGENVALUE (au)     0.538548 - Im part     0.000000
+ - EIGENVALUE NO.  66 - EIGENVALUE (au)     0.563095 - Im part     0.000000
+ - EIGENVALUE NO.  67 - EIGENVALUE (au)     0.610895 - Im part     0.000000
+ - EIGENVALUE NO.  68 - EIGENVALUE (au)     0.644679 - Im part     0.000000
+ - EIGENVALUE NO.  69 - EIGENVALUE (au)     0.661301 - Im part     0.000000
+ - EIGENVALUE NO.  70 - EIGENVALUE (au)     0.701722 - Im part     0.000000
+ - EIGENVALUE NO.  71 - EIGENVALUE (au)     0.747792 - Im part     0.000000
+ - EIGENVALUE NO.  72 - EIGENVALUE (au)     0.779174 - Im part     0.000000
+ - EIGENVALUE NO.  73 - EIGENVALUE (au)     0.927141 - Im part     0.000000
+ - EIGENVALUE NO.  74 - EIGENVALUE (au)     0.997219 - Im part     0.000000
+ - EIGENVALUE NO.  75 - EIGENVALUE (au)     1.094126 - Im part     0.000000
+ - EIGENVALUE NO.  76 - EIGENVALUE (au)     1.137736 - Im part     0.000000
+ - EIGENVALUE NO.  77 - EIGENVALUE (au)     1.164332 - Im part     0.000000
+ - EIGENVALUE NO.  78 - EIGENVALUE (au)     1.185198 - Im part     0.000000
+ - EIGENVALUE NO.  79 - EIGENVALUE (au)     1.219721 - Im part     0.000000
+ - EIGENVALUE NO.  80 - EIGENVALUE (au)     1.296226 - Im part     0.000000
+ - EIGENVALUE NO.  81 - EIGENVALUE (au)     1.334742 - Im part     0.000000
+ - EIGENVALUE NO.  82 - EIGENVALUE (au)     1.358234 - Im part     0.000000
+ - EIGENVALUE NO.  83 - EIGENVALUE (au)     1.407465 - Im part     0.000000
+ - EIGENVALUE NO.  84 - EIGENVALUE (au)     1.459864 - Im part     0.000000
+ - EIGENVALUE NO.  85 - EIGENVALUE (au)     1.469400 - Im part     0.000000
+ - EIGENVALUE NO.  86 - EIGENVALUE (au)     1.598896 - Im part     0.000000
+ - EIGENVALUE NO.  87 - EIGENVALUE (au)     1.696615 - Im part     0.000000
+ - EIGENVALUE NO.  88 - EIGENVALUE (au)     1.733118 - Im part     0.000000
+ - EIGENVALUE NO.  89 - EIGENVALUE (au)     1.902373 - Im part     0.000000
+ - EIGENVALUE NO.  90 - EIGENVALUE (au)     1.927854 - Im part     0.000000
+ - EIGENVALUE NO.  91 - EIGENVALUE (au)     2.066826 - Im part     0.000000
+ - EIGENVALUE NO.  92 - EIGENVALUE (au)     2.207880 - Im part     0.000000
+ - EIGENVALUE NO.  93 - EIGENVALUE (au)     2.218750 - Im part     0.000000
+ - EIGENVALUE NO.  94 - EIGENVALUE (au)     2.303864 - Im part     0.000000
+ - EIGENVALUE NO.  95 - EIGENVALUE (au)     2.469619 - Im part     0.000000
+ - EIGENVALUE NO.  96 - EIGENVALUE (au)     2.546383 - Im part     0.000000
+ - EIGENVALUE NO.  97 - EIGENVALUE (au)     2.714227 - Im part     0.000000
+ - EIGENVALUE NO.  98 - EIGENVALUE (au)     2.749205 - Im part     0.000000
+ - EIGENVALUE NO.  99 - EIGENVALUE (au)     2.989940 - Im part     0.000000
+ - EIGENVALUE NO. 100 - EIGENVALUE (au)     3.084993 - Im part     0.000000
+ - EIGENVALUE NO. 101 - EIGENVALUE (au)     3.296991 - Im part     0.000000
+ - EIGENVALUE NO. 102 - EIGENVALUE (au)     3.488143 - Im part     0.000000
+ - EIGENVALUE NO. 103 - EIGENVALUE (au)     3.594643 - Im part     0.000000
+ - EIGENVALUE NO. 104 - EIGENVALUE (au)     3.788812 - Im part     0.000000
+ - EIGENVALUE NO. 105 - EIGENVALUE (au)     3.828885 - Im part     0.000000
+ - EIGENVALUE NO. 106 - EIGENVALUE (au)     4.040869 - Im part     0.000000
+ - EIGENVALUE NO. 107 - EIGENVALUE (au)     4.453725 - Im part     0.000000
+ - EIGENVALUE NO. 108 - EIGENVALUE (au)     4.493827 - Im part     0.000000
+ - EIGENVALUE NO. 109 - EIGENVALUE (au)     4.795026 - Im part     0.000000
+ - EIGENVALUE NO. 110 - EIGENVALUE (au)    20.269203 - Im part     0.000000
+ - EIGENVALUE NO. 111 - EIGENVALUE (au)    20.453708 - Im part     0.000000
+ - EIGENVALUE NO. 112 - EIGENVALUE (au)    20.521965 - Im part     0.000000
+ - EIGENVALUE NO. 113 - EIGENVALUE (au)    20.611539 - Im part     0.000000
+ - EIGENVALUE NO. 114 - EIGENVALUE (au)    20.657199 - Im part     0.000000
+ - EIGENVALUE NO. 115 - EIGENVALUE (au)    20.848293 - Im part     0.000000
+ - EIGENVALUE NO. 116 - EIGENVALUE (au)    21.069698 - Im part     0.000000
+ - EIGENVALUE NO. 117 - EIGENVALUE (au)    21.180699 - Im part     0.000000
+ - EIGENVALUE NO. 118 - EIGENVALUE (au)    21.277971 - Im part     0.000000
+ - EIGENVALUE NO. 119 - EIGENVALUE (au)    21.564752 - Im part     0.000000
+ - EIGENVALUE NO. 120 - EIGENVALUE (au)    22.433304 - Im part     0.000000
+ - EIGENVALUE NO. 121 - EIGENVALUE (au)    22.528943 - Im part     0.000000
+ - EIGENVALUE NO. 122 - EIGENVALUE (au)    22.915402 - Im part     0.000000
+ - EIGENVALUE NO. 123 - EIGENVALUE (au)    23.386755 - Im part     0.000000
+ - EIGENVALUE NO. 124 - EIGENVALUE (au)    23.775783 - Im part     0.000000
+  
+
+
+                   +--------------------------------------------+
+                   ! Transition strengths in RP_LANCZOS_TRS_STR !
+                   +--------------------------------------------+
+
+       1     0.3850551606
+       2     0.0006198561
+       3     0.0336903242
+       4     0.0758819957
+       5     0.0027541701
+       6     0.2435693498
+       7     0.0342074286
+       8     0.0006162477
+       9     0.2709399635
+      10     0.7106549369
+      11     0.0476668695
+      12     0.0048407448
+      13     0.0375299003
+      14     0.0017366005
+      15     0.0220240126
+      16     0.0968111747
+      17     0.1199312063
+      18     0.1077245319
+      19     0.0436317811
+      20     0.8091258620
+      21     0.0223449523
+      22     0.0118369657
+      23     0.0033882524
+      24     0.0816865207
+      25     0.0092058107
+      26     0.0121846883
+      27     0.0010284375
+      28     0.0028838333
+      29     0.0115006450
+      30     0.0010741511
+      31     0.0424538030
+      32     0.0100322706
+      33     0.0133884954
+      34     0.0200541074
+      35     0.0003702859
+      36     0.0031806079
+      37     0.0047875003
+      38     0.0002419039
+      39     0.0027158012
+      40     0.0066421646
+      41     0.0082977358
+      42     0.0923779871
+      43     0.0018439302
+      44     0.0011176327
+      45     0.0001692221
+      46     0.0256902791
+      47     0.0030352189
+      48     0.0027963801
+      49     0.0012445103
+      50     0.0000039532
+      51     0.0001136636
+      52     0.0004082010
+      53     0.0004603499
+      54     0.0000061546
+      55     0.0015550040
+      56     0.0024862104
+      57     0.0005517179
+      58     0.0004083482
+      59     0.0005369139
+      60     0.0001532602
+      61     0.0000082771
+      62     0.0004967342
+
+
+                   +--------------------------------------------+
+                   ! Oscillator strengths in RP_LANCZOS_OSC_STR !
+                   +--------------------------------------------+
+
+       1      0.103361
+       2      0.000194
+       3      0.012096
+       4      0.028486
+       5      0.001122
+       6      0.104683
+       7      0.015081
+       8      0.000288
+       9      0.135071
+      10      0.369149
+      11      0.029463
+      12      0.003218
+      13      0.027375
+      14      0.001317
+      15      0.017096
+      16      0.076494
+      17      0.097522
+      18      0.093090
+      19      0.038825
+      20      0.732655
+      21      0.020966
+      22      0.011520
+      23      0.003319
+      24      0.087072
+      25      0.010412
+      26      0.014078
+      27      0.001304
+      28      0.003706
+      29      0.015847
+      30      0.001581
+      31      0.062796
+      32      0.015409
+      33      0.022043
+      34      0.034044
+      35      0.000670
+      36      0.005829
+      37      0.009543
+      38      0.000498
+      39      0.005969
+      40      0.015446
+      41      0.019885
+      42      0.233335
+      43      0.004707
+      44      0.003011
+      45      0.000502
+      46      0.076965
+      47      0.009703
+      48      0.037787
+      49      0.016970
+      50      0.000054
+      51      0.001562
+      52      0.005622
+      53      0.006398
+      54      0.000086
+      55      0.021957
+      56      0.035268
+      57      0.007932
+      58      0.006107
+      59      0.008064
+      60      0.002341
+      61      0.000129
+      62      0.007873
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       2
+ p-h + h-p variables       :      74
+ -----------------------------------
+
+ =============================================================
+       Lanczos iterations, Property XDIPLEN 
+ =============================================================
+
+  
+ After Lanczos iteration #      37:  Eigenvalues in Lanczos basis 
+ --------------------------------------------------------------------------
+ - EIGENVALUE NO.   1 - EIGENVALUE (au)   -23.363304 - Im part     0.000000
+ - EIGENVALUE NO.   2 - EIGENVALUE (au)   -22.230688 - Im part     0.000000
+ - EIGENVALUE NO.   3 - EIGENVALUE (au)   -21.305977 - Im part     0.000000
+ - EIGENVALUE NO.   4 - EIGENVALUE (au)   -21.134458 - Im part     0.000000
+ - EIGENVALUE NO.   5 - EIGENVALUE (au)   -20.691112 - Im part     0.000000
+ - EIGENVALUE NO.   6 - EIGENVALUE (au)   -20.440159 - Im part     0.000000
+ - EIGENVALUE NO.   7 - EIGENVALUE (au)    -4.436171 - Im part     0.000000
+ - EIGENVALUE NO.   8 - EIGENVALUE (au)    -4.048197 - Im part     0.000000
+ - EIGENVALUE NO.   9 - EIGENVALUE (au)    -3.869093 - Im part     0.000000
+ - EIGENVALUE NO.  10 - EIGENVALUE (au)    -3.699301 - Im part     0.000000
+ - EIGENVALUE NO.  11 - EIGENVALUE (au)    -3.586289 - Im part     0.000000
+ - EIGENVALUE NO.  12 - EIGENVALUE (au)    -3.028154 - Im part     0.000000
+ - EIGENVALUE NO.  13 - EIGENVALUE (au)    -3.006380 - Im part     0.000000
+ - EIGENVALUE NO.  14 - EIGENVALUE (au)    -2.626291 - Im part     0.000000
+ - EIGENVALUE NO.  15 - EIGENVALUE (au)    -2.464030 - Im part     0.000000
+ - EIGENVALUE NO.  16 - EIGENVALUE (au)    -2.314319 - Im part     0.000000
+ - EIGENVALUE NO.  17 - EIGENVALUE (au)    -2.310318 - Im part     0.000000
+ - EIGENVALUE NO.  18 - EIGENVALUE (au)    -2.282035 - Im part     0.000000
+ - EIGENVALUE NO.  19 - EIGENVALUE (au)    -2.049374 - Im part     0.000000
+ - EIGENVALUE NO.  20 - EIGENVALUE (au)    -1.623534 - Im part     0.000000
+ - EIGENVALUE NO.  21 - EIGENVALUE (au)    -1.561283 - Im part     0.000000
+ - EIGENVALUE NO.  22 - EIGENVALUE (au)    -1.500344 - Im part     0.000000
+ - EIGENVALUE NO.  23 - EIGENVALUE (au)    -1.491033 - Im part     0.000000
+ - EIGENVALUE NO.  24 - EIGENVALUE (au)    -1.371380 - Im part     0.000000
+ - EIGENVALUE NO.  25 - EIGENVALUE (au)    -1.314446 - Im part     0.000000
+ - EIGENVALUE NO.  26 - EIGENVALUE (au)    -1.281656 - Im part     0.000000
+ - EIGENVALUE NO.  27 - EIGENVALUE (au)    -1.209866 - Im part     0.000000
+ - EIGENVALUE NO.  28 - EIGENVALUE (au)    -1.082874 - Im part     0.000000
+ - EIGENVALUE NO.  29 - EIGENVALUE (au)    -0.843703 - Im part     0.000000
+ - EIGENVALUE NO.  30 - EIGENVALUE (au)    -0.823781 - Im part     0.000000
+ - EIGENVALUE NO.  31 - EIGENVALUE (au)    -0.739618 - Im part     0.000000
+ - EIGENVALUE NO.  32 - EIGENVALUE (au)    -0.625691 - Im part     0.000000
+ - EIGENVALUE NO.  33 - EIGENVALUE (au)    -0.566875 - Im part     0.000000
+ - EIGENVALUE NO.  34 - EIGENVALUE (au)    -0.527851 - Im part     0.000000
+ - EIGENVALUE NO.  35 - EIGENVALUE (au)    -0.486080 - Im part     0.000000
+ - EIGENVALUE NO.  36 - EIGENVALUE (au)    -0.444590 - Im part     0.000000
+ - EIGENVALUE NO.  37 - EIGENVALUE (au)    -0.316738 - Im part     0.000000
+ - EIGENVALUE NO.  38 - EIGENVALUE (au)     0.316738 - Im part     0.000000
+ - EIGENVALUE NO.  39 - EIGENVALUE (au)     0.444590 - Im part     0.000000
+ - EIGENVALUE NO.  40 - EIGENVALUE (au)     0.486080 - Im part     0.000000
+ - EIGENVALUE NO.  41 - EIGENVALUE (au)     0.527851 - Im part     0.000000
+ - EIGENVALUE NO.  42 - EIGENVALUE (au)     0.566875 - Im part     0.000000
+ - EIGENVALUE NO.  43 - EIGENVALUE (au)     0.625691 - Im part     0.000000
+ - EIGENVALUE NO.  44 - EIGENVALUE (au)     0.739618 - Im part     0.000000
+ - EIGENVALUE NO.  45 - EIGENVALUE (au)     0.823781 - Im part     0.000000
+ - EIGENVALUE NO.  46 - EIGENVALUE (au)     0.843703 - Im part     0.000000
+ - EIGENVALUE NO.  47 - EIGENVALUE (au)     1.082874 - Im part     0.000000
+ - EIGENVALUE NO.  48 - EIGENVALUE (au)     1.209866 - Im part     0.000000
+ - EIGENVALUE NO.  49 - EIGENVALUE (au)     1.281656 - Im part     0.000000
+ - EIGENVALUE NO.  50 - EIGENVALUE (au)     1.314446 - Im part     0.000000
+ - EIGENVALUE NO.  51 - EIGENVALUE (au)     1.371380 - Im part     0.000000
+ - EIGENVALUE NO.  52 - EIGENVALUE (au)     1.491033 - Im part     0.000000
+ - EIGENVALUE NO.  53 - EIGENVALUE (au)     1.500344 - Im part     0.000000
+ - EIGENVALUE NO.  54 - EIGENVALUE (au)     1.561283 - Im part     0.000000
+ - EIGENVALUE NO.  55 - EIGENVALUE (au)     1.623534 - Im part     0.000000
+ - EIGENVALUE NO.  56 - EIGENVALUE (au)     2.049374 - Im part     0.000000
+ - EIGENVALUE NO.  57 - EIGENVALUE (au)     2.282035 - Im part     0.000000
+ - EIGENVALUE NO.  58 - EIGENVALUE (au)     2.310318 - Im part     0.000000
+ - EIGENVALUE NO.  59 - EIGENVALUE (au)     2.314319 - Im part     0.000000
+ - EIGENVALUE NO.  60 - EIGENVALUE (au)     2.464030 - Im part     0.000000
+ - EIGENVALUE NO.  61 - EIGENVALUE (au)     2.626291 - Im part     0.000000
+ - EIGENVALUE NO.  62 - EIGENVALUE (au)     3.006380 - Im part     0.000000
+ - EIGENVALUE NO.  63 - EIGENVALUE (au)     3.028154 - Im part     0.000000
+ - EIGENVALUE NO.  64 - EIGENVALUE (au)     3.586289 - Im part     0.000000
+ - EIGENVALUE NO.  65 - EIGENVALUE (au)     3.699301 - Im part     0.000000
+ - EIGENVALUE NO.  66 - EIGENVALUE (au)     3.869093 - Im part     0.000000
+ - EIGENVALUE NO.  67 - EIGENVALUE (au)     4.048197 - Im part     0.000000
+ - EIGENVALUE NO.  68 - EIGENVALUE (au)     4.436171 - Im part     0.000000
+ - EIGENVALUE NO.  69 - EIGENVALUE (au)    20.440159 - Im part     0.000000
+ - EIGENVALUE NO.  70 - EIGENVALUE (au)    20.691112 - Im part     0.000000
+ - EIGENVALUE NO.  71 - EIGENVALUE (au)    21.134458 - Im part     0.000000
+ - EIGENVALUE NO.  72 - EIGENVALUE (au)    21.305977 - Im part     0.000000
+ - EIGENVALUE NO.  73 - EIGENVALUE (au)    22.230688 - Im part     0.000000
+ - EIGENVALUE NO.  74 - EIGENVALUE (au)    23.363304 - Im part     0.000000
+  
+
+
+                   +--------------------------------------------+
+                   ! Transition strengths in RP_LANCZOS_TRS_STR !
+                   +--------------------------------------------+
+
+       1     0.2342158969
+       2     0.0187462715
+       3     0.0017347676
+       4     0.0045692415
+       5     0.2185503253
+       6     0.2388990201
+       7     0.2674072742
+       8     0.2534615423
+       9     0.1761819167
+      10     0.3108301669
+      11     0.0367803458
+      12     0.3456191242
+      13     0.0841635413
+      14     0.0484121318
+      15     0.1798831196
+      16     0.2958657969
+      17     0.0400507318
+      18     0.1590282093
+      19     0.0045496737
+      20     0.0483652474
+      21     0.0576926859
+      22     0.0022182246
+      23     0.0027913080
+      24     0.0018912232
+      25     0.0324753812
+      26     0.0160933154
+      27     0.0011494221
+      28     0.0224395136
+      29     0.0169472194
+      30     0.0878801110
+      31     0.0018616315
+      32     0.0024370673
+      33     0.0004322669
+      34     0.0028700554
+      35     0.0031926294
+      36     0.0000033275
+      37     0.0000152032
+
+
+                   +--------------------------------------------+
+                   ! Oscillator strengths in RP_LANCZOS_OSC_STR !
+                   +--------------------------------------------+
+
+       1      0.049457
+       2      0.005556
+       3      0.000562
+       4      0.001608
+       5      0.082594
+       6      0.099651
+       7      0.131853
+       8      0.139198
+       9      0.099097
+      10      0.224393
+      11      0.029666
+      12      0.295310
+      13      0.073752
+      14      0.044261
+      15      0.178808
+      16      0.295934
+      17      0.041687
+      18      0.172125
+      19      0.006216
+      20      0.073581
+      21      0.088859
+      22      0.003422
+      23      0.004585
+      24      0.003311
+      25      0.065089
+      26      0.032489
+      27      0.002748
+      28      0.055340
+      29      0.043714
+      30      0.237171
+      31      0.005506
+      32      0.033209
+      33      0.005963
+      34      0.040438
+      35      0.045348
+      36      0.000049
+      37      0.000237
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       3
+ p-h + h-p variables       :     104
+ -----------------------------------
+
+ =============================================================
+       Lanczos iterations, Property YDIPLEN 
+ =============================================================
+
+  
+ After Lanczos iteration #      52:  Eigenvalues in Lanczos basis 
+ --------------------------------------------------------------------------
+ - EIGENVALUE NO.   1 - EIGENVALUE (au)   -24.043617 - Im part     0.000000
+ - EIGENVALUE NO.   2 - EIGENVALUE (au)   -22.737938 - Im part     0.000000
+ - EIGENVALUE NO.   3 - EIGENVALUE (au)   -22.385158 - Im part     0.000000
+ - EIGENVALUE NO.   4 - EIGENVALUE (au)   -22.096456 - Im part     0.000000
+ - EIGENVALUE NO.   5 - EIGENVALUE (au)   -21.451461 - Im part     0.000000
+ - EIGENVALUE NO.   6 - EIGENVALUE (au)   -20.977943 - Im part     0.000000
+ - EIGENVALUE NO.   7 - EIGENVALUE (au)   -20.877922 - Im part     0.000000
+ - EIGENVALUE NO.   8 - EIGENVALUE (au)   -20.824380 - Im part     0.000000
+ - EIGENVALUE NO.   9 - EIGENVALUE (au)   -20.586833 - Im part     0.000000
+ - EIGENVALUE NO.  10 - EIGENVALUE (au)   -20.511088 - Im part     0.000000
+ - EIGENVALUE NO.  11 - EIGENVALUE (au)   -20.293630 - Im part     0.000000
+ - EIGENVALUE NO.  12 - EIGENVALUE (au)    -5.068984 - Im part     0.000000
+ - EIGENVALUE NO.  13 - EIGENVALUE (au)    -4.362249 - Im part     0.000000
+ - EIGENVALUE NO.  14 - EIGENVALUE (au)    -4.202626 - Im part     0.000000
+ - EIGENVALUE NO.  15 - EIGENVALUE (au)    -3.851528 - Im part     0.000000
+ - EIGENVALUE NO.  16 - EIGENVALUE (au)    -3.654436 - Im part     0.000000
+ - EIGENVALUE NO.  17 - EIGENVALUE (au)    -3.597137 - Im part     0.000000
+ - EIGENVALUE NO.  18 - EIGENVALUE (au)    -3.319117 - Im part     0.000000
+ - EIGENVALUE NO.  19 - EIGENVALUE (au)    -3.216553 - Im part     0.000000
+ - EIGENVALUE NO.  20 - EIGENVALUE (au)    -2.929389 - Im part     0.000000
+ - EIGENVALUE NO.  21 - EIGENVALUE (au)    -2.862155 - Im part     0.000000
+ - EIGENVALUE NO.  22 - EIGENVALUE (au)    -2.818133 - Im part     0.000000
+ - EIGENVALUE NO.  23 - EIGENVALUE (au)    -2.653280 - Im part     0.000000
+ - EIGENVALUE NO.  24 - EIGENVALUE (au)    -2.580736 - Im part     0.000000
+ - EIGENVALUE NO.  25 - EIGENVALUE (au)    -2.384066 - Im part     0.000000
+ - EIGENVALUE NO.  26 - EIGENVALUE (au)    -2.181163 - Im part     0.000000
+ - EIGENVALUE NO.  27 - EIGENVALUE (au)    -2.107654 - Im part     0.000000
+ - EIGENVALUE NO.  28 - EIGENVALUE (au)    -1.853335 - Im part     0.000000
+ - EIGENVALUE NO.  29 - EIGENVALUE (au)    -1.802356 - Im part     0.000000
+ - EIGENVALUE NO.  30 - EIGENVALUE (au)    -1.709184 - Im part     0.000000
+ - EIGENVALUE NO.  31 - EIGENVALUE (au)    -1.636173 - Im part     0.000000
+ - EIGENVALUE NO.  32 - EIGENVALUE (au)    -1.611038 - Im part     0.000000
+ - EIGENVALUE NO.  33 - EIGENVALUE (au)    -1.591727 - Im part     0.000000
+ - EIGENVALUE NO.  34 - EIGENVALUE (au)    -1.453724 - Im part     0.000000
+ - EIGENVALUE NO.  35 - EIGENVALUE (au)    -1.382249 - Im part     0.000000
+ - EIGENVALUE NO.  36 - EIGENVALUE (au)    -1.337650 - Im part     0.000000
+ - EIGENVALUE NO.  37 - EIGENVALUE (au)    -1.321797 - Im part     0.000000
+ - EIGENVALUE NO.  38 - EIGENVALUE (au)    -1.253460 - Im part     0.000000
+ - EIGENVALUE NO.  39 - EIGENVALUE (au)    -1.230894 - Im part     0.000000
+ - EIGENVALUE NO.  40 - EIGENVALUE (au)    -1.055882 - Im part     0.000000
+ - EIGENVALUE NO.  41 - EIGENVALUE (au)    -1.044469 - Im part     0.000000
+ - EIGENVALUE NO.  42 - EIGENVALUE (au)    -0.942272 - Im part     0.000000
+ - EIGENVALUE NO.  43 - EIGENVALUE (au)    -0.870436 - Im part     0.000000
+ - EIGENVALUE NO.  44 - EIGENVALUE (au)    -0.830860 - Im part     0.000000
+ - EIGENVALUE NO.  45 - EIGENVALUE (au)    -0.780503 - Im part     0.000000
+ - EIGENVALUE NO.  46 - EIGENVALUE (au)    -0.703095 - Im part     0.000000
+ - EIGENVALUE NO.  47 - EIGENVALUE (au)    -0.659988 - Im part     0.000000
+ - EIGENVALUE NO.  48 - EIGENVALUE (au)    -0.626576 - Im part     0.000000
+ - EIGENVALUE NO.  49 - EIGENVALUE (au)    -0.607283 - Im part     0.000000
+ - EIGENVALUE NO.  50 - EIGENVALUE (au)    -0.576278 - Im part     0.000000
+ - EIGENVALUE NO.  51 - EIGENVALUE (au)    -0.525449 - Im part     0.000000
+ - EIGENVALUE NO.  52 - EIGENVALUE (au)    -0.462973 - Im part     0.000000
+ - EIGENVALUE NO.  53 - EIGENVALUE (au)     0.462973 - Im part     0.000000
+ - EIGENVALUE NO.  54 - EIGENVALUE (au)     0.525449 - Im part     0.000000
+ - EIGENVALUE NO.  55 - EIGENVALUE (au)     0.576278 - Im part     0.000000
+ - EIGENVALUE NO.  56 - EIGENVALUE (au)     0.607283 - Im part     0.000000
+ - EIGENVALUE NO.  57 - EIGENVALUE (au)     0.626576 - Im part     0.000000
+ - EIGENVALUE NO.  58 - EIGENVALUE (au)     0.659988 - Im part     0.000000
+ - EIGENVALUE NO.  59 - EIGENVALUE (au)     0.703095 - Im part     0.000000
+ - EIGENVALUE NO.  60 - EIGENVALUE (au)     0.780503 - Im part     0.000000
+ - EIGENVALUE NO.  61 - EIGENVALUE (au)     0.830860 - Im part     0.000000
+ - EIGENVALUE NO.  62 - EIGENVALUE (au)     0.870436 - Im part     0.000000
+ - EIGENVALUE NO.  63 - EIGENVALUE (au)     0.942272 - Im part     0.000000
+ - EIGENVALUE NO.  64 - EIGENVALUE (au)     1.044469 - Im part     0.000000
+ - EIGENVALUE NO.  65 - EIGENVALUE (au)     1.055882 - Im part     0.000000
+ - EIGENVALUE NO.  66 - EIGENVALUE (au)     1.230894 - Im part     0.000000
+ - EIGENVALUE NO.  67 - EIGENVALUE (au)     1.253460 - Im part     0.000000
+ - EIGENVALUE NO.  68 - EIGENVALUE (au)     1.321797 - Im part     0.000000
+ - EIGENVALUE NO.  69 - EIGENVALUE (au)     1.337650 - Im part     0.000000
+ - EIGENVALUE NO.  70 - EIGENVALUE (au)     1.382249 - Im part     0.000000
+ - EIGENVALUE NO.  71 - EIGENVALUE (au)     1.453724 - Im part     0.000000
+ - EIGENVALUE NO.  72 - EIGENVALUE (au)     1.591727 - Im part     0.000000
+ - EIGENVALUE NO.  73 - EIGENVALUE (au)     1.611038 - Im part     0.000000
+ - EIGENVALUE NO.  74 - EIGENVALUE (au)     1.636173 - Im part     0.000000
+ - EIGENVALUE NO.  75 - EIGENVALUE (au)     1.709184 - Im part     0.000000
+ - EIGENVALUE NO.  76 - EIGENVALUE (au)     1.802356 - Im part     0.000000
+ - EIGENVALUE NO.  77 - EIGENVALUE (au)     1.853335 - Im part     0.000000
+ - EIGENVALUE NO.  78 - EIGENVALUE (au)     2.107654 - Im part     0.000000
+ - EIGENVALUE NO.  79 - EIGENVALUE (au)     2.181163 - Im part     0.000000
+ - EIGENVALUE NO.  80 - EIGENVALUE (au)     2.384066 - Im part     0.000000
+ - EIGENVALUE NO.  81 - EIGENVALUE (au)     2.580736 - Im part     0.000000
+ - EIGENVALUE NO.  82 - EIGENVALUE (au)     2.653280 - Im part     0.000000
+ - EIGENVALUE NO.  83 - EIGENVALUE (au)     2.818133 - Im part     0.000000
+ - EIGENVALUE NO.  84 - EIGENVALUE (au)     2.862155 - Im part     0.000000
+ - EIGENVALUE NO.  85 - EIGENVALUE (au)     2.929389 - Im part     0.000000
+ - EIGENVALUE NO.  86 - EIGENVALUE (au)     3.216553 - Im part     0.000000
+ - EIGENVALUE NO.  87 - EIGENVALUE (au)     3.319117 - Im part     0.000000
+ - EIGENVALUE NO.  88 - EIGENVALUE (au)     3.597137 - Im part     0.000000
+ - EIGENVALUE NO.  89 - EIGENVALUE (au)     3.654436 - Im part     0.000000
+ - EIGENVALUE NO.  90 - EIGENVALUE (au)     3.851528 - Im part     0.000000
+ - EIGENVALUE NO.  91 - EIGENVALUE (au)     4.202626 - Im part     0.000000
+ - EIGENVALUE NO.  92 - EIGENVALUE (au)     4.362249 - Im part     0.000000
+ - EIGENVALUE NO.  93 - EIGENVALUE (au)     5.068984 - Im part     0.000000
+ - EIGENVALUE NO.  94 - EIGENVALUE (au)    20.293630 - Im part     0.000000
+ - EIGENVALUE NO.  95 - EIGENVALUE (au)    20.511088 - Im part     0.000000
+ - EIGENVALUE NO.  96 - EIGENVALUE (au)    20.586833 - Im part     0.000000
+ - EIGENVALUE NO.  97 - EIGENVALUE (au)    20.824380 - Im part     0.000000
+ - EIGENVALUE NO.  98 - EIGENVALUE (au)    20.877922 - Im part     0.000000
+ - EIGENVALUE NO.  99 - EIGENVALUE (au)    20.977943 - Im part     0.000000
+ - EIGENVALUE NO. 100 - EIGENVALUE (au)    21.451461 - Im part     0.000000
+ - EIGENVALUE NO. 101 - EIGENVALUE (au)    22.096456 - Im part     0.000000
+ - EIGENVALUE NO. 102 - EIGENVALUE (au)    22.385158 - Im part     0.000000
+ - EIGENVALUE NO. 103 - EIGENVALUE (au)    22.737938 - Im part     0.000000
+ - EIGENVALUE NO. 104 - EIGENVALUE (au)    24.043617 - Im part     0.000000
+  
+
+
+                   +--------------------------------------------+
+                   ! Transition strengths in RP_LANCZOS_TRS_STR !
+                   +--------------------------------------------+
+
+       1     0.0927347754
+       2     0.4231689031
+       3     0.1279664961
+       4     0.0621283913
+       5     0.5280506935
+       6     0.0040008477
+       7     0.4959455215
+       8     0.4660813924
+       9     0.0092178465
+      10     0.0088446269
+      11     0.0024841679
+      12     0.0001966098
+      13     0.2433710347
+      14     0.0277216591
+      15     0.0293901420
+      16     0.4502839616
+      17     0.0591437326
+      18     0.0041964531
+      19     0.2982378275
+      20     0.0222161753
+      21     0.1450671854
+      22     0.0014045266
+      23     0.0000714724
+      24     0.0079282552
+      25     0.0053971667
+      26     0.0027297314
+      27     0.0000870702
+      28     0.0181751695
+      29     0.0000042842
+      30     0.0061771389
+      31     0.0181017768
+      32     0.0139141952
+      33     0.0009171842
+      34     0.0003360042
+      35     0.0129879933
+      36     0.0000770074
+      37     0.0361570124
+      38     0.0193057422
+      39     0.0128186250
+      40     0.0479982305
+      41     0.0008126972
+      42     0.0051868190
+      43     0.0003368753
+      44     0.0000705740
+      45     0.0010298538
+      46     0.0003057926
+      47     0.0000021660
+      48     0.0027332088
+      49     0.0005342391
+      50     0.0024163551
+      51     0.0000064728
+      52     0.0004397835
+
+
+                   +--------------------------------------------+
+                   ! Oscillator strengths in RP_LANCZOS_OSC_STR !
+                   +--------------------------------------------+
+
+       1      0.028622
+       2      0.148236
+       3      0.049163
+       4      0.025153
+       5      0.220576
+       6      0.001760
+       7      0.232465
+       8      0.242519
+       9      0.005106
+      10      0.005132
+      11      0.001561
+      12      0.000137
+      13      0.171314
+      14      0.022748
+      15      0.024560
+      16      0.396789
+      17      0.052742
+      18      0.003867
+      19      0.289037
+      20      0.023575
+      21      0.155806
+      22      0.001532
+      23      0.000081
+      24      0.009526
+      25      0.006669
+      26      0.003836
+      27      0.000127
+      28      0.028887
+      29      0.000007
+      30      0.010926
+      31      0.034009
+      32      0.026550
+      33      0.001791
+      34      0.000721
+      35      0.028739
+      36      0.000185
+      37      0.088089
+      38      0.049571
+      39      0.035915
+      40      0.139587
+      41      0.002746
+      42      0.070173
+      43      0.004606
+      44      0.000969
+      45      0.014297
+      46      0.004256
+      47      0.000030
+      48      0.039088
+      49      0.007870
+      50      0.036060
+      51      0.000098
+      52      0.007049
+
+
+                 +------------------------------------------------+
+                 ! Oscillator Strength Sum Rules in Lanczos basis !
+                 +------------------------------------------------+
+
+
+
+                  S(0) Sum Rule : Dipole Length Approximation in a.u.
+     xx - component          yy - component          zz - component          total
+
+     8.138361                8.264575                8.204693                8.202543
+
+
+                  L(0) Sum Rule : Dipole Length Approximation in a.u.
+     xx - component          yy - component          zz - component          total
+
+     3.893953                3.275023                3.586125                3.585033
+
+
+                  I(0) Sum Rule : Dipole Length Approximation in eV
+    xx - component          yy - component          zz - component          total
+
+    43.908343               40.443574               42.128212               42.127431
+
+ |=====================================================| 
+ |     Memory statistics for AO-SOPPA subroutines      |
+ |=====================================================| 
+ |   Routine                  in Words         in MB   |
+ |-----------------------------------------------------| 
+ |  START                            0           0.0   |
+ |  RP_LANCZOS_DRV.1                51           0.0   |
+ |  RP_LANCZOS.1                   298           0.0   |
+ |  RP_LANCZOS_TRIAL               361           0.0   |
+ |  SO_GETGP.1                     895           0.0   |
+ |  SO_ONEPMO                     1429           0.0   |
+ |  SO_GETMO                      1963           0.0   |
+ |  SO_ONEP                       3111           0.0   |
+ |  SO_ERES.2                     3212           0.0   |
+ |  SO_AODENS                     3267           0.0   |
+ |  SO_ERES.3                    13148           0.1   |
+ |  RP_LANCZOS.1                 46674           0.4   |
+ |  RP_LANCZOS.1                 46798           0.4   |
+ |=====================================================| 
+
+ |=====================================================| 
+ |           Timings for AO-SOPPA subroutines          |
+ |=====================================================| 
+ |   Routine            cpu time   of total        sum |
+ |-----------------------------------------------------| 
+ |   CC_AOFOCK           0:00:00     25.0 %     25.0 % |
+ |   CCRDAO              0:00:00     22.5 %     47.5 % |
+ |   SO_REDEV            0:00:00     18.0 %     65.5 % |
+ |   SO_ERES             0:00:00     17.5 %     83.0 % |
+ |   SO_GETMO            0:00:00      4.3 %     87.4 % |
+ |   SO_INIT             0:00:00      2.4 %     89.7 % |
+ |   SO_DENSAI           0:00:00      1.3 %     91.0 % |
+ |   CC_FCKMO            0:00:00      0.7 %     91.7 % |
+ |   SO_AODENS           0:00:00      0.4 %     92.1 % |
+ |   SO_TRIAL1           0:00:00      0.3 %     92.4 % |
+ |   SO_BCKTR            0:00:00      0.2 %     92.6 % |
+ |   SO_TWOFOCK          0:00:00      0.1 %     92.7 % |
+ |   SO_ONEFOCK          0:00:00      0.1 %     92.8 % |
+ |   SO_MOENERGY         0:00:00      0.0 %     92.9 % |
+ |-----------------------------------------------------| 
+ |  Total CPU time       0:00:00                       |
+ |=====================================================| 
+
+ |-----------------------------------------------------| 
+ |   SO_READ             0: 0: 0      5.0 %            |
+ |   SO_WRITE            0: 0: 0      2.7 %            |
+ |   SO_OPEN             0: 0: 0     10.1 %            |
+ |   SO_CLOSE            0: 0: 0     10.2 %            |
+ |-----------------------------------------------------| 
+
+ |=====================================================| 
+ |        Wall timings for AO-SOPPA subroutines        |
+ |=====================================================| 
+ |   Routine           wall time   of total       sum  |
+ |-----------------------------------------------------| 
+ |   SO_ERES             0:00:00     72.3 %     72.3 % |
+ |   SO_SRES             0:00:00      0.0 %     72.3 % |
+ |   SO_REDEV            0:00:00     18.2 %     90.5 % |
+ |   SO_TRIAL2           0:00:00      0.0 %     90.5 % |
+ |-----------------------------------------------------| 
+ |   Total wall time     0: 0: 0                       |
+ |=====================================================| 
+
+
+   ***************************************************************************
+   ************************ FINAL RESULTS from ABACUS ************************
+   ***************************************************************************
+
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:46 2020
+     Host name              : Spinor.local                            
+
+
+                             Molecular geometry (au)
+                             -----------------------
+
+ O          0.0000000000            0.0000000000           -0.1242978079
+ H_a _1     0.0000000000            1.4344192745            0.9863482608
+ H_a _2     0.0000000000           -1.4344192745            0.9863482608
+
+
+
+
+
+                        Molecular wave function and energy
+                        ----------------------------------
+
+     Spatial symmetry   1 ( A1  )
+     Spin multiplicity  1
+     2 * M_S            0
+     State number       1
+     Total charge       0
+
+     Total energy        -76.0412566941 au (Hartrees)
+                         -2069.18785171 eV
+                           -199646.2887 kJ/mol
+                            -47716.6082 kcal/mol
+
+
+ ======================================================================
+                              RPA results:
+ ----------------------------------------------------------------------
+
+
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ++++++++++++++++++ Frequency dependent polarizabilities ++++++++++++++++++
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+          Polarizability tensor for frequency     0.000000 au
+          ----------------------------------------------------
+                            Ex             Ey             Ez
+
+                Ex    7.335546       0.000000       0.000000    
+                Ey    0.000000       9.087682       0.000000    
+                Ez    0.000000       0.000000       8.083132    
+
+Isotropic polarizability:   8.168787    
+
+
+ ======================================================================
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H_a _1      H_a _2
+            ------      ------      ------
+ O     :    0.000000
+ H_a _1:    0.960000    0.000000
+ H_a _2:    0.960000    1.518124    0.000000
+
+
+  Max    interatomic separation is    1.5181 Angstrom (    2.8688 Bohr)
+  between atoms    3 and    2, "H_a _2" and "H_a _1".
+
+  Min HX interatomic separation is    0.9600 Angstrom (    1.8141 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H_a _1     O            0.960000
+  bond distance:  H_a _2     O            0.960000
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H_a _1     O          H_a _2       104.500
+
+
+  Total CPU  time used in ABACUS:   0.34 seconds
+  Total wall time used in ABACUS:   0.35 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Static Property Section (ABACUS) - |
+                   `-------------------------------------------'
+
+  Total CPU  time used in DALTON:   0.43 seconds
+  Total wall time used in DALTON:   0.43 seconds
+
+ 
+     Date and time (Darwin) : Tue Sep 15 16:23:46 2020
+     Host name              : Spinor.local                            

@@ -34,11 +34,13 @@ C     options concerning these calculations.
 C     
 C   
         use so_info, only: AOSOP, AOSOC, AORPA, AOHRP, AOCC2, DCRPA,
-     &                     DCHRP, SDCHR
+     &                     DCHRP, SDCHR, SOP_LANCZOS,
+     &                     SOP_LANC_CHAIN_LEN, SOP_LANC_CONV_CHECK,
+     &                     SOP_LANC_CONV_NR
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-      PARAMETER (NTABLE = 18)
+      PARAMETER (NTABLE = 20)
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       LOGICAL LNEXC2
 #include "abainf.h"
@@ -49,9 +51,9 @@ C
       CALL QENTER('SOPINP')
 C
       DATA TABLE /'.HIRPA ', '.SOPW4 ', '.DIRECT', '.AORPA ', '.RPA(D)',
-     &            '.HRPAD', '.AOSOP ', '.AOSOC ', '.SOPCHK', '.AOTEST',
+     &            '.HRPAD ', '.AOSOP ', '.AOSOC ', '.SOPCHK', '.AOTEST',
      &            '.NSAVMX', '.NEXCI2', '.THREX2', '.AOHRP ', '.AOCC2 ',
-     &            '.HRPA(D', '.DCRPA ', '.SHRPA('/
+     &            '.HRPA(D', '.DCRPA ', '.SHRPA(', '.LANCZO', '.LANCON'/
 C
 C------------------
 C     Set defaults.
@@ -84,7 +86,8 @@ C
          ICHANG = ICHANG + 1
          DO 200 I = 1, NTABLE
             IF (TABLE(I) .EQ. WORD) THEN
-               GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18), I
+               GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
+     &              , I
             END IF
   200    CONTINUE
          IF (WORD .EQ. '.OPTION') THEN
@@ -161,6 +164,15 @@ C           NSYM is set to 8 since NSYM has not yet been set !!
             SDCHR  = .TRUE.
             AOHRP  = .TRUE.
             GOTO 100
+   19    CONTINUE !.LANCZO
+            SOP_LANCZOS  = .TRUE.
+            READ (LUCMD,*) SOP_LANC_CHAIN_LEN
+            GOTO 100
+   20    CONTINUE !.LANCON
+            SOP_LANC_CONV_CHECK  = .TRUE.
+            READ (LUCMD,*) SOP_LANC_CONV_NR
+            GOTO 100
+
       ELSE IF (PROMPT .EQ. '*') THEN
          GOTO 300
       ELSE
@@ -179,6 +191,8 @@ C
      &       ' The W4 term of SOPPA is calculated explicitly'
          IF (AORPA)  WRITE(LUPRI,'(A)')
      &       ' AO integral driven RPA'
+         IF (SOP_LANCZOS) WRITE(LUPRI,'(A)')
+     &       ' Lanczos Iteration for RPA eigenproblem turned on  '
          IF (DCRPA)  WRITE(LUPRI,'(A/,A,A,/,A)')
      &       ' AO integral driven Double corrected RPA :',
      &       '    (Ref.: O. Christiansen, K. L. Bak, H. Koch and',
@@ -215,6 +229,18 @@ Cend-Pi
          IF (LNEXC2) WRITE(LUPRI,'(A,8I5,A/A,1P,E9.2)')
      &       ' The last : ',(NEXCI2(I),I=1,8),' excitation energies',
      &       '    are only converged to : ',THREX2
+         IF (SOP_LANC_CONV_CHECK) THEN
+            IF (.NOT. SOP_LANCZOS) THEN
+                WRITE(LUPRI,'(2A)') 'Inconsistent input. Remember to ',
+     &          'request Lanczos.'
+                SOP_LANCZOS = .TRUE.
+            END IF
+            IF (SOP_LANC_CONV_NR .LE. 0) THEN
+                WRITE(LUPRI,'(2A)') 'Input for Lanczos intermediate',
+     &          'diagonalizations needs to be a positive integer'
+                CALL QUIT('.LANCON needs to be a positive integer')
+            END IF
+         END IF
       END IF
 C     
       CALL QEXIT('SOPINP')

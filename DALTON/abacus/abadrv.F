@@ -19,7 +19,8 @@ C
 C  /* Deck abactl */
       SUBROUTINE ABACTL(WORK,LWORK)
 C
-      USE SO_INFO, ONLY: SO_NUM_ACTIVE_MODELS, SO_ANY_ACTIVE_MODELS
+      USE SO_INFO, ONLY: SO_NUM_ACTIVE_MODELS, SO_ANY_ACTIVE_MODELS,
+     &                   SOP_LANCZOS
       use pelib_interface, only: use_pelib
 C
 #include "implicit.h"
@@ -398,6 +399,15 @@ C              Is this for vibrational stuff?
       END IF
       CALL GETTIM(TIMLNR,TIMDUM)
       TIMLNR = TIMLNR - TIMSTR
+C
+C
+C     **********************************************
+C     ***** RPA Lanczos mean excitation energy *****
+C     **********************************************
+C
+      IF (SOP_LANCZOS) THEN
+          CALL RP_LANCZOS_DRV(WORK(KLST1),LWRK1)
+      END IF
 C
 C     ***************************************
 C     ***** Sum Over States Calculation *****

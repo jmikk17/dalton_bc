@@ -667,6 +667,17 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/soppa/dc_lrnsl.F
     DALTON/soppa/rp_charge.F
     DALTON/soppa/rp_init.F
+    DALTON/soppa/rp_lanczos.F
+    DALTON/soppa/rp_lanczos_biorth.F
+    DALTON/soppa/rp_lanczos_biorth_eigv.F
+    DALTON/soppa/rp_lanczos_drv.F
+    DALTON/soppa/rp_lanczos_eigv.F
+    DALTON/soppa/rp_lanczos_eigv_block.F
+    DALTON/soppa/rp_lanczos_iter.F
+    DALTON/soppa/rp_lanczos_mean_exc.F
+    DALTON/soppa/rp_lanczos_osc_str.F
+    DALTON/soppa/rp_lanczos_trs_str.F
+    DALTON/soppa/rp_lanczos_trialvec.F
     DALTON/soppa/rp_newtrial.F
     DALTON/soppa/rp_orth_trn.F
     DALTON/soppa/rp_trial1.F

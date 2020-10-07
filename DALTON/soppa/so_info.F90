@@ -72,6 +72,12 @@ module so_info
    ! Whether to save vectors for Seller's algorithm
    logical :: sop_use_seller = .false.
 
+   ! Whether to run Lanczos iteration for RPA eigenproblem 
+   logical :: sop_lanczos = .false.   
+   logical :: sop_lanc_conv_check = .false.   
+   integer :: sop_lanc_chain_len = 0
+   integer :: sop_lanc_conv_nr = 5
+
    interface so_has_doubles
       module procedure so_has_doubles_name, so_has_doubles_num
    end interface
