@@ -355,6 +355,13 @@ C    *                MELMN3,NOSYM,ICSF,NCNSM,REFSPC)
            LCINSV = 0 
            LACISV = 0 
            LBCISV = 0 
+           IF (NCDET .LE. 0) THEN
+              WRITE(LUPRI,*) 'WARNING, no determinants in symmetry',
+     &           ICSYM
+              WRITE(LUPRI,*) '# of determinants in all symmetries:',
+     &           NDTASM(1:NSYM)
+              IPRCIX = 5
+           END IF
          END IF
 C
 C        LACISV and LBCISV contain information about core
