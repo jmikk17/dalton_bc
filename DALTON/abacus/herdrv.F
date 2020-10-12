@@ -197,7 +197,7 @@ C
       IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
      &     .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
          WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'//
-     &   ' are postoned until they are needed.'
+     &   ' are postponed until they are needed.'
          RUNTWO = .FALSE.
       END IF
       END IF
