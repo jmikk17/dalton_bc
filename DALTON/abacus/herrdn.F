@@ -3804,8 +3804,8 @@ C
      &       N .LE. NUCIND) THEN
             NFLOAT = NFLOAT + NDEG
          ELSE IF (NFLOAT .GT. 0) THEN
-            CALL QUIT(
-     &      'All nuclei MUST come before floating orbital centers')
+!           CALL QUIT(
+!    &      'All nuclei MUST come before floating orbital centers')
 !           So 1:NATOMS run over the real nuclei
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN

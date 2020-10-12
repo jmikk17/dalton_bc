@@ -31,7 +31,7 @@
   - Added support for AMOEBA potential
   - Added pseudopotentials for avoiding electron spill-out
     - A. M. Khah, P. Reinholdt, J. M. H. Olsen, J. Kongsted and C. Hattig, J. Chem. Theory. Comput. 16, 1373-1381 (2020)
-  - Added easy ghost atom input in the molecule input
+- Added easy ghost atom input in the molecule input (P. Reinholdt & H. J. Aa. Jensen)
 
 ### Other new features added
 - Added the possiblitly to create the Dalton pdf manual with "make pdfmanual" in the build directory. (H. J. Aa. Jensen)
