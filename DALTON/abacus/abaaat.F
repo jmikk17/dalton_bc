@@ -1042,7 +1042,10 @@ C           ==========================================
 C
             IREC = 2*(3*NUCDEP + XS) - 1
             CALL READDX(LURDI,IREC,IRAT*NVARPT,RSPVCB)
-            IF (NODIFC) CALL READDX(LUAAT,IREC,IRAT*N2ORBX,DB)
+            IF (NODIFC) THEN 
+                IREC = 3*NUCDEP + XS
+                CALL READDX(LUAAT,IREC,IRAT*N2ORBX,DB)
+            END IF
             IF (IPRINT. GT. 10) THEN
                CALL HEADER('B-field response vector read in AATOP1',-1)
                CALL PRKAP(NWOPPT,RSPVCB(1+NCONST),DP1,LUPRI)
