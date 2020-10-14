@@ -297,6 +297,7 @@ c
 #include "sphtrm.h"
 #include "symmet.h"
 #include "xyzpow.h"
+#include "dftacb.h"
 c     sync inforb:
 !     write(lupri,*) ' arrived in DFTINTBCAST', mytid
       CALL MPI_Bcast(muld2h, 8*8,   my_MPI_INTEGER,
@@ -399,7 +400,14 @@ c     /DFTASC/
       CALL MPI_Bcast(DOMPOLE,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
       CALL MPI_Bcast(DOLB94,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
       CALL MPI_Bcast(LDFTVXC,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(LLIN,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(LTAN,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(LGRAC,1,my_MPI_LOGICAL,0,MPI_COMM_WORLD,ie)
 
+      CALL MPI_Bcast(DFTIPTA,1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(DFTIPTB,1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(DFTBR1, 1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
+      CALL MPI_Bcast(DFTBR2, 1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
 c     sync functionals, too.
 !     print *, 'calling DFTFUNCSYNC for mytid',mytid, NODTOT
       CALL DFTFUNCSYNC(MYNUM,NODTOT)
