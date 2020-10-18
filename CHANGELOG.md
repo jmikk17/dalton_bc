@@ -13,10 +13,9 @@
   Useful for avoiding (near-)triplet-instability problems, for example in DFT or MC-srDFT calculations of spin-spin coupling constants. (H. J. Aa. Jensen)
 - Added ".TDA SINGLET" keyword for invoking Tamm-Dancoff approximation for singlet response properties under \*\*PROPERTIES. (H. J. Aa. Jensen)
 - Added the ability in QFITLIB to fit up to and including quadrupoles (C. Steinmann)
-- Added the core-valence separation ( CVS ) approximation for CC calculations of core-excited states (S. Coriani et al.)
+- Added the core-valence separation (CVS) approximation for CC calculations of core-excited states (S. Coriani et al.)
 - Added the possibility to calculate triplet-triplet excited state moments using the EOM-CC approximation (R. Faber)
 - New features available through the Polarizable Embedding library (PElib)
-  - Calculate and print oscillator strengths based on .EEF dipole transition moments. (N. List, J. M. H. Olsen, H. J. Aa. Jensen)
   - Polarizable density embedding (PDE) model (use -DENABLE\_PDE=ON during setup to enable it [requires HDF5])
     - J. M. H. Olsen, C. Steinmann, K. Ruud, and J. Kongsted, J. Phys. Chem. A 119, 5344 (2015)
     - P. Reinholdt, J. Kongsted, and J. M. H. Olsen, J. Phys. Chem. Lett. 8, 5949 (2017)
@@ -27,8 +26,9 @@
     - N. M. Thellamurege and H. Li, J. Chem. Phys. 137, 246101 (2012)
   - Enabled cubic response for PE-HF/DFT and PDE-HF/DFT
     - J. M. H. Olsen and J. Kongsted, Adv. Quantum Chem. 61, 107 (2011)
-  - Effective external field (EEF) can now be used for all dipole properties
-  - Added support for AMOEBA potential
+  - Effective external field (EEF) can now be enabled for all dipole properties
+    - N. H. List, H. J. Aa. Jensen, and J. Kongsted. Phys. Chem. Chem. Phys. 18, 10070 (2016)
+  - Added support for AMOEBA potential (P. Reinholdt & J. M. H. Olsen)
   - Added pseudopotentials for avoiding electron spill-out
     - A. M. Khah, P. Reinholdt, J. M. H. Olsen, J. Kongsted and C. Hattig, J. Chem. Theory. Comput. 16, 1373-1381 (2020)
 - Added easy ghost atom input in the molecule input (P. Reinholdt & H. J. Aa. Jensen)
