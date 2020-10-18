@@ -359,7 +359,7 @@ C
      *'Wim Klopper,','KIT Karlsruhe,','Germany',
      &  '(R12 code in CC, SIRIUS, and ABACUS modules)',
      *'Stefan Knecht,','ETH Zurich,','Switzerland',
-     &  '(Parallel CI and MCSCF)',
+     &  '(Parallel CI and MCSCF, MC-srDFT)',
      *'Rika Kobayashi,','Australian National Univ.,','Australia',
      &  '(DIIS in CC, London in MCSCF)',
      *'Henrik Koch,','NTNU,', 'Norway',
