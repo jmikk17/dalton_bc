@@ -1,6 +1,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Ground state--excited state transition moments: \Sec{CCLRSD}}
+\section{Ground state--excited state transition strengths: 
+\Sec{CCLRSD} and \Sec{CCOPA}}
 \label{sec:cclrsd}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \index{linear response!Coupled Cluster}
@@ -16,16 +17,19 @@
 \index{oriented electronic circular dichroism!Coupled Cluster}
 
 
-In the \Sec{CCLRSD} section the input that is
+In the \Sec{CCLRSD} or, alternatively, the \Sec{CCOPA} section, the input that is
 specific for coupled cluster response calculation of ground state--excited state
 electronic transition properties is read in.
-This section includes for example calculation of oscillator strength etc.
+This includes, for example, the calculation of the electric dipole
+oscillator strengths.
 The transition properties are implemented for the models CCS, CC2, CCSD, and CC3
-(singlet states only).
+(singlet states only). For the CC3 transition properties, the \Sec{CCOPA}
+section should be used.
 %Publications that report results obtained with this CC module should cite 
 %Ref.\ \cite{Christiansen:CCLR}.
-The theoretical background for the implementation is detailed in Ref.\ \cite{Christiansen:CCLR,Christiansen:QEL}.
-This section \Sec{CCLRSD} has to be used in connection with \Sec{CCEXCI} 
+The theoretical background for the implementation 
+is detailed in Ref.\ \cite{Christiansen:CCLR,Christiansen:QEL}.
+Both \Sec{CCLRSD} and \Sec{CCOPA} must be used in connection with \Sec{CCEXCI} 
 for the calculation of excited states.
 
 \begin{center}

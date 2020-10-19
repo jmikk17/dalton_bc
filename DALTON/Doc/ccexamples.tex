@@ -160,8 +160,13 @@ Obviously, linear, quadratic and cubic response modules can also be
 run separately. 
 
 \section{Excitation energies and oscillator strengths}
-This is an example for the calculation of singlet excitation energy and
-oscillator strength for a system with \verb+NSYM = 2+ (C$_s$).
+We collect here input examples for the calculation of singlet excitation energies and
+oscillator strengths for a system with \verb+NSYM = 2+ (C$_s$) in the UV-vis
+region.
+Two alternative modules can be activated, \verb+*CCLRSD+ and \verb+*CCOPA+,
+which produce slightly different output formats.
+The \verb+*CCOPA+ module should be used for transition strengths using CC3.
+This is the \verb+*CCLRSD+ example
 \begin{verbatim}
 **DALTON INPUT
 .RUN WAVE FUNCTIONS
@@ -179,12 +184,62 @@ oscillator strength for a system with \verb+NSYM = 2+ (C$_s$).
 *CCLRSD
 .DIPOLE
 **END OF DALTON INPUT
-\end{verbatim}
+\end{verbatim}  
+This is the \verb+*CCOPA+ example
+\begin{verbatim}
+**DALTON INPUT
+.RUN WAVE FUNCTIONS
+**INTEGRAL
+.DIPLEN
+**WAVE FUNCTIONS
+.CC
+*CC INPUT
+.CCSD
+.NSYM
+ 2
+*CCEXCI
+.NCCEXCI                !number of excited states
+ 2 1                    !2 states in symmetry 1 and 1 state in symmetry 2
+*CCOPA
+.DIPOLE
+**END OF DALTON INPUT
+\end{verbatim}  
 Triplet excitation energies can be obtained adding
 an extra line to \Key{NCCEXCI} specifying the number 
 of required triplet excited states for each symmetry class.  
-Note however that linear residues are not available
-for triplet states (The \Sec{CCLRSD} sections should be removed).
+%Linear residues are not available
+%for triplet states (The \Sec{CCLRSD} sections should be removed).
+\subsection{Excitation energies (and strengths) of core excited states}
+Core excited states can be accessed within the CC code
+by activating the core-valence separation in the \verb+*CCEXCI+
+section of the input. The \verb+*CCOPA+ and \verb+CCLRSD+ 
+inputs remain the same.
+In the example below, it is assumed that we want to access 
+core excitations 
+from the first core orbital in symmetry 1.
+\begin{verbatim}
+**DALTON INPUT
+.RUN WAVE FUNCTIONS
+**INTEGRAL
+.DIPLEN
+**WAVE FUNCTIONS
+.CC
+*CC INPUT
+.CCSD
+.NSYM
+ 2
+*CCEXCI
+.NCCEXCI                !number of excited states
+2 1                     !2 states in symmetry 1 and 1 state in symmetry 2
+.CVSEPARATION
+1 0                     !number of active core orbitals per irrep
+1                       !core orbital 1 in irrep/sym 1
+0                       !no core orbitals active in sym 2
+*CCOPA
+.DIPOLE
+**END OF DALTON INPUT
+\end{verbatim}  
+
 
 \section{Gradient calculation, geometry optimization}
 Available for CCS, CC2, MP2, CCSD and CCSD(T) using integral direct analytic gradient.

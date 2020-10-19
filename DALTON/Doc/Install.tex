@@ -30,15 +30,24 @@ directives to the authors.
 
 \section{Source files}\label{sec:source}
 
-The \latestrelease\ program suite is distributed as a \verb|tar|
-file obtainable from
-the Dalton homepage at \verb|http://www.daltonprogram.org|.
-After you have downloaded the file extract it with:
+The 
+%Dalton2020.0 
+\latestrelease\
+program suite is distributed through git obtainable from the Dalton
+repository at https://gitlab.com/dalton/dalton. After you have downloaded the source files with:
 \begin{verbatim}
-tar xvzf DALTON-2016.*-Source.tar.gz
+git clone --recursive -b Dalton2020.0 https://gitlab.com/dalton/dalton.git
 \end{verbatim}
-Most of the extracted subdirectories under \verb|DALTON/*| contain source code for the different
-sections constituting the \dalton\ program (not listed here).
+
+%The \latestrelease\ program suite is distributed as a \verb|tar|
+%file obtainable from
+%the Dalton homepage at \verb|http://www.daltonprogram.org|.
+%After you have downloaded the file extract it with:
+%\begin{verbatim}
+%tar xvzf DALTON-2016.*-Source.tar.gz
+%\end{verbatim}
+Most of the extracted subdirectories under \verb|DALTON/*| contain source code 
+for the different sections constituting the \dalton\ program (not listed here).
 Furthermore, there is a
 directory containing various public domain routines (\verb|pdpack|), a
 directory with the necessary include files containing common blocks and machine
