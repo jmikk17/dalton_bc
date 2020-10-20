@@ -5,8 +5,8 @@
 \dalton\ is configured using CMake, typically via the setup script,
 and subsequently compiled using make or gmake.
 
-Please consult \verb|http://dalton-installation.readthedocs.org| for details.
-Help and support from the Dalton community is available at \verb|http://daltonprogram.org/forum|.
+Please consult \url{http://dalton-installation.readthedocs.org} for details.
+Help and support from the Dalton community is available at \url{http://daltonprogram.org/forum}.
 
 \section{Hardware/software
 supported}\label{sec:hardsoft}\index{hardware/software support}
@@ -30,15 +30,26 @@ directives to the authors.
 
 \section{Source files}\label{sec:source}
 
-The \latestrelease\ program suite is distributed as a \verb|tar|
-file obtainable from
-the Dalton homepage at \verb|http://www.daltonprogram.org|.
-After you have downloaded the file extract it with:
+The 
+%Dalton2020.0 
+\latestrelease\
+program suite is distributed through git and obtainable from the Dalton
+repository at \url{https://gitlab.com/dalton/dalton}.
+After you have downloaded the source files with:
 \begin{verbatim}
-tar xvzf DALTON-2016.*-Source.tar.gz
+git clone --recursive -b Dalton2020.0 https://gitlab.com/dalton/dalton.git
 \end{verbatim}
-Most of the extracted subdirectories under \verb|DALTON/*| contain source code for the different
-sections constituting the \dalton\ program (not listed here).
+you can define your build with the \verb|setup| script in the main directory.
+
+%The \latestrelease\ program suite is distributed as a \verb|tar|
+%file obtainable from
+%the Dalton homepage at \verb|http://www.daltonprogram.org|.
+%After you have downloaded the file extract it with:
+%\begin{verbatim}
+%tar xvzf DALTON-2016.*-Source.tar.gz
+%\end{verbatim}
+Most of the extracted subdirectories under \verb|DALTON/*| contain source code 
+for the different sections constituting the \dalton\ program (not listed here).
 Furthermore, there is a
 directory containing various public domain routines (\verb|pdpack|), a
 directory with the necessary include files containing common blocks and machine
