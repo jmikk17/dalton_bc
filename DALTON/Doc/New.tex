@@ -27,9 +27,26 @@ added and correted basis sets, performance improvements, bugs fixed etc. }
    Useful for avoiding (near-)triplet-instability problems, for example in DFT or MC-srDFT calculations of triplet excitations or spin-spin coupling constants.
   \item gTDA for singlet linear response propertes and singlet excitation energites for wave functions of any spin multiplicity.
    \end{itemize}
-\item{\bf qFITLAB} is extended to include up to quadrupoles. (C. Steinmann)
-\item{\bf CVS for CC} The core-valence separation ( CVS ) approximation for CC calculations of core-excited states. (S. Coriani et al.)
-\item{\bf Triplet-triplet excited state moments using EOM-CC}. (R. Faber)
+\item{\bf qFITLIB} is extended to include up to quadrupoles. (C. Steinmann)
+\item{\bf CVS for CC} The core-valence separation (CVS) 
+approximation for CC calculations of core-excited states. (S. Coriani et al.)\\
+{}
+[S. Coriani and H. Koch, J. Chem. Phys. 143, 181103 (2015)]
+\item{\bf EOM-CC strengths} 
+The equation of motion approach for the
+transition strengths at CC2 and CCSD levels (avoids calculation of
+addition excited state Lagrangian vectors) 
+%(S. Coriani, F. Pawlowski and R. Faber)
+\\
+{}
+[S. Coriani, F. Pawlowski, J. Olsen, and P. J{\o}rgensen,
+J. Chem. Phys. 144, 024102 (2016); 
+R. Faber and S. Coriani, J. Chem. Theory Comput. 15, 520-528 (2019)]
+\item{\bf Triplet-triplet excited state strengths 
+using EOM-CCSD}. \\
+{}
+[R. Faber, E.F. Kj{\o}nstad, H. Koch and S. Coriani,
+J. Chem. Phys. 151, 144107 (2019)]\\
 \item{\bf New features using the Polarizable Embedding library (PElib)}:
    \begin{itemize}
   \item Effective external field (EEF) can now be used for all dipole properties. Calculated oscillator strengths based on EEF dipole transition moments are now printed. (N. List, J. M. H. Olsen, H. J. Aa. Jensen)
@@ -47,7 +64,8 @@ added and correted basis sets, performance improvements, bugs fixed etc. }
   \item Added pseudopotentials for avoiding electron spill-out \\ {}
     [ A. M. Khah, P. Reinholdt, J. M. H. Olsen, J. Kongsted and C. Hattig, J. Chem. Theory. Comput. 16, 1373-1381 (2020) ].
    \end{itemize}
-  \item  Allow specification of basis set(s) after BASIS in line 1 of .mol file (instead of on second line). (H. J. Aa. Jensen)
+  \item {\bf Ghost atoms} Added easy ghost atom input in the molecule input (P. Reinholdt \& H. J. Aa. Jensen)
+  \item Allow specification of basis set(s) after BASIS in line 1 of .mol file (instead of on second line). (H. J. Aa. Jensen)
 \end{description}
 
 \section{New features in Dalton2018}

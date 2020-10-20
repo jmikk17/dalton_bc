@@ -92,7 +92,7 @@ F   2    2
 !
 ! ClF
 !
-Charge=  0.0  Atoms=1 Blocks=4 1 1 1 1
+Charge= 17.0  Atoms=1 Blocks=4 1 1 1 1 Ghost
 Cl               0.00000000         0.00000000        -4.72431497
 !  aug-cc-pVTZ  EMSL  Basis Set Exchange Library   7/29/13 5:26 AM
 ! Elements                             References
@@ -185,7 +185,7 @@ H   2    2
         0.7060000000      1.000000000000      0.000000000000
         0.3120000000      0.000000000000      1.000000000000
 !
-Charge=  0.0  Atoms=1 Blocks=4 1 1 1 1
+Charge=  9.0  Atoms=1 Blocks=4 1 1 1 1 Ghost
 F                0.00000000         0.00000000        -7.88369872
 ! Basis = aug-cc-pVTZ
 ! FLUORINE       (10s,5p,2d,1f)->[4s,3p,2d,1f]

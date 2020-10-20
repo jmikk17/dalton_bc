@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1042,7 +1042,10 @@ C           ==========================================
 C
             IREC = 2*(3*NUCDEP + XS) - 1
             CALL READDX(LURDI,IREC,IRAT*NVARPT,RSPVCB)
-            IF (NODIFC) CALL READDX(LUAAT,IREC,IRAT*N2ORBX,DB)
+            IF (NODIFC) THEN 
+                IREC = 3*NUCDEP + XS
+                CALL READDX(LUAAT,IREC,IRAT*N2ORBX,DB)
+            END IF
             IF (IPRINT. GT. 10) THEN
                CALL HEADER('B-field response vector read in AATOP1',-1)
                CALL PRKAP(NWOPPT,RSPVCB(1+NCONST),DP1,LUPRI)

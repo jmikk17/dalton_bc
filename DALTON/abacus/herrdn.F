@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1098,7 +1098,8 @@ C***********************************************************************
 #include "cbirea.h"
 #include "symmet.h"
       DIMENSION WORK(LWORK)
-      LOGICAL   SEG,ANG,NOORBTS,NOFITFS,ZMAT_INPUT,CNTBAS, MM_ATOMTYPE
+      LOGICAL   SEG,ANG,NOORBTS,NOFITFS,ZMAT_INPUT,CNTBAS
+      LOGICAL   MM_ATOMTYPE, GHOST_ATOMTYPE
       LOGICAL   ADDSYM
       INTEGER   INT_TEMP
       DIMENSION NONT(KATOM),IQM(KATOM,KSETS),JCO(KANG,KATOM,KSETS),
@@ -1233,6 +1234,16 @@ C           correctly if all QM atoms before any MM atom
      &            'READ_MOL: All QM atoms must come before any MM atom')
             END IF
          END IF
+
+! Ghost atoms - same basis as normal, but zero nuclear charge
+         IPOS = INDEX(BKPLIN, 'GHOST')
+         IF (IPOS .GT. 0) THEN
+            GHOST_ATOMTYPE = .TRUE.
+         ELSE
+            GHOST_ATOMTYPE = .FALSE.
+         END IF
+
+
 C
 C        New or old input style ?
 C
@@ -1702,7 +1713,14 @@ C
                GNUEXP(K+INUC) = D0
             ELSE
                ! .. reset charge to effective charge (different from Q for ECP)
-               CHARGE(K+INUC) = QEFF
+               IF (GHOST_ATOMTYPE) THEN
+                  CHARGE(K+INUC) = D0
+                  NQ = NINT(Q)
+                  IZATOM(K+INUC) = -NQ
+                  GNUEXP(K+INUC) = D0
+               ELSE
+                  CHARGE(K+INUC) = QEFF
+               END IF
                IF (IQM(I,1) .EQ. 0) THEN
                ! ... this is a point charge (no basis fu.) /hjaaj Nov 2003
                   IZATOM(K+INUC) = -1234567890
@@ -3786,8 +3804,8 @@ C
      &       N .LE. NUCIND) THEN
             NFLOAT = NFLOAT + NDEG
          ELSE IF (NFLOAT .GT. 0) THEN
-            CALL QUIT(
-     &      'All nuclei MUST come before floating orbital centers')
+!           CALL QUIT(
+!    &      'All nuclei MUST come before floating orbital centers')
 !           So 1:NATOMS run over the real nuclei
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
@@ -3841,7 +3859,9 @@ C
      &           + (CORD(2,N)-CORD(2,M)*PT(IAND(ISYMAX(2,1),KB)))**2
      &           + (CORD(3,N)-CORD(3,M)*PT(IAND(ISYMAX(3,1),KB)))**2
               DIST = SQRT(DS)
-              IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
+              IF (.NOT. NOATMD) THEN
+               IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
+              END IF
               IF (IAND(KB,ISTBNU(N)) .EQ. 0) THEN
                 IF (DIST.GT.D0) THEN
                   HKAB  = FMULT(IAND(ISTBNU(M),ISTBNU(N)))
@@ -4147,7 +4167,7 @@ C
                   JTRAN(NSORB) = JKB ! number of AOs contributing to this SO
 
                   IF (IC .EQ. ISETHUCKEL) THEN
-                     NQ     = IZATOM(NCENT(IA))
+                     NQ     = MAX(0, IZATOM(NCENT(IA)))
 C                    ... atomic charge of this center
                    IF (NQ .GT. 0) THEN
 C                  ... skip point charges (code NQ=-1234567890),

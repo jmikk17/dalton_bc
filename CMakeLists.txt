@@ -46,6 +46,7 @@ option(ENABLE_BUILTIN_LAPACK "Enable builtin LAPACK implementation (slow)"      
 option(ENABLE_AUTO_LAPACK    "Enable CMake to autodetect LAPACK"                ON)
 option(ENABLE_SRDFT          "Enable srdft module"                              ON)
 option(ENABLE_LARGE_TEST     "Enable Large-scale (long) test cases"             OFF)
+option(ENABLE_BENCHMARK      "Enable benchmark test cases"                      OFF)
 option(ENABLE_PYTHON         "Enable Python driver script"                      OFF)
 
 set(EXTERNAL_LIBS)

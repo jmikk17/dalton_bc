@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -197,7 +197,7 @@ C
       IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
      &     .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
          WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'//
-     &   ' are postoned until they are needed.'
+     &   ' are postponed until they are needed.'
          RUNTWO = .FALSE.
       END IF
       END IF

@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2017.alpha (2017)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -52,8 +52,8 @@
      
     and
      
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2017.alpha (2017), see http://daltonprogram.org
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -67,13 +67,14 @@
   Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
   Ove Christiansen,         Aarhus University,            Denmark     (CC module)
   Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
   Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
   Paal Dahle,               University of Oslo,           Norway      (Parallelization)
   Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
   Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
   Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
   Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
   Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
   Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
   Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
@@ -91,6 +92,7 @@
   Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
   Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
   Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
   Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
@@ -108,10 +110,10 @@
   Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
   Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
   Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
   Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
   Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
   Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
   Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
@@ -129,7 +131,9 @@
   Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
   Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -138,53 +142,44 @@
   Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
   David P. Tew,             University of Bristol,        England     (CCSD(R12))
   Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
   David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Apr 24 17:13:05 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:45 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/magnus/Projects/dalton_devel/dalton-private/build/test/pecc_ccr3
-   2) /home/magnus/Projects/dalton_devel/dalton-private/build/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pecc_ccr3
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | magnus
- Host                     | foeroyar
- System                   | Linux-4.15.15-300.fc27.x86_64
+ Who compiled             | foeroyingur
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- BLAS                     | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_gf_lp64.
-                          | so;/home/magnus/Programs/intel/compilers_and_libra
-                          | ries_2018.1.163/linux/mkl/lib/intel64/libmkl_seque
-                          | ntial.so;/home/magnus/Programs/intel/compilers_and
-                          | _libraries_2018.1.163/linux/mkl/lib/intel64/libmkl
-                          | _core.so;/usr/lib64/libpthread.so;/usr/lib64/libm.
-                          | so
- LAPACK                   | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_lapack95
-                          | _lp64.a;/home/magnus/Programs/intel/compilers_and_
-                          | libraries_2018.1.163/linux/mkl/lib/intel64/libmkl_
-                          | gf_lp64.so
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 89aff08b7727e13503e31e84e0688f3409251f83
- Git branch               | pe/develop
- Configuration time       | 2018-04-24 17:09:21.252303
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
  * Sequential calculation.
 
@@ -194,8 +189,8 @@ Compilation information
 
 **DALTON
 .RUN WAVE
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .ITERATIVE
 **WAVE FUNCTIONS
 .CC
@@ -237,7 +232,7 @@ H           -2.508043   -1.382001     .040282
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -262,7 +257,7 @@ H           -2.508043   -1.382001     .040282
   Number of basis sets to read;    2
   The basis set is "6-31G*" from the basis set library.
   Basis set file used for this atomic type with Z =   6 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/6-31G*"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/6-31G*"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 6-31G*                                                                          
@@ -274,7 +269,7 @@ H           -2.508043   -1.382001     .040282
   Number of basis sets to read;    2
   The basis set is "6-31G*" from the basis set library.
   Basis set file used for this atomic type with Z =   8 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/6-31G*"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/6-31G*"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 6-31G*                                                                          
@@ -286,7 +281,7 @@ H           -2.508043   -1.382001     .040282
   Number of basis sets to read;    2
   The basis set is "6-31G*" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/6-31G*"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/6-31G*"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 6-31G*                                                                          
@@ -310,6 +305,7 @@ H           -2.508043   -1.382001     .040282
                        Natural abundance:  98.633 %
 
  Center-of-mass coordinates (a.u.):   -3.067740   -0.312997    0.018175
+ Center-of-mass coordinates (Angs):   -1.623378   -0.165631    0.009618
 
 
   Atoms and basis sets
@@ -436,14 +432,14 @@ H           -2.508043   -1.382001     .040282
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
  Calculation of one- and two-electron Hamiltonian integrals.
 
  Center of mass  (bohr):     -3.067740315293     -0.312997395263      0.018174673399
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+Calculation of 2-electron integrals are postoned until they are needed.
 
 
      ************************************************************************
@@ -462,14 +458,8 @@ H           -2.508043   -1.382001     .040282
       z      0.36129107         0.91831024         3.06315324
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:      130078 ( 93.1% )
- HERMIT - Megabytes written:                              1.491
-
-  Time used in TWOINT     is       0.13 seconds
-  Total CPU  time used in HERMIT:   0.17 seconds
-  Total wall time used in HERMIT:   0.17 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -504,8 +494,8 @@ NCCEXCI for singlet:    2
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Apr 24 17:13:05 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:45 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      CH2O PLUS 2 WATERS                                                      
@@ -530,7 +520,7 @@ NCCEXCI for singlet:    2
      Wave function specification
      ============================
 
-     For the specification of the Coupled Cluster: see later.
+     For the specification of the Coupled Cluster: see below.
 
 
      Wave function environment is modeled using the
@@ -587,63 +577,76 @@ NCCEXCI for singlet:    2
  -----------------------------------------------------------------------------
 
 Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:      130078 ( 93.1% )
+ HERMIT - Megabytes written:                              1.491
+
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
-@  1  -113.442138190     -3.415981112835E-02    2.66732D+00   -1.13D+02
+@  1  -113.442138190     -3.415981112830E-02    2.66732D+00   -1.13D+02
       Virial theorem: -V/T =      2.002690
 @    MULPOP   C       1.05; O      -0.76; H      -0.14; H      -0.15; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-@  2  -113.830611585     -2.006159060288E-02    1.09394D+00   -3.88D-01
+@  2  -113.830611585     -2.006159059977E-02    1.09394D+00   -3.88D-01
       Virial theorem: -V/T =      2.006014
 @    MULPOP   C      -0.22; O      -0.16; H       0.21; H       0.16; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
-@  3  -113.887946396     -2.967639166840E-02    2.30817D-01   -5.73D-02
+@  3  -113.887946396     -2.967639167067E-02    2.30817D-01   -5.73D-02
       Virial theorem: -V/T =      1.999661
 @    MULPOP   C       0.13; O      -0.52; H       0.23; H       0.15; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-@  4  -113.891048267     -3.004809544052E-02    5.67693D-02   -3.10D-03
+@  4  -113.891048267     -3.004809544183E-02    5.67693D-02   -3.10D-03
       Virial theorem: -V/T =      2.002564
 @    MULPOP   C       0.13; O      -0.52; H       0.24; H       0.15; 
  -----------------------------------------------------------------------------
-@  5  -113.891379529     -3.090021679311E-02    1.64050D-02   -3.31D-04
+@  5  -113.891379529     -3.090021679821E-02    1.64050D-02   -3.31D-04
       Virial theorem: -V/T =      2.001865
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@  6  -113.891417361     -3.113663892672E-02    4.99149D-03   -3.78D-05
+@  6  -113.891417361     -3.113663892902E-02    4.99149D-03   -3.78D-05
       Virial theorem: -V/T =      2.001926
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@  7  -113.891422121     -3.120291639059E-02    1.27906D-03   -4.76D-06
+@  7  -113.891422121     -3.120291638924E-02    1.27906D-03   -4.76D-06
       Virial theorem: -V/T =      2.001939
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@  8  -113.891422428     -3.120956326240E-02    2.28576D-04   -3.07D-07
+@  8  -113.891422428     -3.120956326115E-02    2.28576D-04   -3.07D-07
       Virial theorem: -V/T =      2.001941
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@  9  -113.891422435     -3.120987532716E-02    3.39067D-05   -6.90D-09
+@  9  -113.891422435     -3.120987532533E-02    3.39067D-05   -6.90D-09
       Virial theorem: -V/T =      2.001941
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@ 10  -113.891422435     -3.120987290656E-02    1.01219D-05   -1.97D-10
+@ 10  -113.891422435     -3.120987287433E-02    1.01219D-05   -1.66D-10
       Virial theorem: -V/T =      2.001941
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@ 11  -113.891422435     -3.120987085620E-02    5.47486D-06   -3.16D-11
+@ 11  -113.891422435     -3.120987084357E-02    5.47488D-06   -5.48D-11
       Virial theorem: -V/T =      2.001941
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@ 12  -113.891422435     -3.120986618963E-02    2.15883D-06   -1.73D-11
+@ 12  -113.891422435     -3.120986620692E-02    2.15886D-06   -4.34D-11
       Virial theorem: -V/T =      2.001941
 @    MULPOP   C       0.13; O      -0.54; H       0.25; H       0.16; 
  -----------------------------------------------------------------------------
-@ 13  -113.891422435     -3.120987146546E-02    4.54568D-07    3.13D-12
+@ 13  -113.891422435     -3.120987145426E-02    4.54571D-07    3.51D-11
 
 @ *** DIIS converged in  13 iterations !
-@     Converged SCF energy, gradient:   -113.891422434914    4.55D-07
+@     Converged SCF energy, gradient:   -113.891422434899    4.55D-07
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -677,18 +680,18 @@ Calculating AOSUPINT
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.217441756813
+            Electronic                -0.217441756816
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
-            Total                     -0.034323457124
+            Total                     -0.034323457126
 
        Polarization contributions:
-            Electronic                -0.073230155560
-            Nuclear                    0.068628860560
-            Multipole                 -0.005670063035
-            Total                     -0.010271358036
+            Electronic                -0.073230155537
+            Nuclear                    0.068628860541
+            Multipole                 -0.005670063026
+            Total                     -0.010271358022
 
-       Total PE energy:               -0.031209871465
+       Total PE energy:               -0.031209871454
             (excl. multipole-multipole interaction energy)
 
  --- Writing SIRIFC interface file
@@ -699,7 +702,7 @@ Calculating AOSUPINT
                            +---------------------------+
 
 
- CPU and wall time for SCF :       0.134       0.135
+ CPU and wall time for SCF :       0.137       0.137
 
 
                        .-----------------------------------.
@@ -711,18 +714,18 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -113.891422434914                 
+@    Final HF energy:            -113.891422434899                 
 @    Nuclear repulsion:            31.249215315972
-@    Electronic energy:          -145.109427879421
-@    Embedding energy:             -0.031209871465
+@    Electronic energy:          -145.109427879417
+@    Embedding energy:             -0.031209871454
 
-@    Final gradient norm:           0.000000454568
+@    Final gradient norm:           0.000000454571
 
  
-     Date and time (Linux)  : Tue Apr 24 17:13:05 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:45 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  24Apr18   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -794,43 +797,43 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
   32 H   :1s    -0.2215  -0.0023   1.8010  -1.3569  -0.1967   0.0038   0.3542
 
     Orbital        15       16       17       18
-   1 C   :1s     0.0041   0.0429   0.0158   0.0756
-   2 C   :1s     0.0487  -0.9125  -0.3829  -0.4863
-   3 C   :1s    -0.1046   0.5838   0.7491   2.0273
-   4 C   :2px    0.7572   0.0304   0.7232  -0.1002
-   5 C   :2py    0.0156  -0.9095   0.1582   0.3095
-   6 C   :2pz    0.0053   0.0305   0.0020  -0.0103
-   7 C   :2px   -2.3497   0.0003  -0.9822   0.0374
-   8 C   :2py   -0.0312   0.5121  -0.1878  -0.0185
-   9 C   :2pz   -0.0189  -0.0181  -0.0036   0.0008
-  10 C   :3d2-  -0.0608  -0.0184   0.2081  -0.0678
-  11 C   :3d1-  -0.0009  -0.0070  -0.0002  -0.0152
-  12 C   :3d0   -0.0099  -0.0350  -0.0302  -0.1764
-  14 C   :3d2+   0.0077  -0.1540  -0.0119  -0.1556
-  15 O   :1s    -0.0017  -0.0526  -0.0015   0.0392
-  16 O   :1s     0.0194   0.1947   0.0194  -0.1799
-  17 O   :1s    -0.0457  -0.1362  -0.1075  -0.5800
-  18 O   :2px    0.3393   0.0214  -0.1280  -0.0279
-  19 O   :2py    0.0133  -0.2574  -0.0428  -0.7313
-  20 O   :2pz    0.0020   0.0081  -0.0001   0.0239
-  21 O   :2px    0.2536   0.0195   0.0453   0.0491
-  22 O   :2py    0.0138  -0.5216   0.0667   1.2912
-  23 O   :2pz    0.0022   0.0172  -0.0013  -0.0415
-  24 O   :3d2-  -0.0308   0.0166  -0.1407   0.0409
-  25 O   :3d1-  -0.0000   0.0107   0.0003   0.0053
-  26 O   :3d0    0.0003   0.1012   0.0119   0.0479
-  28 O   :3d2+   0.0059   0.1624   0.0261   0.0783
-  29 H   :1s     0.3868  -0.1351  -0.5565   0.4513
-  30 H   :1s     0.9666   0.0091   0.8621  -0.8718
-  31 H   :1s    -0.3035  -0.1559   0.8524   0.2150
-  32 H   :1s    -0.9201   0.0562  -1.5234  -0.5690
+   1 C   :1s     0.0041   0.0429  -0.0158   0.0756
+   2 C   :1s     0.0487  -0.9125   0.3829  -0.4863
+   3 C   :1s    -0.1046   0.5838  -0.7491   2.0273
+   4 C   :2px    0.7572   0.0304  -0.7232  -0.1002
+   5 C   :2py    0.0156  -0.9095  -0.1582   0.3095
+   6 C   :2pz    0.0053   0.0305  -0.0020  -0.0103
+   7 C   :2px   -2.3497   0.0003   0.9822   0.0374
+   8 C   :2py   -0.0312   0.5121   0.1878  -0.0185
+   9 C   :2pz   -0.0189  -0.0181   0.0036   0.0008
+  10 C   :3d2-  -0.0608  -0.0184  -0.2081  -0.0678
+  11 C   :3d1-  -0.0009  -0.0070   0.0002  -0.0152
+  12 C   :3d0   -0.0099  -0.0350   0.0302  -0.1764
+  14 C   :3d2+   0.0077  -0.1540   0.0119  -0.1556
+  15 O   :1s    -0.0017  -0.0526   0.0015   0.0392
+  16 O   :1s     0.0194   0.1947  -0.0194  -0.1799
+  17 O   :1s    -0.0457  -0.1362   0.1075  -0.5800
+  18 O   :2px    0.3393   0.0214   0.1280  -0.0279
+  19 O   :2py    0.0133  -0.2574   0.0428  -0.7313
+  20 O   :2pz    0.0020   0.0081   0.0001   0.0239
+  21 O   :2px    0.2536   0.0195  -0.0453   0.0491
+  22 O   :2py    0.0138  -0.5216  -0.0667   1.2912
+  23 O   :2pz    0.0022   0.0172   0.0013  -0.0415
+  24 O   :3d2-  -0.0308   0.0166   0.1407   0.0409
+  25 O   :3d1-  -0.0000   0.0107  -0.0003   0.0053
+  26 O   :3d0    0.0003   0.1012  -0.0119   0.0479
+  28 O   :3d2+   0.0059   0.1624  -0.0261   0.0783
+  29 H   :1s     0.3868  -0.1351   0.5565   0.4513
+  30 H   :1s     0.9666   0.0091  -0.8621  -0.8718
+  31 H   :1s    -0.3035  -0.1559  -0.8524   0.2150
+  32 H   :1s    -0.9201   0.0562   1.5234  -0.5690
 
   Total CPU  time used in SIRIUS :   0.14 seconds
   Total wall time used in SIRIUS :   0.14 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 17:13:05 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:45 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
@@ -880,24 +883,24 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster MP2   energy :    -114.1911572087822151
- Iter.  1: Coupled cluster CCSD  energy :    -114.1931244817009627
- Iter.  2: Coupled cluster CCSD  energy :    -114.2022123360510335
- Iter.  3: Coupled cluster CCSD  energy :    -114.2054401249986881
- Iter.  4: Coupled cluster CCSD  energy :    -114.2051119850997338
- Iter.  5: Coupled cluster CCSD  energy :    -114.2051561208167101
- Iter.  6: Coupled cluster CCSD  energy :    -114.2051605964863228
- Iter.  7: Coupled cluster CCSD  energy :    -114.2051481857760535
- Iter.  8: Coupled cluster CCSD  energy :    -114.2051484582656684
- Iter.  9: Coupled cluster CCSD  energy :    -114.2051485768061525
- Iter. 10: Coupled cluster CCSD  energy :    -114.2051487344760261
- Iter. 11: Coupled cluster CCSD  energy :    -114.2051487232126021
- Iter. 12: Coupled cluster CCSD  energy :    -114.2051487092010689
- Iter. 13: Coupled cluster CCSD  energy :    -114.2051487048387344
+ Iter.  1: Coupled cluster MP2   energy :    -114.1911572087661710
+ Iter.  1: Coupled cluster CCSD  energy :    -114.1931244816842508
+ Iter.  2: Coupled cluster CCSD  energy :    -114.2022123360338810
+ Iter.  3: Coupled cluster CCSD  energy :    -114.2054401249831272
+ Iter.  4: Coupled cluster CCSD  energy :    -114.2051119850832350
+ Iter.  5: Coupled cluster CCSD  energy :    -114.2051561207999129
+ Iter.  6: Coupled cluster CCSD  energy :    -114.2051605964708756
+ Iter.  7: Coupled cluster CCSD  energy :    -114.2051481857595832
+ Iter.  8: Coupled cluster CCSD  energy :    -114.2051484582490275
+ Iter.  9: Coupled cluster CCSD  energy :    -114.2051485767901369
+ Iter. 10: Coupled cluster CCSD  energy :    -114.2051487344592147
+ Iter. 11: Coupled cluster CCSD  energy :    -114.2051487231959896
+ Iter. 12: Coupled cluster CCSD  energy :    -114.2051487091858206
+ Iter. 13: Coupled cluster CCSD  energy :    -114.2051487048229603
 
- CCSD  energy converged to within   0.10D-07 is         -114.205148704839
- Final 2-norm of the CC vector function:  5.67263851D-07
-  Change in norm^2 of T-amplitudes in this solvent it.:   6.3540734362996232E-002
+ CCSD  energy converged to within   0.10D-07 is         -114.205148704823
+ Final 2-norm of the CC vector function:  5.67263857D-07
+  Change in norm^2 of T-amplitudes in this solvent it.:   6.3540734366852453E-002
 
 
 
@@ -946,13 +949,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
- RPA: call cceq_str
- RPA: exit cceq_str
-  Change in norm^2 of L-amplitudes in this PECC it.:  0.35608594091039492     
- Total <Lambda|H|CC> energy:   -114.20648918188566     
+  Change in norm^2 of L-amplitudes in this PECC it.:  0.35608594091605417     
+ Total <Lambda|H|CC> energy:   -114.20648918187170     
             The singles contribution is:            -0.0006536903
             The doubles contribution is:            -0.0006867868
- CCFOP: call CC_D1AO to recalc the 1e Density
 
 
                             +--------------------------+
@@ -1000,18 +1000,18 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.215236512975
+            Electronic                -0.215236512974
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
             Total                     -0.032118213285
 
        Polarization contributions:
-            Electronic                -0.067423589579
-            Nuclear                    0.063576187889
-            Multipole                 -0.005468875474
-            Total                     -0.009316277164
+            Electronic                -0.067423589634
+            Nuclear                    0.063576187945
+            Multipole                 -0.005468875472
+            Total                     -0.009316277161
 
-       Total PE energy:               -0.028049546755
+       Total PE energy:               -0.028049546752
             (excl. multipole-multipole interaction energy)
 
 
@@ -1019,7 +1019,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           0 :   -2.8049546755391206E-002
+ E(PECC) contribution in iteration           0 :   -2.8049546751985465E-002
   
    
 
@@ -1040,19 +1040,19 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster RSTAR energy :    -114.2051487048387344
- Iter.  1: Coupled cluster CCSD  energy :    -114.2051507914785731
- Iter.  2: Coupled cluster CCSD  energy :    -114.2051725441686187
- Iter.  3: Coupled cluster CCSD  energy :    -114.2051692943438184
- Iter.  4: Coupled cluster CCSD  energy :    -114.2051730163940420
- Iter.  5: Coupled cluster CCSD  energy :    -114.2051729665537181
- Iter.  6: Coupled cluster CCSD  energy :    -114.2051731191335620
- Iter.  7: Coupled cluster CCSD  energy :    -114.2051731941879353
- Iter.  8: Coupled cluster CCSD  energy :    -114.2051731905436611
+ Iter.  1: Coupled cluster RSTAR energy :    -114.2051487048229603
+ Iter.  1: Coupled cluster CCSD  energy :    -114.2051507914632111
+ Iter.  2: Coupled cluster CCSD  energy :    -114.2051725441521910
+ Iter.  3: Coupled cluster CCSD  energy :    -114.2051692943281438
+ Iter.  4: Coupled cluster CCSD  energy :    -114.2051730163784953
+ Iter.  5: Coupled cluster CCSD  energy :    -114.2051729665383704
+ Iter.  6: Coupled cluster CCSD  energy :    -114.2051731191171910
+ Iter.  7: Coupled cluster CCSD  energy :    -114.2051731941729145
+ Iter.  8: Coupled cluster CCSD  energy :    -114.2051731905282850
 
- CCSD  energy converged to within   0.10D-07 is         -114.205173190544
- Final 2-norm of the CC vector function:  4.70468838D-07
-  Change in norm^2 of T-amplitudes in this solvent it.:   1.2017976401204611E-004
+ CCSD  energy converged to within   0.10D-07 is         -114.205173190528
+ Final 2-norm of the CC vector function:  4.70468846D-07
+  Change in norm^2 of T-amplitudes in this solvent it.:   1.2017976441203171E-004
 
 
 
@@ -1101,15 +1101,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
- RPA: call cceq_str
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
- RPA: exit cceq_str
-  Change in norm^2 of L-amplitudes in this PECC it.:   2.6902813027102068E-004
- Total <Lambda|H|CC> energy:   -114.20655644387344     
+  Change in norm^2 of L-amplitudes in this PECC it.:   2.6902813122031688E-004
+ Total <Lambda|H|CC> energy:   -114.20655644386002     
             The singles contribution is:            -0.0007059974
             The doubles contribution is:            -0.0006772559
- CCFOP: call CC_D1AO to recalc the 1e Density
 
 
                             +--------------------------+
@@ -1157,18 +1154,18 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.215132787938
+            Electronic                -0.215132787937
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
             Total                     -0.032014488248
 
        Polarization contributions:
-            Electronic                -0.067123129338
-            Nuclear                    0.063309156580
-            Multipole                 -0.005460511150
-            Total                     -0.009274483908
+            Electronic                -0.067123129111
+            Nuclear                    0.063309156351
+            Multipole                 -0.005460511158
+            Total                     -0.009274483918
 
-       Total PE energy:               -0.027904028462
+       Total PE energy:               -0.027904028472
             (excl. multipole-multipole interaction energy)
 
 
@@ -1176,7 +1173,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           1 :   -2.7904028462026484E-002
+ E(PECC) contribution in iteration           1 :   -2.7904028472072739E-002
   
    
 
@@ -1197,16 +1194,16 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster RSTAR energy :    -114.2051731905436611
- Iter.  1: Coupled cluster CCSD  energy :    -114.2051732895913858
- Iter.  2: Coupled cluster CCSD  energy :    -114.2051743126685466
- Iter.  3: Coupled cluster CCSD  energy :    -114.2051741562065814
- Iter.  4: Coupled cluster CCSD  energy :    -114.2051743341463066
- Iter.  5: Coupled cluster CCSD  energy :    -114.2051743315745256
+ Iter.  1: Coupled cluster RSTAR energy :    -114.2051731905282850
+ Iter.  1: Coupled cluster CCSD  energy :    -114.2051732895754412
+ Iter.  2: Coupled cluster CCSD  energy :    -114.2051743126516925
+ Iter.  3: Coupled cluster CCSD  energy :    -114.2051741561916600
+ Iter.  4: Coupled cluster CCSD  energy :    -114.2051743341295662
+ Iter.  5: Coupled cluster CCSD  energy :    -114.2051743315582399
 
- CCSD  energy converged to within   0.10D-07 is         -114.205174331575
- Final 2-norm of the CC vector function:  5.55294110D-07
-  Change in norm^2 of T-amplitudes in this solvent it.:   5.7262203298213965E-006
+ CCSD  energy converged to within   0.10D-07 is         -114.205174331558
+ Final 2-norm of the CC vector function:  5.55293940D-07
+  Change in norm^2 of T-amplitudes in this solvent it.:   5.7262185562956258E-006
 
 
 
@@ -1255,15 +1252,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
- RPA: call cceq_str
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
- RPA: exit cceq_str
-  Change in norm^2 of L-amplitudes in this PECC it.:   1.2628010501003484E-005
- Total <Lambda|H|CC> energy:   -114.20655959352602     
+  Change in norm^2 of L-amplitudes in this PECC it.:   1.2628006549664228E-005
+ Total <Lambda|H|CC> energy:   -114.20655959351106     
             The singles contribution is:            -0.0007084591
             The doubles contribution is:            -0.0006768029
- CCFOP: call CC_D1AO to recalc the 1e Density
 
 
                             +--------------------------+
@@ -1311,18 +1305,18 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.215127827316
+            Electronic                -0.215127827317
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
-            Total                     -0.032009527626
+            Total                     -0.032009527627
 
        Polarization contributions:
-            Electronic                -0.067108144642
-            Nuclear                    0.063295777432
-            Multipole                 -0.005460114089
-            Total                     -0.009272481298
+            Electronic                -0.067108144816
+            Nuclear                    0.063295777601
+            Multipole                 -0.005460114117
+            Total                     -0.009272481331
 
-       Total PE energy:               -0.027897065231
+       Total PE energy:               -0.027897065265
             (excl. multipole-multipole interaction energy)
 
 
@@ -1330,7 +1324,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           2 :   -2.7897065230941979E-002
+ E(PECC) contribution in iteration           2 :   -2.7897065264632124E-002
   
    
 
@@ -1351,14 +1345,14 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster RSTAR energy :    -114.2051743315745256
- Iter.  1: Coupled cluster CCSD  energy :    -114.2051743436428524
- Iter.  2: Coupled cluster CCSD  energy :    -114.2051743937225865
- Iter.  3: Coupled cluster CCSD  energy :    -114.2051743878722192
+ Iter.  1: Coupled cluster RSTAR energy :    -114.2051743315582399
+ Iter.  1: Coupled cluster CCSD  energy :    -114.2051743436265667
+ Iter.  2: Coupled cluster CCSD  energy :    -114.2051743937047377
+ Iter.  3: Coupled cluster CCSD  energy :    -114.2051743878551378
 
- CCSD  energy converged to within   0.10D-07 is         -114.205174387872
- Final 2-norm of the CC vector function:  2.64242461D-07
-  Change in norm^2 of T-amplitudes in this solvent it.:   2.8391021013318696E-007
+ CCSD  energy converged to within   0.10D-07 is         -114.205174387855
+ Final 2-norm of the CC vector function:  2.64240999D-07
+  Change in norm^2 of T-amplitudes in this solvent it.:   2.8390849322879053E-007
 
 
 
@@ -1407,15 +1401,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
- RPA: call cceq_str
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
- RPA: exit cceq_str
-  Change in norm^2 of L-amplitudes in this PECC it.:   1.0402385675067904E-008
- Total <Lambda|H|CC> energy:   -114.20655958383682     
+  Change in norm^2 of L-amplitudes in this PECC it.:   1.0402036898504718E-008
+ Total <Lambda|H|CC> energy:   -114.20655958382144     
             The singles contribution is:            -0.0007084292
             The doubles contribution is:            -0.0006767668
- CCFOP: call CC_D1AO to recalc the 1e Density
 
 
                             +--------------------------+
@@ -1463,18 +1454,18 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.215127699240
+            Electronic                -0.215127699242
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
-            Total                     -0.032009399551
+            Total                     -0.032009399552
 
        Polarization contributions:
-            Electronic                -0.067107748130
-            Nuclear                    0.063295422644
-            Multipole                 -0.005460103808
-            Total                     -0.009272429294
+            Electronic                -0.067107748160
+            Nuclear                    0.063295422671
+            Multipole                 -0.005460103813
+            Total                     -0.009272429303
 
-       Total PE energy:               -0.027896885151
+       Total PE energy:               -0.027896885161
             (excl. multipole-multipole interaction energy)
 
 
@@ -1482,7 +1473,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           3 :   -2.7896885151093131E-002
+ E(PECC) contribution in iteration           3 :   -2.7896885161129141E-002
   
    
 
@@ -1503,12 +1494,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster RSTAR energy :    -114.2051743878722192
- Iter.  1: Coupled cluster CCSD  energy :    -114.2051743951164156
+ Iter.  1: Coupled cluster RSTAR energy :    -114.2051743878551378
+ Iter.  1: Coupled cluster CCSD  energy :    -114.2051743950989504
 
- CCSD  energy converged to within   0.10D-07 is         -114.205174395116
- Final 2-norm of the CC vector function:  1.12569502D-07
-  Change in norm^2 of T-amplitudes in this solvent it.:   1.5607313941234935E-008
+ CCSD  energy converged to within   0.10D-07 is         -114.205174395099
+ Final 2-norm of the CC vector function:  1.12573059D-07
+  Change in norm^2 of T-amplitudes in this solvent it.:   1.5607996214916930E-008
 
 
 
@@ -1557,15 +1548,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
- RPA: call cceq_str
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
- RPA: exit cceq_str
-  Change in norm^2 of L-amplitudes in this PECC it.:  -1.3293365852540262E-009
- Total <Lambda|H|CC> energy:   -114.20655959965330     
+  Change in norm^2 of L-amplitudes in this PECC it.:  -1.3289365718982538E-009
+ Total <Lambda|H|CC> energy:   -114.20655959963766     
             The singles contribution is:            -0.0007084226
             The doubles contribution is:            -0.0006767819
- CCFOP: call CC_D1AO to recalc the 1e Density
 
 
                             +--------------------------+
@@ -1613,18 +1601,18 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.215127696349
+            Electronic                -0.215127696351
             Nuclear                    0.196503243383
             Multipole                 -0.013384943694
-            Total                     -0.032009396660
+            Total                     -0.032009396661
 
        Polarization contributions:
-            Electronic                -0.067107740181
-            Nuclear                    0.063295415620
-            Multipole                 -0.005460103567
-            Total                     -0.009272428128
+            Electronic                -0.067107740243
+            Nuclear                    0.063295415677
+            Multipole                 -0.005460103578
+            Total                     -0.009272428144
 
-       Total PE energy:               -0.027896881094
+       Total PE energy:               -0.027896881111
             (excl. multipole-multipole interaction energy)
 
 
@@ -1632,7 +1620,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           4 :   -2.7896881093934529E-002
+ E(PECC) contribution in iteration           4 :   -2.7896881111226707E-002
  PECC equations are converged in            4  outer iterations
  PECC equations are converged in           55  inner iterations
   
@@ -1678,15 +1666,15 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
  Excitation no.       Hartree               eV 
  --------------       -------               --
-         1            0.1601059086        4.3567033944
-         2            0.3591652190        9.7733827699
+         1            0.1601059863        4.3567055073
+         2            0.3591655019        9.7733904684
 
 
  Total excited state energies for states of symmetry/spin    1    1
  Excitation no.       Energy (Hartree) 
  ------------------------------------- 
-@@    1    1          -114.046453691009631
-@@    1    2          -113.847394380620926
+@@    1    1          -114.046453613345165
+@@    1    2          -113.847394097692117
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  1
@@ -1700,11 +1688,11 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
 
 
-          Single Excitation Contribution :              93.5595 %
+          Single Excitation Contribution :              93.5593 %
 
-          Double Excitation Contribution :               6.4405 %
+          Double Excitation Contribution :               6.4407 %
 
-          ||T1||/||T2||                  :               3.8114
+          ||T1||/||T2||                  :               3.8113
 
           Norm of Total Amplitude Vector :               1.0000
 
@@ -1715,8 +1703,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  +=============================================================================+
  | 1   1   |   1       8     |      169          |              |    0.950393  |
  +-----------------------------------------------------------------------------+
- | 1 1 1 1 |   1   1   7   5 |      145       97 |        10537 |   -0.097731  |
- | 1 1 1 1 |   1   1   8   7 |      169      145 |        14341 |    0.145244  |
+ | 1 1 1 1 |   1   1   7   5 |      145       97 |        10537 |   -0.097717  |
+ | 1 1 1 1 |   1   1   8   7 |      169      145 |        14341 |    0.145254  |
  +=============================================================================+
 
 
@@ -1724,7 +1712,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
           Printed all single excitations greater than 0.193452
 
-          Printed all double excitations greater than 0.050756
+          Printed all double excitations greater than 0.050757
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  2
@@ -1738,9 +1726,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
 
 
-          Single Excitation Contribution :              93.5266 %
+          Single Excitation Contribution :              93.5265 %
 
-          Double Excitation Contribution :               6.4734 %
+          Double Excitation Contribution :               6.4735 %
 
           ||T1||/||T2||                  :               3.8010
 
@@ -1751,10 +1739,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
  |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
  +=============================================================================+
- | 1   1   |   1       6     |      121          |              |    0.954145  |
+ | 1   1   |   1       6     |      121          |              |    0.954143  |
  +-----------------------------------------------------------------------------+
- | 1 1 1 1 |   1   1   7   4 |      145       73 |        10513 |   -0.090038  |
- | 1 1 1 1 |   1   1   7   6 |      145      121 |        10561 |    0.157070  |
+ | 1 1 1 1 |   1   1   7   4 |      145       73 |        10513 |   -0.090031  |
+ | 1 1 1 1 |   1   1   7   6 |      145      121 |        10561 |    0.157075  |
  +=============================================================================+
 
 
@@ -1815,15 +1803,15 @@ Try to use right eigenvector as start for a left eigenvector.
 
  Excitation no.       Hartree               eV 
  --------------       -------               --
-         1            0.1601058989        4.3567031284
-         2            0.3591652267        9.7733829789
+         1            0.1601058987        4.3567031248
+         2            0.3591652266        9.7733829763
 
 
  Total excited state energies for states of symmetry/spin    1    1
  Excitation no.       Energy (Hartree) 
  ------------------------------------- 
-@@    1    1          -114.046453700786003
-@@    1    2          -113.847394372943540
+@@    1    1          -114.046453700899875
+@@    1    2          -113.847394373022169
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  1
@@ -1850,10 +1838,10 @@ Try to use right eigenvector as start for a left eigenvector.
  | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
  |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
  +=============================================================================+
- | 1   1   |   1       8     |      169          |              |    0.925166  |
+ | 1   1   |   1       8     |      169          |              |    0.925167  |
  +-----------------------------------------------------------------------------+
- | 1 1 1 1 |   1   1   7   5 |      145       97 |        10537 |   -0.106222  |
- | 1 1 1 1 |   1   1   8   7 |      169      145 |        14341 |    0.135424  |
+ | 1 1 1 1 |   1   1   7   5 |      145       97 |        10537 |   -0.106223  |
+ | 1 1 1 1 |   1   1   8   7 |      169      145 |        14341 |    0.135422  |
  +=============================================================================+
 
 
@@ -1861,7 +1849,7 @@ Try to use right eigenvector as start for a left eigenvector.
 
           Printed all single excitations greater than 0.188054
 
-          Printed all double excitations greater than 0.068086
+          Printed all double excitations greater than 0.068085
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  2
@@ -1875,11 +1863,11 @@ Try to use right eigenvector as start for a left eigenvector.
 
 
 
-          Single Excitation Contribution :              88.2342 %
+          Single Excitation Contribution :              88.2340 %
 
-          Double Excitation Contribution :              11.7658 %
+          Double Excitation Contribution :              11.7660 %
 
-          ||T1||/||T2||                  :               2.7385
+          ||T1||/||T2||                  :               2.7384
 
           Norm of Total Amplitude Vector :               1.0000
 
@@ -1888,11 +1876,11 @@ Try to use right eigenvector as start for a left eigenvector.
  | symmetry|  orbital index  |   Excitation Numbers             |   Amplitude  |
  |  Index  |   a   b   i   j |      NAI      NBJ |     NAIBJ    |              |
  +=============================================================================+
- | 1   1   |   1       6     |      121          |              |    0.928092  |
+ | 1   1   |   1       6     |      121          |              |    0.928090  |
  +-----------------------------------------------------------------------------+
- | 1 1 1 1 |   1   1   7   4 |      145       73 |        10513 |   -0.097566  |
- | 1 1 1 1 |   1   1   7   6 |      145      121 |        10561 |    0.149366  |
- | 1 1 1 1 |  12   1   7   6 |      156      121 |        12211 |    0.069436  |
+ | 1 1 1 1 |   1   1   7   4 |      145       73 |        10513 |   -0.097544  |
+ | 1 1 1 1 |   1   1   7   6 |      145      121 |        10561 |    0.149386  |
+ | 1 1 1 1 |  12   1   7   6 |      156      121 |        12211 |    0.069427  |
  +=============================================================================+
 
 
@@ -1910,8 +1898,8 @@ Try to use right eigenvector as start for a left eigenvector.
 +----------------------------------------------------------------------+
 | sym | multi | state |    E / eV  | % singles | % doubles | % triples |
 +======================================================================+
-|    1|   1   |   1   |    4.35670 |  93.5595  |   6.4405  |   0.0000  |
-|    1|   1   |   2   |    9.77338 |  93.5266  |   6.4734  |   0.0000  |
+|    1|   1   |   1   |    4.35671 |  93.5593  |   6.4407  |   0.0000  |
+|    1|   1   |   2   |    9.77339 |  93.5265  |   6.4735  |   0.0000  |
 +======================================================================+
 
 
@@ -1924,8 +1912,8 @@ Try to use right eigenvector as start for a left eigenvector.
 +----------------------------------------------------------------------+
 | sym | multi | state |    E / eV  | % singles | % doubles | % triples |
 +======================================================================+
-|    1|   1   |   1   |    4.35670 |  92.3982  |   7.6018  |   0.0000  |
-|    1|   1   |   2   |    9.77338 |  92.3234  |   7.6766  |   0.0000  |
+|    1|   1   |   1   |    4.35671 |  92.3980  |   7.6020  |   0.0000  |
+|    1|   1   |   2   |    9.77339 |  92.3232  |   7.6768  |   0.0000  |
 +======================================================================+
 
 
@@ -1990,8 +1978,8 @@ Try to use right eigenvector as start for a left eigenvector.
 
                Index   State Symmetry  Frequency
                --------------------------------------------------
-                  1             1    1     1.601059D-01
-                  2             2    1     3.591652D-01
+                  1             1    1     1.601060D-01
+                  2             2    1     3.591655D-01
                --------------------------------------------------
 
 
@@ -2037,17 +2025,15 @@ Try to use right eigenvector as start for a left eigenvector.
 
  Testing R1 list: 
 
- List nr.  Label     Symmetry      Frequency      T1-norm    T2-norm
+ List nr.  Label     Symmetry      Frequency      T1-norm        T2-norm
 
 
  Testing L1 list: 
 
  List nr.  Label     Symmetry      Frequency      T1-norm        T2-norm
   Solvent 1-order response equations converged in           0  solvent iterations
- RPA: call cceq_str
  Vector nr.  1 of type M1  and symmetry  1 was not found on file.
  Vector nr.  2 of type M1  and symmetry  1 was not found on file.
- RPA: exit cceq_str
 
  Solution of CC response equations completed.
 
@@ -2066,89 +2052,92 @@ Try to use right eigenvector as start for a left eigenvector.
                   ! CC_SOPR: Calculation of CCSD       Residues !
                   +---------------------------------------------+
 
+ Doing the Mf*CsiA
+ Doing the Mf*CsiA
+ Doing the Mf*CsiA
 
 
  CCSD  Right transition moments in atomic units:
  -----------------------------------------------
 
-  1       0.160106  <XDIPLEN |f> =      -0.00106617
-  2       0.359165  <XDIPLEN |f> =       0.00016369
-  1       0.160106  <YDIPLEN |f> =       0.00043926
-  2       0.359165  <YDIPLEN |f> =       0.00046162
-  1       0.160106  <ZDIPLEN |f> =      -0.00679268
-  2       0.359165  <ZDIPLEN |f> =       0.09958700
+  1       0.160106  <XDIPLEN |f> =      -0.00107011
+  2       0.359166  <XDIPLEN |f> =       0.00013556
+  1       0.160106  <YDIPLEN |f> =       0.00043590
+  2       0.359166  <YDIPLEN |f> =       0.00047611
+  1       0.160106  <ZDIPLEN |f> =      -0.00679567
+  2       0.359166  <ZDIPLEN |f> =       0.09960529
 
 
  CCSD  Left  transition moments in atomic units:
  -----------------------------------------------
 
-  1       0.160106  <f|XDIPLEN > =      -0.00056259
-  2       0.359165  <f|XDIPLEN > =      -0.00002936
-  1       0.160106  <f|YDIPLEN > =       0.00038066
-  2       0.359165  <f|YDIPLEN > =       0.00043054
-  1       0.160106  <f|ZDIPLEN > =      -0.00407814
-  2       0.359165  <f|ZDIPLEN > =       0.05736616
+  1       0.160106  <f|XDIPLEN > =      -0.00056257
+  2       0.359166  <f|XDIPLEN > =      -0.00002622
+  1       0.160106  <f|YDIPLEN > =       0.00037933
+  2       0.359166  <f|YDIPLEN > =       0.00041487
+  1       0.160106  <f|ZDIPLEN > =      -0.00408364
+  2       0.359166  <f|ZDIPLEN > =       0.05739094
 
 
  CCSD  linear response residue property in atomic units:
  -------------------------------------------------------
 
- RES{<<XDIPLEN ,XDIPLEN >>( 0.160106)} =     0.00000060 (   0.00077448)
- RES{<<XDIPLEN ,XDIPLEN >>( 0.359165)} =    -0.00000000 (  -0.00006932)
- RES{<<XDIPLEN ,YDIPLEN >>( 0.160106)} =    -0.00000033 (  -0.00057139)
- RES{<<XDIPLEN ,YDIPLEN >>( 0.359165)} =     0.00000003 (   0.00016871)
- RES{<<XDIPLEN ,ZDIPLEN >>( 0.160106)} =     0.00000408 (   0.00202108)
- RES{<<XDIPLEN ,ZDIPLEN >>( 0.359165)} =     0.00000323 (   0.00179818)
- RES{<<YDIPLEN ,XDIPLEN >>( 0.160106)} =    -0.00000033 (  -0.00057139)
- RES{<<YDIPLEN ,XDIPLEN >>( 0.359165)} =     0.00000003 (   0.00016871)
- RES{<<YDIPLEN ,YDIPLEN >>( 0.160106)} =     0.00000017 (   0.00040891)
- RES{<<YDIPLEN ,YDIPLEN >>( 0.359165)} =     0.00000020 (   0.00044581)
- RES{<<YDIPLEN ,ZDIPLEN >>( 0.160106)} =    -0.00000219 (  -0.00147937)
- RES{<<YDIPLEN ,ZDIPLEN >>( 0.359165)} =     0.00003468 (   0.00588886)
- RES{<<ZDIPLEN ,XDIPLEN >>( 0.160106)} =     0.00000408 (   0.00202108)
- RES{<<ZDIPLEN ,XDIPLEN >>( 0.359165)} =     0.00000323 (   0.00179818)
- RES{<<ZDIPLEN ,YDIPLEN >>( 0.160106)} =    -0.00000219 (  -0.00147937)
- RES{<<ZDIPLEN ,YDIPLEN >>( 0.359165)} =     0.00003468 (   0.00588886)
- RES{<<ZDIPLEN ,ZDIPLEN >>( 0.160106)} =     0.00002770 (   0.00526322)
- RES{<<ZDIPLEN ,ZDIPLEN >>( 0.359165)} =     0.00571292 (   0.07558388)
+ RES{<<XDIPLEN ,XDIPLEN >>( 0.160106)} =     0.00000060 (   0.00077589)
+ RES{<<XDIPLEN ,XDIPLEN >>( 0.359166)} =    -0.00000000 (  -0.00005962)
+ RES{<<XDIPLEN ,YDIPLEN >>( 0.160106)} =    -0.00000033 (  -0.00057059)
+ RES{<<XDIPLEN ,YDIPLEN >>( 0.359166)} =     0.00000002 (   0.00014792)
+ RES{<<XDIPLEN ,ZDIPLEN >>( 0.160106)} =     0.00000410 (   0.00202398)
+ RES{<<XDIPLEN ,ZDIPLEN >>( 0.359166)} =     0.00000258 (   0.00160759)
+ RES{<<YDIPLEN ,XDIPLEN >>( 0.160106)} =    -0.00000033 (  -0.00057059)
+ RES{<<YDIPLEN ,XDIPLEN >>( 0.359166)} =     0.00000002 (   0.00014792)
+ RES{<<YDIPLEN ,YDIPLEN >>( 0.160106)} =     0.00000017 (   0.00040663)
+ RES{<<YDIPLEN ,YDIPLEN >>( 0.359166)} =     0.00000020 (   0.00044444)
+ RES{<<YDIPLEN ,ZDIPLEN >>( 0.160106)} =    -0.00000218 (  -0.00147612)
+ RES{<<YDIPLEN ,ZDIPLEN >>( 0.359166)} =     0.00003432 (   0.00585867)
+ RES{<<ZDIPLEN ,XDIPLEN >>( 0.160106)} =     0.00000410 (   0.00202398)
+ RES{<<ZDIPLEN ,XDIPLEN >>( 0.359166)} =     0.00000258 (   0.00160759)
+ RES{<<ZDIPLEN ,YDIPLEN >>( 0.160106)} =    -0.00000218 (  -0.00147612)
+ RES{<<ZDIPLEN ,YDIPLEN >>( 0.359166)} =     0.00003432 (   0.00585867)
+ RES{<<ZDIPLEN ,ZDIPLEN >>( 0.160106)} =     0.00002775 (   0.00526793)
+ RES{<<ZDIPLEN ,ZDIPLEN >>( 0.359166)} =     0.00571644 (   0.07560715)
 
 
  CCSD  Transition strength matrix for state nr.  1 of symmetry 1
- CCSD  excitation energy: 0.16010591
+ CCSD  excitation energy: 0.16010599
 
  Gauge: length
 
                Column   1     Column   2     Column   3
-       1     5.998196E-07  -3.264856E-07   4.084752E-06
-       2    -3.264856E-07   1.672082E-07  -2.188528E-06
-       3     4.084752E-06  -2.188528E-06   2.770151E-05
+       1     6.020117E-07  -3.255757E-07   4.096494E-06
+       2    -3.255757E-07   1.653509E-07  -2.178937E-06
+       3     4.096494E-06  -2.178937E-06   2.775109E-05
     ==== End of matrix output ====
 
  Principal values of diagonalized transition strength matrix:
 
              a.u.               
  1      -0.00000001
- 2      -0.00000000
- 3       0.00002848
+ 2       0.00000000
+ 3       0.00002853
 
  Principal axis of diagonalized transition strength matrix:
 
 
                Column   1     Column   2     Column   3
-       1       0.55028803     0.82221193     0.14543257
-       2       0.83483684    -0.54495428    -0.07792486
-       3      -0.01518335    -0.16429358     0.98629462
+       1       0.56287285     0.81361986     0.14559151
+       2       0.82634307    -0.55781640    -0.07744668
+       3      -0.01820117    -0.16390117     0.98630884
     ==== End of matrix output ====
 
 
  CCSD   oscillator strength matrix for state nr.  1 of symmetry 1
- CCSD  excitation energy: 0.16010591
+ CCSD  excitation energy: 0.16010599
 
 
                Column   1     Column   2     Column   3
-       1     6.402311E-08  -3.484818E-08   4.359953E-07
-       2    -3.484818E-08   1.784734E-08  -2.335975E-07
-       3     4.359953E-07  -2.335975E-07   2.956783E-06
+       1     6.425712E-08  -3.475108E-08   4.372488E-07
+       2    -3.475108E-08   1.764912E-08  -2.325739E-07
+       3     4.372488E-07  -2.325739E-07   2.962077E-06
     ==== End of matrix output ====
 
  Principal values of diagonalized oscillator strength matrix:
@@ -2162,48 +2151,48 @@ Try to use right eigenvector as start for a left eigenvector.
 
 
                Column   1     Column   2     Column   3
-       1       0.55028803     0.82221193     0.14543257
-       2       0.83483684    -0.54495428    -0.07792486
-       3      -0.01518335    -0.16429358     0.98629462
+       1       0.56287285     0.81361986     0.14559151
+       2       0.82634307    -0.55781640    -0.07744668
+       3      -0.01820117    -0.16390117     0.98630884
     ==== End of matrix output ====
 
 
  CCSD  Transition strength matrix for state nr.  2 of symmetry 1
- CCSD  excitation energy: 0.35916522
+ CCSD  excitation energy: 0.35916550
 
  Gauge: length
 
                Column   1     Column   2     Column   3
-       1      -0.00000000     0.00000003     0.00000323
-       2       0.00000003     0.00000020     0.00003468
-       3       0.00000323     0.00003468     0.00571292
+       1      -0.00000000     0.00000002     0.00000258
+       2       0.00000002     0.00000020     0.00003432
+       3       0.00000258     0.00003432     0.00571644
     ==== End of matrix output ====
 
  Principal values of diagonalized transition strength matrix:
 
              a.u.               
- 1      -0.00000002
+ 1      -0.00000001
  2       0.00000000
- 3       0.00571314
+ 3       0.00571665
 
  Principal axis of diagonalized transition strength matrix:
 
 
                Column   1     Column   2     Column   3
-       1      -0.60057985     0.79956458     0.00056599
-       2       0.79955204     0.60056614     0.00607010
-       3      -0.00451352    -0.00409811     0.99998142
+       1      -0.59604124     0.80295370     0.00045209
+       2       0.80294092     0.59602837     0.00600432
+       3      -0.00455173    -0.00394182     0.99998187
     ==== End of matrix output ====
 
 
  CCSD   oscillator strength matrix for state nr.  2 of symmetry 1
- CCSD  excitation energy: 0.35916522
+ CCSD  excitation energy: 0.35916550
 
 
                Column   1     Column   2     Column   3
-       1      -0.00000000     0.00000001     0.00000077
-       2       0.00000001     0.00000005     0.00000830
-       3       0.00000077     0.00000830     0.00136792
+       1      -0.00000000     0.00000001     0.00000062
+       2       0.00000001     0.00000005     0.00000822
+       3       0.00000062     0.00000822     0.00136877
     ==== End of matrix output ====
 
  Principal values of diagonalized oscillator strength matrix:
@@ -2211,18 +2200,18 @@ Try to use right eigenvector as start for a left eigenvector.
              a.u.               
  1      -0.00000000
  2       0.00000000
- 3       0.00136797
+ 3       0.00136882
 
  Principal axis of diagonalized oscillator strength matrix:
 
 
                Column   1     Column   2     Column   3
-       1      -0.60057985     0.79956458     0.00056599
-       2       0.79955204     0.60056614     0.00607010
-       3      -0.00451352    -0.00409811     0.99998142
+       1      -0.59604124     0.80295370     0.00045209
+       2       0.80294092     0.59602837     0.00600432
+       3      -0.00455173    -0.00394182     0.99998187
     ==== End of matrix output ====
 
-  Total time for     18 linear response residues:       0.02 seconds.
+  Total time for     18 linear response residues:       0.01 seconds.
 
 
  CCR12 ANSATZ =   0
@@ -2248,12 +2237,12 @@ Try to use right eigenvector as start for a left eigenvector.
           Number of t2 amplitudes                 :     18528
           Total number of amplitudes in ccsd      :     18720
 
- Iter.  1: Coupled cluster RSTAR energy :    -114.2051743951164156
- Iter.  1: Coupled cluster CCSD  energy :    -114.2051743967577551
+ Iter.  1: Coupled cluster RSTAR energy :    -114.2051743950989504
+ Iter.  1: Coupled cluster CCSD  energy :    -114.2051743967409010
 
- CCSD  energy converged to within   0.10D-07 is         -114.205174396758
- Final 2-norm of the CC vector function:  6.49005822D-08
-  Change in norm^2 of T-amplitudes in this solvent it.:   7.7100618112169172E-009
+ CCSD  energy converged to within   0.10D-07 is         -114.205174396741
+ Final 2-norm of the CC vector function:  6.49009542D-08
+  Change in norm^2 of T-amplitudes in this solvent it.:   7.7099277240311181E-009
 
  Perturbational corrected amplitudes calculated
 
@@ -2272,7 +2261,7 @@ Try to use right eigenvector as start for a left eigenvector.
 
             Total RSTAR energy:                  -114.2051743951
 
-            Total CCSD  energy:                  -114.2051743968
+            Total CCSD  energy:                  -114.2051743967
 
 
                      Perturbative triples corrections
@@ -2382,11 +2371,11 @@ Try to use right eigenvector as start for a left eigenvector.
 
  CC-model               Excitation no.          Hartree               eV
  --------               --------------          --------           ---------
- CCSDR(3)                     1                 0.159582            4.342447
+ CCSDR(3)                     1                 0.159582            4.342444
  --------               --------------          --------           ---------
 
  --------               --------------          --------           ---------
- CCSDR(3)                     2                 0.357308            9.722846
+ CCSDR(3)                     2                 0.357308            9.722840
  --------               --------------          --------           ---------
 
 
@@ -2443,14 +2432,14 @@ Try to use right eigenvector as start for a left eigenvector.
  |(spin, |        +------------------------------------------------------------+
  | spat) |        |     Hartree    |       eV.      |     cm-1       |    %    |
  +=============================================================================+
- | ^1A   |    1   |     0.1601059  |       4.35670  |     35139.185  |  93.56  |
- | ^1A   |    2   |     0.3591652  |       9.77338  |     78827.653  |  93.53  |
+ | ^1A   |    1   |     0.1601060  |       4.35671  |     35139.202  |  93.56  |
+ | ^1A   |    2   |     0.3591655  |       9.77339  |     78827.715  |  93.53  |
  +=============================================================================+
                                                                                 
                                                                                 
      Total energies in Hartree:                                                 
-             1 ^1A       -114.0464536910                                        
-             2 ^1A       -113.8473943806                                        
+             1 ^1A       -114.0464536133                                        
+             2 ^1A       -113.8473940977                                        
                                                                                 
                                                                                 
  +=============================================================================+
@@ -2459,13 +2448,13 @@ Try to use right eigenvector as start for a left eigenvector.
  | spat) |        | Dipole Strength(a.u.) | Oscillator strength  | Direction   |
  +=============================================================================+
  | ^1A   |    1   |        0.0000285      |      0.0000030       | unknown     |
- | ^1A   |    2   |        0.0057131      |      0.0013680       | unknown     |
+ | ^1A   |    2   |        0.0057166      |      0.0013688       | unknown     |
  +=============================================================================+
                                                                                 
                                                                                 
             Total SCF   energy:                  -113.8914224349                
             Total RSTAR energy:                  -114.2051743951                
-            Total CCSD  energy:                  -114.2051743968                
+            Total CCSD  energy:                  -114.2051743967                
                                                                                 
                                                                                 
                      Perturbative triples corrections                           
@@ -2485,14 +2474,14 @@ Try to use right eigenvector as start for a left eigenvector.
  |(spin, |        +--------------------------------------------------+          
  | spat) |        |     Hartree    |       eV.      |     cm-1       |          
  +===================================================================+          
- | ^1A   |    1   |     0.1595820  |       4.34245  |     35024.200  |          
- | ^1A   |    2   |     0.3573080  |       9.72285  |     78420.046  |          
+ | ^1A   |    1   |     0.1595819  |       4.34244  |     35024.179  |          
+ | ^1A   |    2   |     0.3573078  |       9.72284  |     78419.997  |          
  +===================================================================+          
                                                                                 
                                                                                 
      Total energies in Hartree:                                                 
-             1 ^1A       -114.0543668141                                        
-             2 ^1A       -113.8566407862                                        
+             1 ^1A       -114.0543669087                                        
+             2 ^1A       -113.8566410121                                        
 
   1 a.u. =        27.21138 eV.  
   1 a.u. =    219474.62934 cm-1.
@@ -2509,20 +2498,20 @@ Try to use right eigenvector as start for a left eigenvector.
  *******************************************************************************
 
 
- CPU and wall time for CC :      16.594      17.392
+ CPU and wall time for CC :       6.990       7.466
 
  
-     Date and time (Linux)  : Tue Apr 24 17:13:22 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
+     Host name              : localhost.localdomain                   
 
 
                       .-------------------------------------.
                       | End of Coupled Cluster Section (CC) |
                       `-------------------------------------'
 
-  Total CPU  time used in DALTON:  16.94 seconds
-  Total wall time used in DALTON:  17.73 seconds
+  Total CPU  time used in DALTON:   7.16 seconds
+  Total wall time used in DALTON:   7.63 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 17:13:22 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
+     Host name              : localhost.localdomain                   

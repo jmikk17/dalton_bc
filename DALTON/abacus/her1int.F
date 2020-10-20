@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1124,7 +1124,8 @@ C
                IHUCA = IHUCPT(ISHELA)
                IHUCB = IHUCPT(ISHELB)
                IF (IHUCA .EQ. 0 .OR. IHUCB .EQ. 0) THEN
-                  CALL QUIT('Program error IHUCPT(ISHELx) .eq. 0')
+!                  CALL QUIT('Program error IHUCPT(ISHELx) .eq. 0')
+                   HUCFAC = 0.0D0
                ELSE IF (ISHELA .EQ. ISHELB .AND. DISTAB .LT. 1.D-3) THEN
                   HUCFAC = HUCEXC(IHUCA)
                ELSE IF (DISTAB .LT. 1.0D-3 .OR. EWMO) THEN

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -557,9 +557,12 @@ c
 #include "mpif.h"
 #include "priunit.h"
 #include "inforb.h"
+#include "mxcent.h"
+#include "dftacb.h"
       REAL*8 DMAT(NBAST,NBAST)
       CALL MPI_Bcast(DMAT,NBAST*NBAST,MPI_DOUBLE_PRECISION,
      &               0, MPI_COMM_WORLD,ierr)
+      CALL MPI_Bcast(EHOMO, 1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
       END
 #endif
       SUBROUTINE KSMCOLLECT(FMAT,ENERGY,WRK,LFREE)

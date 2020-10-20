@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2017.alpha (2016)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -52,8 +52,8 @@
      
     and
      
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2017.alpha (2016), see http://daltonprogram.org
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -67,13 +67,14 @@
   Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
   Ove Christiansen,         Aarhus University,            Denmark     (CC module)
   Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
   Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
   Paal Dahle,               University of Oslo,           Norway      (Parallelization)
   Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
   Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
   Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
   Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
   Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
   Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
   Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
@@ -89,7 +90,9 @@
   Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
   Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
   Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
+  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
   Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
   Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
@@ -107,10 +110,10 @@
   Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
   Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
   Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
   Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
   Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
   Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
   Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
@@ -128,7 +131,9 @@
   Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
   Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -137,79 +142,78 @@
   Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
   David P. Tew,             University of Bristol,        England     (CCSD(R12))
   Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
   David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Wed Mar 30 19:03:06 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:41 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /gpfs/gss1/work/sdujk/foeroyingur/Programs/dalton/build/pe/develop/test/pehf_lao
-   2) /gpfs/gss1/work/sdujk/foeroyingur/Programs/dalton/build/pe/develop/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_lao
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
  Who compiled             | foeroyingur
- Host                     | fe1.deic.sdu.dk
- System                   | Linux-3.10.0-123.20.1.el7.x86_64
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /opt/sys/apps/intel/2015.04/impi_latest/intel64/bi
-                          | n/mpiifort
- Fortran compiler version | unknown
- C compiler               | /opt/sys/apps/intel/2015.04/impi_latest/intel64/bi
-                          | n/mpiicc
- C compiler version       | unknown
- C++ compiler             | /opt/sys/apps/intel/2015.04/impi_latest/intel64/bi
-                          | n/mpiicpc
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | f680f13ead38ce3387d61c0eb1466454a86e22ae
- Git branch               | [32mpe/develop[m
- Configuration time       | 2016-03-29 09:08:38.287996
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
- * MPI run using 24 processes.
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
  ----------------------------------
 
-**DALTON                                          
-.RUN PROPERTIES                                   
-.PEQM                                             
-*PEQM                                             
-.SOLVAT                                           
-.FIXSOL                                           
-.DIIS                                             
-**WAVE FUNCTIONS                                  
-.HF                                               
-**PROPERTIES                                      
-.SHIELD                                           
-**END OF                                          
+**DALTON
+.RUN PROPERTIES
+.PELIB
+*PELIB
+.SOLVAT
+**WAVE FUNCTIONS
+.HF
+**PROPERTIES
+.SHIELD
+**END OF
 
 
    Content of the .mol file
  ----------------------------
 
-BASIS                                                                          
-STO-3G                                                                         
-Formaldehyde                                                                   
-------------------------                                                       
-AtomTypes=3 NoSymmetry Angstrom                                                
-Charge=6.0 Atoms=1                                                             
-C           -1.588367    -.770650     .029109                                  
-Charge=8.0 Atoms=1                                                             
-O           -1.657083     .436069    -.009750                                  
-Charge=1.0 Atoms=2                                                             
-H           -.620668   -1.294822      .054251                                  
-H           -2.508043   -1.382001     .040282                                  
+BASIS
+STO-3G
+Formaldehyde
+------------------------
+AtomTypes=3 NoSymmetry Angstrom
+Charge=6.0 Atoms=1
+C           -1.588367    -.770650     .029109
+Charge=8.0 Atoms=1
+O           -1.657083     .436069    -.009750
+Charge=1.0 Atoms=2
+H           -.620668   -1.294822      .054251
+H           -2.508043   -1.382001     .040282
 
 
        *******************************************************************
@@ -226,7 +230,7 @@ H           -2.508043   -1.382001     .040282
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
     Static molecular property section will be executed (ABACUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -250,7 +254,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/gpfs/gss1/work/sdujk/foeroyingur/Programs/dalton/build/pe/develop/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -258,7 +262,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/gpfs/gss1/work/sdujk/foeroyingur/Programs/dalton/build/pe/develop/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -266,7 +270,7 @@ H           -2.508043   -1.382001     .040282
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/gpfs/gss1/work/sdujk/foeroyingur/Programs/dalton/build/pe/develop/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -287,6 +291,7 @@ H           -2.508043   -1.382001     .040282
                        Natural abundance:  98.633 %
 
  Center-of-mass coordinates (a.u.):   -3.067740   -0.312997    0.018175
+ Center-of-mass coordinates (Angs):   -1.623378   -0.165631    0.009618
 
 
   Atoms and basis sets
@@ -382,7 +387,7 @@ H           -2.508043   -1.382001     .040282
 @  Nuclear repulsion energy :   31.249215315972 Hartree
 
   Reading potential input file for polarizable embedding calculation
- 
+
     .------------------------------------------------.
     | Information from polarizable embedding library |
     `------------------------------------------------´
@@ -420,8 +425,6 @@ H           -2.508043   -1.382001     .040282
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
  Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):     -3.067740315293     -0.312997395263      0.018174673399
@@ -433,6 +436,18 @@ H           -2.508043   -1.382001     .040282
      ************************************************************************
      ************************** Output from HERINT **************************
      ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x    -48.97334290      -124.47781350      -415.21329231
+      y     -7.20395913       -18.31063652       -61.07770905
+      z      0.36129107         0.91831024         3.06315324
+
 
   Total CPU  time used in HERMIT:   0.01 seconds
   Total wall time used in HERMIT:   0.01 seconds
@@ -469,8 +484,8 @@ H           -2.508043   -1.382001     .040282
  **********************************************************************
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:06 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:41 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Formaldehyde                                                            
@@ -535,59 +550,59 @@ H           -2.508043   -1.382001     .040282
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  3.35D-01  3.34D-01
-@  1  -112.183221255     -5.479550230203E-02    1.54208D+00   -1.12D+02
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  4.39D-03  5.00D-03
+@  1  -112.183221255     -5.479550230221E-02    1.54208D+00   -1.12D+02
       Virial theorem: -V/T =      2.002848
-@      MULPOP C       1.10; O      -0.82; H      -0.14; H      -0.14; 
+@    MULPOP   C       1.10; O      -0.82; H      -0.14; H      -0.14; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  2.22D-02  2.20D-02
-@  2  -112.371650009     -2.718940469910E-02    4.43016D-01   -1.88D-01
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  1.94D-03  2.00D-03
+@  2  -112.371650009     -2.718940470279E-02    4.43016D-01   -1.88D-01
       Virial theorem: -V/T =      2.009873
-@      MULPOP C      -0.13; O      -0.06; H       0.10; H       0.08; 
+@    MULPOP   C      -0.13; O      -0.06; H       0.10; H       0.08; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.81D-02  1.80D-02
-@  3  -112.383271744     -3.135152805897E-02    6.41757D-02   -1.16D-02
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.89D-03  1.00D-03
+@  3  -112.383271744     -3.135152804603E-02    6.41757D-02   -1.16D-02
       Virial theorem: -V/T =      2.008381
-@      MULPOP C       0.07; O      -0.23; H       0.09; H       0.07; 
+@    MULPOP   C       0.07; O      -0.23; H       0.09; H       0.07; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  1.08D-02  1.10D-02
-@  4  -112.383592762     -3.144341432675E-02    1.23404D-02   -3.21D-04
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  2.05D-03  2.00D-03
+@  4  -112.383592762     -3.144341430694E-02    1.23404D-02   -3.21D-04
       Virial theorem: -V/T =      2.008142
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  1.06D-02  1.00D-02
-@  5  -112.383611528     -3.140932343775E-02    3.80999D-03   -1.88D-05
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  1.93D-03  2.00D-03
+@  5  -112.383611528     -3.140932343006E-02    3.80999D-03   -1.88D-05
       Virial theorem: -V/T =      2.008136
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  1.09D-02  1.10D-02
-@  6  -112.383614484     -3.138187543669E-02    4.94537D-04   -2.96D-06
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  1.95D-03  2.00D-03
+@  6  -112.383614484     -3.138187541372E-02    4.94537D-04   -2.96D-06
       Virial theorem: -V/T =      2.008148
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  1.08D-02  1.10D-02
-@  7  -112.383614528     -3.138220723706E-02    1.02614D-04   -4.45D-08
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  1.95D-03  2.00D-03
+@  7  -112.383614528     -3.138220721690E-02    1.02614D-04   -4.45D-08
       Virial theorem: -V/T =      2.008148
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  1.07D-02  1.00D-02
-@  8  -112.383614532     -3.138181223937E-02    5.68410D-05   -3.99D-09
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  1.88D-03  2.00D-03
+@  8  -112.383614532     -3.138181221969E-02    5.68410D-05   -3.99D-09
       Virial theorem: -V/T =      2.008149
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  1.06D-02  1.10D-02
-@  9  -112.383614534     -3.138189127029E-02    1.62620D-05   -1.98D-09
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  1.93D-03  2.00D-03
+@  9  -112.383614534     -3.138189125001E-02    1.62620D-05   -1.98D-09
       Virial theorem: -V/T =      2.008149
-@      MULPOP C       0.08; O      -0.25; H       0.09; H       0.07; 
+@    MULPOP   C       0.08; O      -0.25; H       0.09; H       0.07; 
  -----------------------------------------------------------------------------
-  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  1.08D-02  1.10D-02
-@ 10  -112.383614535     -3.138190841098E-02    3.30830D-06   -1.47D-10
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  1.90D-03  2.00D-03
+@ 10  -112.383614535     -3.138190839083E-02    3.30830D-06   -1.47D-10
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:   -112.383614534593    3.31D-06
+@     Converged SCF energy, gradient:   -112.383614534570    3.31D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -616,28 +631,35 @@ H           -2.508043   -1.382001     .040282
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.208860379097
+            Electronic                -0.208860379099
             Nuclear                    0.196501001970
-            Multipole                  0.000000000000
-            Total                     -0.012359377127
+            Multipole                 -0.013384918679
+            Total                     -0.025744295808
 
        Polarization contributions:
-            Electronic                -0.043831211825
-            Nuclear                    0.041524508596
-            Multipole                 -0.005820339534
-            Total                     -0.008127042763
+            Electronic                -0.043831211771
+            Nuclear                    0.041524508546
+            Multipole                 -0.005820339521
+            Total                     -0.008127042746
 
        Continuum solvation contributions:
-            Electronic                 0.017429395620
-            Nuclear                   -0.017528769205
-            Multipole                 -0.010796114938
-            Total                     -0.010895488523
+            Electronic                 0.017429395930
+            Nuclear                   -0.017528769532
+            Multipole                 -0.010796114915
+            Total                     -0.010895488516
 
-       Total PE energy:            -0.031381908413
+       Total PE energy:               -0.031381908391
+            (excl. multipole-multipole interaction energy)
 
  --- Writing SIRIFC interface file
 
- CPU and wall time for SCF :       0.810       0.840
+
+                           +---------------------------+
+                           ! Writing FOCKMAT in siropt !
+                           +---------------------------+
+
+
+ CPU and wall time for SCF :       0.265       0.266
 
 
                        .-----------------------------------.
@@ -649,18 +671,18 @@ H           -2.508043   -1.382001     .040282
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -112.383614534593                 
+@    Final HF energy:            -112.383614534570                 
 @    Nuclear repulsion:            31.249215315972
-@    Electronic energy:          -143.601447942155
-@    Embedding energy:             -0.031381908411
+@    Electronic energy:          -143.601447942152
+@    Embedding energy:             -0.031381908391
 
 @    Final gradient norm:           0.000003308299
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:07 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:41 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  30Mar16   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -695,12 +717,12 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
   11 H   :1s     0.3551   0.0004   0.8687   0.8781  -0.1332
   12 H   :1s    -0.3598  -0.0005   0.9206  -0.8178  -0.0596
 
-  Total CPU  time used in SIRIUS :   0.81 seconds
-  Total wall time used in SIRIUS :   0.85 seconds
+  Total CPU  time used in SIRIUS :   0.27 seconds
+  Total wall time used in SIRIUS :   0.27 seconds
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:07 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:41 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
@@ -713,6 +735,7 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
         ******** Output from **PROPE input processing for ABACUS ********
         *****************************************************************
 
+     Environment effects are included through the PE library
 
 
  The following molecular properties will be calculated in this run:
@@ -725,7 +748,7 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
       Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
-      Environment is modeled using the polarizable embedding scheme (PE library).
+     Environment effects are included through the PE library
 
  Center of mass dipole origin  :   -3.067740   -0.312997    0.018175
 
@@ -738,11 +761,11 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:07 2016
-     Host name              : s24p28.deic.sdu.dk                      
-    Convergence for MAGFLD.1. Last residual and threshold:   0.00008   0.00010
-    Convergence for MAGFLD.2. Last residual and threshold:   0.00010   0.00010
-    Convergence for MAGFLD.3. Last residual and threshold:   0.00005   0.00010
+     Date and time (Linux)  : Mon Jul 27 22:02:41 2020
+     Host name              : localhost.localdomain                   
+    Convergence for "MAGFLD.1". Last residual and threshold:   0.00008   0.00000;  # trial vectors: 6
+    Convergence for "MAGFLD.2". Last residual and threshold:   0.00010   0.00000;  # trial vectors: 6
+    Convergence for "MAGFLD.3". Last residual and threshold:   0.00005   0.00000;  # trial vectors: 7
 
 
    ***************************************************************************
@@ -751,8 +774,8 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:08 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:42 2020
+     Host name              : localhost.localdomain                   
 
 
                              Molecular geometry (au)
@@ -777,7 +800,7 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
      Total charge       0
 
      Total energy       -112.3836145346 au (Hartrees)
-                         -3058.11371401 eV
+                         -3058.11371400 eV
                            -295063.1345 kJ/mol
                             -70521.7817 kcal/mol
 
@@ -808,8 +831,8 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
                  au               Debye          C m (/(10**-30)
 
-      x      0.07163166         0.18206951         0.60731850
-      y     -0.76237494        -1.93776369        -6.46368394
+      x      0.07163166         0.18206951         0.60731851
+      y     -0.76237494        -1.93776370        -6.46368394
       z      0.02575033         0.06545079         0.21832035
 
 
@@ -830,13 +853,13 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
                        Bx             By             Bz
 
-        C    x   -44.02322337   -16.53254525    -1.40874141
-        C    y    -8.52710834   120.30045386     2.24016665
+        C    x   -44.02322336   -16.53254526    -1.40874141
+        C    y    -8.52710834   120.30045383     2.24016665
         C    z    -1.79389660     2.20404890   192.49399599
 
-        O    x  -409.38447839    14.64173451    -7.87589516
-        O    y     5.91521988 -1017.19070729    49.33122455
-        O    z    -7.08552203    49.75389880   513.40610928
+        O    x  -409.38447831    14.64173451    -7.87589515
+        O    y     5.91521988 -1017.19070716    49.33122453
+        O    z    -7.08552202    49.75389879   513.40610926
 
         H    x    20.16725774    -3.19338442     0.05965375
         H    y     2.97827249    20.85994704     0.18941188
@@ -867,8 +890,8 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
                     Bx             By             Bz
 
-  C      x   -44.02322337   -16.53254525    -1.40874141
-  C      y    -8.52710834   120.30045386     2.24016665
+  C      x   -44.02322336   -16.53254526    -1.40874141
+  C      y    -8.52710834   120.30045383     2.24016665
   C      z    -1.79389660     2.20404890   192.49399599
 
 
@@ -919,9 +942,9 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
 
                     Bx             By             Bz
 
-  O      x  -409.38447839    14.64173451    -7.87589516
-  O      y     5.91521988 -1017.19070729    49.33122455
-  O      z    -7.08552203    49.75389880   513.40610928
+  O      x  -409.38447831    14.64173451    -7.87589515
+  O      y     5.91521988 -1017.19070716    49.33122453
+  O      z    -7.08552202    49.75389879   513.40610926
 
 
   Diamagnetic and paramagnetic contributions (ppm):
@@ -1131,25 +1154,17 @@ File label for MO orbitals:  30Mar16   FOCKDIIS
   bond angle:     H          C          H            117.919
 
 
-
-
- CPU time statistics for ABACUS
- ------------------------------
-
-
-
-
-  Total CPU  time used in ABACUS:   0.78 seconds
-  Total wall time used in ABACUS:   0.78 seconds
+  Total CPU  time used in ABACUS:   0.49 seconds
+  Total wall time used in ABACUS:   0.49 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   1.61 seconds
-  Total wall time used in DALTON:   1.66 seconds
+  Total CPU  time used in DALTON:   0.77 seconds
+  Total wall time used in DALTON:   0.77 seconds
 
  
-     Date and time (Linux)  : Wed Mar 30 19:03:08 2016
-     Host name              : s24p28.deic.sdu.dk                      
+     Date and time (Linux)  : Mon Jul 27 22:02:42 2020
+     Host name              : localhost.localdomain                   

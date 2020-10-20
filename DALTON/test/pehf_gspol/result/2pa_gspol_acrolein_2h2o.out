@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2017.alpha (2017)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -52,8 +52,8 @@
      
     and
      
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2017.alpha (2017), see http://daltonprogram.org
+       Dalton, a molecular electronic structure program,
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -67,13 +67,14 @@
   Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
   Ove Christiansen,         Aarhus University,            Denmark     (CC module)
   Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
+  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
   Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
   Paal Dahle,               University of Oslo,           Norway      (Parallelization)
   Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
   Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
   Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
   Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
+  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
   Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
   Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
   Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
@@ -91,6 +92,7 @@
   Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
   Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
+  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
   Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
   Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
@@ -108,10 +110,10 @@
   Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
   Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
+  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
   Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
   Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex frequency response in RESPONS)
+  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
   Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
   Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
   Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
@@ -129,7 +131,9 @@
   Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
   Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -138,55 +142,46 @@
   Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
   David P. Tew,             University of Bristol,        England     (CCSD(R12))
   Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
   David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Apr 24 14:09:48 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:03 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/magnus/Projects/dalton_devel/dalton-private/build/test/pehf_gspol
-   2) /home/magnus/Projects/dalton_devel/dalton-private/build/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pehf_gspol
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | magnus
- Host                     | foeroyar
- System                   | Linux-4.15.15-300.fc27.x86_64
+ Who compiled             | foeroyingur
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- BLAS                     | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_gf_lp64.
-                          | so;/home/magnus/Programs/intel/compilers_and_libra
-                          | ries_2018.1.163/linux/mkl/lib/intel64/libmkl_seque
-                          | ntial.so;/home/magnus/Programs/intel/compilers_and
-                          | _libraries_2018.1.163/linux/mkl/lib/intel64/libmkl
-                          | _core.so;/usr/lib64/libpthread.so;/usr/lib64/libm.
-                          | so
- LAPACK                   | /home/magnus/Programs/intel/compilers_and_librarie
-                          | s_2018.1.163/linux/mkl/lib/intel64/libmkl_lapack95
-                          | _lp64.a;/home/magnus/Programs/intel/compilers_and_
-                          | libraries_2018.1.163/linux/mkl/lib/intel64/libmkl_
-                          | gf_lp64.so
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 9055103dddfd9c6746ec240c40a8a01c46350288
- Git branch               | master
- Configuration time       | 2018-04-24 13:57:14.806869
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
- * Sequential calculation.
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
@@ -194,8 +189,8 @@ Compilation information
 
 **DALTON
 .RUN RESPONSE
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .GSPOL
 **WAVE FUNCTIONS
 .HF
@@ -236,11 +231,13 @@ H              2.675323   -2.516779   -0.000673
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
     Dynamic molecular response properties section will be executed (RESPONSE module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -264,7 +261,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    3
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -272,7 +269,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -280,7 +277,7 @@ H              2.675323   -2.516779   -0.000673
   Number of symmetry independent centers:    4
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/magnus/Projects/dalton_devel/dalton-private/build/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -305,6 +302,7 @@ H              2.675323   -2.516779   -0.000673
                        Natural abundance:  96.446 %
 
  Center-of-mass coordinates (a.u.):    0.973773   -1.393790    0.000425
+ Center-of-mass coordinates (Angs):    0.515299   -0.737562    0.000225
 
 
   Atoms and basis sets
@@ -457,9 +455,7 @@ H              2.675323   -2.516779   -0.000673
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
- Calculation of one- and two-electron Hamiltonian integrals.
+ Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):      0.973773359129     -1.393789716280      0.000424788898
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
@@ -483,14 +479,8 @@ H              2.675323   -2.516779   -0.000673
       z      0.01223409         0.03109595         0.10372491
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:       43383 ( 96.1% )
- HERMIT - Megabytes written:                              0.502
-
-  Time used in TWOINT     is       0.25 seconds
-  Total CPU  time used in HERMIT:   0.30 seconds
-  Total wall time used in HERMIT:   0.31 seconds
+  Total CPU  time used in HERMIT:   0.02 seconds
+  Total wall time used in HERMIT:   0.02 seconds
 
 
                         .----------------------------------.
@@ -526,8 +516,8 @@ H              2.675323   -2.516779   -0.000673
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:48 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:03 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
      Acrolein                                                                
@@ -539,6 +529,7 @@ H              2.675323   -2.516779   -0.000673
 @    Restricted, closed shell Hartree-Fock calculation.
 
 @    Time-dependent Hartree-Fock calculation (random phase approximation).
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -593,54 +584,60 @@ H              2.675323   -2.516779   -0.000673
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-
-Calculating AOSUPINT
-     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
-      Threshold for discarding integrals :  1.00D-12 )
-@  1  -187.948496600     -4.868374348978E-02    2.01259D+00   -1.88D+02
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  2.46D-02  2.50D-02
+@  1  -187.948501792     -4.868374348971E-02    2.01259D+00   -1.88D+02
       Virial theorem: -V/T =      2.003056
 @    MULPOP   C       0.93; C       0.24; C       0.42; O      -1.03; H      -0.16; H      -0.14; H      -0.12; H      -0.13; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-@  2  -188.277995302     -9.093837723590E-03    7.39409D-01   -3.29D-01
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    2    F  2.32D-02  2.30D-02
+@  2  -188.277992064     -9.093782156968E-03    7.39437D-01   -3.29D-01
       Virial theorem: -V/T =      2.009155
 @    MULPOP   C      -0.14; C      -0.12; C      -0.12; O       0.05; H       0.05; H       0.11; H       0.09; H       0.09; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
-@  3  -188.315432415     -1.888561259408E-02    1.08656D-01   -3.74D-02
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  2.25D-02  2.20D-02
+@  3  -188.315432291     -1.888555761309E-02    1.08663D-01   -3.74D-02
       Virial theorem: -V/T =      2.007941
 @    MULPOP   C       0.16; C      -0.10; C      -0.11; O      -0.26; H       0.05; H       0.10; H       0.08; H       0.08; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-@  4  -188.317193250     -1.925767147939E-02    3.06386D-02   -1.76D-03
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  2.23D-02  2.20D-02
+@  4  -188.317193247     -1.925766590430E-02    3.06390D-02   -1.76D-03
       Virial theorem: -V/T =      2.007863
 @    MULPOP   C       0.14; C      -0.10; C      -0.09; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-@  5  -188.317370671     -1.919167066081E-02    1.14753D-02   -1.77D-04
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  2.25D-02  2.20D-02
+@  5  -188.317370672     -1.919167042622E-02    1.14751D-02   -1.77D-04
       Virial theorem: -V/T =      2.007830
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-@  6  -188.317390052     -1.919889012299E-02    2.95560D-03   -1.94D-05
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  2.25D-02  2.20D-02
+@  6  -188.317390052     -1.919889007225E-02    2.95560D-03   -1.94D-05
       Virial theorem: -V/T =      2.007831
 @    MULPOP   C       0.14; C      -0.09; C      -0.09; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-@  7  -188.317391738     -1.918832142625E-02    1.02866D-03   -1.69D-06
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  2.22D-02  2.30D-02
+@  7  -188.317391738     -1.918832084438E-02    1.02861D-03   -1.69D-06
       Virial theorem: -V/T =      2.007834
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-@  8  -188.317391898     -1.918616582085E-02    3.18858D-04   -1.60D-07
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  2.22D-02  2.20D-02
+@  8  -188.317391898     -1.918616595252E-02    3.18862D-04   -1.60D-07
       Virial theorem: -V/T =      2.007835
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-@  9  -188.317391916     -1.918468638462E-02    5.62091D-05   -1.75D-08
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  2.21D-02  2.30D-02
+@  9  -188.317391916     -1.918468634941E-02    5.62166D-05   -1.75D-08
       Virial theorem: -V/T =      2.007835
 @    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
  -----------------------------------------------------------------------------
-@ 10  -188.317391916     -1.918446172362E-02    9.18807D-06   -5.22D-10
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  2.21D-02  2.20D-02
+@ 10  -188.317391916     -1.918446173531E-02    9.17614D-06   -5.22D-10
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:   -188.317391916159    9.19D-06
+@     Converged SCF energy, gradient:   -188.317391916096    9.18D-06
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -671,23 +668,29 @@ Calculating AOSUPINT
        ---------------------------------------------
 
        Electrostatic contributions:
-            Electronic                -0.467226876803
+            Electronic                -0.467226876813
             Nuclear                    0.448807800596
             Multipole                  0.001021874822
-            Total                     -0.017397201385
+            Total                     -0.017397201395
 
        Polarization contributions:
-            Electronic                -0.043153863363
-            Nuclear                    0.042259438101
+            Electronic                -0.043153863434
+            Nuclear                    0.042259438171
             Multipole                  0.000129039745
-            Total                     -0.000765385517
+            Total                     -0.000765385518
 
-       Total PE energy:               -0.019184461724
+       Total PE energy:               -0.019184461735
             (excl. multipole-multipole interaction energy)
 
  --- Writing SIRIFC interface file
 
- CPU and wall time for SCF :       0.238       0.240
+
+                           +---------------------------+
+                           ! Writing FOCKMAT in siropt !
+                           +---------------------------+
+
+
+ CPU and wall time for SCF :       0.332       0.334
 
 
                        .-----------------------------------.
@@ -699,18 +702,18 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -188.317391916159                 
+@    Final HF energy:            -188.317391916096                 
 @    Nuclear repulsion:           102.664846860515
-@    Electronic energy:          -290.963054314950
-@    Embedding energy:             -0.019184461724
+@    Electronic energy:          -290.963054314876
+@    Embedding energy:             -0.019184461735
 
-@    Final gradient norm:           0.000009188075
+@    Final gradient norm:           0.000009176138
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:48 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:03 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:  24Apr18   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -813,12 +816,12 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
   23 H   :1s    -0.2205   0.5473   0.0473
   24 H   :1s     0.5319  -0.3795  -0.1527
 
-  Total CPU  time used in SIRIUS :   0.24 seconds
-  Total wall time used in SIRIUS :   0.25 seconds
+  Total CPU  time used in SIRIUS :   0.34 seconds
+  Total wall time used in SIRIUS :   0.34 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:48 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:03 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
@@ -832,9 +835,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                  `------------------------------------------------'
 
 
- ------------------------------------------------------------------------------
-  RESPONSE  -  an MCSCF, MC-srDFT, DFT, and SOPPA response property program
- ------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, SOPPA and SOPPA-srDFT response property program
+ ----------------------------------------------------------------------------------------
 
 
  -------- OUTPUT FROM RESPONSE INPUT PROCESSING --------
@@ -854,13 +857,14 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  Spin of operator B , ISPINB=    0
  Spin of operator C , (Excitation energy) ISPINC=    0
 
+Environment effects are included (.PELIB)
+
  Print level                                    : IPRSMO =    2
  Threshold for convergence in RSPPP             : THCPP  = 1.000D-03
  Maximum number of iterations in RSPPP          : MAXITP =   60
  Threshold for convergence in RSPLR             : THCLR  = 1.000D-03
  Maximum number of iterations in RSPLR          : MAXITL =   60
  Maximum iterations in optimal orbital algorithm: MAXITO =    5
- Environment is modeled using the polarizable embedding scheme (PE library)
 
     3 A OPERATORS OF SYMMETRY NO:    1 AND LABELS:
 
@@ -874,18 +878,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
           YDIPLEN 
           ZDIPLEN 
 
- INFO SIR_INTOPEN, old integral transformation not found as expected, ICASE = 2
- - ICASE = 1: MO integral file MOTWOINT does not exist
- - ICASE = 2: no MO integrals on MOTWOINT
- - ICASE = 3: transformation level on MOTWOINT not sufficient
 
- 2-el. integral transformation level 10: Total CPU and WALL times (sec)       0.045       0.046
-
- Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.003       0.003
-
-
-   SCF energy         :     -188.317391916158556
- -- inactive part     :     -290.963054314950114
+   SCF energy         :     -188.317391916096483
+ -- inactive part     :     -290.963054314876331
  -- nuclear repulsion :      102.664846860515169
 
 
@@ -893,6 +888,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
                      *** RHF response calculation (TDHF) ***
                      ***************************************
 
+ Environment is modeled using the polarizable embedding scheme (PE library)
 
 
  Linear response excitations for quadratic response
@@ -900,11 +896,11 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  - is the operator a triplet operator ?     F
 
 
- Perturbation symmetry.     KSYMOP:       1
- Perturbation spin symmetry.TRPLET:       F
- Orbital variables.         KZWOPT:     135
- Configuration variables.   KZCONF:       0
- Total number of variables. KZVAR :     135
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           F
+ Orbital variables.         KZWOPT:         135
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :         135
 
 
 
@@ -964,7 +960,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
       ----------------------------------------------------------------
          1    3.26456D-04  0.00D+00  3.26D-04  7.11D-01    1.56268D-01
          2    3.06919D-04  0.00D+00  3.07D-04  7.20D-01    3.09710D-01
-         3    1.68058D-02  0.00D+00  1.68D-02  7.14D-01    3.22089D-01
+         3    1.68059D-02  0.00D+00  1.68D-02  7.14D-01    3.22089D-01
          4    1.36623D-02  0.00D+00  1.37D-02  7.08D-01    3.80737D-01
 
  ** RSPCTL MICROITERATION NUMBER    7
@@ -1023,11 +1019,11 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  - singlet property operator of symmetry    1  ( A  )
 
 
- Perturbation symmetry.     KSYMOP:       1
- Perturbation spin symmetry.TRPLET:       F
- Orbital variables.         KZWOPT:     135
- Configuration variables.   KZCONF:       0
- Total number of variables. KZVAR :     135
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           F
+ Orbital variables.         KZWOPT:         135
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :         135
 
 
  QRLRVE -- linear response calculation for symmetry  1  ( A  )
@@ -1101,35 +1097,35 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.781339D-01
 
-@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.07813):     21.3535925630    
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.07813):     21.3535925555    
 
-@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.07813):    -9.09559048208    
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.07813):    -9.09559047295    
 
-@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.07813):   -7.840644845155E-03
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.07813):   -7.840829928965E-03
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.154855D+00
 
-@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.15485):     23.2205641822    
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.15485):     23.2205641720    
 
-@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.15485):    -11.5376307186    
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.15485):    -11.5376307074    
 
-@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.15485):   -8.323409106307E-03
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.15485):   -8.323599597433E-03
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.161012D+00
 
-@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.16101):     23.4694695489    
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.16101):     23.4694695378    
 
-@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.16101):    -11.8794086898    
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.16101):    -11.8794086776    
 
-@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.16101):   -8.386264861790E-03
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.16101):   -8.386456000125E-03
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.190351D+00
 
-@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.19035):     25.0123228692    
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.19035):     25.0123228565    
 
-@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.19035):    -14.0665709495    
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.19035):    -14.0665709371    
 
-@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.19035):   -8.769763570657E-03
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.19035):   -8.769958465050E-03
 
 
  QRLRVE -- linear response calculation for symmetry  1  ( A  )
@@ -1184,10 +1180,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
        No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
       ----------------------------------------------------------------
-         1    5.84127D-04  0.00D+00  5.84D-04  5.86D+00    7.81339D-02
-         2    1.03671D-03  0.00D+00  1.04D-03  7.82D+00    1.54855D-01
+         1    5.84126D-04  0.00D+00  5.84D-04  5.86D+00    7.81339D-02
+         2    1.03670D-03  0.00D+00  1.04D-03  7.82D+00    1.54855D-01
          3    1.10515D-03  0.00D+00  1.11D-03  8.09D+00    1.61012D-01
-         4    1.56895D-03  0.00D+00  1.57D-03  9.82D+00    1.90351D-01
+         4    1.56893D-03  0.00D+00  1.57D-03  9.82D+00    1.90351D-01
 
  *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
 
@@ -1203,35 +1199,35 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.781339D-01
 
-@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.07813):    -9.09564988463    
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.07813):    -9.09564987111    
 
-@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.07813):     34.3514253196    
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.07813):     34.3514253103    
 
-@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.07813):   -8.972072408278E-04
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.07813):   -8.969122352153E-04
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.154855D+00
 
-@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.15485):    -11.5376498098    
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.15485):    -11.5376497976    
 
-@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.15485):     39.1238547080    
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.15485):     39.1238546962    
 
-@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.15485):   -4.041615924335E-04
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.15485):   -4.038669974122E-04
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.161012D+00
 
-@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.16101):    -11.8794187756    
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.16101):    -11.8794187635    
 
-@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.16101):     39.7772312267    
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.16101):     39.7772312131    
 
-@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.16101):   -3.328345453728E-04
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.16101):   -3.325404104624E-04
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.190351D+00
 
-@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.19035):    -14.0665075719    
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.19035):    -14.0665075714    
 
-@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.19035):     43.8989226244    
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.19035):     43.8989226104    
 
-@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.19035):    1.332331528819E-04
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.19035):    1.335225082069E-04
 
 
  QRLRVE -- linear response calculation for symmetry  1  ( A  )
@@ -1253,14 +1249,14 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
          1    3.82465D-01  0.00D+00  3.82D-01  1.69D+00    7.81339D-02
          2    4.41909D-01  0.00D+00  4.42D-01  1.80D+00    1.54855D-01
          3    4.53379D-01  0.00D+00  4.53D-01  1.81D+00    1.61012D-01
-         4    6.03577D-01  0.00D+00  6.04D-01  1.97D+00    1.90351D-01
+         4    6.03576D-01  0.00D+00  6.04D-01  1.97D+00    1.90351D-01
 
  ** RSPCTL MICROITERATION NUMBER    2
 
  *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
 
  GP * SOLUTION vector at frequency     0.16101 a.u.
- after    8 linear transformations is      4.77175094D+00
+ after    8 linear transformations is      4.77175060D+00
  INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
  Determinant of reduced matrix is -7.08 * 10 ** -2.0
 
@@ -1275,7 +1271,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
       ----------------------------------------------------------------
          1    9.71785D-02  0.00D+00  9.72D-02  1.74D+00    7.81339D-02
          2    1.53087D-01  0.00D+00  1.53D-01  2.10D+00    1.54855D-01
-         3    5.96451D-01  0.00D+00  5.96D-01  6.30D+00    1.61012D-01
+         3    5.96455D-01  0.00D+00  5.96D-01  6.30D+00    1.61012D-01
          4    1.53445D-01  0.00D+00  1.53D-01  1.99D+00    1.90351D-01
 
  ** RSPCTL MICROITERATION NUMBER    3
@@ -1283,7 +1279,7 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    24
 
  GP * SOLUTION vector at frequency     0.16101 a.u.
- after   12 linear transformations is      4.83259606D+00
+ after   12 linear transformations is      4.83259604D+00
  INERTIA (POS,ZER,NEG) of reduced matrix is   23    0    1
  Determinant of reduced matrix is -9.71 * 10 **  0.0
 
@@ -1297,9 +1293,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
        No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
       ----------------------------------------------------------------
          1    1.43535D-02  0.00D+00  1.44D-02  1.75D+00    7.81339D-02
-         2    8.20923D-02  0.00D+00  8.21D-02  3.30D+00    1.54855D-01
-         3    3.71026D-02  0.00D+00  3.71D-02  2.12D+00    1.61012D-01
-         4    3.40204D-02  0.00D+00  3.40D-02  2.02D+00    1.90351D-01
+         2    8.20934D-02  0.00D+00  8.21D-02  3.30D+00    1.54855D-01
+         3    3.71033D-02  0.00D+00  3.71D-02  2.12D+00    1.61012D-01
+         4    3.40205D-02  0.00D+00  3.40D-02  2.02D+00    1.90351D-01
 
  ** RSPCTL MICROITERATION NUMBER    4
 
@@ -1319,10 +1315,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
        No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
       ----------------------------------------------------------------
-         1    2.97544D-03  0.00D+00  2.98D-03  1.75D+00    7.81339D-02
-         2    2.87079D-02  0.00D+00  2.87D-02  3.54D+00    1.54855D-01
-         3    1.27376D-02  0.00D+00  1.27D-02  2.11D+00    1.61012D-01
-         4    1.08219D-02  0.00D+00  1.08D-02  2.02D+00    1.90351D-01
+         1    2.97540D-03  0.00D+00  2.98D-03  1.75D+00    7.81339D-02
+         2    2.87081D-02  0.00D+00  2.87D-02  3.54D+00    1.54855D-01
+         3    1.27377D-02  0.00D+00  1.27D-02  2.11D+00    1.61012D-01
+         4    1.08220D-02  0.00D+00  1.08D-02  2.02D+00    1.90351D-01
 
  ** RSPCTL MICROITERATION NUMBER    5
 
@@ -1342,10 +1338,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
        No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
       ----------------------------------------------------------------
-         1    6.19158D-04  0.00D+00  6.19D-04  1.75D+00    7.81339D-02
-         2    6.87893D-03  0.00D+00  6.88D-03  3.57D+00    1.54855D-01
-         3    3.16327D-03  0.00D+00  3.16D-03  2.11D+00    1.61012D-01
-         4    3.17321D-03  0.00D+00  3.17D-03  2.02D+00    1.90351D-01
+         1    6.19118D-04  0.00D+00  6.19D-04  1.75D+00    7.81339D-02
+         2    6.87901D-03  0.00D+00  6.88D-03  3.57D+00    1.54855D-01
+         3    3.16302D-03  0.00D+00  3.16D-03  2.11D+00    1.61012D-01
+         4    3.17295D-03  0.00D+00  3.17D-03  2.02D+00    1.90351D-01
 
  ** RSPCTL MICROITERATION NUMBER    6
 
@@ -1365,10 +1361,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
        No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
       ----------------------------------------------------------------
-         1    1.08854D-04  0.00D+00  1.09D-04  1.75D+00    7.81339D-02
-         2    1.40948D-03  0.00D+00  1.41D-03  3.57D+00    1.54855D-01
-         3    4.84874D-04  0.00D+00  4.85D-04  2.11D+00    1.61012D-01
-         4    5.84636D-04  0.00D+00  5.85D-04  2.02D+00    1.90351D-01
+         1    1.08965D-04  0.00D+00  1.09D-04  1.75D+00    7.81339D-02
+         2    1.40943D-03  0.00D+00  1.41D-03  3.57D+00    1.54855D-01
+         3    4.85166D-04  0.00D+00  4.85D-04  2.11D+00    1.61012D-01
+         4    5.85471D-04  0.00D+00  5.85D-04  2.02D+00    1.90351D-01
 
  *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
 
@@ -1384,35 +1380,35 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.781339D-01
 
-@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.07813):   -7.823683828523E-03
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.07813):   -7.823853529081E-03
 
-@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.07813):   -9.102295529054E-04
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.07813):   -9.099479342482E-04
 
-@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.07813):     4.63559502362    
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.07813):     4.63559502441    
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.154855D+00
 
-@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.15485):   -8.007948308088E-03
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.15485):   -8.008328262270E-03
 
-@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.15485):   -7.318594333218E-04
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.15485):   -7.312575948595E-04
 
-@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.15485):     4.84476554351    
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.15485):     4.84476554429    
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.161012D+00
 
-@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.16101):   -8.523651279536E-03
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.16101):   -8.523759429513E-03
 
-@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.16101):   -1.022171995167E-04
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.16101):   -1.020377732499E-04
 
-@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.16101):     4.83335508318    
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.16101):     4.83335508375    
 
 @ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.190351D+00
 
-@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.19035):   -8.881196287262E-03
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.19035):   -8.881371481381E-03
 
-@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.19035):    3.987071401055E-04
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.19035):    3.989812039772E-04
 
-@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.19035):     4.96156508201    
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.19035):     4.96156508266    
 
 
  Second order moment in a.u. for
@@ -1420,7 +1416,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.000669
+ omega B, excitation energy, moment :    0.078134    0.156268    0.000668
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.156>> =   0.000668
 
 
  Second order moment in a.u. for
@@ -1428,7 +1426,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.000324
+ omega B, excitation energy, moment :    0.078134    0.156268    0.000324
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.156>> =   0.000324
 
 
  Second order moment in a.u. for
@@ -1436,7 +1436,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.486954
+ omega B, excitation energy, moment :    0.078134    0.156268    0.486954
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.156>> =   0.486954
 
 
  Second order moment in a.u. for
@@ -1444,7 +1446,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.000324
+ omega B, excitation energy, moment :    0.078134    0.156268    0.000324
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.156>> =   0.000324
 
 
  Second order moment in a.u. for
@@ -1452,7 +1456,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.000265
+ omega B, excitation energy, moment :    0.078134    0.156268    0.000265
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.156>> =   0.000265
 
 
  Second order moment in a.u. for
@@ -1460,7 +1466,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.430127
+ omega B, excitation energy, moment :    0.078134    0.156268    0.430127
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.156>> =   0.430127
 
 
  Second order moment in a.u. for
@@ -1468,7 +1476,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.486954
+ omega B, excitation energy, moment :    0.078134    0.156268    0.486954
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.156>> =   0.486954
 
 
  Second order moment in a.u. for
@@ -1476,7 +1486,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268   -0.430128
+ omega B, excitation energy, moment :    0.078134    0.156268    0.430128
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.156>> =   0.430128
 
 
  Second order moment in a.u. for
@@ -1484,7 +1496,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             1    1    0
 
- omega B, excitation energy, moment :    0.078134    0.156268    0.000800
+ omega B, excitation energy, moment :    0.078134    0.156268   -0.000800
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.156>> =  -0.000800
 
 
  Second order moment in a.u. for
@@ -1492,7 +1506,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710   -7.269624
+ omega B, excitation energy, moment :    0.154855    0.309710    7.269624
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.155, w2 = 0.310>> =   7.269624
 
 
  Second order moment in a.u. for
@@ -1500,7 +1516,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710    5.657044
+ omega B, excitation energy, moment :    0.154855    0.309710   -5.657044
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.155, w2 = 0.310>> =  -5.657044
 
 
  Second order moment in a.u. for
@@ -1508,7 +1526,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710    0.002923
+ omega B, excitation energy, moment :    0.154855    0.309710   -0.002923
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.155, w2 = 0.310>> =  -0.002923
 
 
  Second order moment in a.u. for
@@ -1516,7 +1536,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710    5.657044
+ omega B, excitation energy, moment :    0.154855    0.309710   -5.657044
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.155, w2 = 0.310>> =  -5.657044
 
 
  Second order moment in a.u. for
@@ -1524,7 +1546,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710   -3.310777
+ omega B, excitation energy, moment :    0.154855    0.309710    3.310777
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.155, w2 = 0.310>> =   3.310777
 
 
  Second order moment in a.u. for
@@ -1532,7 +1556,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710   -0.002248
+ omega B, excitation energy, moment :    0.154855    0.309710    0.002247
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.155, w2 = 0.310>> =   0.002247
 
 
  Second order moment in a.u. for
@@ -1540,7 +1566,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710    0.002924
+ omega B, excitation energy, moment :    0.154855    0.309710   -0.002923
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.155, w2 = 0.310>> =  -0.002923
 
 
  Second order moment in a.u. for
@@ -1548,7 +1576,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710   -0.002248
+ omega B, excitation energy, moment :    0.154855    0.309710    0.002248
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.155, w2 = 0.310>> =   0.002248
 
 
  Second order moment in a.u. for
@@ -1556,7 +1586,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             2    1    0
 
- omega B, excitation energy, moment :    0.154855    0.309710   -0.485857
+ omega B, excitation energy, moment :    0.154855    0.309710    0.485857
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.155, w2 = 0.310>> =   0.485857
 
 
  Second order moment in a.u. for
@@ -1564,7 +1596,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             3    1    0
 
- omega B, excitation energy, moment :    0.161012    0.322024    0.001600
+ omega B, excitation energy, moment :    0.161012    0.322024    0.001601
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =   0.001601
 
 
  Second order moment in a.u. for
@@ -1572,7 +1606,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             3    1    0
 
- omega B, excitation energy, moment :    0.161012    0.322024   -0.000992
+ omega B, excitation energy, moment :    0.161012    0.322024   -0.000993
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000993
 
 
  Second order moment in a.u. for
@@ -1581,6 +1617,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  Excited state no., symmetry, spin:             3    1    0
 
  omega B, excitation energy, moment :    0.161012    0.322024   -0.632299
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.632299
 
 
  Second order moment in a.u. for
@@ -1590,6 +1628,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
  omega B, excitation energy, moment :    0.161012    0.322024   -0.000993
 
+@    <<XDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000993
+
 
  Second order moment in a.u. for
  A operator label,  symmetry, spin:      YDIPLEN     1    0
@@ -1597,6 +1637,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  Excited state no., symmetry, spin:             3    1    0
 
  omega B, excitation energy, moment :    0.161012    0.322024    0.002140
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =   0.002140
 
 
  Second order moment in a.u. for
@@ -1606,6 +1648,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
  omega B, excitation energy, moment :    0.161012    0.322024    1.774663
 
+@    <<ZDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =   1.774663
+
 
  Second order moment in a.u. for
  A operator label,  symmetry, spin:      XDIPLEN     1    0
@@ -1613,6 +1657,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  Excited state no., symmetry, spin:             3    1    0
 
  omega B, excitation energy, moment :    0.161012    0.322024   -0.632299
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.632299
 
 
  Second order moment in a.u. for
@@ -1622,6 +1668,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
  omega B, excitation energy, moment :    0.161012    0.322024    1.774664
 
+@    <<YDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =   1.774664
+
 
  Second order moment in a.u. for
  A operator label,  symmetry, spin:      ZDIPLEN     1    0
@@ -1630,13 +1678,17 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
 
  omega B, excitation energy, moment :    0.161012    0.322024   -0.000187
 
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000187
+
 
  Second order moment in a.u. for
  A operator label,  symmetry, spin:      XDIPLEN     1    0
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    0.001322
+ omega B, excitation energy, moment :    0.190351    0.380702   -0.001322
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =  -0.001322
 
 
  Second order moment in a.u. for
@@ -1644,7 +1696,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    0.000306
+ omega B, excitation energy, moment :    0.190351    0.380702   -0.000306
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =  -0.000306
 
 
  Second order moment in a.u. for
@@ -1652,7 +1706,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      XDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    1.032587
+ omega B, excitation energy, moment :    0.190351    0.380702   -1.032588
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =  -1.032588
 
 
  Second order moment in a.u. for
@@ -1660,7 +1716,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    0.000306
+ omega B, excitation energy, moment :    0.190351    0.380702   -0.000306
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =  -0.000306
 
 
  Second order moment in a.u. for
@@ -1668,7 +1726,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    0.001355
+ omega B, excitation energy, moment :    0.190351    0.380702   -0.001355
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =  -0.001355
 
 
  Second order moment in a.u. for
@@ -1676,7 +1736,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      YDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    1.049632
+ omega B, excitation energy, moment :    0.190351    0.380702   -1.049632
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =  -1.049632
 
 
  Second order moment in a.u. for
@@ -1684,7 +1746,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    1.032588
+ omega B, excitation energy, moment :    0.190351    0.380702   -1.032588
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =  -1.032588
 
 
  Second order moment in a.u. for
@@ -1692,7 +1756,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702    1.049631
+ omega B, excitation energy, moment :    0.190351    0.380702   -1.049631
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =  -1.049631
 
 
  Second order moment in a.u. for
@@ -1700,7 +1766,9 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
  B operator label,  symmetry, spin:      ZDIPLEN     1    0
  Excited state no., symmetry, spin:             4    1    0
 
- omega B, excitation energy, moment :    0.190351    0.380702   -0.001616
+ omega B, excitation energy, moment :    0.190351    0.380702    0.001616
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =   0.001616
 
 
        *******************************************************************
@@ -1729,10 +1797,10 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
      ---------------------------------------------------------------------------------
      Sym  No  Energy        Sxx        Syy        Szz        Sxy        Sxz        Syz
      ---------------------------------------------------------------------------------
-       1   1    4.25    -0.0    -0.0     0.0    -0.0    -0.5    -0.4
-       1   2    8.43    -7.3    -3.3    -0.5     5.7     0.0    -0.0
+       1   1    4.25     0.0     0.0    -0.0     0.0     0.5     0.4
+       1   2    8.43     7.3     3.3     0.5    -5.7    -0.0     0.0
        1   3    8.76     0.0     0.0    -0.0    -0.0    -0.6     1.8
-       1   4   10.36     0.0     0.0    -0.0     0.0     1.0     1.0
+       1   4   10.36    -0.0    -0.0     0.0    -0.0    -1.0    -1.0
      ------------------------------------------------------------------------
 
 
@@ -1758,8 +1826,8 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
    ---------------------------------------------------------------------------------
    Sym  No  Energy  Polarization         Df         Dg          D      sigma       R
    ---------------------------------------------------------------------------------
-     1   1    4.25   Linear       0.597E-09  0.281E-01  0.113E+00  0.149E-02    1.50
-     1   1    4.25   Circular     0.597E-09  0.281E-01  0.169E+00  0.224E-02    1.50
+     1   1    4.25   Linear       0.596E-09  0.281E-01  0.113E+00  0.149E-02    1.50
+     1   1    4.25   Circular     0.596E-09  0.281E-01  0.169E+00  0.224E-02    1.50
      1   2    8.43   Linear       0.408E+01  0.427E+01  0.252E+02  0.131E+01    0.69
      1   2    8.43   Circular     0.408E+01  0.427E+01  0.174E+02  0.908E+00    0.69
      1   3    8.76   Linear       0.421E-06  0.237E+00  0.946E+00  0.532E-01    1.50
@@ -1768,17 +1836,17 @@ File label for MO orbitals:  24Apr18   FOCKDIIS
      1   4   10.36   Circular     0.376E-07  0.145E+00  0.867E+00  0.682E-01    1.50
    ---------------------------------------------------------------------------------
 
-  Total CPU  time used in RESPONSE:   0.35 seconds
-  Total wall time used in RESPONSE:   0.35 seconds
+  Total CPU  time used in RESPONSE:   0.93 seconds
+  Total wall time used in RESPONSE:   0.94 seconds
 
 
                    .-------------------------------------------.
                    | End of Dynamic Property Section (RESPONS) |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   0.90 seconds
-  Total wall time used in DALTON:   0.91 seconds
+  Total CPU  time used in DALTON:   1.30 seconds
+  Total wall time used in DALTON:   1.31 seconds
 
  
-     Date and time (Linux)  : Tue Apr 24 14:09:49 2018
-     Host name              : foeroyar                                
+     Date and time (Linux)  : Mon Jul 27 22:02:04 2020
+     Host name              : localhost.localdomain                   

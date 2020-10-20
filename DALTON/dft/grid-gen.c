@@ -2,7 +2,7 @@
 
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1655,20 +1655,45 @@ extern void FSYM2(get_atom_by_icent)(const integer* icent, real* charge,
 static GridGenAtom*
 grid_gen_atom_new(integer* atom_cnt)
 {
-    integer nat = 0, i;
-    integer icent, mult;
+    integer icent, nat, nat_total;
+    integer cnt, mult;
+    integer i;
     real x[8], y[8], z[8], charge;
     GridGenAtom* atoms;
-
-    FSYM2(get_no_atoms)(atom_cnt);
-    atoms = dal_new(*atom_cnt, GridGenAtom);
     
+    // gets total number of centers
+    FSYM2(get_no_atoms)(atom_cnt);
+    // find out which need grids
+    // charge is ABS(IZATOM(N)), skip zero (floating orbital) and 1234567890 (point charge) 
     icent = 0;
+    nat = 0;
+    nat_total = 0;
     do {
-        integer cnt;
         icent++;
-        FSYM2(get_atom_by_icent)(&icent, &charge, &cnt, &mult, x,y,z);
+        FSYM2(get_atom_by_icent)(&icent, &charge, &cnt, &mult, x, y, z);
         for(i=0; i<cnt; i++) {
+            if (charge == 0 || charge > 12345){
+                nat_total++;
+                continue;
+            }
+            nat++;
+            nat_total++;
+        }
+    } while(nat_total<*atom_cnt);
+    
+    //allocate and fill atoms
+    atoms = dal_new(nat, GridGenAtom);
+    icent = 0;
+    nat = 0;
+    nat_total = 0;
+    do {
+        icent++;
+        FSYM2(get_atom_by_icent)(&icent, &charge, &cnt, &mult, x, y, z);
+        for(i=0; i<cnt; i++) {
+            if (charge == 0 || charge > 12345){
+                nat_total++;
+                continue;
+            }
             atoms[nat].x = x[i];
             atoms[nat].y = y[i];
             atoms[nat].z = z[i];
@@ -1676,8 +1701,10 @@ grid_gen_atom_new(integer* atom_cnt)
             atoms[nat].Z = charge;
             atoms[nat].mult = mult;
             nat++;
+            nat_total++;
         }
-    } while(nat<*atom_cnt);
+    } while(nat_total<*atom_cnt);
+    *atom_cnt = nat;
     return atoms;
 }
 

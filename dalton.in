@@ -98,7 +98,7 @@ usage (){
         echo ' -ow              : redirect output from program to job directory with standard file name'
         echo ' -dal file        : the '$dalton' input file'
         echo ' -mol file        : the molecule input file'
-        echo ' -pot file        : the potential input file (for .QM3, .QMMM and .PEQM)'
+        echo ' -pot file        : the potential input file (for .QM3, .QMMM and .PELIB)'
         echo ' -pcm file        : the pcm input file'
         echo ' -ext log         : change default output extension from ".out" to ".log"'
         echo ' -nobackup        : do not backup files, simply overwrite outputs'
@@ -208,13 +208,13 @@ while [ -n "`echo $1 | grep '^-'`" ]; do
       -pcm ) pcmfil=$2; shift;;
       -m|-mw ) WRKMEM=$2; export WRKMEM; shift;;
       -M|-mb ) WRKMEM=`expr $2 \* 128000`; export WRKMEM; shift;;
-         -gb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
-         -nw ) NODE_WRKMEM=$2; export NODE_WRKMEM; shift;;
+       -gb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
+       -nw ) NODE_WRKMEM=$2; export NODE_WRKMEM; shift;;
        -nb|-nmb ) NODE_WRKMEM=`expr $2 "*" 128000`; export NODE_WRKMEM; shift;;
-         -ngb ) WRKMEM=`expr $2 \* 128000 \* 1024`; export WRKMEM; shift;;
+       -ngb ) NODE_WRKMEM=`expr $2 \* 128000 \* 1024`; export NODE_WRKMEM; shift;;
        -v|--version ) echo "version: @DALTON_VERSION@"; exit 0;;
-      -x ) optx=1; gs=$2; ch=$3; shift;shift;;
-      * ) echo "Unrecognized option: $1"; usage; exit 1;;
+       -x ) optx=1; gs=$2; ch=$3; shift;shift;;
+        * ) echo "Unrecognized option: $1"; usage; exit 1;;
    esac
    shift
 done
@@ -454,29 +454,34 @@ else
    fi
 fi
 if [ "x$potfil" != "x" ]; then
-  if [ -s $WRKDIR/$potfil.$POTEXT -a -r $WRKDIR/$potfil.$POTEXT ]; then
-     cp $WRKDIR/$potfil.$POTEXT POTENTIAL.INP
-  else
-     echo "$WRKDIR/$potfil.$POTEXT does not exist or is not readable"
-     dalton_exitcode=1
-  fi
+   if [ -s $WRKDIR/$potfil.$POTEXT -a -r $WRKDIR/$potfil.$POTEXT ]; then
+      if [[ $(file --mime-type -b "$WRKDIR/$potfil.$POTEXT") == application/x-hdf ]]; then
+         cp $WRKDIR/$potfil.$POTEXT pelib_temp.h5
+         h5unjam -i pelib_temp.h5 -o standard.h5 -u POTENTIAL.INP
+      else
+         cp $WRKDIR/$potfil.$POTEXT POTENTIAL.INP
+      fi
+   else
+      echo "$WRKDIR/$potfil.$POTEXT does not exist or is not readable"
+      dalton_exitcode=1
+   fi
 fi
 
 if [ "x$pcmfil" != "x" ]; then
-  if [ -s $WRKDIR/$pcmfil.$PCMEXT -a -r $WRKDIR/$pcmfil.$PCMEXT ]; then
-     cp $WRKDIR/$pcmfil.$PCMEXT pcmsolver.inp
-     python @PCMSolver_PARSE_DIR@/pcmsolver.py pcmsolver.inp
-  else
-     echo "$WRKDIR/$pcmfil.$PCMEXT for PCM does not exist or is not readable"
-     dalton_exitcode=1
-  fi
+   if [ -s $WRKDIR/$pcmfil.$PCMEXT -a -r $WRKDIR/$pcmfil.$PCMEXT ]; then
+      cp $WRKDIR/$pcmfil.$PCMEXT pcmsolver.inp
+      python @PCMSolver_PARSE_DIR@/pcmsolver.py pcmsolver.inp
+   else
+      echo "$WRKDIR/$pcmfil.$PCMEXT for PCM does not exist or is not readable"
+      dalton_exitcode=1
+   fi
 fi
 
 # put files listed under -put to scratch directory
 if [ "x$PUT_FILES" != "x" ]; then
    for file in $PUT_FILES; do
-       echo copying $file to scratch directory
-       cp $WRKDIR/$file $file
+      echo copying $file to scratch directory
+      cp $WRKDIR/$file $file
    done
 fi
 

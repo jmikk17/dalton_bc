@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2020.alpha (2020)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -53,7 +53,7 @@
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2020.alpha (2020), see http://daltonprogram.org
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -133,6 +133,7 @@
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
   Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -146,38 +147,39 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Fri Feb  7 22:56:42 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
      Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/foeroyingur/Projects/dalton_devel/dalton/DALTON/test/pecc_cvs
-   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pelib/basis
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pecc_cvs
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
 Compilation information
 -----------------------
 
  Who compiled             | foeroyingur
- Host                     | tromso-ansatte2-dhcp919.wifi.uit.no
- System                   | Linux-5.4.14-200.fc31.x86_64
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
  BLAS                     | /lib64/libopenblas.so
  LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 6148a1ade6ea0831c0dd5731995cb0e7b7b0a209
- Git branch               | pe/develop
- Configuration time       | 2020-02-07 09:44:57.504711
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
  * Sequential calculation.
 
@@ -187,7 +189,7 @@ Compilation information
 
 **DALTON
 .RUN WAVE FUNCTIONS
-.PEQM
+.PELIB
 **INTEGRALS
 .DIPLEN
 **WAVE FUNCTIONS
@@ -254,7 +256,7 @@ H      5.189000    -2.545000    10.509000
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -278,7 +280,7 @@ H      5.189000    -2.545000    10.509000
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   7 :
-     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pelib/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -286,7 +288,7 @@ H      5.189000    -2.545000    10.509000
   Number of symmetry independent centers:    3
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pelib/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -294,7 +296,7 @@ H      5.189000    -2.545000    10.509000
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pelib/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
   Atomic type no.    4
   --------------------
@@ -302,7 +304,7 @@ H      5.189000    -2.545000    10.509000
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pelib/basis/STO-3G"
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis/STO-3G"
 
 
                          SYMGRP: Point group information
@@ -326,6 +328,7 @@ H      5.189000    -2.545000    10.509000
                        Natural abundance:  99.316 %
 
  Center-of-mass coordinates (a.u.):   10.061125   -5.277771   19.914308
+ Center-of-mass coordinates (Angs):    5.324118   -2.792876   10.538198
 
 
   Atoms and basis sets
@@ -480,6 +483,8 @@ H      5.189000    -2.545000    10.509000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
+Calculation of 2-electron integrals are postoned until they are needed.
+
 
      ************************************************************************
      ************************** Output from HERINT **************************
@@ -497,13 +502,8 @@ H      5.189000    -2.545000    10.509000
       z    398.99866376      1014.15338039      3382.85154721
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:        6966 ( 96.0% )
- HERMIT - Megabytes written:                              0.082
-
-  Total CPU  time used in HERMIT:   0.04 seconds
-  Total wall time used in HERMIT:   0.04 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -543,7 +543,7 @@ NCCEXCI for singlet:    1
  **********************************************************************
 
  
-     Date and time (Linux)  : Fri Feb  7 22:56:43 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
      Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
@@ -569,7 +569,7 @@ NCCEXCI for singlet:    1
      Wave function specification
      ============================
 
-     For the specification of the Coupled Cluster: see later.
+     For the specification of the Coupled Cluster: see below.
 
 
      Wave function environment is modeled using the
@@ -628,6 +628,19 @@ NCCEXCI for singlet:    1
  -----------------------------------------------------------------------------
 
 Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:        6966 ( 96.0% )
+ HERMIT - Megabytes written:                              0.082
+
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
 @  1  -130.277763156     -3.234718963515E-02    1.33753D+00   -1.30D+02
@@ -661,15 +674,15 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      2.003808
 @    MULPOP   N      -0.50; H       0.20; H       0.20; H       0.21; O      -0.46; H       0.12; H       0.23; 
  -----------------------------------------------------------------------------
-@  8  -130.431167652     -2.061147039860E-02    7.27625D-06   -4.96D-10
+@  8  -130.431167652     -2.061147039860E-02    7.27625D-06   -4.97D-10
       Virial theorem: -V/T =      2.003808
 @    MULPOP   N      -0.50; H       0.20; H       0.20; H       0.21; O      -0.46; H       0.12; H       0.23; 
  -----------------------------------------------------------------------------
-@  9  -130.431167652     -2.061145505961E-02    6.66250D-07   -9.04D-12
+@  9  -130.431167652     -2.061145505961E-02    6.66250D-07   -8.95D-12
       Virial theorem: -V/T =      2.003808
 @    MULPOP   N      -0.50; H       0.20; H       0.20; H       0.21; O      -0.46; H       0.12; H       0.23; 
  -----------------------------------------------------------------------------
-@ 10  -130.431167652     -2.061145484506E-02    1.78138D-07   -8.53D-14
+@ 10  -130.431167652     -2.061145484506E-02    1.78138D-07   -2.84D-14
       Virial theorem: -V/T =      2.003808
 @    MULPOP   N      -0.50; H       0.20; H       0.20; H       0.21; O      -0.46; H       0.12; H       0.23; 
  -----------------------------------------------------------------------------
@@ -727,7 +740,7 @@ Calculating AOSUPINT
                            +---------------------------+
 
 
- CPU and wall time for SCF :       0.026       0.027
+ CPU and wall time for SCF :       0.041       0.042
 
 
                        .-----------------------------------.
@@ -747,10 +760,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000033385
 
  
-     Date and time (Linux)  : Fri Feb  7 22:56:43 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
      Host name              : localhost.localdomain                   
 
-File label for MO orbitals:   7Feb20   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -808,11 +821,11 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
   14 H   :1s    -0.5745
   15 H   :1s     1.0296
 
-  Total CPU  time used in SIRIUS :   0.03 seconds
-  Total wall time used in SIRIUS :   0.03 seconds
+  Total CPU  time used in SIRIUS :   0.04 seconds
+  Total wall time used in SIRIUS :   0.04 seconds
 
  
-     Date and time (Linux)  : Fri Feb  7 22:56:43 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:53 2020
      Host name              : localhost.localdomain                   
 
 
@@ -863,27 +876,27 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
           Number of t2 amplitudes                 :      1035
           Total number of amplitudes in ccsd      :      1080
 
- Iter.  1: Coupled cluster MP2   energy :    -130.5187628275431848
- Iter.  1: Coupled cluster CCSD  energy :    -130.5386176677406525
+ Iter.  1: Coupled cluster MP2   energy :    -130.5187628275431280
+ Iter.  1: Coupled cluster CCSD  energy :    -130.5386176677405956
  Iter.  2: Coupled cluster CCSD  energy :    -130.5477387204099671
- Iter.  3: Coupled cluster CCSD  energy :    -130.5480719419293507
- Iter.  4: Coupled cluster CCSD  energy :    -130.5481429503516893
- Iter.  5: Coupled cluster CCSD  energy :    -130.5481333182661388
+ Iter.  3: Coupled cluster CCSD  energy :    -130.5480719419292370
+ Iter.  4: Coupled cluster CCSD  energy :    -130.5481429503516324
+ Iter.  5: Coupled cluster CCSD  energy :    -130.5481333182660819
  Iter.  6: Coupled cluster CCSD  energy :    -130.5481309241486088
- Iter.  7: Coupled cluster CCSD  energy :    -130.5481304705294008
+ Iter.  7: Coupled cluster CCSD  energy :    -130.5481304705293439
  Iter.  8: Coupled cluster CCSD  energy :    -130.5481304403532476
- Iter.  9: Coupled cluster CCSD  energy :    -130.5481304581240636
- Iter. 10: Coupled cluster CCSD  energy :    -130.5481304497555186
- Iter. 11: Coupled cluster CCSD  energy :    -130.5481304398678617
+ Iter.  9: Coupled cluster CCSD  energy :    -130.5481304581240067
+ Iter. 10: Coupled cluster CCSD  energy :    -130.5481304497554618
+ Iter. 11: Coupled cluster CCSD  energy :    -130.5481304398678049
  Iter. 12: Coupled cluster CCSD  energy :    -130.5481304377647405
- Iter. 13: Coupled cluster CCSD  energy :    -130.5481304381544589
- Iter. 14: Coupled cluster CCSD  energy :    -130.5481304390694390
- Iter. 15: Coupled cluster CCSD  energy :    -130.5481304392495190
- Iter. 16: Coupled cluster CCSD  energy :    -130.5481304392959316
+ Iter. 13: Coupled cluster CCSD  energy :    -130.5481304381544021
+ Iter. 14: Coupled cluster CCSD  energy :    -130.5481304390693822
+ Iter. 15: Coupled cluster CCSD  energy :    -130.5481304392494621
+ Iter. 16: Coupled cluster CCSD  energy :    -130.5481304392958748
 
  CCSD  energy converged to within   0.10D-09 is         -130.548130439296
- Final 2-norm of the CC vector function:  1.29015088D-09
-  Change in norm^2 of T-amplitudes in this solvent it.:   4.0804086408663891E-002
+ Final 2-norm of the CC vector function:  1.29015127D-09
+  Change in norm^2 of T-amplitudes in this solvent it.:   4.0804086408663745E-002
 
 
 
@@ -932,11 +945,10 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
                          ! Coupled Cluster model is: CCSD !
                          +--------------------------------+
 
-  Change in norm^2 of L-amplitudes in this PECC it.:  0.17261107199622819     
- Total <Lambda|H|CC> energy:   -130.54869571401829     
+  Change in norm^2 of L-amplitudes in this PECC it.:  0.17261107199622899     
+ Total <Lambda|H|CC> energy:   -130.54869571401824     
             The singles contribution is:            -0.0002487695
             The doubles contribution is:            -0.0003165052
- CCFOP: call CC_D1AO to recalc the 1e Density
   
 
  ******************************************************************
@@ -979,7 +991,7 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           0 :   -1.9693274312745687E-002
+ E(PECC) contribution in iteration           0 :   -1.9693274312746381E-002
   
    
 
@@ -1000,21 +1012,21 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
           Number of t2 amplitudes                 :      1035
           Total number of amplitudes in ccsd      :      1080
 
- Iter.  1: Coupled cluster RSTAR energy :    -130.5481304392959316
- Iter.  1: Coupled cluster CCSD  energy :    -130.5481325830873516
- Iter.  2: Coupled cluster CCSD  energy :    -130.5481367947373599
+ Iter.  1: Coupled cluster RSTAR energy :    -130.5481304392958748
+ Iter.  1: Coupled cluster CCSD  energy :    -130.5481325830872947
+ Iter.  2: Coupled cluster CCSD  energy :    -130.5481367947373883
  Iter.  3: Coupled cluster CCSD  energy :    -130.5481388044163111
  Iter.  4: Coupled cluster CCSD  energy :    -130.5481389346464312
- Iter.  5: Coupled cluster CCSD  energy :    -130.5481389446561593
- Iter.  6: Coupled cluster CCSD  energy :    -130.5481389449016376
+ Iter.  5: Coupled cluster CCSD  energy :    -130.5481389446561025
+ Iter.  6: Coupled cluster CCSD  energy :    -130.5481389449016092
  Iter.  7: Coupled cluster CCSD  energy :    -130.5481389450019378
- Iter.  8: Coupled cluster CCSD  energy :    -130.5481389452811811
- Iter.  9: Coupled cluster CCSD  energy :    -130.5481389450785343
- Iter. 10: Coupled cluster CCSD  energy :    -130.5481389450388008
+ Iter.  8: Coupled cluster CCSD  energy :    -130.5481389452810674
+ Iter.  9: Coupled cluster CCSD  energy :    -130.5481389450784206
+ Iter. 10: Coupled cluster CCSD  energy :    -130.5481389450387439
 
  CCSD  energy converged to within   0.10D-09 is         -130.548138945039
- Final 2-norm of the CC vector function:  8.24410103D-09
-  Change in norm^2 of T-amplitudes in this solvent it.:   1.5240979698842583E-005
+ Final 2-norm of the CC vector function:  8.24410076D-09
+  Change in norm^2 of T-amplitudes in this solvent it.:   1.5240979698863399E-005
 
 
 
@@ -1065,11 +1077,10 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
 
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
-  Change in norm^2 of L-amplitudes in this PECC it.:   4.7405574321340849E-005
- Total <Lambda|H|CC> energy:   -130.54870216253320     
+  Change in norm^2 of L-amplitudes in this PECC it.:   4.7405574321618404E-005
+ Total <Lambda|H|CC> energy:   -130.54870216253315     
             The singles contribution is:            -0.0002509498
             The doubles contribution is:            -0.0003122677
- CCFOP: call CC_D1AO to recalc the 1e Density
   
 
  ******************************************************************
@@ -1112,7 +1123,7 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           1 :   -1.9678815246671422E-002
+ E(PECC) contribution in iteration           1 :   -1.9678815246672254E-002
   
    
 
@@ -1133,17 +1144,17 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
           Number of t2 amplitudes                 :      1035
           Total number of amplitudes in ccsd      :      1080
 
- Iter.  1: Coupled cluster RSTAR energy :    -130.5481389450388008
- Iter.  1: Coupled cluster CCSD  energy :    -130.5481389782278541
- Iter.  2: Coupled cluster CCSD  energy :    -130.5481390435269589
- Iter.  3: Coupled cluster CCSD  energy :    -130.5481390746780619
- Iter.  4: Coupled cluster CCSD  energy :    -130.5481390767355379
- Iter.  5: Coupled cluster CCSD  energy :    -130.5481390768832171
- Iter.  6: Coupled cluster CCSD  energy :    -130.5481390768908341
+ Iter.  1: Coupled cluster RSTAR energy :    -130.5481389450387439
+ Iter.  1: Coupled cluster CCSD  energy :    -130.5481389782277404
+ Iter.  2: Coupled cluster CCSD  energy :    -130.5481390435269020
+ Iter.  3: Coupled cluster CCSD  energy :    -130.5481390746780050
+ Iter.  4: Coupled cluster CCSD  energy :    -130.5481390767354810
+ Iter.  5: Coupled cluster CCSD  energy :    -130.5481390768831602
+ Iter.  6: Coupled cluster CCSD  energy :    -130.5481390768907772
 
  CCSD  energy converged to within   0.10D-09 is         -130.548139076891
- Final 2-norm of the CC vector function:  6.51630903D-09
-  Change in norm^2 of T-amplitudes in this solvent it.:   2.3757555401432429E-007
+ Final 2-norm of the CC vector function:  6.51630974D-09
+  Change in norm^2 of T-amplitudes in this solvent it.:   2.3757555448616907E-007
 
 
 
@@ -1194,11 +1205,10 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
 
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
-  Change in norm^2 of L-amplitudes in this PECC it.:   7.3791027016545385E-007
- Total <Lambda|H|CC> energy:   -130.54870226106328     
+  Change in norm^2 of L-amplitudes in this PECC it.:   7.3791026894420852E-007
+ Total <Lambda|H|CC> energy:   -130.54870226106323     
             The singles contribution is:            -0.0002509825
             The doubles contribution is:            -0.0003122016
- CCFOP: call CC_D1AO to recalc the 1e Density
   
 
  ******************************************************************
@@ -1241,7 +1251,7 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           2 :   -1.9678590373571114E-002
+ E(PECC) contribution in iteration           2 :   -1.9678590373571628E-002
   
    
 
@@ -1262,15 +1272,15 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
           Number of t2 amplitudes                 :      1035
           Total number of amplitudes in ccsd      :      1080
 
- Iter.  1: Coupled cluster RSTAR energy :    -130.5481390768908341
- Iter.  1: Coupled cluster CCSD  energy :    -130.5481390774091608
- Iter.  2: Coupled cluster CCSD  energy :    -130.5481390784203768
- Iter.  3: Coupled cluster CCSD  energy :    -130.5481390788904434
- Iter.  4: Coupled cluster CCSD  energy :    -130.5481390789382488
+ Iter.  1: Coupled cluster RSTAR energy :    -130.5481390768907772
+ Iter.  1: Coupled cluster CCSD  energy :    -130.5481390774091039
+ Iter.  2: Coupled cluster CCSD  energy :    -130.5481390784203199
+ Iter.  3: Coupled cluster CCSD  energy :    -130.5481390788903866
+ Iter.  4: Coupled cluster CCSD  energy :    -130.5481390789381919
 
  CCSD  energy converged to within   0.10D-09 is         -130.548139078938
- Final 2-norm of the CC vector function:  1.53324277D-09
-  Change in norm^2 of T-amplitudes in this solvent it.:   3.6714766782353081E-009
+ Final 2-norm of the CC vector function:  1.53324199D-09
+  Change in norm^2 of T-amplitudes in this solvent it.:   3.6714762965961434E-009
 
 
 
@@ -1321,11 +1331,10 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
 
  Vector nr.  1 of symmetry  1 found on file - RESTART SUCCESS
  Start vector is a CCSD      L0  vector
-  Change in norm^2 of L-amplitudes in this PECC it.:   1.1458155951826754E-008
- Total <Lambda|H|CC> energy:   -130.54870226263111     
+  Change in norm^2 of L-amplitudes in this PECC it.:   1.1458154980381607E-008
+ Total <Lambda|H|CC> energy:   -130.54870226263108     
             The singles contribution is:            -0.0002509830
             The doubles contribution is:            -0.0003122007
- CCFOP: call CC_D1AO to recalc the 1e Density
   
 
  ******************************************************************
@@ -1368,7 +1377,7 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
                     ! Writing the Fock matrix to FOCKMAT file !
                     +-----------------------------------------+
 
- E(PECC) contribution in iteration           3 :   -1.9678586878175516E-002
+ E(PECC) contribution in iteration           3 :   -1.9678586878176099E-002
  PECC equations are converged in            3  outer iterations
  PECC equations are converged in           82  inner iterations
   
@@ -1436,7 +1445,7 @@ File label for MO orbitals:   7Feb20   FOCKDIIS
  Total excited state energies for states of symmetry/spin    1    1
  Excitation no.       Energy (Hartree) 
  ------------------------------------- 
-@@    1    1          -115.410100876262064
+@@    1    1          -115.410100876262007
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  1
@@ -1546,7 +1555,7 @@ Try to use right eigenvector as start for a left eigenvector.
  Total excited state energies for states of symmetry/spin    1    1
  Excitation no.       Energy (Hartree) 
  ------------------------------------- 
-@@    1    1          -115.410099779802721
+@@    1    1          -115.410099779802664
 
 
  Analysis of the Coupled Cluster Excitation Vector Number :  1
@@ -1915,10 +1924,10 @@ Try to use right eigenvector as start for a left eigenvector.
  *******************************************************************************
 
 
- CPU and wall time for CC :       0.814       1.293
+ CPU and wall time for CC :       0.641       0.991
 
  
-     Date and time (Linux)  : Fri Feb  7 22:56:44 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:54 2020
      Host name              : localhost.localdomain                   
 
 
@@ -1926,9 +1935,9 @@ Try to use right eigenvector as start for a left eigenvector.
                       | End of Coupled Cluster Section (CC) |
                       `-------------------------------------'
 
-  Total CPU  time used in DALTON:   0.89 seconds
-  Total wall time used in DALTON:   1.37 seconds
+  Total CPU  time used in DALTON:   0.71 seconds
+  Total wall time used in DALTON:   1.06 seconds
 
  
-     Date and time (Linux)  : Fri Feb  7 22:56:44 2020
+     Date and time (Linux)  : Mon Jul 27 23:11:54 2020
      Host name              : localhost.localdomain                   

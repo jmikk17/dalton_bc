@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -355,6 +355,13 @@ C    *                MELMN3,NOSYM,ICSF,NCNSM,REFSPC)
            LCINSV = 0 
            LACISV = 0 
            LBCISV = 0 
+           IF (NCDET .LE. 0) THEN
+              WRITE(LUPRI,*) 'WARNING, no determinants in symmetry',
+     &           ICSYM
+              WRITE(LUPRI,*) '# of determinants in all symmetries:',
+     &           NDTASM(1:NSYM)
+              IPRCIX = 5
+           END IF
          END IF
 C
 C        LACISV and LBCISV contain information about core
