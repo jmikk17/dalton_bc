@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1603,9 +1603,11 @@ C
 
       IF (QMMM) WRITE(LUPRI,'(5X,A)') ' QMMM calculation'
 
-      IF (use_pelib())
-     &   WRITE(LUPRI,'(5X,A)') ' Environment is modeled using'//
-     &          ' the polarizable embedding scheme (PE library).'
+      IF (USE_PELIB()) THEN
+         WRITE(LUPRI,'(5X,A)') 
+     &         'Environment effects are included through the'//
+     &         ' PE library'
+      END IF
 
       CALL HEADER('The following molecular properties will be'//
      *            ' calculated in this run:',0)
@@ -2017,25 +2019,26 @@ CAMT quit here to catch this...
 CAMT--------------
       IF (USE_PELIB()) THEN
         IF (POLAR) THEN
-         WRITE (LUPRI,'(4A)') 'ERROR: .POLARI and .PEQM are not',
+         WRITE (LUPRI,'(4A)') 'ERROR: .POLARI and .PELIB are not',
      &                        ' compatible. Please use either .ALPHA',
      &                        ' or the RESPONSE module and set',
      &                        ' frequency to zero.'
-         CALL QUIT('ERROR: .POLARI and .PEQM are not compatible'//
+         CALL QUIT('ERROR: .POLARI and .PELIB are not compatible'//
      &             ' (see output file for more details)')
         END IF
         IF ((MAGSUS .OR. MOLGFA) .AND. .NOT. NOLOND) THEN
          WRITE (LUPRI,'(4A)') 'ERROR: .MAGNET and .MOLGFA are not',
-     &                        ' implemented for .PEQM with London',
+     &                        ' implemented for .PELIB with London',
      &                        ' orbitals. You may consider using',
      &                        ' .NOLOND to deactivate use of London',
      &                        ' orbitals.'
          CALL QUIT('ERROR: .MAGNET and .MOLGFA are not implemented'//
-     &             ' for .PEQM with London orbitals'//
+     &             ' for .PELIB with London orbitals'//
      &             ' (see output file for more details)')
         END IF
-        WRITE(LUPRI,'(6X,A)') 'Environment is modeled using'//
-     &                 ' the polarizable embedding scheme (PE library).'
+         WRITE(LUPRI,'(5X,A)')
+     &         'Environment effects are included through the'//
+     &         ' PE library'
       END IF
 C
 C

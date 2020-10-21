@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -635,7 +635,7 @@ C     NAORDR = max order of analytical geometry derivatives
          IF (MOLHES .AND. NAORDR .EQ. 2) THEN
             WRITE(LUPRI,'(//A)')
      &      '@ WARNING. Analytical molecular Hessian is approximate'//
-     &      ' because PEQM contributions are neglected.'
+     &      ' because embedding contributions are neglected.'
          END IF
          CALL PELIB_IFC_ACTIVATE()
       END IF
@@ -1295,7 +1295,7 @@ Cholesky
 #include "ccdeco.h"
 #include "center.h"
 C
-      PARAMETER (NDIR = 15, NTABLE = 36, D0 = 0.D0)
+      PARAMETER (NDIR = 15, NTABLE = 37, D0 = 0.D0)
 #if defined (VAR_VECTOR)
       PARAMETER (IVECDF = 128)
 #else
@@ -1311,7 +1311,7 @@ C
 C
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      *          REWORD*12, RWORD*6, WORD1*7
-      DATA TABDIR/'*END OF', '*PARALL', '*WALK  ', '*OPTIMI', 'XXXXXXX',
+      DATA TABDIR/'*END OF', '*PARALL', '*WALK  ', '*OPTIMI', '*PELIB ',
      &            '*MOLBAS', '*PCM   ', '*QM3   ', '*QMMM  ', '*PEQM  ',
      &            '*READIN', '*QMNPMM', '*QFIT  ', '*EXTPCM', '*FDE   '/
       DATA TABLE /'.PRINT ', '.ITERAT', '.PRIERR',
@@ -1321,11 +1321,12 @@ C
      &            '.RUN PR', '.RUN RE', '.RUN WA',
      &            '.PRESOR', '.WESTA ', '.CHOLES', ! 18
      &            '.EXTPCM', '.FCKTRA', '.2TRATY',
-     &            'xXXXXXX', '.OPTIMI', '.TOTSYM', ! 24
+     &            '.PELIB ', '.OPTIMI', '.TOTSYM', ! 24
      &            '.VECLEN', '.RUNERI', '.NEWTRA',
      &            '.RUN AL', '.NMDDRV', '.PARNMD', ! 30
      &            '.THRRED', '.DOUGLA', '.PEQM  ',
-     &            '.QFIT  ', '.LSLIB ', '.FDE   '/ ! 36
+     &            '.QFIT  ', '.LSLIB ', '.FDE   ', ! 36
+     &            '.NOATMD'/
 C
       CALL QENTER('DALTON_GNRLINP')
 C
@@ -1371,6 +1372,7 @@ C
       DOCCSD = .FALSE.
       WESTA  = .FALSE.
       QMNPMM = .FALSE.
+      NOATMD = .FALSE.
 
 C     FCKTRA_TYPE and NEWTRA are in /INFTRA/ for practical reasons
 C     NEWTRA and NEWTRA_USEDRC are in /INFTRA/ for practical reasons
@@ -1512,10 +1514,10 @@ C 01-05: '.PRINT ', '.ITERAT', '.PRIERR', '.INTEGR', '.WAVE F',
 C 06-10: '.PROPER', '.INPTES', '.PARALL', '.DIRECT', '.WALK  ',
 C 11-15: '.MAX IT', '.RESPON', '.RUN PR', '.RUN RE', '.RUN WA',
 C 16-20: '.PRESOR', '.WESTA ', '.CHOLES', '.EXTPCM', '.FCKTRA',
-C 21-25: '.2TRATY', 'xXXXXXX', '.OPTIMI', '.TOTSYM', '.VECLEN',
+C 21-25: '.2TRATY', '.PELIB ', '.OPTIMI', '.TOTSYM', '.VECLEN',
 C 26-30: '.RUNERI', '.NEWTRA', '.RUN AL', '.NMDDRV', '.PARNMD',
 C 31-35: '.THRRED', '.DOUGLA', '.PEQM  ', '.QFIT  ', '.LSLIB ',
-C 36-40: '.FDE   '.
+C 36-40: '.FDE   ', '.NOATMD'.
 C
       IPRSTAT = -10
   100 READ (LUCMD, '(A7)') WORD
@@ -1529,7 +1531,7 @@ C
                GO TO (101,102,103,104,105,106,107,108,109,110,
      &                111,112,113,114,115,116,117,118,119,120,
      &                121,122,123,124,125,126,127,128,129,129,
-     &                131,132,133,134,135,136), I
+     &                131,132,133,134,135,136,137), I
             END IF
    99    CONTINUE
             IF (WORD .EQ. '.OPTION') THEN
@@ -1632,7 +1634,8 @@ C
             READ(LUCMD, *) FCKTRA_TYPE
             NEWTRA = FCKTRA_TYPE .GE. 0
          GO TO 100
- 122     CONTINUE  ! not used
+ 122     CONTINUE  ! .PELIB
+            CALL PELIB_IFC_ACTIVATE()
          GO TO 100
  123     CONTINUE  ! .OPTIMIzation of geometry
             OPTNEW = .TRUE.
@@ -1668,6 +1671,8 @@ C
             DKTRAN = .TRUE.
          GOTO 100
  133     CONTINUE ! .PEQM
+            write(LUPRI, *) 'WARNING: the .PEQM option is deprecated,'
+     &                   // 'please use .PELIB'
             CALL PELIB_IFC_ACTIVATE()
          GOTO 100
  134     CONTINUE ! .QFIT
@@ -1696,6 +1701,9 @@ C
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal prompt in DALTON_GNRLINP.')
       END IF
+ 137     CONTINUE  ! .NOATMD
+            NOATMD = .TRUE.
+         GOTO 100
 C
 C
   999 CONTINUE
@@ -1804,8 +1812,7 @@ C     ... default print level for statistics /hjaaj apr 2000
       IF (WESTA) WRITE (LUPRI,'(4X,A)')
      &  'Information for WESTA will be calculated and written to files.'
       IF (USE_PELIB()) WRITE(LUPRI,'(4X,A)')
-     &   'Environment is modeled using polarizable embedding scheme'//
-     &   ' (PE library)'
+     &        'Environment effects are included (PElib)'
       IF(QFIT) WRITE(LUPRI,'(4X,A)')
      &   'Potential derived multipole moments will be calculated'//
      &   ' (QFITLIB)'
@@ -1820,9 +1827,9 @@ Cholesky
 C
       WRITE (LUPRI,'(1X,A)') SEPARATOR
 C
-C     TABDIR : '*END OF', '*PARALL', '*WALK  ', '*OPTIMI', '*NMDDRV',
+C     TABDIR : '*END OF', '*PARALL', '*WALK  ', '*OPTIMI', '*PELIB ',
 C              '*MOLBAS', '*PCM   ', '*QM3   ', '*QMMM  ', '*PEQM  ',
-C              '*READIN', '*QMNPMM'
+C              '*READIN', '*QMNPMM', '*QFIT  ', '*EXTPCM', '*FDE   '
 C
 C     Initialize for REAINP and READIN (reading of .mol input file)
       IPREAD_ini = IPRUSR + 1
@@ -1869,21 +1876,23 @@ C
  203    READ (LUCMD,'(A7)') WORD
         IF (WORD(1:1) .NE. '*') GOTO 203
       GO TO 200
+
 C     "*OPTIMI" input
     4 CONTINUE
         CALL OPINPU(WORD)
       GO TO 200
-C     "XXXXXXX" input
+
+C     "*PELIB " input
     5 CONTINUE
+        CALL PELIB_IFC_INPUT_READER(WORD)
       GO TO 200
-C
+
 C     "*MOLBAS" input
     6 CONTINUE
         CALL REAINP(WORD,RELCAL)
       GO TO 200
-C
+
 Clf:  "*PCM   " input processing
-C
     7 CONTINUE
 C       INPERR is defined as a precaution (not used during PCM input processing)
         INPERR = 0
@@ -1903,6 +1912,8 @@ C     "*QMMM  " input
 
 !     "*PEQM  " input
    10 CONTINUE
+        write(LUPRI, *) 'WARNING: the *PEQM section is deprecated,'
+     &               // 'please use *PELIB'
         CALL PELIB_IFC_INPUT_READER(WORD)
       GO TO 200
 C
@@ -1916,10 +1927,11 @@ C     "*QMNPMM" input
    12 CONTINUE
         CALL QMNPINP(WORD)
       GO TO 200
+
+!     "*QFIT  " input
    13 CONTINUE
         CALL QFITLIB_IFC_INPUT_READER(WORD)
       GOTO 200
-C     "*END OF" or "**something"
 
 !     *EXTPCM input
    14 CONTINUE
@@ -1931,11 +1943,13 @@ C     "*END OF" or "**something"
             CALL QUIT('Recompile including the PCM Module')
 #endif
       GOTO 200
+
 !     *FDE  input
    15 CONTINUE
         call fde_input_init(LUPRI,'DALTON.OUT')
         call fde_dalton_input(word,.true.)
       GOTO 200
+
 C     "*END OF" or "**something"
     1 CONTINUE
 C

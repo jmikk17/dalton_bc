@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2020.alpha (2020)
+    This is output from DALTON release Dalton2020.0.beta (2020)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -53,7 +53,7 @@
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2020.alpha (2020), see http://daltonprogram.org
+       Release Dalton2020.0.beta (2020), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (major contribution(s) in parenthesis):
@@ -133,6 +133,7 @@
   Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
   Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
   Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
+  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
   Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
   Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
   Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
@@ -146,13 +147,13 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Thu Feb  6 12:55:21 2020
-     Host name              : tromso-ansatte2-dhcp919.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:03:33 2020
+     Host name              : localhost.localdomain                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/foeroyingur/Projects/dalton_devel/dalton/DALTON/test/pdehf
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/test/pdehf_energy
    2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pde/basis
 
 
@@ -160,26 +161,27 @@ Compilation information
 -----------------------
 
  Who compiled             | foeroyingur
- Host                     | tromso-ansatte2-dhcp919.wifi.uit.no
- System                   | Linux-5.4.14-200.fc31.x86_64
+ Host                     | localhost.localdomain
+ System                   | Linux-5.7.8-200.fc32.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/lib64/mpich/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C compiler               | /usr/lib64/mpich/bin/mpicc
- C compiler version       | gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1)
- C++ compiler             | /usr/lib64/mpich/bin/mpicxx
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 10.1.1 20200507 (Red Hat 10.1.1-
+                          | 1)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
  C++ compiler version     | unknown
  BLAS                     | /lib64/libopenblas.so
  LAPACK                   | /lib64/liblapack.so
  Static linking           | OFF
- Last Git revision        | 59c49f135a4f45c71192309a5c9dcacba43740ed
- Git branch               | pde-refactoring
- Configuration time       | 2020-02-06 11:47:53.693286
+ Last Git revision        | b058b5c1034ca5290b815a629f29812c8e37c450
+ Git branch               | new-pde-fixes
+ Configuration time       | 2020-07-27 20:05:45.713451
 
- * Sequential calculation.
+ * MPI parallel run using 6 processes.
 
 
    Content of the .dal input file
@@ -188,8 +190,8 @@ Compilation information
 **DALTON
 .RUN WAVE FUN
 .DIRECT
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .ITERATIVE
 1.0d-12
 .PDE
@@ -226,11 +228,12 @@ H   -0.784000   -0.554000    0.000000
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
     AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
-    Environment is modeled using polarizable embedding scheme (PE library)
+    Environment effects are included (PElib)
  --------------------------------------------------------------------------------
 
 
@@ -282,6 +285,7 @@ H   -0.784000   -0.554000    0.000000
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000   -0.117165    0.000000
+ Center-of-mass coordinates (Angs):    0.000000   -0.062001    0.000000
 
 
   Atoms and basis sets
@@ -426,7 +430,7 @@ H   -0.784000   -0.554000    0.000000
       z      0.00000000         0.00000000         0.00000000
 
 
-  Total CPU  time used in HERMIT:   0.00 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
   Total wall time used in HERMIT:   0.00 seconds
 
 
@@ -460,8 +464,8 @@ H   -0.784000   -0.554000    0.000000
  **********************************************************************
 
  
-     Date and time (Linux)  : Thu Feb  6 12:55:21 2020
-     Host name              : tromso-ansatte2-dhcp919.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:03:33 2020
+     Host name              : localhost.localdomain                   
 
  Title lines from ".mol" input file:
                                                                              
@@ -471,7 +475,7 @@ H   -0.784000   -0.554000    0.000000
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
- Fock matrices are calculated directly without use of integrals on disk.
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -526,59 +530,59 @@ H   -0.784000   -0.554000    0.000000
 
  Iter      Total energy     Embedding energy      Error norm     Delta(E)
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  8.28D-04  1.00D-03
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  4.07D-03  4.00D-03
 @  1  -74.7830510244      0.131249414257        7.81203D-01   -7.48D+01
       Virial theorem: -V/T =      2.002603
 @    MULPOP   O      -0.46; H       0.23; H       0.23; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  8.70D-04  1.00D-03
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  1.07D-03  1.00D-03
 @  2  -74.8357583319      0.121800629331        2.51371D-01   -5.27D-02
       Virial theorem: -V/T =      2.004763
 @    MULPOP   O      -0.35; H       0.18; H       0.18; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  8.64D-04  1.00D-03
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.00D-03  1.00D-03
 @  3  -74.8428629679      0.116480861725        4.97324D-02   -7.10D-03
       Virial theorem: -V/T =      2.004018
 @    MULPOP   O      -0.33; H       0.16; H       0.16; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    4    F  8.31D-04  1.00D-03
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    4    F  1.21D-03  1.00D-03
 @  4  -74.8432207591      0.114843821794        1.10240D-02   -3.58D-04
       Virial theorem: -V/T =      2.003744
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    5    F  8.73D-04  1.00D-03
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    5    F  3.32D-03  3.00D-03
 @  5  -74.8432477362      0.114371802646        2.20856D-04   -2.70D-05
       Virial theorem: -V/T =      2.003687
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    F  8.70D-04  0.00D+00
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    F  1.18D-03  1.00D-03
 @  6  -74.8432477439      0.114361851078        1.18921D-05   -7.73D-09
       Virial theorem: -V/T =      2.003689
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -11    7    F  8.76D-04  1.00D-03
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -11    7    F  1.15D-03  2.00D-03
 @  7  -74.8432477439      0.114361665225        2.34957D-07   -1.75D-11
       Virial theorem: -V/T =      2.003689
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    F  8.73D-04  1.00D-03
-@  8  -74.8432477439      0.114361658642        4.47648D-08   -4.26D-14
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    F  1.55D-03  1.00D-03
+@  8  -74.8432477439      0.114361658642        4.47648D-08    0.00D+00
       Virial theorem: -V/T =      2.003689
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    F  8.66D-04  1.00D-03
-@  9  -74.8432477439      0.114361660201        1.07530D-08    4.26D-14
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    F  1.46D-03  1.00D-03
+@  9  -74.8432477439      0.114361660223        1.07003D-08   -2.84D-14
       Virial theorem: -V/T =      2.003689
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12   10    F  8.76D-04  1.00D-03
-@ 10  -74.8432477439      0.114361659951        1.64505D-09    1.42D-14
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12   10    F  1.39D-03  2.00D-03
+@ 10  -74.8432477439      0.114361659951        1.67064D-09    2.84D-14
 
 @ *** DIIS converged in  10 iterations !
-@     Converged SCF energy, gradient:    -74.843247743894    1.65D-09
+@     Converged SCF energy, gradient:    -74.843247743894    1.67D-09
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -606,16 +610,16 @@ H   -0.784000   -0.554000    0.000000
        ---------------------------------------------
 
        Polarization contributions:
-            Electronic                -0.087279032959
-            Nuclear                    0.084453741284
+            Electronic                -0.087279032961
+            Nuclear                    0.084453741286
             Total                     -0.002825291675
 
        Fragment density contributions:
-            Electronic                 0.586748120800
+            Electronic                 0.586748120801
             Nuclear                   -0.651828642076
             Polarization              -0.000000000000
-            Repulsion                  0.182267472901
-            Total                      0.117186951625
+            Repulsion                  0.182267472902
+            Total                      0.117186951626
 
        Total PE energy:                0.114361659951
             (excl. multipole-multipole interaction energy)
@@ -628,7 +632,7 @@ H   -0.784000   -0.554000    0.000000
                            +---------------------------+
 
 
- CPU and wall time for SCF :       0.018       0.019
+ CPU and wall time for SCF :       0.046       0.046
 
 
                        .-----------------------------------.
@@ -642,16 +646,16 @@ H   -0.784000   -0.554000    0.000000
 
 @    Final HF energy:             -74.843247743894                 
 @    Nuclear repulsion:             9.157239627730
-@    Electronic energy:           -84.114849031574
+@    Electronic energy:           -84.114849031575
 @    Embedding energy:              0.114361659951
 
-@    Final gradient norm:           0.000000001645
+@    Final gradient norm:           0.000000001671
 
  
-     Date and time (Linux)  : Thu Feb  6 12:55:21 2020
-     Host name              : tromso-ansatte2-dhcp919.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:03:33 2020
+     Host name              : localhost.localdomain                   
 
-File label for MO orbitals:   6Feb20   FOCKDIIS
+File label for MO orbitals:  27Jul20   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -667,21 +671,21 @@ File label for MO orbitals:   6Feb20   FOCKDIIS
    6 H   :1s     0.0060  -0.1635  -0.4463  -0.0000  -0.3023   0.7887   0.8312
    7 H   :1s     0.0060  -0.1635   0.4463  -0.0000  -0.3023   0.7887  -0.8312
 
-  Total CPU  time used in SIRIUS :   0.02 seconds
-  Total wall time used in SIRIUS :   0.02 seconds
+  Total CPU  time used in SIRIUS :   0.05 seconds
+  Total wall time used in SIRIUS :   0.05 seconds
 
  
-     Date and time (Linux)  : Thu Feb  6 12:55:21 2020
-     Host name              : tromso-ansatte2-dhcp919.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:03:33 2020
+     Host name              : localhost.localdomain                   
 
 
                      .---------------------------------------.
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.02 seconds
-  Total wall time used in DALTON:   0.02 seconds
+  Total CPU  time used in DALTON:   0.06 seconds
+  Total wall time used in DALTON:   0.06 seconds
 
  
-     Date and time (Linux)  : Thu Feb  6 12:55:21 2020
-     Host name              : tromso-ansatte2-dhcp919.wifi.uit.no     
+     Date and time (Linux)  : Mon Jul 27 22:03:33 2020
+     Host name              : localhost.localdomain                   

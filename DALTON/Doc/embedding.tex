@@ -1,17 +1,21 @@
 \chapter{Polarizable embedding calculations}\label{ch:embedding}
 
-\index{polarizable embedding}\index{electrostatic embedding}\index{PE}\index{environment model}\index{embedding model}\index{multiscale modeling}\index{embedding}\index{QM/MM}\index{quantum mechanics / molecular mechanics}\index{solvent effects}\index{enviroment effects}
-This chapter introduces the polarizable embedding (PE) model\cite{pemodel1,pemodel2} as implemented
+\index{polarizable embedding}\index{electrostatic embedding}\index{PE}\index{environment model}\index{embedding model}\index{multiscale modeling}\index{embedding}\index{QM/MM}\index{quantum mechanics / molecular mechanics}\index{solvent effects}\index{enviroment effects}\index{polarizable density embedding}\index{PDE}
+This chapter introduces the polarizable embedding (PE)\cite{pemodel1,pemodel2} and
+polarizable density embedding (PDE)\cite{pde1,pde2,pde3} models as implemented
 in the PE library~\cite{pelib} included in the \latestrelease\ release.
 Methods available are: PE-HF~\cite{pescf}, PE-DFT~\cite{pescf},
-PE-MP2/SOPPA~\cite{pesoppa}, PE-MCSCF~\cite{pemcscf}
-and PE-CC~\cite{pecc,pdecc}.
+PE-MP2/SOPPA~\cite{pesoppa}, PE-MCSCF~\cite{pemcscf}, PE-MC-srDFT~\cite{pesrdft}
+and PE-CC~\cite{pecc}.
+The PDE model can be used with all of the same methods (see subsection~\ref{subsec:pde})~\cite{pde1,pde2,pde3,pdecc}.
 The implementation uses the Gen1Int library to calculate one-electron
 integrals~\cite{gen1int} which is also included in the \latestrelease\ release. The
 first section gives some general considerations about the model and
 implementation. In the second section we introduce the input format using
 basic examples.
-We also refer to our tutorial review on the use of polarizable embedding for modeling of response properties of embedded molecules~\cite{petutorial} (see \url{https://doi.org/10.1002/qua.25717} or alternatively \url{https://arxiv.org/abs/1804.03598}).
+We also refer to our tutorial review on the use of polarizable embedding for modeling of response
+properties of embedded molecules~\cite{petutorial} (see \url{https://doi.org/10.1002/qua.25717}
+or alternatively \url{https://arxiv.org/abs/1804.03598}).
 
 \begin{center}
 \fbox{
@@ -20,7 +24,7 @@ We also refer to our tutorial review on the use of polarizable embedding for mod
 \noindent
 {\bf Reference literature:}
 \begin{list}{}{}
-\item General references: J.~M.~Olsen, K.~Aidas and J.~Kongsted, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 6}, 3721 (2010) and J.~M.~H.~Olsen and J.~Kongsted, \newblock {\em Adv. Quantum Chem.}, {\bf 61}, 107 (2011).
+\item Polarizable embedding (PE): J.~M.~Olsen, K.~Aidas and J.~Kongsted, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 6}, 3721 (2010) and J.~M.~H.~Olsen and J.~Kongsted, \newblock {\em Adv. Quantum Chem.}, {\bf 61}, 107 (2011)
 \item PE-HF/DFT: J.~M.~Olsen, K.~Aidas and J.~Kongsted, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 6}, 3721 (2010).
 \item PE-MP2/SOPPA: J.~J.~Eriksen, S.~P.~A.~Sauer, K.~V.~Mikkelsen, H.~J.~Aa.~Jensen and J.~Kongsted, \newblock {\em J.~Comp.~Chem.}, {\bf 33}, 2012, (2012).
 \item PE-MCSCF: E.~D.~Hedeg\aa{}rd, N.~H.~List, H.~J.~Aa.~Jensen and J.~Kongsted, \newblock {\em J.~Chem.~Phys.}, {\bf 139}, 044101 (2013).
@@ -28,7 +32,8 @@ We also refer to our tutorial review on the use of polarizable embedding for mod
 \item Damped response (CPP) with PE: M.~N.~Pedersen, E.~D.~Hedeg\aa{}rd, J.~M.~H.~Olsen, J.~Kauczor, P.~Norman and J.~Kongsted, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 10}, 1164 (2014).
 \item Magnetic properties with LAOs: C.~Steinmann, J.~M.~H.~Olsen and J.~Kongsted, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 10}, 981 (2014).
 \item Effective external field (EEF) effects: N.~H.~List, H.~J.~Aa.~Jensen and J.~Kongsted, \newblock{\em Phys.~Chem.~Chem.~Phys.},{\bf 18}, 10070 (2016) and N.~H.~List, PhD thesis, University of Southern Denmark, Odense, Denmark, 2015.
-\item Tutorial review: C.~Steinmann, P.~Reinholdt, M.~S.~N\o{}rby, J.~Kongsted and J.~M.~H.~Olsen, \newblock{\em Int.~J.~Quantum~Chem.}, 2018, \url{https://doi.org/10.1002/qua.25717}.
+\item Polarizable density embedding (PDE): J.~M.~H.~Olsen, C.~Steinmann, K.~Ruud, and J.~Kongsted, \newblock{\em J.~Phys.~Chem.~A}, {\bf 119}, 5344 (2015), P.~Reinholdt, J.~Kongsted, and J.~M.~H.~Olsen, \newblock {\em J.~Phys.~Chem.~Lett.}, {\bf 8}, 5949 (2017), and P.~Reinholdt, F.~K.~J\o{}rgensen, J.~Kongsted, and J.~M.~H.~Olsen, \newblock {\em J.~Chem.~Theory~Comput.}, {\bf 16}, 5999 (2020)
+\item Tutorial review: C.~Steinmann, P.~Reinholdt, M.~S.~N\o{}rby, J.~Kongsted and J.~M.~H.~Olsen, \newblock{\em Int.~J.~Quantum~Chem.}, {\bf 119}, e25717 (2019), \url{https://doi.org/10.1002/qua.25717}.
 \end{list}
 }}
 \end{center}
@@ -36,7 +41,7 @@ We also refer to our tutorial review on the use of polarizable embedding for mod
 \section{General considerations}
 In {\dalton} it is possible to include the effects from a structured
 environment on a core molecular system using the polarizable embedding (PE)
-model. The current implementation is a layered QM/MM-type embedding model
+model. The current implementation is a layered QM/MM-type classical embedding model
 capable of using advanced potentials that include an electrostatic component as
 well as an induction (polarization) component. The effects of the environment
 are included through effective operators that contain an embedding potential,
@@ -72,29 +77,29 @@ polarizabilities are included it might be necessary to use an exclusion list
 to ensure that only relevant sites can polarize each other. The format of
 the \potinp\ file is demonstrated below.
 
-The PE model is implemented for HF, DFT, MP2, MCSCF and
+The PE model is implemented for HF, DFT, MP2, MCSCF, MC-srDFT, and
 CC (CC2, CCSD, and CCSDR(3)) wave functions. Singlet linear response may be evaluated
 at PE-HF and PE-DFT levels of theory for closed- and open-shell systems,
-and at PE-SOPPA, PE-MCSCF, PE-CC2, PE-CCSD, and PE-CCSDR(3) levels for closed-shell systems.
+and at PE-SOPPA, PE-MCSCF, PE-MC-srDFT, PE-CC2, PE-CCSD, and PE-CCSDR(3) levels for
+closed-shell systems.
 Furthermore, the PE library has been coupled to the complex polarization
 propagator (CPP) module to allow damped response properties at
 PE-HF and PE-DFT levels of theory for closed- and open-shell systems~\cite{pecpp}.
 Triplet linear response properties are
 available at the PE-HF and PE-DFT levels for closed-shell systems
 only.
-Singlet quadratic and cubic response properties are available for PE-HF and PE-DFT levels of theory
-for closed-shell systems.
+Singlet quadratic and cubic response properties are available for PE-HF and PE-DFT
+levels of theory for closed-shell systems.
 It is furthermore possible to include the effective external field (EEF) effect,
-which models the environment polarization
-induced directly by the presence of an external field \cite{peeef,peeef2}.
-This leads to properties that are defined in terms of the external field and are thus comparable to
-supermolecular calculations.
-Magnetic linear response properties using London atomic
-orbitals (LAOs) are also available.
-In the PE-MP2/SOPPA models, the
-environment response is taken into account at the HF/RPA level
-(see Ref.~\cite{pesoppa} for details). Note, that
-point-group symmetry and analytical molecular Hessians are not supported.
+which models the environment polarization induced directly by the presence of an
+external field~\cite{peeef,peeef2}.
+This leads to properties that are defined in terms of the external field and are
+thus comparable to supermolecular calculations.
+Magnetic linear response properties using London atomic orbitals (LAOs) are also
+available~\cite{pelao}.
+In the PE-MP2/SOPPA models, the environment response is taken into account at the
+HF/RPA level (see Ref.~\cite{pesoppa} for details).
+Note, that point-group symmetry and analytical molecular Hessians are not supported.
 
 
 \section{Input description}
@@ -103,7 +108,7 @@ is necessary to define the core and environment part of the system: the \molinp\
 file specifies the core molecular system and the \potinp\ file, which contains
 the embedding potential, defines the environment. Moreover, additional
 keywords are needed in the \dalinp\ input file to activate the PE model. To use
-default options it is only necessary to include \Key{PEQM} in the \Sec{*DALTON}
+default options it is only necessary to include \Key{PELIB} in the \Sec{*DALTON}
 section (except for PE-CC which requires additional input (see subsection~\ref{subsec:pecc})).
 All other specifications of wave function, properties etc.\ are
 unchanged and thus follow the input described in other chapters. For example, to
@@ -111,27 +116,27 @@ calculate the PE-HF wave function the following input can be used:
 \begin{verbatim}
 **DALTON
 .RUN WAVE FUNCTIONS
-.PEQM
+.PELIB
 **WAVE FUNCTIONS
 .HF
 **END OF DALTON
 \end{verbatim}
-To use non-default options, a \Sec{PEQM} subsection is needed, which should also be placed in the
+To use non-default options, a \Sec{PELIB} subsection is needed, which should also be placed in the
 \Sec{*DALTON} section. For instance, to use the direct solver for induced
 dipoles the following input example can be used:
 \begin{verbatim}
 **DALTON
 .RUN WAVE FUNCTIONS
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .DIRECT
 **WAVE FUNCTIONS
 .HF
 **END OF DALTON
 \end{verbatim}
 where the \Key{DIRECT} keyword request the use of a direct solver. See further
-input options in Chapter~\ref{ch:general} under the \Sec{PEQM}
-input section (subsection~\ref{subsec:peqm}). Furthermore,
+input options in Chapter~\ref{ch:general} under the \Sec{PELIB}
+input section (subsection~\ref{subsec:pelib}). Furthermore,
 Section~\ref{sec:daltoninp} in Chapter~\ref{ch:starting} provides an
 introduction to the \dalton\ (and \molinp) input in general. The format of the
 \molinp\ file is described in detail in \ref{ch:molinp} and requires no
@@ -273,8 +278,8 @@ The following input exemplifies the input:
 \begin{verbatim}
 **DALTON
 .RUN WAVEFUNCTION
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 **WAVE FUNCTIONS
 .CC
 *CC INP
@@ -329,4 +334,257 @@ O     21.415000    20.203000    28.463000
 Charge=1 Atoms=2 Basis=pointcharge ECP=pe_pp
 H     20.840000    20.665000    29.073000
 H     22.267000    20.190000    28.899000
+\end{verbatim}
+
+\subsection{Polarizable density embedding}\label{subsec:pde}
+The polarizable density embedding (PDE) model is an advanced extension to the PE model
+that goes beyond purely classical embedding~\cite{pde1,pde2,pde3}.
+Instead of resorting to fragment-based multipole expansions of the charge distributions
+in the environment, full fragment-based electronic densities are retained, and the
+electrostatic interaction is calculated exactly.
+Further, an account of non-electrostatic repulsion (also known as Pauli and
+exchange repulsion) is included, which is crucial in avoiding electron
+spill-out problems.
+The PDE model shares the same efficient description of environment polarization as
+the PE model, i.e., it uses distributed polarizabilities on environment sites.
+It can be used together with the same methods and properties as the PE model,
+except molecular gradients and LAOs, which are not available for any method.
+
+A PDE calculation involves two main stages, first a preparation stage, 
+which is used to derive the embedding operators and parameters (electrostatic
+and repulsion operators; distributed polarizabilities), and, second, the final
+embedding calculation.
+The preparation stage consists of two parts. Monomer calculations are used 
+to obtain the fragment densities of the environment, and these are followed
+by dimer calculations to evaluate operator contributions to the core region
+from each fragment.
+The calculations needed for the setup are somewhat involved, but they are
+automated in the \verb|PyFraME| Python package~\cite{pyframe}, and this
+is the recommended way of preparing such calculations.
+A minimal example input for deriving a PDE potential is given below.
+\begin{verbatim}
+#!/usr/bin/env python
+
+import pyframe
+
+system = pyframe.MolecularSystem('example.pdb')
+core = system.get_fragments_by_number(1)
+environment = system.get_remaining_fragments()
+
+system.set_core_region(fragments=core, basis='aug-pcseg-2')
+system.add_region(name="environment", fragments=environment,
+                    use_multipoles=False,
+                    use_polarizabilities=True,
+                    use_fragment_densities=True,
+                    use_exchange_repulsion=True,
+                    basis='loprop-6-31+G*',
+                    method='DFT',
+                    xcfun='PBE0')
+
+project = pyframe.Project(mpi_procs_per_job=24, jobs_per_node=1, memory_per_job=24000)
+project.create_embedding_potential(system)
+project.write_potential(system)
+project.write_core(system)
+\end{verbatim}
+Following the setup, the final embedding calculation is run by providing a
+\verb|hdf5| file, which is provided by \verb|PyFraME|, with the PDE potential
+and activating the PDE option in the \dalinp\ file.
+As an example, the following input calculates five excitation energies and
+oscillator strengths for a molecule embedded in the potential stored in \verb|final.h5|.
+\begin{verbatim}
+**DALTON INPUT
+.RUN RESPONSE
+.DIRECT
+.PELIB
+*PELIB
+.EEF
+.PDE
+final.h5
+**WAVE FUN
+.DFT
+PBE0
+**RESPONSE
+*LINEAR
+.SINGLE
+.DIPLEN
+.ROOTS
+5
+**END OF
+\end{verbatim}
+\subsubsection{For developers}
+Behind the scenes, the setup for a PDE calculations comprises a number of steps,
+which are described in the following. Running these manually is tedious and
+error-prone, so we recommend using the \verb|PyFraME| Python package for the 
+setup in general.
+For each fragment in the environment, the density needs to be obtained.
+These calculations should be run with just the monomer (in vacuum), 
+and are activated with the \verb|.SAVE DENSITY| option.
+\begin{verbatim}
+**DALTON
+.RUN WAVE FUNCTION
+.DIRECT
+*PELIB
+.SAVE DENSITY
+save_density.h5
+**WAVE FUNCTIONS
+.DFT
+PBE0
+**END of
+\end{verbatim}
+In addition to the standard input files, a \verb|hdf5| file 
+with information about the core region and environment fragment 
+must be provided. Also, a potential file with the positions of
+the polarizable sites must be supplied.
+The following fields must be provided in the \verb|hdf5| file:
+\begin{verbatim}
+HDF5 "save_density.h5" {
+GROUP "/" {
+   GROUP "core_fragment" {
+      DATASET "charges" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 3 ) / ( 3 ) }
+      }
+      DATASET "coordinates" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 3, 3 ) / ( 3, 3 ) }
+      }
+      DATASET "num_nuclei" {
+         DATATYPE  H5T_STD_I64LE
+         DATASPACE  SCALAR
+      }
+   }
+   GROUP "fragment" {
+      DATASET "charges" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 3 ) / ( 3 ) }
+      }
+      DATASET "coordinates" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 3, 3 ) / ( 3, 3 ) }
+      }
+      DATASET "num_nuclei" {
+         DATATYPE  H5T_STD_I64LE
+         DATASPACE  SCALAR
+      }
+   }
+}
+}
+\end{verbatim}
+Note that the dimensions shown here, and in the listings below, depend on the 
+dimensions (number of atoms / number of basis functions) of the environment fragments 
+and core region. The \verb|.SAVE DENSITY| calculation will result in a \verb|hdf5| file 
+to which the following information has been added:
+\begin{verbatim}
+HDF5 "save_density.h5" {
+GROUP "/" {
+   GROUP "core_fragment" {
+      DATASET "nuclear-electron energy" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 1 ) / ( 1 ) }
+      }
+   }
+   GROUP "fragment" {
+      DATASET "density matrix" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 28 ) / ( 28 ) }
+      }
+      DATASET "electric fields" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 9 ) / ( 9 ) }
+      }
+      DATASET "energy-weighted density matrix" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 7, 7 ) / ( 7, 7 ) }
+      }
+      DATASET "num_bas" {
+         DATATYPE  H5T_STD_I32LE
+         DATASPACE  SIMPLE { ( 1 ) / ( 1 ) }
+      }
+      DATASET "num_pols" {
+         DATATYPE  H5T_STD_I32LE
+         DATASPACE  SIMPLE { ( 1 ) / ( 1 ) }
+      }
+   }
+}
+}
+\end{verbatim}
+The dimer calculations (core region + environment fragment) are activated with the \verb|.TWOINT| option.
+The basis functions of the core region should be listed first in the \verb|.mol| file, 
+followed by the basis functions of the environent fragment.
+The \verb|hdf5| output from the preceding monomer calculation should be provided.
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.TWOINT
+save_density.h5
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
+This will result add entries for the electrostatic (fragment-density) operator and exchange-repulsion operator to the output \verb|hdf5| file.
+\begin{verbatim}
+HDF5 "twoint.h5" {
+GROUP "/" {
+   GROUP "core_fragment" {
+      DATASET "electrostatic matrix" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 28 ) / ( 28 ) }
+      }
+      DATASET "exchange-repulsion matrix" {
+         DATATYPE  H5T_IEEE_F64LE
+         DATASPACE  SIMPLE { ( 28 ) / ( 28 ) }
+      }
+      DATASET "num_bas" {
+         DATATYPE  H5T_STD_I32LE
+         DATASPACE  SIMPLE { ( 1 ) / ( 1 ) }
+      }
+   }
+}
+\end{verbatim}
+From individual dimer calculations on each of the environment fragments,
+a final \verb|hdf5| file can be assembled. This file should have the
+following structure:
+\begin{verbatim}
+HDF5 "final.h5" {
+GROUP "/" {
+   DATASET "electric fields" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 9 ) / ( 9 ) }
+   }
+   DATASET "electrostatic matrix" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 28 ) / ( 28 ) }
+   }
+   DATASET "exchange-repulsion matrix" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 28 ) / ( 28 ) }
+   }
+   DATASET "nuclear charges" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 3 ) / ( 3 ) }
+   }
+   DATASET "nuclear coordinates" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 3, 3 ) / ( 3, 3 ) }
+   }
+   DATASET "nuclear-electron energy" {
+      DATATYPE  H5T_IEEE_F64LE
+      DATASPACE  SIMPLE { ( 1 ) / ( 1 ) }
+   }
+   DATASET "num_bas" {
+      DATATYPE  H5T_STD_I32LE
+      DATASPACE  SCALAR
+   }
+   DATASET "num_fields" {
+      DATATYPE  H5T_STD_I32LE
+      DATASPACE  SCALAR
+   }
+   DATASET "num_nuclei" {
+      DATATYPE  H5T_STD_I32LE
+      DATASPACE  SCALAR
+   }
+}
+}
 \end{verbatim}

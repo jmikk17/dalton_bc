@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -156,7 +156,7 @@ C
       NODIHE = .FALSE.
       NOADDA = .FALSE.
       IF (USE_PELIB()) THEN 
-         PRJTRO = .FALSE.  ! no translation and rotation invariance when PE sites are fixed
+         PRJTRO = .FALSE.  ! no translation and rotation invariance when classical sites are fixed
          CARTCO = .TRUE.   ! force geometry optimization to be in Cartesian coordinates
          IF (EVLINI .LE. 0.0D0) EVLINI = 8.0D0
       ELSE
@@ -2854,7 +2854,7 @@ C
          IF (NAORDR .EQ. 2) THEN
             WRITE(LUPRI,'(//A)')
      &      '@ WARNING. Analytical molecular Hessian is approximate'//
-     &      ' because PEQM contributions are neglected.'
+     &      ' because embedding contributions are neglected.'
          END IF
          CALL PELIB_IFC_ACTIVATE()
       END IF

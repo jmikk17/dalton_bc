@@ -5,7 +5,7 @@
 !
 !
 !     EMBEDDING : QM part is embedded in environment (solvent or e.g. protein)
-!                 May 2011/hjaaj: EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .or. use_pelib()
+!                 May 2011/hjaaj: EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .or. USE_PELIB()
 !                 (For now, EMBEDDING is defined in sirius/sirinp.F because this is
 !                 the first instance where all of FLAG(16), PCM, QM3, QMMM are set)
 !                 Dec 2017/hjaaj: also define in abaset.F(SETSIR) for restart in RESPONS without
@@ -22,7 +22,7 @@
      &        TOTSYM, NMWALK, DKTRAN, GEOALL, WESTA,  SEGAUX,           &
      &        CHI1ST, DKHINT,                                           &
      &        EMBEDDING, QM3, QMMM,   QMNPMM, QFIT,   USE_LSLIB,        &
-     &        SIR_INPPRC, NEWGEO, DOFDE
+     &        SIR_INPPRC, NEWGEO, DOFDE, NOATMD
 
 ! srDFT variables
 !     ERFEXP() : which type of lr-sr operators
@@ -46,7 +46,7 @@
      &        TOTSYM, NMWALK, DKTRAN, GEOALL, WESTA,  SEGAUX,           &
      &        ERFEXP, DOSRIN, SRINTS, CHI1ST, DKHINT, COMLAM,           & ! srDFT
      &        EMBEDDING, QM3, QMMM,   QMNPMM, QFIT,                     & ! embedding & QFIT
-     &        USE_LSLIB, SIR_INPPRC, NEWGEO, DOFDE
+     &        USE_LSLIB, SIR_INPPRC, NEWGEO, DOFDE, NOATMD
       COMMON /GNRINF/ GNRINFlast
       ! Very important: Always keep GNRINFlast as the last variable in the common block.
       ! See GETBYTESPAN(firstvar, <name>last, SizeInBytes) for explanation.

@@ -392,7 +392,7 @@ which is not different from any other (pure QM) calculation. The \dalinp\ file, 
 \begin{verbatim}
 **DALTON
 .RUN RESPONSE
-.PEQM
+.PELIB
 **WAVE FUNCTIONS
 .DFT
 CAMB3LYP
@@ -409,7 +409,7 @@ response property so we specify \Sec{QUADRATIC} under the \Sec{RESPONSE}
 section. We get the 2PA from the single residue of the quadratic response 
 function and use the \Key{TWO-PHOTON} keyword to get those. In addition, we 
 want the four lowest states, thus, we solve for four roots indicated by the 
-\Key{ROOTS} keyword. The important point here is the \Key{PEQM} keyword which 
+\Key{ROOTS} keyword. The important point here is the \Key{PELIB} keyword which 
 specifies that the core system (acrolein) is to be embedded in a (polarizable) environment given in the \potinp\ file:
 \begin{verbatim}
 ! Two water molecules
@@ -492,7 +492,7 @@ section). The potential parameters are obtained from separate calculations on ea
 water molecule in vacuum and it is therefore also necessary to specify 
 an exclusion list which specifies what other sites a given site can be polarized by.
 More examples can be found in the \verb|DALTON/test| directory (search for 
-\verb|PEQM|).
+\verb|PELIB|).
 
 \section{The first calculation with {\dalton}}\label{sec:firstcalc}
 

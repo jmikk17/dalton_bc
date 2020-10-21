@@ -140,6 +140,8 @@ calculated. What order of derivatives and whether any analytical
 derivatives are to be used is determined in the \verb|**NMDDRV| input
 module (required when \texttt{.NMDDRV} specified).
 
+\item[\Key{NOATMD}] Turns off checking if atoms are too close.
+
 \item[\Key{OPTIMIZE}] Perform a geometry optimization\index{geometry optimization!.OPTIMIZE module}.
 The default is a geometry minimization\index{geometry minimization!.OPTIMIZE module}:
 an optimization of the molecular geometry to a stationary point with no
@@ -187,13 +189,12 @@ detailed description of possible options.
 %Roos should be used during execution of the program.
 %The keyword is needed if one attempts an MCSCF, CI or MP2 (run through the \sir\ module and not using the Coupled Cluster module) with more than 255 basis functions.
 
-\item[\Key{PEQM}] Include environment effects by using the polarizable embedding (PE)
-model~(See Ref.~\cite{pescf} for details on the PE-HF/DFT model, Ref.~\cite{pesoppa}
-for PE-MP2/SOPPA and Ref.~\cite{pecc} for PE-CC)\index{polarizable embedding}\index{PE}\index{environment model}\index{embedding model}\index{embedding}\index{QM/MM}.
+\item[\Key{PELIB}] Include environment effects by using the polarizable embedding (PE)
+or polarizable density embedding models\index{polarizable embedding}\index{PE}\index{environment model}\index{embedding model}\index{embedding}\index{QM/MM}.
 This will embed the core molecular system, as defined in the \molinp\ file, in a
-polarizable embedding potential given in the \potinp\ file. See further input options
-in the \Sec{PEQM} input section (see subsection~\ref{subsec:peqm}). See
-Chapter~\ref{ch:embedding} for an introduction to polarizable embedding calculations.
+PE/PDE potential. See further input options
+in the \Sec{PELIB} input section (see subsection~\ref{subsec:peqm}). See
+Chapter~\ref{ch:embedding} for an introduction to PE and PDE calculations.
 
 \item[\Key{PRIERR}]\verb| |\newline
 \verb|READ (LUCMD, *) IPRERR|
@@ -921,26 +922,26 @@ parallel efficiency\index{parallel efficiency}. A complete
 timing for all nodes will be given if the print level is 4 or higher.
 \end{description}
 
-\subsection{Polarizable embedding model: \Sec{PEQM}}
+\subsection{Polarizable embedding model: \Sec{PELIB}}
 \label{subsec:peqm} \index{polarizable embedding}\index{PE}\index{environment model}\index{embedding model}\index{embedding}\index{QM/MM}\index{multiscale model}\index{multiscale}\index{quantum mechanics / molecular mechanics}\index{solvent effects}\index{enviroment effects}
 
 This input section controls calculations using the polarizable
-embedding (PE) model\cite{pemodel1,pemodel2} which can include effects from a structured
+embedding (PE)~\cite{pemodel1,pemodel2}
+and polarizable density embedding (PDE)~\cite{pde1,pde2,pde3} models
+which can include effects from a structured
 environment on a core molecular system described using quantum mechanics.
-The core system is defined by the \molinp\ file.
-The environment can be described by multipole moment expansions
-and anisotropic dipole-dipole polarizabilities provided in the \potinp\
-file. See Chapter~\ref{ch:embedding} for an introduction to
-calculations using the polarizable embedding model. See also Ref.~\cite{pescf} for
-details on the PE-HF/DFT model, Ref.~\cite{pesoppa} for PE-MP2/SOPPA,
-Ref.~\cite{pemcscf} for PE-MCSCF, Ref.~\cite{pecc} for PE-CC and Ref.~\cite{peeef,peeef2}
-for details on the EEF effect.
+See Chapter~\ref{ch:embedding} for an introduction to
+calculations using the PE and PDE models.
 
 \begin{description}
 
 \item[\Key{POTENTIAL}]\verb| |\newline
 \verb|READ (LUCMD, *) POTFILE|\verb| |\newline
 This option can be used to specify a non-default name of the \potinp\ input file that contains the embedding potential parameters. The default name is \verb|POTENTIAL.INP|.
+
+\item[\Key{PDE}]\verb| |\newline
+\verb|READ (LUCMD, *) HDF5FILE|\verb| |\newline
+This option can be used to specify a non-default name of the \verb|hdf5| input file that contains the PDE operators. The default name is \verb|standard.h5|.
 
 \item[\Key{DIRECT}]\verb| |\newline
 Use the direct solver to determine the induced dipole moments. It will explicitly build a classical response matrix of size $3S(3S+1)/2$, where $S$ is the number of polarizable sites and is therefore only recommendable for smaller molecular systems. Note that this solver is not parallelized. The default is to use the iterative solver.
@@ -1002,9 +1003,10 @@ Activate the ground-state polarization approximation, i.e.\ freeze the embedding
 Remove many-body effects in the environment. This is done by deactivating interactions between induced dipole moments.
 
 \item[\Key{EEF}]\verb| |\newline
-Request the calculation of effective dipole integrals (\verb|XLFDIPLN,YLFDIPLN,ZLFDIPLN|), i.e.,
-include the effective external field effect in property calculations in the \resp\ module.
-NOTE: Does currently only affect 1PA and 2PA properties (.SINGLE RESIDUE and .DIPLEN or .TWO-PHOTON).
+Request the calculation of effective dipole integrals, i.e.,
+include the effective external field effect in dipole property calculations.
+NOTE: Activating this option will affect all dipole properties, including the dipole moment
+of the core quantum region.
 
 \item[\Key{RESTART}]\verb| |\newline
 Use any existing files to restart calculation.
@@ -1056,7 +1058,7 @@ Debug output. Prints the total electric field and the induced dipole moments in 
 \subsection{QM/MM model: \Sec{QM3}}
 \label{sec:qm3}
 
-Not documented. Examples can be found by grepping for "QM3" in the "DALTON/test" directory in the distribution. See also \Key{PEQM} and \Sec{PEQM}
+Not documented. Examples can be found by grepping for "QM3" in the "DALTON/test" directory in the distribution. See also \Key{PELIB} and \Sec{PELIB}
 (introduction in Chapter~\ref{ch:embedding}) for a newer more general and efficient implementation with many of the same capabilities.
 
 \subsection{Polarizable continuum model: \Sec{PCM}}

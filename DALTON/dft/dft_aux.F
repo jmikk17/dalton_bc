@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -218,7 +218,7 @@ c return total number of atoms.
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
-      NATOM_CNT = NATOMS
+      NATOM_CNT = NUCDEP
       END
       SUBROUTINE GET_ATOM_BY_ICENT(ICENT,ZCNT,NAT,NDEG,X,Y,Z)
 #include "implicit.h"
@@ -231,7 +231,7 @@ c return total number of atoms.
 c
 
 csymmetry is not completely implemented here yet.
-      ZCNT   = CHARGE(ICENT)
+      ZCNT   = ABS(IZATOM(ICENT))
       MULCNT = ISTBNU(ICENT)
       NDEG   = MULT(MULCNT)
       NAT = 0

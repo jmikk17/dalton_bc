@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -377,10 +377,10 @@ C
      &      ' the polarizable embedding scheme (PE library)'
          IF (TRPFLG) THEN
             IF (ISPIN .NE. 1) THEN
-               write(lupri,'(/A,I0)') '@ FATAL ERROR: .PEQM '//
+               WRITE(LUPRI,'(/A,I0)') '@ FATAL ERROR: .PELIB '//
      &         'is only implemented for singlet reference states,'//
      &         ' but spin multiplicity is ',ISPIN
-               CALL QUIT('FATAL ERROR: .PEQM '//
+               CALL QUIT('FATAL ERROR: .PELIB '//
      &         'is only implemented for singlet reference states.')
             END IF
          END IF
@@ -1866,7 +1866,7 @@ C
      &      ,EPSINF
          END IF
 
-         IF ( (QM3 .OR. QMMM .OR. QMNPMM .OR. PCM .OR. use_pelib())
+         IF ( (QM3 .OR. QMMM .OR. QMNPMM .OR. PCM .OR. USE_PELIB())
      &       .AND. (SOPPA .AND. .NOT. SOPRPA)) THEN
                WRITE (LUPRI,'(//A/A/A)') 'RSPPP-ERROR: Full '//
      &     'embedding model SOPPA response is not implemented.',

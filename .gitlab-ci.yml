@@ -39,10 +39,10 @@ coverage:
     - make -j 4
     - export DALTON_LAUNCHER="mpirun -n 4"
     - export OMP_NUM_THREADS=1
-    - ctest --output-on-failure -L dalton -LE "serial|long|verylong" -E dft_ac_multpole
+    - ctest --output-on-failure -L dalton -LE "serial|long|verylong"
     - export DALTON_LAUNCHER=""
     - export OMP_NUM_THREADS=4
-    - ctest --output-on-failure -L serial -LE "long|verylong" -E dft_ac_multpole
+    - ctest --output-on-failure -L serial -LE "long|verylong"
     - ctest -D ExperimentalCoverage
     - bash <(curl -s https://codecov.io/bash) -t 69d70b17-576f-459e-8f6c-409607c9f06b
 
@@ -61,7 +61,7 @@ intel:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
     - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl
     - set +e
-    - . /opt/intel/inteloneapi/setvars.sh
+    - . /opt/intel/oneapi/setvars.sh
     - set -e
     - uname -a
     - lscpu
@@ -93,7 +93,7 @@ intel-mpi:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
     - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
     - set +e
-    - . /opt/intel/inteloneapi/setvars.sh
+    - . /opt/intel/oneapi/setvars.sh
     - set -e
     - uname -a
     - lscpu

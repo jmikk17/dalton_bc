@@ -1,7 +1,7 @@
 c -*-mode:fortran; fortran-continuation-string: "&" -*-
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1828,7 +1828,7 @@ C     Calls QM3FIRST_P if parallel and with #nodes>1, Arnfinn nov. -08
          IF (USE_PELIB() .AND. (KEY.EQ.'HMAT') .AND. .NOT. NOLOND) THEN
             KTMAT = KWRK
             MWRK = KTMAT + 3 * N2BASX
-            IF (MWRK > LWRK) CALL STOPIT('ONEDRL', 'PEQM', MWRK, LWRK)
+            IF (MWRK > LWRK) CALL STOPIT('ONEDRL', 'PELIB', MWRK, LWRK)
             CALL PELIB_IFC_LONDON(WORK(KTMAT))
             CALL DAXPY(3*N2BASX, D1, WORK(KTMAT), 1, WORK(KMATS), 1)
          END IF

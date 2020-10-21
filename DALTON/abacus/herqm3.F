@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2018 by the authors of Dalton.
+!  Copyright (C) by the authors of Dalton.
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1470,7 +1470,7 @@ C
               CORD(2,NCTOT+KURT) = TMINV * COMY
               CORD(3,NCTOT+KURT) = TMINV * COMZ
               CHARGE(NCTOT+KURT) = 0.0000
-              IZATOM(NCTOT+KURT) = -2
+              IZATOM(NCTOT+KURT) = -20000
               ISUBSY(NCTOT+KURT) = M
               ISUBSI(NCTOT+KURT) = LTEMP + 1
               LTEMP1 = LTEMP
@@ -1516,7 +1516,7 @@ C
                   CORD(2,NCTOT+KURT) = CORD(2,J)
                   CORD(3,NCTOT+KURT) = CORD(3,J)
                   CHARGE(NCTOT+KURT) = 0.0000
-                  IZATOM(NCTOT+KURT) = -2
+                  IZATOM(NCTOT+KURT) = -20000
                   ISUBSY(NCTOT+KURT) = M
                   ISUBSI(NCTOT+KURT) = NUALIS(L) + LTEMP
 C
@@ -1605,7 +1605,7 @@ C
                 END IF
 C
                 CHARGE(NCTOT+KURT) = 0.0000
-                IZATOM(NCTOT+KURT) = -2
+                IZATOM(NCTOT+KURT) = -20000
                 ISUBSY(NCTOT+KURT) = M
                 ISUBSI(NCTOT+KURT) = LTEMP1
 C
