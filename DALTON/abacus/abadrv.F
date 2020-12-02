@@ -1085,7 +1085,7 @@ C
             READ (LUCMD,*) NPERT
             READ (LUCMD, *) (IPOINT(I),I=1,NPERT)
             CALL HEADER('In this run only the following '//
-     *                  'perturbations are considered:',1)
+     *                  'nuclear perturbations are considered:',1)
             WRITE (LUPRI,'(5I5,5X,5I5)') (IPOINT(I), I = 1, NPERT)
             WRITE (LUPRI,'()')
             DOPERT(:,1) = .FALSE.

@@ -3672,8 +3672,11 @@ C  /* Deck psoor1 */
 C
       KSYMP = -1
       CALL PRPGET(LABEL,CMO,PSOINT,KSYMP,ANTSYM,WORK,LWORK,IPRINT)
-      IF (KSYMP.NE.KSYMPSO)
-     &   CALL QUIT('ERROR: unexpected property symmetry in PSOOR1')
+      IF (KSYMP.NE.KSYMPSO) THEN
+         WRITE(LUPRI,*) 'ERROR: unexpected property symmetry in PSOOR1'
+         WRITE(LUPRI,*) 'ERROR: expected & found ',KSYMP,KSYMPSO
+         CALL QUIT('ERROR: unexpected property symmetry in PSOOR1')
+      END IF
       DO 100 X = 1, 3
          ORTO = DDOT(N2ORBX,PSOINT,1,WMAT(1,X),1)
          SIGMAS(X,ISCOOR) = ORTO

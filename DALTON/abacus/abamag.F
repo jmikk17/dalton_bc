@@ -1204,27 +1204,25 @@ C
      &               '" not recognized in SPIN-S.'
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
                CALL QUIT('Input keywords in SPNINP')
- 1             CONTINUE
+ 1             CONTINUE ! .ABUNDANCE
                   READ (LUCMD,*) ABUND
                   IF (ABUND .EQ. 1.0D0) ICHANG = ICHANG - 1
                GOTO 100
- 2             CONTINUE
+ 2             CONTINUE ! .PRINT
                   READ (LUCMD,*) ISPPRI
                   IF (ISPPRI .EQ. 0) ICHANG = ICHANG - 1
                GOTO 100
- 3             CONTINUE
-                  DO 1030 I = 1, MXCENT
-                     DOPERT(I,2) = .FALSE.
- 1030             CONTINUE
+ 3             CONTINUE ! .SELECT
+                  DOPERT(1:MXCENT,2) = .FALSE.
                   READ (LUCMD,*) NPERT
                   READ (LUCMD, *) (IPOINT(I),I=1,NPERT)
                   CALL HEADER('Only the spin-spin couplings between'//
      &               ' the following nuclei will be calculated:',1)
                   WRITE (LUPRI,*) ' ',(IPOINT(I), I = 1 , NPERT)
                   WRITE (LUPRI,'()')
-                  DO 1031 I = 1, NPERT
+                  DO I = 1, NPERT
                      DOPERT(IPOINT(I),2) = .TRUE.
- 1031             CONTINUE
+                  END DO
                   DOSELE = .TRUE.
                GOTO 100
  4             CONTINUE
