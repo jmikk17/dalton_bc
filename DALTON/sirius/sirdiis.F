@@ -120,7 +120,7 @@ C
          NINFO = NINFO + 1
          WRITE (LUPRI,'(//A/)')
      &   ' INFO: no DIIS iterations because degenerate'//
-     &   'supersymmetries is not implemented for DIIS'
+     &   ' supersymmetries is not implemented for DIIS'
          GO TO 9999
       END IF
 C

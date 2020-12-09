@@ -118,8 +118,9 @@ C *** WF_TYPE
 C
       RHF_CALC = (NASHT .LE. 1 .OR. HSROHF)
       IF ( (MCTYPE.LE.0) .NEQV. RHF_CALC ) THEN
-         WRITE (LUPRI,'(//A,I5)')
-     &  'WARNING siropt: RHF_CALC neqv MCTYPE =',MCTYPE
+         WRITE (LUPRI,'(//A,I5/A,I5,L5)')
+     &  'WARNING siropt: RHF_CALC neqv MCTYPE =',MCTYPE,
+     &  'WARNING siropt: NASHT, HSROHF =',NASHT,HSROHF
       END IF
       IF (RHF_CALC) THEN
          IF (DOHFSRDFT) THEN

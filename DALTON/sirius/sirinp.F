@@ -3330,6 +3330,10 @@ C     Option 26 >MEP   <
       GO TO 100
 C
  2000 CONTINUE
+      IF (.NOT. DOSCF) THEN
+         HSROHF = .FALSE.
+         IOPRHF = 0
+      END IF
       IF (THR_REDFAC .GT. 0.0D0) THEN
 C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,

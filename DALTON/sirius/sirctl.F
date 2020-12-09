@@ -518,11 +518,11 @@ C
 C ***************************************************
 C        *** reset to CI/MCSCF flags ***
 C
+      HSROHF = .FALSE.
+C     ... otherwise error in some MCSCF routines
+C         where HSROHF specifications erroneously will be used
       IF ( (DOSCF .OR. DOMP2) .AND.
      &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
-         HSROHF = .FALSE.
-C        ... otherwise error in some MCSCF routines
-C            where HSROHF specifications erroneously will be used
          IOPRHF  = -1
          FLAG(25)   = FLAGSV(25)
          DO 25 ISYM = 1, NSYM
