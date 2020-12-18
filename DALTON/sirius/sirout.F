@@ -395,11 +395,11 @@ C        CI calculation
       ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
-            WRITE (LUPRI,5013)
+            WRITE (LUPRI,5014)
             WRITE (LUPRI,5024) ISTATE,EMCSCF,CONV_text,
      &         POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE
-            WRITE (LUPRI,5014)
+            WRITE (LUPRI,5013)
             WRITE (LUPRI,5020) ISTATE,EMCSCF,CONV_text,
      &         POTNUC,(EMCSCF-POTNUC-ESOLT)
          END IF

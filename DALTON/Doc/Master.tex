@@ -13,8 +13,17 @@
  breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=true]
  {hyperref}
 \usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
-\hypersetup{
- urlcolor=brown,linkcolor=blue,citecolor=red}
+\hypersetup{urlcolor=brown,linkcolor=blue,citecolor=red}
+
+%****************************************************
+%****************************************************
+%****************************************************
+% Define release version, should correspond to the
+% content of the file VERSION in the root directory.
+\newcommand{\latestrelease}{Dalton2021.alpha}
+%****************************************************
+%****************************************************
+%****************************************************
 
 \newcommand{\ignore}[1]{}
 \newcommand{\nobibentry}[1]{{\let\nocite\ignore\bibentry{#1}}}
@@ -52,10 +61,6 @@
 %
 %    Options for Sirius
 %
-\newcommand{\beq}{\begin{equation}}
-\newcommand{\eeq}{\end{equation}}
-\newcommand{\beqar}{\begin{eqnarray}}
-\newcommand{\eeqar}{\end{eqnarray}}
 \newcommand{\bcen}{\begin{center}}
 \newcommand{\ecen}{\end{center}}
 \newcommand{\lrar}{\mbox{$\leftrightarrow$}}
@@ -110,7 +115,6 @@
 %\fi
 
 %\renewcommand{\thetable}{\Roman{table}}
-\newcommand{\latestrelease}{Dalton2020.0}
 \newcommand{\dalton}{{\sc Dalton}}
 \newcommand{\her}{{\sc Hermit}\index{\sc Hermit}}
 \newcommand{\hermit}{{\sc Hermit}\index{\sc Hermit}}

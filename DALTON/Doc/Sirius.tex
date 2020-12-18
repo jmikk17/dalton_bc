@@ -241,16 +241,16 @@ Specification of which wave function calculation is to be performed.
   Note: you can only specify one of the \quotekw{.HF}, \quotekw{.DFT}, and \quotekw{.HFsrDFT} keywords.
 
 \item[\Key{HFsrDFT}]
-  Long-range Hartree-Fock  and short-range DFT (HF-srDFT) calculation. \index{HF-srDFT}
+  Long-range Hartree-Fock and short-range DFT (HF-srDFT) calculation. \index{HF-srDFT}
   (Unrestricted HF-srDFT is not possible in \dalton.)
   The short-range srDFT functional must be defined with the \quotekw{.SRFUN} keyword in this input section.
   The occupied orbitals, optimization control etc. are specified in the
   \quotekw{*SCF INPUT} submodule. \\
   Default range-separation is the error function with $\mu = 0.4$, our standard value.
-  The value can be canged with the \quotekw{.ERF} keyword. \\
+  The value can be changed with the \quotekw{\Key{ERF}} keyword under \quotekw{*TWOINT}. \\
   This option is quite similar to long-range corrected Kohn-Sham functionals, the only difference
   is that long-range correction is also performed on the correlation funtional.
-  HF-srDFT with srPBEGWS may therefore be expected to give results close to LC-PBE.
+  HF-srDFT with srPBEGWS may therefore be expected to give results close to LC-PBE for single-reference molecules.
   Note: you can only specify one of the \quotekw{.HF}, \quotekw{.DFT}, and \quotekw{.HFsrDFT} keywords.
 
 \item[\Key{DFT}] \ \\
@@ -277,8 +277,8 @@ Specification of which wave function calculation is to be performed.
 
 \item[\Key{SRFUN}] \ \\
   \kw{READ (LUINP,'(A80)') LINE} \\
-  Specification of functional used for \quotekw{.HFSRDFT}, \quotekw{.MP2SRDFT}, \quotekw{.CISRDFT},
-  and \quotekw{.MCSRDFT} calculations. It is \emph{required} for these calculations, there is not default functional.
+  Specification of functional to be used for \quotekw{.HFSRDFT}, \quotekw{.MP2SRDFT}, \quotekw{.CISRDFT},
+  and \quotekw{.MCSRDFT} calculations. It is \emph{required} for these calculations, there is no default functional.
   \index{Short-range functionals!.SRFUN}
   Note that this keyword must not be specified together with the Kohn--Shan DFT keyword \quotekw{.DFT}.
 
@@ -355,7 +355,7 @@ Specification of which wave function calculation is to be performed.
   Long-range MCSCF and short-range DFT (MC--srDFT) calculation. CAS-srDFT or RAS-srDFT.\index{MC--srDFT}
   The short-range srDFT functional must be defined with the \quotekw{.SRFUN} keyword in this input section.
   Default range-separation is the error function with $\mu = 0.4$, our standard value.
-  The value can be canged with the \quotekw{.ERF} keyword. \\
+  The value can be changed with the \quotekw{\Key{ERF}} keyword. \\
   It is normally recommended that you use initial orbitals from MP2-srDFT for faster convergence to
   the desired state (other initial guesses more often end in a local minimum). \\
   Note: you can only specify one of the \quotekw{.MCSCF} and \quotekw{.MCsrDFT} keywords.
@@ -585,7 +585,7 @@ To obtain initial guess for CI vector(s).
 \begin{description}
 \item[\Key{PLUS COMBINATIONS}]
   Use with \quotekw{\Key{STARTHDIAGONAL}} to choose plus combination
-  of degenerate   diagonal elements ({\bf STRONGLY RECOMMENDED} for
+  of degenerate diagonal elements ({\bf STRONGLY RECOMMENDED} for
   calculation of singlet states  with \quotekw{\Key{DETERMINANTS}}).
 
 \item[\Key{SELECT}] \ \\
@@ -673,9 +673,9 @@ To specify the configuration part in .MCSCF and .CI calculations.
 \item[\Key{MS2}]
   Default is determind by \kw{.SPIN MULTIPLICITY}. \\
   \kw{READ (LUINP,*) MS2}\\
-  For CSF basis: MS2 specifies non-default $2 M_S$ value to be used in the determinant expansion of the CSFs.
-  The computationally optional MS2 value for, say, triplet is zero (default), but if you want to calculate
-  spin-density you should select MS2=2.\\
+  For CSF basis: MS2 specifies which $2 M_S$ value to be used in the determinant expansion of the CSFs.
+  The computationally optimal MS2 value for, say, triplet is usually MS2 = 0 (default), but if you want to calculate
+  spin-density you should select \verb|MS2 = 2 S|, that is, 2 for triplet.\\
   For determinant basis this option should never be used, if used it must give the
   same $M_S$ value as the \kw{.SPIN MULTIPLICTY} key word.
 
@@ -1670,7 +1670,7 @@ Some of the options also affect a QC-HF optimization.
   orbital absorption   will be ignored.
 
 \item[\Key{DETERMINANTS}]
-  Use determinant\index{determinants} basis instead of CSF basis (see comments).
+  Use a determinant\index{determinants} basis instead of an CSF basis (see comments).
 
 \item[\Key{EXACTDIAGONAL}]
   Default for RAS calculations.\\
@@ -1696,7 +1696,9 @@ Some of the options also affect a QC-HF optimization.
 
 \item[\Key{MAX CI}] \ \\
   \kw{READ (LUINP,*) MAXCIT} \\
-  maximum number of CI iterations before MCSCF (default = 3).
+  maximum number of CI iterations before MCSCF.
+  Default = 3, unless restart from old orbitals which might be converged orbitals
+  in which case it is set to 20.
 
 \item[\Key{MAX MACRO ITERATIONS}] \ \\
   \kw{READ (LUINP,*) MAXMAC} \\
@@ -1715,9 +1717,9 @@ Some of the options also affect a QC-HF optimization.
 
 \item[\Key{MAXAPM}] \ \\
   \kw{READ (LUINP,*) MAXAPM} \\
-  maximum number orbital absorptions\index{orbital absorption} within
+  maximum number of orbital absorption steps\index{orbital absorption} within
   a macro iteration
-  (APM : Absorptions Per Macro iteration; default = 5)
+  (APM : Max number of absorptions Per Macro iteration; default = 5)
 
 \item[\Key{NATONLY}]
   Activate TRACI option (default : program decides).\\
@@ -1725,12 +1727,12 @@ Some of the options also affect a QC-HF optimization.
   touched (these two types of orbitals are already natural orbitals).
 
 \item[\Key{NEO ALWAYS}]
-  Always norm-extended optimization (never switch to New\-ton-Raph\-son).
+  Always use norm-extended optimization (never switch to New\-ton-Raph\-son).
   Note: \quotekw{\Key{NR ALWAYS}} and \quotekw{\Key{CORERELAX}}
   takes precedence over \quotekw{\Key{NEO ALWAYS}}.
 
 \item[\Key{NO ABSORPTION}]
-  Never orbital absorption\index{orbital absorption} (default settings removed)
+  Never do orbital absorption\index{orbital absorption} (default settings removed)
 
 \item[\Key{NO ACTIVE-ACTIVE ROTATIONS}]
   No active-active rotations in RAS optimization.
@@ -1745,11 +1747,17 @@ Some of the options also affect a QC-HF optimization.
 
 \item[\Key{OLSEN}]
   Use Jeppe Olsen's generalization of the Davidson
-  algorithm\index{Davidson algorithm}.
+  algorithm\index{Davidson algorithm!Olsen generalization}.
 
 \item[\Key{OPTIMAL ORBITAL TRIAL VECTORS}]
   Generate "optimal" orbital trial
   vectors~\cite{hjajpjhajcp87}.\index{optimal orbital trial vector} 
+  This will usually save computer time in each MCSCF macro iteration in cases
+  where the configuration part is much more expensive than the orbital part.
+  It will also save time in cases where maybe 20 orbital trial vectors
+  before a configuration trial vector, in this case the optimal
+  orbital trial vectors will reduce the 20 calculations of CI sigma
+  parts to in best case just 1 calculation.
 
 \item[\Key{ORB\_TRIAL VECTORS}]
   Use also orbital trial vectors as start vectors for auxiliary roots
@@ -1757,30 +1765,31 @@ Some of the options also affect a QC-HF optimization.
 
 \item[\Key{PHPRESIDUAL}]
   Select configurations for PHP matrix based on largest residual
-  rather than lowest diagonal elements.
+  rather than lowest diagonal elements. Experimental option.
 
 \item[\Key{SIMULTANEOUS ROOTS}]
-  Default : NROOTS = ISTATE, LROOTS = NROOTS\\
+  Default : NROOTS = ISTATE from \quotekw{\Key{STATE}}, LROOTS = NROOTS\\
   \kw{READ (LUINP,*) NROOTS, LROOTS} \\
   NROOTS = Number of simultaneous roots in NEO\\
   LROOTS = Number of simultaneous roots in NEO at start
 
 \item[\Key{STATE}]
-  Default = 1\\
+  Default is ISTATE = 1, corresponding to the ground state in the specified symmetry\\
   \kw{READ (LUINP,*) ISTATE} \\
-  Index of MCSCF Hessian\index{MCSCF Hessian} at convergence (1 for
-  lowest state, 2 for first
-  excited state, etc. within the spatial symmetry\index{symmetry} and
+  $ISTATE-1$ is the index -- number of negative eigenvalues -- of the MCSCF Hessian\index{MCSCF Hessian}
+  at convergence (i.e. 0 for lowest state, 1 for first excited state, etc. within the spatial symmetry\index{symmetry} and
   spin symmetry\index{spin symmetry}
-  specified under \Sec{CONFIGURATION INPUT}).
+  specified under \Sec{CONFIGURATION INPUT}).\\
+  See \quotekw{\Key{SYM CHECK}} for options to how the state is selected when $ISTATE > 1$.
 
 \item[\Key{SUPSYM}]
   Enforce automatic identification of "super symmetry"
-  \index{super symmetry} (see comments and .THRSSY keyword below).\\
+  \index{super symmetry} (see comments and \quotekw{\Key{THRSSY}} keyword below).\\
   Default is that "super symmetry" is not identified.
+  Examples of super symmetry: $C_{3v}$ for ammonia, $T_d$ for methane, $L$ quantum states for atoms)
 
 \item[\Key{SYM CHECK}]
-  Default: ICHECK = 2 when NROOTS $>$ 1, else ICHECK = -1.\\
+Default: ICHECK = 2 when either \quotekw{\Key{STATE}} or \quotekw{\Key{SIMULT}} value is $>$ 1, otherwise ICHECK = -1.\\
   \kw{READ (LUINP,*) ICHECK} \\
   Check symmetry of the LROOTS start CI-vectors and remove those which
   have wrong symmetry ({\it e.g.\/} vectors of delta symmetry in a sigma
@@ -1797,28 +1806,31 @@ Some of the options also affect a QC-HF optimization.
   The \quotekw{\Key{SIMULTANEOUS ROOTS}} input will automatically be
   updated if CI vectors are removed.
 
-\item[\Key{THRCGR}] \ \\
+\item[\Key{THRCGR}] Default: $0.1$ \\
   \kw{READ (LUINP,*) THRCGR} \\
-  Threshold for print of CI gradient. Default is 0.1D0.
+  Threshold for print of CI gradient elements.
 
 \item[\Key{THRESH}]
-  Default = 1.0D-05\\
+  Default: 1.0D-05\\
   \kw{READ (LUINP,*) THRMC} \\
-  Convergence threshold for energy gradient in MCSCF optimization.
+  Convergence threshold for energy gradient in MCSCF, MC-srDFT, or QCHF second order optimization.
   The convergence of the energy will be approximately the square of this
-  number.
+  number. This is selected to usually be sharp enough for response properties.
+  If you just want the energy accurate to e.g. 10 micro Hartrees, five decimal places,
+  then you can usually safely use $1.0d-03$ for the threshold.
+  You can always check if the energy is sufficiently converged from the convergence statistics
+  in the output.
 
-\item[\Key{THRSSY}] \ \\
+\item[\Key{THRSSY}] Default: 5.0D-8\\
   \kw{READ (LUINP,*) THRSSY} \\
   Threshold for identification of "super
   symmetry"\index{super symmetry} and degeneracies among
-  "super symmetries" from matrix elements of the kinetic energy matrix
-  (default: 5.0D-8).
+  "super symmetries" from matrix elements of the kinetic energy matrix.
 
 \item[\Key{TRACI}]
   Activate TRACI option (default : program decides).\\
-  Active orbitals are transformed to natural orbitals and the CI-vectors
-  are counter-rotated such that the CI states do not change.  The
+  Active orbitals are transformed to natural orbitals in each active subspace
+  and the CI-vectors are counter-rotated such that the CI states do not change.  The
   inactive and secondary orbitals are transformed to Fock type orbitals
   (corresponding to canonical orbitals for closed shell Hartree--Fock).
   For RAS wave functions the active orbitals are only transformed
@@ -1912,7 +1924,7 @@ geometry and numerical round-off errors.
 
 SYM CHECK: The symmetry check is performed on the matrix element
 $\langle VEC1 \mid oper \mid VEC2\rangle$, where "oper" is
-the CI-diagonal.
+the CI diagonal.
 It is recommended and the default to use \quotekw{\Key{SYM CHECK}}
 for excited states, including
 CI vectors of undesired symmetries is a waste of CPU time.

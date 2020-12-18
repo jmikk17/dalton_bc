@@ -1234,10 +1234,22 @@ the reaction field.
 Directives affecting the two-electron\index{two-electron integral}
 undifferentiated Hamiltonian
 integral calculation appear in the \Sec{TWOINT} section.
+
 \begin{description}
+
+\item[\Key{ERF   }] Default: standard two-electron repulsion integrals.\newline
+\verb|READ (LUCMD,*) MU_VALUE| \\
+Here \verb|MU_VALUE| is the value of $\mu$ used in the separation of two-electron repulsion integrals in a short-range part and a long-range part using the error function:
+\begin{eqnarray*}
+Vee &=& Vlr+Vsr \\
+Vlr &=& \mathrm{erf}(\mu r_{12})/(r_{12}) \\
+Vsr &=& [1 -\mathrm{erf}(\mu r_{12})]/(r_{12}) 
+\end{eqnarray*}
+This option is used to specify the long-range and the short-range two-electron repulsion integrals
+in HF-srDFT, MP2-srDFT, CI-srDFT, MC-srDFT calculations.
+
 \item[\Key{ICEDIF}]\verb| |\newline
 \verb|READ (LUCMD,*) ICDIFF,IEDIFF|
-
 Screening\index{integral screening} threshold for Coulomb and exchange
 contributions to the Fock
 matrix in direct and parallel calculations. The thresholds for the
@@ -1248,37 +1260,42 @@ converges more and more tightly.
 
 \item[\Key{IFTHRS}]\verb| |\newline
 \verb|READ (LUCMD,*) IFTHRS|
-
 Screening threshold\index{integral screening} used in direct and
-parallel calculations. The integral threshold will be ten to the
-negative power of this number. The default is that this value will change dynamically as the wave function converges more and more tightly.
+parallel calculations. The treshold for excluded integrals will be $10^{\rm -IFTHRS}$.
+The default is that this value will change dynamically as the wave function converges more and more tightly
+in direct calculations.
 
 \item[\Key{PANAS}] Calculates scaled two-electron integrals as
 proposed by Panas as a simple way of introducing electron
 correlation in calculations of molecular energies~\cite{ipcpl245}.
 
+\item[\Key{SOFOCK}] Construct the Fock matrix in symmetry-orbital
+basis during a direct or parallel calculation. Currently not active.
+
+\item[\Key{TIME}] Provide detailed timing breakdown for the
+two-electron integral calculation.
+\end{description}
+
+Debug options:
+
+\begin{description}
+
 \item[\Key{PRINT}]\verb| |\newline
 \verb|READ (LUCMD, *) IPRINT, IPRNTA, IPRNTB, IPRNTC, IPRNTD|
-
 Set print level for the derivative integral calculation of a particular shell
 quadruplet.  Read one more line containing print level and the four
 shell indices.  The print level is changed from the default
 for this quadruplet only.
 
 \item[\Key{RETURN}] Stop after the shell quadruplet specified
-under \Key{PRINT} above. Mainly for debugging purposes.
+under \Key{PRINT} above. Only for debugging purposes.
 
 \item[\Key{SKIP}] Skip the calculation of two-electron Hamiltonian
 integrals. An alternative keyword is \Key{NOTWO} in the \Sec{*INTEGRALS}
 input module.
 
-\item[\Key{SOFOCK}] Construct the Fock matrix in symmetry-orbital
-basis during a direct or parallel calculation. Currently not active.
+%\item[\Key{THRFAC}] Not used in \dalton .
 
-\item[\Key{THRFAC}] Not used in \dalton .
-
-\item[\Key{TIME}] Provide detailed timing breakdown for the
-two-electron integral calculation.
 \end{description}
 
 % ==========================================================================================
