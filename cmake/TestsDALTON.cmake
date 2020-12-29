@@ -109,7 +109,7 @@ add_dalton_test(energy_hsrohf                    "dalton;energy;short")
 add_dalton_test(energy_hsrohf_qc                 "dalton;energy;short;essential")
 add_dalton_test(energy_lucita_gasci              "dalton;energy;short;essential")
 add_dalton_test(energy_scsmp2                    "dalton;energy;short;essential")
-add_dalton_test(energy_localize_selected         "dalton;energy;short")
+add_dalton_test(energy_localize_selected         "dalton;energy;short;essential")
 add_dalton_test(energy_solv                      "dalton;energy;medium")
 
 add_dalton_test(geoopt_cartsad                   "dalton;geo;short")

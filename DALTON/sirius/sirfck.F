@@ -207,6 +207,13 @@ C        DC, DV or DXC, DXV
          IF (DOERG .AND. NSR_DMAT .GT. 1) THEN
             CALL QUIT('SIRFCK ERROR: nsr_dmat > 1 for sr gradient call')
          END IF
+         IF (DO_SPINDNS .AND. .NOT. AO_DIRECT) THEN
+            WRITE(lupri,'(//A)') 'SIRFCK ERROR, open-shell srDFT is'
+     &       //' only implemented for .DIRECT Fock matrix construction.'
+            CALL QUIT('SIRFCK ERROR, open-shell srDFT only for'//
+     &         ' AO-direct Fock matrices')
+         END IF
+
       END IF
 
 C     ...PREHF: Find out if this is a HF calculation preceding
@@ -601,13 +608,6 @@ C
 C        Add Short-range integrals to FC part of FMAT (SRDFT hybrid models)
 C
          IF (ADDSRI) THEN
-
-            IF (DO_SPINDNS) THEN
-               WRITE(lupri,'(//A)') 'SIRFCK ERROR, open-shell srDFT is'
-     &       //' only implemented for direct Fock matrix construction.'
-               CALL QUIT('SIRFCK ERROR, open-shell srDFT only for'//
-     &         ' AO-direct Fock matrices')
-            END IF
 
             IF (NASHT.GT.0 .AND. (.NOT.DOCISRDFT)) THEN
                ! IFCTYP(1) might be 0 for "FTC", thus we go for the FTV value
@@ -1306,6 +1306,7 @@ C
      &   'SIRFCK2: ', NREC,' records with integrals read.',
      &   NINTS_TOT,' integrals processed.'
       END IF
+      CALL MEMREL('2INT buffer',WRK,1,1,KFREE,LFREE)
 C
 C     Finish symmetric and antisymmetric Fock matrices
 C     Restore original density matrices

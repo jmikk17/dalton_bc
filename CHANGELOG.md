@@ -1,5 +1,10 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
+## [2020.0.1]
+
+### Fixed
+- Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
+
 ## [2020.0] (2020-10-20)
 
 ### Major new features added

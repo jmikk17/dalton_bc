@@ -154,7 +154,7 @@ C
       DATA THRESROT /1D-10/ , MAXIT /30/
       PARAMETER ( D1=1.0D0,  D0=0.0D0)
       PARAMETER (PI = 3.14159 26535 89793 23846 D00)
-      LOGICAL ISMAX
+      LOGICAL ISMAX, is_open
 C
 C External funcitons (blas)
 C
@@ -176,9 +176,15 @@ C
 C
 C Read dipole matrix and transform to selected MO:s
 C
-      LU=-1
-      CALL GPOPEN(LU,'AOPROPER','OLD','SEQUENTIAL','UNFORMATTED',0,
+      CALL GPINQ('AOPROPER','OPENED',is_open)
+      if (is_open) then
+         inquire(file='AOPROPER',number=lu)
+      else
+         LU=-1
+         CALL GPOPEN(LU,'AOPROPER','OLD','SEQUENTIAL','UNFORMATTED',0,
      &   .FALSE.)
+      end if
+
       NAOT=NAO*(NAO+1)/2
       LTMP=MAX(NAOT,NMO*NAO)
       CALL MEMGET('REAL',KTMP,LTMP,WORK,KFREE,LFREE)
@@ -204,7 +210,6 @@ C        WRITE (LUPR,'(A)')DLAB(I)//'(AO)'
 C        CALL OUTPUT(X(1,1,I),1,NMO,1,NMO,NMO,NMO,1,LUPR)
       END DO
       CALL MEMCHK('CXC(T)',WORK,1)
-      CALL GPCLOSE(LU,'KEEP')
 C
 C Initialize for localization iterations
 C
