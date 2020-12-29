@@ -15,15 +15,15 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-C
-#ifdef UNDEF
+
 !===========================================================================
-!/* Comdeck memlog */
+!/* mempkg log */
+!201229-hjaaj: introduced MEMDUMP for dump of allocation when no error
+!       hjaaj: introduced MEMGET2 for better tracebacks
 !060316-hjaaj: for DBG_LENID check memcb1.h
-!910110-hjaaj MEMREL: removed non-standard char. concat. in CALL MEMCHK
+!910110-hjaaj: MEMREL: removed non-standard char. concat. in CALL MEMCHK
 !901004-hjaaj: NWNMEM introduced, no final check on NWNMEM (yet)
 !===========================================================================
-#endif
 C  /* Deck memini */
       SUBROUTINE MEMINI(LUWME1,LUEME1)
 C
@@ -412,6 +412,118 @@ C
      &             'allocation has negative length.')
 C
 C     end of MEMCHK
+C
+      END
+C  /* Deck memdump */
+      SUBROUTINE MEMDUMP(TEXT,WORK,KFIRST)
+C
+C MEMDUMP 28-Dec-2020 Hans Joergen Aa. Jensen;
+C based on memchk from 17-Mar-1989 Hans Joergen Aa. Jensen
+C
+C list memory allocations from WORK(KFIRST) and
+C check if the memory allocation IDs are intact
+C (check if anything has been out of bounds).
+C
+#include "implicit.h"
+      DIMENSION     WORK(*)
+      CHARACTER*(*) TEXT
+      logical :: mem_errors
+C
+#include "memcb1.h"
+C
+Chj1  CALL QENTER('MEMDUMP  ')
+C
+      KALLOC = KFIRST
+      IF (KALLOC .EQ. 1) KALLOC = 1 + LENID
+C
+      mem_errors = .true.
+      IALLOC = 0
+  100 CONTINUE
+         IALLOC = IALLOC + 1
+#ifdef DBG_LENID
+         do i = 2,lenid-1
+            WMEMCK = WORK(KALLOC-LENID+i)
+            IF (MEMCK .NE. MEMID) GO TO 8001
+         end do
+#else
+         WMEMCK = WORK(KALLOC-1)
+         IF (MEMCK .NE. MEMID) GO TO 8001
+#endif
+         WLREAL = WORK(KALLOC-LENID+1)
+         IF (LREAL .GE. 0) THEN
+            KALLOC = KALLOC + LENID + LREAL
+            GO TO 100
+         END IF
+         IF (LREAL .NE. LZERO) GO TO 8002
+C
+C finished checking, now dump
+         WRITE (LUWMEM,'(/A/A)')
+     &      ' Dump of memory allocations',
+     &      ' IALLOC #   IDENT           KBASE         Length'
+         mem_errors = .false.
+         go to 200
+C
+C        error branch IF (MEMCK .NE. MEMID) THEN
+C
+ 8001    WRITE (LUWMEM,'(/A/2A/A,3I10/A,I25,A,G20.12,A/A,I25)')
+     *      ' MEMDUMP ERROR, not a valid memget id in work(kalloc-1)',
+     *      ' Text from calling routine : ',TEXT,
+     *      ' KFIRST,KALLOC,IALLOC =',KFIRST,KALLOC,IALLOC,
+     *      ' found memory checks:',MEMCK,
+     &      ' ( value as real*8: ',WMEMCK,' )',
+     *      ' expected           :',MEMID
+         WRITE (LUWMEM,'(/A/A)')
+     &      ' Dump of allocations before invalid memget id:',
+     &      ' IALLOC #   IDENT           KBASE         Length'
+
+
+  200    KALLOC = KFIRST
+         IF (KALLOC .EQ. 1) KALLOC = 1 + LENID
+         DO I = 1, IALLOC
+            WRITE (IDENT8,'(A8)') WORK(KALLOC-LENID)
+            WLREAL = WORK(KALLOC-LENID+1)
+            WRITE (LUWMEM,'(I7,5X,A8,I13,I15)') I,IDENT8,KALLOC,LREAL
+            KALLOC = KALLOC + LENID + LREAL
+         END DO
+#ifdef DBG_LENID
+         do i = 2,lenid-1
+            WMEMCK = WORK(KALLOC-LENID+i)
+            if (memck .ne. memid) write (luwmem,*)
+     &         'MEMDUMP error in debug element: ',i+1,memck
+         end do
+#endif
+         if (.not.mem_errors) then
+            return
+         end if
+         CALL QENTER('MEMDUMP  ')
+         CALL QTRACE(LUWMEM)
+         IF (LUEMEM.NE.LUWMEM) THEN
+            WRITE (LUEMEM,'(/A/A)')
+     *      ' MEMDUMP ERROR, not a valid memget id in work(kalloc-1)',
+     *      ' ---> see output file'
+            CALL QTRACE(LUEMEM)
+         END IF
+         CALL QUIT('MEMDUMP ERROR, not a valid memget '//
+     &             'id in work(kalloc-1)')
+C
+C        error branch IF (LREAL .LT. 0) THEN
+C
+ 8002    WRITE (LUWMEM,'(/A/2A/A,4I10)')
+     *      ' MEMDUMP ERROR, next allocation LENGTH is negative',
+     *      ' Text from calling routine : ',TEXT,
+     *      ' KFIRST,KALLOC,IALLOC,LENGTH =',KFIRST,KALLOC,IALLOC,LREAL
+         CALL QENTER('MEMDUMP  ')
+         CALL QTRACE(LUWMEM)
+         IF (LUEMEM.NE.LUWMEM) THEN
+            WRITE (LUEMEM,'(/A/A)')
+     *      ' MEMDUMP ERROR, next allocation LENGTH is negative',
+     *      ' ---> see output file'
+            CALL QTRACE(LUEMEM)
+         END IF
+         CALL QUIT('MEMDUMP ERROR, next '//
+     &             'allocation has negative length.')
+C
+C     end of MEMDUMP
 C
       END
 C --- end of mempgk.F ---
