@@ -6,6 +6,10 @@
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called form ABACUS driver.
 
+## [2020.0.1]
+
+### Fixed
+- Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
 
 ## [2020.0] (2020-10-20)
 
