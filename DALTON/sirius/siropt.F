@@ -1,3 +1,4 @@
+!define SIROPT_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) by the authors of Dalton.
@@ -594,17 +595,17 @@ chj   IF (P6FLAG(1)) THEN
             IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUPRI,1018) ESRDFTY
          END IF
 chj   END IF
-      IF (SOLVNT) WRITE (LUW4,1016) ESOLT
-      IF (PCM)    WRITE (LUW4,1019) ESOLT
-      IF (QM3)    WRITE (LUW4,1017) EQM3
-      IF (QMMM)   WRITE (LUW4,1017) ESOLT
+      IF (SOLVNT)      WRITE (LUW4,1016) ESOLT
+      IF (PCM)         WRITE (LUW4,1019) ESOLT
+      IF (QM3)         WRITE (LUW4,1017) EQM3
+      IF (QMMM)        WRITE (LUW4,1017) ESOLT
       IF (USE_PELIB()) WRITE (LUW4,1021) ESOLT
       WRITE (LUW4,1020) GNORM(3),GNORM(1),GNORM(2)
       IF (LUPRI.NE.LUW4) THEN
-         IF (SOLVNT) WRITE (LUPRI,1016) ESOLT
-         IF (PCM)    WRITE (LUPRI,1019) ESOLT
-         IF (QM3) WRITE (LUPRI,1017) EQM3
-         IF (QMMM) WRITE (LUPRI,1017) ESOLT
+         IF (SOLVNT)      WRITE (LUPRI,1016) ESOLT
+         IF (PCM)         WRITE (LUPRI,1019) ESOLT
+         IF (QM3)         WRITE (LUPRI,1017) EQM3
+         IF (QMMM)        WRITE (LUPRI,1017) ESOLT
          IF (USE_PELIB()) WRITE(LUPRI,1021) ESOLT
          WRITE (LUPRI,1020) GNORM(3),GNORM(1),GNORM(2)
       END IF
@@ -1348,9 +1349,13 @@ C hjaaj TODO:   EKT orbital energies may be defined later.
       IF (IPRINT .LT. 10 .AND. NSSHT .GT. 20)
      &   WRITE (LUPRI,'(/A)') ' Only the 20'//
      &   ' lowest virtual orbital energies printed in each symmetry.'
-      IF (IPRINT .GE. 2) WRITE (LUPRI,'(/A,I5/A,8I5)')
-     &   ' Number of electrons :',2*NISHT,
-     &   ' Orbital occupations :',(NISH(I),I=1,NSYM)
+      IF (IPRINT .GE. 2) THEN
+         WRITE (LUPRI,'(/A,I5/A,8I5)')
+     &   ' Number of electrons        :',2*NISHT+NACTEL,
+     &   ' Closed shell orbitals      :',NISH(1:NSYM)
+         IF (NASHT .GT. 0) WRITE (LUPRI,'(A,8I5)')
+     &   ' HSROHF open shell orbitals :',NASH(1:NSYM)
+      END IF
 C
       KORBEN = 1
       LNEED  = KORBEN + NORBT
@@ -2078,7 +2083,7 @@ C                  NEO calculation, e.g. for double core hole.
                JCVECS = JCVECS + NCONF
  9010       CONTINUE
          END IF
-!        set logical flag for new reference CI vector in WRK(KCREF) - 
+!        set logical flag for new reference CI vector in WRK(KCREF) -
 !        in the interface to lucita we use this info to save/broadcast the new
 !        reference vector on lucita internal sequential/parallel MPI-I/O files
          vector_exchange_type1                      = 1
@@ -2543,7 +2548,7 @@ C
    30 FORMAT(/1X,A8,10X,4F15.2)
       END
 C  /* Deck wr_sirifc */
-      SUBROUTINE WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
+      SUBROUTINE WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,L_WRK,
      &                     GORB,ERLM,ORBHES,XINDX)
 C
 C MOTECC: this routine writes the interface file SIRIFC for post-programs.
@@ -2624,8 +2629,11 @@ C
       use pcm_scf
 #endif
 #include "implicit.h"
-      DIMENSION CMO(*),DV(*),PV(*),FC(*),FV(*),FQ(NORBT,*),XINDX(*)
-      DIMENSION ERLM(NLMSOL,2),GORB(*),CREF(*),FCAC(*),H2AC(*),WRK(*)
+      REAL*8    CMO(*),FC(*),FV(NNORBT,*),FQ(NORBT,*)
+      REAL*8    DV(NNASHX,*), PV(*)
+      REAL*8    ERLM(NLMSOL,2),GORB(*),CREF(*),FCAC(*),H2AC(*)
+      REAL*8    XINDX(*),WRK(*)
+      LOGICAL   ORBHES
 C
       PARAMETER ( D0=0.0D0, D2=2.0D0 )
 #include "dummy.h"
@@ -2669,7 +2677,7 @@ C
 #include "gnrinf.h"
 #include "dftcom.h"
 C
-      LOGICAL     FNDLAB, ORBHES, LGLOCAL, EXP1VL, TOFILE
+      LOGICAL     FNDLAB, LGLOCAL, EXP1VL, TOFILE
 C
       CHARACTER*8 LAB123(3), TABLE(12), LABEOD, LABCC, LABABA
       CHARACTER*8 LABAUX, LABUNI
@@ -2701,15 +2709,20 @@ C
 C
 C     Calculate Fock matrix
 C
+      IF (DFT_SPINDNS) THEN
+         NDV = 2 ! DV in DV(:,1) and DS in DV(:,2)
+      ELSE
+         NDV = 1 ! only DV
+      END IF
       KFCDIA = 1
       KFOCK  = KFCDIA + NORBT
       KWRK1  = KFOCK  + N2ORBT
       KFCI   = KWRK1
       KUDV   = KFCI   + NORBMA*NORBMA
-      KFCFV  = KUDV   + N2ASHX
+      KFCFV  = KUDV   + NDV*N2ASHX
       KEND   = KFCFV  + NNORBT
       KEND   = MAX(KEND,KWRK1+NCONF,KWRK1+NWOPT)
-      IF (KEND .GT. LFREE) CALL ERRWRK('WR_SIRIFC',KEND,LFREE)
+      IF (KEND .GT. L_WRK) CALL ERRWRK('WR_SIRIFC',KEND,L_WRK)
 C
       IF (NASHT .EQ. 0) THEN
          DO I = 1,NNORBT
@@ -2717,10 +2730,30 @@ C
          END DO
       ELSE
          CALL DSPTSI(NASHT,DV,WRK(KUDV))
+         IF (NDV .EQ. 2)
+     &   CALL DSPTSI(NASHT,DV(1,2),WRK(KUDV+N2ASHX))
+
          DO I = 1,NNORBT
-            WRK((KFCFV-1)+I) = D2*(FC(I) + FV(I))
+            WRK((KFCFV-1)+I) = D2*(FC(I) + FV(I,1))
          END DO
       END IF
+#if SIROPT_DEBUG > 4
+         write(lupri,*) 'DV in wr_sirifc'
+         call output(wrk(kudv),1,nasht,1,nasht,nasht,nasht,-1,lupri)
+         write(lupri,*) 'DS in wr_sirifc'
+         call output(wrk(kudv+n2ashx),1,nasht,1,nasht,
+     &      nasht,nasht,-1,lupri)
+         write(lupri,*) 'FC in wr_sirifc'
+         call outpkb(fc,NORB,NSYM,-1,lupri)
+         write(lupri,*) 'FV in wr_sirifc'
+         call outpkb(fv(1,1),NORB,NSYM,-1,lupri)
+         write(lupri,*) 'FS in wr_sirifc'
+         call outpkb(fv(1,2),NORB,NSYM,-1,lupri)
+         write(lupri,*) '2*(FC+FV) in wr_sirifc'
+         call outpkb(wrk(kfcfv),NORB,NSYM,-1,lupri)
+         write(lupri,*) 'total FQ in wr_sirifc'
+         call output(FQ,1,NORBT,1,NASHT,norbt,nasht,-1,lupri)
+#endif
 C
       CALL DZERO(WRK(KFOCK),N2ORBT)
       DO 500 ISYM = 1,NSYM
@@ -2741,37 +2774,47 @@ C
          NASHI  = NASH(ISYM)
          NSSHI  = NSSH(ISYM)
 C        inactive-general + junk in active-general and secondary-general
-         IF (NISHI .GT. 0) THEN
+         IF (NISHI .GT. 0 .OR. ADDSRI) THEN ! FC contains Vxc(srDFT) if srDFT
             JFCFV  = KFCFV + IIORB(ISYM)
             CALL DSPTSI(NORBI,WRK(JFCFV),WRK(JFOCK))
          END IF
 C        active-general
          IF (NASHI .GT. 0) THEN
-            CALL DSPTSI(NORBI,FC(1+IIORB(ISYM)),WRK(KFCI))
             IASHI  = IASH(ISYM)
             JUDV   = KUDV + IASHI + IASHI*NASHT
             JFCI   = KFCI + NISHI
             IFOCKJ = JFOCK + NISHI
+            CALL DSPTSI(NORBI,FC(1+IIORB(ISYM)),WRK(KFCI))
             CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
      &                 WRK(JUDV),NASHT,
      &                 WRK(JFCI),NORBI,0.D0,
      &                 WRK(IFOCKJ),NORBI)
-            DO 360 J = 1,NORBI
+
+            IF (DFT_SPINDNS) THEN ! add FS contribution
+               JUDV = JUDV + N2ASHX ! address for DS
+               CALL DSPTSI(NORBI,FV(1+IIORB(ISYM),2),WRK(KFCI))
+               CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
+     &                    WRK(JUDV),NASHT,
+     &                    WRK(JFCI),NORBI,1.D0,
+     &                    WRK(IFOCKJ),NORBI)
+            END IF
+
+            DO J = 1,NORBI
                IFOCKJ = JFOCK - 1 + NISHI + (J-1)*NORBI
-               DO 340 NI = 1,NASHI
+               DO NI = 1,NASHI
                   WRK(IFOCKJ + NI) = WRK(IFOCKJ + NI)
      &                             + FQ(IORBI + J, IASHI + NI)
-  340          CONTINUE
-  360       CONTINUE
+               END DO
+            END DO
          END IF
 C        secondary-general is zero
          IF (NSSHI .GT. 0) THEN
-            DO 460 J = 1,NORBI
+            DO J = 1,NORBI
                IFOCKJ = JFOCK - 1 + NOCCI + (J-1)*NORBI
-               DO 440 NI = 1,NSSHI
-                  WRK(IFOCKJ + NI) = D0
-  440          CONTINUE
-  460       CONTINUE
+               DO NI = 1,NSSHI
+                  WRK(IFOCKJ + NI) = 0.0D0
+               END DO
+            END DO
          END IF
       END IF
 C
@@ -2829,7 +2872,7 @@ C Write Fock matrix.
          CALL DZERO(WRK(KFOCK),NNORBT)
          CALL WRITT (LUSIFC,MMORBT,WRK(KFOCK))
       ELSE
-         CALL WRITT (LUSIFC,NDV*MMORBT,FV) ! rec. no. 9;  FC, (FS)
+         CALL WRITT (LUSIFC,NDV*MMORBT,FV) ! rec. no. 9;  FV, (FS)
       END IF
 C
       CALL WRITT (LUSIFC,NDV*MMASHX,FCAC) ! rec. no. 10;  FCAC, (FSAC)
@@ -2896,9 +2939,9 @@ C     Write Solvent information, if Solvent calculation.
       IF (FLAG(16)) THEN
          KTMAT = KWRK1
          KWRK2 = KTMAT + NNORBT
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE)
-     &      CALL ERRWRK('WR_SIRIFC-SOLVENT',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK)
+     &      CALL ERRWRK('WR_SIRIFC-SOLVENT',KWRK2,L_WRK)
          WRITE (LUSIFC) LAB123,TABLE(6)
          WRITE (LUSIFC) EPSOL,EPSTAT,EPPN,RSOL,LSOLMX,INERSI,INERSF
          WRITE (LUSIFC) GRDNRM,POTNUC,EMY,EACTIV,ESOLT,EMCSCF
@@ -2921,8 +2964,8 @@ C Write qm3 solvent part of the Fock matrix to interface file
          KFSOLAO = KTMAT + NNORBT
          KUCMO = KFSOLAO + NNBASX
          KWRK2 = KUCMO + NORBT*NBAST
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE) CALL ERRWRK('WRSIFC-2',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK) CALL ERRWRK('WRSIFC-2',KWRK2,L_WRK)
          CALL QM3_FMO(WRK(KFSOLAO),WRK(KWRK2),LWRK2,IQM3PR)
          CALL UPKCMO(CMO,WRK(KUCMO))
          CALL UTHU(WRK(KFSOLAO),WRK(KTMAT),WRK(KUCMO),WRK(KWRK2),
@@ -2940,8 +2983,8 @@ C     Write PCM solvent info if PCM calculation
          KDVAO = KDCAO + N2BASX
          KPOT  = KDVAO + N2BASX
          KWRK2 = KPOT  + NTS
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE) CALL ERRWRK('WR_SIRIFC-PCM',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK) CALL ERRWRK('WR_SIRIFC-PCM',KWRK2,L_WRK)
 C
          CALL PCMFCK(DUMMY,DUMMY,WRK(KTMAT),CMO,.TRUE.,
      *               DUMSOL,WRK(KWRK2),LWRK2,IPRSOL)
@@ -2987,7 +3030,7 @@ Ckr
 ! Write PCM contribution to Fock matrix in MO basis to SIRIFC
       if(pcm_cfg%do_pcm) then
          kwrk2 = 1
-         lwrk2 = lfree - kwrk2 +1
+         lwrk2 = L_WRK - kwrk2 +1
 ! Allocate scratch space for the PCM Fock matrix contribution in AO basis.
          allocate(fock_pcm_mo(nnorbt))
          fock_pcm_mo = 0.0d0
@@ -3015,9 +3058,9 @@ C Write qm/mm solvent part of the Fock matrix to interface file
          KUCMO  = KMAT   + NNBASX
          KMATMO = KUCMO  + NORBT*NBAST
          KWRK2  = KMATMO + NNORBT
-         LWRK2  = LFREE  - KWRK2 + 1
+         LWRK2  = L_WRK  - KWRK2 + 1
 
-         IF (LWRK2 .LT. 0) CALL ERRWRK('WR_SIRIFC-QMMM',-KWRK2,LFREE)
+         IF (LWRK2 .LT. 0) CALL ERRWRK('WR_SIRIFC-QMMM',-KWRK2,L_WRK)
 
          CALL DZERO(WRK(KDCAO),N2BASX)
          CALL DZERO(WRK(KDVAO),N2BASX)
@@ -3061,8 +3104,8 @@ C Write qm/mm solvent part of the Fock matrix to interface file
          KFDTAO = KDVAO + N2BASX
          KFCKAO = KFDTAO + NNBASX
          KWRK2 = KFCKAO + NNBASX
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (LWRK2 > LFREE) CALL ERRWRK('WR_SIRIFC-PELIB',-KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (LWRK2 > L_WRK) CALL ERRWRK('WR_SIRIFC-PELIB',-KWRK2,L_WRK)
          CALL FCKDEN((NISHT>0), (NASHT>0), WRK(KDCAO), WRK(KDVAO),
      &               CMO, DV, WRK(KWRK2), LWRK2)
          IF (NISHT == 0) THEN
@@ -3095,7 +3138,7 @@ C
          END IF
          WRITE (LUSIFC) LAB123,TABLE(8) ! label "CREFDETS"
          KWRK1 = 1 + NCDETS
-         LWRK1 = LFREE - KWRK1
+         LWRK1 = L_WRK - KWRK1
          CALL GETDETS(LSYM,NCONF,NCDETS,XINDX,CREF,WRK,WRK(KWRK1),LWRK1)
          NC4 = MAX(4,NCDETS)
          CALL WRITT(LUSIFC,NC4,WRK)
