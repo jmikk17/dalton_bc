@@ -1842,9 +1842,10 @@ C *** and now we are ready to call WR_SIRIFC to write SIRIFC
          CALL MEMGET2('REAL','DUM',KDUM,0,WRK,KFREE,LFREE)
          CALL WR_SIRIFC(CMO,DV,WRK(KPV),FCAO,DCAO,
      &               WRK(KFQ),WRK(KDUM),WRK(KDUM),WRK(KDUM),
-     &               WRK(KFREE),LFREE,WRK(KGORB),TNLM,.FALSE.,WRK(KDUM))
+     &               WRK(KFREE),LFREE,WRK(KGORB),TNLM,
+     &               .FALSE.,WRK(KDUM),.FALSE.)
 C        CALL WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
-C    &               GORB,ERLM,ORBHES,XINDX)
+C    &               GORB,ERLM,ORBHES,XINDX,ONLY_EKT)
 C
          CALL MEMREL('DIIS_CTL.WR_SIRIFC',WRK,1,KPV,KFREE,LFREE)
       END IF
