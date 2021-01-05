@@ -19,21 +19,6 @@
 C
 C FILE: sirius/sirgrad.F
 C
-#ifdef REVISION_LOG
-===========================================================================
-Revision 1.2  2001/01/17 10:41:33  vebjornb
-Calls to *MPA*B* in arhpack.F have been replaced with DGEMM calls
-
-Revision 1.6  2000/05/05 11:15:57  hjj
-bugfix in updgrd, ci diagonal was not calculated because LUIT2 .lt. 0
-has until today meant do not calculate CI diagonal. Now LUIT2 is temp.
-set to zero to tell CIDIAG not to save diagonal on file.
-
-Revision 1.4  2000/05/01 10:49:20  hjj
-If FULODG then call MAKE_KLWOP to get KLWOP for full orbital diagonal.
-(KLWOP is not in infvar.h any more)
-===========================================================================
-#endif
 C  /* Deck cigrad */
       SUBROUTINE CIGRAD(CREF,FCAC,H2AC,INDXCI,GCI,EMCACT,WRK,LFREE)
 C
@@ -1691,10 +1676,10 @@ C
      &              WRK(KW3),LW3)
 C        CALL GETH2(DV,PV,H2AC,FQ,ORDIAG,FULODG,WRK,LFRSAV)
 
-!ifdef SIRGRAD_DEBUG
+#ifdef SIRGRAD_DEBUG
          write(lupri,*) 'Total FQ after GETH2'
          call output(FQ,1,NORBT,1,NASHT,norbt,nasht,-1,lupri)
-!endif
+#endif
 !     save EMCMY on common variable for LUCITA
          IF (P6FLAG(23) .AND. IPRI6.GT.60 .AND. FULODG) THEN
             WRITE (LUPRI,'(4(/A))')
