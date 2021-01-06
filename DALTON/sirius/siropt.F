@@ -3422,11 +3422,7 @@ C
 
       CALL QENTER('SIREKT')
 
-#ifdef SIROPT_DEBUG
-      IPRINT  = max(6,IPRINT_in)
-#else
-      IPRINT  = IPRINT_in
-#endif
+      IPRINT  = max( SIROPT_DEBUG ,IPRINT_in)
 
       IF (NASHT .EQ. 0) THEN
          IF (DODFT) THEN
@@ -3559,7 +3555,7 @@ C
             CALL RGG(MATRIX_SIZE, MATRIX_SIZE, UV, US, AR, AI,
      &         B, MATRIX_SIZE, UZ, IERR)
 
-#ifdef SIROPT_DEBUG
+#if SIROPT_DEBUG > 2
             write(lupri,*) 'UV after RGG'
             call output(uv,1,matrix_size,1,matrix_size,
      &         matrix_size,matrix_size,-1,lupri)
