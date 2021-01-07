@@ -19,21 +19,6 @@
 C
 C FILE: sirius/sirgrad.F
 C
-#ifdef REVISION_LOG
-===========================================================================
-Revision 1.2  2001/01/17 10:41:33  vebjornb
-Calls to *MPA*B* in arhpack.F have been replaced with DGEMM calls
-
-Revision 1.6  2000/05/05 11:15:57  hjj
-bugfix in updgrd, ci diagonal was not calculated because LUIT2 .lt. 0
-has until today meant do not calculate CI diagonal. Now LUIT2 is temp.
-set to zero to tell CIDIAG not to save diagonal on file.
-
-Revision 1.4  2000/05/01 10:49:20  hjj
-If FULODG then call MAKE_KLWOP to get KLWOP for full orbital diagonal.
-(KLWOP is not in infvar.h any more)
-===========================================================================
-#endif
 C  /* Deck cigrad */
       SUBROUTINE CIGRAD(CREF,FCAC,H2AC,INDXCI,GCI,EMCACT,WRK,LFREE)
 C
@@ -1582,11 +1567,6 @@ C Step 1: calculate one- and two-electron density matrices for
 C         active orbital indices.
 C
 C
-#ifdef SIRGRAD_DEBUG
-CFRAN 18/02/2010
-      WRITE(LUPRI,*) ' NDV= ', NDV
-CFRAN 18/02/2010 END
-#endif
       CALL GETTIM (T0,W0)
       IF (NWOPT.EQ.0) FULODG = .FALSE.
       IF (NASHT.EQ.0) GO TO 1999
@@ -1648,6 +1628,17 @@ C Step 2: calculate inactive and active Fock matrices.
 C
       CALL FCKMAT((NASHT.EQ.0),DV,CMO,EMCMY,FC,FV,WRK(KWRKF),LWRKF)
 C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
+#ifdef SIRGRAD_DEBUG
+         ! debug
+         write(lupri,*) 'FC after FCKMAT'
+         call outpkb(fc,NORB,NSYM,-1,lupri)
+         write(lupri,*) 'FV after FCKMAT'
+         call outpkb(fv,NORB,NSYM,-1,lupri)
+         if (dft_spindns) then
+            write(lupri,*) 'FS after FCKMAT'
+            call outpkb(fv(nnorbt+1),NORB,NSYM,-1,lupri)
+         end if
+#endif
 !     save EMCMY on common variable for LUCITA
       einact_mc2lu = emcmy
 
@@ -1684,6 +1675,12 @@ C
          CALL GETH2(DV,PV,H2AC,FQ,WRK(KORDIA),FULODG,
      &              WRK(KW3),LW3)
 C        CALL GETH2(DV,PV,H2AC,FQ,ORDIAG,FULODG,WRK,LFRSAV)
+
+#ifdef SIRGRAD_DEBUG
+         write(lupri,*) 'Total FQ after GETH2'
+         call output(FQ,1,NORBT,1,NASHT,norbt,nasht,-1,lupri)
+#endif
+!     save EMCMY on common variable for LUCITA
          IF (P6FLAG(23) .AND. IPRI6.GT.60 .AND. FULODG) THEN
             WRITE (LUPRI,'(4(/A))')
      &         ' Non-Fock type contributions to inact-act and act-sec',
@@ -2041,7 +2038,7 @@ C
 C ** Calculate gradient from the pieces we now have
 C
       JSYM = 0
-      DO 300 IG = 1,NWOPX
+      DO IG = 1,NWOPX
          K = JWOP(1,IG)
          L = JWOP(2,IG)
          ISYM = ISMO(K)
@@ -2068,6 +2065,7 @@ C ** first index active
 C    (only other possibility, inactive, is already eliminated):
             NKW = ISW(K) - NISHT
             TEMP = D0
+            TEMPS = D0
             NX = NISHI
             DO 100 NXW = IASHI+1,IASHI+NASHI
                NX = NX + 1
@@ -2078,15 +2076,21 @@ C    (only other possibility, inactive, is already eliminated):
                END IF
                TEMP = TEMP + UDV(NXW,NKW,1)*FC(J_XL)
                IF (DFT_SPINDNS) THEN
-                  TEMP = TEMP + UDV(NXW,NKW,2)*FV(J_XL,2)
+                  TEMPS = TEMPS + UDV(NXW,NKW,2)*FV(J_XL,2)
                END IF
   100       CONTINUE
-            GORB(IG) = GORB(IG) + D2*(TEMP + FQ(L,NKW))
+            GORB(IG) = GORB(IG) + D2*(TEMP + TEMPS + FQ(L,NKW))
+#ifdef SIRGRAD_DEBUG
+            write(lupri,*) 'K,L,G(KL)-1',K,L,GORB(IG)
+            write(lupri,*) 'TEMP,TEMPS,FQ(L,NKW),F(L,K)',
+     &      TEMP, TEMPS,FQ(L,NKW), TEMP+TEMPS+FQ(L,NKW)
+#endif
          END IF
          IF (ITYPL .EQ. JTACT) THEN
 C ** second index active:
             NLW = ISW(L) - NISHT
             TEMP = D0
+            TEMPS = D0
             NX = NISHI
             DO 200 NXW = IASHI+1,IASHI+NASHI
                NX = NX + 1
@@ -2097,13 +2101,18 @@ C ** second index active:
                END IF
                TEMP = TEMP + UDV(NXW,NLW,1)*FC(J_XK)
                IF (DFT_SPINDNS) THEN
-                  TEMP = TEMP + UDV(NXW,NLW,2)*FV(J_XK,2)
+                  TEMPS = TEMPS + UDV(NXW,NLW,2)*FV(J_XK,2)
                END IF
   200       CONTINUE
-            GORB(IG) = GORB(IG) - D2*(TEMP + FQ(K,NLW))
+            GORB(IG) = GORB(IG) - D2*(TEMP + TEMPS + FQ(K,NLW))
+#ifdef SIRGRAD_DEBUG
+            write(lupri,*) 'L,K,G(KL)-2',K,L,GORB(IG)
+            write(lupri,*) 'TEMP,TEMPS,FQ(K,NLW),F(K,L)',
+     &      TEMP, TEMPS, FQ(K,NLW), TEMP+TEMPS+FQ(K,NLW)
+#endif
          END IF
 C *** next IG
-  300 CONTINUE
+      END DO ! IG = 1,NWOPX
 C
 C Make microcanonical average on GORB
 C (AVERAG returns immediately if no averageing requested)

@@ -25,11 +25,15 @@ f.add(string = 'Hartree-Fock total energy',
 f.add(string = 'Final MC-SRDFT energy:',
       rel_tolerance = 1.0e-9)
 
+f.add(from_string = 'KT ionization potentials [eV] and pole strengths',
+      to_string = 'KT output',
+      rel_tolerance = 1.e-4)
+
 #f.add(from_string = 'Occupancies of natural orbitals',
 #      num_lines = 16, ignore_order = True,
 #      abs_tolerance = 1.0e-5)
 
 
-test.run(['energy_srlda_openshell.dal'], ['H2O.mol'], f={'out': f})
+test.run(['energy_srlda_openshell_EKT.dal'], ['H2O.mol'], f={'out': f})
 
 sys.exit(test.return_code)

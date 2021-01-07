@@ -1,3 +1,4 @@
+#define SIROPT_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) by the authors of Dalton.
@@ -24,6 +25,7 @@ C OPTST  starting the optimization
 C SIRSTP step control
 C TIMOPT timing statistics of optimization
 C WR_SIRIFC write SIRIFC interface file from SIRIUS to RESPONS and ABACUS
+C           *and* calculate EKT ionization energies
 C
 C===========================================================================
 C  /* Deck siropt */
@@ -594,17 +596,17 @@ chj   IF (P6FLAG(1)) THEN
             IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUPRI,1018) ESRDFTY
          END IF
 chj   END IF
-      IF (SOLVNT) WRITE (LUW4,1016) ESOLT
-      IF (PCM)    WRITE (LUW4,1019) ESOLT
-      IF (QM3)    WRITE (LUW4,1017) EQM3
-      IF (QMMM)   WRITE (LUW4,1017) ESOLT
+      IF (SOLVNT)      WRITE (LUW4,1016) ESOLT
+      IF (PCM)         WRITE (LUW4,1019) ESOLT
+      IF (QM3)         WRITE (LUW4,1017) EQM3
+      IF (QMMM)        WRITE (LUW4,1017) ESOLT
       IF (USE_PELIB()) WRITE (LUW4,1021) ESOLT
       WRITE (LUW4,1020) GNORM(3),GNORM(1),GNORM(2)
       IF (LUPRI.NE.LUW4) THEN
-         IF (SOLVNT) WRITE (LUPRI,1016) ESOLT
-         IF (PCM)    WRITE (LUPRI,1019) ESOLT
-         IF (QM3) WRITE (LUPRI,1017) EQM3
-         IF (QMMM) WRITE (LUPRI,1017) ESOLT
+         IF (SOLVNT)      WRITE (LUPRI,1016) ESOLT
+         IF (PCM)         WRITE (LUPRI,1019) ESOLT
+         IF (QM3)         WRITE (LUPRI,1017) EQM3
+         IF (QMMM)        WRITE (LUPRI,1017) ESOLT
          IF (USE_PELIB()) WRITE(LUPRI,1021) ESOLT
          WRITE (LUPRI,1020) GNORM(3),GNORM(1),GNORM(2)
       END IF
@@ -1228,14 +1230,20 @@ Chj      if walk is rejected: do not update information on SIRIFC
      &               WRK(KFCSOL),WRK(KFV),WRK(KFQ),
      &               WRK(KCREF),WRK(KFCAC),WRK(KH2AC),
      &               WRK(KWRKG),LWRKG,WRK(KGTOT+NCONF),WRK(KERLM),
-     &              .TRUE.,WRK(KCINDX))
+     &              .TRUE.,WRK(KCINDX),.FALSE.)
 C        CALL WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
-C    &               GORB,ERLM,ORBHES,XINDX)
+C    &               GORB,ERLM,ORBHES,XINDX, ONLY_EKT)
 C        ... note: GORB will in a normal macro iteration be
 C                  overwritten in SIRNEO or SIRNR, but none of
 C                  these routines have been called after GRAD
 C                  when the wave function is converged.
 C
+      ELSE ! only EKT output
+         CALL WR_SIRIFC(WRK(KCMO),WRK(KDV),WRK(KPV),
+     &               WRK(KFCSOL),WRK(KFV),WRK(KFQ),
+     &               WRK(KCREF),WRK(KFCAC),WRK(KH2AC),
+     &               WRK(KWRKG),LWRKG,WRK(KGTOT+NCONF),WRK(KERLM),
+     &              .TRUE.,WRK(KCINDX),.TRUE.)
       END IF
 C
 C     Transform integrals for abacus or response or
@@ -1343,14 +1351,18 @@ C        allow printing of orbital energies for open-shell systems.
 C        WRITE (LUPRI,'(/A)')
 C    *      ' Orbital energy analysis skipped for open-shell systems'
 C        GO TO 9999
-C hjaaj TODO:   EKT orbital energies may be defined later.
+C hjaaj:   EKT orbital energies defined later.
       END IF
       IF (IPRINT .LT. 10 .AND. NSSHT .GT. 20)
      &   WRITE (LUPRI,'(/A)') ' Only the 20'//
      &   ' lowest virtual orbital energies printed in each symmetry.'
-      IF (IPRINT .GE. 2) WRITE (LUPRI,'(/A,I5/A,8I5)')
-     &   ' Number of electrons :',2*NISHT,
-     &   ' Orbital occupations :',(NISH(I),I=1,NSYM)
+      IF (IPRINT .GE. 2) THEN
+         WRITE (LUPRI,'(/A,I5/A,8I5)')
+     &   ' Number of electrons        :',2*NISHT+NACTEL,
+     &   ' Closed shell orbitals      :',NISH(1:NSYM)
+         IF (NASHT .GT. 0) WRITE (LUPRI,'(A,8I5)')
+     &   ' HSROHF open shell orbitals :',NASH(1:NSYM)
+      END IF
 C
       KORBEN = 1
       LNEED  = KORBEN + NORBT
@@ -2078,7 +2090,7 @@ C                  NEO calculation, e.g. for double core hole.
                JCVECS = JCVECS + NCONF
  9010       CONTINUE
          END IF
-!        set logical flag for new reference CI vector in WRK(KCREF) - 
+!        set logical flag for new reference CI vector in WRK(KCREF) -
 !        in the interface to lucita we use this info to save/broadcast the new
 !        reference vector on lucita internal sequential/parallel MPI-I/O files
          vector_exchange_type1                      = 1
@@ -2543,8 +2555,8 @@ C
    30 FORMAT(/1X,A8,10X,4F15.2)
       END
 C  /* Deck wr_sirifc */
-      SUBROUTINE WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
-     &                     GORB,ERLM,ORBHES,XINDX)
+      SUBROUTINE WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,L_WRK,
+     &                     GORB,ERLM,ORBHES,XINDX,ONLY_EKT)
 C
 C MOTECC: this routine writes the interface file SIRIFC for post-programs.
 C         The structure of the SIRIFC file is described here.
@@ -2624,8 +2636,11 @@ C
       use pcm_scf
 #endif
 #include "implicit.h"
-      DIMENSION CMO(*),DV(*),PV(*),FC(*),FV(*),FQ(NORBT,*),XINDX(*)
-      DIMENSION ERLM(NLMSOL,2),GORB(*),CREF(*),FCAC(*),H2AC(*),WRK(*)
+      REAL*8    CMO(*),FC(*),FV(NNORBT,*),FQ(NORBT,*)
+      REAL*8    DV(NNASHX,*), PV(*)
+      REAL*8    ERLM(NLMSOL,2),GORB(*),CREF(*),FCAC(*),H2AC(*)
+      REAL*8    XINDX(*),WRK(*)
+      LOGICAL   ORBHES, ONLY_EKT
 C
       PARAMETER ( D0=0.0D0, D2=2.0D0 )
 #include "dummy.h"
@@ -2669,7 +2684,7 @@ C
 #include "gnrinf.h"
 #include "dftcom.h"
 C
-      LOGICAL     FNDLAB, ORBHES, LGLOCAL, EXP1VL, TOFILE
+      LOGICAL     FNDLAB, LGLOCAL, EXP1VL, TOFILE
 C
       CHARACTER*8 LAB123(3), TABLE(12), LABEOD, LABCC, LABABA
       CHARACTER*8 LABAUX, LABUNI
@@ -2695,21 +2710,26 @@ C
      &            'UNKNOWN',' ','UNFORMATTED',IDUMMY,.FALSE.)
       REWIND (LUSIFC)
 
-      IF (IPRI6 .GE. 5) WRITE (LUPRI,'(/A)')
+      IF (IPRI6 .GE. 5 .AND. .NOT.ONLY_EKT) WRITE (LUPRI,'(/A)')
      *   ' --- Writing Sirius interface file for'//
      *   ' post-programs in WR_SIRIFC. ---'
 C
 C     Calculate Fock matrix
 C
+      IF (DFT_SPINDNS) THEN
+         NDV = 2 ! DV in DV(:,1) and DS in DV(:,2)
+      ELSE
+         NDV = 1 ! only DV
+      END IF
       KFCDIA = 1
       KFOCK  = KFCDIA + NORBT
       KWRK1  = KFOCK  + N2ORBT
       KFCI   = KWRK1
       KUDV   = KFCI   + NORBMA*NORBMA
-      KFCFV  = KUDV   + N2ASHX
+      KFCFV  = KUDV   + NDV*N2ASHX
       KEND   = KFCFV  + NNORBT
       KEND   = MAX(KEND,KWRK1+NCONF,KWRK1+NWOPT)
-      IF (KEND .GT. LFREE) CALL ERRWRK('WR_SIRIFC',KEND,LFREE)
+      IF (KEND .GT. L_WRK) CALL ERRWRK('WR_SIRIFC',KEND,L_WRK)
 C
       IF (NASHT .EQ. 0) THEN
          DO I = 1,NNORBT
@@ -2717,10 +2737,30 @@ C
          END DO
       ELSE
          CALL DSPTSI(NASHT,DV,WRK(KUDV))
+         IF (NDV .EQ. 2)
+     &   CALL DSPTSI(NASHT,DV(1,2),WRK(KUDV+N2ASHX))
+
          DO I = 1,NNORBT
-            WRK((KFCFV-1)+I) = D2*(FC(I) + FV(I))
+            WRK((KFCFV-1)+I) = D2*(FC(I) + FV(I,1))
          END DO
       END IF
+#if SIROPT_DEBUG > 4
+         write(lupri,*) 'DV in wr_sirifc'
+         call output(wrk(kudv),1,nasht,1,nasht,nasht,nasht,-1,lupri)
+         write(lupri,*) 'DS in wr_sirifc'
+         call output(wrk(kudv+n2ashx),1,nasht,1,nasht,
+     &      nasht,nasht,-1,lupri)
+         write(lupri,*) 'FC in wr_sirifc'
+         call outpkb(fc,NORB,NSYM,-1,lupri)
+         write(lupri,*) 'FV in wr_sirifc'
+         call outpkb(fv(1,1),NORB,NSYM,-1,lupri)
+         write(lupri,*) 'FS in wr_sirifc'
+         call outpkb(fv(1,2),NORB,NSYM,-1,lupri)
+         write(lupri,*) '2*(FC+FV) in wr_sirifc'
+         call outpkb(wrk(kfcfv),NORB,NSYM,-1,lupri)
+         write(lupri,*) 'total FQ in wr_sirifc'
+         call output(FQ,1,NORBT,1,NASHT,norbt,nasht,-1,lupri)
+#endif
 C
       CALL DZERO(WRK(KFOCK),N2ORBT)
       DO 500 ISYM = 1,NSYM
@@ -2741,37 +2781,47 @@ C
          NASHI  = NASH(ISYM)
          NSSHI  = NSSH(ISYM)
 C        inactive-general + junk in active-general and secondary-general
-         IF (NISHI .GT. 0) THEN
+         IF (NISHI .GT. 0 .OR. ADDSRI) THEN ! FC contains Vxc(srDFT) if srDFT
             JFCFV  = KFCFV + IIORB(ISYM)
             CALL DSPTSI(NORBI,WRK(JFCFV),WRK(JFOCK))
          END IF
 C        active-general
          IF (NASHI .GT. 0) THEN
-            CALL DSPTSI(NORBI,FC(1+IIORB(ISYM)),WRK(KFCI))
             IASHI  = IASH(ISYM)
             JUDV   = KUDV + IASHI + IASHI*NASHT
             JFCI   = KFCI + NISHI
             IFOCKJ = JFOCK + NISHI
+            CALL DSPTSI(NORBI,FC(1+IIORB(ISYM)),WRK(KFCI))
             CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
      &                 WRK(JUDV),NASHT,
      &                 WRK(JFCI),NORBI,0.D0,
      &                 WRK(IFOCKJ),NORBI)
-            DO 360 J = 1,NORBI
+
+            IF (DFT_SPINDNS) THEN ! add FS contribution
+               JUDV = JUDV + N2ASHX ! address for DS
+               CALL DSPTSI(NORBI,FV(1+IIORB(ISYM),2),WRK(KFCI))
+               CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
+     &                    WRK(JUDV),NASHT,
+     &                    WRK(JFCI),NORBI,1.D0,
+     &                    WRK(IFOCKJ),NORBI)
+            END IF
+
+            DO J = 1,NORBI
                IFOCKJ = JFOCK - 1 + NISHI + (J-1)*NORBI
-               DO 340 NI = 1,NASHI
+               DO NI = 1,NASHI
                   WRK(IFOCKJ + NI) = WRK(IFOCKJ + NI)
      &                             + FQ(IORBI + J, IASHI + NI)
-  340          CONTINUE
-  360       CONTINUE
+               END DO
+            END DO
          END IF
 C        secondary-general is zero
          IF (NSSHI .GT. 0) THEN
-            DO 460 J = 1,NORBI
+            DO J = 1,NORBI
                IFOCKJ = JFOCK - 1 + NOCCI + (J-1)*NORBI
-               DO 440 NI = 1,NSSHI
-                  WRK(IFOCKJ + NI) = D0
-  440          CONTINUE
-  460       CONTINUE
+               DO NI = 1,NSSHI
+                  WRK(IFOCKJ + NI) = 0.0D0
+               END DO
+            END DO
          END IF
       END IF
 C
@@ -2783,8 +2833,49 @@ C
          WRITE (LUPRI,'(/A)') ' FC diagonal elememts from WR_SIRIFC :'
          WRITE (LUPRI,'(/,(1X,5F15.8))') (WRK(KFCDIA-1+I),I=1,NORBT)
       END IF
-C
-C
+
+! save information for EKT
+#ifdef standalone_WRITE_dalton_ekt.dat
+      luekt = 69
+      open (luekt, file='dalton_ekt.dat', form='unformatted',
+     &   status='unknown')
+
+         write (lupri,'(//)')
+         write (lupri,*) 'Test output from writing to dalton_ekt.dat'
+         write (lupri,*) 'nsym  ',nsym
+         write (lupri,*) 'nish  ',nish
+         write (lupri,*) 'nash  ',nash
+         write (lupri,*) 'norb  ',norb
+         write (lupri,*) 'nnashx',nnashx
+         write (lupri,*) 'n2orbt',n2orbt
+         flush (lupri)
+         write (luekt) nsym, nish, nash, norb, nnashx, n2orbt
+         write (luekt) dv(1:nnashx)
+         write (luekt) wrk(kfock:kfock-1+N2ORBT) ! all symmetries packed
+      rewind luekt
+      close (luekt, STATUS='KEEP')
+#endif
+
+!     Perform EKT analysis
+
+      kfree = 1
+      lfree = l_wrk - kend
+      call memget2('REAL','k_ekt_E',j_ekt_EV,NOCCT,
+     &   wrk(kend),kfree,lfree)
+      call memget2('REAL','k_ekt_Z',j_ekt_EZ,N2OCCT,
+     &   wrk(kend),kfree,lfree)
+      k_ekt_ev = kend-1 + j_ekt_ev
+      k_ekt_ez = kend-1 + j_ekt_ez
+
+      CALL SIREKT(wrk(kfock),dv,wrk(k_ekt_EV),wrk(k_ekt_EZ),ipri6)
+      !    SIREKT(V, S, EV, EZ, IPRINT)
+
+      call memrel('after SIREKT',wrk(kend),1,1,kfree,lfree)
+
+      IF (ONLY_EKT) GO TO 9000  ! Only EKT calculation, do not write SIRIFC
+
+!     Write info to interface file SIRIFC
+
       WRITE (LUSIFC) LAB123,LBSIFC
       WRITE (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,
      &               ISTATE,ISPIN,NACTEL,LSYM,MS2
@@ -2829,7 +2920,7 @@ C Write Fock matrix.
          CALL DZERO(WRK(KFOCK),NNORBT)
          CALL WRITT (LUSIFC,MMORBT,WRK(KFOCK))
       ELSE
-         CALL WRITT (LUSIFC,NDV*MMORBT,FV) ! rec. no. 9;  FC, (FS)
+         CALL WRITT (LUSIFC,NDV*MMORBT,FV) ! rec. no. 9;  FV, (FS)
       END IF
 C
       CALL WRITT (LUSIFC,NDV*MMASHX,FCAC) ! rec. no. 10;  FCAC, (FSAC)
@@ -2896,9 +2987,9 @@ C     Write Solvent information, if Solvent calculation.
       IF (FLAG(16)) THEN
          KTMAT = KWRK1
          KWRK2 = KTMAT + NNORBT
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE)
-     &      CALL ERRWRK('WR_SIRIFC-SOLVENT',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK)
+     &      CALL ERRWRK('WR_SIRIFC-SOLVENT',KWRK2,L_WRK)
          WRITE (LUSIFC) LAB123,TABLE(6)
          WRITE (LUSIFC) EPSOL,EPSTAT,EPPN,RSOL,LSOLMX,INERSI,INERSF
          WRITE (LUSIFC) GRDNRM,POTNUC,EMY,EACTIV,ESOLT,EMCSCF
@@ -2921,8 +3012,8 @@ C Write qm3 solvent part of the Fock matrix to interface file
          KFSOLAO = KTMAT + NNORBT
          KUCMO = KFSOLAO + NNBASX
          KWRK2 = KUCMO + NORBT*NBAST
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE) CALL ERRWRK('WRSIFC-2',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK) CALL ERRWRK('WRSIFC-2',KWRK2,L_WRK)
          CALL QM3_FMO(WRK(KFSOLAO),WRK(KWRK2),LWRK2,IQM3PR)
          CALL UPKCMO(CMO,WRK(KUCMO))
          CALL UTHU(WRK(KFSOLAO),WRK(KTMAT),WRK(KUCMO),WRK(KWRK2),
@@ -2940,8 +3031,8 @@ C     Write PCM solvent info if PCM calculation
          KDVAO = KDCAO + N2BASX
          KPOT  = KDVAO + N2BASX
          KWRK2 = KPOT  + NTS
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (KWRK2 .GT. LFREE) CALL ERRWRK('WR_SIRIFC-PCM',KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (KWRK2 .GT. L_WRK) CALL ERRWRK('WR_SIRIFC-PCM',KWRK2,L_WRK)
 C
          CALL PCMFCK(DUMMY,DUMMY,WRK(KTMAT),CMO,.TRUE.,
      *               DUMSOL,WRK(KWRK2),LWRK2,IPRSOL)
@@ -2987,7 +3078,7 @@ Ckr
 ! Write PCM contribution to Fock matrix in MO basis to SIRIFC
       if(pcm_cfg%do_pcm) then
          kwrk2 = 1
-         lwrk2 = lfree - kwrk2 +1
+         lwrk2 = L_WRK - kwrk2 +1
 ! Allocate scratch space for the PCM Fock matrix contribution in AO basis.
          allocate(fock_pcm_mo(nnorbt))
          fock_pcm_mo = 0.0d0
@@ -3015,9 +3106,9 @@ C Write qm/mm solvent part of the Fock matrix to interface file
          KUCMO  = KMAT   + NNBASX
          KMATMO = KUCMO  + NORBT*NBAST
          KWRK2  = KMATMO + NNORBT
-         LWRK2  = LFREE  - KWRK2 + 1
+         LWRK2  = L_WRK  - KWRK2 + 1
 
-         IF (LWRK2 .LT. 0) CALL ERRWRK('WR_SIRIFC-QMMM',-KWRK2,LFREE)
+         IF (LWRK2 .LT. 0) CALL ERRWRK('WR_SIRIFC-QMMM',-KWRK2,L_WRK)
 
          CALL DZERO(WRK(KDCAO),N2BASX)
          CALL DZERO(WRK(KDVAO),N2BASX)
@@ -3061,8 +3152,8 @@ C Write qm/mm solvent part of the Fock matrix to interface file
          KFDTAO = KDVAO + N2BASX
          KFCKAO = KFDTAO + NNBASX
          KWRK2 = KFCKAO + NNBASX
-         LWRK2 = LFREE - KWRK2 + 1
-         IF (LWRK2 > LFREE) CALL ERRWRK('WR_SIRIFC-PELIB',-KWRK2,LFREE)
+         LWRK2 = L_WRK - KWRK2 + 1
+         IF (LWRK2 > L_WRK) CALL ERRWRK('WR_SIRIFC-PELIB',-KWRK2,L_WRK)
          CALL FCKDEN((NISHT>0), (NASHT>0), WRK(KDCAO), WRK(KDVAO),
      &               CMO, DV, WRK(KWRK2), LWRK2)
          IF (NISHT == 0) THEN
@@ -3095,7 +3186,7 @@ C
          END IF
          WRITE (LUSIFC) LAB123,TABLE(8) ! label "CREFDETS"
          KWRK1 = 1 + NCDETS
-         LWRK1 = LFREE - KWRK1
+         LWRK1 = L_WRK - KWRK1
          CALL GETDETS(LSYM,NCONF,NCDETS,XINDX,CREF,WRK,WRK(KWRK1),LWRK1)
          NC4 = MAX(4,NCDETS)
          CALL WRITT(LUSIFC,NC4,WRK)
@@ -3256,7 +3347,404 @@ C *** end of subroutine WR_SIRIFC
 C
       WRITE (LUSIFC) LAB123,LABEOD
       CALL GPCLOSE(LUSIFC,'KEEP')
-      CALL QEXIT('WR_SIRIFC')
+ 9000 CALL QEXIT('WR_SIRIFC')
       RETURN
       END
+
+      SUBROUTINE SIREKT(V, S, E_IP, EZ, IPRINT_in)
+!.......................................................................
+! SIREKT calculates the ionization potentials (IP) with the given V and
+! S matrices for each symmetry group, and prints the IP in eV
+!
+! INPUT:
+!         V(*)   Packed generalized fock matrix
+!         S(*)   Packed overlap/density matrix
+!         IPRINT Output control
+! OUTPUT:
+!         E_IP(*)  Eigenvalues given in Hartree
+!         EZ(*)  Packed matrix of eigenvectors
+!
+! Print:
+!         Eigenvalue IERR codes:
+!         0 - Alpha is complex
+!         1 - Beta is zero
+!         2 - Alpha is complex and beta is zero
+!
+!
+! Author:    Martin Johannes Rønnekjær Jensen
+!            University of Southern Denmark
+!            Version = 18/12/20
+!
+! Project:  Calculation of ionization energy using Extended Koopmans’ Theorem (EKT)
+
+! 20dec2020: Hans Joergen Aagaard: integrated in Sirius,added ekt_type descriptor,
+!            Dyson vectors, pole strengths, sorting of principals IPx,
+!            multiline output when > 5 IPs, added '@' in most important output.
+!.......................................................................
+
+      IMPLICIT NONE
+
+#include "priunit.h"
+
+! codata.h: XTEV (Hartree to eV conversion factor)
+#include "codata.h"
+! Used from common blocks:
+!  inforb.h:  NSYM, N2ORBT, N2OCCT, NASHT, NOCCT, NISH, NASH, NOCC, NORB
+!  infinp.h:  DODFT, DOHFSRDFT, DOMCSRDFT, MCTYPE
+!  pgroup.h:  REP
+#include "inforb.h"
+#include "maxorb.h"
+#include "infinp.h"
+#include "pgroup.h"
+
+! debug DFT_SPINDNS
+#include "dftcom.h"
+
+      REAL*8, DIMENSION(N2ORBT), INTENT(IN)  :: V  ! symmetry packed
+      REAL*8, DIMENSION(NNASHX), INTENT(IN)  :: S  ! not symmetry packed
+      REAL*8, DIMENSION(NOCCT),  INTENT(OUT) :: E_IP
+      REAL*8, DIMENSION(N2OCCT), INTENT(OUT) :: EZ ! symmetry packed
+
+      INTEGER, INTENT(IN) :: IPRINT_in
+
+      REAL*8, DIMENSION(:,:), ALLOCATABLE :: UV, US, UZ, US_COPY
+      REAL*8, DIMENSION(:), ALLOCATABLE   :: AR, AI, B, POLE_STRENGTH
+      REAL*8  :: ASYM, LARGEST_ASYM, S_IJ, DYSON_NORM, TEMP
+      REAL*8  :: DDOT ! decalaration of function
+      INTEGER :: I, J, ISYM, IERR, MATRIX_SIZE, IPRINT
+      INTEGER :: K, K_END, l_wt, N_IP_strong
+      INTEGER, PARAMETER :: K_STEP = 5
+      INTEGER :: I_ASYM, J_ASYM
+      INTEGER :: V_INDEX, S_INDEX, E_INDEX, Z_INDEX
+      INTEGER :: NORBI  ! debug defs.
+      LOGICAL :: TEST
+      CHARACTER*15 :: EKT_TYPE
+
+      CALL QENTER('SIREKT')
+
+      IPRINT  = max( SIROPT_DEBUG ,IPRINT_in)
+
+      IF (NASHT .EQ. 0) THEN
+         IF (DODFT) THEN
+            EKT_TYPE = 'DFT KT'
+            l_wt = 6
+         ELSE IF (DOHFSRDFT) THEN
+            EKT_TYPE = 'HF-srDFT KT'
+            l_wt = 11
+         ELSE
+            EKT_TYPE = 'HF-SCF KT'
+            l_wt = 9
+         END IF
+      ELSE IF (MCTYPE .EQ. -1) THEN
+         IF (DODFT) THEN
+            EKT_TYPE = 'HS-RODFT EKT'
+            l_wt = 12
+         ELSE IF (DOHFSRDFT) THEN
+            EKT_TYPE = 'HS-RO-srDFT EKT'
+            l_wt = 15
+         ELSE
+            EKT_TYPE = 'HS-ROHF EKT'
+            l_wt = 11
+         END IF
+      ELSE
+         IF (DOMCSRDFT) THEN
+            EKT_TYPE = 'MC-srDFT EKT'
+            l_wt = 12
+         ELSE
+            EKT_TYPE = 'MCSCF EKT'
+            l_wt = 9
+         END IF
+      END IF
+
+      WRITE(LUPRI,'(/A)') SEPARATOR
+      CALL TITLER( EKT_TYPE(1:l_wt)//
+     &  ' IPs [a.u. & eV], pole strengths, and Dyson orbitals ',' ',204)
+
+      IF (iprint .gt. 5) THEN
+         write(lupri,'(/A)') 'Generalized Fock matrix V input sirekt'
+         call outptb(V,norb,nsym,-1,lupri)
+         write(lupri,'(/A)')
+     &      'Metric = Active density matrix DV input sirekt'
+         call outpak(S,nasht,-1,lupri)
+         IF (DFT_SPINDNS) THEN
+            WRITE(lupri,"(/A)") 'spin-density DS input sirekt :'
+            call outpak(S(NNASHX+1),NASHT,-1,LUPRI)
+         END IF
+      END IF
+
+      ALLOCATE (POLE_STRENGTH(NOCCT))
+      POLE_STRENGTH(:) = 0.0D0
+      S_INDEX = 0
+      E_INDEX = 0
+      Z_INDEX = 0
+      DO ISYM = 1, NSYM
+         IF (NOCC(ISYM) > 0) THEN
+            IF (IPRINT .GE. 1) WRITE(lupri,"(/3x,2A, I2, A)")
+     &      EKT_TYPE(1:l_wt),' symmetry', ISYM ,':'
+
+            !Allocate UV and US matrices (Unpacked V and S matrices)
+            MATRIX_SIZE = NOCC(ISYM)
+            ALLOCATE (UV(MATRIX_SIZE,MATRIX_SIZE))
+            ALLOCATE (US(MATRIX_SIZE,MATRIX_SIZE))
+            ALLOCATE (UZ(MATRIX_SIZE,MATRIX_SIZE))
+            ALLOCATE (AR(MATRIX_SIZE),AI(MATRIX_SIZE), B(MATRIX_SIZE))
+            ALLOCATE (US_COPY(MATRIX_SIZE,MATRIX_SIZE))
+
+            !Assign values to UV in symmetry ISYM
+            ! and find largest asymmetry ( which is proportional to orbital gradient )
+            LARGEST_ASYM = 0.0d0
+            I_ASYM = 0
+            J_ASYM = 0
+
+            V_INDEX = I2ORB(ISYM)
+
+            DO I = 1, MATRIX_SIZE
+               DO J = 1, I-1
+                  UV(I,J) = (V(V_INDEX + (I-1)*NORB(ISYM)+J)
+     &                    +  V(V_INDEX + (J-1)*NORB(ISYM)+I)) / 2
+                  UV(J,I) = UV(I,J)
+                  ASYM = ABS(V(V_INDEX + (I-1)*NORB(ISYM)+J)
+     &                     - V(V_INDEX + (J-1)*NORB(ISYM)+I))
+                  IF (ASYM .GT. LARGEST_ASYM) THEN
+                     LARGEST_ASYM = ASYM
+                     I_ASYM = I
+                     J_ASYM = J
+                  END IF
+               END DO
+               UV(I,I) = V(V_INDEX + (I-1)*NORB(ISYM)+I)
+            END DO
+
+            !Assign values to US in symmetry ISYM
+            US = 0.0D0
+            DO I = 1, NISH(ISYM)
+               US(I,I) = 2.0D0
+            END DO
+            DO I = 1, NASH(ISYM)
+               DO J = 1, I
+                  S_IJ = S((S_INDEX*(S_INDEX+1+2*I)+I*I-I)/2+J)
+                  US(NISH(ISYM)+I,NISH(ISYM)+J) = S_IJ
+                  US(NISH(ISYM)+J,NISH(ISYM)+I) = S_IJ
+               END DO
+            END DO
+            US_COPY = US
+            S_INDEX = S_INDEX + NASH(ISYM) ! off-set to symmetry ISYM+1
+
+         !Print UV and US matrices
+
+         IF (LARGEST_ASYM .GT. 1.0D-5) THEN
+            WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT warning: '//
+     &         'Largest asymmetry in V = generalized Fock matrix : ',
+     &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
+         ELSE IF (IPRINT .GE. 1 .OR. LARGEST_ASYM .GT. 1.0D-6) THEN
+            WRITE(lupri,"(/A,1P,G16.5,A,2I5)") 'EKT INFO : '//
+     &         'Largest asymmetry in V = generalized Fock matrix : ',
+     &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
+         END IF
+         IF (IPRINT .GE. 5) THEN
+            WRITE(lupri,"(/A)")
+     &         'Generalized Fock Matrix (UV):'
+            CALL OUTPUT(UV,1,MATRIX_SIZE,1,MATRIX_SIZE,
+     &         MATRIX_SIZE,MATRIX_SIZE,-1,LUPRI)
+
+            WRITE(lupri,"(/A)") 'Overlap (metric) matrix (US):'
+            CALL OUTPUT(US,1,MATRIX_SIZE,1,MATRIX_SIZE,
+     &         MATRIX_SIZE,MATRIX_SIZE,-1,LUPRI)
+         ENDIF
+
+            !Diagonalization - UV * UZ = US * UZ * (A/B)
+            CALL RGG(MATRIX_SIZE, MATRIX_SIZE, UV, US, AR, AI,
+     &         B, MATRIX_SIZE, UZ, IERR)
+
+#if SIROPT_DEBUG > 2
+            write(lupri,*) 'UV after RGG'
+            call output(uv,1,matrix_size,1,matrix_size,
+     &         matrix_size,matrix_size,-1,lupri)
+            write(lupri,*) 'US after RGG'
+            call output(uS,1,matrix_size,1,matrix_size,
+     &         matrix_size,matrix_size,-1,lupri)
+            write(lupri,*) 'UZ after RGG'
+            call output(uZ,1,matrix_size,1,matrix_size,
+     &         matrix_size,matrix_size,-1,lupri)
+#endif
+
+            !Check for errors and print eigenvalues and vectors
+            IF (IERR /= 0) WRITE(lupri,"(/A36, I0)")
+     &            'Error: EKT diagonalization failed IERR: ', IERR
+
+            ! Unnormalized Dyson orbitals g(i,k) for IP # k:
+            !    g(i,k) = sum(j) c∗(j,k)) gamma(j,i)
+            !           = sum(j) gamma(i,j) c(j,k) ! "c" real and "gamma" symmetric
+
+            ! Unnormalized Dyson orbitals in UV: UV(i,k) = 0.5 sum(j) US_COPY(i,j) UZ(j,k)
+            !    ( factor 0.5 because density matrix is normalized for 2 electrons)
+
+            CALL DGEMM('N','N',MATRIX_SIZE,MATRIX_SIZE,MATRIX_SIZE,
+     &           0.5D0,US_COPY,MATRIX_SIZE,
+     &                 UZ,MATRIX_SIZE,
+     &           0.0D0,UV,MATRIX_SIZE)
+
+            IF (IPRINT.ge.3) THEN
+              ! Debug: calculate overlap matrix between two solution vectors in US
+              ! (should be diagonal matrix with norm(k)**2 on diagonal)
+
+              !  US(i,k) = sum(j) UZ(j,i) UV(j,k) = sum(j) UZ_T(i,j) UV(j,k)
+
+           CALL DGEMM('T','N',MATRIX_SIZE,MATRIX_SIZE,MATRIX_SIZE,1.D0,
+     &                UZ,MATRIX_SIZE,
+     &                UV,MATRIX_SIZE,0.D0,
+     &                US,MATRIX_SIZE)
+              write(lupri,*)
+     &         'DEBUG: overlap matrix for unnormalized Dyson orbitals'
+              j = matrix_size
+              call output(us,1,j,1,j,j,j,-1,lupri)
+            END IF ! iprint .ge. 3
+
+            N_IP_strong = 0
+            DO K = 1, MATRIX_SIZE ! IP # K
+               ! save IP # K in E_IP(:)
+               IF (AI(K) /= 0 .AND. B(K) == 0) THEN ! imaginary -infinty IP
+                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 102'
+                  E_IP(E_INDEX+K) = -102
+               ELSE IF (AI(K) /= 0) THEN ! imaginary IP
+                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 100'
+                  E_IP(E_INDEX+K) = -100
+               ELSE IF (B(K) == 0) THEN ! real infinity IP
+                  E_IP(E_INDEX+K) = -101
+                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 101'
+               ELSE ! real IP
+                  E_IP(E_INDEX+K) = - AR(K)/B(K)
+               END IF
+
+               ! Normalized Dyson orbital no. K in UZ(;.k)
+               ! dyson_norm(k) = sum(i,j) c(i,k) gamma(i,j) c(j,k)
+               !               = sum(i)   UZ(i,k) UV(i,k)
+               DYSON_NORM = DDOT(MATRIX_SIZE,UV(1,K),1,UZ(1,K),1)
+!              write(lupri,*) 'DYSON_NORM **2',dyson_norm
+               DYSON_NORM = 1.0D0 / SQRT(DYSON_NORM)
+!              write(lupri,*) 'DYSON_NORM    ',dyson_norm
+               !  pole strength of IP # K = unit_norm(dyson_k)**2
+               DO J = 1, MATRIX_SIZE
+                  UZ(J,K) = UV(J,K) * DYSON_NORM ! normalize Dyson orbital
+                  POLE_STRENGTH(E_INDEX+K) = POLE_STRENGTH(E_INDEX+K)
+     &                                     + UZ(J,K)**2
+               END DO ! J
+
+               IF (E_IP(E_INDEX+K) < 0.d0) then ! negative IP gets negative pole strength
+                  POLE_STRENGTH(E_INDEX+K) = -POLE_STRENGTH(E_INDEX+K)
+               ELSE IF (POLE_STRENGTH(E_INDEX+K)>0.499d0) then
+                  N_IP_strong = N_IP_strong + 1
+               END IF
+
+            END DO !  do K
+
+            ! sort IPs: We want the Dyson vectors sorted such that all
+            !           strong poles before all weaker poles;
+            !           and we want them in energy order for the principal peaks
+            DO K = 1, N_IP_strong
+
+               IF (POLE_STRENGTH(E_INDEX+K) > 0.499D0) cycle ! OK, K strong pole, next K
+
+               DO J = N_IP_strong+1, MATRIX_SIZE ! K weak pole, find strong pole to swap with
+                  IF (POLE_STRENGTH(E_INDEX+J) > 0.499D0) then ! OK, J strong pole, swap with K
+                     TEMP = E_IP(E_INDEX+K)
+                     E_IP(E_index+K) = E_IP(E_index+J)
+                     E_IP(E_index+J) = TEMP
+                     TEMP = POLE_STRENGTH(E_INDEX+K)
+                     POLE_STRENGTH(E_index+K) = POLE_STRENGTH(E_index+J)
+                     POLE_STRENGTH(E_index+J) = TEMP
+                     CALL DSWAP(MATRIX_SIZE,UZ(1,K),1,UZ(1,J),1)
+                     exit ! K is now strong pole, go to next K
+                  END IF
+               END DO
+            END DO
+
+            DO K = 1, N_IP_strong ! Sort the strong poles in IP energy order
+               I = K
+               TEMP = E_IP(E_INDEX+I)
+               DO J = K+1, N_IP_strong ! find the largest E_IP among the remaining strong poles
+                  IF (E_IP(E_INDEX+J) > TEMP) THEN ! J and K strong poles, in wrong energy order
+                     I = J
+                     TEMP = E_IP(E_INDEX+I)
+                  END IF
+               END DO ! J
+               IF (I .NE. K) THEN ! then swap
+                  E_IP(E_INDEX+I) = E_IP(E_INDEX+K)
+                  E_IP(E_INDEX+K) = TEMP
+
+                  TEMP = POLE_STRENGTH(E_INDEX+I)
+                  POLE_STRENGTH(E_INDEX+I) = POLE_STRENGTH(E_INDEX+K)
+                  POLE_STRENGTH(E_INDEX+K) = TEMP
+
+                  CALL DSWAP(MATRIX_SIZE,UZ(1,I),1,UZ(1,K),1)
+               END IF ! I.ne.K
+
+               ! here one could also sort the weak poles, if desired
+
+            END DO
+
+            WRITE(lupri,"(5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
+     &       ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
+     &       GROUP,' -- ',N_IP_strong,' principal poles'
+
+            DO K = 1, MATRIX_SIZE, K_STEP ! K_STEP IPs in each output block
+            K_END = MIN(K+K_STEP-1, MATRIX_SIZE)
+
+            ! print IPs
+            WRITE(lupri,'(/1X,10A)') ('  ============',i=k,k_end)
+            WRITE(lupri,'(1X,10F14.6)')
+     &           E_IP(E_INDEX+k:E_INDEX+k_end)
+            WRITE(lupri,'(1X,10F14.6)')
+     &           E_IP(E_INDEX+k:E_INDEX+k_end) * XTEV
+            WRITE(lupri,'(1X,10A)') ('  ------------',i=k,k_end)
+
+            ! print pole strengths
+            WRITE(lupri,'(1X,10F14.6)')
+     &         POLE_STRENGTH(E_INDEX+k:E_INDEX+k_end)
+            WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+
+            ! print Dyson orbital coefficients
+            DO I = 1, MATRIX_SIZE
+               WRITE(lupri,"(1X,10F14.6)") UZ(I,K:K_END)
+               DO J = K, K_END
+                  EZ(Z_INDEX+(J-1)*MATRIX_SIZE+I) = UZ(I,J)
+               END DO
+            END DO ! I
+            WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+            WRITE(lupri,*) ' '
+
+            END DO ! K = 1, MATRIX_SIZE, K_STEP
+
+            Z_INDEX = Z_INDEX + MATRIX_SIZE * MATRIX_SIZE
+            E_INDEX = E_INDEX + MATRIX_SIZE
+
+            DEALLOCATE (UV, US, UZ, AR, AI, B, US_COPY)
+         END IF ! NOCC(ISYM) > 0
+         V_INDEX = V_INDEX + NORB(ISYM)**2 ! off-set to symmetry ISYM+1
+      END DO ! ISYM
+
+      WRITE(lupri,"(/3A)") '@ Summary of ',EKT_TYPE(1:l_wt),
+     &   ' ionization potentials [eV] and pole strengths:'
+      DO ISYM = 1, NSYM
+         WRITE(lupri,"(/A,I2,3A)", ADVANCE="no")
+     &         '@ Symmetry', ISYM ,' (',REP(ISYM-1),') :'
+         IF (NOCC(ISYM) > 0) THEN
+            E_INDEX = IOCC(ISYM)
+            WRITE(lupri,"(F10.3,4F12.3,(:/'@',T19,5F12.3))")
+     &        (E_IP(E_INDEX + I) * XTEV, I = 1, NOCC(ISYM))
+            WRITE(lupri,
+     &      "('@ Pole strengths   :',F10.3,4F12.3,(:/'@',T19,5F12.3))")
+     &      (POLE_STRENGTH(E_INDEX+I), I = 1, NOCC(ISYM))
+         ELSE
+            WRITE(lupri,"(A)") '  No IPs in this symmetry'
+         END IF
+      END DO
+
+      DEALLOCATE (POLE_STRENGTH)
+      WRITE(lupri,"(/3A/A/)")
+     &   '  === End of ',EKT_TYPE(1:l_wt),' output ===',
+     &   SEPARATOR
+      FLUSH(LUPRI)
+
+      CALL QEXIT('SIREKT')
+      END ! SUBROUTINE SIREKT
 C --- end of siropt.F ---
