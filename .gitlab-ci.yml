@@ -59,7 +59,7 @@ intel:
     - dnf install -y -q gcc gcc-c++ gcc-gfortran git make cmake python python3
                         redhat-rpm-config findutils which procps-ng coreutils
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
-    - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl
+    - dnf install -y intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mkl
     - set +e
     - . /opt/intel/oneapi/setvars.sh
     - set -e
@@ -91,7 +91,7 @@ intel-mpi:
     - dnf install -y -q gcc gcc-c++ gcc-gfortran git make cmake python python3
                         redhat-rpm-config findutils which procps-ng coreutils
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
-    - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
+    - dnf install -y intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
     - set +e
     - . /opt/intel/oneapi/setvars.sh
     - set -e
@@ -125,7 +125,7 @@ gcc-5:
                    -DENABLE_PDE=ON
     - cd build
     - make
-    - ctest --output-on-failure -L essential
+    - ctest --output-on-failure -L essential -E rsp_mnf
 
 gcc-5-int64:
   image: fedora:23
@@ -140,7 +140,7 @@ gcc-5-int64:
     - python setup --int64 --blas=none --lapack=builtin --explicit-libs="-lopenblas64" --type=release
     - cd build
     - make
-    - ctest --output-on-failure -L essential
+    - ctest --output-on-failure -L essential -E rsp_mnf
 
 gcc-5-ompi-1.8:
   image: fedora:23
@@ -160,7 +160,7 @@ gcc-5-ompi-1.8:
                    -DENABLE_PDE=ON
     - cd build
     - make -j 4
-    - ctest --output-on-failure -L essential -LE serial
+    - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
 
 gcc-5-ompi-1.8-int64:
   image: fedora:23
@@ -179,7 +179,7 @@ gcc-5-ompi-1.8-int64:
     - python setup --int64 --mpi --blas=none --lapack=builtin --explicit-libs="-lopenblas64" --type=release
     - cd build
     - make -j 4
-    - ctest --output-on-failure -L essential -LE serial
+    - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
 
 gcc-6:
   image: fedora:25
@@ -194,7 +194,7 @@ gcc-6:
                    -DENABLE_PDE=ON
     - cd build
     - make
-    - ctest --output-on-failure -L essential
+    - ctest --output-on-failure -L essential -E rsp_mnf
 
 gcc-6-int64:
   image: fedora:25
@@ -209,7 +209,7 @@ gcc-6-int64:
     - python setup --int64 --blas=none --lapack=builtin --explicit-libs="-lopenblas64" --type=release
     - cd build
     - make
-    - ctest --output-on-failure -L essential
+    - ctest --output-on-failure -L essential -E rsp_mnf
 
 gcc-7:
   image: fedora:27
