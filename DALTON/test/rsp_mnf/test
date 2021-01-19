@@ -31,9 +31,11 @@ f = [
     get_filter(string='@ Excitation energy :',
                abs_tolerance=1.0e-8),
     get_filter(string='@ Operator label: Z1MNF-SO; Transition moment :',
-               abs_tolerance=1.0e-8),
+               abs_tolerance=1.0e-8,
+               ignore_sign=True),
     get_filter(string='@ Spin-orbit coupling constant (Z1MNF-SO) :',
-               abs_tolerance=1.0e-5),
+               abs_tolerance=1.0e-5,
+               ignore_sign=True),
 ]
 
 options = cli()
