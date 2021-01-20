@@ -497,6 +497,7 @@ cfrj-end
      &                  DUMMY,LDUMMY)
             HFXMU = HFXM0
             IF (HFXMU.NE.D0) THEN
+!           IF (SRDFTRUN .OR. HFXMU.NE.D0) THEN <-- TODO
 
                KFCTMP = KLAST
                KLAST  = KFCTMP + NFMAT*N2BASX
@@ -525,7 +526,7 @@ cfrj-end
      &                                     WORK(KFCTMP),1,WORK(KFMAT),1)
                HFXFAC = HFXFC0
             END IF
-         ELSE
+         ELSE ! PARHER is not OK for MPI
             PARHER_SAVE = PARHER
             PARHER = .FALSE.
 #endif

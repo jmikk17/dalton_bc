@@ -25,7 +25,7 @@ C
 C     T. Helgaker, Sep. 91
 C
 C     gnrinf.h needed for PANAS correction factor, and CHIVAL,ERFEXP,
-C              SRINTS for partition of r_12 (MCDFT)
+C              SRINTS for partition of r_12 (MC-srDFT)
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -368,7 +368,7 @@ C
                END DO
             ELSE IF (SRINTS) THEN
 C
-C              Short-range two-electron integrals (MCDFT)
+C              Short-range two-electron integrals (MC-srDFT)
 C
                CHISQ     = CHIVAL**2
                DO IOD34 = 1, NUC34
@@ -416,7 +416,7 @@ c              ---
                END DO
             ELSE IF (PANAS .EQ. D0) THEN
 C
-C              Long-range two-electron integrals (MCDFT)
+C              Long-range two-electron integrals (MC-srDFT)
 C
                CHISQ     = CHIVAL**2
                DO IOD34 = 1, NUC34
@@ -591,7 +591,7 @@ C
                END DO
             ELSE IF (SRINTS) THEN
 C
-C              Short-range two-electron integrals (MCDFT)
+C              Short-range two-electron integrals (MC-srDFT)
 C
                CHISQ     = CHIVAL**2
                DO IOD34 = 1, NUC34
