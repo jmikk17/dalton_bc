@@ -7,7 +7,7 @@ C
      &                SDRTST, UNDIF, TRATST, RUNGDY,
      &                NODC, NODV, NOPV, TESTFS, DIAGTD, NOFD,
      &                NOFS, NOSSF, NOORTH, GDHAM, RETUR, TKTIME,
-     &                AOMAT, CUT, DMAGGD(3), NODDY, NODPTR,
+     &                CUT, DMAGGD(3), NODDY, NODPTR,
      &                RUNPTR, RALLCO
       COMMON /CBIRHS/ MAXSIM, IPRMAX, IPRALL, IPRFD,                            ! integers
      &                IPRINT, IPRNTA, IPRNTB, IPRNTC, IPRNTD,
@@ -18,6 +18,6 @@ C
      &                SDRTST, UNDIF, TRATST, RUNGDY,
      &                NODC, NODV, NOPV, TESTFS, DIAGTD, NOFD,
      &                NOFS, NOSSF, NOORTH, GDHAM, RETUR, TKTIME,
-     &                AOMAT, CUT, DMAGGD, NODDY, NODPTR,
+     &                CUT, DMAGGD, NODDY, NODPTR,
      &                RUNPTR, RALLCO
 ! -- end of cbirhs.h --
