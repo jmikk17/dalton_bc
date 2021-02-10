@@ -2,6 +2,7 @@
 !     AO atomic orbital, SO = symmetry orbital
 !     CTRAN, ITRAN, JTRAN: transformation from SO to AO
 !     IPTYP, IPCEN: gto type and sym.indep. center index for each SO
+!     (if no symmetry, i.e. SO=AO, then gto type and center index for each AO)
 !     IAOAO, JAOAO: AO to AO transformation (see AOTOAO subroutine in herrdn.F)
 !     IAOINFO: information about each atomic orbital
 !        IAOINFO(:,1) =   sym. indep. AO index

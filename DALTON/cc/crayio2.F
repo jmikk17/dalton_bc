@@ -230,7 +230,7 @@ C
 #endif
 C
       IF (IERR.NE.0) THEN
-        WRITE (LUPRI,*) 'I/O ERROR IN CLOSE2:'
+        WRITE (LUPRI,*) 'I/O ERROR IN WCLOSE2:'
         WRITE (LUPRI,*) 'FILE:', FILE
         WRITE (LUPRI,*) 'UNIT:', LUNIT
         WRITE (LUPRI,*) 'MODE:', MODE

@@ -1027,7 +1027,7 @@ C                  IF (DIRCAL) AOSOP = .TRUE.
      *               '@ **RESPONS: NUMBER OF OPERATORS FOR .PROPAV'
      *               ,'CALCULATION EXCEEDS THE ALLOWED NUMBER :'
      *               ,MAX1AV
-                   CALL QUIT('RSPINP, TOO MANY .PROPAV OPERATORS')
+                   CALL QUIT('**RESPONS, TOO MANY .PROPAV OPERATORS')
                   END IF
                   READ(LUCMD,'(A)') LBL1AV(N1AVTOT)
                GO TO 100

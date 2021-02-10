@@ -112,7 +112,6 @@ C
 #include "implicit.h"
 #include "mxcent.h"
 #include "priunit.h"
-      PARAMETER (D1 = 1.0D0)
 #include "nuclei.h"
 #include "trkoor.h"
 #include "fcsym.h"
@@ -141,15 +140,15 @@ C
      &               WORK(KTMPSM),GRIREP,WORK(KTMPTR),WORK(KTMPVC),
      &               WORK(KLAST),ICRIRP,WORK(KNSTBC),LWRK,IPRINT)
       ELSE
-         CALL HEADER('There is only C1-symmetry, using cart. coor',-1)
-C
+         CALL HEADER(
+     &     'Molecule has C1 symmetry, using cartesian coordinates',-1)
          KDIM = NCOOR**2
          CALL DZERO(SYMCOR,KDIM)
-         DO 100 ICOOR = 1, NCOOR
-            SYMCOR(ICOOR,ICOOR) = D1
+         DO ICOOR = 1, NCOOR
+            SYMCOR(ICOOR,ICOOR) = 1.0D0
             ICRIRP(ICOOR,1) = 1
             ICRIRP(ICOOR,2) = 0
- 100     CONTINUE
+         END DO
          N1DIME = 1
       END IF
 C
@@ -163,7 +162,6 @@ C
 #include "pi.h"
 #include "priunit.h"
       PARAMETER (NDEG = 2)
-      PARAMETER (D1 = 1.0D0)
       PARAMETER (D0 = 0.0D0, D2 = 2.0D0)
 C
       DIMENSION SIRREP(NCORDR,NCORDR), GRIREP(NGORDR,NGVERT),
@@ -180,8 +178,8 @@ C
       DO 200 M = 1, NDEG
          IORDR = IORDR + 1
          DO 300 K = 1, NCORDR
-            PHASE = D1
-            IF (M .EQ. 2) PHASE = -D1
+            PHASE = 1.0D0
+            IF (M .EQ. 2) PHASE = -1.0D0
 C
             SIRREP(K,IORDR) = PHASE*DBLE(N*(K-1))
  300     CONTINUE

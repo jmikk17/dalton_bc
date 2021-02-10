@@ -259,8 +259,9 @@ C
             END IF
             IF (FCKTST) WRITE (LUPRI, '(A)')
      *         ' Testing of Fock matrices.'
-            IF (AOMAT) WRITE (LUPRI, '(A)')
-     *         ' AO printing of SO Fock matrices.'
+! AOMAT is not implemented since before 2001
+!           IF (AOMAT) WRITE (LUPRI, '(A)')
+!    *         ' AO printing of SO Fock matrices.'
             IF (TWOH1) THEN
                WRITE (LUPRI, '(A)')
      *           ' One-electron Hamiltonian multiplied by two in GETFD.'
@@ -401,7 +402,6 @@ C
       GDHAM  = .FALSE.
       RETUR  = .FALSE.
       TKTIME = .FALSE.
-      AOMAT  = .FALSE.
       NODDY  = .FALSE.
       NODPTR = .FALSE.
       RALLCO = .FALSE.
@@ -978,7 +978,7 @@ C
                CALL GETFD(IATOM,NOORBI,TWOH1,NOH1,NOH2,NODC,NODV,IPRFD,
      &                    DERIV,EMYD,WORK(KCMO),WORK(KDV),WORK(KFDC),
      &                    WORK(KFDV),WORK(KDFTFD),WORK(KGETFD),LGETFD,
-     &                    AOMAT,DOREAL,IPRINT)
+     &                    DOREAL,IPRINT)
                IF (IPRFD .GT. 2)
      &            CALL TIMER('GETFD ',TIMSTR,TIMEND)
             END IF
@@ -3672,8 +3672,11 @@ C  /* Deck psoor1 */
 C
       KSYMP = -1
       CALL PRPGET(LABEL,CMO,PSOINT,KSYMP,ANTSYM,WORK,LWORK,IPRINT)
-      IF (KSYMP.NE.KSYMPSO)
-     &   CALL QUIT('ERROR: unexpected property symmetry in PSOOR1')
+      IF (KSYMP.NE.KSYMPSO) THEN
+         WRITE(LUPRI,*) 'ERROR: unexpected property symmetry in PSOOR1'
+         WRITE(LUPRI,*) 'ERROR: expected & found ',KSYMP,KSYMPSO
+         CALL QUIT('ERROR: unexpected property symmetry in PSOOR1')
+      END IF
       DO 100 X = 1, 3
          ORTO = DDOT(N2ORBX,PSOINT,1,WMAT(1,X),1)
          SIGMAS(X,ISCOOR) = ORTO
