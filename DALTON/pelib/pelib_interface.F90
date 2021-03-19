@@ -160,6 +160,7 @@ subroutine pelib_ifc_input_reader(word)
 
     potfile = 'POTENTIAL.INP'
     h5pdefile = 'standard.h5'
+    pelib_skipmul = .true.
 
     do
         read(lucmd, '(a80)') option
@@ -541,6 +542,8 @@ subroutine pelib_ifc_input_reader(word)
         ! skip calculation of multipole-multipole interaction energy
         else if (trim(option(2:7)) == 'SKIPMU') then
             pelib_skipmul = .true.
+        else if (trim(option(2:7)) == 'NOSKIP') then
+            pelib_skipmul = .false.
         else if (trim(option(2:7)) == 'GAUGE') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
