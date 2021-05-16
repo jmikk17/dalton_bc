@@ -345,6 +345,18 @@ subroutine pelib_ifc_input_reader(word)
         ! skip electrostatics from fragment densities
         else if (trim(option(2:7)) == 'NO FD') then
             pelib_fdes = .false.
+        ! activate legacy PE field evaluation code (OLDFIELD)
+        else if (trim(option(2:7)) == 'OLDFIE') then
+            pelib_old_field = .true.
+        ! activate Fast Multipole Method for evaluation of multipolar fields
+        else if (trim(option(2:7)) == 'FMM') then
+            pelib_fmm = .true.
+        else if (trim(option(2:7)) == 'THETA') then
+            read(lucmd, *) fmm_theta
+        else if (trim(option(2:7)) == 'NCRIT') then
+            read(lucmd, *) fmm_ncrit
+        else if (trim(option(2:7)) == 'EXPANS') then
+            read(lucmd, *) fmm_expansion_order
         ! request calculation of effective dipole integrals
         else if (trim(option(2:7)) == 'EEF') then
             read(lucmd, '(a80)') option
