@@ -588,3 +588,56 @@ GROUP "/" {
 }
 }
 \end{verbatim}
+
+\subsection{Fast Multipole Method}\label{subsec:FMM}
+The computational scaling of the PE model is quadratic with the number of polarizable sites.
+For large systems, this can become the bottleneck of PE calculations.
+To overcome this, fast summation schemes, such as the fast multipole method (FMM) can be used.
+The FMM implementation in PElib is used to evaluate both the static fields from multipoles as well 
+as the fields from induced dipoles.
+In practice, FMM is beneficial (faster than traditional direct summation) for systems exceeding 
+about 8000 environment sites. 
+FMM can be activated with:
+
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.FMM
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
+
+The accuracy of FMM is controlled by two parameters, the multipole acceptance criterion, $\theta$,
+and the multipole expansion order. The multipole acceptance criterion determines whether two 
+boxes, $A$ and $B$ can be considered far separated, according to
+\begin{equation}
+R\theta > R_A + R_B.
+\end{equation}
+Smaller values of $\theta$ are more accurate since more of the interactions are placed in the 
+short range, but are also more expensive. The limit of $\theta=0$ corresponds formally to a 
+direct summation. Typical values of $\theta$ are around $0.5$.
+The expansion order controls to which order the multipole expansion in FMM is taken. 
+Higher orders are more accurate, but also more expensive.
+The FMM implementation is based on an adaptive octree code, which boxifies the system such that
+boxes contain at most NCRIT particles. Smaller values of NCRIT will result in more boxes.
+The acceptance criterion ($\theta$), expansion order, and critical number of particles can be changed as:
+
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.FMM
+.THETA
+0.40       ! default
+.EXPANSION ORDER
+6          ! default
+.NCRIT
+64         ! default
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
