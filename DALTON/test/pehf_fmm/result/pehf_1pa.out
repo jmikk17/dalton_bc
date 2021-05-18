@@ -689,8 +689,8 @@ Calculating AOSUPINT
        Electrostatic contributions:
             Electronic                -0.467189400871
             Nuclear                    0.448807800596
-            Multipole                  0.001021874822
-            Total                     -0.017359725453
+            Multipole                  0.000000000000
+            Total                     -0.018381600275
 
        Polarization contributions:
             Electronic                -0.035581031306
