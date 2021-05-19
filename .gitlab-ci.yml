@@ -45,6 +45,7 @@ coverage:
     - ctest --output-on-failure -L serial -LE "long|verylong"
     - ctest -D ExperimentalCoverage
     - bash <(curl -s https://codecov.io/bash) -t 69d70b17-576f-459e-8f6c-409607c9f06b
+  interruptible: true
 
 intel:
   image: fedora:32
@@ -77,6 +78,7 @@ intel:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 intel-mpi:
   image: fedora:32
@@ -110,6 +112,7 @@ intel-mpi:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-5:
   image: fedora:23
@@ -126,6 +129,7 @@ gcc-5:
     - cd build
     - make
     - ctest --output-on-failure -L essential -E rsp_mnf
+  interruptible: true
 
 gcc-5-int64:
   image: fedora:23
@@ -141,6 +145,7 @@ gcc-5-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential -E rsp_mnf
+  interruptible: true
 
 gcc-5-ompi-1.8:
   image: fedora:23
@@ -161,6 +166,7 @@ gcc-5-ompi-1.8:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
+  interruptible: true
 
 gcc-5-ompi-1.8-int64:
   image: fedora:23
@@ -180,6 +186,7 @@ gcc-5-ompi-1.8-int64:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
+  interruptible: true
 
 gcc-6:
   image: fedora:25
@@ -195,6 +202,7 @@ gcc-6:
     - cd build
     - make
     - ctest --output-on-failure -L essential -E rsp_mnf
+  interruptible: true
 
 gcc-6-int64:
   image: fedora:25
@@ -210,6 +218,7 @@ gcc-6-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential -E rsp_mnf
+  interruptible: true
 
 gcc-7:
   image: fedora:27
@@ -225,6 +234,7 @@ gcc-7:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-7-int64:
   image: fedora:27
@@ -240,6 +250,7 @@ gcc-7-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-8:
   image: fedora:29
@@ -255,6 +266,7 @@ gcc-8:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-8-int64:
   image: fedora:29
@@ -270,6 +282,7 @@ gcc-8-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-8-ompi-2.1:
   image: fedora:29
@@ -289,6 +302,7 @@ gcc-8-ompi-2.1:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
 
 gcc-8-ompi-2.1-int64:
   image: fedora:29
@@ -308,6 +322,7 @@ gcc-8-ompi-2.1-int64:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
 
 gcc-9:
   image: fedora:31
@@ -323,6 +338,7 @@ gcc-9:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-9-debug:
   image: fedora:31
@@ -338,6 +354,7 @@ gcc-9-debug:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-9-int64:
   image: fedora:31
@@ -353,6 +370,7 @@ gcc-9-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-9-ompi-4.0:
   image: fedora:31
@@ -372,6 +390,7 @@ gcc-9-ompi-4.0:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
 
 gcc-9-mpich-3.3:
   image: fedora:31
@@ -391,6 +410,7 @@ gcc-9-mpich-3.3:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
 
 gcc-9-ompi-4.0-int64:
   image: fedora:31
@@ -410,6 +430,7 @@ gcc-9-ompi-4.0-int64:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
 
 gcc-9-mpich-3.3-int64:
   image: fedora:31
@@ -430,6 +451,7 @@ gcc-9-mpich-3.3-int64:
     - cd build
     - make -j 4
     - ctest --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
 
 gcc-10:
   image: fedora:32
@@ -445,6 +467,7 @@ gcc-10:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 gcc-10-int64:
   image: fedora:32
@@ -460,6 +483,7 @@ gcc-10-int64:
     - cd build
     - make
     - ctest --output-on-failure -L essential
+  interruptible: true
 
 nightly-gcc-serial:
   image: fedora:31
