@@ -526,7 +526,7 @@ cfrj-end
      &                                     WORK(KFCTMP),1,WORK(KFMAT),1)
                HFXFAC = HFXFC0
             END IF
-         ELSE ! PARHER is not OK for MPI
+         ELSE ! PARHER is not OK for MPI for this wave function type
             PARHER_SAVE = PARHER
             PARHER = .FALSE.
 #endif
