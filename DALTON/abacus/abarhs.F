@@ -674,10 +674,10 @@ C
      &         .AND..NOT.(IATOM .EQ. 0 .AND. NOLOND)
      &         .AND..NOT.(FCKDDR.AND.EXPFCK.AND.IATOM.GT.0)) THEN
 C
-               IF (IATOM .EQ. 0) THEN
+               IF (IATOM .EQ. 0) THEN ! London B derivatives
                   ITYPE = 5
                   IF (FCKDDR) ITYPE = -5
-               ELSE
+               ELSE                   ! geometry derivatives for atom mo. IATOM
                   ITYPE = 1
                   IF (FCKDDR.AND..NOT.EXPFCK) ITYPE = 8
                END IF
@@ -705,7 +705,7 @@ CTROND
                KLAST = KJORBS
                LWRK = LWORK - KLAST + 1
 C
-               IF (ITYPE .EQ. 1) THEN
+               IF (ITYPE .EQ. 1) THEN ! nuclear derivatives for atom IATOM
                   NDMAT  = 1
                   NFMAT  = NDMAT
                   KDMAT  = KLAST
@@ -713,7 +713,7 @@ C
 C                 ... so KDMAT, KFMAT is defined in subroutine calls below,
 C                     also when WORK(KFMAT) is not used.
                   MAXDIF = 1
-               ELSE IF (ABS(ITYPE) .EQ. 5) THEN
+               ELSE IF (ABS(ITYPE) .EQ. 5) THEN ! London B field derivatives
                   NDMAT = 2
                   IF (NODV) NDMAT = 1
                   IF (MAGSUS .OR. MOLGFA) THEN

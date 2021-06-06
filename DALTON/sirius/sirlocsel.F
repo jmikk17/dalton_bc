@@ -154,7 +154,7 @@ C
       DATA THRESROT /1D-10/ , MAXIT /30/
       PARAMETER ( D1=1.0D0,  D0=0.0D0)
       PARAMETER (PI = 3.14159 26535 89793 23846 D00)
-      LOGICAL ISMAX, is_open
+      LOGICAL ISMAX, ANTIS
 C
 C External funcitons (blas)
 C
@@ -176,22 +176,13 @@ C
 C
 C Read dipole matrix and transform to selected MO:s
 C
-      CALL GPINQ('AOPROPER','OPENED',is_open)
-      if (is_open) then
-         inquire(file='AOPROPER',number=lu)
-      else
-         LU=-1
-         CALL GPOPEN(LU,'AOPROPER','OLD','SEQUENTIAL','UNFORMATTED',0,
-     &   .FALSE.)
-      end if
-
       NAOT=NAO*(NAO+1)/2
       LTMP=MAX(NAOT,NMO*NAO)
       CALL MEMGET('REAL',KTMP,LTMP,WORK,KFREE,LFREE)
       DO I=1,3
-         REWIND LU
-         CALL MOLLAB(DLAB(I),LU,LUPR)
-         CALL READT(LU,NAOT,WORK(KTMP))
+         IF (I.eq.1) CALL RDPROP('XDIPLEN ',WORK(KTMP),ANTIS)
+         IF (I.eq.2) CALL RDPROP('YDIPLEN ',WORK(KTMP),ANTIS)
+         IF (I.eq.3) CALL RDPROP('ZDIPLEN ',WORK(KTMP),ANTIS)
 C        CALL OUTPAK(WORK(KTMP),NAO,1,LUPR)
          CALL DSPTSI(NAO,WORK(KTMP),DAO)
 C        WRITE (LUPR,'(A)')DLAB(I)//'(AO)'
