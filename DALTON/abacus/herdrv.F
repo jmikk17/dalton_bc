@@ -197,7 +197,7 @@ C
       IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
      &     .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
          WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'//
-     &   ' are postponed until they are needed.'
+     &   ' are positioned until they are needed.'
          RUNTWO = .FALSE.
       END IF
       END IF
@@ -322,7 +322,7 @@ C
 #include "maxaqn.h"
 C
 C     NTABLE has been increased 118 (WK/UniKA/07-25-2005).
-      PARAMETER (NDIR = 9, NTABLE = 146)
+      PARAMETER (NDIR = 9, NTABLE = 148)
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D4 = 4.0D0, D10 = 1.0D1)
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      &          WORD1*7
@@ -442,8 +442,8 @@ C     Bin Gao, Oct. 3, 2011
      &             '.NEWTRA', '.KINADI', '.GENINT', '.S2MBRA',
 !                    241        242        243        244
      &             '.S2MKET', '.S2MMIX', '.LRINTS', '.NORMAO',
-!                    245        246
-     &             '.TWOBYT', '.LFDIPL'/
+!                    245        246        247		  248
+     &             '.TWOBYT', '.LFDIPL', '.DZZEFG', '.LAPEFG'/
 C
 C
       CALL QENTER('HERINP')
@@ -534,7 +534,7 @@ C
      &                211,212,213,214,215,216,217,218,219,220,
      &                221,222,223,224,225,226,227,228,229,230,
      &                231,232,233,234,235,236,237,238,239,240,
-     &                241,242,243,244,245,246), I
+     &                241,242,243,244,245,246,247,248), I
             END IF
          END DO
             IF (WORD .EQ. '.OPTION') THEN
@@ -744,6 +744,14 @@ C
             GOTO 100
   145    CONTINUE
             NELFLD = .TRUE.
+            ONEPRP = .TRUE.
+            GOTO 100
+  247    CONTINUE
+            DZZEFG = .TRUE.
+            ONEPRP = .TRUE.
+            GOTO 100
+  248    CONTINUE
+            LAPEFG = .TRUE.
             ONEPRP = .TRUE.
             GOTO 100
   146    CONTINUE
@@ -1648,6 +1656,12 @@ Cajt qdb
      &        '- small component potential energy for DPT'
          IF (DPTOVL) WRITE (LUPRI,'(10X,A)')
      &        '- small component overlap integrals for DPT'
+         IF (DZZEFG) WRITE (LUPRI,'(10X,A)')
+     &     '- Divergence of the zz EFG component at the nuclei'
+     &        //' - (DO NOT USE SYMMETRY)'
+         IF (LAPEFG) WRITE (LUPRI,'(10X,A)')
+     &     '- Laplacian of the xx,yy and zz EFG component at the nuclei'
+     &        //' - (DO NOT USE SYMMETRY)'
          IF (XDDXR3) WRITE (LUPRI,'(10X,A)')
      &        '-d/dB d/dK   < 1/Rk^3 > type of integrals. '
          IF (PROPRI) WRITE (LUPRI,'(/A)')
@@ -3192,6 +3206,26 @@ C
                CALL TIMER('NELFLD',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
             END IF
+            
+C     ***** Divergence of the zz EFG (electronic contribution) at the individual nuclei *****
+C
+            IF (DZZEFG) THEN
+               CALL TIMER('START ',TIMSTR,TIMEND)
+               CALL PR1INT('DIVZZEFG',WORK,LWORK,IDUMMY,
+     &                     IDUMMY,TRIANG,PROPRI,IPRONE)
+               CALL TIMER('DZZEFG',TIMSTR,TIMEND)
+               CALL FLSHFO(LUPRI)
+            END IF
+            
+C     ***** Laplacian of the xx,yy and zz EFG (electronic contribution) at the individual nuclei *****
+C
+            IF (LAPEFG) THEN
+               CALL TIMER('START ',TIMSTR,TIMEND)
+               CALL PR1INT('LAPEFG ',WORK,LWORK,IDUMMY,
+     &                     IDUMMY,TRIANG,PROPRI,IPRONE)
+               CALL TIMER('LEFG',TIMSTR,TIMEND)
+               CALL FLSHFO(LUPRI)
+            END IF
 C
 C     ***** Electric field gradient at the individual nuclei, cartesian *****
 C
@@ -4186,6 +4220,8 @@ C
       NSTTST = .FALSE.
       NSLTST = .FALSE.
       NELFLD = .FALSE.
+      DZZEFG = .FALSE.
+      LAPEFG = .FALSE.
       NSNLTS = .FALSE.
       EFGCAR = .FALSE.
       EFGSPH = .FALSE.

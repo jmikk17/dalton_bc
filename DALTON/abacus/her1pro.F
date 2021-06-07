@@ -170,6 +170,8 @@ C     Cosine and Sine integrals (24.06.93)
 C     Mass-velocity and Darwin integrals (23.07.93 ShKi+HJAaJ)
 C     Magnetic field derivatives of electric field (280893 KRu)
 C     DPT correction to dipole (WK/UniKA/09-03-2004)
+C     Divergence of the zz EFG component at the nuclei - (2021)
+C     Laplacian of the xx,yy and zz EFG component at the nuclei - (2021)
 C
 C     Changes for writing symmetry information to property file
 C     (OV 08.03.90)
@@ -191,7 +193,7 @@ C
 #include "efield.h"
 #include "ccom.h"
 #include "qm3.h"
-      PARAMETER (NTABLE = 107)
+      PARAMETER (NTABLE = 109)
       PARAMETER (D2 = 2.D0)
 C
       LOGICAL ANTI, TRASPH, SOLVNT, TRIANG, SQUARE
@@ -249,7 +251,8 @@ C Bin Gao, December 17, 2009; adds integrals S2MBRA, S2MKET, and S2MMIX
      &            'HUCKEL ', 'SQHD2OR', 'EFIELB1', 'EFIELB2', !  93:96
      &            'MAGQDP ', 'DERANGM', 'DIPANH ', 'POPOVLP', !  97:100
      &            'KINADIA', 'S2MBRA ', 'S2MKET ', 'S2MMIX ', ! 101:104
-     &            'LFDIPLN', 'R2     ', 'R4     '/ ! 104:108
+     &            'LFDIPLN', 'R2     ', 'R4     ', 'DIVZZEFG',! 105:108
+     &            'LAPEFG ' / !109
 C
       LOGICAL   RGAUGE, RCHRG
       DIMENSION GAGSAV(3)
@@ -287,7 +290,8 @@ C
      &             71,72,73,74,75,76,77,78,79,80,
      &             81,82,83,84,85,86,87,88,89,90,
      &             91,92, 1,94,95,96,97,98,99,100,
-     &             101,102,103,104,105,106,107), I
+     &             101,102,103,104,105,106,107,
+     &             108,109), I
          END IF
       END DO
       WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
@@ -900,6 +904,33 @@ C
          ANTI = .FALSE.
       GOTO 200
 C
+C     Divergence of the zz EFG (electronic) component at the individual nuclei
+C     --------------------------------------
+C
+ 108   CONTINUE
+         INTTYP = 109
+         IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &        'Calculation of the divergence of q_zz at the nuclei'
+         CALL SETATM(DOATOM,NATOM,INTTYP)
+         CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+         ANTI = .FALSE.
+      GOTO 200
+C
+C     Laplacian of the qxx,qyy and qzz EFGs components (electronic) at the individual nuclei!
+C     --------------------------------------
+C
+ 109   CONTINUE
+         INTTYP = 110
+         IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &     'Calculation of laplacian of qxx,qyy,qzz at the nuclei'
+         CALL SETATM(DOATOM,NATOM,INTTYP)
+         CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+         ANTI = .FALSE.
+      GOTO 200
+C
+
 C     Electric field gradient at the individual nuclei, cartesian ELFGRDC
 C     -----------------------------------------------------------
 C
@@ -4147,6 +4178,14 @@ C
                     LABINT(ITYP) = '1DHAM'//CHRNOS(ISCOOR/100)
      &                       //CHRNOS(MOD(ISCOOR,100)/10)
      &                       //CHRNOS(MOD(ISCOOR,10))
+                  ELSEIF (INTTYP .EQ. 109) THEN
+                    LABINT(ITYP) = 'DEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
+                  ELSEIF (INTTYP .EQ. 110) THEN
+                    LABINT(ITYP) = 'LEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
                   ELSE
                     LABINT(ITYP) = 'NEF '//CHRNOS(ISCOOR/100)
      &                       //CHRNOS(MOD(ISCOOR,100)/10)
@@ -4171,6 +4210,15 @@ C     ... FORQM3
                   LABINT(ITYP) = '1DHAM'//CHRNOS(ISCOOR/100)
      &                     //CHRNOS(MOD(ISCOOR,100)/10)
      &                     //CHRNOS(MOD((MOD(ISCOOR,100)),10))
+                ELSEIF (INTTYP .EQ. 109) THEN
+                  LABINT(ITYP) = 'DEFG '//CHRNOS(ISCOOR/100)
+     &                     //CHRNOS(MOD(ISCOOR,100)/10)
+     &                     //CHRNOS(MOD((MOD(ISCOOR,100)),10))
+                  ELSEIF (INTTYP .EQ. 110) THEN
+                    LABINT(ITYP) = 'LEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
+
                 ELSE
                   LABINT(ITYP) = 'NEF '//CHRNOS(ISCOOR/100)
      &                     //CHRNOS(MOD(ISCOOR,100)/10)

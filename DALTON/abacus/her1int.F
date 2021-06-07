@@ -271,6 +271,16 @@ C
          JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
+      ELSE IF (INTTYP .EQ.109) THEN
+         JMAXD = 0
+         JMAXM = 0
+         DONUC1= .FALSE.
+         DOMOM1 = .TRUE.
+      ELSE IF (INTTYP .EQ.110) THEN
+         JMAXD = 0
+         JMAXM = 0
+         DONUC1= .FALSE.
+         DOMOM1 = .TRUE.
       ELSE IF (INTTYP .EQ.30) THEN
          JMAXD = 0
          JMAXM = 0
@@ -827,8 +837,9 @@ C  /* Deck pr1sop */
 #include "onecom.h"
 C
       INATM = NUCDEP
-      IF (FORQM3 .AND. (INTTYP .EQ. 35 .OR. INTTYP .EQ. 29
-     &               .OR. INTTYP .EQ. 30)) INATM = NCTOT
+      IF (FORQM3 .AND. (INTTYP .EQ. 35 .OR. INTTYP .EQ. 29 .OR. 
+     &       INTTYP .EQ. 109 .OR. INTTYP .EQ. 110 .OR. INTTYP
+     &       .EQ. 30)) INATM = NCTOT
       KSHINT = 1
       KSYMC  = KSHINT + KCKTAB*NSHINT
       KCENTC = KSYMC  + (INATM + 1)/IRAT
@@ -935,6 +946,8 @@ cLig <> added JMAX adjustment  for INTTYP = 82
      &                    .OR. (INTTYP .EQ. 97)
      &                    .OR. (INTTYP .EQ. 99)
      &                    .OR. (INTTYP .EQ. 100)
+     &                    .OR. (INTTYP .EQ. 109)
+     &                    .OR. (INTTYP .EQ. 110)
      &   ) THEN
 
          JMAX = NHKTA + NHKTB - 2
@@ -951,6 +964,8 @@ cLig <> added JMAX adjustment  for INTTYP = 82
          IF (INTTYP .EQ. 27) JMAX = JMAX + 2
          IF (INTTYP .EQ. 28) JMAX = JMAX + 2
          IF (INTTYP .EQ. 29) JMAX = JMAX + 1
+         IF (INTTYP .EQ. 109)JMAX = JMAX + 3
+         IF (INTTYP .EQ. 110)JMAX = JMAX + 4
          IF (INTTYP .EQ. 30) JMAX = JMAX + 2
          IF (INTTYP .EQ. 31) JMAX = JMAX + 2
          IF (INTTYP .EQ. 38) JMAX = JMAX + 2
@@ -999,6 +1014,8 @@ C
      &        .OR. INTTYP .EQ. 67 .OR. INTTYP .EQ. 99
      &        .OR. INTTYP .EQ. 100
      &        .OR. ( (INTTYP .EQ. 29) .AND. RUNQM3 )
+     &        .OR. ( (INTTYP .EQ. 109) .AND. RUNQM3)
+     &        .OR. ( (INTTYP .EQ. 110) .AND. RUNQM3)
      &        .OR. ( (INTTYP .EQ. 30) .AND. RUNQM3 ) ) THEN
             NATOMC = 0
 C
@@ -1026,7 +1043,8 @@ C
             NATOMC = 0
             IMXATM = NUCIND
             IF (FORQM3 .AND.
-     &         (INTTYP .EQ. 35 .OR. INTTYP .EQ. 29 .OR. INTTYP .EQ. 30))
+     &         (INTTYP .EQ. 35 .OR. INTTYP .EQ. 29 .OR. INTTYP .EQ. 30)
+     &         .OR. INTTYP .EQ. 109 .OR. INTTYP .EQ. 110)
      &         IMXATM = NCTOT
             DO 300 IATOMC = 1, IMXATM
             IF (DOATOM(IATOMC)) THEN
@@ -1188,7 +1206,8 @@ C
      &                  ISYMOP,NELMNT,NOPTYP,ANTI,IORBA,IORBB,MULTA,
      &                  MULTB,NBAST,INTTYP,IPRINT,INTADR,EXPVAL,DENMAT,
      &                  EXP1EL)
-            ELSE IF (INTTYP .EQ. 29) THEN
+            ELSE IF (INTTYP .EQ. 29 .OR. INTTYP .EQ. 109 .OR. INTTYP
+     &         .EQ. 110) THEN
                CALL EFTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NATOMC,
      &                    ISYMOP,NELMNT,NOPTYP,ANTI,INTADR,IPRINT,
      &                    MULTA,MULTB,EXPVAL,DENMAT,EXP1EL)
@@ -1260,7 +1279,8 @@ cLig <> added the call to NSSTRA for INTTYP = 82
             CALL NSTTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NATOMC,ISYMOP,
      &                  NELMNT,NOPTYP,ANTI,IORBA,IORBB,MULTA,MULTB,
      &                  NBAST,INTTYP,IPRINT,INTADR,EXPVAL,DUMMY,EXP1EL)
-         ELSE IF (INTTYP .EQ. 29) THEN
+         ELSE IF (INTTYP .EQ. 29 .OR. INTTYP .EQ. 109 .OR. 
+     &                  INTTYP .EQ. 110) THEN
             CALL EFTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NATOMC,
      &                 ISYMOP,NELMNT,NOPTYP,ANTI,INTADR,IPRINT,
      &                 MULTA,MULTB,EXPVAL,DENMAT,EXP1EL)
@@ -1496,7 +1516,8 @@ C
      &            (INTTYP .EQ. 30) .OR. (INTTYP .EQ. 31) .OR.
      &            (INTTYP .EQ. 56) .OR. (INTTYP .EQ. 53) .OR.
      &            (INTTYP .EQ. 54) .OR. (INTTYP .EQ. 83) .OR.
-     &            (INTTYP .EQ. 84) .OR. (INTTYP .EQ. 108)) THEN
+     &            (INTTYP .EQ. 84) .OR. (INTTYP .EQ. 108) .OR.
+     &            (INTTYP .EQ. 109 .OR. INTTYP .EQ. 110)) THEN
             TEMP(1) = DIPORG(1)
             TEMP(2) = DIPORG(2)
             TEMP(3) = DIPORG(3)
@@ -1598,6 +1619,8 @@ cLig <> added the call to DZERO also for INTTYP = 82
      &                       .OR. (INTTYP .EQ. 97)
      &                       .OR. (INTTYP .EQ. 99)
      &                       .OR. (INTTYP .EQ. 100)
+     &                       .OR. (INTTYP .EQ. 109)
+     &                       .OR. (INTTYP .EQ. 110)
      &    ) THEN
             IF (ADDNAI) THEN !  ADD Nuclear Attraction Integrals
                IADR = 1 + NAHGTF
@@ -1895,6 +1918,22 @@ C
             CALL EFGINT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
      &                  SHLINT,NOPTYP,NATOMC,DISTAB)
 C
+
+C         Divergence of the qzz electric field gradient component at the individual nuclei
+C        -----------------------------------------
+C
+         ELSE IF (INTTYP .EQ. 109) THEN
+            CALL DZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
+     &                  SHLINT,NOPTYP,NATOMC)
+
+C         Laplacian of qxx,qyy and qzz electric field gradient components at the individual nuclei
+C        -----------------------------------------
+C
+         ELSE IF (INTTYP .EQ. 110) THEN
+            CALL LAPEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
+     &                  SHLINT,NOPTYP,NATOMC)
+     
+     
 C        Bra-differentiated overlap matrix with respect to magnetic field
 C        ----------------------------------------------------------------
 C
@@ -4978,6 +5017,163 @@ C
  200     CONTINUE
          INT = INT + 1
  100  CONTINUE
+
+
+      RETURN
+      END
+ 
+      SUBROUTINE DZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,
+     &                  AHGTF,SHLINT,NOPTYP,NATOMC)
+C
+C     Divergence of the zz EFG (electronic contribution) integrals
+
+
+C     J. Aucar, November 2020
+C
+#include "implicit.h"
+#include "maxaqn.h"
+#include "mxcent.h"
+      DIMENSION ODC(0:JMAXA,0:JMAXB,0:JMAXT,0:JMAXD,0:JMAXM,3),
+     &          SHLINT(KCKTAB,NOPTYP), AHGTF(*)
+#include "onecom.h"
+#include "lmns.h"
+      INT = 1
+      DO 100 ICOMPA = 1, KCKTA
+         LVALA = LVALUA(ICOMPA)
+         MVALA = MVALUA(ICOMPA)
+         NVALA = NVALUA(ICOMPA)
+      DO 100 ICOMPB = 1, KCKTB
+         LVALB = LVALUB(ICOMPB)
+         MVALB = MVALUB(ICOMPB)
+         NVALB = NVALUB(ICOMPB)
+C
+         MAXT = LVALA + LVALB
+         MAXU = MVALA + MVALB
+         MAXV = NVALA + NVALB
+         IADRAV = 1
+         DO 200 IV = 0, MAXV
+            EV = ODC(NVALA,NVALB,IV,0,0,3)
+            IADRAU = IADRAV
+            DO 300 IU = 0, MAXU
+               EU = ODC(MVALA,MVALB,IU,0,0,2)
+               DO 400 IT = 0, MAXT
+                  ET = ODC(LVALA,LVALB,IT,0,0,1)
+                  EEE = ET*EU*EV
+                  IOFF = 0
+                  DO 500 IATOM = 1, NATOMC
+                     IX = 3*(IATOM - 1) + 1
+                     IY = 3*(IATOM - 1) + 2
+                     IZ = 3*(IATOM - 1) + 3
+
+      AH0T = (2*AHGTF(IOFF + IADRAU + IT + 1 + 2*ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 3)-
+     &      AHGTF(IOFF + IADRAU + IT + 1 + 2*ISTEPU))/3
+
+
+      AH0U = (2*AHGTF(IOFF + IADRAU + IT + ISTEPU + 2*ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 2 + ISTEPU)-
+     &      AHGTF(IOFF + IADRAU + IT + 3*ISTEPU))/3
+
+      AH0V = (2*AHGTF(IOFF + IADRAU + IT + 3*ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 2 + ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 2*ISTEPU + ISTEPV))/3
+
+            SHLINT(INT,IX) = SHLINT(INT,IX) + EEE*AH0T
+            SHLINT(INT,IY) = SHLINT(INT,IY) + EEE*AH0U
+            SHLINT(INT,IZ) = SHLINT(INT,IZ) + EEE*AH0V
+            IOFF = IOFF + NAHGTF
+ 500              CONTINUE
+ 400           CONTINUE
+               IADRAU = IADRAU + ISTEPU
+ 300        CONTINUE
+            IADRAV = IADRAV + ISTEPV
+ 200     CONTINUE
+         INT = INT + 1
+ 100  CONTINUE
+
+
+      RETURN
+      END
+      
+      SUBROUTINE LAPEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,
+     &                  AHGTF,SHLINT,NOPTYP,NATOMC)
+C
+C     Laplacian of qxx,qyy and qzz EFG (electronic contribution) integrals
+
+
+C     J. Aucar, April 2021
+C
+#include "implicit.h"
+#include "maxaqn.h"
+#include "mxcent.h"
+      DIMENSION ODC(0:JMAXA,0:JMAXB,0:JMAXT,0:JMAXD,0:JMAXM,3),
+     &          SHLINT(KCKTAB,NOPTYP), AHGTF(*)
+#include "onecom.h"
+#include "lmns.h"
+      INT = 1
+      DO 100 ICOMPA = 1, KCKTA
+         LVALA = LVALUA(ICOMPA)
+         MVALA = MVALUA(ICOMPA)
+         NVALA = NVALUA(ICOMPA)
+      DO 100 ICOMPB = 1, KCKTB
+         LVALB = LVALUB(ICOMPB)
+         MVALB = MVALUB(ICOMPB)
+         NVALB = NVALUB(ICOMPB)
+C
+         MAXT = LVALA + LVALB
+         MAXU = MVALA + MVALB
+         MAXV = NVALA + NVALB
+         IADRAV = 1
+         DO 200 IV = 0, MAXV
+            EV = ODC(NVALA,NVALB,IV,0,0,3)
+            IADRAU = IADRAV
+            DO 300 IU = 0, MAXU
+               EU = ODC(MVALA,MVALB,IU,0,0,2)
+               DO 400 IT = 0, MAXT
+                  ET = ODC(LVALA,LVALB,IT,0,0,1)
+                  EEE = ET*EU*EV
+                  IOFF = 0
+                  DO 500 IATOM = 1, NATOMC
+                     IX = 3*(IATOM - 1) + 1
+                     IY = 3*(IATOM - 1) + 2
+                     IZ = 3*(IATOM - 1) + 3
+
+  
+      AH0T = (AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPV)-
+     &      2*AHGTF(IOFF + IADRAU + IT + 2*ISTEPU + 2*ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 4*ISTEPV)+
+     &      AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPU)+
+     &      2*AHGTF(IOFF + IADRAU + IT + 4)-
+     &      AHGTF(IOFF + IADRAU + IT + 4*ISTEPU))/3
+
+      AH0U = (-2*AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPV)+
+     &      AHGTF(IOFF + IADRAU + IT + 2*ISTEPU + 2*ISTEPV)-
+     &      AHGTF(IOFF + IADRAU + IT + 4*ISTEPV)+
+     &      AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPU)-
+     &      AHGTF(IOFF + IADRAU + IT + 4)+
+     &      2*AHGTF(IOFF + IADRAU + IT + 4*ISTEPU))/3
+
+      AH0V = (AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPV)+
+     &      AHGTF(IOFF + IADRAU + IT + 2*ISTEPU + 2*ISTEPV)+
+     &      2*AHGTF(IOFF + IADRAU + IT + 4*ISTEPV)-
+     &      2*AHGTF(IOFF + IADRAU + IT + 2 + 2*ISTEPU)-
+     &      AHGTF(IOFF + IADRAU + IT + 4)-
+     &      AHGTF(IOFF + IADRAU + IT + 4*ISTEPU))/3
+
+            SHLINT(INT,IX) = SHLINT(INT,IX) - EEE*AH0T
+            SHLINT(INT,IY) = SHLINT(INT,IY) - EEE*AH0U
+            SHLINT(INT,IZ) = SHLINT(INT,IZ) - EEE*AH0V
+            IOFF = IOFF + NAHGTF
+ 500              CONTINUE
+ 400           CONTINUE
+               IADRAU = IADRAU + ISTEPU
+ 300        CONTINUE
+            IADRAV = IADRAV + ISTEPV
+ 200     CONTINUE
+         INT = INT + 1
+ 100  CONTINUE
+
+
       RETURN
       END
 C  /* Deck efbint */
