@@ -46,7 +46,7 @@
        K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
        E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski,
-       H. Agren and J. J. Aucar,
+       H. Agren, A. D. Zapata E. and J. J. Aucar,
        "The Dalton quantum chemistry program system",
        WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
      
@@ -153,14 +153,14 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Jun  7 15:38:13 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:33 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
  * Work memory size             :   128000000 =  976.56 megabytes.
 
  * Directories for basis set searches:
-   1) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/CORRIDA/INPUTs
-   2) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis
+   1) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-juanyandy/CORRIDA/INPUTs
+   2) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-juanyandy/build/basis
 
 
 Compilation information
@@ -168,7 +168,7 @@ Compilation information
 
  Who compiled             | juanjoaucar
  Host                     | juanjoaucar-Nitro-AN515-55
- System                   | Linux-5.8.0-55-generic
+ System                   | Linux-5.8.0-50-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
@@ -201,9 +201,9 @@ Compilation information
                           | s_2020.4.304/linux/mkl/lib/intel64/libmkl_gf_lp64.
                           | so
  Static linking           | OFF
- Last Git revision        | 20b2752d5cb38a2b72b13d60e5bc268c2e4fd071
- Git branch               | lresc_efg
- Configuration time       | 2021-06-07 15:38:02.660615
+ Last Git revision        | b67b16200a0a5cc70b44a20d1a3058150d377675
+ Git branch               | efg
+ Configuration time       | 2021-06-04 23:34:30.253026
 
  * MPI parallel run using 4 processes.
 
@@ -211,24 +211,25 @@ Compilation information
    Content of the .dal input file
  ----------------------------------
 
-**DALTON
+**DALTON INPUT
 .RUN PROPERTIES
 *MOLBAS
-.UNCONT
+.UNCONTRACTED
+.NUCMOD
+ 2
 **INTEGRALS
-.LR-SHIELDING
-.GAUGEO
-0.0000 0.0000 0.0000
+.LR-EFG
 **WAVE FUNCTIONS
 .HF
+*SCF INPUT
+.THRESH
+1.0D-7
 **PROPERTIES
-.LR-SHIELDING
-*LRSOPT
-.PRTALL
-#.PRINT
-#!2
-.SELECT
-1
+.LR-EFG
+*LREOPT
+.PQPKIN
+.ORBCON
+#.PRTALL
 **END OF DALTON INPUT
 
 
@@ -262,7 +263,7 @@ FINISH
     Static molecular property section will be executed (ABACUS module)
  --------------------------------------------------------------------------------
 
-@ * Nuclear model: Point charge.
+@ * Nuclear model: Gaussian charge distribution.
 
 
  Changes of defaults for *MOLBAS
@@ -291,10 +292,12 @@ FINISH
   --------------------
   Nuclear charge:   9.00000
   Number of symmetry independent centers:    1
+   F  : Exponent for nuclear gaussian charge distribution :      5.35493D+08
+
   Number of basis sets to read;    2
   The basis set is "aug-cc-pVTZ-lresc" from the basis set library.
   Basis set file used for this atomic type with Z =   9 :
-     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis/aug-cc-pVTZ-lresc"
+     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-juanyandy/build/basis/aug-cc-pVTZ-lresc"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: aug-cc-pVTZ-lresc                                                               
@@ -303,10 +306,12 @@ FINISH
   --------------------
   Nuclear charge:   1.00000
   Number of symmetry independent centers:    1
+   H  : Exponent for nuclear gaussian charge distribution :      2.11827D+09
+
   Number of basis sets to read;    2
   The basis set is "aug-cc-pVTZ-lresc" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis/aug-cc-pVTZ-lresc"
+     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-juanyandy/build/basis/aug-cc-pVTZ-lresc"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: aug-cc-pVTZ-lresc                                                               
@@ -426,32 +431,21 @@ FINISH
 
  The following one-electron property integrals are calculated as requested:
           - overlap integrals
+          - dipole length integrals
           - dipole velocity integrals
           - electronic kinetic energy
           - mass velocity integrals
           - 1-electron Darwin integrals
           - spatial spin-orbit integrals
-          - Fermi contact integrals
-            (Dirac delta function integrals)
-          - paramagnetic spin-orbit integrals
-            (nuclear moment - electron orbit coupling)
-          - spin-dipole integrals
-            (electron spin - nuclear moment coupling)
-          - electronic angular momentum around the origin
-          - Diamagnetic shielding tensor using common gauge origin
-          - Magnetic-field correction to one-electron SO integrals
-          - kinetic energy correction to paramagnetic spin-orbit
-          - kinetic energy correction to diamagnetic shielding
-          - kinetic energy correction to orbital Zeeman
-          - orbital Zeeman correction to paramagnetic spin-orbit integral
-          - small component overlap integrals for DPT
+          - Electric field at the nuclei
+          - Cartesien electric field gradient integrals
+          - Divergence of the zz EFG component at the nuclei - (DO NOT USE SYMMETRY)
+          - Laplacian of the xx,yy and zz EFG component at the nuclei - (DO NOT USE SYMMETRY)
 
  Center of mass  (bohr):      0.000000000000      0.000000000000      0.087285228497
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
-
- Integrals for all indirect spin-spin coupling and/or shielding tensors are calculated.
 
 
      ************************************************************************
@@ -470,10 +464,8 @@ FINISH
       z      1.73268988         4.40405812        14.69035660
 
 
-  Time used in DNSKE      is       0.12 seconds
-  Time used in PSO-OZ     is       0.18 seconds
-  Total CPU  time used in HERMIT:   0.62 seconds
-  Total wall time used in HERMIT:   0.62 seconds
+  Total CPU  time used in HERMIT:   0.17 seconds
+  Total wall time used in HERMIT:   0.17 seconds
 
 
                         .----------------------------------.
@@ -506,7 +498,7 @@ FINISH
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:14 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:33 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
  Title lines from ".mol" input file:
@@ -553,7 +545,7 @@ FINISH
      Maximum number of Fock   iterations      0
      Maximum number of DIIS   iterations     60
      Maximum number of QC-SCF iterations     60
-     Threshold for SCF convergence     1.00D-05
+     Threshold for SCF convergence     1.00D-07
 
 
  ***********************************************
@@ -564,55 +556,65 @@ FINISH
 
  Iter      Total energy        Error norm    Delta(E)  DIIS dim.
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.34D-01  1.35D-01
-@  1    -99.9489276715        3.09491D+02   -9.99D+01    1
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.34D-01  1.34D-01
+@  1    -99.9489045624        3.10126D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  1.35D-01  1.36D-01
-@  2    -100.058416262        3.71539D-01   -1.09D-01    2
-      Virial theorem: -V/T =      2.004191
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  1.36D-01  1.35D-01
+@  2    -100.058391941        3.71555D-01   -1.09D-01    2
+      Virial theorem: -V/T =      2.004193
 @    MULPOP   F      -0.28; H       0.28; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  1.35D-01  1.36D-01
-@  3    -100.063463927        1.37564D-01   -5.05D-03    3
-      Virial theorem: -V/T =      1.998447
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  1.32D-01  1.33D-01
+@  3    -100.063439652        1.37626D-01   -5.05D-03    3
+      Virial theorem: -V/T =      1.998446
 @    MULPOP   F      -0.28; H       0.28; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  1.33D-01  1.35D-01
-@  4    -100.064194499        4.83640D-02   -7.31D-04    4
-      Virial theorem: -V/T =      2.001166
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  1.35D-01  1.35D-01
+@  4    -100.064170759        4.83846D-02   -7.31D-04    4
+      Virial theorem: -V/T =      2.001167
 @    MULPOP   F      -0.27; H       0.27; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  1.39D-01  1.40D-01
-@  5    -100.064324046        8.48605D-03   -1.30D-04    5
-      Virial theorem: -V/T =      2.000455
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    5    F  1.39D-01  1.40D-01
+@  5    -100.064300444        8.49136D-03   -1.30D-04    5
+      Virial theorem: -V/T =      2.000456
 @    MULPOP   F      -0.27; H       0.27; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  1.38D-01  1.39D-01
-@  6    -100.064333404        1.88009D-03   -9.36D-06    6
-      Virial theorem: -V/T =      2.000502
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    T  1.37D-01  1.36D-01
+@  6    -100.064309822        1.88101D-03   -9.38D-06    6
+      Virial theorem: -V/T =      2.000503
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  1.37D-01  1.37D-01
-@  7    -100.064333863        3.29001D-04   -4.59D-07    7
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    T  1.32D-01  1.33D-01
+@  7    -100.064310282        3.28972D-04   -4.60D-07    7
       Virial theorem: -V/T =      2.000506
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  1.39D-01  1.39D-01
-@  8    -100.064333875        5.23684D-05   -1.22D-08    8
-      Virial theorem: -V/T =      2.000508
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -14    8    F  1.47D-01  1.48D-01
+@  8    -100.064310294        5.23581D-05   -1.23D-08    8
+      Virial theorem: -V/T =      2.000509
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  1.34D-01  1.35D-01
-@  9    -100.064333876        5.40012D-06   -2.42D-10    8
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -14    9    T  1.47D-01  1.47D-01
+@  9    -100.064310294        5.28193D-06   -2.41D-10    8
+      Virial theorem: -V/T =      2.000509
+@    MULPOP   F      -0.28; H       0.28; 
+ -----------------------------------------------------------------------------
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -14   10    T  1.46D-01  1.47D-01
+@ 10    -100.064310294        5.52780D-07   -3.13D-12    8
+      Virial theorem: -V/T =      2.000509
+@    MULPOP   F      -0.28; H       0.28; 
+ -----------------------------------------------------------------------------
+  11  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -14   11    T  1.40D-01  1.41D-01
+@ 11    -100.064310294        5.93245D-08   -2.84D-14    8
 
-@ *** DIIS converged in   9 iterations !
-@     Converged SCF energy, gradient:   -100.064333875595    5.40D-06
+@ *** DIIS converged in  11 iterations !
+@     Converged SCF energy, gradient:   -100.064310294321    5.93D-08
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -625,16 +627,16 @@ FINISH
 
  Sym       Hartree-Fock orbital energies
 
-1 A     -26.29721743    -1.60229459    -0.76872924    -0.65063959    -0.65063959
-          0.03066773     0.14109790     0.20089564     0.20089564     0.20859749
-          0.28927917     0.28927917     0.31565840     0.43414128     0.70701979
-          0.87422941     0.87422941     0.91113195     0.91113195     1.08855266
-          1.08855266     1.08906026     1.13417507     1.18885702     1.28398903
+1 A     -26.29720709    -1.60229408    -0.76872936    -0.65063949    -0.65063949
+          0.03066775     0.14109788     0.20089565     0.20089565     0.20859751
+          0.28927918     0.28927918     0.31565843     0.43414125     0.70701982
+          0.87422944     0.87422944     0.91113196     0.91113196     1.08855269
+          1.08855269     1.08906029     1.13417505     1.18885708     1.28398906
 
-    E(LUMO) :     0.03066773 au (symmetry 1)
-  - E(HOMO) :    -0.65063959 au (symmetry 1)
+    E(LUMO) :     0.03066775 au (symmetry 1)
+  - E(HOMO) :    -0.65063949 au (symmetry 1)
   ------------------------------------------
-    gap     :     0.68130733 au
+    gap     :     0.68130724 au
 
  --- Writing SIRIFC interface file
 
@@ -648,29 +650,29 @@ FINISH
      HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles
 
    ============  ============  ============  ============  ============
-      26.297217      1.602295      0.768729      0.650640      0.650640
-     715.583687     43.600654     20.918187     17.704804     17.704804
+      26.297207      1.602294      0.768729      0.650639      0.650639
+     715.583406     43.600640     20.918190     17.704801     17.704801
    ------------  ------------  ------------  ------------  ------------
        1.000000      1.000000      1.000000      1.000000      1.000000
    ============  ============  ============  ============  ============
-       1.000000     -0.000000     -0.000000     -0.000000      0.000000
-      -0.000000     -1.000000      0.000001      0.000000     -0.000000
-      -0.000000     -0.000001     -1.000000      0.000000     -0.000000
-      -0.000000     -0.000000     -0.000000     -0.792474      0.609902
-       0.000000     -0.000000     -0.000000     -0.609906     -0.792477
+       1.000000      0.000000      0.000000     -0.000000     -0.000000
+      -0.000000      1.000000      0.000000      0.000000      0.000000
+      -0.000000     -0.000000      1.000000      0.000000      0.000000
+       0.000000      0.000000      0.000000     -0.700706      0.713452
+      -0.000000      0.000000      0.000000     -0.713450     -0.700705
    ============  ============  ============  ============  ============
   
 
 @ Summary of HF-SCF KT ionization potentials [eV] and pole strengths:
 
-@ Symmetry 1 (A  ) :   715.584      43.601      20.918      17.705      17.705
+@ Symmetry 1 (A  ) :   715.583      43.601      20.918      17.705      17.705
 @ Pole strengths   :     1.000       1.000       1.000       1.000       1.000
 
   === End of HF-SCF KT output ===
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       1.285       1.295
+ CPU and wall time for SCF :       1.601       1.605
 
 
                        .-----------------------------------.
@@ -682,17 +684,17 @@ FINISH
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -100.064333875595                 
+@    Final HF energy:            -100.064310294321                 
 @    Nuclear repulsion:             5.194235900534
-@    Electronic energy:          -105.258569776129
+@    Electronic energy:          -105.258546194855
 
-@    Final gradient norm:           0.000005400119
+@    Final gradient norm:           0.000000059325
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:35 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
-File label for MO orbitals:   7Jun21   FOCKDIIS
+File label for MO orbitals:   4Jun21   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -709,91 +711,91 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
   13 F   :1s     0.0115  -0.5633  -0.1426  -0.0000  -0.0000   0.0697   0.0793
   14 F   :1s    -0.0077  -0.3327  -0.2746  -0.0000  -0.0000   0.3409  -1.1551
   15 F   :1s    -0.0008  -0.0338  -0.0554  -0.0000  -0.0000   1.3251  -7.4938
-  25 F   :2px   -0.0000   0.0000   0.0000  -0.0005  -0.0151  -0.0000  -0.0000
-  26 F   :2py   -0.0000   0.0000   0.0000  -0.0151   0.0005  -0.0000  -0.0000
+  25 F   :2px   -0.0000   0.0000   0.0000  -0.0151  -0.0005  -0.0000  -0.0000
+  26 F   :2py   -0.0000   0.0000   0.0000   0.0005  -0.0151  -0.0000  -0.0000
   27 F   :2pz   -0.0002  -0.0014   0.0129   0.0000   0.0000   0.0014   0.0038
-  28 F   :2px   -0.0000   0.0000   0.0000  -0.0033  -0.1013  -0.0000  -0.0000
-  29 F   :2py   -0.0000   0.0000   0.0000  -0.1013   0.0033  -0.0000  -0.0000
+  28 F   :2px   -0.0000   0.0000   0.0000  -0.1013  -0.0033  -0.0000  -0.0000
+  29 F   :2py   -0.0000   0.0000   0.0000   0.0033  -0.1013  -0.0000  -0.0000
   30 F   :2pz   -0.0007  -0.0088   0.0855   0.0000   0.0000   0.0099   0.0225
-  31 F   :2px   -0.0000   0.0000   0.0000  -0.0097  -0.3021  -0.0000  -0.0000
-  32 F   :2py   -0.0000   0.0000   0.0000  -0.3021   0.0097  -0.0000  -0.0000
+  31 F   :2px   -0.0000   0.0000   0.0000  -0.3021  -0.0097  -0.0000  -0.0000
+  32 F   :2py   -0.0000   0.0000   0.0000   0.0097  -0.3021  -0.0000  -0.0000
   33 F   :2pz   -0.0005  -0.0280   0.2580   0.0000   0.0000   0.0277   0.0802
-  34 F   :2px   -0.0000   0.0000   0.0000  -0.0152  -0.4711  -0.0000  -0.0000
-  35 F   :2py   -0.0000   0.0000   0.0000  -0.4711   0.0152  -0.0000  -0.0000
+  34 F   :2px   -0.0000   0.0000   0.0000  -0.4711  -0.0152  -0.0000  -0.0000
+  35 F   :2py   -0.0000   0.0000   0.0000   0.0152  -0.4711  -0.0000  -0.0000
   36 F   :2pz    0.0009  -0.0473   0.3899   0.0000   0.0000   0.0633   0.0559
-  37 F   :2px   -0.0000   0.0000   0.0000  -0.0104  -0.3219  -0.0000  -0.0000
-  38 F   :2py   -0.0000   0.0000   0.0000  -0.3219   0.0104  -0.0000  -0.0000
+  37 F   :2px   -0.0000   0.0000   0.0000  -0.3219  -0.0104  -0.0000  -0.0000
+  38 F   :2py   -0.0000   0.0000   0.0000   0.0104  -0.3219  -0.0000  -0.0000
   39 F   :2pz   -0.0035  -0.0207   0.1715   0.0000   0.0000   0.3495  -0.7261
-  40 F   :2px   -0.0000   0.0000   0.0000  -0.0009  -0.0276  -0.0000  -0.0000
-  41 F   :2py   -0.0000   0.0000   0.0000  -0.0276   0.0009  -0.0000  -0.0000
+  40 F   :2px   -0.0000   0.0000   0.0000  -0.0276  -0.0009  -0.0000  -0.0000
+  41 F   :2py   -0.0000   0.0000   0.0000   0.0009  -0.0276  -0.0000  -0.0000
   42 F   :2pz   -0.0002  -0.0049   0.0098   0.0000   0.0000   0.2077  -2.3287
-  64 F   :3d1-  -0.0000   0.0000   0.0000  -0.0106   0.0003  -0.0000  -0.0000
+  64 F   :3d1-  -0.0000   0.0000   0.0000   0.0003  -0.0106  -0.0000  -0.0000
   65 F   :3d0    0.0006  -0.0078   0.0176   0.0000   0.0000   0.0100  -0.0170
-  66 F   :3d1+  -0.0000   0.0000   0.0000  -0.0003  -0.0106  -0.0000  -0.0000
+  66 F   :3d1+  -0.0000   0.0000   0.0000  -0.0106  -0.0003  -0.0000  -0.0000
   70 F   :3d0   -0.0015  -0.0023  -0.0103   0.0000   0.0000   0.0803  -0.1817
   92 H   :1s     0.0001  -0.0170   0.0305   0.0000   0.0000  -0.0031  -0.0033
   93 H   :1s    -0.0009  -0.0716   0.1361   0.0000   0.0000   0.0101  -0.0306
   94 H   :1s     0.0049  -0.0543   0.3085   0.0000   0.0000  -0.4543   0.8652
   95 H   :1s     0.0010   0.0260   0.0611   0.0000   0.0000  -0.8285   6.6703
-  96 H   :1s    -0.0001   0.0003   0.0010   0.0000   0.0000  -1.3096   1.0721
-  97 H   :2px   -0.0000   0.0000   0.0000  -0.0004  -0.0118  -0.0000  -0.0000
-  98 H   :2py   -0.0000   0.0000   0.0000  -0.0118   0.0004  -0.0000  -0.0000
+  96 H   :1s    -0.0001   0.0003   0.0010   0.0000   0.0000  -1.3096   1.0720
+  97 H   :2px   -0.0000   0.0000   0.0000  -0.0118  -0.0004  -0.0000  -0.0000
+  98 H   :2py   -0.0000   0.0000   0.0000   0.0004  -0.0118  -0.0000  -0.0000
   99 H   :2pz    0.0007   0.0152  -0.0153  -0.0000  -0.0000  -0.0046  -0.0004
- 100 H   :2px    0.0000  -0.0000  -0.0000  -0.0010  -0.0325   0.0000   0.0000
- 101 H   :2py    0.0000  -0.0000  -0.0000  -0.0325   0.0010   0.0000   0.0000
+ 100 H   :2px    0.0000  -0.0000  -0.0000  -0.0325  -0.0010   0.0000   0.0000
+ 101 H   :2py    0.0000  -0.0000  -0.0000   0.0010  -0.0325   0.0000   0.0000
  102 H   :2pz   -0.0009   0.0114  -0.0683   0.0000   0.0000   0.1459  -0.5453
- 103 H   :2px   -0.0000   0.0000   0.0000  -0.0004  -0.0135  -0.0000  -0.0000
- 104 H   :2py   -0.0000   0.0000   0.0000  -0.0135   0.0004  -0.0000  -0.0000
+ 103 H   :2px   -0.0000   0.0000   0.0000  -0.0135  -0.0004  -0.0000  -0.0000
+ 104 H   :2py   -0.0000   0.0000   0.0000   0.0004  -0.0135  -0.0000  -0.0000
  105 H   :2pz   -0.0003  -0.0079  -0.0015  -0.0000  -0.0000   0.2283  -2.4324
  113 H   :3d0   -0.0005  -0.0023   0.0092  -0.0000  -0.0000  -0.0188   0.1642
 
     Orbital         8        9       10       11       12       13       14
-   9 F   :1s     0.0000   0.0000  -0.0120   0.0000  -0.0000  -0.0115   0.0067
-  10 F   :1s     0.0000   0.0000  -0.0251   0.0000  -0.0000  -0.0209   0.0132
-  11 F   :1s     0.0000   0.0000  -0.0407   0.0000  -0.0000  -0.0427   0.0233
-  12 F   :1s    -0.0000  -0.0000   0.0624  -0.0000   0.0000   0.0810  -0.0357
-  13 F   :1s    -0.0000  -0.0000   0.0853  -0.0000   0.0000   0.0255   0.0370
-  14 F   :1s    -0.0000  -0.0000  -0.2376  -0.0000   0.0000  -0.2802  -3.4136
-  15 F   :1s    -0.0000  -0.0000   0.5464  -0.0000   0.0000  -5.3070 -14.6658
-  28 F   :2px    0.0000   0.0222  -0.0000  -0.0000   0.0066  -0.0000   0.0000
-  29 F   :2py    0.0222  -0.0000  -0.0000  -0.0066  -0.0000  -0.0000   0.0000
-  30 F   :2pz    0.0000   0.0000   0.0094   0.0000  -0.0000  -0.0066  -0.0469
-  31 F   :2px    0.0000   0.0882  -0.0000  -0.0000   0.0286  -0.0000   0.0000
-  32 F   :2py    0.0882  -0.0000  -0.0000  -0.0286  -0.0000  -0.0000   0.0000
-  33 F   :2pz    0.0000   0.0000   0.0336   0.0000  -0.0000  -0.0228  -0.1084
-  34 F   :2px    0.0000   0.0627  -0.0000  -0.0000   0.0141  -0.0000   0.0000
-  35 F   :2py    0.0627  -0.0000  -0.0000  -0.0141  -0.0000  -0.0000   0.0000
-  36 F   :2pz    0.0000   0.0000   0.0076   0.0000  -0.0000  -0.0610  -0.3747
-  37 F   :2px    0.0000   0.4571  -0.0000  -0.0000   0.4737  -0.0000   0.0000
-  38 F   :2py    0.4571  -0.0000  -0.0000  -0.4737  -0.0000  -0.0000   0.0000
-  39 F   :2pz    0.0000   0.0000  -0.5388   0.0000  -0.0000  -1.4048  -2.4842
-  40 F   :2px   -0.0000  -1.2722  -0.0000  -0.0000   1.6214  -0.0000   0.0000
-  41 F   :2py   -1.2722   0.0000  -0.0000  -1.6214  -0.0000  -0.0000   0.0000
-  42 F   :2pz    0.0000   0.0000   1.6927   0.0000  -0.0000  -1.9528  -2.7241
-  64 F   :3d1-   0.0185  -0.0000  -0.0000   0.0384   0.0000  -0.0000   0.0000
-  65 F   :3d0    0.0000   0.0000  -0.0459   0.0000  -0.0000   0.0015  -0.0942
-  66 F   :3d1+   0.0000   0.0185  -0.0000   0.0000  -0.0384  -0.0000   0.0000
-  69 F   :3d1-   0.0112   0.0000  -0.0000  -0.2714  -0.0000  -0.0000   0.0000
-  70 F   :3d0    0.0000   0.0000  -0.1254   0.0000  -0.0000  -0.4985  -0.2870
-  71 F   :3d1+  -0.0000   0.0112  -0.0000  -0.0000   0.2714  -0.0000   0.0000
-  92 H   :1s     0.0000   0.0000  -0.0040   0.0000  -0.0000   0.0047   0.0131
-  93 H   :1s     0.0000   0.0000  -0.1095   0.0000  -0.0000  -0.0211  -0.0032
-  94 H   :1s     0.0000   0.0000   0.9689   0.0000  -0.0000   1.8475   2.5508
-  95 H   :1s     0.0000   0.0000  -2.5855   0.0000  -0.0000   4.1685  14.6202
-  96 H   :1s     0.0000   0.0000   0.7706   0.0000  -0.0000   0.4608   0.8424
-  99 H   :2pz   -0.0000  -0.0000  -0.0263  -0.0000   0.0000   0.0132   0.0184
- 100 H   :2px   -0.0000  -0.0745   0.0000   0.0000  -0.1288   0.0000  -0.0000
- 101 H   :2py   -0.0745   0.0000   0.0000   0.1288   0.0000   0.0000  -0.0000
- 102 H   :2pz    0.0000   0.0000  -0.3053   0.0000  -0.0000  -0.6425  -1.2834
- 103 H   :2px    0.0000   0.1094  -0.0000   0.0000  -2.2236  -0.0000   0.0000
- 104 H   :2py    0.1094  -0.0000  -0.0000   2.2236   0.0000  -0.0000   0.0000
- 105 H   :2pz   -0.0000  -0.0000  -0.4176  -0.0000   0.0000   0.2858  -4.9783
- 107 H   :3d1-  -0.0020   0.0000   0.0000   0.0294   0.0000   0.0000  -0.0000
- 108 H   :3d0   -0.0000  -0.0000   0.0270  -0.0000   0.0000   0.0450   0.0323
- 109 H   :3d1+  -0.0000  -0.0020   0.0000   0.0000  -0.0294   0.0000  -0.0000
- 112 H   :3d1-   0.0518  -0.0000  -0.0000  -0.2142  -0.0000  -0.0000   0.0000
- 113 H   :3d0   -0.0000  -0.0000   0.0193  -0.0000   0.0000  -0.0608   0.4415
- 114 H   :3d1+   0.0000   0.0518  -0.0000  -0.0000   0.2142  -0.0000   0.0000
+   9 F   :1s     0.0000   0.0000  -0.0120  -0.0000   0.0000  -0.0115   0.0067
+  10 F   :1s     0.0000   0.0000  -0.0251  -0.0000   0.0000  -0.0209   0.0132
+  11 F   :1s     0.0000   0.0000  -0.0407  -0.0000   0.0000  -0.0427   0.0233
+  12 F   :1s    -0.0000  -0.0000   0.0624   0.0000  -0.0000   0.0810  -0.0357
+  13 F   :1s    -0.0000  -0.0000   0.0853   0.0000  -0.0000   0.0255   0.0370
+  14 F   :1s    -0.0000  -0.0000  -0.2376   0.0000  -0.0000  -0.2802  -3.4136
+  15 F   :1s    -0.0000  -0.0000   0.5463   0.0000  -0.0000  -5.3071 -14.6658
+  28 F   :2px    0.0222   0.0000  -0.0000   0.0066  -0.0000  -0.0000   0.0000
+  29 F   :2py   -0.0000   0.0222  -0.0000  -0.0000  -0.0066  -0.0000   0.0000
+  30 F   :2pz    0.0000   0.0000   0.0094  -0.0000   0.0000  -0.0066  -0.0469
+  31 F   :2px    0.0882   0.0000  -0.0000   0.0286  -0.0000  -0.0000   0.0000
+  32 F   :2py   -0.0000   0.0882  -0.0000  -0.0000  -0.0286  -0.0000   0.0000
+  33 F   :2pz    0.0000   0.0000   0.0336  -0.0000   0.0000  -0.0228  -0.1084
+  34 F   :2px    0.0627   0.0000  -0.0000   0.0141  -0.0000  -0.0000   0.0000
+  35 F   :2py   -0.0000   0.0627  -0.0000  -0.0000  -0.0141  -0.0000   0.0000
+  36 F   :2pz    0.0000   0.0000   0.0076  -0.0000   0.0000  -0.0610  -0.3747
+  37 F   :2px    0.4571   0.0000  -0.0000   0.4737  -0.0000  -0.0000   0.0000
+  38 F   :2py   -0.0000   0.4571  -0.0000  -0.0000  -0.4737  -0.0000   0.0000
+  39 F   :2pz    0.0000   0.0000  -0.5388  -0.0000   0.0000  -1.4048  -2.4842
+  40 F   :2px   -1.2722  -0.0000  -0.0000   1.6214  -0.0000  -0.0000   0.0000
+  41 F   :2py    0.0000  -1.2722  -0.0000  -0.0000  -1.6214  -0.0000   0.0000
+  42 F   :2pz    0.0000   0.0000   1.6927  -0.0000   0.0000  -1.9528  -2.7241
+  64 F   :3d1-  -0.0000   0.0185  -0.0000   0.0000   0.0384  -0.0000   0.0000
+  65 F   :3d0    0.0000   0.0000  -0.0459  -0.0000   0.0000   0.0015  -0.0942
+  66 F   :3d1+   0.0185   0.0000  -0.0000  -0.0384   0.0000  -0.0000   0.0000
+  69 F   :3d1-  -0.0000   0.0112  -0.0000  -0.0000  -0.2714  -0.0000   0.0000
+  70 F   :3d0    0.0000   0.0000  -0.1254  -0.0000   0.0000  -0.4985  -0.2870
+  71 F   :3d1+   0.0112   0.0000  -0.0000   0.2714  -0.0000  -0.0000   0.0000
+  92 H   :1s     0.0000   0.0000  -0.0040  -0.0000   0.0000   0.0047   0.0131
+  93 H   :1s     0.0000   0.0000  -0.1095  -0.0000   0.0000  -0.0211  -0.0032
+  94 H   :1s     0.0000   0.0000   0.9689  -0.0000   0.0000   1.8475   2.5508
+  95 H   :1s     0.0000   0.0000  -2.5854  -0.0000   0.0000   4.1685  14.6202
+  96 H   :1s     0.0000   0.0000   0.7706  -0.0000   0.0000   0.4608   0.8424
+  99 H   :2pz   -0.0000  -0.0000  -0.0263   0.0000  -0.0000   0.0132   0.0184
+ 100 H   :2px   -0.0745  -0.0000   0.0000  -0.1288   0.0000   0.0000  -0.0000
+ 101 H   :2py    0.0000  -0.0745   0.0000   0.0000   0.1288   0.0000  -0.0000
+ 102 H   :2pz    0.0000   0.0000  -0.3053  -0.0000   0.0000  -0.6425  -1.2834
+ 103 H   :2px    0.1094   0.0000  -0.0000  -2.2236   0.0000  -0.0000   0.0000
+ 104 H   :2py   -0.0000   0.1094  -0.0000   0.0000   2.2236  -0.0000   0.0000
+ 105 H   :2pz   -0.0000  -0.0000  -0.4176   0.0000  -0.0000   0.2858  -4.9783
+ 107 H   :3d1-   0.0000  -0.0020   0.0000   0.0000   0.0294   0.0000  -0.0000
+ 108 H   :3d0   -0.0000  -0.0000   0.0270   0.0000  -0.0000   0.0450   0.0323
+ 109 H   :3d1+  -0.0020  -0.0000   0.0000  -0.0294   0.0000   0.0000  -0.0000
+ 112 H   :3d1-  -0.0000   0.0518  -0.0000  -0.0000  -0.2142  -0.0000   0.0000
+ 113 H   :3d0   -0.0000  -0.0000   0.0193   0.0000  -0.0000  -0.0608   0.4415
+ 114 H   :3d1+   0.0518   0.0000  -0.0000   0.2142  -0.0000  -0.0000   0.0000
 
     Orbital        15
   10 F   :1s     0.0268
@@ -818,11 +820,11 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   1.33 seconds
-  Total wall time used in SIRIUS :   1.34 seconds
+  Total CPU  time used in SIRIUS :   1.64 seconds
+  Total wall time used in SIRIUS :   1.65 seconds
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:35 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -847,12 +849,9 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
       Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
-      Linear Response Elimination of Small Component (LRESC) applied to shielding. Observations :   
+      Linear Response Elimination of Small Component (LRESC) applied to EFG. Observations :   
           1) Uncontracted Basis set should be used 
-          2) LRESC Corrections : 
-               Diamagnetic first and second order 
-               Paramagnetic second singlet and triplet order 
-          3) GAUGEO should be placed at selected nucleus at au
+          2) First order LRESC Corrections
 
  Center of mass dipole origin  :    0.000000    0.000000    0.087285
 
@@ -865,7 +864,7 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:35 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -875,7 +874,7 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:35 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -898,20 +897,20 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
      State number       1
      Total charge       0
 
-     Total energy       -100.0643338756 au (Hartrees)
-                         -2722.88903480 eV
-                           -262718.8681 kJ/mol
-                            -62791.3165 kcal/mol
+     Total energy       -100.0643102943 au (Hartrees)
+                         -2722.88839312 eV
+                           -262718.8062 kJ/mol
+                            -62791.3017 kcal/mol
 
 
                    Scalar Breit-Pauli relativistic corrections
                    -------------------------------------------
 
-     Darwin correction:                          0.3363352529 au
-     Mass-velocity correction:                  -0.4237438045 au
+     Darwin correction:                          0.3362505973 au
+     Mass-velocity correction:                  -0.4235770546 au
 
-     Total relativistic correction:             -0.0874085516 au ( 0.0874%)
-     Non-relativistic + relativistic energy:  -100.1517424272 au
+     Total relativistic correction:             -0.0873264574 au ( 0.0873%)
+     Non-relativistic + relativistic energy:  -100.1516367517 au
 
 
 
@@ -922,7 +921,7 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
                                   -------------
 
                  au               Debye          C m (/(10**-30)
-              0.757345           1.924978           6.421035
+              0.757344           1.924976           6.421028
 
 
                              Dipole moment components
@@ -932,7 +931,7 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
       x      0.00000000         0.00000000         0.00000000
       y      0.00000000         0.00000000         0.00000000
-      z      0.75734461         1.92497786         6.42103498
+      z      0.75734379         1.92497578         6.42102805
 
 
    Units:   1 a.u. =   2.54175 Debye 
@@ -964,87 +963,117 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
   bond distance:  H          F            0.916900
 
 
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < XDIPVEL  >< ZZEFG011>< XDIPVEL >
+ Orbital :            1   Valor  -67018.366430132955     
+ Orbital :            2   Valor  -3671.9026899768191     
+ Orbital :            3   Valor  -203.72509741039093     
+ Orbital :            4   Valor   162.03052060335440     
+ Orbital :            5   Valor  -17.880353620032505     
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < YDIPVEL  >< ZZEFG011>< YDIPVEL >
+ Orbital :            1   Valor  -67018.366430132970     
+ Orbital :            2   Valor  -3671.9026899768214     
+ Orbital :            3   Valor  -203.72509741039107     
+ Orbital :            4   Valor  -17.880353621322488     
+ Orbital :            5   Valor   162.03052060268271     
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < ZDIPVEL  >< ZZEFG011>< ZDIPVEL >
+ Orbital :            1   Valor   134085.63022345112     
+ Orbital :            2   Valor   7352.2985799668495     
+ Orbital :            3   Valor   178.15767142463346     
+ Orbital :            4   Valor   8.9602672456757002     
+ Orbital :            5   Valor   8.9602672457122079     
+  ******ORBITAL CONTRIBUTIONS DETECTED!*******
+ < KINENERG >< ZZEFG011>
+ Orbital :            1   Valor  -7.8273209676924340     
+ Orbital :            2   Valor  -3.3021919299056450     
+ Orbital :            3   Valor  -358.16116468524518     
+ Orbital :            4   Valor   244.52604454912603     
+ Orbital :            5   Valor   244.52604455008259     
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < XDIPVEL  >< ZZEFG021>< XDIPVEL >
+ Orbital :            1   Valor   18.744080848285719     
+ Orbital :            2   Valor   1.5416811377483080     
+ Orbital :            3   Valor  0.44058097794590961     
+ Orbital :            4   Valor   2.9772860397633658     
+ Orbital :            5   Valor  0.57182257375514067     
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < YDIPVEL  >< ZZEFG021>< YDIPVEL >
+ Orbital :            1   Valor   18.744080848285734     
+ Orbital :            2   Valor   1.5416811377483088     
+ Orbital :            3   Valor  0.44058097794590911     
+ Orbital :            4   Valor  0.57182257374906631     
+ Orbital :            5   Valor   2.9772860397607079     
+  ******ORBITAL CONTRIBUTUIONS DETECTED!*******
+ < ZDIPVEL  >< ZZEFG021>< ZDIPVEL >
+ Orbital :            1   Valor   19.658975895107357     
+ Orbital :            2   Valor   2.0058150714792742     
+ Orbital :            3   Valor   1.8484762810745625     
+ Orbital :            4   Valor  0.71436495206161910     
+ Orbital :            5   Valor  0.71436495206601125     
+  ******ORBITAL CONTRIBUTIONS DETECTED!*******
+ < KINENERG >< ZZEFG021>
+ Orbital :            1   Valor  -28.645880674173615     
+ Orbital :            2   Valor  -3.4020194847139233     
+ Orbital :            3   Valor  -2.5724660510707245     
+ Orbital :            4   Valor  -2.0869401879307130     
+ Orbital :            5   Valor  -2.0869401879394927     
 
 
- ******************************************************************************************************
- ************************ ABACUS - RELATIVISTIC CORRECTIONS LRESC TO SHIELDING ************************
- ******************************************************************************************************
+ ****************************************************************************************
+ ************************ EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS ************************
+ ****************************************************************************************
 
 
-  First and Second order relativistic corrections to nuclear shielding constant.
-
- * LRESC corrections to paramagnetic component were activated
+  First order relativistic corrections to the zz component of the electronic EFG.
 
     -  Original LRESC papers at : J. Chem. Phys. 118, 2 (2003), doi:10.1063/1.1525808
                                   Mol. Phys. 101, 20, 3103-3109 (2003) 
-                                  J. Chem. Phys. 125, 064107 (2006), doi:10.1063/1.2244572
+                                  Int. J. Quantum Chem. 119(15) (2019), doi:https://doi.org/10.1002/qua.25935
 
-    -  Selected Atom    : # 1: F   
+    -  Corrections calculated in all symmetry independent centers
+    -  WARNING: not tested with automatic symmetry detection
+    -  WARNING: Implemented for máx. 10 nucleus
 
-    -  Atom coordinates :   -0.0000    0.0000    0.0000
 
-    -  Remember : 
-              *  GAUGEO should be placed at selected nucleus, on INTEGRALS SECTION, in a.u
-              *  Third Order Singlet and Triplet Corrections must be run in order to get
-                 all relativistic corrections. Not  yet implemented, but can be done via
-                 RESPONSE calculation (see Manual for details)
+
+                           Non Relativistic Values [au]
+                           ----------------------------
+
+          Atom                 NR
+          F                  2.4135603
+          H                 -2.9159165
+
+
+
+                             First order corrections
+                             -----------------------
+
+        Detailed info : [.PRTALL] contributions [au]
+        ---------------
+          Atom                 Mv              Dw             Laplace
+          F                  0.0156476      -0.0017401      -0.0044394
+          H                 -0.0001859      -0.0002742       0.0000608
   
+        Detailed info : [.PQPKIN] contributions [au]
+        ---------------
+  
+          Atom                 pqp             kin            pqp+kin            
+          F                 -0.0017877      -0.0031887      -0.0049764
+          H                 -0.0009784       0.0010329       0.0000545
 
 
-
-                             Paramagnetic Corrections
-                             ------------------------
-
-
-     Second Order Singlets. Total Value :                    0.45654 [ppm]
-
-        Detailed info : [.PARA1S] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          Lkin :                 0.30318       0.30318       0.28595      0.29744 [ppm]
-         PsoKin :                0.23866       0.23866      -0.00000      0.15910 [ppm]
-
-     Second Order Triplets. Total Value :                    8.31637[ppm]
-
-        Detailed info : [.PARA1T] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          FcKin :               10.62948      10.62948      10.62948     10.62948 [ppm]
-          SdKin :                0.18349       0.18349       0.18595      0.18431 [ppm]
-          FcBso :               -2.74919      -2.74919      -2.75880     -2.75239 [ppm]
-          SdBso :                0.25289       0.25289       0.25915      0.25497 [ppm]
-
-     Total Paramagnetic Corrections :                        8.77291 [ppm]
+                      Total (EFG) Relativistic Corrections :
+                      --------------------------------------
 
 
+        Sum of corrections [au] : 
 
-                             Diamagnetic Corrections :
-                            --------------------------
-
-
-     LRESC
-     First Order Singlets. Total Value :                    -5.57778 [ppm]
-
-        Detailed info : [.DIAM1S] Diagonal components, for each operator
-        ---------------                   xx             yy            zz         iso
-          FC LRESC :                   -4.64831      -4.64831      -4.64831     -4.64831 [ppm]
-          AngPso LRESC:                -0.03515      -0.03515      -0.03980     -0.03670 [ppm]
-          DiaKin LRESC :               -0.89251      -0.89251      -0.89327     -0.89277 [ppm]
-
-     LRESC 
-     Second Order Singlets. Total Value :                    1.41796 [ppm]
-
-        Detailed info : [.DIAM1S] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          DiaMv  :                3.46971       3.46971       3.49023      3.47655 [ppm]
-          DiaDw  :               -2.05500      -2.05500      -2.06577     -2.05859 [ppm]
-
-     Total Diamagnetic Corrections from LRESC :                        -4.15982 [ppm]
-
-
-                         Total Relativistic Corrections :
-                         --------------------------------
-
-
-     Sum of corrections of LRESC :           4.61309 [ppm]
+        (only c^-2 terms on sum)
+        ---------------
+          F                  0.0094681
+          H                 -0.0003994
 
 
 
@@ -1052,20 +1081,20 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:51     100 %
+ TOTAL      00:00:05     100 %
 
 
-  Total CPU  time used in ABACUS:  51.29 seconds
-  Total wall time used in ABACUS:  51.66 seconds
+  Total CPU  time used in ABACUS:   5.09 seconds
+  Total wall time used in ABACUS:   5.11 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  53.26 seconds
-  Total wall time used in DALTON:  53.63 seconds
+  Total CPU  time used in DALTON:   6.92 seconds
+  Total wall time used in DALTON:   6.95 seconds
 
  
-     Date and time (Linux)  : Mon Jun  7 15:39:07 2021
+     Date and time (Linux)  : Fri Jun  4 23:34:40 2021
      Host name              : juanjoaucar-Nitro-AN515-55              

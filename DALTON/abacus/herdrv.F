@@ -322,7 +322,7 @@ C
 #include "maxaqn.h"
 C
 C     NTABLE has been increased 118 (WK/UniKA/07-25-2005).
-      PARAMETER (NDIR = 9, NTABLE = 148)
+      PARAMETER (NDIR = 9, NTABLE = 149)
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D4 = 4.0D0, D10 = 1.0D1)
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      &          WORD1*7
@@ -441,9 +441,11 @@ C     Bin Gao, Oct. 3, 2011
 !                    237        238        239        240
      &             '.NEWTRA', '.KINADI', '.GENINT', '.S2MBRA',
 !                    241        242        243        244
-     &             '.S2MKET', '.S2MMIX', '.LRINTS', '.NORMAO',
+     &             '.S2MKET', '.S2MMIX', '.LR-SHI', '.NORMAO',
 !                    245        246        247		  248
-     &             '.TWOBYT', '.LFDIPL', '.DZZEFG', '.LAPEFG'/
+     &             '.TWOBYT', '.LFDIPL', '.DZZEFG', '.LAPEFG',
+!                    249
+     &             '.LR-EFG'/
 C
 C
       CALL QENTER('HERINP')
@@ -534,7 +536,7 @@ C
      &                211,212,213,214,215,216,217,218,219,220,
      &                221,222,223,224,225,226,227,228,229,230,
      &                231,232,233,234,235,236,237,238,239,240,
-     &                241,242,243,244,245,246,247,248), I
+     &                241,242,243,244,245,246,247,248,249), I
             END IF
          END DO
             IF (WORD .EQ. '.OPTION') THEN
@@ -1271,7 +1273,6 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
   243    CONTINUE
 c jim-dbg : setting all integrals for LRESC module
             ONEPRP = .TRUE.
-            DOLRINTS=.TRUE.
             FERMI = .TRUE.  ! 115.Fermi 
             KINENE = .TRUE. ! 133.Kinenerg
             SOFLD  = .TRUE. ! 184.somf
@@ -1286,12 +1287,13 @@ c jim-dbg : setting all integrals for LRESC module
             OZKE   = .TRUE. ! 215.Lkin
             PSOKE  = .TRUE. ! 216.PsoKin
             DNSKE  = .TRUE. ! 217.DiaKin
-            PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso          
+            PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
+            SPNORB = .TRUE. ! 104 Spin-Orbit
 Cxx  el problema es que el origen de gauge debe estar en el atomo q elegimos, LRATOM. 
 c       1 - Leer INP file y buscar LRATOM 
 c       2 - hacer que GAGORG = CORD(LRATOM)
 c Por ahora GAGORG = (0.0 0.0 0.0)
-c  ACLARARLO EN OUT FILE !!
+c  ACLARADO EN OUT (buscar "Remember to set GAUGEO" en abadrv.F)
 cx            write(lupri,*)' At INTEGRAL SECT to do GAUGEO on LRATOM' 
 cx            write(lupri,*)' Calling lrscinp for SELECT' 
 cx            CALL LRSCINP('.SELECT')
@@ -1315,6 +1317,20 @@ cs              WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
 cs              WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
 cs              CALL QUIT('Error in reading (GAGORG(I),I=1,3)!')
 cs            ENDIF
+            GO TO 100
+  249    CONTINUE
+c Setting all integrals for LRESC-EFG module
+            ONEPRP = .TRUE.
+            KINENE = .TRUE. ! 133.Kinenerg
+            DARWIN = .TRUE. ! 164
+            MASSVL = .TRUE. ! 163
+            DIPVEL = .TRUE. ! 108.DipVel
+            NELFLD = .TRUE.
+            DIPLEN = .TRUE.
+            DZZEFG = .TRUE. ! 247 divergence of EFG (qzz)
+            LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
+            SPNORB = .TRUE. ! 104 Spin-Orbit
+            EFGCAR = .TRUE. ! 147 Cartesian EFG components
             GO TO 100
   244    CONTINUE
             RMAOTWO = .FALSE.
@@ -4345,8 +4361,6 @@ C     Initialize R12 logical variables R12CAL (WK/UniKA/04-11-2002).
 cLig setting RANGMO and RPSO false
       RANGMO = .FALSE.
       RPSO   = .FALSE.
-cLig
-      DOLRINTS=.FALSE. ! jim-dgb DOLRINT init to FALSE
 C
       CALL DZERO(ORIGIN,3)
 chj may 09: GAGORG and DIPORG now initialized in READIN

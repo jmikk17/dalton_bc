@@ -302,11 +302,11 @@ Third order corrections are not included in the present version of the code, any
 **DALTON INPUT
 .RUN PROPERTIES
 **INTEGRLAS 
-.LRINTS  ! mandatory, to have all necessary integrals computed to use in LRESC module.
+.LR-SHI  ! mandatory, to have all necessary integrals computed to use in LRESC module.
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
-.LRESC
+.LR-SHI
 **END OF DALTON INPUT
 \end{verbatim}
 
@@ -345,13 +345,13 @@ Default Values, and some tips for better running:
 \begin{verbatim}
 (...)
 *INTEGRALS
-.LRINTS
+.LR-SHI
 .GAUGEO 
 a b c        ! a b c atomic cartesian coordinates of selected nucleus (in a.u.)
 (...)
 **PROPERTIES
-.LRESC
-*LROPTS
+.LR-SHI
+*LRSOPT
 .PRTALL      ! detailed output on individual corrections
 .PRINT
 JIMPRT       ! reads one integer , for debugging

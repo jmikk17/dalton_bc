@@ -1,6 +1,6 @@
-ATOMBASIS
-
-
+ATOMBASIS		 #Comment line
+			 #Comment line
+		         #Comment line
 Angstrom Atomtypes=2 Generators=0
 Charge= 9.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
 F     -0.0000000000       0.0000000000     0.0000000000

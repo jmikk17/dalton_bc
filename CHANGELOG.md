@@ -9,6 +9,8 @@
 - Atomic Integrals
   - Divergence of the zz Electric Field Gradient component
   - Laplacian of xx,yy and zz Electric Field Gradient components
+- LRESC
+  - Implementation for the Electric Field Gradient at first order in 1/c2
 
 ## [2020.0.1]
 
