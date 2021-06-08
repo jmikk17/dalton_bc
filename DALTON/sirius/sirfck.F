@@ -1178,7 +1178,10 @@ C for HFXFAC:
 
       CALL QENTER('SIRFCK2')
 
-#include "memint.h"
+      KWORK = 1
+      KFREE = KWORK
+      LFREE = LWORK
+
 #if SIRFCK_DEBUG > 0
       write(lupri,*)'SIRFCK2: NDMAT=', NDMAT
       write(lupri,*)'SIRFCK2: IFCTYP=', (IFCTYP(I),I=1,NDMAT)

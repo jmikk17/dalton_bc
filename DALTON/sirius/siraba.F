@@ -547,6 +547,7 @@ C Symmetry and number of variational parameters are defined through
 C INFLIN.
 C
 #include "implicit.h"
+#include "priunit.h"
       DIMENSION BCVECS(*), BOVECS(*)
       DIMENSION CREF(*), GORB(*), CMO(*), DV(*), PV(*)
       DIMENSION FC(*), FV(*), FCAC(*), H2AC(*)
