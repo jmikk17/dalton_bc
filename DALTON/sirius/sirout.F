@@ -65,7 +65,7 @@ C
       DIMENSION IINFO(LIINFO,*),DINFO(LDINFO,*),WRK(LWRK)
 C
 C Used from common blocks:
-C   gnrinf : WFTYPE, ?
+C   gnrinf : WFTYPE, CHIVAL, ?
 C   pgroup : REP,GROUP
 C   INFINP : ISPIN,LSYM,ISTATE, NACTEL,POTNUC, THRPWF, DOCINO, MCTYPE
 C   INFVAR : NCONF,NWOPT
@@ -395,7 +395,7 @@ C        CI calculation
       ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
-            WRITE (LUPRI,5014)
+            WRITE (LUPRI,5014) CHIVAL
             WRITE (LUPRI,5024) ISTATE,EMCSCF,CONV_text,
      &         POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE
@@ -442,7 +442,7 @@ C        ... DIIS-DFT or QC-DFT optimization
  5010 FORMAT(/'@    This was a CI-NO calculation.')
  5012 FORMAT(/'@    This was a CI calculation.')
  5013 FORMAT(/'@    This was an MCSCF calculation.')
- 5014 FORMAT(/'@    This was an MC-srDFT calculation.')
+ 5014 FORMAT(/'@    This was an MC-srDFT calculation with mu =',F8.3)
  5020 FORMAT( '@    State number:',T31,I5,
      *      //'@    Final MCSCF energy:',T31,F20.12,A,
      *       /'@    Nuclear repulsion:',T31,F20.12,

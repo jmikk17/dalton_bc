@@ -1093,7 +1093,7 @@ C
                DOPERT(IPOINT(I),1) = .TRUE.
             END DO
             GO TO 100
-  104    CONTINUE !        .DIPTRA
+  104    CONTINUE !        .DIPGRA
             DIPDER = .TRUE.
             GO TO 100
   105    CONTINUE !        .POLARI

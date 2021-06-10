@@ -4927,7 +4927,7 @@ C     when reaching this routine.
      &         '"EOFLABEL" label not found in AOPROPER'
             CALL GPINQ_print(LUPROP,'NAME')
             REWIND LUPROP
-            CALL QDUMP(LUPROP)
+            CALL DMPLAB(LUPROP,LUPRI)
             CALL QUIT('Internal error, EOF not found in AOPROPER')
          END IF
          BACKSPACE LUPROP

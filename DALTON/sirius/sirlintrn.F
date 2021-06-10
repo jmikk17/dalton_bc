@@ -218,6 +218,8 @@ C-- SIRTR1, ..., ORBSIG
       KFXC   = KEMYX  + MOSIM
       KFXV   = KFXC   + NOSIM*N2ORBX
       KFTV   = KFXV   + NOSIM*N2ORBX * N_VS
+!     KFTC   = KFTV   + MCSIM*N2ORBX
+!    (KFTC not used, but FYI this is the order: FTV, FTC)
 C-- SIRTR1, ORBSIG, CISIG
       LFTV   = MCSIM*N2ORBX
       IF (DOMCSRDFT) LFTV = LFTV + MCSIM*N2ORBX
