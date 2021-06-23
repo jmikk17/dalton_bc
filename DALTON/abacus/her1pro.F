@@ -3632,17 +3632,17 @@ C  /* Deck sdtyp */
                   ITHIRD = MOD(MOD(ISCOR1,100),10)
                   DO 400 ICOOR2 = 1, 3
                      ITYP = ITYP + 1
-                     IF (INTTYP .EQ. 11) THEN
+                     IF (INTTYP .EQ. 11) THEN ! SD only
                         LABINT(ITYP) = 'SD '//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 13) THEN
+                     ELSE IF (INTTYP .EQ. 13) THEN ! SD+FC
                         LABINT(ITYP) = 'SDC'//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 68) THEN
+                     ELSE IF (INTTYP .EQ. 94) THEN ! SDKE
                IF (ISCOR1 .GT. 99) THEN
          CALL QUIT('Error: SDKE only implemented for max 33 atoms')
                END IF
