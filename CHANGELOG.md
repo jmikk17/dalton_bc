@@ -1,6 +1,6 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2020.1-dev]
+## [2020.1-dev] (unreleased)
 ### New features added
 - New features available through the Polarizable Embedding library (PElib)
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
@@ -9,6 +9,8 @@
 ### Fixed
 - Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
 - Fixed PElib compile error when using explicit math libs
+- Fixed error for SDKE, relativistic kinetic energy corrections to spin-dipole. Has never worked since it was introduced in 2004. (H. J. Aa. Jensen)
+
 
 ## [2020.0] (2020-10-20)
 
