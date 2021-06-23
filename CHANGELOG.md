@@ -1,13 +1,14 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2021.0-dev]
+## [2021.0-dev] (unreleased)
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver.
 
-## [2020.1-dev]
+
+## [2020.1-dev] (unreleased)
 
 ### New features added
 - New features available through the Polarizable Embedding library (PElib)
@@ -16,6 +17,9 @@
 
 ### Fixed
 - Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
+- Fixed PElib compile error when using explicit math libs
+- Fixed error for SDKE, relativistic kinetic energy corrections to spin-dipole. Has never worked since it was introduced in 2004. (H. J. Aa. Jensen)
+
 
 ## [2020.0] (2020-10-20)
 
