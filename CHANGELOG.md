@@ -8,6 +8,7 @@
 
 ### Fixed
 - Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
+- Fixed PElib compile error when using explicit math libs
 
 ## [2020.0] (2020-10-20)
 
