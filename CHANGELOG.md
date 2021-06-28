@@ -10,6 +10,7 @@
 - Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
 - Fixed PElib compile error when using explicit math libs
 - Fixed error for SDKE, relativistic kinetic energy corrections to spin-dipole. Has never worked since it was introduced in 2004. (H. J. Aa. Jensen)
+- Quit nicely if orbital relaxation is on for excited-state first-order property CC calculations
 
 
 ## [2020.0] (2020-10-20)
