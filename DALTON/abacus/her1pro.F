@@ -4010,6 +4010,7 @@ C  /* Deck hdotyp */
       END
 C  /* Deck npetyp */
       SUBROUTINE NPETYP(NOPTYP,INTREP,NPETBL,LABINT,DOATOM,NATOM)
+!     Property labels for potential energy at the nuclei (NUCPOT)
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
@@ -4026,7 +4027,7 @@ C  /* Deck npetyp */
 C
       NOPTYP = NATOM
       CALL NTYPTS(NOPTYP)
-      CALL DZERO(NPETBL,NCTOT*(MAXREP + 1))
+      CALL IZERO(NPETBL,NCTOT*(MAXREP + 1))
 C
       ITYP = 0
 C
