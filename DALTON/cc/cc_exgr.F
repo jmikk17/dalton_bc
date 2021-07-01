@@ -105,6 +105,18 @@ C
       END IF
 C
       IF (CCR12) CALL QUIT('R12 not yet implemented in CC_EXGR.')
+      IF (RELORB) THEN
+         WRITE(LUPRI,*) 'ERROR: Orbital relaxation is active but not'
+     *      //' supported for excited-state'
+         WRITE(LUPRI,*) '       first-order properties (*CCEXGR).'
+         WRITE(LUPRI,*) '       To find results in a consistent'
+     *      //' approximation turn orbital'
+         WRITE(LUPRI,*) '       relaxation off for the ground state'
+     *      //' calculation'
+         WRITE(LUPRI,*) '       (add .NONREL in *CCFOP section).'
+         CALL QUIT('Orbital relaxation is active but not supported'
+     *           //' for *CCEXGR (see output for more information).')
+      END IF
 C      
       WRITE (LUPRI,'(1X,A,/)') '  '
       WRITE (LUPRI,'(1X,A)')
@@ -468,7 +480,7 @@ C
 C
 Casm        ifort does not like LIST. Use 'E0' instead.
 C
-            CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),DUM,WORK(KWRK2),
+            CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),VDUMMY,WORK(KWRK2),
      &                   LWRK2,MODEL,'E0',ILLNR,.FALSE.,
      &                   FNDPTIA, FNDPTIA2, FNDPTAB, FNDPTIJ)
 casm        CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),DUM,WORK(KWRK2),
