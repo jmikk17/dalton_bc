@@ -757,6 +757,7 @@ C --- start of executable code
 ! Used from include files:
 !  gnrinf.h : CHIVAL
 !  inforb.h : N2BASX, NORBT,NNORBX, ...
+!  infinp.h : MCTYPE
 !  infind.h : ISMO(:)
 !  inftra.h : IPRTRA
 !  inftap.h : LUMINT
@@ -768,6 +769,7 @@ C --- start of executable code
 #include "maxash.h"
 #include "gnrinf.h"
 #include "inforb.h"
+#include "infinp.h"
 #include "infind.h"
 #include "inftra.h"
 #include "inftap.h"
@@ -826,6 +828,7 @@ C --- start of executable code
       call MPIXBCAST(TYPE_TEXT,4,'CHARACTER',MASTER)
       call MPIXBCAST(IFTHRS,1,'INTEGER',MASTER)
       call MPIXBCAST(CHIVAL,1,'DOUBLE',MASTER)
+      call MPIXBCAST(MCTYPE,1,'INTEGER',MASTER)
       call MPIXBCAST(ICDTRA,NNORBX,'INTEGER',MASTER)
       call MPIXBCAST(ISMO,NORBT,'INTEGER',MASTER)
       call MPIXBCAST(ICD_NODE,NNORBX,'INTEGER',MASTER)
@@ -955,6 +958,7 @@ C --- start of executable code
       call MPIXBCAST(TYPE_TEXT,4,'CHARACTER',MASTER)
       call MPIXBCAST(IFTHRS,1,'INTEGER',MASTER)            ! accuracy of MO integrals (screening)
       call MPIXBCAST(CHIVAL,1,'DOUBLE',MASTER)
+      call MPIXBCAST(MCTYPE,1,'INTEGER',MASTER)
       call MPIXBCAST(ICDTRA,NNORBX,'INTEGER',MASTER)
       call MPIXBCAST(ISMO,NORBT,'INTEGER',MASTER)
       call MPIXBCAST(ICD_NODE,NNORBX,'INTEGER',MASTER)
