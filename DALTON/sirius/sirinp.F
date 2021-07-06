@@ -245,6 +245,7 @@ C
          INPERR = 0
          NUMRUN = 1
 C        ... only highest calculation specification is done
+C            (this is set in subroutine SRESTR unless NEWSYM is true)
 C
 C     Several common block are restored
 C     (MUST be called before NEWSYM reset to false)

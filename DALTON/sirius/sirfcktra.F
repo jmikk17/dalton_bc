@@ -882,7 +882,7 @@ C --- start of executable code
 
       integer, allocatable :: ICDTRA(:), ICD_NODE(:)
       integer ICD, NCDTRA, MX_NDMAT
-      integer KFREE, LFREE, KDMAT, KFMAT, KUCMO
+      integer KFREE, LFREE, KDMAT, KFMAT, KUCMO, KCMO
       logical PARHER_save, SLAVE_save, DIRFCK_save
       character*4 TYPE_TEXT
 #include "priunit.h"
@@ -963,8 +963,9 @@ C --- start of executable code
       call MPIXBCAST(ISMO,NORBT,'INTEGER',MASTER)
       call MPIXBCAST(ICD_NODE,NNORBX,'INTEGER',MASTER)
 
-      call MPIXBCAST(WORK(KFREE),NCMOT,'DOUBLE',MASTER)
-      call UPKCMO(WORK(KFREE),WORK(KUCMO))
+      KCMO = KFREE
+      call MPIXBCAST(WORK(KCMO),NCMOT,'DOUBLE',MASTER)     ! receive symmetry packed CMO
+      call UPKCMO(WORK(KCMO),WORK(KUCMO))
 
       NCDTRA = 0
       DO ICD = 1,NNORBX

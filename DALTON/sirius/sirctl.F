@@ -524,6 +524,8 @@ C         where HSROHF specifications erroneously will be used
       MCTYPE = MCTYPE_save
       IF ( (DOSCF .OR. DOMP2) .AND.
      &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
+         DOSCF = .FALSE.
+         DOMP2 = .FALSE.
          IOPRHF  = -1
          FLAG(25)   = FLAGSV(25)
          DO 25 ISYM = 1, NSYM
