@@ -803,11 +803,11 @@ C infpar.h : PARHER
      &             '*EXCITA', '*REORT ', '*RESPON',
      &             '*TROINV', '*FMM   ', '*DIPCTL',
      &             '*RELAX ', '*GEOANA', '*VIBANA',
-     &             '*FLOAT ', '*LRSOPT', '*QPGCTL',
+     &             '*FLOAT ', '*LROPTS', '*QPGCTL',
      &             'xXXXXXX', '*LOCALI', '*SOPPA ', ! *LOCALI: PFP 27/03-2006 - SOS for spin-spin coupling included
      &             '*LINRES', '*EXPECT', '*SPIN-S',
      &             '*QRPROP', '*AAT   ', '*TRPRSP',
-     &             '*ABALNR', '*RHSIDE', '*LREOPT'/
+     &             '*ABALNR', '*RHSIDE', '*LROPTE'/
 Caug04-hjaaj: disabled currently inactive .NACME
 Csep08-spas: .NACME reactivated for Vib_g
 C                      1          2          3
@@ -2148,7 +2148,7 @@ cs
       GO TO 200
    29   CALL RHSINP(WORD) ! *RHSIDE
       GO TO 200
-   30 CONTINUE			  ! *LREOPT
+   30 CONTINUE			  ! *LROPTE
          CALL LRSCINP_EFG(WORD)
       GO TO 200
 C

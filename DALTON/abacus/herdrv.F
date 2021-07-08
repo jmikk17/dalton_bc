@@ -361,6 +361,7 @@ C
 #include "codata.h"
 #include "denfit.h"
 #include "infpar.h"
+#include "symmet.h"
 
 C     Keywords for R12 have been added (WK/UniKA/04-11-2002).
 cLig <> added RANGMO and RPSO
@@ -443,7 +444,7 @@ C     Bin Gao, Oct. 3, 2011
 !                    241        242        243        244
      &             '.S2MKET', '.S2MMIX', '.LR-SHI', '.NORMAO',
 !                    245        246        247		  248
-     &             '.TWOBYT', '.LFDIPL', '.DZZEFG', '.LAPEFG',
+     &             '.TWOBYT', '.LFDIPL', '.GZZEFG', '.LAPEFG',
 !                    249
      &             '.LR-EFG'/
 C
@@ -749,12 +750,16 @@ C
             ONEPRP = .TRUE.
             GOTO 100
   247    CONTINUE
-            DZZEFG = .TRUE.
+            GZZEFG = .TRUE.
             ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR GZZEFG')
             GOTO 100
   248    CONTINUE
             LAPEFG = .TRUE.
             ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LAPEFG')
             GOTO 100
   146    CONTINUE
             NSTTST = .TRUE.
@@ -1272,6 +1277,8 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
             GO TO 100
   243    CONTINUE
 c jim-dbg : setting all integrals for LRESC module
+            IF (MAXREP.NE.0)
+     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_SHIELDING')
             ONEPRP = .TRUE.
             FERMI = .TRUE.  ! 115.Fermi 
             KINENE = .TRUE. ! 133.Kinenerg
@@ -1320,6 +1327,8 @@ cs            ENDIF
             GO TO 100
   249    CONTINUE
 c Setting all integrals for LRESC-EFG module
+            IF (MAXREP.NE.0)
+     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
             ONEPRP = .TRUE.
             KINENE = .TRUE. ! 133.Kinenerg
             DARWIN = .TRUE. ! 164
@@ -1327,7 +1336,7 @@ c Setting all integrals for LRESC-EFG module
             DIPVEL = .TRUE. ! 108.DipVel
             NELFLD = .TRUE.
             DIPLEN = .TRUE.
-            DZZEFG = .TRUE. ! 247 divergence of EFG (qzz)
+            GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
             LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
             SPNORB = .TRUE. ! 104 Spin-Orbit
             EFGCAR = .TRUE. ! 147 Cartesian EFG components
@@ -1672,12 +1681,10 @@ Cajt qdb
      &        '- small component potential energy for DPT'
          IF (DPTOVL) WRITE (LUPRI,'(10X,A)')
      &        '- small component overlap integrals for DPT'
-         IF (DZZEFG) WRITE (LUPRI,'(10X,A)')
-     &     '- Divergence of the zz EFG component at the nuclei'
-     &        //' - (DO NOT USE SYMMETRY)'
+         IF (GZZEFG) WRITE (LUPRI,'(10X,A)')
+     &     '- Gradient of the zz EFG component at the nuclei'
          IF (LAPEFG) WRITE (LUPRI,'(10X,A)')
      &     '- Laplacian of the xx,yy and zz EFG component at the nuclei'
-     &        //' - (DO NOT USE SYMMETRY)'
          IF (XDDXR3) WRITE (LUPRI,'(10X,A)')
      &        '-d/dB d/dK   < 1/Rk^3 > type of integrals. '
          IF (PROPRI) WRITE (LUPRI,'(/A)')
@@ -3223,13 +3230,13 @@ C
                CALL FLSHFO(LUPRI)
             END IF
             
-C     ***** Divergence of the zz EFG (electronic contribution) at the individual nuclei *****
+C     ***** Gradient of the zz EFG (electronic contribution) at the individual nuclei *****
 C
-            IF (DZZEFG) THEN
+            IF (GZZEFG) THEN
                CALL TIMER('START ',TIMSTR,TIMEND)
-               CALL PR1INT('DIVZZEFG',WORK,LWORK,IDUMMY,
+               CALL PR1INT('GRAZZEFG',WORK,LWORK,IDUMMY,
      &                     IDUMMY,TRIANG,PROPRI,IPRONE)
-               CALL TIMER('DZZEFG',TIMSTR,TIMEND)
+               CALL TIMER('GZZEFG',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
             END IF
             
@@ -4236,7 +4243,7 @@ C
       NSTTST = .FALSE.
       NSLTST = .FALSE.
       NELFLD = .FALSE.
-      DZZEFG = .FALSE.
+      GZZEFG = .FALSE.
       LAPEFG = .FALSE.
       NSNLTS = .FALSE.
       EFGCAR = .FALSE.

@@ -415,15 +415,15 @@ directions. The center of expansion is always~(0,0,0).
   \verb|COS KZ/K|, \verb|SIN KX/K|, \verb|SIN KY/K|, \verb|SIN KZ/K|.
 \end{list}
 
-\item[\Key{DIVEFG}] Divergence of the $zz$ cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
+\item[\Key{GZZEFG}] Gradient of the electronic contribution to the $zz$ cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
  field integrals}.
 
 \begin{list}{}{}
 \item Integral:
 $\left<\chi_{\mu}\left|\nabla q_{zz}(\textbf{R}_K)\right|\chi_{\nu}\right>$
 where $K$ is the nucleus of interest.
-\item Property labels: \verb|DEFG abc |, where \verb|abc| is the number
-$(1/2/3)$ times the symmetry-adapted nuclear coordinate of interest for the $(x/y/z)$ component of the divergence.
+\item Property labels: \verb|GEFG abc |, where \verb|abc| is the number of the nuclear coordinate.
+%$(1/2/3)$ times the symmetry-adapted nuclear coordinate of interest for the $(x/y/z)$ component of the gradient respectively.
 \end{list}
 
 \item[\Key{FC}] Fermi contact integrals,
@@ -520,7 +520,7 @@ $-\frac{1}{2}\left<\chi_{\mu}\left|\nabla^{2}\right|\chi_{\nu}\right>$
 \item Property label: \verb|KINENERG|.
 \end{list}
 
-\item[\Key{LAPEFG}] Laplacian of the cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
+\item[\Key{LAPEFG}] Laplacian of the electronic contribution to the cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
  field integrals}.
 
 \begin{list}{}{}

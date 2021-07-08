@@ -1919,11 +1919,11 @@ C
      &                  SHLINT,NOPTYP,NATOMC,DISTAB)
 C
 
-C         Divergence of the qzz electric field gradient component at the individual nuclei
+C        Gradient of the qzz electric field gradient component at the individual nuclei
 C        -----------------------------------------
 C
          ELSE IF (INTTYP .EQ. 109) THEN
-            CALL DZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
+            CALL GZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
      &                  SHLINT,NOPTYP,NATOMC)
 
 C         Laplacian of qxx,qyy and qzz electric field gradient components at the individual nuclei
@@ -5022,10 +5022,10 @@ C
       RETURN
       END
  
-      SUBROUTINE DZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,
+      SUBROUTINE GZZEFG1INT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,
      &                  AHGTF,SHLINT,NOPTYP,NATOMC)
 C
-C     Divergence of the zz EFG (electronic contribution) integrals
+C     Gradient of the zz EFG (electronic contribution) integrals
 
 
 C     J. Aucar, November 2020

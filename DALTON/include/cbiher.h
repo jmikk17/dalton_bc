@@ -28,7 +28,7 @@ C     Selection of specific one-electron (property) integrals:
      &        RANGMO, RPSO, PXPINT, OZKE, PSOKE, DNSKE, SDKE, FCKE,
      &        DSOKE,  PSOOZ,  EFBDER, EFB2DR, MAGQDP, MQDPTS,
      &        DERAM,  DIPANH, RMAOTWO,LFDIPLN,
-     &        S2MBRA, S2MKET, S2MMIX,DZZEFG,LAPEFG
+     &        S2MBRA, S2MKET, S2MMIX,GZZEFG,LAPEFG
 C
       COMMON /CBIHER/ EXPKR(3), THRESH,                                         ! real*8
      &        IPRDEF, IORCAR, IORSPH, NPQUAD, NPATOM, IPATOM(MXCENT),           ! integer
@@ -53,5 +53,5 @@ C
      &        RANGMO, RPSO, PXPINT, OZKE, PSOKE, DNSKE, SDKE, FCKE,
      &        DSOKE,  PSOOZ,  EFBDER, EFB2DR, MAGQDP, MQDPTS,
      &        DERAM,  DIPANH, RMAOTWO,LFDIPLN,
-     &        S2MBRA, S2MKET, S2MMIX,DZZEFG,LAPEFG
+     &        S2MBRA, S2MKET, S2MMIX,GZZEFG,LAPEFG
 C --- end of cbiher.h ---

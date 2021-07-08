@@ -44,7 +44,7 @@ C                      1         2         3		4
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
 
-      NEWDEF = (WORD .EQ. '*LREOPT')
+      NEWDEF = (WORD .EQ. '*LROPTE')
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
@@ -121,6 +121,7 @@ C
 #include "mxcent.h"
 #include "cbiqr.h"
 #include "abainf.h"
+#include "inforb.h"              
 C
       PARAMETER(D0 = 0.0D+0)
 
@@ -184,43 +185,46 @@ c c^-2
 
       CALL TITLER('EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS','*',124)
       WRITE(lupri,*)
-      WRITE(lupri,*)' First order relativistic '// 
+      WRITE(lupri,*)'   First order relativistic '// 
      & 'corrections to the zz component of the electronic EFG.'
       WRITE(LUPRI,*)
-       WRITE(LUPRI,*)'   -  Original LRESC papers at : J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi:10.1063/1.1525808' 
-       WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
-c     &                       ' DOI: 10.1080/00268970310001617784'
-       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. 119(15) (2019), '//
-     & 'doi:https://doi.org/10.1002/qua.25935'
+       WRITE(LUPRI,*)'   -  Original LRESC papers at :'
+       WRITE(LUPRI,'(33X,A)')' J. Chem. Phys.'//
+     &               ' 118, 2 (2003), doi: 10.1063/1.1525808' 
+       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2019), '//
+     & 'doi: 10.1002/qua.25935'
+       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2021), '//
+     & 'doi: 10.1002/qua.26769'
    
 
       WRITE(LUPRI,*)
       WRITE(LUPRI,*)'   -  Corrections calculated in all symmetry '// 
      & 'independent centers'
-      WRITE(LUPRI,*)'   -  WARNING: not tested with '// 
-     & 'automatic symmetry detection'
       WRITE(LUPRI,*)'   -  WARNING: Implemented for '// 
      & 'máx. 10 nucleus'
   
       IF (.NOT. PRTALL2) THEN 
-         WRITE(LUPRI,'(14X,A)')'*  For individual contributions, add '//
-     &   '.PRTALL2 in your input file under *LROPTS'
+         WRITE(LUPRI,'(14X,A)')'*  For LRESC corrections, add '//
+     &   '.PRTALL in your input file under *LROPTE'
       ENDIF
     
 C
 C NR value
+C
+      IF (PRTALL2) THEN
             WRITE(LUPRI,*)
-            CALL HEADER('Non Relativistic Values [au]',-1)
+            CALL HEADER('Non Relativistic Values (NR) [au]',-1)
 
 
-            WRITE(LUPRI,*)'         Atom                 NR'
+            WRITE(LUPRI,'(10X,A,19X,A)') 'Atom','NR'
+            WRITE(LUPRI,'(10X,A)') REPEAT('-',28)
             IJ = 0
             DO I=1,NUCIND
-                  WRITE (LUPRI,'(10X,A,9X,F15.7)')
+                  WRITE (LUPRI,'(10X,A,9X,F15.5)')
      &            NAMN(I),EFGC0(I)
                   IJ = IJ + 1
             END DO
+       ENDIF
 
 
 
@@ -229,35 +233,33 @@ C First order corrections
 C
       IF (PRTALL2) THEN
             WRITE(LUPRI,*)
-            CALL HEADER('First order corrections',-1)
-
-
-            WRITE(LUPRI,*)'       Detailed info : [.PRTALL]'// 
-     &            ' contributions [au]'
-            WRITE(LUPRI,*)'       ---------------'
-
-
-            WRITE(LUPRI,*)'         Atom                 Mv   '//
-     &              '           Dw             Laplace'
+            CALL HEADER('First order corrections (1st Order) [au]',-1)
+            WRITE(LUPRI,*)'         Atom          ΔMv  '//
+     &              '           ΔDw             ΔLap            Total'
+            WRITE(LUPRI,'(10X,A)') REPEAT('-',67)
             IJ = 0
             DO I=1,NUCIND
-                  WRITE (LUPRI,'(10X,A,9X,F15.7,X,F15.7,X,F15.7)')
-     &            NAMN(I),EFGC2(I,1),EFGC2(I,2),EFGC2(I,5)
-                  IJ = IJ + 1
+               relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
+               WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5,X,F15.5)')
+     &         NAMN(I),EFGC2(I,1),EFGC2(I,2),EFGC2(I,5),relall
+               IJ = IJ + 1
             END DO
 
 
             IF (PQPKINLRESC) THEN
                   WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)'       Detailed info : [.PQPKIN]'// 
-     &            ' contributions [au]'
-                  WRITE(LUPRI,*)'       ---------------'
                   WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)'         Atom                 pqp'//
-     &              '             kin            pqp+kin            '
+                  WRITE(LUPRI,'(10X,A)') 'Extra info :' 
+                  WRITE(LUPRI,'(10X,A)') REPEAT('-',12)
+                  WRITE(LUPRI,'(10X,A)')'Δpqpkin should approach'//
+     &            ' ΔLap in the basis set limit'
+                  WRITE(LUPRI,*)' '
+                  WRITE(LUPRI,*)'         Atom          Δpqp'//
+     &              '            Δkin            Δpqpkin'
+                  WRITE(LUPRI,'(10X,A)') REPEAT('-',53)
                   IJ = 0
                   DO I=1,NUCIND
-                        WRITE (LUPRI,'(10X,A,9X,F15.7,X,F15.7,X,F15.7)')
+                        WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5)')
      &               NAMN(I),EFGC2(I,3),EFGC2(I,4),EFGC2(I,3)+EFGC2(I,4)
                         IJ = IJ + 1
                   END DO
@@ -267,17 +269,24 @@ C
 C
 
 
-         CALL HEADER('Total (EFG) Relativistic Corrections :',-1)
-         WRITE (LUPRI,'(/8X,A)') 'Sum of corrections [au] : '
-         WRITE (LUPRI,'(/8X,A)') '(only c^-2 terms on sum)'
-         WRITE (LUPRI,'(8X,A)') '---------------'
-         
-         
-         
+      WRITE(LUPRI,*) 
+      WRITE(LUPRI,*) 
+      WRITE(LUPRI,*) 
+      WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
+      WRITE(LUPRI,'(27X,A)') 'Total EFG (zz component) [au]'
+      WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
+      WRITE(LUPRI,*) 
+       
+      WRITE(LUPRI,*) '         Atom           '//
+     &         'NR           1st Order          Total'
+
+      WRITE(LUPRI,'(10X,A)') REPEAT('-',52)
       IJ = 0
       DO I=1,NUCIND
          relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
-         WRITE (LUPRI,'(10X,A,9X,F15.7)') NAMN(I),relall
+         total=EFGC0(I)+relall
+         WRITE (LUPRI,'(10X,A,A,F15.5,X,F15.5,X,F15.5)')
+     &       '@',NAMN(I),EFGC0(I),relall,total
          IJ = IJ + 1
       END DO
       WRITE(LUPRI,*) 

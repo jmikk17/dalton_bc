@@ -53,7 +53,7 @@ C                      11
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
 
-      NEWDEF = (WORD .EQ. '*LRSOPT')
+      NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
@@ -399,7 +399,7 @@ c      WRITE(LUPRI,*)' Gaugeo placed at : ', GAGORG
      &  'nucleus, on INTEGRALS SECTION, in a.u'
       IF (.NOT. PRTALL1) THEN
          WRITE(LUPRI,'(14X,A)')'*  For individual contributions, add '//
-     &   '.PRTALL in your input file under *LRSOPT'
+     &   '.PRTALL in your input file under *LROPTS'
       ENDIF
       WRITE(LUPRI,'(14X,A)')'*  Third Order Singlet and Triplet '//
      & 'Corrections must be run in order to get'

@@ -43,15 +43,15 @@ C
       double precision, dimension(NBAST*NORBT), intent(in) :: xmos
       double precision, dimension(NBAST,NBAST), intent(inout) :: OVERLP
       double precision cmos(NORBT,NBAST)
-      CHARACTER*8 :: ZZEFG(NUCIND),DZZEFG(3*NUCIND)
+      CHARACTER*8 :: ZZEFG(NUCIND),GZZEFG(3*NUCIND)
       double precision :: ORBC(NOCCT),Av,Aux
       
       double precision, dimension(NBAST,NBAST) :: aux1,aux2,aux3
       double precision, dimension(NBAST,NBAST) :: aux0
       double precision, dimension(NBAST,NBAST) :: XDIPVEL
       double precision, dimension(NBAST,NBAST) :: YDIPVEL,ZDIPVEL
-      double precision, dimension(NBAST,NBAST) :: DZZEFGx,DZZEFGy
-      double precision, dimension(NBAST,NBAST) :: DZZEFGz
+      double precision, dimension(NBAST,NBAST) :: GZZEFGx,GZZEFGy
+      double precision, dimension(NBAST,NBAST) :: GZZEFGz
       double precision, dimension(NBAST,NBAST) :: X1SPNORB
       double precision, dimension(NBAST,NBAST) :: Y1SPNORB,Z1SPNORB
       double precision, dimension(NBAST,NBAST) :: ZZEFGm
@@ -101,12 +101,12 @@ C     Get the operators (its representation in the AO basis)
        ZZEFG(I)= 'ZZEFG'//CHRNOS(0)//CHRNOS(I)//CHRNOS(1) ! NUCIND.leq.10
             DO J=1,3
             INDEX=3*(I-1)+J
-            DZZEFG(INDEX)= 'DEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(INDEX) !
+            GZZEFG(INDEX)= 'GEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(INDEX) !
             ENDDO
       
-      call READAOP(DZZEFGx, naos,DZZEFG(3*(I-1)+1)) !gets DZZEFG_X(I) matrix
-      call READAOP(DZZEFGy, naos,DZZEFG(3*(I-1)+2)) !gets DZZEFG_Y(I) matrix
-      call READAOP(DZZEFGz, naos,DZZEFG(3*(I-1)+3)) !gets DZZEFG_Z(I) matrix
+      call READAOP(GZZEFGx, naos,GZZEFG(3*(I-1)+1)) !gets GZZEFG_X(I) matrix
+      call READAOP(GZZEFGy, naos,GZZEFG(3*(I-1)+2)) !gets GZZEFG_Y(I) matrix
+      call READAOP(GZZEFGz, naos,GZZEFG(3*(I-1)+3)) !gets GZZEFG_Z(I) matrix
       call READAOP(ZZEFGm,naos,ZZEFG(I))            !gets ZZEFG0(I)1 matrix
        
 
@@ -123,11 +123,11 @@ c     pqp - no chain rule applied
 
 
 c     -(nabla qzz)p +qp^2 - chain rule applied - for comparisson
-c      call AVGAB(cmos,DZZEFG(3*(I-1)+1),'XDIPVEL ',B0,PRT,ORBC,Av)
+c      call AVGAB(cmos,GZZEFG(3*(I-1)+1),'XDIPVEL ',B0,PRT,ORBC,Av)
 c      Aux=-Av
-c      call AVGAB(cmos,DZZEFG(3*(I-1)+2),'YDIPVEL ',B0,PRT,ORBC,Av)
+c      call AVGAB(cmos,GZZEFG(3*(I-1)+2),'YDIPVEL ',B0,PRT,ORBC,Av)
 c      Aux=Aux-Av
-c      call AVGAB(cmos,DZZEFG(3*(I-1)+3),'ZDIPVEL ',B0,PRT,ORBC,Av)
+c      call AVGAB(cmos,GZZEFG(3*(I-1)+3),'ZDIPVEL ',B0,PRT,ORBC,Av)
 c      Aux=Aux-Av
 c      call AVGAB(cmos,ZZEFG(I),'KINENERG',B0,PRT,ORBC,Av)
 c      Aux=Aux+2*Av
@@ -145,12 +145,12 @@ C     Correcciones orden c^(-4)
       aux0=matmul(transpose(cmos),cmos)
 
 c     Hago (pq).I x p     
-      aux1=matmul(matmul(DZZEFGy,aux0),ZDIPVEL)-
-     &     matmul(matmul(DZZEFGz,aux0),YDIPVEL)
-      aux2=matmul(matmul(DZZEFGz,aux0),XDIPVEL)-
-     &     matmul(matmul(DZZEFGx,aux0),ZDIPVEL)
-      aux3=matmul(matmul(DZZEFGx,aux0),YDIPVEL)-
-     &     matmul(matmul(DZZEFGy,aux0),XDIPVEL)
+      aux1=matmul(matmul(GZZEFGy,aux0),ZDIPVEL)-
+     &     matmul(matmul(GZZEFGz,aux0),YDIPVEL)
+      aux2=matmul(matmul(GZZEFGz,aux0),XDIPVEL)-
+     &     matmul(matmul(GZZEFGx,aux0),ZDIPVEL)
+      aux3=matmul(matmul(GZZEFGx,aux0),YDIPVEL)-
+     &     matmul(matmul(GZZEFGy,aux0),XDIPVEL)
 
 
       CALL GETDAT(RTNLBL(1),RTNLBL(2))

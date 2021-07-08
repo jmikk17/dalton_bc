@@ -23,25 +23,18 @@ f.add(from_string = 'Cartesian Coordinates',
       num_lines = 6,
       rel_tolerance = 1.0e-8)
 
-f.add(string = 'Divergence of the zz EFG component at the nuclei',
+f.add(string = 'Gradient of the zz EFG component at the nuclei',
         abs_tolerance=1.0e-8)
 f.add(string = 'Laplacian of the xx,yy and zz EFG component at the nuclei',
         abs_tolerance=1.0e-8)
-f.add(string = '******ORBITAL CONTRIBUTUIONS DETECTED!*******',
-        abs_tolerance=1.0e-7)
-
-f.add(from_string = ' < ZDIPVEL  >< ZZEFG011>< ZDIPVEL >',
-      num_lines = 6,
-      abs_tolerance = 1.0e-5)
-f.add(from_string = ' < ZDIPVEL  >< ZZEFG021>< ZDIPVEL >',
-      num_lines = 6,
-      abs_tolerance = 1.0e-5)
 
 f.add(from_string = 'Non Relativistic Values',
-      num_lines = 36,
-      rel_tolerance = 1.0e-8)
+      num_lines = 6,
+      abs_tolerance = 1.0e-3)
 
-
+f.add(from_string = 'First order corrections',
+      num_lines = 16,
+      abs_tolerance = 1.0e-3)
 
 
 test.run(['LRESC_HF_EFG.dal'], ['HF.mol'], f={'out': f})

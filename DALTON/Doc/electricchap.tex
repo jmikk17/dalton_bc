@@ -110,7 +110,8 @@ The implementation of the Linear Response Elimination of Small Component scheme 
 \begin{list}{}{}
 \item J.I. Melo, M.C. Ruiz de Azua, C.G Giribet, G.A. Aucar, and R.H. Romero \newblock {\em J. Chem. Phys.}, {\bf 118},\hspace{0.25em}2, (2003).
 
-\item Aucar, G. A., Melo, J. I., Aucar, I. A., and Maldonado, A. F. \newblock{\em Int. J. Quantum Chem.}, {\bf 118}(1),\hspace{0.25em}e25487, (2018).
+%\item Aucar, G. A., Melo, J. I., Aucar, I. A., and Maldonado, A. F. \newblock{\em Int. J. Quantum Chem.}, {\bf 118}(1),\hspace{0.25em}e25487, (2018).
+\item J. J. Aucar, A. F. Maldonado, and J. I. Melo \newblock{\em Int. J. Quantum Chem.}, (2021). DOI: 10.1002/qua.26769
 
 \item J. I. Melo and A. F. Maldonado \newblock{\em Int. J. Quantum Chem.}, {\bf 119}(15),\hspace{0.25em}e25935, (2019).
  
@@ -118,7 +119,7 @@ The implementation of the Linear Response Elimination of Small Component scheme 
 }}
 \end{center}
 
-LRESC module computes all first order (singlet) corrections to electric field gradients of all the independent nucleus in a molecule. 
+LRESC module computes all first order corrections to electric field gradients of all the independent nucleus in a molecule. 
 An input example file is:
 
 \begin{verbatim}
@@ -126,22 +127,18 @@ An input example file is:
 .RUN PROPERTIES
 *MOLBAS
 .UNCONTRACTED
-.NUCMOD
- 2
 **INTEGRALS
 .LR-EFG
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
 .LR-EFG
-*LREOPT
-.PQPKIN
-.ORBCON
+*LROPTE
 .PRTALL
 **END OF DALTON INPUT
 \end{verbatim}
 
-The integrals computed under \Key{LRINTS} are described in INTEGRALS chapter Section \ref{sec:herinp}.
+The integrals computed under \Key{LR-EFG} are described in INTEGRALS chapter Section \ref{sec:herinp}.
 The complete list of control keywords are:
 
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
@@ -156,8 +153,8 @@ There are some important issues to keep in mind:
 \begin{itemize}{}{}
 \item Uncontracted basis set is recommended. 
 \item Symmetry is not yet implemented.
-\item Hartree-Fock and DFT schemes are supported for the ground state wave function.
-\item At first order in LRESC scheme results are reliable for molecules containing atoms belonging up to the fifth row of the periodic table \cite{melomaldo19}. 
+\item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
+\item At first order in LRESC scheme results are reliable for molecules containing atoms belonging up to the fifth row of the periodic table \cite{melomaldo19,aucarmaldomelo21}. 
 \end{itemize}
 \end{center}
 
