@@ -16,7 +16,8 @@
     - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput., (2021). DOI: 10.1021/acs.jctc.1c00225
 
 ### Fixed
-- Fixed error leading to test energy_selected_localize failed. (H. J. Aa. Jensen.)
+- Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
+- Fixed error leading to test energy_selected_localize failed (H. J. Aa. Jensen)
 - Fixed PElib compile error when using explicit math libs
 - Fixed error for SDKE, relativistic kinetic energy corrections to spin-dipole. Has never worked since it was introduced in 2004. (H. J. Aa. Jensen)
 - Quit nicely if orbital relaxation is on for excited-state first-order property CC calculations

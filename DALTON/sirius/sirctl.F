@@ -521,8 +521,11 @@ C
       HSROHF = .FALSE.
 C     ... otherwise error in some MCSCF routines
 C         where HSROHF specifications erroneously will be used
+      MCTYPE = MCTYPE_save
       IF ( (DOSCF .OR. DOMP2) .AND.
      &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
+         DOSCF = .FALSE.
+         DOMP2 = .FALSE.
          IOPRHF  = -1
          FLAG(25)   = FLAGSV(25)
          DO 25 ISYM = 1, NSYM
@@ -548,7 +551,6 @@ C           ... orbital super symmetries may have been reordered
             OLDWOP = .TRUE.
          END IF
          JWOPSY = 1
-         MCTYPE = MCTYPE_save
          IF  (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) THEN
             ! do not call SIRSET if next step is LUCITA:
             ! SETCI will return NCONF=0 and cause error exit.
