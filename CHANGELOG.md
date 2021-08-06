@@ -5,6 +5,7 @@
 - New features available through the Polarizable Embedding library (PElib)
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
     - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput., (2021). DOI: 10.1021/acs.jctc.1c00225
+  - Additional solvents available for the FixSol continuum solvation model (see 26.1.5 in the manual for a list of available solvents)
 
 ### Fixed
 - Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
