@@ -87,7 +87,7 @@ C
 #include "pcmdef.h"
 #include "pcm.h"
 #include "pcmlog.h"
-! dftcom.h: DFT_SPINDNS, DFT_LOCALSPIN
+! dftcom.h: DFT_SPINDNS, DFT_LOCALSPIN, HFXFAC
 #include "dftcom.h"
 #include "exeinf.h"
 #include "stex.h"
@@ -525,6 +525,10 @@ C         where HSROHF specifications erroneously will be used
       IF ( (DOSCF .OR. DOMP2) .AND.
      &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
          DOSCF = .FALSE.
+         IF (DODFT) THEN
+            DODFT = .FALSE.
+            HFXFAC= 1.0D0 ! for CI/MCSCF with DFT initial orbitals
+         END IF
          DOMP2 = .FALSE.
          IOPRHF  = -1
          FLAG(25)   = FLAGSV(25)
