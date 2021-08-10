@@ -225,19 +225,19 @@ subroutine pelib_ifc_input_reader(word)
                 if ((trim(border_type) /= 'REMOVE') .and.&
                   & (trim(border_type) /= 'REDIST') .and.&
                   & (trim(border_type) /= 'CHGRED')) then
-                    error stop 'unknown handling of border sites'
+                    call quit('unknown handling of border sites')
                 else if (trim(border_type) == 'REMOVE') then
                     read(lucmd, *) border_type, Rmin, auoraa
                 else if (trim(border_type) == 'REDIST') then
                     read(lucmd, *) border_type, redist_order, Rmin, auoraa, nredist
                     if ((nredist > 3) .or. (nredist < 1)) then
-                        error stop 'parameters can only be distributed to&
-                             & minimum one site and maximum three sites'
+                        call quit('parameters can only be distributed to&
+                             & minimum one site and maximum three sites')
                     end if
                 else if (trim(border_type) == 'CHGRED') then
                     read(lucmd, *) border_type, Rmin, auoraa
                 else
-                    error stop 'unrecognized input in .BORDER option'
+                    call quit('unrecognized input in .BORDER option')
                 end if
                 call chcase(auoraa)
                 if (trim(auoraa) == 'AA') Rmin = Rmin * aa2bohr
@@ -420,7 +420,7 @@ subroutine pelib_ifc_input_reader(word)
                     else if (option(1:1) == '!' .or. option(1:1) == '#') then
                         cycle
                     else
-                        error stop 'unknown input under .CUBE option'
+                        call quit('unknown input under .CUBE option')
                     end if
                 end do
             end if
@@ -469,13 +469,13 @@ subroutine pelib_ifc_input_reader(word)
                     else if (option(1:1) == '!' .or. option(1:1) == '#') then
                         cycle
                     else
-                        error stop 'unknown option present in .MEP section.'
+                        call quit('unknown option present in .MEP section.')
                     end if
                 end do
             end if
             pelib_mep = .true.
         ! continuum solvation calculation
-        else if (trim(option(2:7)) == 'SOLVAT') then
+        else if (trim(option(2:7)) == 'SOLVAT' .or. trim(option(2:7)) == 'FIXSOL') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
             if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
@@ -492,6 +492,12 @@ subroutine pelib_ifc_input_reader(word)
         ! equilibrium solvation (non-equilibrium is default)
         else if (trim(option(2:7)) == 'EQSOL') then
             pelib_noneq = .false.
+        ! set the static dielectric constant
+        else if (trim(option(2:7)) == 'EPS') then
+            read(lucmd, *) eps
+        ! set the optical dielectric constant
+        else if (trim(option(2:7)) == 'EPSINF') then
+            read(lucmd, *) epsinf
         ! Turn off interaction between induced dipoles and surface charges
         else if (trim(option(2:7)) == 'NOMUQ') then
             pelib_nomuq = .true.
@@ -507,14 +513,14 @@ subroutine pelib_ifc_input_reader(word)
             end if
             pelib_read_surf = .true.
         ! FixSol solvation using FIXPVA2 tesselation (optional: number of tessera per atom)
-        else if (trim(option(2:7)) == 'NTESS ') then
+        else if (trim(option(2:7)) == 'NTESS') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
             if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
                & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
                 read(lucmd, *) ntsatm
                 if ((ntsatm .ne. 60) .and. (ntsatm .ne. 240) .and. (ntsatm .ne. 960)) then
-                   error stop 'number of tessera per atom must be equal to 60, 240 or 960'
+                   call quit('number of tessera per atom must be equal to 60, 240 or 960')
                 end if
             end if
         ! apply external electric field
@@ -547,7 +553,7 @@ subroutine pelib_ifc_input_reader(word)
                & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
                 read(lucmd, *) zeromul_order
                 if (zeromul_order < 0) then
-                    error stop 'ZEROMUL order cannot be negative'
+                    call quit('ZEROMUL order cannot be negative')
                 end if
             end if
             pelib_zeromul = .true.
@@ -575,7 +581,7 @@ subroutine pelib_ifc_input_reader(word)
             cycle
         else
             write(luout, *) 'unknown option:', option
-            error stop 'unknown option in *PELIB section'
+            call quit('unknown option in *PELIB section')
         end if
     end do
 
@@ -585,11 +591,11 @@ subroutine pelib_ifc_input_reader(word)
     end if
 
     if (pelib_sol .and. pelib_iter .and. .not. pelib_fixsol) then
-        error stop '.SOLV without .FIXSOL requires .DIRECT'
+        call quit('.SOLV without .FIXSOL requires .DIRECT')
     end if
 
     if (pelib_mep .and. pelib_cube) then
-        error stop '.MEP and .CUBE are not compatible.'
+        call quit('.MEP and .CUBE are not compatible.')
     end if
 
     call qexit('pelib_ifc_input_reader')
