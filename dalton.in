@@ -329,7 +329,7 @@ fi
 
 
 if [ -z "$DALTON_TMPDIR" ]; then  # not set as environment variable and not set with "-t dir" option
-    scratch_dir_candidates="$SCRATCH /global/work/$USER /scratch/$USER /work /scratch /scr /temp /tmp"
+    scratch_dir_candidates="$SCRATCH /global/work/$USER /scratch/$USER /work/$USER /work /scratch /scr /temp /tmp"
     for dir in $scratch_dir_candidates; do
         if [ -d "$dir" ]; then
             DALTON_TMPDIR=$dir
@@ -371,12 +371,6 @@ if [ ! -d "$DALTON_TMPDIR" ]; then
     exit 1
 fi
 
-if [ $opt_noappend -eq 1 ]; then
-    DALTON_SCRATCH=$DALTON_TMPDIR
-else
-    DALTON_SCRATCH=$DALTON_TMPDIR/$outnam
-fi
-
 # now we know that the directory exists
 # we will now try whether user has write permission to this directory
 file=$DALTON_TMPDIR/test_whether_dalton_can_create_this_file.$$.tmp
@@ -388,7 +382,7 @@ if [ -f $file ]; then
     rm $file &> /dev/null
 else
     rm $file &> /dev/null
-    echo "ERROR: you have no write permission to directory $DALTON_TMPDIR"
+    echo "ERROR: you have no write permission to scratch directory $DALTON_TMPDIR"
     exit 1
 fi
 
