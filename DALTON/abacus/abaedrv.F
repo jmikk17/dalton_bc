@@ -607,7 +607,15 @@ C
       LOGICAL FNDLAB
 C
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      IF (.NOT.FNDLAB('SIR IPH ',LUSIFC)) THEN
+         REWIND LUSIFC
+      IF (FNDLAB('CIRESPON',LUSIFC)) THEN
+         ! CIRESPON is not implemented for MOLHES or B response.
+         CALL QUIT(
+     &      'ERROR: CI properties not implemented for MOLHES and B')
+      END IF
+         CALL QUIT("ERROR: label 'SIR IPH ' not found on SIRIFC")
+      END IF
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF
       POTNUC = EPOT
       READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,NWOPH,

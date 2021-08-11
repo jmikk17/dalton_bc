@@ -2395,6 +2395,7 @@ C
 #include "trkoor.h"
 #include "taymol.h"
       REAL*8, allocatable ::  GRDMOL(:), HESMOL(:,:)
+      LOGICAL :: FNDLAB
 
       CALL QENTER('ABARESULT')
 C
@@ -2413,8 +2414,15 @@ C
 C
       IF (LUSIFC .LE. 0) CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',
      &                               IDUMMY,.FALSE.)
+
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      IF (.NOT.FNDLAB('SIR IPH ',LUSIFC)) THEN
+         REWIND LUSIFC
+      IF (.NOT.FNDLAB('CIRESPON',LUSIFC)) THEN
+         CALL QUIT('ERROR: no labels on SIRIFC')
+      END IF
+      END IF
+
       READ (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,
      *            LSYM,MS2
       READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT
