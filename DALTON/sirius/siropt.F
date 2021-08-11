@@ -1275,7 +1275,7 @@ C
       !> store 1-particle density matrix in AO-basis on file
 !#define AO_DENSITIES_ON_FILE
 #ifdef AO_DENSITIES_ON_FILE
-      call rdcref(wrk(kcref))
+      call rdcref(wrk(kcref),.true.)
       call makdv(wrk(kcref),wrk(kdv),wrk(kcindx),wrk(kwrkg),lwrkg)
       call write_aodens(wrk(kdv),nisht,nasht,nbast,nnashx,
      &                  ncmot,nsym,nbas,ibas,lupri,.false.,"MC")
@@ -2842,28 +2842,6 @@ C
          WRITE (LUPRI,'(/A)') ' FC diagonal elememts from WR_SIRIFC :'
          WRITE (LUPRI,'(/,(1X,5F15.8))') (WRK(KFCDIA-1+I),I=1,NORBT)
       END IF
-
-! save information for EKT
-#ifdef standalone_WRITE_dalton_ekt.dat
-      luekt = 69
-      open (luekt, file='dalton_ekt.dat', form='unformatted',
-     &   status='unknown')
-
-         write (lupri,'(//)')
-         write (lupri,*) 'Test output from writing to dalton_ekt.dat'
-         write (lupri,*) 'nsym  ',nsym
-         write (lupri,*) 'nish  ',nish
-         write (lupri,*) 'nash  ',nash
-         write (lupri,*) 'norb  ',norb
-         write (lupri,*) 'nnashx',nnashx
-         write (lupri,*) 'n2orbt',n2orbt
-         flush (lupri)
-         write (luekt) nsym, nish, nash, norb, nnashx, n2orbt
-         write (luekt) dv(1:nnashx)
-         write (luekt) wrk(kfock:kfock-1+N2ORBT) ! all symmetries packed
-      rewind luekt
-      close (luekt, STATUS='KEEP')
-#endif
 
 !     Perform EKT analysis
 

@@ -2592,10 +2592,15 @@ C  Revised 13-Jun-1991 hjaaj : also calculate and write DV
 C
 C Purpose:
 C  Interface to RESPONSE for CI response calculations:
-C  write information to LUSIFC ("SIRIFC") needed for response calculation.
+C  Write information to LUSIFC ("SIRIFC") needed for response calculation.
+C
+C  NOTE: The label on SIRIFC will tell if info is from an SCF/MCSCF wave function
+C        (label "SIR IPH ") or from a CI wave function (label "CIRESPON").
+C        "SIR IPH " info is written by WR_SIRIFC subroutine.
 C
 C  The following records are written:
 C
+C    0) label "CIRESPON"
 C    1) POTNUC,EMY,EACTIV,ECIREF,ISTACI,ISPIN,NACTEL,LSYM,MS2
 C    2) NISHT,NASHT,...
 C    3) CMO
