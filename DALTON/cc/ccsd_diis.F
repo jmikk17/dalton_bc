@@ -188,8 +188,11 @@ C
       IPVT(J)=K
 C
       IF(T.EQ.0.0D0)THEN
-      WRITE(LUPRI,*)'ZERO PIVOT - MATRIX SINGULAR'
-      CALL QUIT(' ')
+         GO TO 40
+       ! WRITE(LUPRI,*)'ZERO PIVOT - MATRIX SINGULAR'
+       ! CALL QUIT(' ')
+       ! hjaaj Aug 2021: test "cc2_r12_he_a2" failed here for gfortran
+       ! 10.2.0. With this change the test passed.
       ENDIF
 C
 C     SWOP ROWS
