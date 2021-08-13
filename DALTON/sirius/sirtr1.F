@@ -2735,7 +2735,7 @@ C
 C     Local variables
 C
       LOGICAL   DOFXQ
-      DIMENSION NEEDDI(-4:6)
+      INTEGER   NEEDDI(-4:6)
 C
       CALL QENTER('TR1H2D')
 C

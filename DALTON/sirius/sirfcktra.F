@@ -78,6 +78,10 @@ C --- start of executable code
       call QENTER('SIR_FCKTRA_CTL')
 
       JTRSIR = abs(ITRSIR)
+      ! 0    : first order
+      ! 1..4 : variants of second order
+      ! 5, 6 : variants of third order
+      ! > 6  : fourth order, i.e. full
 
 #if FCKTRA_DEBUG > 0
       IPRTRA = MAX(IPRTRA,FCKTRA_DEBUG)
@@ -113,8 +117,8 @@ C     Test if MO integrals already available
          READ  (LUINTM)
          READ  (LUINTM) J,NTRLVL ! originally LBINTM, JTRLVL
          IF (NTRLVL .EQ. 3 .AND. JTRSIR .EQ. 2) NTRLVL = -1 ! (aa|ii) and (ai|ai) missing
-         IF (NTRLVL .EQ. 2 .AND. JTRSIR .EQ. 3) NTRLVL =  3
-         IF (NTRLVL .EQ. 5 .AND. JTRSIR .EQ. 6) NTRLVL =  6
+         IF (NTRLVL .EQ. 2 .AND. JTRSIR .EQ. 3) NTRLVL =  3 ! reset for NTRLVL.ge.JTRSIR test below
+         IF (NTRLVL .EQ. 5 .AND. JTRSIR .EQ. 6) NTRLVL =  6 ! reset for NTRLVL.ge.JTRSIR test below
          IF (NTRLVL .EQ. 6 .AND. JTRSIR .EQ. 4) NTRLVL = -1 ! (gg|ii) and (gi|gi) missing
          IF (NTRLVL .EQ. 6 .AND. JTRSIR .EQ. 5) NTRLVL = -1 ! (gg|gi) missing
          IF (NTRLVL .GE. JTRSIR) THEN

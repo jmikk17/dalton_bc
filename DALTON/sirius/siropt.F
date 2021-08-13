@@ -3531,12 +3531,16 @@ C
 
          !Print UV and US matrices
 
-         IF (LARGEST_ASYM .GT. 1.0D-5) THEN
-            WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT warning: '//
+         IF (LARGEST_ASYM .GT. 1.0D-4) THEN
+            WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT WARNING: '//
+     &         'Largest asymmetry in V = generalized Fock matrix : ',
+     &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
+         ELSE IF (LARGEST_ASYM .GT. 1.0D-5) THEN
+            WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT INFO: '//
      &         'Largest asymmetry in V = generalized Fock matrix : ',
      &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
          ELSE IF (IPRINT .GE. 1 .OR. LARGEST_ASYM .GT. 1.0D-6) THEN
-            WRITE(lupri,"(/A,1P,G16.5,A,2I5)") 'EKT INFO : '//
+            WRITE(lupri,"(/A,1P,G16.5,A,2I5)") 'EKT : '//
      &         'Largest asymmetry in V = generalized Fock matrix : ',
      &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
          END IF

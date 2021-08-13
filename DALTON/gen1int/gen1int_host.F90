@@ -855,8 +855,7 @@
       print *, 
       call quit('error: RD_SIRIFC not available in DIRAC')
 #else
-      call RD_SIRIFC("CMO", found, wrk_space(1), wrk_space(NCMOT+1), &
-                     len_work-NCMOT)
+      call RD_SIRIFC("CMO", found, wrk_space(1))
 #endif
       if (.not.found) then
         call quit("gen1int_host_get_cube>> CMO is not found on SIRIFC!")
@@ -1812,8 +1811,7 @@
       print *, 'error: RD_SIRIFC not available in DIRAC'
       call quit('error: RD_SIRIFC not available in DIRAC')
 #else
-    call RD_SIRIFC("CMO", found, wrk_space(1), wrk_space(start_left_wrk), &
-                   len_left_wrk)
+    call RD_SIRIFC("CMO", found, wrk_space(1))
 #endif
     if (.not.found) then
       call quit("gen1int_host_get_dens>> CMO is not found on SIRIFC!")
@@ -1825,8 +1823,7 @@
       print *,'error: RD_SIRIFC not available in DIRAC' 
       call quit('error: RD_SIRIFC not available in DIRAC')
 #else
-      call RD_SIRIFC("DV", found, wrk_space(start_dv_mo), &
-                     wrk_space(start_left_wrk), len_left_wrk)
+      call RD_SIRIFC("DV", found, wrk_space(start_dv_mo))
 #endif
       if (.not.found) then
         call quit("gen1int_host_get_dens>> DV is not found on SIRIFC!")

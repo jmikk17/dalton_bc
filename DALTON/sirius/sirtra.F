@@ -1784,7 +1784,7 @@ C
          NEWTRA_USEDRC = .FALSE. ! FCKTRA_DRCCTL not implemented yet
          CALL SIR_FCKTRA_CTL('COUL',KTRLVL,THRP,CMO,WORK,KWORK)
       ELSE IF (NEWTRA) THEN
-         IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! zeroth, third or fourth order transformation
+         IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
             NEWTRA_USEDRC = .FALSE. ! use DRCCTL and not Dirac integrals from N_TRACTL
             ! because a lot of MO integrals are calculated twice in N_TRACTL if ITRLVL .ge. 5
          ELSE
@@ -1965,10 +1965,10 @@ C     ***** ITRLVL=1:TWO INDICES,ALL ORBITALS                  *****
 C     *****         TWO INDICES,PRIMARY ORBITALS ONLY          *****
 C                   (CAS-NR transformation)
 C
-C           ITRLVL=0: zeroth order transformation (uv|xy)
-C                     (all four indices active orbitals)
-C           ITRLVL=1: first order transformation  (gv|xy)
-C                     (first index all orbitals, other indices active orbitals)
+C           ITRLVL=0: first order transformation (gv|xy) 
+C                     (one index general orbitals, other indices active orbitals)
+C           ITRLVL=1: full  second order transformation  (gg|oo) and (go|go)
+C                     (g : general orbital, o : occupied orbital)
 C           ITRLVL=2: SIRIUS 2. order transformation, include (ii|aa) and (ia|ia)
 C                     included: (uv|ab), (ua|vb), (ii|aa), and (ia|ia)
 C                     (two indices active orbitals, other indices secondary orbitals)
