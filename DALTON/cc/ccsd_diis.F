@@ -49,6 +49,13 @@ C
       SAVE FIRST
       DATA FIRST /.TRUE./
 C
+      IF (MXDIIS .GT. MAXVEC) THEN
+         WRITE(LUPRI,'(/A/A,I0,A,I0)') 'INFO: '//
+     &'requested .MXDIIS is greater than maximum in CCSD_DIIS routine',
+     &'INFO: .MXDIIS value decreased from ',MXDIIS,' to ',MAXVEC
+         MXDIIS = MAXVEC
+      END IF
+
       IF (FIRST) THEN
 C
          FIRST = .FALSE.
