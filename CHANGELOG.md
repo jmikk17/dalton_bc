@@ -6,8 +6,11 @@
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
     - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput., (2021). DOI: 10.1021/acs.jctc.1c00225
   - Additional solvents available for the FixSol continuum solvation model (see 26.1.5 in the manual for a list of available solvents)
+  - Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
 
 ### Fixed
+- Fixed bug for *CUBE (crashed always) (H. J. Aa. Jensen) 
+- Fixed combination of DFT in SCF for initial orbital guess error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
 - Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
 - Fixed error leading to test energy_selected_localize failed (H. J. Aa. Jensen)
 - Fixed PElib compile error when using explicit math libs
