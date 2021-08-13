@@ -632,12 +632,15 @@ C         (ESRDFTY is in common block and is calculated inside FCK2AO)
       END IF
 !!      
       IF(DODFT) THEN
-         IF(NASHT.NE.0) CALL QUIT('Gradient not implemented for RO-DFT')
+         IF(NASHT.NE.0)
+     &   CALL QUIT('Wave function gradient not implemented for RO-DFT')
          EXCTRO = HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
          CALL DFTKSMb(DCAO,FCAO,EDFTY,WRK(KFREE),LFREE,IPRFCK)
          EDFTY = EDFTY + EXCTRO - HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
      &   ' Kohn-Sham DFT xc energy      :',EDFTY
+      ELSE
+         EDFTY = 0.0D0
       ENDIF
       IF (ESRDFTY .ne. D0 .and. P6FLAG(11))
      &   WRITE (LUPRI,'(A,F25.12)')
@@ -658,7 +661,7 @@ C
          EMCMY1 = DDOT(N2BASX,DCAO,1,WRK(KH1AO),1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
      &   ' Inactive one-electron energy :',EMCMY1
-         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1)+EDFTY
+         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1) + EDFTY
 !! Manu debug
 #ifdef SIRGRAD_DEBUG
         write(lupri,*) 'printing H1AO ...'
@@ -671,7 +674,7 @@ C
          EMCMY1 = 0.0D0
          EMCMY  = 0.0D0
       END IF
-      IF (P6FLAG(11) .AND. NASHT.GT.0) THEN
+      IF (P6FLAG(11) .AND. .NOT.ONLYFC) THEN
          EMCAC1 = DDOT(N2BASX,DVAO,1,WRK(KH1AO),1)
          WRITE (LUPRI,'(A,F25.12)')
      &   ' Active   one-electron energy :',EMCAC1,
