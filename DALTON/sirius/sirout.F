@@ -402,6 +402,11 @@ C        CI calculation
          ELSE
             WRITE (LUPRI,5012)
          END IF
+         IF (ISTACI .GT. 0) THEN
+            WRITE (LUPRI,5027) ISTACI,EMCSCF,
+     &         POTNUC,(EMCSCF-POTNUC-ESOLT)
+            WRITE (LUPRI,5030) GRDNRM
+         END IF
       ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
@@ -477,6 +482,10 @@ C        ... DIIS-DFT or QC-DFT optimization
      *       /'@    Electronic energy:',T31,F20.12)
  5025 FORMAT( '@    Solvation  energy:',T31,F20.12)
  5026 FORMAT( '@    Embedding energy:',T31,F20.12)
+ 5027 FORMAT( '@    State number:',T31,I5,
+     *      //'@    Final CI energy:',T31,F20.12,
+     *       /'@    Nuclear repulsion:',T31,F20.12,
+     *       /'@    Electronic energy:',T31,F20.12)
  5030 FORMAT(/'@    Final gradient norm:',T31,F20.12)
  5035 FORMAT(/'@    Finite field energy contribution ',
      &        'from nuclear dipole moment:',F20.12,

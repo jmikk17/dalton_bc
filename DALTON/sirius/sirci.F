@@ -1,3 +1,4 @@
+#define SIRCI_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) by the authors of Dalton.
@@ -45,6 +46,16 @@ C
 #include "dftcom.h"
 C
       LOGICAL ADDSRI_SAVE
+#if SIRCI_DEBUG > 0
+! hjaaj debug for p6flag, p4flag, ipri4
+#include "infpri.h"
+      p4flag( 6) = .true. ! hjaaj debug
+      ipri4 = 11
+      p6flag(10) = .true. ! hjaaj debug
+!     p6flag(32) = .true. ! hjaaj debug
+!     p6flag(34) = .true. ! hjaaj debug
+!     p6flag(51) = .true. ! hjaaj debug
+#endif
 C
       CALL QENTER('CIMAIN')
       ICIST  = ICI0
@@ -247,6 +258,7 @@ C   INFORB : NNASHX
 C   cbespn.h : ispin1,ispin2
 C   INFDIM : LCINDX,LACIMX,LBCIMX,LPHPMX,MAXPHP
 C   INFTAP : LUIT1,LUIT3,LUIT5
+C   infopt.h : EMCSCF, GRDNRM
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -258,6 +270,7 @@ C
 #include "cbespn.h"
 #include "infdim.h"
 #include "inftap.h"
+#include "infopt.h"
 #include "infpri.h"
 C
 C     Local variables
@@ -269,7 +282,7 @@ C
       real*8            :: EMYDFTAUX, EENSEMB, ESRDV_ens, ESRDFT(3)
       character(len=12) :: myciruntype
       EMYDFTAUX = 0.0D0 ! initialization
-      EENSEMB = 0.0D0 
+      EENSEMB   = 0.0D0 
       ESRDV_ens = 0.0D0 
 C
 C     *****************************************************************
@@ -635,6 +648,12 @@ C          write(lupri,*) 'ESRDV = ', ESRDV
      &     ' (irrep ',REP(LSYM-1),')',
      &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
 
+      IF (ISTACI .GT. 0) THEN ! if only converge one root, save info for
+                              ! print final results
+         EMCSCF = ECI(ISTACI)
+         GRDNRM = residual_croot(ISTACI)
+      END IF
+
       IF (J .NE. LUPRI) THEN
          J = LUPRI
          GO TO 815
@@ -963,7 +982,7 @@ C
 C     We know that IC and ID are both active orbitals
 C     because we have specified so in NEEDMU.
 C
-#if defined (VAR_DEBUG)
+#if SIRCI_DEBUG > 0
       IF (IOBTYP(IC).NE.JTACT .OR. IOBTYP(ID).NE.JTACT) THEN
          CALL QUIT('CIIN2A: NXTH2M did not return '//
      &             'active-active distribution')
