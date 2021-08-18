@@ -402,9 +402,9 @@ C <---
       DOCINO    = .FALSE.
       DOFCI     = .FALSE. ! Do Full CI
       DOCISD    = .FALSE. ! DO CISD
-      DORSP     = RNRESP
-      ABAIPH    = RNABAC
-C     ... It is followed by an abacus run
+      DORSP     = RNRESP .OR. RNABAC
+C     ... RNRESP: It is followed by a **RESPON run (RESPON module)
+C     ... RNABAC: It is followed by a **PROPERTIES run (ABACUS module)
       CORHOL    = .FALSE.
       CORRLX    = .FALSE.
 C added by Bin Gao for generating cube files
@@ -865,18 +865,6 @@ C
       IF (DIRFCK) THEN
          LUSUPM = -1
       END IF
-C
-C     set ITRFIN for ABAIPH
-!     Apr. 2016: not any more, Abacus calls TRACTL
-!     and that is better, then it is known exactly what
-!     transformation level is needed.
-!
-!     IF (ABAIPH .AND. ITRFIN .EQ. -6789) THEN
-!        IF (DOMC .OR. DOCI) THEN
-!           ITRFIN = 4
-!           IF (NEWTRA) ITRFIN = 5 ! to get occ-sec integrals
-!        END IF
-!     END IF
 C
       IF (DOCI .AND. ISTACI .LE. 0) THEN
          IF (DORSP .AND. .NOT.DOMC) THEN

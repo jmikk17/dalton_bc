@@ -781,6 +781,14 @@ C              subtract EMY from diagonal again, as expected in CIRSPS
                   WRK(KCDIAG+I) = WRK(KCDIAG+I) - EMY_CI
   950          CONTINUE
             END IF
+            IF (ISTACI .LE. 0) THEN
+               ISTACI = 1
+               WRITE(LUPRI,'(/A)')
+     &         ' Writing SIRIFC interface file for CI root no. 1'
+            ELSE
+               WRITE(LUPRI,'(/A,I0)')
+     &         ' Writing SIRIFC interface file for CI root no. ',ISTACI
+            END IF
 C
             CALL CIRSPS(ECI(ISTACI),EMY_CI,CMO,WRK(KFCAC),WRK(KH2AC),
      *                  WRK(KCDIAG),INDXCI,WRK(KW2),LW2)

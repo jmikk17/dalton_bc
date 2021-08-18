@@ -187,7 +187,6 @@ C
       CORRLX = .FALSE.
       RESPHP = .FALSE.
       JOLSEN = .FALSE.
-      ABAIPH = .FALSE.
       INERSI = .FALSE.
       INERSF = .FALSE.
 C
