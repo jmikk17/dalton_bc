@@ -248,8 +248,9 @@ c     assert(NTYPSO>=NRHO)
       DIMENSION DMAT(NBAST,NBAST), GAO(NVCLEN,NBAST,*)
       DIMENSION NBLOCKS(NSYM),IBLOCKS(2,LDAIB,NSYM), GRAD(4,NVCLEN)
       DIMENSION TMP(NVCLEN,NBAST)
-      real*8 dmat_sym(nbast,nbast)
+      real*8, allocatable :: dmat_sym(:,:)
 #include "priunit.h"
+      allocate(dmat_sym(nbast,nbast))
 c
       CALL zeroorbs(TMP,NBLOCKS,IBLOCKS,LDAIB,NVCLEN)
 c      CALL DZERO(TMP,NVCLEN*NBAST)
@@ -294,6 +295,7 @@ c      CALL DZERO(TMP,NVCLEN*NBAST)
       END DO
       END DO
       END DO
+      deallocate(dmat_sym)
       END
 c
       SUBROUTINE GETBLOCKS(CENTER,CELLSZ,RSHEL,NBLCNT,IBLCKS)
