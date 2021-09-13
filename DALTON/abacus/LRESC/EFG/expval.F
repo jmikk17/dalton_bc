@@ -211,7 +211,8 @@ C --------------------------------
          NLAB=NUCIND         
          IJ = 1
          DO I=1,NUCIND
-           LISTA1(IJ)= 'ZZEFG'//CHRNOS(0)//CHRNOS(I)//CHRNOS(1)
+      LISTA1(IJ)= 'ZZEFG'//CHRNOS(I/10)//CHRNOS(MOD(I,10))//
+     &            CHRNOS(1)
            IJ = IJ + 1
          END DO
       END IF
@@ -222,7 +223,9 @@ C     ---------------------------
       NLAB=NUCIND 
       IJ = 1
       DO I=1, NUCIND
-            LISTA1(IJ)= 'LEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(3*I) !
+            LISTA1(IJ)= 'LEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(3*I)
+      LISTA1(IJ)= 'LEFG '//CHRNOS(3*I/100)//CHRNOS(MOD(3*I,100)/10)
+     &   //CHRNOS(MOD(3*I,10))
       IJ = IJ + 1
       END DO
       ENDIF

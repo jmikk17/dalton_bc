@@ -201,8 +201,9 @@ C        Look for LABELS : ZZEFG---
          LABEL1='ZZEFG  '
          IJ = 1
          DO I=1,NUCIND
-         LISTA1(IJ)= 'ZZEFG'//CHRNOS(0)//CHRNOS(I)//CHRNOS(1)
-             IJ = IJ + 1
+            LISTA1(IJ)= 'ZZEFG'//CHRNOS(I/10)//CHRNOS(MOD(I,10))//
+     &      CHRNOS(1)
+            IJ = IJ + 1
          END DO
          NLAB1 = NUCIND
 C        Look for LABELS : Darwin
@@ -220,9 +221,10 @@ C        -------------------------------------
          LABEL1='ZZEFG  '
          IJ = 1
          DO I=1,NUCIND
-         LISTA1(IJ)= 'ZZEFG'//CHRNOS(0)//CHRNOS(I)//CHRNOS(1)
-             LABSYM(IJ)=1
-             IJ = IJ + 1
+            LISTA1(IJ)= 'ZZEFG'//CHRNOS(I/10)//CHRNOS(MOD(I,10))//
+     &      CHRNOS(1)
+            LABSYM(IJ)=1
+            IJ = IJ + 1
          END DO
          NLAB1 = NUCIND
 C        Look for LABELS : Mass Velocity

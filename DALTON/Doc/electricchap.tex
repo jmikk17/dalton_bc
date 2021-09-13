@@ -99,7 +99,7 @@ importance, see for instance Ref.~\cite{mjssocpjthkrcpl243}.
 % by jjaucar June-2021
 \section{Relativistic corrections to Electric Field Gradients}\label{sec:lresc-efg}
 
-The implementation of the Linear Response Elimination of Small Component scheme (LRESC) provides the calculation of first order relativistic corrections to the $zz$ cartesian component of the electric field gradients. This corrections are invoked through the keyword \Key{LR-EFG} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions can be found on
+The implementation of the Linear Response Elimination of Small Component scheme (LRESC) provides the calculation of first order relativistic corrections to the electronic $zz$ cartesian component of the electric field gradients ($q_{zz}4$). This corrections are invoked through the keyword \Key{LR-EFG} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions can be found on
 
 \begin{center}
 \fbox{
@@ -111,15 +111,26 @@ The implementation of the Linear Response Elimination of Small Component scheme 
 \item J.I. Melo, M.C. Ruiz de Azua, C.G Giribet, G.A. Aucar, and R.H. Romero \newblock {\em J. Chem. Phys.}, {\bf 118},\hspace{0.25em}2, (2003).
 
 %\item Aucar, G. A., Melo, J. I., Aucar, I. A., and Maldonado, A. F. \newblock{\em Int. J. Quantum Chem.}, {\bf 118}(1),\hspace{0.25em}e25487, (2018).
-\item J. J. Aucar, A. F. Maldonado, and J. I. Melo \newblock{\em Int. J. Quantum Chem.}, (2021). DOI: 10.1002/qua.26769
-
 \item J. I. Melo and A. F. Maldonado \newblock{\em Int. J. Quantum Chem.}, {\bf 119}(15),\hspace{0.25em}e25935, (2019).
+
+\item J. J. Aucar, A. F. Maldonado, and J. I. Melo \newblock{\em Int. J. Quantum Chem.}, (2021). DOI: 10.1002/qua.26769.
  
 \end{list}
 }}
 \end{center}
 
-LRESC module computes all first order corrections to electric field gradients of all the independent nucleus in a molecule. 
+LRESC module computes all first order corrections to electric field gradients of all the independent nucleus in a molecule.
+There are some important issues to keep in mind:
+\begin{center}
+\begin{itemize}{}{}
+\item Uncontracted basis set is recommended. 
+\item Symmetry is not yet implemented.
+\item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
+\item At first order in LRESC scheme results are reliable for molecules containing atoms belonging up to the fifth row of the periodic table \cite{melomaldo19,aucarmaldomelo21}. 
+\end{itemize}
+\end{center}
+
+
 An input example file is:
 
 \begin{verbatim}
@@ -139,25 +150,14 @@ An input example file is:
 \end{verbatim}
 
 The integrals computed under \Key{LR-EFG} are described in INTEGRALS chapter Section \ref{sec:herinp}.
-The complete list of control keywords are:
+The complete list of control keywords for \Sec{LROPTE} are:
 
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
 \item[\Key{PRINT}] Controls the print level, for debugging purpose.
 \item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. If not, only the total relativistic corrections are printed. 
-\item[\Key{ORBCON}] Orbital contributions to relativistic corrections (the ones that are expressed as mean values of certain operators) are printed.
-\item[\Key{PQPKIN}] Prints out the so called $\Delta^{pqp}$ and $\Delta^{kin}$ corrections.
+\item[\Key{ORBCON}] Orbital contributions for the mean values corrections are printed.
+\item[\Key{PQPKIN}] Prints out the so called $\Delta^{pqp}$ and $\Delta^{kin}$ corrections, for debugging purpose.
 \end{list}
-
-There are some important issues to keep in mind:
-\begin{center}
-\begin{itemize}{}{}
-\item Uncontracted basis set is recommended. 
-\item Symmetry is not yet implemented.
-\item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
-\item At first order in LRESC scheme results are reliable for molecules containing atoms belonging up to the fifth row of the periodic table \cite{melomaldo19,aucarmaldomelo21}. 
-\end{itemize}
-\end{center}
-
 
 \section{Static and frequency dependent
 polarizabilities}\label{sec:polari}

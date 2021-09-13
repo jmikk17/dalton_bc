@@ -200,9 +200,12 @@ c c^-2
       WRITE(LUPRI,*)
       WRITE(LUPRI,*)'   -  Corrections calculated in all symmetry '// 
      & 'independent centers'
-      WRITE(LUPRI,*)'   -  WARNING: Implemented for '// 
-     & 'máx. 10 nucleus'
-  
+
+      IF (PRTALL2) THEN 
+      WRITE(LUPRI,*)'   -  To identify LRESC corrections '// 
+     & 'see related papers'
+      END IF
+        
       IF (.NOT. PRTALL2) THEN 
          WRITE(LUPRI,'(14X,A)')'*  For LRESC corrections, add '//
      &   '.PRTALL in your input file under *LROPTE'
@@ -213,7 +216,7 @@ C NR value
 C
       IF (PRTALL2) THEN
             WRITE(LUPRI,*)
-            CALL HEADER('Non Relativistic Values (NR) [au]',-1)
+            CALL HEADER('Non-relativistic Values (NR) [au]',-1)
 
 
             WRITE(LUPRI,'(10X,A,19X,A)') 'Atom','NR'
@@ -233,7 +236,7 @@ C First order corrections
 C
       IF (PRTALL2) THEN
             WRITE(LUPRI,*)
-            CALL HEADER('First order corrections (1st Order) [au]',-1)
+            CALL HEADER('First Order Corrections (1st Order) [au]',-1)
             WRITE(LUPRI,*)'         Atom          ΔMv  '//
      &              '           ΔDw             ΔLap            Total'
             WRITE(LUPRI,'(10X,A)') REPEAT('-',67)
@@ -255,7 +258,7 @@ C
      &            ' ΔLap in the basis set limit'
                   WRITE(LUPRI,*)' '
                   WRITE(LUPRI,*)'         Atom          Δpqp'//
-     &              '            Δkin            Δpqpkin'
+     &              '     +      Δkin    =       Δpqpkin'
                   WRITE(LUPRI,'(10X,A)') REPEAT('-',53)
                   IJ = 0
                   DO I=1,NUCIND

@@ -3,7 +3,7 @@
 #    -------------
 #    Molecule:         HF
 #    Wave Function:    Hartree Fock
-#    Test Purpose:     LRESC correction to FCl EFG
+#    Test Purpose:     LRESC correction to FH EFG
 
 import os
 import sys
@@ -28,11 +28,11 @@ f.add(string = 'Gradient of the zz EFG component at the nuclei',
 f.add(string = 'Laplacian of the xx,yy and zz EFG component at the nuclei',
         abs_tolerance=1.0e-8)
 
-f.add(from_string = 'Non Relativistic Values',
+f.add(from_string = 'Non-relativistic Values',
       num_lines = 6,
       abs_tolerance = 1.0e-3)
 
-f.add(from_string = 'First order corrections',
+f.add(from_string = 'First Order Corrections',
       num_lines = 16,
       abs_tolerance = 1.0e-3)
 

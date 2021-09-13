@@ -422,7 +422,8 @@ directions. The center of expansion is always~(0,0,0).
 \item Integral:
 $\left<\chi_{\mu}\left|\nabla q_{zz}(\textbf{R}_K)\right|\chi_{\nu}\right>$
 where $K$ is the nucleus of interest.
-\item Property labels: \verb|GEFG abc |, where \verb|abc| is the number of the nuclear coordinate.
+\item Property labels: \verb|GEFG abc |, where \verb|abc| is related to the nuclear coordinate number and the gradient component. \\
+E.g.: $GEFG\;\;002 \equiv \left<\chi_{\mu}\left|\frac{\partial q_{zz}(\textbf{R}_1)}{\partial y}\right|\chi_{\nu}\right>$ and $GEFG\;\;006 \equiv \left<\chi_{\mu}\left|\frac{\partial q_{zz}(\textbf{R}_2)}{\partial z}\right|\chi_{\nu}\right>$.
 %$(1/2/3)$ times the symmetry-adapted nuclear coordinate of interest for the $(x/y/z)$ component of the gradient respectively.
 \end{list}
 
@@ -527,8 +528,18 @@ $-\frac{1}{2}\left<\chi_{\mu}\left|\nabla^{2}\right|\chi_{\nu}\right>$
 \item Integral:
 $\left<\chi_{\mu}\left|\nabla^2 q_{ii}(\textbf{R}_K)\right|\chi_{\nu}\right>$
 where $K$ is the nucleus of interest.
-\item Property labels: \verb|LEFG abc |, where \verb|abc| is the number
-of the symmetry-adapted nuclear coordinate.
+\item Property labels: \verb|LEFG abc|, where \verb|abc| is related to the nuclear coordinate number and the laplacian component. There are nine integrals for each nucleus. \\
+E.g.:
+\begin{eqnarray*}
+LAPEFG\;\;010 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{xx}(\textbf{R}_2)}{\partial x^2}\right|\chi_{\nu}\right>   \\
+LAPEFG\;\;012 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{xx}(\textbf{R}_2)}{\partial z^2}\right|\chi_{\nu}\right> \\
+LAPEFG\;\;016 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{zz}(\textbf{R}_2)}{\partial x^2}\right|\chi_{\nu}\right> \\
+LAPEFG\;\;018 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{zz}(\textbf{R}_2)}{\partial z^2}\right|\chi_{\nu}\right>
+\end{eqnarray*}
+
+
+
+
 \end{list}
 
 \item[\Key{LONMOM}] Contribution to the London magnetic

@@ -98,11 +98,11 @@ C     Get the operators (its representation in the AO basis)
       
 
       DO I=1,NUCIND
-       ZZEFG(I)= 'ZZEFG'//CHRNOS(0)//CHRNOS(I)//CHRNOS(1) ! NUCIND.leq.10
-            DO J=1,3
+         ZZEFG(I)= 'ZZEFG'//CHRNOS(I/10)//CHRNOS(MOD(I,10))//CHRNOS(1)
+         DO J=1,3
             INDEX=3*(I-1)+J
             GZZEFG(INDEX)= 'GEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(INDEX) !
-            ENDDO
+         ENDDO
       
       call READAOP(GZZEFGx, naos,GZZEFG(3*(I-1)+1)) !gets GZZEFG_X(I) matrix
       call READAOP(GZZEFGy, naos,GZZEFG(3*(I-1)+2)) !gets GZZEFG_Y(I) matrix
