@@ -416,6 +416,8 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/cc/cc_freeze_tripletexci.F
     DALTON/cc/rpa_grad.F
     DALTON/cc/cc_active.F
+    DALTON/cc/mp3_energy.F
+    DALTON/cc/mp3_rhs.F
     DALTON/choles/cc_caa.F
     DALTON/choles/cc_choatr.F
     DALTON/choles/cc_chocc2.F

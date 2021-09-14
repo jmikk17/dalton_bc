@@ -9,3 +9,4 @@ DALTON/Dalton_PDFmanual
 .DS_Store
 venv/
 tags*
+cp_test*/*

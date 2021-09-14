@@ -6,6 +6,7 @@
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver.
+- The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
 
 
 ## [2020.1-dev] (unreleased)

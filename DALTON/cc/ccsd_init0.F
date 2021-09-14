@@ -75,6 +75,7 @@ C
       DCPT2  = .FALSE.
       CIS    = .FALSE.
       CCS    = .FALSE.
+      MP3    = .FALSE.
       CCD    = .FALSE.
 !SONIA/FRAN
       rCCD   = .FALSE.
@@ -199,6 +200,9 @@ C
 C     Multi-Level CC3 OR CCSD(T)
       MLCC3 = .FALSE.
       MLCCSDPT = .FALSE.
+
+C     CP ORDER
+      CPORDER = 0
 C
 C DRCCD/DRPA related stuff
 C
