@@ -300,7 +300,7 @@ C
          IOFFAX = IOFFAX + NAXIS
   100 CONTINUE
 C
-C     ***** Print static constribution to dipole gradient *****
+C     ***** Print static contribution to dipole gradient *****
 C
       CALL GPCLOSE(LUGDR,'KEEP')
       IF (IPRINT .GT. 1 .AND. DIPDER) THEN

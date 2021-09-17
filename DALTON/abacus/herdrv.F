@@ -3760,14 +3760,14 @@ C
             END IF
          END IF
 C
-C        ******************************************************
-C        ***** Short-range two-electron integrals (MCDFT) *****
-C        ******************************************************
+C        *********************************************************
+C        ***** Short-range two-electron integrals (MC-srDFT) *****
+C        *********************************************************
 C
          IF(DOSRIN) THEN
-            IF (PANAS .EQ. D0 .AND. CHIVAL .EQ. -1.d0) 
-     &      CALL QUIT('FATAL ERROR : Short-range integrals '//
-     &           'specified with the unmodified 2e-repulsion!')
+            IF (CHIVAL .EQ. -1.d0) 
+     &      CALL QUIT('FATAL ERROR : Short-range 2e integrals '//
+     &           'requested, but mu is not specified!')
             SRINTS = .TRUE.
             NPAO = MXSHEL*MXAOVC
             CALL MEMGET('INTE',KJSTRS,NPAO*2,WORK,KFREE,LFREE)

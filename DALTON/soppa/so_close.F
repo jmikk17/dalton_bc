@@ -15,12 +15,16 @@ C
       CHARACTER*7 FILENM
       CHARACTER*4 STATUS
 C
-      DTIME      = SECOND()
-C
-      CALL WCLOSE2(LUFILE,FILENM,STATUS)
-C
-      DTIME     = SECOND()  - DTIME
-      SOORWC(4) = SOORWC(4) + DTIME
+      IF (LUFILE .GT. 0) THEN
+      ! if .lt. 0 then LUFILE has not been opened,
+      ! probably because no operators of current symmetry
+
+        DTIME     = SECOND()
+        CALL WCLOSE2(LUFILE,FILENM,STATUS)
+        DTIME     = SECOND()  - DTIME
+        SOORWC(4) = SOORWC(4) + DTIME
+
+      END IF
 C
       RETURN
 C

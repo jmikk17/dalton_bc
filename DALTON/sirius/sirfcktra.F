@@ -78,6 +78,10 @@ C --- start of executable code
       call QENTER('SIR_FCKTRA_CTL')
 
       JTRSIR = abs(ITRSIR)
+      ! 0    : first order
+      ! 1..4 : variants of second order
+      ! 5, 6 : variants of third order
+      ! > 6  : fourth order, i.e. full
 
 #if FCKTRA_DEBUG > 0
       IPRTRA = MAX(IPRTRA,FCKTRA_DEBUG)
@@ -113,8 +117,8 @@ C     Test if MO integrals already available
          READ  (LUINTM)
          READ  (LUINTM) J,NTRLVL ! originally LBINTM, JTRLVL
          IF (NTRLVL .EQ. 3 .AND. JTRSIR .EQ. 2) NTRLVL = -1 ! (aa|ii) and (ai|ai) missing
-         IF (NTRLVL .EQ. 2 .AND. JTRSIR .EQ. 3) NTRLVL =  3
-         IF (NTRLVL .EQ. 5 .AND. JTRSIR .EQ. 6) NTRLVL =  6
+         IF (NTRLVL .EQ. 2 .AND. JTRSIR .EQ. 3) NTRLVL =  3 ! reset for NTRLVL.ge.JTRSIR test below
+         IF (NTRLVL .EQ. 5 .AND. JTRSIR .EQ. 6) NTRLVL =  6 ! reset for NTRLVL.ge.JTRSIR test below
          IF (NTRLVL .EQ. 6 .AND. JTRSIR .EQ. 4) NTRLVL = -1 ! (gg|ii) and (gi|gi) missing
          IF (NTRLVL .EQ. 6 .AND. JTRSIR .EQ. 5) NTRLVL = -1 ! (gg|gi) missing
          IF (NTRLVL .GE. JTRSIR) THEN
@@ -757,6 +761,7 @@ C --- start of executable code
 ! Used from include files:
 !  gnrinf.h : CHIVAL
 !  inforb.h : N2BASX, NORBT,NNORBX, ...
+!  infinp.h : MCTYPE
 !  infind.h : ISMO(:)
 !  inftra.h : IPRTRA
 !  inftap.h : LUMINT
@@ -768,6 +773,7 @@ C --- start of executable code
 #include "maxash.h"
 #include "gnrinf.h"
 #include "inforb.h"
+#include "infinp.h"
 #include "infind.h"
 #include "inftra.h"
 #include "inftap.h"
@@ -826,6 +832,7 @@ C --- start of executable code
       call MPIXBCAST(TYPE_TEXT,4,'CHARACTER',MASTER)
       call MPIXBCAST(IFTHRS,1,'INTEGER',MASTER)
       call MPIXBCAST(CHIVAL,1,'DOUBLE',MASTER)
+      call MPIXBCAST(MCTYPE,1,'INTEGER',MASTER)
       call MPIXBCAST(ICDTRA,NNORBX,'INTEGER',MASTER)
       call MPIXBCAST(ISMO,NORBT,'INTEGER',MASTER)
       call MPIXBCAST(ICD_NODE,NNORBX,'INTEGER',MASTER)
@@ -879,7 +886,7 @@ C --- start of executable code
 
       integer, allocatable :: ICDTRA(:), ICD_NODE(:)
       integer ICD, NCDTRA, MX_NDMAT
-      integer KFREE, LFREE, KDMAT, KFMAT, KUCMO
+      integer KFREE, LFREE, KDMAT, KFMAT, KUCMO, KCMO
       logical PARHER_save, SLAVE_save, DIRFCK_save
       character*4 TYPE_TEXT
 #include "priunit.h"
@@ -955,12 +962,14 @@ C --- start of executable code
       call MPIXBCAST(TYPE_TEXT,4,'CHARACTER',MASTER)
       call MPIXBCAST(IFTHRS,1,'INTEGER',MASTER)            ! accuracy of MO integrals (screening)
       call MPIXBCAST(CHIVAL,1,'DOUBLE',MASTER)
+      call MPIXBCAST(MCTYPE,1,'INTEGER',MASTER)
       call MPIXBCAST(ICDTRA,NNORBX,'INTEGER',MASTER)
       call MPIXBCAST(ISMO,NORBT,'INTEGER',MASTER)
       call MPIXBCAST(ICD_NODE,NNORBX,'INTEGER',MASTER)
 
-      call MPIXBCAST(WORK(KFREE),NCMOT,'DOUBLE',MASTER)
-      call UPKCMO(WORK(KFREE),WORK(KUCMO))
+      KCMO = KFREE
+      call MPIXBCAST(WORK(KCMO),NCMOT,'DOUBLE',MASTER)     ! receive symmetry packed CMO
+      call UPKCMO(WORK(KCMO),WORK(KUCMO))
 
       NCDTRA = 0
       DO ICD = 1,NNORBX

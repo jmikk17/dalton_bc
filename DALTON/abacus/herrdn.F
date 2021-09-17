@@ -2121,7 +2121,7 @@ C         ... code -1 to tell MBSI (value of 0 is floating orbitals)
         ELSE
           CHARGE(NCTOT) = Q
           IZATOM(NCTOT) = NQ
-C         ... if point charge this is reset outside to -1234567890
+C         ... if point charge IZATOM is reset outside to -1234567890
 C             to tell this is a point charge /hjaaj Nov 2003
           GNUEXP(NCTOT) = GEXP
         END IF
@@ -2523,7 +2523,7 @@ C
       NCHTOT = 0
       NQMBAS = 0
       QM3CHT = 0.0D0
-      DO 100 I = 1,NONTYP
+      DO I = 1,NONTYP
 C
 C        Convert information to a string that can be understood by the innocent user
 C
@@ -2590,10 +2590,10 @@ C               Output for multiple basis sets (WK/UniKA/04-11-2002).
      &            WRITE (LUCME,'(2X,A2,I11,F10.4,2I6,6X,A)')
      &                 NAMN(ICENT)(1:2),NUCTYP,CHTTYP,
      &                 NPRIM(1),NCONT(1),TSTRING(1)
-               END IF
-            END IF
-         END IF
-  100 CONTINUE
+               END IF ! LMULBS
+            END IF ! DIRAC
+         END IF ! IPREAD .gt. 0
+  100 END DO ! I = 1, NONTYP
       IF (IPREAD .GT. 0) THEN
          IF(DIRAC) THEN
             WRITE (LUPRI,'(2X,70A1)') ('-',I=1,70)

@@ -3663,17 +3663,17 @@ C  /* Deck sdtyp */
                   ITHIRD = MOD(MOD(ISCOR1,100),10)
                   DO 400 ICOOR2 = 1, 3
                      ITYP = ITYP + 1
-                     IF (INTTYP .EQ. 11) THEN
+                     IF (INTTYP .EQ. 11) THEN ! SD only
                         LABINT(ITYP) = 'SD '//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 13) THEN
+                     ELSE IF (INTTYP .EQ. 13) THEN ! SD+FC
                         LABINT(ITYP) = 'SDC'//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 68) THEN
+                     ELSE IF (INTTYP .EQ. 94) THEN ! SDKE
                IF (ISCOR1 .GT. 99) THEN
          CALL QUIT('Error: SDKE only implemented for max 33 atoms')
                END IF
@@ -4041,6 +4041,7 @@ C  /* Deck hdotyp */
       END
 C  /* Deck npetyp */
       SUBROUTINE NPETYP(NOPTYP,INTREP,NPETBL,LABINT,DOATOM,NATOM)
+!     Property labels for potential energy at the nuclei (NUCPOT)
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
@@ -4057,7 +4058,7 @@ C  /* Deck npetyp */
 C
       NOPTYP = NATOM
       CALL NTYPTS(NOPTYP)
-      CALL DZERO(NPETBL,NCTOT*(MAXREP + 1))
+      CALL IZERO(NPETBL,NCTOT*(MAXREP + 1))
 C
       ITYP = 0
 C
@@ -4975,7 +4976,7 @@ C     when reaching this routine.
      &         '"EOFLABEL" label not found in AOPROPER'
             CALL GPINQ_print(LUPROP,'NAME')
             REWIND LUPROP
-            CALL QDUMP(LUPROP)
+            CALL DMPLAB(LUPROP,LUPRI)
             CALL QUIT('Internal error, EOF not found in AOPROPER')
          END IF
          BACKSPACE LUPROP

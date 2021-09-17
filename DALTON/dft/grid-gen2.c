@@ -2884,7 +2884,7 @@ compute_extent_for_shells(BasisInfoStruct* basisInfo, real targetRhoError)
       for(kk = 0; kk < contr; kk++)
 	{
 	  DistributionSpecStruct testDistr;
-	  BoxStruct testBox;
+	  BoxStruct testBox = {}; // initialize to zero to avoid compiler complaints in currExtent definition below
 	  integer j;
 	  real currExtent;
 

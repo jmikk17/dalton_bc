@@ -248,6 +248,7 @@ C--------------------------------------------------
 C
       DO ISYM = 1, NSYM
          IF (NUM_LABELS(ISYM).LE.0) CYCLE ! Nothing to do for this sym
+         IF (NT1AM(ISYM).EQ.0) CYCLE      ! No p-h nor h-p operators for this sym
          ILABOFF = LABEL_OFFSETS(ISYM)
          ! Also skip, if we are not to solve any vectors for this
          ! symmetry

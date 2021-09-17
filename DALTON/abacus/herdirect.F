@@ -786,7 +786,7 @@ c             calculation.
          END IF
 
          CALL MEMREL('HERFCK_1.PARDRV',WORK,KWORK,KNSTAT,KFREE,LFREE)
-      ELSE
+      ELSE ! not PARHER
 #endif
 C
 C        Calculate full Coulomb and exchange weighted with hfxfac 

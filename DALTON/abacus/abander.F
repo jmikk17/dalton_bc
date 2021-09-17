@@ -343,6 +343,7 @@ C
       ELSE IF (CCD. OR. CCSD .OR. CCS .OR. CC2 .OR. MP2 .OR. CCPT .OR.  ! MP2 is MP2 from CC code
      &        DOROSCF .OR.  ! high spin HF or DFT, no symmetry
      &        (DFTRUN .AND. (NSYM.GT.1.OR.HFXMU.NE.D0)) .OR.
+!    &        DOHFSRDFT .OR. DOMCSRDFT .OR.   ! TODO use analytical gradient and hessian for srDFT !!!
      &        DRCCD .OR. SOSEX .OR. RCCD .OR.  !RPA Methods with analytic gradient only
      &        DPCM .OR.
      &        DODFTD .OR. !AMT Only gradients for empirical disp correction so far

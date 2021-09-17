@@ -2491,7 +2491,7 @@ C
             ISYMORB = 0
             IADD = 0
             ICMMO = 1
-            DO 1 I=1,NBAST
+            DO 1 I=1,NORBT
 C
                IF (ISYMORB .EQ. NAOS(ISYMCLAS)) THEN
                   ISYMORB = 0

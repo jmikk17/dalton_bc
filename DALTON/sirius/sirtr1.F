@@ -1016,7 +1016,10 @@ C ***** of the inactive Fock matrix above).
 C
       IF (NDMAT .GT. 0) THEN
 
-         CALL DZERO(FXCAO,NDMAT*N2BASX)
+         IF (NDTMAT .GT. 0)
+     &   CALL DZERO(FTVAO,NDTMAT*N2BASX)
+         IF (NDXMAT .GT. 0)
+     &   CALL DZERO(FXCAO,NDXMAT*N2BASX)
 
       IF (LUSUPM .NE. -1 .AND.
      &   .NOT. (HSROHF .OR. DOCISRDFT .OR. DOHFSRDFT .OR.
@@ -2732,7 +2735,7 @@ C
 C     Local variables
 C
       LOGICAL   DOFXQ
-      DIMENSION NEEDDI(-4:6)
+      INTEGER   NEEDDI(-4:6)
 C
       CALL QENTER('TR1H2D')
 C

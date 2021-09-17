@@ -1035,7 +1035,10 @@ containing the Cartesian components of the electric field from the
 embedding potential will be created.
 
 \item[\Key{SKIPMUL}]\verb| |\newline
-Skip calculation of multipole--multipole interaction energy.
+Skip calculation of multipole--multipole interaction energy (default)
+
+\item[\Key{NOSKIPMUL}]\verb| |\newline
+Do not skip calculation of multipole--multipole interaction energy.
 
 \item[\Key{ISOPOL}]\verb| |\newline
 Converts all anisotropic polarizabilities into isotropic polarizabilities.
@@ -1052,6 +1055,24 @@ Verbose output. Currently this will print the final converged induced dipole mom
 
 \item[\Key{DEBUG}]\verb| |\newline
 Debug output. Prints the total electric field and the induced dipole moments in each iteration. WARNING: for large systems this will produce very large output files.
+
+\item[\Key{OLDFIELD}]\verb| |\newline
+Activates the legacy implementation of direct multipole field evaluation. For debugging purposes.
+
+\item[\Key{FMM}]\verb| |\newline
+Activate FMM for evaluations of static and induced multipole fields.
+
+\item[\Key{THETA}]\verb| |\newline
+\verb|READ (LUCMD, *) THETA|\verb| |\newline
+Value of the multipole acceptance criterion for FMM.
+
+\item[\Key{EXPANSION ORDER}]\verb| |\newline
+\verb|READ (LUCMD, *) EXPANSION_ORDER|\verb| |\newline
+Multipole expansion order used in FMM.
+
+\item[\Key{NCRIT}]\verb| |\newline
+\verb|READ (LUCMD, *) NCRIT|\verb| |\newline
+Maximum number of particles in an FMM box (before it is split).
 
 \end{description}
 

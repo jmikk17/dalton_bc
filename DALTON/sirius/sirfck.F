@@ -21,7 +21,7 @@
 ! -- FILE: DALTON/sirius/sirfck.F --
 C
 C
-      SUBROUTINE SIRFCK(FMAT,DMAT,NDMAT,ISYMDM,IFCTYP,AO_DIRECT,
+      SUBROUTINE SIRFCK(FMAT,DMAT,NDMAT,ISYMDM,IFCTYP,AO_DIRECT_in,
      &                  WORK,LWORK)
 C
 C     March 1997 - tsaue Screening
@@ -56,12 +56,12 @@ C         Y = 3 Coulomb + Exchange
 C       + sign: alpha + beta matrix (singlet)
 C       - sign: alpha - beta matrix (triplet)
 C
-C     AO_DIRECT = .TRUE.   Direct calculation using hermit.
-C                 .FALSE.  Read integrals from AOTWOINT/AOSR2INT
+C     AO_DIRECT_in = .TRUE.   Direct calculation using hermit.
+C                    .FALSE.  Read integrals from AOTWOINT/AOSR2INT
 Cholesky       Overridden by the CHOINT flag
 C
 #include "implicit.h"
-      LOGICAL   AO_DIRECT, DOERG, DOATR, LSRHYBR
+      LOGICAL   AO_DIRECT_in, AO_DIRECT, DOERG, DOATR, LSRHYBR
       LOGICAL   DO_SPINDNS, DFT_SPINDNS_SAVE, TRIPLET_local
       REAL*8    FMAT(N2BASX,NDMAT), DMAT(N2BASX,*)
       INTEGER   ISYMDM(NDMAT), IFCTYP(NDMAT)
@@ -106,6 +106,7 @@ C
       CALL QENTER('SIRFCK')
       CALL GETTIM(T0,W0)
 C
+      AO_DIRECT = AO_DIRECT_in ! AO_DIRECT may be reset below
       iprfck = max(iprfck, SIRFCK_DEBUG)
       iprsrdft = iprfck
       IF (NDMAT.EQ.0) GO TO 9999
@@ -208,10 +209,15 @@ C        DC, DV or DXC, DXV
             CALL QUIT('SIRFCK ERROR: nsr_dmat > 1 for sr gradient call')
          END IF
          IF (DO_SPINDNS .AND. .NOT. AO_DIRECT) THEN
-            WRITE(lupri,'(//A)') 'SIRFCK ERROR, open-shell srDFT is'
-     &       //' only implemented for .DIRECT Fock matrix construction.'
-            CALL QUIT('SIRFCK ERROR, open-shell srDFT only for'//
-     &         ' AO-direct Fock matrices')
+            WRITE(lupri,'(//A/A)') 'SIRFCK INFO: Open-shell srDFT is '
+     &       //'only implemented for .DIRECT Fock matrix construction.',
+     &       'SIRFCK INFO: '
+     &       //'Dalton therefore shifts to AO DIRECT in this call.'
+            AO_DIRECT = .TRUE.
+!           WRITE(lupri,'(//A)') 'SIRFCK ERROR, open-shell srDFT is'
+!    &       //' only implemented for .DIRECT Fock matrix construction.'
+!           CALL QUIT('SIRFCK ERROR, open-shell srDFT only for'//
+!    &         ' AO-direct Fock matrices')
          END IF
 
       END IF
@@ -1172,7 +1178,10 @@ C for HFXFAC:
 
       CALL QENTER('SIRFCK2')
 
-#include "memint.h"
+      KWORK = 1
+      KFREE = KWORK
+      LFREE = LWORK
+
 #if SIRFCK_DEBUG > 0
       write(lupri,*)'SIRFCK2: NDMAT=', NDMAT
       write(lupri,*)'SIRFCK2: IFCTYP=', (IFCTYP(I),I=1,NDMAT)
