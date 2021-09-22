@@ -36,7 +36,7 @@ C       Revisited - J. Aucar 2020
        naos = NBAST ! NBAST: Total number of (atomic) basis functions
        nmos= NORBT !NORBT: Total number of molecular orbitals
 C ----------------------------------------------------------
-C         SECCION CHEQUEO DE LA BASE
+C         BASE CHECKING
 C ----------------------------------------------------------
       IF (PRT.GT.0) THEN 
          write(lupri,*) '*******************************************' 
@@ -44,8 +44,8 @@ C ----------------------------------------------------------
          write(lupri,*) '*******************************************' 
          IF (PRT.GT.3) then
             write(lupri,*) ' **** INTEGRALS OUTPUT   DETECTED ! *******'
-            write(lupri,*) ' ************** CMOS OJO !! **************'
-            write(lupri,*) ' ***** en DALTON.OUT has the transposed **'
+            write(lupri,*) ' ************** CMOS care !! **************'
+            write(lupri,*) ' ***** DALTON.OUT has the transposed **'
             write(lupri,*) ' ******      CMOS(NOCCT,naos)       ******'
             write(lupri,*) ' *****************************************' 
 

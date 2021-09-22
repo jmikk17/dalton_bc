@@ -76,7 +76,7 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
  1             CONTINUE
 C   SET PRINT LEVEL
                   READ (LUCMD,*) JJAPRT
-c                 write(lupri,*)' ..aca leo print level :', JJAPRT
+c                 write(lupri,*)' ..Reading print level :', JJAPRT
                   ICHANG = ICHANG + 1
                   GOTO 100
  2             CONTINUE
@@ -99,8 +99,8 @@ c                 write(lupri,*)' ..aca leo print level :', JJAPRT
             END IF
          END IF
  300  CONTINUE
-c jim-dbg ICHANG > 0 cambios en default variables
-c jim-dbg ICHANG < 0 no cambios
+c jim-dbg ICHANG > 0 default variables change
+c jim-dbg ICHANG < 0 no changes in default variables
 
 
       RETURN
@@ -237,8 +237,8 @@ C
       IF (PRTALL2) THEN
             WRITE(LUPRI,*)
             CALL HEADER('First Order Corrections (1st Order) [au]',-1)
-            WRITE(LUPRI,*)'         Atom          ΔMv  '//
-     &              '           ΔDw             ΔLap            Total'
+            WRITE(LUPRI,*)'         Atom           Mv  '//
+     &              '            Dw              Lap            Total'
             WRITE(LUPRI,'(10X,A)') REPEAT('-',67)
             IJ = 0
             DO I=1,NUCIND
@@ -254,11 +254,11 @@ C
                   WRITE(LUPRI,*)' '
                   WRITE(LUPRI,'(10X,A)') 'Extra info :' 
                   WRITE(LUPRI,'(10X,A)') REPEAT('-',12)
-                  WRITE(LUPRI,'(10X,A)')'Δpqpkin should approach'//
-     &            ' ΔLap in the basis set limit'
+                  WRITE(LUPRI,'(10X,A)')' pqpkin should approach'//
+     &            '  Lap in the basis set limit'
                   WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)'         Atom          Δpqp'//
-     &              '     +      Δkin    =       Δpqpkin'
+                  WRITE(LUPRI,*)'         Atom           pqp'//
+     &              '     +       kin    =        pqpkin'
                   WRITE(LUPRI,'(10X,A)') REPEAT('-',53)
                   IJ = 0
                   DO I=1,NUCIND

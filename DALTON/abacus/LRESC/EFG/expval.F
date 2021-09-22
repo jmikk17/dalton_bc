@@ -115,7 +115,7 @@ C
 C
          WRITE(lupri,*) ' COMMON VARIABLES on LINEAR '
          WRITE(lupri,*) ' ----------------------------'
-         WRITE(lupri,*) '     N2ASHX : ni idea ' , N2ASHX
+         WRITE(lupri,*) '     N2ASHX : ' , N2ASHX
          WRITE(lupri,*) '     NASHT # Active Orbitals = 0 ? :', NASHT
          WRITE(lupri,*) '     LISTA1y2 (4*MXCOOR+9) = ', 4*MXCOOR+9
          WRITE(lupri,*) '     MXCOOR              = ', MXCOOR

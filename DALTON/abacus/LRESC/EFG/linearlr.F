@@ -96,7 +96,7 @@ C
          WRITE(lupri,'(A,3F12.8)') '            ORIGIN :', ORIGIN
          WRITE(lupri,'(A,3F12.8)') '            CMXYZ  :', CMXYZ
          WRITE(lupri,*)
-         WRITE(lupri,*) ' alocando 1 : ANTES MEMGET :'
+         WRITE(lupri,*) ' alocando 1 : BEFORE MEMGET :'
          WRITE(lupri,*) ' ----------------------------'
          WRITE(lupri,*) '     KFREE = 1' 
          WRITE(lupri,*) '     LFREE = LWORK :         ', LWORK 

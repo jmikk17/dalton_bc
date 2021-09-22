@@ -19,7 +19,7 @@
      &        ABA_ALPHA,      EXPGRD, CTOCD,  NUMHES, DOD2DQ2,          &
      &        OECD,   MVEOR,  QPGRAD, SECNDM, THIRDM, VIB_G,            &
      &        GSDIP,  GSQUAD, GSOCT,  GSDIDI, GSDIQU, GSQUQU,           &
-     &        VIBGIR, RNLRSCSHI, TDA_SINGLET, TDA_TRIPLET,RNLRSCEFG
+     &        VIBGIR, RNLRSCSHI, TDA_SINGLET, TDA_TRIPLET, RNLRSCEFG
       COMMON /ABAINF/ IPRDEF, NWNABA, IRVIBG,                           &
      &        MOLGRD, MOLHES, DIPDER, POLAR,  TSTINP,                   &
      &        VIB,    RESTAR, DOWALK, GDALL,  CCSD,                     &
@@ -33,5 +33,5 @@
      &        ABA_ALPHA,      EXPGRD, CTOCD,  NUMHES, DOD2DQ2,          &
      &        OECD,   MVEOR,  QPGRAD, SECNDM, THIRDM, VIB_G,            &
      &        GSDIP,  GSQUAD, GSOCT,  GSDIDI, GSDIQU, GSQUQU,           &
-     &        VIBGIR, RNLRSCSHI, RNLRSCEFG, TDA_SINGLET, TDA_TRIPLET
+     &        VIBGIR, RNLRSCSHI, TDA_SINGLET, TDA_TRIPLET, RNLRSCEFG
 ! -- end of abainf.h --

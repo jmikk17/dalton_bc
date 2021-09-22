@@ -904,33 +904,7 @@ C
          ANTI = .FALSE.
       GOTO 200
 C
-C     Gradient of the zz EFG (electronic) component at the individual nuclei
-C     --------------------------------------
 C
- 108   CONTINUE
-         INTTYP = 109
-         IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
-     &        'Calculation of the gradient of q_zz at the nuclei'
-         CALL SETATM(DOATOM,NATOM,INTTYP)
-         CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
-     &               INTTYP)
-         ANTI = .FALSE.
-      GOTO 200
-C
-C     Laplacian of the qxx,qyy and qzz EFGs components (electronic) at the individual nuclei!
-C     --------------------------------------
-C
- 109   CONTINUE
-         INTTYP = 110
-         IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
-     &     'Calculation of laplacian of qxx,qyy,qzz at the nuclei'
-         CALL SETATM(DOATOM,NATOM,INTTYP)
-         CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
-     &               INTTYP)
-         ANTI = .FALSE.
-      GOTO 200
-C
-
 C     Electric field gradient at the individual nuclei, cartesian ELFGRDC
 C     -----------------------------------------------------------
 C
@@ -2497,6 +2471,32 @@ C  R4 integrals
          INTREP(1) = 0
          ANTI = .FALSE.
       GO TO 200
+C
+C     Gradient of the zz EFG (electronic) component at the individual nuclei
+C     --------------------------------------
+C
+  108   CONTINUE
+      INTTYP = 109
+      IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &        'Calculation of the gradient of q_zz at the nuclei'
+      CALL SETATM(DOATOM,NATOM,INTTYP)
+      CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+      ANTI = .FALSE.
+      GOTO 200
+C
+C     Laplacian of the qxx,qyy and qzz EFGs components (electronic) at the individual nuclei!
+C     --------------------------------------
+C
+  109   CONTINUE
+      INTTYP = 110
+      IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &     'Calculation of laplacian of qxx,qyy,qzz at the nuclei'
+      CALL SETATM(DOATOM,NATOM,INTTYP)
+      CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+      ANTI = .FALSE.
+      GOTO 200
   200 CONTINUE
 C
 C     ***** Print section *****

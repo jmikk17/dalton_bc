@@ -197,7 +197,7 @@ C
       IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
      &     .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
          WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'//
-     &   ' are positioned until they are needed.'
+     &   ' are postponed until they are needed.'
          RUNTWO = .FALSE.
       END IF
       END IF
@@ -748,18 +748,6 @@ C
   145    CONTINUE
             NELFLD = .TRUE.
             ONEPRP = .TRUE.
-            GOTO 100
-  247    CONTINUE
-            GZZEFG = .TRUE.
-            ONEPRP = .TRUE.
-            IF (MAXREP.NE.0)
-     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR GZZEFG')
-            GOTO 100
-  248    CONTINUE
-            LAPEFG = .TRUE.
-            ONEPRP = .TRUE.
-            IF (MAXREP.NE.0)
-     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LAPEFG')
             GOTO 100
   146    CONTINUE
             NSTTST = .TRUE.
@@ -1325,22 +1313,6 @@ cs              WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
 cs              CALL QUIT('Error in reading (GAGORG(I),I=1,3)!')
 cs            ENDIF
             GO TO 100
-  249    CONTINUE
-c Setting all integrals for LRESC-EFG module
-            IF (MAXREP.NE.0)
-     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
-            ONEPRP = .TRUE.
-            KINENE = .TRUE. ! 133.Kinenerg
-            DARWIN = .TRUE. ! 164
-            MASSVL = .TRUE. ! 163
-            DIPVEL = .TRUE. ! 108.DipVel
-            NELFLD = .TRUE.
-            DIPLEN = .TRUE.
-            GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
-            LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
-            SPNORB = .TRUE. ! 104 Spin-Orbit
-            EFGCAR = .TRUE. ! 147 Cartesian EFG components
-            GO TO 100
   244    CONTINUE
             RMAOTWO = .FALSE.
             GO TO 100 
@@ -1358,6 +1330,34 @@ c Setting all integrals for LRESC-EFG module
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal prompt in '//WORD1)
       END IF
+  247    CONTINUE
+            GZZEFG = .TRUE.
+            ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR GZZEFG')
+            GOTO 100
+  248    CONTINUE
+            LAPEFG = .TRUE.
+            ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LAPEFG')
+            GOTO 100
+  249    CONTINUE
+c Setting all integrals for LRESC-EFG module
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
+               ONEPRP = .TRUE.
+               KINENE = .TRUE. ! 133.Kinenerg
+               DARWIN = .TRUE. ! 164
+               MASSVL = .TRUE. ! 163
+               DIPVEL = .TRUE. ! 108.DipVel
+               NELFLD = .TRUE.
+               DIPLEN = .TRUE.
+               GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
+               LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
+               SPNORB = .TRUE. ! 104 Spin-Orbit
+               EFGCAR = .TRUE. ! 147 Cartesian EFG components
+               GO TO 100
   300 CONTINUE
 
       IF (.NOT. BGWEIL) BGWEIN = WEINBG 

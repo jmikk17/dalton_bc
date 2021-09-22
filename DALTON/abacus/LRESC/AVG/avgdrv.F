@@ -62,18 +62,18 @@ C       DALTON.CM variables
 C ------------------------------------------------------
        naos = NBAST ! NBAST: Total number of (atomic) basis functions
        nmos= NORBT !NORBT: Total number of molecular orbitals
-       !Algunas otras variables (por posible uso a futuro):
+       !Some other variables (por possible future use):
        !NRHFT:  Occupied SCF orbitals (of closed shells¿?)
        !NOCCT: Total number of occupied orbitals
-       !NASHT: Open shell SCF orbitals. Si se usara, ver mejor en el archivo sirinp.F (buscar el nro "1555")
-C      cmos(i,j)   :  Elementos de la matriz de coef. moleculares (de SIRIUS.RST)
+       !NASHT: Open shell SCF orbitals. See on sirinp.F.
+C      cmos(i,j)   :  Molecular orbitals coeficients matrix elements (from SIRIUS.RST)
 
        k = 1
 
        cmos=0.0
-       do i=1,nmos                              !i corresponde a un OM
-          do j=1,naos				!j corresponde al coef. j del OM i
-             cmos(i,j) = xmos(k)		!Transformar vector en matriz
+       do i=1,nmos                  !i corresponds to a MO
+          do j=1,naos				   !j corresponds to j coef. of the ith MO
+             cmos(i,j) = xmos(k)		! Transforms vector into matrix
              k = k + 1
           end do
        end do
