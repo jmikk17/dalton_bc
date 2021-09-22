@@ -271,16 +271,6 @@ C
          JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.109) THEN
-         JMAXD = 0
-         JMAXM = 0
-         DONUC1= .FALSE.
-         DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.110) THEN
-         JMAXD = 0
-         JMAXM = 0
-         DONUC1= .FALSE.
-         DOMOM1 = .TRUE.
       ELSE IF (INTTYP .EQ.30) THEN
          JMAXD = 0
          JMAXM = 0
@@ -600,6 +590,16 @@ Cdj integrals types 104 bra diff. 105 ket diff. 106 mixed bra-ket diff.
       ELSE IF (INTTYP .EQ.106) THEN
          JMAXD = 0
          JMAXM = 2
+         DONUC1= .FALSE.
+         DOMOM1 = .TRUE.
+      ELSE IF (INTTYP .EQ.109) THEN
+         JMAXD = 0
+         JMAXM = 0
+         DONUC1= .FALSE.
+         DOMOM1 = .TRUE.
+      ELSE IF (INTTYP .EQ.110) THEN
+         JMAXD = 0
+         JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
       ELSE
