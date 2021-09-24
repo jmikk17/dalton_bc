@@ -415,6 +415,18 @@ directions. The center of expansion is always~(0,0,0).
   \verb|COS KZ/K|, \verb|SIN KX/K|, \verb|SIN KY/K|, \verb|SIN KZ/K|.
 \end{list}
 
+\item[\Key{GZZEFG}] Gradient of the electronic contribution to the $zz$ cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
+ field integrals}.
+
+\begin{list}{}{}
+\item Integral:
+$\left<\chi_{\mu}\left|\nabla q_{zz}(\textbf{R}_K)\right|\chi_{\nu}\right>$
+where $K$ is the nucleus of interest.
+\item Property labels: \verb|GEFG abc |, where \verb|abc| is related to the nuclear coordinate number and the gradient component. \\
+E.g.: $GEFG\;\;002 \equiv \left<\chi_{\mu}\left|\frac{\partial q_{zz}(\textbf{R}_1)}{\partial y}\right|\chi_{\nu}\right>$ and $GEFG\;\;006 \equiv \left<\chi_{\mu}\left|\frac{\partial q_{zz}(\textbf{R}_2)}{\partial z}\right|\chi_{\nu}\right>$.
+%$(1/2/3)$ times the symmetry-adapted nuclear coordinate of interest for the $(x/y/z)$ component of the gradient respectively.
+\end{list}
+
 \item[\Key{FC}] Fermi contact integrals,
 \index{Fermi contact integrals}\index{integrals!Fermi contact}
 see Ref.~\cite{ovhapjhjajsbpthjcp96}.
@@ -509,6 +521,27 @@ $-\frac{1}{2}\left<\chi_{\mu}\left|\nabla^{2}\right|\chi_{\nu}\right>$
 \item Property label: \verb|KINENERG|.
 \end{list}
 
+\item[\Key{LAPEFG}] Laplacian of the electronic contribution to the cartesian electric field integrals at nucleus \index{laplacian of cartesian electric
+ field integrals}.
+
+\begin{list}{}{}
+\item Integral:
+$\left<\chi_{\mu}\left|\nabla^2 q_{ii}(\textbf{R}_K)\right|\chi_{\nu}\right>$
+where $K$ is the nucleus of interest.
+\item Property labels: \verb|LEFG abc|, where \verb|abc| is related to the nuclear coordinate number and the laplacian component. There are nine integrals for each nucleus. \\
+E.g.:
+\begin{eqnarray*}
+LAPEFG\;\;010 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{xx}(\textbf{R}_2)}{\partial x^2}\right|\chi_{\nu}\right>   \\
+LAPEFG\;\;012 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{xx}(\textbf{R}_2)}{\partial z^2}\right|\chi_{\nu}\right> \\
+LAPEFG\;\;016 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{zz}(\textbf{R}_2)}{\partial x^2}\right|\chi_{\nu}\right> \\
+LAPEFG\;\;018 &\equiv& \left<\chi_{\mu}\left| \frac{\partial^2 q_{zz}(\textbf{R}_2)}{\partial z^2}\right|\chi_{\nu}\right>
+\end{eqnarray*}
+
+
+
+
+\end{list}
+
 \item[\Key{LONMOM}] Contribution to the London magnetic
 moment\index{magnetic moment} from
 the differentiation with respect to magnetic field on the London
@@ -521,8 +554,10 @@ $\frac{1}{4}Q_{MN}\left<\chi_{\mu}\left|{\bf r}h\right|\chi_{\nu}\right>$
 \end{list}
 
 
-\item[\Key{LRINTS}] All needed integrals to compute relativisctic corrections 
+\item[\Key{LR-SHI}] All needed integrals to compute relativisctic corrections 
 to nuclear magnetic shielding will be done. 
+\item[\Key{LR-EFG}] All needed integrals to compute relativisctic corrections 
+to electric field gradients will be done.
 %\begin{list}{}{}
 %\item Integral:
 %\end{list}

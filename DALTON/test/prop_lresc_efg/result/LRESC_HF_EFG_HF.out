@@ -25,9 +25,9 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       K. Aidas, C. Angeli, J. J. Aucar, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
        L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
        C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
@@ -45,8 +45,8 @@
        B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
        K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
        E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
-       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski,
-       H. Agren and J. J. Aucar,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
        "The Dalton quantum chemistry program system",
        WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
      
@@ -153,7 +153,7 @@
   Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Jun  7 15:38:13 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:51 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
  * Work memory size             :   128000000 =  976.56 megabytes.
@@ -203,7 +203,7 @@ Compilation information
  Static linking           | OFF
  Last Git revision        | 20b2752d5cb38a2b72b13d60e5bc268c2e4fd071
  Git branch               | lresc_efg
- Configuration time       | 2021-06-07 15:38:02.660615
+ Configuration time       | 2021-08-20 14:19:15.378626
 
  * MPI parallel run using 4 processes.
 
@@ -211,24 +211,18 @@ Compilation information
    Content of the .dal input file
  ----------------------------------
 
-**DALTON
+**DALTON INPUT
 .RUN PROPERTIES
 *MOLBAS
-.UNCONT
+.UNCONTRACTED
 **INTEGRALS
-.LR-SHIELDING
-.GAUGEO
-0.0000 0.0000 0.0000
+.LR-EFG
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
-.LR-SHIELDING
-*LRSOPT
+.LR-EFG
+*LROPTE
 .PRTALL
-#.PRINT
-#!2
-.SELECT
-1
 **END OF DALTON INPUT
 
 
@@ -240,7 +234,7 @@ ATOMBASIS		 #Es un comentario la línea
 		         #Es un comentario la línea
 Angstrom Atomtypes=2 Generators=0
 Charge= 9.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
-F     -0.0000000000       0.0000000000     0.0000000000
+F      0.0000000000       0.0000000000     0.0000000000
 Charge= 1.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
 H      0.0000000000       0.0000000000     0.9169000000
 FINISH
@@ -353,7 +347,7 @@ FINISH
   ----------------------------
 
   Total number of coordinates:    6
-  F       :     1  x  -0.0000000000    2  y   0.0000000000    3  z   0.0000000000
+  F       :     1  x   0.0000000000    2  y   0.0000000000    3  z   0.0000000000
   H       :     4  x   0.0000000000    5  y   0.0000000000    6  z   1.7326898840
 
 
@@ -426,32 +420,21 @@ FINISH
 
  The following one-electron property integrals are calculated as requested:
           - overlap integrals
+          - dipole length integrals
           - dipole velocity integrals
           - electronic kinetic energy
           - mass velocity integrals
           - 1-electron Darwin integrals
           - spatial spin-orbit integrals
-          - Fermi contact integrals
-            (Dirac delta function integrals)
-          - paramagnetic spin-orbit integrals
-            (nuclear moment - electron orbit coupling)
-          - spin-dipole integrals
-            (electron spin - nuclear moment coupling)
-          - electronic angular momentum around the origin
-          - Diamagnetic shielding tensor using common gauge origin
-          - Magnetic-field correction to one-electron SO integrals
-          - kinetic energy correction to paramagnetic spin-orbit
-          - kinetic energy correction to diamagnetic shielding
-          - kinetic energy correction to orbital Zeeman
-          - orbital Zeeman correction to paramagnetic spin-orbit integral
-          - small component overlap integrals for DPT
+          - Electric field at the nuclei
+          - Cartesien electric field gradient integrals
+          - Gradient of the zz EFG component at the nuclei
+          - Laplacian of the xx,yy and zz EFG component at the nuclei
 
  Center of mass  (bohr):      0.000000000000      0.000000000000      0.087285228497
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
-
- Integrals for all indirect spin-spin coupling and/or shielding tensors are calculated.
 
 
      ************************************************************************
@@ -470,10 +453,8 @@ FINISH
       z      1.73268988         4.40405812        14.69035660
 
 
-  Time used in DNSKE      is       0.12 seconds
-  Time used in PSO-OZ     is       0.18 seconds
-  Total CPU  time used in HERMIT:   0.62 seconds
-  Total wall time used in HERMIT:   0.62 seconds
+  Total CPU  time used in HERMIT:   0.19 seconds
+  Total wall time used in HERMIT:   0.19 seconds
 
 
                         .----------------------------------.
@@ -506,7 +487,7 @@ FINISH
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:14 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:51 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
  Title lines from ".mol" input file:
@@ -564,51 +545,51 @@ FINISH
 
  Iter      Total energy        Error norm    Delta(E)  DIIS dim.
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.34D-01  1.35D-01
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.53D-01  1.53D-01
 @  1    -99.9489276715        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  1.35D-01  1.36D-01
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  1.56D-01  1.56D-01
 @  2    -100.058416262        3.71539D-01   -1.09D-01    2
       Virial theorem: -V/T =      2.004191
 @    MULPOP   F      -0.28; H       0.28; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  1.35D-01  1.36D-01
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  1.46D-01  1.46D-01
 @  3    -100.063463927        1.37564D-01   -5.05D-03    3
       Virial theorem: -V/T =      1.998447
 @    MULPOP   F      -0.28; H       0.28; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  1.33D-01  1.35D-01
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  1.52D-01  1.52D-01
 @  4    -100.064194499        4.83640D-02   -7.31D-04    4
       Virial theorem: -V/T =      2.001166
 @    MULPOP   F      -0.27; H       0.27; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  1.39D-01  1.40D-01
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  1.62D-01  1.62D-01
 @  5    -100.064324046        8.48605D-03   -1.30D-04    5
       Virial theorem: -V/T =      2.000455
 @    MULPOP   F      -0.27; H       0.27; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  1.38D-01  1.39D-01
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  1.58D-01  1.59D-01
 @  6    -100.064333404        1.88009D-03   -9.36D-06    6
       Virial theorem: -V/T =      2.000502
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  1.37D-01  1.37D-01
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  1.48D-01  1.48D-01
 @  7    -100.064333863        3.29001D-04   -4.59D-07    7
       Virial theorem: -V/T =      2.000506
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  1.39D-01  1.39D-01
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  1.52D-01  1.53D-01
 @  8    -100.064333875        5.23684D-05   -1.22D-08    8
       Virial theorem: -V/T =      2.000508
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  1.34D-01  1.35D-01
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  1.53D-01  1.54D-01
 @  9    -100.064333876        5.40012D-06   -2.42D-10    8
 
 @ *** DIIS converged in   9 iterations !
@@ -656,8 +637,8 @@ FINISH
        1.000000     -0.000000     -0.000000     -0.000000      0.000000
       -0.000000     -1.000000      0.000001      0.000000     -0.000000
       -0.000000     -0.000001     -1.000000      0.000000     -0.000000
-      -0.000000     -0.000000     -0.000000     -0.792474      0.609902
-       0.000000     -0.000000     -0.000000     -0.609906     -0.792477
+      -0.000000     -0.000000     -0.000000     -0.792546      0.609809
+       0.000000     -0.000000     -0.000000     -0.609812     -0.792549
    ============  ============  ============  ============  ============
   
 
@@ -670,7 +651,7 @@ FINISH
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       1.285       1.295
+ CPU and wall time for SCF :       1.448       1.447
 
 
                        .-----------------------------------.
@@ -686,13 +667,13 @@ FINISH
 @    Nuclear repulsion:             5.194235900534
 @    Electronic energy:          -105.258569776129
 
-@    Final gradient norm:           0.000005400119
+@    Final gradient norm:           0.000005400118
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
-File label for MO orbitals:   7Jun21   FOCKDIIS
+File label for MO orbitals:  13Sep21   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -818,11 +799,11 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   1.33 seconds
-  Total wall time used in SIRIUS :   1.34 seconds
+  Total CPU  time used in SIRIUS :   1.49 seconds
+  Total wall time used in SIRIUS :   1.49 seconds
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -847,12 +828,9 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
       Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
-      Linear Response Elimination of Small Component (LRESC) applied to shielding. Observations :   
+      Linear Response Elimination of Small Component (LRESC) applied to EFG. Observations :   
           1) Uncontracted Basis set should be used 
-          2) LRESC Corrections : 
-               Diamagnetic first and second order 
-               Paramagnetic second singlet and triplet order 
-          3) GAUGEO should be placed at selected nucleus at au
+          2) First order LRESC Corrections
 
  Center of mass dipole origin  :    0.000000    0.000000    0.087285
 
@@ -865,7 +843,7 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -875,14 +853,14 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  7 15:38:15 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
                              Molecular geometry (au)
                              -----------------------
 
- F         -0.0000000000            0.0000000000            0.0000000000
+ F          0.0000000000            0.0000000000            0.0000000000
  H          0.0000000000            0.0000000000            1.7326898840
 
 
@@ -966,85 +944,51 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
 
 
 
- ******************************************************************************************************
- ************************ ABACUS - RELATIVISTIC CORRECTIONS LRESC TO SHIELDING ************************
- ******************************************************************************************************
+ ****************************************************************************************
+ ************************ EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS ************************
+ ****************************************************************************************
 
 
-  First and Second order relativistic corrections to nuclear shielding constant.
+    First order relativistic corrections to the zz component of the electronic EFG.
 
- * LRESC corrections to paramagnetic component were activated
+    -  Original LRESC papers at :
+                                  J. Chem. Phys. 118, 2 (2003), doi: 10.1063/1.1525808
+                                  Int. J. Quantum Chem. (2019), doi: 10.1002/qua.25935
+                                  Int. J. Quantum Chem. (2021), doi: 10.1002/qua.26769
 
-    -  Original LRESC papers at : J. Chem. Phys. 118, 2 (2003), doi:10.1063/1.1525808
-                                  Mol. Phys. 101, 20, 3103-3109 (2003) 
-                                  J. Chem. Phys. 125, 064107 (2006), doi:10.1063/1.2244572
-
-    -  Selected Atom    : # 1: F   
-
-    -  Atom coordinates :   -0.0000    0.0000    0.0000
-
-    -  Remember : 
-              *  GAUGEO should be placed at selected nucleus, on INTEGRALS SECTION, in a.u
-              *  Third Order Singlet and Triplet Corrections must be run in order to get
-                 all relativistic corrections. Not  yet implemented, but can be done via
-                 RESPONSE calculation (see Manual for details)
-  
+    -  Corrections calculated in all symmetry independent centers
+    -  To identify LRESC corrections see related papers
 
 
 
-                             Paramagnetic Corrections
-                             ------------------------
+                        Non-relativistic Values (NR) [au]
+                        ---------------------------------
 
-
-     Second Order Singlets. Total Value :                    0.45654 [ppm]
-
-        Detailed info : [.PARA1S] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          Lkin :                 0.30318       0.30318       0.28595      0.29744 [ppm]
-         PsoKin :                0.23866       0.23866      -0.00000      0.15910 [ppm]
-
-     Second Order Triplets. Total Value :                    8.31637[ppm]
-
-        Detailed info : [.PARA1T] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          FcKin :               10.62948      10.62948      10.62948     10.62948 [ppm]
-          SdKin :                0.18349       0.18349       0.18595      0.18431 [ppm]
-          FcBso :               -2.74919      -2.74919      -2.75880     -2.75239 [ppm]
-          SdBso :                0.25289       0.25289       0.25915      0.25497 [ppm]
-
-     Total Paramagnetic Corrections :                        8.77291 [ppm]
+          Atom                   NR
+          ----------------------------
+          F                    2.41357
+          H                   -2.91592
 
 
 
-                             Diamagnetic Corrections :
-                            --------------------------
+                     First Order Corrections (1st Order) [au]
+                     ----------------------------------------
+
+          Atom          ΔMv             ΔDw             ΔLap            Total
+          -------------------------------------------------------------------
+          F           0.01565        -0.00174        -0.00444         0.00947
+          H          -0.00019        -0.00027         0.00006        -0.00040
 
 
-     LRESC
-     First Order Singlets. Total Value :                    -5.57778 [ppm]
 
-        Detailed info : [.DIAM1S] Diagonal components, for each operator
-        ---------------                   xx             yy            zz         iso
-          FC LRESC :                   -4.64831      -4.64831      -4.64831     -4.64831 [ppm]
-          AngPso LRESC:                -0.03515      -0.03515      -0.03980     -0.03670 [ppm]
-          DiaKin LRESC :               -0.89251      -0.89251      -0.89327     -0.89277 [ppm]
+                           =============================
+                           Total EFG (zz component) [au]
+                           =============================
 
-     LRESC 
-     Second Order Singlets. Total Value :                    1.41796 [ppm]
-
-        Detailed info : [.DIAM1S] Diagonal components, for each operator
-        ---------------            xx            yy             zz          iso
-          DiaMv  :                3.46971       3.46971       3.49023      3.47655 [ppm]
-          DiaDw  :               -2.05500      -2.05500      -2.06577     -2.05859 [ppm]
-
-     Total Diamagnetic Corrections from LRESC :                        -4.15982 [ppm]
-
-
-                         Total Relativistic Corrections :
-                         --------------------------------
-
-
-     Sum of corrections of LRESC :           4.61309 [ppm]
+          Atom           NR           1st Order          Total
+          ----------------------------------------------------
+          @F           2.41357         0.00947         2.42304
+          @H          -2.91592        -0.00040        -2.91632
 
 
 
@@ -1052,20 +996,20 @@ File label for MO orbitals:   7Jun21   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:51     100 %
+ TOTAL      00:00:06     100 %
 
 
-  Total CPU  time used in ABACUS:  51.29 seconds
-  Total wall time used in ABACUS:  51.66 seconds
+  Total CPU  time used in ABACUS:   5.55 seconds
+  Total wall time used in ABACUS:   5.55 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  53.26 seconds
-  Total wall time used in DALTON:  53.63 seconds
+  Total CPU  time used in DALTON:   7.26 seconds
+  Total wall time used in DALTON:   7.26 seconds
 
  
-     Date and time (Linux)  : Mon Jun  7 15:39:07 2021
+     Date and time (Linux)  : Mon Sep 13 12:30:58 2021
      Host name              : juanjoaucar-Nitro-AN515-55              

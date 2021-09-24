@@ -508,18 +508,6 @@ cs
          CALL AQRDRV(WORK(KLST2),LWRK2)
       END IF
 C
-C     ******************************************
-C     ***** Lresc Response Properties      *****
-C     ******************************************
-C
-C  jim-gesc 1: call to LRSCDRV
-      CALL GETTIM(TIMSTR,TIMDUM)
-      IF (RNLRSC) THEN
-       CALL LRSCDRV(WORK(KLST2),LWRK2)
-cx       KLST2 final pointer on mem. LWRK2 the length of it
-cx       CALL AQRDRV(WORK(KLST2),LWRK2)
-      END IF
-C
 C     ****************************************
 C     ***** Add contributions calculated *****
 C     ****************************************
@@ -669,6 +657,24 @@ CClark:end
      &   CALL GEOANA(CORD,.TRUE.,.FALSE.,NBONDS,-1,WORK(KLAST),LWRK3)
       CALL FLSHFO(LUPRI)
 C
+C     ******************************************
+C     ***** Lresc Response Properties      *****
+C     ******************************************
+C
+C  jim-gesc 1.0: @ABACTL : call to LRSCDRV_SHI
+      CALL GETTIM(TIMSTR,TIMDUM)
+      IF (RNLRSCSHI) THEN
+         CALL LRSCDRV_SHI(WORK(KLST2),LWRK2)
+cx       KLST2 final pointer on mem. LWRK2 the length of it
+cx       CALL AQRDRV(WORK(KLST2),LWRK2)
+      END IF
+      
+      IF (RNLRSCEFG) THEN
+         CALL LRSCDRV_EFG(WORK(KLST2),LWRK2)
+cx       KLST2 final pointer on mem. LWRK2 the length of it
+cx       CALL AQRDRV(WORK(KLST2),LWRK2)
+      END IF
+C
 C     *************************
 C     ***** Geometry walk *****
 C     *************************
@@ -750,7 +756,7 @@ C
 #include "maxaqn.h"
 #include "maxorb.h"
 #include "priunit.h"
-      PARAMETER (NDIR = 29, NTABLE = 64, D0 = 0.D0)
+      PARAMETER (NDIR = 30, NTABLE = 65, D0 = 0.D0)
       LOGICAL   POPULA, NOHESS, FCKEXP
       LOGICAL   DIPORG_SET,  GAGORG_SET, CAVORG_SET
       LOGICAL   GRDINP, NO_ABACUS_INPUT
@@ -792,7 +798,6 @@ C infpar.h : PARHER
 #include "locinf.h"
 #include "infpar.h"
 
-C  jim-gesc 1.0: TABDIR(#17) ="*LROPTS" , TABLE(60)=".LRESC ". check INTRST for gaugeo
       DATA TABDIR /'*END OF', 'xxxxxxx', '*NUCREP',
      &             '*ONEINT', '*TWOEXP', '*GETSGY',
      &             '*EXCITA', '*REORT ', '*RESPON',
@@ -802,7 +807,7 @@ C  jim-gesc 1.0: TABDIR(#17) ="*LROPTS" , TABLE(60)=".LRESC ". check INTRST for 
      &             'xXXXXXX', '*LOCALI', '*SOPPA ', ! *LOCALI: PFP 27/03-2006 - SOS for spin-spin coupling included
      &             '*LINRES', '*EXPECT', '*SPIN-S',
      &             '*QRPROP', '*AAT   ', '*TRPRSP',
-     &             '*ABALNR', '*RHSIDE'/
+     &             '*ABALNR', '*RHSIDE', '*LROPTE'/
 Caug04-hjaaj: disabled currently inactive .NACME
 Csep08-spas: .NACME reactivated for Vib_g
 C                      1          2          3
@@ -844,11 +849,11 @@ C                     52         53         54
 C                     55         56         57
      &             '.DISDIP', '.SECMOM', '.THIRDM',
 C                     58         59         60
-     &             '.VIB_G ', '.LOCALI', '.LRESC ',  ! jim May-12 for LRESC
+     &             '.VIB_G ', '.LOCALI', '.LR-SHI',
 C                     61         62        63
      &             '.TDA SI', '.TDA TR', '.RPA(D)', 
-C                     64
-     &             '.RPA   '/
+C                     64         65
+     &             '.RPA   ', '.LR-EFG'/
 C
       DATA RSTLBL /'ORTREL', 'DIPCTL', 'RESPON', 'RELAX ',
      &             'DIPREL', 'TROINV', 'CCRHS ', 'CCTRES',
@@ -957,7 +962,8 @@ C
       THIRDM = .FALSE.
       ESG    = .FALSE.
       VIB_G  = .FALSE.
-      RNLRSC = .FALSE.   ! jim-gesc 1.1: set RNLRSC FALSE
+      RNLRSCSHI = .FALSE.
+      RNLRSCEFG = .FALSE.
       CALL DZERO(ORIGIN,3)
       CALL DZERO(CMXYZ,3)
       CALL DZERO(DIPORG,3)
@@ -1061,7 +1067,7 @@ C
      &                131,132,133,134,135,136,137,138,139,140,
      &                141,142,143,144,145,146,147,148,149,150,
      &                151,152,153,154,155,156,157,158,159,160,
-     &                161,162,163,164), I
+     &                161,162,163,164,165), I
             END IF
    99    CONTINUE
             IF (WORD .EQ. '.OPTION') THEN
@@ -1341,8 +1347,8 @@ C        .LOCALI
  159     CONTINUE
             ABALOC = .TRUE.
          GOTO 100
- 160     CONTINUE ! jim-gesc 1.2: set RNLRSC true
-         RNLRSC = .TRUE.
+ 160     CONTINUE
+         RNLRSCSHI = .TRUE.
          GOTO 100
 C
  161     CONTINUE ! .TDA SInglet
@@ -1361,6 +1367,10 @@ C
             AORPA=.TRUE.!RPA
          GOTO 100
 C
+ 165     CONTINUE
+         RNLRSCEFG = .TRUE.
+         GOTO 100
+
 C
       ELSE IF (PROMPT .EQ. '*') THEN
          GO TO 999
@@ -1851,28 +1861,37 @@ cLig added the control to right CTOCD input
          CALL QUIT('Not supported input in ABAINP')
       ENDIF
 cLig
-C  jim-gesc 1.3:  Print section 'lresc will be done '
 Cx jim-dbg :  here we can stop if london or smthg else.
 cx jim-dbg :  asking to specific logic : ex SOPPA
-      IF (RNLRSC) THEN
+      IF (RNLRSCSHI) THEN
 c         IF (.NOT.NOLOND)  WRITE(LUPRI,*)
 c     &     ' Unsupported input - LONDON Orbitals not implemented' //
 c     &     ' for LRESC properties'
 c            CALL QUIT('Not supported input in ABAINP')
 
-         IF (RNLRSC) WRITE (LUPRI,'(5X,A)')
-     &      ' Linear Response Elimination of Small Component (LRESC)',
-     &      ' DEVELOPING NOTES :   ' ,
-     &      '     - Uncontracted Basis set should be used ',
-     &      '     - LRESC Corrections : ',
-     &      '        Diamagnetic first and second order ',
-     &      '        Paramagnetic second singlet and triplet order ',
-     &      '     - Remember to set GAUGEO on INTEGRAL SECTION',
-     &   '        GAUGEO Should be placed at selected nucleus, in a.u.'
+         WRITE (LUPRI,'(5X,A)')
+     &      ' Linear Response Elimination of Small Component (LRESC)'//
+     &      ' applied to shielding. Observations :   ' ,
+     &      '     1) Uncontracted Basis set should be used ',
+     &      '     2) LRESC Corrections : ',
+     &      '          Diamagnetic first and second order ',
+     &      '          Paramagnetic second singlet and triplet order ',
+     &      '     3) GAUGEO should be placed at selected nucleus at au'
       ENDIF
+      
+      IF (RNLRSCEFG) THEN
+
+         WRITE (LUPRI,'(5X,A)')
+     &      ' Linear Response Elimination of Small Component (LRESC)'//
+     &      ' applied to EFG. Observations :   ' ,
+     &      '     1) Uncontracted Basis set should be used ',
+     &      '     2) First order LRESC Corrections'
+      ENDIF
+      
+      
       IF (ABASOP) THEN
          IERR = 0
-         IF (RNLRSC) THEN    ! jim-dbg : soppa not for lresc
+         IF (RNLRSCSHI.OR.RNLRSCEFG) THEN    ! jim-dbg : soppa not for lresc
             WRITE(LUPRI,'(A)') ' Incompatible input. LRESC '//
      &                         'cannot be calculated with SOPPA'
             IERR = IERR + 1
@@ -2057,7 +2076,7 @@ cs
             IF (WORD .EQ. TABDIR(I)) THEN
                GO TO
      *         (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,
-     *              22,23,24,25,26,27,28,29), I
+     *              22,23,24,25,26,27,28,29,30), I
             END IF
   210    CONTINUE
          IF (WORD(1:2) .EQ. '**') GO TO 1
@@ -2100,9 +2119,8 @@ cs
       GO TO 200
    16   CALL FLTINP(WORD)
       GO TO 200
-C jim-gesc 1.4 : CALL LRSCINP to read OPTNS @ DAL  file
    17 CONTINUE
-         CALL LRSCINP(WORD)
+         CALL LRSCINP_SHI(WORD)
       GO TO 200
    18   CONTINUE
          CALL QPGINP(WORD)
@@ -2129,6 +2147,9 @@ C jim-gesc 1.4 : CALL LRSCINP to read OPTNS @ DAL  file
    28   CALL LNRINP(WORD) ! *ABALNR
       GO TO 200
    29   CALL RHSINP(WORD) ! *RHSIDE
+      GO TO 200
+   30 CONTINUE			  ! *LROPTE
+         CALL LRSCINP_EFG(WORD)
       GO TO 200
 C
     1 CONTINUE
@@ -3883,6 +3904,7 @@ C
       CALL LNRINI
       CALL AQRINI
       CALL LOCINI !PFP: 27/03-2006: SOS for spin-spin coupling included
-      CALL LRSCINI !jim-gesc call LRSCINI to Init all for lresc
+      CALL LRSCINI_SHI
+      CALL LRSCINI_EFG
       RETURN
       END

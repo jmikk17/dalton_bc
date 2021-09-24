@@ -557,7 +557,7 @@ C
             KTRLVL = 10 ! quadratic resonse with RESPONS module
          ELSE IF (CTOCD .OR. DOEXCI .OR. ABALNR .OR. VCD .OR.
      &       SPNSPN .OR. MAGSUS .OR. SHIELD .OR. SPINRO .OR.
-     &       MOLGFA .OR. RNLRSC) THEN
+     &       MOLGFA .OR. RNLRSCSHI.OR.RNLRSCEFG) THEN
             IF (KTRLVL .EQ. 6) THEN
                KTRLVL = 5 ! we need the common set of KTRLVLs 6 and 4
                USEDRC = .TRUE.

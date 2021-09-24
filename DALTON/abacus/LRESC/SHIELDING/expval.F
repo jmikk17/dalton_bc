@@ -16,11 +16,17 @@
 !
 C
       SUBROUTINE AVELRSC(KEY,WORK,LWORK)
-C  
-C...
+C
+C     Purpose:
+C     Get average values from AOPROPER operators in order
+C     to get LRESC
+C     Author:
+C           J. I. Melo
+C     Edited:
+C           Juan J. Aucar         April 2020              
+C...  Note:
 C...  This subroutine was written by Juan Ignacio Melo using
 C...  the subroutine ABACTOCD  as a model (2012)
-C
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -32,9 +38,11 @@ c#include "sigma.h"
 #include "cbilnr.h"
 c#include "suscpt.h"
 #include "infpri.h"
+      double precision cmos(NORBT,NBAST)
+      double precision OVERLP(NBAST,NBAST)
       LOGICAL FOUND
       DIMENSION WORK(LWORK)
-      CHARACTER*8 LABEL1,LISTA1(10)
+      CHARACTER*8 LABEL1,LISTA1(100)
       CHARACTER*6 LABEL2
       CHARACTER*4 KEY
       CHARACTER*3 char
@@ -73,7 +81,6 @@ C   KEY = 'FCAV'  <Fc>
 C         'DIAK'  <Dia.Kin>
 C         'ANGP'  <L.Pso>
 C
-C
       CALL QENTER('AVELRSC')
       CALL TIMER('START ',TIMEIN,TIMOUT)
 
@@ -81,14 +88,13 @@ C
          WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
          WRITE(LUPRI,*)
          IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(A)')
-     &      '   LINEARLR, Diamagnetic First Order Singlet : FCAV '
+     &      '   Diamagnetic First Order Singlet : FC '
          IF (KEY.EQ.'DIAK') WRITE(LUPRI,'(A)')
-     &      '   LINEARLR, Diamagnetic First Order Singlet : DIAK'
+     &      '   Diamagnetic First Order Singlet : DIAK'
          IF (KEY.EQ.'ANGP') WRITE(LUPRI,'(A)')
-     &      '   LINEARLR, Diamagnetic First Order Singlet : ANGP '
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+     &      '   Diamagnetic First Order Singlet : ANGP '
       END IF
-C     
+C
 
 C
 C
@@ -101,27 +107,27 @@ C
       LPVX   = 0
       KFREE  = 1
       LFREE  = LWORK
-      IF (JIMPRT.GT.3) Then 
-          write(lupri,'(A,3F12.8)') ' orgcom.h : GAGORG :', GAGORG
-          write(lupri,'(A,3F12.8)') '            ORIGIN :', ORIGIN
-          write(lupri,'(A,3F12.8)') '            CMXYZ  :', CMXYZ
-          write(lupri,*)
-          write(lupri,*) ' alocando 1 : ANTES MEMGET :'
-          write(lupri,*) ' ----------------------------'
-          write(lupri,*) '     KFREE = 1' 
-          write(lupri,*) '     LFREE = LWORK :         ', LWORK 
-          write(lupri,*) '                             '     
-C      
-          write(lupri,*) ' COMMON VARIABLES on LINEAR '
-          write(lupri,*) ' ----------------------------'
-          write(lupri,*) '     N2ASHX : ni idea ' , N2ASHX
-          write(lupri,*) '     NASHT # Active Orbitals = 0 ? :', NASHT
-          write(lupri,*) '     LISTA1y2 (4*MXCOOR+9) = ', 4*MXCOOR+9
-          write(lupri,*) '     MXCOOR              = ', MXCOOR
-          write(lupri,*) '     NCMOT = NORB * NORB = ', NCMOT
-          write(lupri,*) '   '     
-          write(lupri,*) ' memget....  '     
-      ENDIF 
+      IF (JIMPRT.GT.3) Then
+         WRITE(lupri,'(A,3F12.8)') ' orgcom.h : GAGORG :', GAGORG
+         WRITE(lupri,'(A,3F12.8)') '            ORIGIN :', ORIGIN
+         WRITE(lupri,'(A,3F12.8)') '            CMXYZ  :', CMXYZ
+         WRITE(lupri,*)
+         WRITE(lupri,*) ' alocando 1 : ANTES MEMGET :'
+         WRITE(lupri,*) ' ----------------------------'
+         WRITE(lupri,*) '     KFREE = 1'
+         WRITE(lupri,*) '     LFREE = LWORK :         ', LWORK
+         WRITE(lupri,*) '                             '
+C
+         WRITE(lupri,*) ' COMMON VARIABLES on LINEAR '
+         WRITE(lupri,*) ' ----------------------------'
+         WRITE(lupri,*) '     N2ASHX : ni idea ' , N2ASHX
+         WRITE(lupri,*) '     NASHT # Active Orbitals = 0 ? :', NASHT
+         WRITE(lupri,*) '     LISTA1y2 (4*MXCOOR+9) = ', 4*MXCOOR+9
+         WRITE(lupri,*) '     MXCOOR              = ', MXCOOR
+         WRITE(lupri,*) '     NCMOT = NORB * NORB = ', NCMOT
+         WRITE(lupri,*) '   '
+         WRITE(lupri,*) ' memget....  '
+      ENDIF
       CALL MEMGET('REAL',KCMO  ,NCMOT ,WORK ,KFREE ,LFREE)
       CALL MEMGET('REAL',KUDV  ,LUDV  ,WORK ,KFREE ,LFREE)
       CALL MEMGET('REAL',KPVX  ,LPVX  ,WORK ,KFREE ,LFREE)
@@ -131,46 +137,47 @@ c            dimensiona work(KCMO, KCMO+NCMOT)
 C
       KWORK1 = KFREE
       WORK1  = LFREE
-      IF (JIMPRT.GT.3) Then 
-          write(lupri,*) '   '     
-          write(lupri,*) ' AFTER MEMGET  '
-          write(lupri,*) ' ----------------------------'
-          write(lupri,*) '        KCMO, NCMOT     =  ', KCMO,NCMOT
-          write(lupri,*) '        KUDV, LUDV      =  ', KUDV,LUDV
-          write(lupri,*) '        KPVX, LPVX      =  ', KPVX,LPVX
-          write(lupri,*) '        KPXINDX, LCINDX =  ', KXINDX,KXINDX
-          write(lupri,*) '        KWORK1 = KFREE :   ', KFREE 
-          write(lupri,*) '        WORK1  = LFREE :   ', LFREE 
-          write(lupri,*) '   '     
-      ENDIF 
+      IF (JIMPRT.GT.3) Then
+         WRITE(lupri,*) '   '
+         WRITE(lupri,*) ' AFTER MEMGET  '
+         WRITE(lupri,*) ' ----------------------------'
+         WRITE(lupri,*) '        KCMO, NCMOT     =  ', KCMO,NCMOT
+         WRITE(lupri,*) '        KUDV, LUDV      =  ', KUDV,LUDV
+         WRITE(lupri,*) '        KPVX, LPVX      =  ', KPVX,LPVX
+         WRITE(lupri,*) '        KPXINDX, LCINDX =  ', KXINDX,KXINDX
+         WRITE(lupri,*) '        KWORK1 = KFREE :   ', KFREE
+         WRITE(lupri,*) '        WORK1  = LFREE :   ', LFREE
+         WRITE(lupri,*) '   '
+      ENDIF
 
       CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
 C          RD_SIRIFC( KEY ,FOUND,   AMAT   ,  WRK      ,LWRK)
  
-      IF (.NOT.FOUND) CALL QUIT('AVELRSC error: CMO not on SIRIFC')
-      IF (JIMPRT.GT.5) THEN 
-         write(lupri,*)' CMOS :  dan bien !!! aunq no parezca.' 
+      IF (.NOT.FOUND) 
+     & CALL QUIT('***Error AVELRSC: CMO is not in SIRIFC***')
+      IF (JIMPRT.GT.5) THEN
+         WRITE(lupri,*)' CMOS : '
          CALL OUTPUT(WORK(KCMO),1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
-         write(lupri,*) '   '     
+         WRITE(lupri,*) '   '
       ENDIF
 cx ACA es para alguna capa activa
 cx      IF (NASHT .GT. 0) THEN
 cx         CALL RD_SIRIFC('DV',FOUND,WORK(KWORK1),WORK(KWORK1),LWORK1)
-cx         write(lupri,*)'jim  DV found on RD_SIFC '
+cx         WRITE(lupri,*)'jim  DV found on RD_SIFC '
 cx         IF (.NOT.FOUND)
 cx     &      CALL QUIT('ROUTINE error: DV not found on SIRIFC')
 cx         CALL DSPTSI(NASHT,WORK(KWORK1),WORK(KUDV))
 cx      END IF
 C
       ISYM = 1
-      IF (JIMPRT.GT.3) Then 
-          write(lupri,*) '   ' 
-          write(lupri,*) ' about to call LNRVAR' 
-          write(lupri,*) ' ----------------------------'
-          write(lupri,*) '           ISYM   : ', ISYM 
-          write(lupri,*) '   KWORK1=KFREE   : ', KWORK1
-          write(lupri,*) '    WORK1=LFREE   : ', WORK1
-          write(lupri,*) '   '     
+      IF (JIMPRT.GT.3) Then
+         WRITE(lupri,*) '   '
+         WRITE(lupri,*) ' about to call LNRVAR'
+         WRITE(lupri,*) ' ----------------------------'
+         WRITE(lupri,*) '           ISYM   : ', ISYM
+         WRITE(lupri,*) '   KWORK1=KFREE   : ', KWORK1
+         WRITE(lupri,*) '    WORK1=LFREE   : ', WORK1
+         WRITE(lupri,*) '   '
       ENDIF
 C not needed for mean value
 C      CALL LNRVAR(ISYM,IPRLNR,WORK(KWORK1),LWORK1)
@@ -237,7 +244,7 @@ cdx         CALL SOPUDV(WORK(KUDV))
 cdx      END IF
 C
 C
-C     Construct property-integrals and write to LUPROP
+C     Construct property-integrals and WRITE to LUPROP
 C     ================================================
 C
 C     2. Work Allocations:
@@ -246,45 +253,37 @@ C
       KIDADR = KIDSYM + 9*MXCENT
       KWORK2 = KIDADR + 9*MXCENT
       LWORK2 = LWORK  - KWORK2
-      IF (JIMPRT.GT.3) Then 
-          write(lupri,*) '        '
-          write(lupri,*) ' sigo alocando : '
-          write(lupri,*) ' ----------------------------'
-          write(lupri,*) ' KIDSYM = KWORK1           : ' , KIDSYM
-          write(lupri,*) ' KIDADR = KIDSYM + 9MXCENT : ' , KIDADR
-          write(lupri,*) ' KWORK2 = KIDADR + 9MXCENT : ' , KWORK2
-          write(lupri,*) ' LWORK2 = LWORK - KWORK2   : ' , LWORK2
+      IF (JIMPRT.GT.3) Then
+         WRITE(lupri,*) '        '
+         WRITE(lupri,*) ' stills to allocate : '
+         WRITE(lupri,*) ' ----------------------------'
+         WRITE(lupri,*) ' KIDSYM = KWORK1           : ' , KIDSYM
+         WRITE(lupri,*) ' KIDADR = KIDSYM + 9MXCENT : ' , KIDADR
+         WRITE(lupri,*) ' KWORK2 = KIDADR + 9MXCENT : ' , KWORK2
+         WRITE(lupri,*) ' LWORK2 = LWORK - KWORK2   : ' , LWORK2
       ENDIF
 C
 C
-C  blanquear todas las labels antes 
-C
-      NLAB = 0
-      DO I = 1, 10
-       LISTA1(I)='        '
-      ENDDO
-C
+C  
 C ==============================================================================
 C
 C  Starting Labels stuff
 C
 C ==============================================================================
-
-c       write(lupri,*)
-cb      write(lupri,*)' selected atom is :', LRATOM
-cb      write(lupri,*)' LRATOM / 100' , LRATOM / 100
-cb      write(lupri,*)' LRATOM / 10' , LRATOM / 10
- 
+      NLAB = 0
+      LISTA1='        '
       npos1 = 3*LRATOM-2
+cb      write(lupri,*)' selected atom is :', LRATOM
+
 C===============================================================================
-C  SINGLET CALCULATIONS : D1S and P1S 
+C  SINGLET CALCULATIONS : D1S and P1S
 C ==============================================================================
 C
-C      Look for LABELS : FERMI  
+C      Look for LABELS : FERMI
 C     ---------------------------
-      IF(KEY.EQ."FCAV") THEN 
-        NLAB=1
-        write(LISTA1(1),'(A3,A2,I3.3)') 'FC ',
+      IF(KEY.EQ."FCAV") THEN
+         NLAB=1
+         WRITE(LISTA1(1),'(A3,A2,I3.3)') 'FC ',
      &        NAMN(LRATOM)(1:2), LRATOM
       ENDIF
 C
@@ -293,14 +292,14 @@ C
 C      Look for LABELS : DIAKIN
 C     ---------------------------
       IF(KEY.EQ."DIAK") THEN
-        NLAB=3 
-        LABEL2='NSKE'
-        IJ = 1
-        DO I=npos1,npos1+2
-           LISTA1(IJ)= CHRNOS(I/100)//CHRNOS(I/10)//
+         NLAB=3
+         LABEL2='NSKE'
+         IJ = 1
+         DO I=npos1,npos1+2
+            LISTA1(IJ)= CHRNOS(I/100)//CHRNOS(I/10)//
      &                    CHRNOS(MOD(I,10))//'NSKE'//CHRXYZ(IJ)
-          IJ = IJ + 1
-        END DO
+            IJ = IJ + 1
+         END DO
       ENDIF
 C
 C
@@ -315,10 +314,11 @@ C     ---------------------------
         DO I=npos1,npos1+2
            LISTA1(IJ)= CHRNOS(I/100)//CHRNOS(I/10)//
      &               CHRNOS(MOD(I,10))//'PSOZ'// CHRXYZ(IJ)
-c           write(*,*) LISTA1(IJ)
+c           WRITE(*,*) LISTA1(IJ)
           IJ = IJ + 1
         END DO
       ENDIF
+
 C
 C
 C
@@ -346,43 +346,36 @@ cx      ENDIF
 C
 C ---------------------------------------------------------------------
 
-c        write(lupri,*)' NAOS  ' , NAOS(1)
-c        write(lupri,*)' NASHT ' , NASHT
-c        write(lupri,*)' NCMOT ' , NCMOT
-c        write(lupri,*)'   KCMO  ', KCMO
-c        write(lupri,*)'   NORBT ', NORBT
-c        write(lupri,*)'   NORB  ', NORB(1)
-c        write(lupri,*)'   N2BASX  ', N2BASX 
-c        write(lupri,*)'   NNBASX  ', NNBASX 
-c        write(lupri,*)'NISHT,NSSHT,NOCCT,NBAST,NRHFT,NVIRT :' ,
+c        WRITE(lupri,*)' NAOS  ' , NAOS(1)
+c        WRITE(lupri,*)' NASHT ' , NASHT
+c        WRITE(lupri,*)' NCMOT ' , NCMOT
+c        WRITE(lupri,*)'   KCMO  ', KCMO
+c        WRITE(lupri,*)'   NORBT ', NORBT
+c        WRITE(lupri,*)'   NORB  ', NORB(1)
+c        WRITE(lupri,*)'   N2BASX  ', N2BASX 
+c        WRITE(lupri,*)'   NNBASX  ', NNBASX 
+c        WRITE(lupri,*)'NISHT,NSSHT,NOCCT,NBAST,NRHFT,NVIRT :' ,
 c     &                 NISHT,NSSHT,NOCCT,NBAST,NRHFT,NVIRT
 c  idea pasarle n2basx a ver si lee bien aoproper.
 c        DO j = 1 , NORBT
-c           write(lupri,*) j ,  WORK(KCMO+j)
+c           WRITE(lupri,*) j ,  WORK(KCMO+j)
 c        ENDDO
 
 C  Print LABELS
 C -----------------------------------
       IF(JIMPRT.GE.2) THEN
-      write(lupri,*) '@AVELRSC setting  LABEL :'
-      DO i =1, NLAB
-         WRITE(LUPRI,*)'   LABEL :', LISTA1(I) 
-      ENDDO
+         WRITE(lupri,*) '@AVELRSC setting  LABEL :'
+         DO i =1, NLAB
+            WRITE(LUPRI,*)'   LABEL :', LISTA1(I)
+         ENDDO
       ENDIF
 C
 C ---------------------------------------------------------------------
 C
-C     Zero the property tensors
-cdx      IF (MAGSUS) CALL DZERO(SUSDZD,9)
-
 C   
-C        Loop over the right operators which are the
-C        the dipole velocity operators 
-C        ===========================================
-C   
-C     
+C
       KJ = 0
-      IDIP = 0 
+      IDIP = 0
       DO 300 IDIP = 1,NLAB
 C
 C           3. Work Allocations:
@@ -392,15 +385,15 @@ C
          LWRKG1 = LWORK - KWRKG1
          KSLV   = KGD1 + 2*NVARPT
          KLAST  = KSLV + 2*NVARPT
-c         write(lupri,*)' NVARPT :', NVARPT 
-         IF (KLAST.GT.LWORK) CALL STOPIT('KLAST GT LWORK on AVELRESC
-     $        ',' ',KLAST,LWORK)
+c         WRITE(lupri,*)' NVARPT :', NVARPT
+         IF (KLAST.GT.LWORK) 
+     &   CALL STOPIT('KLAST GT LWORK on AVELRESC',' ',KLAST,LWORK)
          KWRK = KLAST
          LWRK = LWORK - KLAST + 1
 C
 C        Starting Calculations depending on angpso or not
-C        
-         KJ = KJ+1 
+C
+         KJ = KJ+1
 cx         IF (KEY.EQ.'ANGP') THEN
 cx            CALL ANGPSO(WORK(KCMO),LWORK,JIMPRT,LISTA1(IDIP),
 cx     $      LISTA1(IDIP+3),SNDPRP)
@@ -409,45 +402,49 @@ cx               WRITE (LUPRI,'(1A,I2,5A,F20.12)')
 cx     &         '#',KJ,' Expectation Value for Operator : < ',
 cx     &         LISTA1(IDIP), '.',LISTA1(IDIP+3),' > = ',SNDPRP
 cx            ENDIF
-cx         ELSE 
+cx         ELSE
+!           Get average value of operator
             CALL PRP1AVE(LISTA1(IDIP),SNDPRP,WORK(KCMO),WORK(KUDV),
      $      WORK(KWRKG1),LWRKG1,JIMPRT)
             IF (JIMPRT.GE.2) THEN
                WRITE (LUPRI,'(1A,I2,3A,F20.12)')
      &         '#',KJ,' Expectation Value for Operator : < ',
      &         LISTA1(IDIP), ' > = ',SNDPRP
-            ENDIF
+c            ENDIF
+           ENDIF
 cx         ENDIF
 C
 C       =========================================================
 C
 C
-C              Write properties into the various property matrices
+C              WRITE properties into the various property matrices
 C              ===================================================
 C
 C         <Fc> : 
 C       -----------
-           IF (KEY.EQ.'FCAV') THEN
-              LRFCAV(1,1)= SNDPRP
-              LRFCAV(2,2)= SNDPRP
-              LRFCAV(3,3)= SNDPRP
-           ENDIF
+         IF (KEY.EQ.'FCAV') THEN
+            LRFCAV(1,1)= SNDPRP
+            LRFCAV(2,2)= SNDPRP
+            LRFCAV(3,3)= SNDPRP
+         ENDIF
 C         <DiaKin> :
 C       ------------------
-           IF (KEY.EQ.'DIAK') THEN
-             IF(KJ.EQ.1) LRDIAK(1,1)=SNDPRP         
-             IF(KJ.EQ.2) LRDIAK(2,2)=SNDPRP         
-             IF(KJ.EQ.3) LRDIAK(3,3)=SNDPRP         
-           ENDIF
+         IF (KEY.EQ.'DIAK') THEN
+            IF(KJ.EQ.1) LRDIAK(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRDIAK(2,2)=SNDPRP
+            IF(KJ.EQ.3) LRDIAK(3,3)=SNDPRP
+         ENDIF
 C         <Angpso> :
 C       ------------------
-           IF (KEY.EQ.'ANGP') THEN
-             IF(KJ.EQ.1) LRANGP(1,1)=SNDPRP         
-             IF(KJ.EQ.2) LRANGP(2,2)=SNDPRP         
-             IF(KJ.EQ.3) LRANGP(3,3)=SNDPRP         
-           ENDIF
+         IF (KEY.EQ.'ANGP') THEN
+            IF(KJ.EQ.1) LRANGP(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRANGP(2,2)=SNDPRP
+            IF(KJ.EQ.3) LRANGP(3,3)=SNDPRP
+         ENDIF
   300 CONTINUE
 C
+
+
       CALL TIMER ('AVELRSC',TIMEIN,TIMOUT)
 C
       CALL QEXIT('AVELRSC')
