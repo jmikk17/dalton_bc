@@ -227,7 +227,7 @@ C
      &'If results obtained with this code are published,',
      &'the appropriate citations would be both of:',
      &' ',
-     &'   K. Aidas, C. Angeli, J. J. Aucar, K. L. Bak, V. Bakken,',
+     &'   K. Aidas, C. Angeli, K. L. Bak, V. Bakken,',
      &'   R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,',
      &'   S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,',
      &'   T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,',
