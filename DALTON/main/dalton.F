@@ -448,6 +448,8 @@ C
      &  '(Frozen density embedding)',
      *'David J. Wilson,','La Trobe University,','Australia',
      &  '(DFT Hessian and DFT magnetizabilities)',
+     *'Luna Zamok,','University of Copenhagen,','Denmark',
+     &  '(Block Lanczos RPA solver in SOPPA module)',
      *'Hans Agren,','KTH Stockholm,','Sweden',
      &  '(SIRIUS module, RESPONS, MC-SCRF solvation)'
 C
