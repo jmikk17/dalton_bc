@@ -20,17 +20,18 @@ f.add(from_string = 'Occupancies of natural orbitals',
 
 f.add(from_string = 'Molecular orbitals for symmetry species 1',
       num_lines = 11,
+      ignore_sign=True,
       rel_tolerance = 1.0e-3)
 
 f.add(from_string = 'Molecular orbitals for symmetry species 2',
       num_lines = 6,
+      ignore_sign=True,
       rel_tolerance = 1.0e-3)
 
 f.add(from_string = 'Molecular orbitals for symmetry species 3',
       num_lines = 8,
+      ignore_sign=True,
       rel_tolerance = 1.0e-3)
-
-
 
 test.run(['cino.dal'], ['H2O.mol'], f={'out': f})
 
