@@ -1045,6 +1045,7 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
 #include "infvar.h"
 #include "inforb.h"
 #include "inftap.h"
+#include "dftcom.h"
 
     integer :: nwrk
     real*8 :: energy
@@ -1062,9 +1063,12 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
     real*8, dimension(:), allocatable :: fckmo, fckac
     real*8, dimension(:), allocatable :: pegrd, diape
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
+    logical dft_spindns_save
 
     call qenter('pelib_ifc_grad')
     if (.not. use_pelib()) call quit('PElib not active')
+    dft_spindns_save = dft_spindns
+    dft_spindns = .false.
 
     allocate(dcao(n2basx), dvao(n2basx))
     call fckden((nisht > 0), (nasht > 0), dcao, dvao, cmo, dv, wrk, nwrk)
@@ -1124,6 +1128,7 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
         write(luit2) star8, star8, star8, eodata
     end if
 
+    dft_spindns = dft_spindns_save
     call qexit('pelib_ifc_grad')
 
 end subroutine pelib_ifc_grad
@@ -1194,6 +1199,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
 #include "infvar.h"
 #include "inflin.h"
 #include "infdim.h"
+#include "dftcom.h"
 
     integer :: ncsim, nwrk
     integer, dimension(*) :: cindx
@@ -1209,9 +1215,12 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     real*8, dimension(:), allocatable :: dtvao, fdtvaos, fxcaos
     real*8, dimension(:), allocatable :: tfxcacs, fyc, fycac
     real*8, dimension(:,:), allocatable :: fxcs, fxcacs
+    logical dft_spindns_save
 
     call qenter('pelib_lnc')
     if (.not. use_pelib()) call quit('PElib not active')
+    dft_spindns_save = dft_spindns
+    dft_spindns = .false.
 
     allocate(fxcs(nnorbx,ncsim))
     allocate(fxcacs(nnashx,ncsim))
@@ -1281,6 +1290,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     deallocate(fxcacs, fycac, tfxcacs)
     deallocate(fyc, fxcs)
 
+    dft_spindns = dft_spindns_save
     call qexit('pelib_lnc')
 
 end subroutine pelib_lnc
@@ -1308,6 +1318,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
 #include "inforb.h"
 #include "infvar.h"
 #include "inflin.h"
+#include "dftcom.h"
 
     integer :: nosim, nso, nwrk
     integer, dimension(*) :: cindx
@@ -1328,10 +1339,12 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
     real*8, dimension(:,:), allocatable :: ubovecs, fxos
     real*8, dimension(:,:), allocatable :: fxyos, fxyoacs
-
+    logical dft_spindns_save
 
     call qenter('pelib_lno')
     if (.not. use_pelib()) call quit('PElib not active')
+    dft_spindns_save = dft_spindns
+    dft_spindns = .false.
 
     allocate(ubovecs(n2orbx,nosim))
     if (nosim > 0) then
@@ -1428,6 +1441,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     end do
     nwoph = mwoph
 
+    dft_spindns = dft_spindns_save
     call qexit('pelib_lno')
 
 end subroutine pelib_lno
@@ -1478,6 +1492,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
 #include "inforb.h"
 #include "qrinf.h"
 #include "infvar.h"
+#include "dftcom.h"
 
     integer :: i, j
     integer :: ncsim, nwrk
@@ -1501,9 +1516,12 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
     logical :: lexist, lopen, locdeb
     logical :: fndlab
     logical :: tdm, norho2
+    logical dft_spindns_save
 
     call qenter('pelib_rsplnc')
     if (.not. use_pelib()) call quit('PElib not active')
+    dft_spindns_save = dft_spindns
+    dft_spindns = .false.
 
     locdeb = .false.
 
@@ -1646,6 +1664,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
         call quit('ERROR in pelib_rsplnc: ncref /= kzconf')
     end if
 
+    dft_spindns = dft_spindns_save
     call qexit('pelib_rsplnc')
 
 end subroutine pelib_rsplnc
