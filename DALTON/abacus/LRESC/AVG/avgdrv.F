@@ -195,7 +195,7 @@ C     ******  ******
       CHARACTER*8 B0,char1,char2
       integer PRT, naos
       double precision,intent(out) :: Av
-      real(16) A1(NBAST,NBAST), A2(NBAST,NBAST)
+      double precision A1(NBAST,NBAST), A2(NBAST,NBAST)
 
       naos = NBAST
       nmos=NORBT
@@ -248,7 +248,7 @@ C     ******  ******
       CHARACTER*8 B0,char1,char2,char3
       integer PRT, naos,mu,nu
       double precision,intent(out) :: Av
-      real(16) A1(NBAST,NBAST), A2(NBAST,NBAST),A3(NBAST,NBAST)
+      double precision A1(NBAST,NBAST), A2(NBAST,NBAST),A3(NBAST,NBAST)
 
       naos = NBAST
       nmos=NORBT
