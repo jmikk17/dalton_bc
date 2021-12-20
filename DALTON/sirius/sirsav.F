@@ -706,13 +706,14 @@ C        write nat. orb. occupation numbers, when available
          IF (NASHT.LE.1 .OR.
      &      (CNOLBL.NE.'ONLYFD' .AND. NASHT.GT.0)) THEN
             IF (NASHT.EQ.1) WRK(KAOCC) = NACTEL
-            WRITE (LUIT1) LAB123,TABLE(9)
+            WRITE (LUIT1) LAB123,TABLE(9) ! label "NATOCC  "
             KOCCUP = KW31
-            DO, I = 1, NISHT
+            CALL DZERO(WRK(KOCCUP),NORBT)
+            DO I = 1, NISHT
                IX  = ISX(I)
                WRK(KOCCUP-1+IX) = 2.0D0
             END DO
-            DO, I = 1, NASHT
+            DO I = 1, NASHT
                IX = ISX(NISHT+I)
                WRK(KOCCUP-1+IX) = WRK(KAOCC-1+I)
             END DO
