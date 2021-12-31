@@ -1,6 +1,7 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2020.1-dev] (unreleased)
+## [2020.1-dev] (unreleased, last update 2020-12-21)
+
 ### New features added
 - New features available through the Polarizable Embedding library (PElib)
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
@@ -9,6 +10,8 @@
   - Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
 
 ### Fixed
+- Performance improvement: disable DFT_SPINDNS if true when singlet (H. J. Aa. Jensen)
+- Fixed bug for molden.inp: empty orbitals got arbitrary occupation numbers. (H. J. Aa. Jensen)
 - Fixed bug for *CUBE (crashed always) (H. J. Aa. Jensen) 
 - Fixed combination of DFT in SCF for initial orbital guess error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
 - Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
