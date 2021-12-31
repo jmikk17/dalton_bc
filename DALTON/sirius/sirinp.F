@@ -1677,6 +1677,16 @@ C        CALL SIRSET(WRK,LWRK,OLDWOP)
          CALL AVECHK(INPERR)
       END IF
 C
+C DFT_SPINDNS is by default set .true. in srdft input unless explicitly
+C disabled with NO_SPINDENSITY. We here disable spin density for singlet
+C wave functions without spin density from local spin model.
+C This saves CPU time not calculate contributions from zero spin density
+C matrices ... /Dec2021, hjaaj
+C
+      IF (ISPIN.EQ.1 .AND. DFT_SPINDNS .AND. .NOT.DFT_LOCALSPIN) THEN
+         DFT_SPINDNS = .FALSE.
+      END IF
+C
 C  Do we use embedding ?
 C  (that is, is QM part embedded in environment)
 C
