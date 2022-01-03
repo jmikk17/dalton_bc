@@ -145,12 +145,12 @@ C
 !        END IF
       ELSE IF (HSROHF .OR. NASHT .LE. 1) THEN
          CALL DZERO(WRK(KOCCUP),NORBT)
-         DO, I = 1, NISHT
+         DO I = 1, NISHT
             IX = ISX(I)
             WRK(KOCCUP-1+IX) = 2.0D0
          END DO
          IF (HSROHF) THEN
-            DO, I = NISHT+1, NOCCT
+            DO I = NISHT+1, NOCCT
                IX = ISX(I)
                WRK(KOCCUP-1+IX) = 1.0D0
             END DO

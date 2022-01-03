@@ -38,7 +38,6 @@ C
 C
 C -- local variables and constants
 C
-      PARAMETER ( D0 = 0.0D0, DP5 = 0.5D0, D1 = 1.0D0, D2 = 2.0D0 )
 #include "dummy.h"
 C
 C Used from common blocks:
@@ -118,14 +117,14 @@ C
 C
          JOCC1  = IORB(ISYM)
          NISHI  = NISH(ISYM)
-         DO 271 J = 1,NISHI
-            OCC(JOCC1+J) = D2
-  271    CONTINUE
+         DO J = 1,NISHI
+            OCC(JOCC1+J) = 2.0D0
+         END DO
 C
          NASHI  = NASH(ISYM)
       IF (NASHI.EQ.0) GO TO 300
          JOCC1  = JOCC1 + NISHI
-         OCCSUM = D0
+         OCCSUM = 0.0D0
          DO 275 I=1,NASHI
             IAOCC = IAOCC + 1
             OCC(JOCC1 + I) = WRK(IAOCC)
@@ -140,7 +139,7 @@ C
  3040 FORMAT(/' Symmetry',I3,'  Total occupancy this symmetry',F14.9,
      &      //,(5F14.9))
 C
-C     Print out natural orbitals
+C     Print natural orbitals
 C
       IF (P6FLAG(59)) THEN
          IF (ONLYFD .OR. (NASHT .LE. 1 .AND. .NOT.ONLYNO)) THEN
@@ -188,7 +187,7 @@ C
 C        if (int.transf. needed in optimization)
          NCROOT = NROOTS
          MAXITC = MAXMAC
-         THRCIX = DP5*THRGRD
+         THRCIX = 0.5D0*THRGRD
          CALL MEMGET('REAL',KECI,NCROOT,WRK,KFREE,LFREE)
          CALL MEMGET('INTE',KICROO,NCROOT,WRK,KFREE,LFREE)
          CALL MEMGET('WORK',KWRK,LWRK,WRK,KFREE,LFREE)
@@ -251,7 +250,6 @@ C
 C -- local variables and constants
 C
       LOGICAL   DFT_SPINDNS_SAVE
-      PARAMETER ( D0 = 0.0D0, D1 = 1.0D0, DM1 = -1.0D0 )
       PARAMETER ( THRCAN = 1.0D-10 )
 C
 C Used from common blocks:
@@ -440,8 +438,8 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       ELSE IF (HSROHF) THEN
          DO I = 1, NASHT
             II = KDV + I*(I+1)/2 - 1
-            WRK(II) = D1
-            IF (NDV.EQ.2) WRK(NNASHX+II)=D1
+            WRK(II) = 1.0D0
+            IF (NDV.EQ.2) WRK(NNASHX+II)=1.0D0
          END DO 
       ELSE IF (NASHT .EQ. 1) THEN
          WRK(KDV) = NACTEL
@@ -481,9 +479,9 @@ C
      *            WRK(KWRK2),LWRK2)
 C     CALL FCKMAT(ONLYFC,DV,CMO,EMY,FC,FV,WRK,LFREE)
       IF (NASHT .GT. 0) THEN
-         CALL DAXPY(NNORBT,D1,WRK(KFV),1,WRK(KFC),1)
+         CALL DAXPY(NNORBT,1.0D0,WRK(KFV),1,WRK(KFC),1)
          IF (DFT_SPINDNS) THEN
-            CALL DAXPY(NNORBT,D1,WRK(KFV+NNORBT),1,WRK(KFC),1)
+            CALL DAXPY(NNORBT,1.0D0,WRK(KFV+NNORBT),1,WRK(KFC),1)
          END IF
       END IF
       IF (SUPSYM) CALL AVEFCK(WRK(KFC))
@@ -522,7 +520,7 @@ C           zero off-diagonal frozen-frozen elements
                JSTA = JFC + IROW(I)
                JEND = JSTA + I - 2
                DO J = JSTA,JEND
-                  WRK(J) = D0
+                  WRK(J) = 0.0D0
                END DO
             END DO
          END IF
@@ -633,7 +631,8 @@ C
          DO 410 I = 1,NASHT
             IF (TRTONO) AOCC(I) = WRK(KDV-1 + IROW(I+1))
             JUNOMX = JUNO-1 + IDAMAX(NASHT,WRK(JUNO),1)
-            IF (WRK(JUNOMX) .LT. D0) CALL DSCAL(NASHT,DM1,WRK(JUNO),1)
+            IF (WRK(JUNOMX) .LT. 0.0D0)
+     &         CALL DSCAL(NASHT,-1.0D0,WRK(JUNO),1)
             JUNO   = JUNO + NASHT
   410    CONTINUE
 CHJ-S-860827
@@ -688,7 +687,7 @@ C
 C900801-hjaaj: If transformation is unit matrix, skip TRACI.
 C
          CALL DUNIT(WRK(KBIG),NASHT)
-         CALL DAXPY(N2ASHX,DM1,WRK(KUNO),1,WRK(KBIG),1)
+         CALL DAXPY(N2ASHX,-1.0D0,WRK(KUNO),1,WRK(KBIG),1)
          I = IDAMAX(N2ASHX,WRK(KBIG),1)
          IF (ABS(WRK(KBIG-1+I)) .LE. THRCAN) THEN
             IF (IPRCNO .GE. 5) WRITE (LUPRI,'(/A/A,1P,D10.1/)')
@@ -775,7 +774,6 @@ C
 C
 #include "implicit.h"
       DIMENSION DV(NNASHX),DVZRAS(3)
-      PARAMETER ( D0 = 0.0D0 )
 C
 C Used from common blocks:
 C   INFORB : NASHT, NNASHX
@@ -797,7 +795,7 @@ C
             IF (IACTI .NE. IACTJ) THEN
                DVZTMP(IACTI,IACTJ) = DVZTMP(IACTI,IACTJ)
      &            + DV(JR + I) ** 2
-               DV(JR + I) = D0
+               DV(JR + I) = 0.0D0
             END IF
   100    CONTINUE
   200 CONTINUE
@@ -840,7 +838,6 @@ C
       DIMENSION CVEC(*), OCCNO(*), UNO(NASHT,*), CMO(*), INDXCI(*),
      *          WRK(*)
       LOGICAL   ORDER_in, ORDER, NATORB, MOISNO, NOAVER
-      PARAMETER (D0 = 0.0D0, D1 = 1.0D0, DM1 = -1.0D0, D2 = 2.0D0)
 #include "thrzer.h"
 C
 C Used from common blocks:
@@ -889,7 +886,7 @@ C
          CALL DZERO(WRK(KDV),NNASHX)
          DO I = 1, NASHT
             II = KDV + I*(I+1)/2 - 1
-            WRK(II) = D1
+            WRK(II) = 1.0D0
          END DO 
       ELSE IF (NASHT .GT. 1) THEN
          LSYMSV = LSYM
@@ -915,10 +912,10 @@ C
                CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
             END IF
          END IF
-         DVMAX = D0
-         DO, I = 2,NASHT
+         DVMAX = 0.0D0
+         DO I = 2,NASHT
             II = (I*I-I)/2
-            DO, J = 1,I-1
+            DO J = 1,I-1
                DVMAX = MAX(DVMAX,ABS(WRK(KDV-1+II+J)))
             END DO
          END DO
@@ -941,9 +938,10 @@ C
          CALL JACO_THR(WRK(KDV),UNO,NASHT,NASHT,NASHT,0.0D0)
 
 C        select positive phase of MO-NO transformation vectors:
-         DO, I = 1,NASHT
+         DO I = 1,NASHT
             JUNOMX = IDAMAX(NASHT,UNO(1,I),1)
-            IF (UNO(JUNOMX,I) .LT. D0) CALL DSCAL(NASHT,DM1,UNO(1,I),1)
+            IF (UNO(JUNOMX,I) .LT. 0.0D0)
+     &         CALL DSCAL(NASHT,-1.0D0,UNO(1,I),1)
          END DO
 
       END IF
@@ -951,19 +949,18 @@ C
 C     extract natural occupation numbers
 C
       CALL DZERO(OCCNO, NORBT)
-      JORB = 0
       JACT = 0
-      DO, ISYM = 1,NSYM
-         DO, I = 1,NISH(ISYM)
+      DO ISYM = 1,NSYM
+         JORB = IORB(ISYM)
+         DO I = 1,NISH(ISYM)
             JORB = JORB + 1
-            OCCNO(JORB) = D2
+            OCCNO(JORB) = 2.0D0
          END DO
-         DO, I = 1,NASH(ISYM)
+         DO I = 1,NASH(ISYM) ! assume natural orbitals
             JORB = JORB + 1
             JACT = JACT + 1
             OCCNO(JORB) = WRK(KDV-1 + (JACT*JACT+JACT)/2)
          END DO
-         JORB = JORB + NSSH(ISYM)
       END DO
       IF (ORDER) THEN
 C     ... reasons why reordering of active orbitals may not be desired:
@@ -982,8 +979,8 @@ C            for non-zero diagonal elements.
          IF (SUPSYM) CALL AVEORD()
 C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
          IF (MOISNO) THEN
-            DO, I = 1,NASHT
-               IF (UNO(I,I) .NE. D1) MOISNO = .FALSE.
+            DO I = 1,NASHT
+               IF (UNO(I,I) .NE. 1.0D0) MOISNO = .FALSE.
             END DO
             IF (IPRINT .GE. 2 .AND. .NOT. MOISNO) THEN
                WRITE(LUPRI,'(/A)')

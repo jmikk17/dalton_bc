@@ -269,7 +269,6 @@ C
      *         ' ABACUS/RESPONSE interface.'
          END IF
          IF (FLAG(3)) THEN
-            KREL1 = KFREE
             CALL SIRCAN(IPRI4,WRK(KCREF),WRK(KCMO),WRK(KOCCNO),
      *                  WRK,KFREE,LFREE)
 C           CALL SIRCAN(IPRCAN,CREF,CMO,OCC,WRK,KFREE,LFREE)
@@ -287,7 +286,7 @@ C
       IF ( FNDLAB('NATOCC  ',LUIT1) ) THEN
          CALL READT(LUIT1,NORBT,WRK(KOCCNO))
       ELSE IF (MCTYPE .LE. 0) THEN
-         DO, ISYM = 1,NSYM
+         DO ISYM = 1,NSYM
             JOCC1  = KOCCNO -1 + IORB(ISYM)
             NISHI  = NISH(ISYM)
             WRK(JOCC1+1:JOCC1+NISHI) = 2.0D0
@@ -514,8 +513,10 @@ C
          CALL MEMGET('REAL', KOVEC, NBAST,       WRK, KFREE, LFREE)
          CALL MOLDEN_MOS(1,WRK(KCMO), WRK(KOCCNO), WRK(KAOSO),
      &                   WRK(KUCMO), WRK(KOVEC))
+!        CALL  MOLDEN_MOS(ITASK,CMO,OCCUP,ORBTRA,UCMO,ORBVEC)
          CALL MEMREL('SIROUT.MOLDEN_MOS',WRK,KREL2,KREL2,KFREE,LFREE)
       END IF ! (MOLDEN)
+
 C
 C ***  Print final MCSCF orbitals ***
 C
