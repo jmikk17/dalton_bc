@@ -393,8 +393,8 @@ C           2 : save orbital energies in OREN in molde.h
                WRITE(LUMOLDEN_MOS,'(A)') '[9G]'   ! 9g
             ELSE
                NINFO = NINFO + 1
-               WRITE (LUPRI,'(//A)') ' INFO: Sorry, plot of MOs with '//
-     &         'Molden is only implemented for spherical GTOs'
+               WRITE (LUPRI,'(//A)') '@ INFO: Sorry, plot of MOs with '
+     &       //'Molden is only implemented for spherical GTOs'
                DONEIV = .TRUE.
             END IF
          END IF

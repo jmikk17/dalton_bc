@@ -2123,13 +2123,14 @@ C        write the natural orbitals to LUIT1 label NEWORB
          IF (NASHT .EQ. 1 .OR.
      &      (CNOLBL .NE. 'ONLYFD' .AND. NASHT .GT. 1)) THEN
             IF (NASHT.EQ.1) WRK(KAOCC) = NACTEL
-            WRITE (LUIT1) STAR8,LBLDAT(1),LBLINF(2),TABLE(8)
+            WRITE (LUIT1) STAR8,LBLDAT(1),LBLINF(2),TABLE(8) ! label NATOCC
             KOCCUP = KW31
-            DO, I = 1, NISHT
+            CALL DZERO(WRK(KOCCUP),NORBT)
+            DO I = 1, NISHT
                IX  = ISX(I)
                WRK(KOCCUP-1+IX) = 2.0D0
             END DO
-            DO, I = 1, NASHT
+            DO I = 1, NASHT
                IX = ISX(NISHT+I)
                WRK(KOCCUP-1+IX) = WRK(KAOCC-1+I)
             END DO
