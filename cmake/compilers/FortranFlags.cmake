@@ -74,20 +74,18 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
 endif()
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
-
-    add_definitions(-DVAR_PGI)
-
 # Patrick: mcmodel=medium is not available on PGI Free for MacOS X
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DVAR_PGI")
     if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
+        if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
+            set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
+        endif()
+        if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64")
+            set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=large")
+        endif()
     endif()
-
 # Simen: added to include c++ libraries needed for the final linking
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -pgc++libs")
-
     set(CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -Mframe -traceback")
-# I would like to add -fast but this makes certain dec tests fails
     set(CMAKE_Fortran_FLAGS_RELEASE "-O3 -Mipa=fast")
     set(CMAKE_Fortran_FLAGS_PROFILE "${CMAKE_Fortran_FLAGS_RELEASE} -g -pg")
     if(ENABLE_64BIT_INTEGERS)
@@ -95,15 +93,26 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DVAR_PGI")
             "${CMAKE_Fortran_FLAGS} -i8 -i8storage"
             )
     endif()
-    if(ENABLE_BOUNDS_CHECK)
-        set(CMAKE_Fortran_FLAGS
-#add -Mbounds at some point
-            "${CMAKE_Fortran_FLAGS} "
-            )
+endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES NVHPC)
+# Patrick: mcmodel=medium is not available on PGI Free for MacOS X
+    if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+        if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
+            set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
+        endif()
+        if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "aarch64")
+            set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=large")
+        endif()
     endif()
-    if(ENABLE_CODE_COVERAGE)
+# Simen: added to include c++ libraries needed for the final linking
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -pgc++libs")
+    set(CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -Mframe -traceback")
+    set(CMAKE_Fortran_FLAGS_RELEASE "-O3 -Mipa=fast")
+    set(CMAKE_Fortran_FLAGS_PROFILE "${CMAKE_Fortran_FLAGS_RELEASE} -g -pg")
+    if(ENABLE_64BIT_INTEGERS)
         set(CMAKE_Fortran_FLAGS
-            "${CMAKE_Fortran_FLAGS} "
+            "${CMAKE_Fortran_FLAGS} -i8 -i8storage"
             )
     endif()
 endif()
