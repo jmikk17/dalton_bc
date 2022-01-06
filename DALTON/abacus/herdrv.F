@@ -180,9 +180,9 @@ C
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          CALL GPCLOSE(LUINTA,'DELETE')
 C
-         IF (LUSRINT .LE. 0) CALL GPOPEN(LUSRINT,'AOSR2INT',
+         IF (LUINTA_SR .LE. 0) CALL GPOPEN(LUINTA_SR,'AOSR2INT',
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
-         CALL GPCLOSE(LUSRINT,'DELETE')
+         CALL GPCLOSE(LUINTA_SR,'DELETE')
          IF (LUSUPM .LE. 0) CALL GPOPEN(LUSUPM,'AOSUPINT',
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          CALL GPCLOSE(LUSUPM,'DELETE')
@@ -204,13 +204,13 @@ C
 
 
 C     IF (RUNTWO .or. RUNERI) :
-C        Open LUINTA and LUSRINT for new 2-el. integrals
+C        Open LUINTA and LUINTA_SR for new 2-el. integrals
 C        to be calculated in the CALL HERINT call below
 
       IF ((RUNTWO .OR. RUNERI) .AND. .NOT. DCCR12) THEN
          CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          IF (DOSRIN) CALL
-     &       GPOPEN(LUSRINT,'AOSR2INT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
+     &     GPOPEN(LUINTA_SR,'AOSR2INT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
       END IF
 C
       CALL GPOPEN(LUONEL,'AOONEINT','OLD',' ',' ',IDUMMY,.FALSE.)
@@ -290,7 +290,7 @@ C
       IF (LUSOL   .GT. 0) CALL GPCLOSE(LUSOL ,'KEEP')
 C
       IF (LUINTA  .GT. 0) CALL GPCLOSE(LUINTA ,'KEEP')
-      IF (LUSRINT .GT. 0) CALL GPCLOSE(LUSRINT,'KEEP')
+      IF (LUINTA_SR .GT. 0) CALL GPCLOSE(LUINTA_SR,'KEEP')
 C
       IF (RUNTWO .OR. RUNERI) FTRCTL = .TRUE.
 C     ..transformation control, old AO/MO files cannot be used any more.
@@ -3966,7 +3966,7 @@ C  GNRINF: DIRCAL, DOSRIN
 C  CBIHER: ONEPRP
 C  CBIHR1: RUNONE
 C  CBIHR2: RUNTWO
-C  INFTAP: LUINTA, LUSRINT
+C  INFTAP: LUINTA, LUINTA_SR
 #include "mxcent.h"
 #include "gnrinf.h"
 #include "cbiher.h"
@@ -3993,12 +3993,12 @@ C
          ONEPRP = .FALSE.
          RUNTWO = .TRUE.
          DIRCAL = .FALSE.
-C        Open LUINTA/LUSRINT for new integrals
+C        Open LUINTA/LUINTA_SR for new integrals
          WRITE (LUPRI,'(/A)') '---> (Re)generating AOTWOINT'
          CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          IF (DOSRIN) THEN
             WRITE (LUPRI,'(A)') '---> and (re)generating AOSR2INT'
-            CALL GPOPEN(LUSRINT,'AOSR2INT','UNKNOWN',' ',' ',
+            CALL GPOPEN(LUINTA_SR,'AOSR2INT','UNKNOWN',' ',' ',
      &                  IDUMMY,.FALSE.)
          END IF
          IF (LUPROP .LT. 0)

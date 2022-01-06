@@ -87,7 +87,7 @@ C
 #include "pcmdef.h"
 #include "pcm.h"
 #include "pcmlog.h"
-! dftcom.h: DFT_SPINDNS, DFT_LOCALSPIN, HFXFAC
+! dftcom.h: SRDFT_SPINDNS, SRDFT_LOCALSPIN, HFXFAC
 #include "dftcom.h"
 #include "exeinf.h"
 #include "stex.h"
@@ -97,7 +97,7 @@ C
 
 C
       LOGICAL   FLAGSV(NFLAG), OLDWOP, RHFWOP, PCM_save
-      LOGICAL   DFT_SPINDNS_save, DFT_LOCALSPIN_save, USEDRC_save
+      LOGICAL   SRDFT_SPINDNS_save, SRDFT_LOCALSPIN_save, USEDRC_save
       LOGICAL   dftadd_s, addsri_s
       DIMENSION NASHSV(8), NISHSV(8), NFROSV(8)
       real(8), allocatable :: tmp_space(:)
@@ -303,9 +303,9 @@ C
          CALL GETTIM(TSTART,WSTART)
 C
 C        Modifications for open-shell HF-srDFT ...
-C        (do not switch off DIIS if DFT_SPINDNS but NASHT.eq.0, i.e. closed-shell SCF)
+C        (do not switch off DIIS if SRDFT_SPINDNS but NASHT.eq.0, i.e. closed-shell SCF)
 C
-         IF (DOHFSRDFT .and. DFT_SPINDNS .AND. NASHT.GT.0) THEN
+         IF (DOHFSRDFT .and. SRDFT_SPINDNS .AND. NASHT.GT.0) THEN
          IF (MXDIIS .gt. 0) THEN ! DIIS not implemented for HFSRDFT and open shell SCF
             MXDIIS = 0
             NINFO  = NINFO + 1
@@ -472,15 +472,15 @@ C
          IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
             FLAG(25) = .FALSE. ! do not write to SIRIFC if MP2 followed by MC or CI
          END IF
-         IF (DFT_SPINDNS .OR. DFT_LOCALSPIN) THEN
+         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN) THEN
             NWARN = NWARN + 1
             WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//
      &      'implemented in MP2 module and is ignored.'
          END IF
-         DFT_SPINDNS_save = DFT_SPINDNS
-         DFT_SPINDNS = .FALSE.
-         DFT_LOCALSPIN_save = DFT_LOCALSPIN
-         DFT_LOCALSPIN = .FALSE.
+         SRDFT_SPINDNS_save = SRDFT_SPINDNS
+         SRDFT_SPINDNS = .FALSE.
+         SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+         SRDFT_LOCALSPIN = .FALSE.
          NUMRUN = NUMRUN + 1
          IF (DOSCF .AND. ICONV .LE. 0) THEN
             WRITE (LUPRI,7020)
@@ -511,8 +511,8 @@ C
          CALL FLSHFO(LUSTAT)
          FLAG(14)   = .FALSE.
          FLAGSV(14) = .FALSE.
-         DFT_SPINDNS = DFT_SPINDNS_save
-         DFT_LOCALSPIN = DFT_LOCALSPIN_save
+         SRDFT_SPINDNS = SRDFT_SPINDNS_save
+         SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
       END IF
 C
 C ***************************************************
@@ -610,15 +610,15 @@ C ***************************************************
 C        *** CI ***
 C
       IF (DOCI .OR. DOCINO) THEN
-         IF (DFT_SPINDNS .OR. DFT_LOCALSPIN) THEN
+         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN) THEN
             NWARN = NWARN + 1
             WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//
      &      'implemented in CI module and is ignored.'
          END IF
-         DFT_SPINDNS_save = DFT_SPINDNS
-         DFT_SPINDNS = .FALSE.
-         DFT_LOCALSPIN_save = DFT_LOCALSPIN
-         DFT_LOCALSPIN = .FALSE.
+         SRDFT_SPINDNS_save = SRDFT_SPINDNS
+         SRDFT_SPINDNS = .FALSE.
+         SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+         SRDFT_LOCALSPIN = .FALSE.
          NUMRUN = NUMRUN + 1
          DOHFSRDFT = .FALSE.
 C        ... no more HFSRDFT
@@ -670,8 +670,8 @@ C              ... orbital super symmetries may have been reordered
      &         'SIRCTL CINO error: inconsistency in sup.sym. averaging')
             END IF
          END IF
-         DFT_SPINDNS = DFT_SPINDNS_save
-         DFT_LOCALSPIN = DFT_LOCALSPIN_save
+         SRDFT_SPINDNS = SRDFT_SPINDNS_save
+         SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
       END IF
 C
 C ***************************************************

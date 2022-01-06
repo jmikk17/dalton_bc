@@ -1359,7 +1359,7 @@ C   INFINP : LSYM,FLAG(*)
 C   INFORB : NASHT,N2ASHX,NNASHX
 C   INFLIN : LSYMRF,LSYMST,NCONRF,NCONST
 C   INFPRI : IPRDNS
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -1427,7 +1427,7 @@ C          ... pack RHO1 as triangular matrix
       END DO ! ICSIM = 1,NCSIM
 C
 C
-      IF (DFT_SPINDNS) THEN ! calculate DTS
+      IF (SRDFT_SPINDNS) THEN ! calculate DTS
          if(ci_program .eq. 'LUCITA   ') 
      &   call quit('spin density in srDFT not implemented with LUCITA')
          ISPIN1 = 1

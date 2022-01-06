@@ -99,7 +99,7 @@ C
 #include "infvar.h"
 #include "infpri.h"
 #include "gnrinf.h"
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 #include "dftcom.h"
 C
 Cholesky
@@ -206,7 +206,7 @@ C     scale by 4 to get correct orbital gradient from DIIS_EVC
       CALL DSCAL(N2BAST,D4,WRK(KSMOAO),1)
       CALL MEMREL('SRDIIS.SMOAO',WRK,KFRSAV,KREL,KFREE,LFREE)
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDMAT = 3
       ELSE IF (NASHT .EQ. 0) THEN
          NDMAT = 1

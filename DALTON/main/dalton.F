@@ -950,7 +950,7 @@ C
       LUMMOV = -9045
       LUOVER = -9046
       LUNDPF = -9047
-      LUSRINT =-9048
+      LUINTA_SR =-9048
       LUNMPF = -9049
       LUMOLDEN    =-9050
       LUMOLDEN_MOS=-9051

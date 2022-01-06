@@ -249,7 +249,7 @@ C
 C
 C -- local variables and constants
 C
-      LOGICAL   DFT_SPINDNS_SAVE
+      LOGICAL   SRDFT_SPINDNS_SAVE
       PARAMETER ( THRCAN = 1.0D-10 )
 C
 C Used from common blocks:
@@ -279,8 +279,8 @@ C
       LOGICAL TRTONO, GETOCC, TRTOFC, TRTOCO, TRCVEC, TSTFLG
 C
       CALL QENTER('SIRCNO')
-      DFT_SPINDNS_SAVE = DFT_SPINDNS
-      DFT_SPINDNS = .FALSE.  ! no spin densities needed for canonical orbitals
+      SRDFT_SPINDNS_SAVE = SRDFT_SPINDNS
+      SRDFT_SPINDNS = .FALSE.  ! no spin densities needed for canonical orbitals
       IF (IPRCNO .GE. 2) CALL GETTIM (T0,W0)
       IF (IPRCNO .GE. 1) THEN
          WRITE (LUPRI,'(/2A/)')
@@ -385,7 +385,7 @@ C
       LWRK   = LFRSAV + KFRSAV - 1
 C .. 1.1 .. (MAKDV, TRACI)
 C     If spin-dependent srDFT then both charge and spin density 1-el matrices
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2
       ELSE
          NDV = 1
@@ -397,7 +397,7 @@ C     If spin-dependent srDFT then both charge and spin density 1-el matrices
 C .. 1.2 .. (FCKMAT)
       KFC    = KWRK1
       KFV    = KFC    + NNORBT
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KWRK2  = KFV    + 2*NNORBT
       ELSE
          KWRK2  = KFV    + NNORBT
@@ -422,7 +422,7 @@ C
 C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
          IF (SUPSYM) CALL AVEDV(WRK(KDV))
          IF (NDV .EQ. 2) THEN
-            IF (DFT_LOCALSPIN) THEN
+            IF (SRDFT_LOCALSPIN) THEN
 #ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(WRK(KDV),WRK(KDSV),
      &            WRK(KWRK1),LWRK1)
@@ -480,7 +480,7 @@ C
 C     CALL FCKMAT(ONLYFC,DV,CMO,EMY,FC,FV,WRK,LFREE)
       IF (NASHT .GT. 0) THEN
          CALL DAXPY(NNORBT,1.0D0,WRK(KFV),1,WRK(KFC),1)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL DAXPY(NNORBT,1.0D0,WRK(KFV+NNORBT),1,WRK(KFC),1)
          END IF
       END IF
@@ -756,7 +756,7 @@ C        ... redo JWOP in case ISSMO should have changed in ORDRSS /hjaaj aug 04
          CALL GETTIM (TEND,WEND)
          WRITE (LUPRI,'(/A,F9.2)') ' CPU time used in SIRCNO :',TEND-T0
       END IF
-      DFT_SPINDNS = DFT_SPINDNS_SAVE
+      SRDFT_SPINDNS = SRDFT_SPINDNS_SAVE
       CALL QEXIT('SIRCNO')
       RETURN
 C

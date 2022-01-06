@@ -571,7 +571,8 @@ C HFSRDFT --------------------------------------------------------
 C        SRDFT ...
          IF (.NOT. DOHFSRDFT) CALL QUIT('DOHFSRDFT false in DFTATR')
          IF (NASHT.GT.0) CALL QUIT('NASHT .gt. 0 for SRDFT in DFTATR')
-C        CALL SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),DOERG,DOGRD,DOATR,WORK,LWORK,IPRINT)
+C        CALL SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),
+C    &      DOERG,DO_MOLGRAD,DOATR,TRIPLET,WORK,LWORK,IPRINT)
 !         WRITE(LUPRI,*) 'DFTATR: calling SRDFT'  !JT
          CALL SRDFT(1,WORK(KFAO),WORK(KDAO),VDUMMY,
      &              .FALSE.,.FALSE.,.TRUE.,.FALSE.,

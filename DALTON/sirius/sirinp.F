@@ -396,8 +396,8 @@ C  ---> Initialize SR-DFT stuff here !
       DOHFSRDFT = .FALSE.
       ADDSRI    = .FALSE.
       SRHYBR    = .FALSE.
-      DFT_SPINDNS = .FALSE.
-      DFT_LOCALSPIN = .FALSE.
+      SRDFT_SPINDNS = .FALSE.
+      SRDFT_LOCALSPIN = .FALSE.
 C <---
       DOCINO    = .FALSE.
       DOFCI     = .FALSE. ! Do Full CI
@@ -1489,8 +1489,8 @@ C
       END IF
 
 C     To be able to use spin-dependent functionals for closed-shell Hartree-Fock
-      IF (DFT_SPINDNS .AND. NASHT .EQ. 0) THEN
-         DFT_SPINDNS = .FALSE.
+      IF (SRDFT_SPINDNS .AND. NASHT .EQ. 0) THEN
+         SRDFT_SPINDNS = .FALSE.
       END IF
 
 C
@@ -1678,14 +1678,14 @@ C        CALL SIRSET(WRK,LWRK,OLDWOP)
          CALL AVECHK(INPERR)
       END IF
 C
-C DFT_SPINDNS is by default set .true. in srdft input unless explicitly
+C SRDFT_SPINDNS is by default set .true. in srdft input unless explicitly
 C disabled with NO_SPINDENSITY. We here disable spin density for singlet
 C wave functions without spin density from local spin model.
 C This saves CPU time not calculate contributions from zero spin density
 C matrices ... /Dec2021, hjaaj
 C
-      IF (ISPIN.EQ.1 .AND. DFT_SPINDNS .AND. .NOT.DFT_LOCALSPIN) THEN
-         DFT_SPINDNS = .FALSE.
+      IF(ISPIN.EQ.1 .AND. SRDFT_SPINDNS .AND. .NOT.SRDFT_LOCALSPIN) THEN
+         SRDFT_SPINDNS = .FALSE.
       END IF
 C
 C  Do we use embedding ?

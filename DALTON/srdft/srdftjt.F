@@ -43,15 +43,15 @@ C                  TRIPLET true: triplet operators
 C                  DMAT(1) = charge density matrix
 C                  DMAT(2) = 1-index transformed charge density matrix (DOATR)
 C                       or = 1-index transformed spin density matrix (TRIPLET and DOATR)
-C                  DMAT(3) = spin density matrix (DFT_SPINDNS)
-C                  DMAT(4) = 1-index transformed spin density matrix (DFT_SPINDNS and DOATR)
+C                  DMAT(3) = spin density matrix (SRDFT_SPINDNS)
+C                  DMAT(4) = 1-index transformed spin density matrix (SRDFT_SPINDNS and DOATR)
 C            (if SRHYBR then different ordering of DMAT matrices)
 C            (Note that the order of DMATs also fits for gradient calculations, DOATR false:
 C             for energy and gradien calculations DMAT(2) will be the DVAO matrix needed
 C             for Coulomb and exchange Fock matrices and not needed for SRDFT.)
 C
 C                  EXCMAT(1) = charge density potential matrix
-C                  EXCMAT(2) = spin density potential matrix (DFT_SPINDNS)
+C                  EXCMAT(2) = spin density potential matrix (SRDFT_SPINDNS)
 C
 C     Created : 15-02-05, J. Toulouse
 C     Modified: 17-08-09, J. Toulouse, add spin density
@@ -149,7 +149,7 @@ C     ... GRD2(6) = grdab = RHG(:,3) . RHG(:,4)
      &   ,DOERG,DOATR,DO_MOLGRAD,DOGGA,TRIPLET
       WRITE(LUPRI,*) 'SRDFT1JT: ERFEXP(0:2)=',ERFEXP(0:2)
       WRITE(LUPRI,*) 'SRDFT1JT: DOSRX_PBERI=',DOSRX_PBERI
-      WRITE(LUPRI,*) 'SRDFT1JT: DFT_SPINDNS=',DFT_SPINDNS
+      WRITE(LUPRI,*) 'SRDFT1JT: SRDFT_SPINDNS=',SRDFT_SPINDNS
       flush(lupri)
       IF (IPRINT .GE. 12) THEN
       WRITE(LUPRI,*) 'D_TOT_AO matrix:'
@@ -158,7 +158,7 @@ C     ... GRD2(6) = grdab = RHG(:,3) . RHG(:,4)
          WRITE(LUPRI,*) 'DX_TOT_AO matrix for DOATR true:'
          call output(DMAT(1,2),1,nbast,1,nbast,nbast,nbast,-1,lupri)
       END IF
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          WRITE(LUPRI,*) 'D_SPIN_AO matrix:'
          call output(DMAT(1,3),1,nbast,1,nbast,nbast,nbast,-1,lupri)
          IF (DOATR) THEN
@@ -187,7 +187,7 @@ C     ... GRD2(6) = grdab = RHG(:,3) . RHG(:,4)
      &   'SRDFT1JT: London orbitals (DOLND) not implemented yet')
       END IF
 
-      IF (DFT_SPINDNS .AND. TRIPLET) THEN
+      IF (SRDFT_SPINDNS .AND. TRIPLET) THEN
          CALL QUIT('SRDFT1JT: triplet only for closed shell')
       END IF
       IF (DOERG .AND. TRIPLET) THEN
@@ -360,12 +360,12 @@ C        ... skip this point, go to next grid point
       END IF
 
 C     Spin density rho_s ( in RHO(2) )
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
 C        DMAT(1,3) is the spin density matrix
          CALL GETRHO_OLD(DMAT(1,3),GSO(KSO0),RHO(2),
      &                   DMATGAOSR(1,2),THRINT,IPRINT)
 
-         IF (DFT_LOCALSPIN) THEN
+         IF (SRDFT_LOCALSPIN) THEN
 C        In our local spin model we can get unphysical densities
 C        because we allow DS > DV in some regions.
             IF (RHO(2) .GT. RHO(1)) THEN
@@ -399,7 +399,7 @@ C       GSO(KSO1)*DMATGAOSR
         CALL DGEMV('T',NBAST,3,D2,GSO(KSO1),NBAST,DMATGAOSR(1,1),
      &     1,D0,RHG(1,1),1)
 C
-        IF (DFT_SPINDNS) THEN
+        IF (SRDFT_SPINDNS) THEN
            CALL DGEMV('T',NBAST,3,D2,GSO(KSO1),NBAST,DMATGAOSR(1,2),
      &        1,D0,RHG(1,2),1)
         ELSE
@@ -432,7 +432,7 @@ C
          CALL GETRHO_OLD(DMAT(1,1),GSO(KSO1_gz),TAU_Z,
      &       DMATGAOSR(1,1),THRINT,IPRINT_x)
          TAU(1) = 0.5D0*(TAU_X + TAU_Y + TAU_Z)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
 C           DMAT(1,3) is the spin density matrix
             CALL GETRHO_OLD(DMAT(1,3),GSO(KSO1_gx),TAU_X,
      &          DMATGAOSR(1,1),THRINT,IPRINT_x)
@@ -495,14 +495,14 @@ C      Exchange-correlation contribution to Kohn-Sham matrix (charge and spin co
 !                      d1Excdrhoc,d1Excdgrdcc,DOGGA,FROMVX,DFTHRL)
        else if (domcsrdft .and. .not. docisrdft) then
           if (do_metagga) then
-             if (dft_spindns) then
+             if (srdft_spindns) then
                CALL DFTKSM_MGGA(EXCMAT, GSO(KSO0), GSO(KSO1), 0.0d0,
      &                             RHG, d1Exc, DFTHRL, .TRUE.)
              else
                CALL DFTKSM_MGGA(EXCMAT, GSO(KSO0), GSO(KSO1), 0.0d0,
      &                             RHG, d1Exc, DFTHRL, .FALSE.)
              end if
-          else if (dogga .and. dft_spindns) then ! special treatment if gga + spin
+          else if (dogga .and. srdft_spindns) then ! special treatment if gga + spin
               CALL DFTKSMGGASPIN(EXCMAT,GSO(KSO0),GSO(KSO1),RHG,
      &             d1Exc,DFTHRL)
 !                  d1Exc = (d1Excdrhoc,d1Excdrhos, d1Excdgrdcc,d1Excdgrdss,d1Excdgrdcs)
@@ -510,14 +510,14 @@ C      Exchange-correlation contribution to Kohn-Sham matrix (charge and spin co
              CALL DFTKSM(EXCMAT,GSO(KSO0),GSO(KSO1),RHG(1,1),
      &                d1Exc(1)  ,d1Exc(3)    ,DOGGA,FROMVX,DFTHRL)
 !                     d1Excdrhoc,d1Excdgrdcc,DOGGA,FROMVX,DFTHRL)
-             if (dft_spindns .and. .not. dogga) then ! i.e. LDA with spin density
+             if (srdft_spindns .and. .not. dogga) then ! i.e. LDA with spin density
                  CALL DFTKSM(EXCMAT(1,1,2),GSO(KSO0),GSO(KSO1),RHG(1,2),
      &                 d1Exc(2)  ,0.0d0,DOGGA,FROMVX,DFTHRL)
 !    &                 d1Excdrhos,0.0d0,DOGGA,FROMVX,DFTHRL)
              end if
           end if
        else ! if hfsrdft
-          IF (DFT_SPINDNS) CALL QUIT('no HFsrDFT with open shells')
+          IF (srDFT_SPINDNS) CALL QUIT('no HFsrDFT with open shells')
           if (do_metagga) then
              CALL DFTKSM_MGGA(EXCMAT, GSO(KSO0), GSO(KSO1), 0.0d0,
      &                            RHG, d1Exc, DFTHRL, .FALSE.)
@@ -536,7 +536,7 @@ C        Notation: "DT" for charge density, "DS" for spin density,
 C                  "DX*" for 1-index transformed or transition density
 C                  "AO" for in AO basis
 C        Three cases:
-         if (dft_spindns) then  ! open-shell non-singlet reference
+         if (srdft_spindns) then  ! open-shell non-singlet reference
          ! four input matrices: DTAO,  DXTAO, DSAO,  DXSAO
          ! two output matrices: EXCMAT(:,:,1) = W2CAO, EXCMAT(:,:,2) = W2SAO
             JDXTAO = 2
@@ -747,8 +747,8 @@ c  Exchange  ------------------------------------------------------------
 C linear complement spin-dependent exchange LDA functional, Kamal SHARKAS 09-05-11
       ELSE IF (DOLAX_LDAS) THEN
          call ELX_LDALAMSPIN (rho(1),rho(2),VLAMBDA,Ex)
-         call DELSPIN(ESRX_LDAERFSPIN,rho(1),rho(2),VLAMBDA,DFT_SPINDNS,
-     &                NORDER,d1Ex,d2Ex)
+         call DELSPIN(ESRX_LDAERFSPIN,rho(1),rho(2),VLAMBDA,
+     &                SRDFT_SPINDNS,NORDER,d1Ex,d2Ex)
 
 C linear complement exchange PBE functional, Kamal SHARKAS 19-05-11
       ELSE IF (DOLAX_PBEGWS) THEN
@@ -818,9 +818,9 @@ C  Correlation  ----------------------------------------------------------
 
 C linear Complement spin-dependent (NON-Scaled) correlation LDA functional
       ELSE IF (DOLANSC_LDAS) THEN
-         call ELC_LDALAMSPIN (rho(1),rho(2),VLAMBDA,DFT_SPINDNS,Ec)
+         call ELC_LDALAMSPIN (rho(1),rho(2),VLAMBDA,SRDFT_SPINDNS,Ec)
          call DELSPINnSC(ESRC_LDAERFSPIN,rho(1),rho(2),VLAMBDA,
-     &                DFT_SPINDNS,NORDER,d1Ec,d2Ec)
+     &                SRDFT_SPINDNS,NORDER,d1Ec,d2Ec)
 
 C Complement (NON-Scaled) correlation PBE functional
       ELSE IF (DOLANSC_PBEGWS) THEN
@@ -836,7 +836,7 @@ C Complement Scaled correlation PBE functional
 !     ... or for RSDHf calculations (Manu 06-12-2012)
       ELSE IF (DOSRC_MD_LDA) THEN
         call DESRSPIN(ESRC_MD_LDAERF,rho(1),rho(2),
-     &             CHIVAL,DFT_SPINDNS,NORDER,Ec,d1Ec,d2Ec)
+     &             CHIVAL,SRDFT_SPINDNS,NORDER,Ec,d1Ec,d2Ec)
 
 !     Short-range LDA functional with local CHIVAL parameter ! MNP 13-09-11
       ELSE IF (DOSRC_MULOC_GGA) THEN
@@ -944,14 +944,14 @@ C*****************************************************************************
 
       n_call = n_call + 1
 
-      IF (DFT_SPINDNS .AND. TRIPLET) THEN
+      IF (SRDFT_SPINDNS .AND. TRIPLET) THEN
          CALL QUIT('SRDFTJT.F: Triplet with open-shell not implemented')
       END IF
 
       ! DGAO(1,1) = DTXMAT*GAO;
       !  if (.not.triplet) DTXMAT is 1-index transformed or transition total (charge) density matrix
       !  if (     triplet) DTXMAT is in fact 1-index transformed or transition spin (triplet) density matrix = DSXMAT
-      if (triplet .and. .not.dft_spindns) then
+      if (triplet .and. .not.srdft_spindns) then
          j = 2 ! triplet (spin)   terms in B0(2), B2(:,2)
       else
          j = 1 ! singlet (charge) terms in B0(1), B2(:,1)
@@ -988,7 +988,7 @@ C        B3(1:3,j) = B3(1:3,j) + GAO1(1:NBAST,1:3)'*DGAO((1:NBAST, 1)
          B4(j) = B4(j)*0.5d0
       end if
 
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          ! DGAO(1,2) = DSXMAT*GAO; DSXMAT is 1-index transformed or transition spin density matrix
          CALL DGEMV('N',NBAST,NBAST,1.0d0,DSXMAT,NBAST,
      &              GAO,1,0.0d0,DGAO(1,2),1)
@@ -1083,7 +1083,7 @@ C Linear transformation -----------------------------------------------------
                RX(1) = RHG(1,1)
                RY(1) = RHG(2,1)
                RZ(1) = RHG(3,1)
-               if (dft_spindns .or. triplet) then
+               if (srdft_spindns .or. triplet) then
                   ! grd[rhos^(X,Y,Z)]
                   RX(2) = RHG(1,2)
                   RY(2) = RHG(2,2)
@@ -1091,7 +1091,7 @@ C Linear transformation -----------------------------------------------------
                end if
             end if
             if (do_metagga) then
-               if (dft_spindns) then
+               if (srdft_spindns) then
                   BR(1) = B3(1,1)*RX(1) + B3(2,1)*RY(1) + B3(3,1)*RZ(1)
                   BR(2) = B3(1,2)*RX(2) + B3(2,2)*RY(2) + B3(3,2)*RZ(2)
                   BR(3) = B3(1,2)*RX(1) + B3(2,2)*RY(1) + B3(3,2)*RZ(1)
@@ -1173,7 +1173,7 @@ C Linear transformation -----------------------------------------------------
       !&                     d2Exc(36)*B5(1) + d2Exc(34)*B4(1)
                end if
             else if (dogga) then
-               if (dft_spindns) then
+               if (srdft_spindns) then
                   BR(1) = B3(1,1)*RX(1) + B3(2,1)*RY(1) + B3(3,1)*RZ(1)
                   BR(2) = B3(1,2)*RX(2) + B3(2,2)*RY(2) + B3(3,2)*RZ(2)
                   BR(3) = B3(1,2)*RX(1) + B3(2,2)*RY(1) + B3(3,2)*RZ(1)
@@ -1203,7 +1203,7 @@ C Linear transformation -----------------------------------------------------
                   FACR  = 2.0d0*d2Exc(4)*B0(1) + 4.0d0*d2Exc(6)*BR(1)
                end if
             else !LDA
-               if (dft_spindns) then
+               if (srdft_spindns) then
                   FAC0R = d2Exc(1)*B0(1) + d2Exc(2)*B0(2)
                   FAC0S = d2Exc(2)*B0(1) + d2Exc(3)*B0(2)
                else if (triplet) then
@@ -1220,7 +1220,7 @@ C Linear transformation -----------------------------------------------------
               write(lupri,*) 'hjaaj: grd2',grd2(1:6)
               write(lupri,*) 'debug: tau',tau(1:4)
               write(lupri,*) 'hjaaj: Ex, Ec, gga, spindns, triplet',
-     &          Ex, Ec, dogga, dft_spindns, triplet
+     &          Ex, Ec, dogga, srdft_spindns, triplet
               write(lupri,*) 'debug: do_metagga',do_metagga
               write(lupri,*) 'hjaaj: d1Ex  ',d1Ex(:)
               write(lupri,*) 'hjaaj: d1Ec  ',d1Ec(:)
@@ -1280,7 +1280,7 @@ C Linear transformation -----------------------------------------------------
       !&                         + FAC_SC*??
                         END DO
                      END DO
-                  else if (dft_spindns) then
+                  else if (srdft_spindns) then
                      DO I = 1, NBAST
                         G0 = GAO(I)
                         GX = GAO1(I,1)
@@ -1347,7 +1347,7 @@ C Linear transformation -----------------------------------------------------
      &                                     + FAC_AR*AR(1)
                         END DO
                      END DO
-                  ELSE IF (DFT_SPINDNS) THEN ! open-shell GGA response
+                  ELSE IF (SRDFT_SPINDNS) THEN ! open-shell GGA response
                      DO I = 1, NBAST
                         G0 = GAO(I)
                         GX = GAO1(I,1)
@@ -1398,7 +1398,7 @@ C Linear transformation -----------------------------------------------------
                            EXCMAT(J,I,1) = EXCMAT(J,I,1)+FAC0S*G0*GAO(J)
                         END DO
                      END DO
-                  ELSE IF (DFT_SPINDNS) THEN
+                  ELSE IF (SRDFT_SPINDNS) THEN
                      DO I = 1, NBAST
                         G0 = GAO(I)
                         DO J = 1, I
@@ -1445,7 +1445,7 @@ C Linear transformation -----------------------------------------------------
       !&                         + FAC_SC*??
                          END DO
                        END DO
-                     ELSE IF (dft_spindns) THEN
+                     ELSE IF (srdft_spindns) THEN
                        do i = istr, iend
                          G0 = GAO(I)
                          GX = GAO1(I,1)
@@ -1512,7 +1512,7 @@ C Linear transformation -----------------------------------------------------
      &                                     + FAC_AR*AR(1)
                          END DO
                        END DO
-                     ELSE IF (DFT_SPINDNS) THEN
+                     ELSE IF (SRDFT_SPINDNS) THEN
                        DO I = ISTR, IEND
                          G0 = GAO(I)
                          GX = GAO1(I,1)
@@ -1563,7 +1563,7 @@ C Linear transformation -----------------------------------------------------
                            EXCMAT(J,I,1) = EXCMAT(J,I,1)+FAC0S*G0*GAO(J)
                          END DO
                        END DO
-                     ELSE IF (DFT_SPINDNS) THEN
+                     ELSE IF (SRDFT_SPINDNS) THEN
                        DO I = ISTR, IEND
                          G0 = GAO(I)
                          DO J = JSTR, MIN(I,JEND)

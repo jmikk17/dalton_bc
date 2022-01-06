@@ -138,7 +138,7 @@ C     variables for SRCPBERI
      &     MASTER,MPI_COMM_WORLD,ierr_mpi)
 
 !     6) Transfer density matrices
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NEXCMAT = 2
          NDMAT   = 3
       ELSE
@@ -270,7 +270,7 @@ C     variables for SRCPBERI
      &     MASTER,MPI_COMM_WORLD,ierr_mpi)
 
 !     6) Receive density matrices from master
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NEXCMAT = 2
          NDMAT   = 3
       ELSE
@@ -326,7 +326,8 @@ C     variables for SRCPBERI
      &      ND_SIM,WORK(KEXCMAT),WORK(KDMAT),EDFT,
      &      DOERG,DO_MOLGRAD,DOATR,TRIPLET,
      &      WORK(KFREE),LFREE,IPRINT)
-!     SUBROUTINE SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),DOERG,DO_MOLGRAD,DOATR,
+!     SUBROUTINE SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),
+!    &                 DOERG,DO_MOLGRAD,DOATR,TRIPLET,
 !    &                 WORK,LWORK,IPRINT)
 
       if (iprint .ge. 5) then

@@ -1233,7 +1233,7 @@ C
                END IF
 C              then  SVECS(NA) = SVECS(NA) + < NA | 2*RY | BCVECS > -Note: Tg is called "Ry" 
                IF (IPRRSP.GT.100) THEN
-                  WRITE(LUPRI,*)' Z part,-1.0*RYAC MATRIX, ICSIM=', ICSIM
+                  WRITE(LUPRI,*)' Z part,-1.0*RYAC MATRIX, ICSIM=',ICSIM
                   CALL OUTPUT(WRK(KURYAC),1,NASHT,1,NASHT,
      *                                    NASHT,NASHT,1,LUPRI)
                END IF
