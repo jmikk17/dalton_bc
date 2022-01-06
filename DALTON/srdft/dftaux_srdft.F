@@ -24,7 +24,7 @@
 
 
 C*****************************************************************************
-      SUBROUTINE GETRHO_OLD(DMAT,GSO,RHO,DMATGAO,DFTHRI,IPRINT)
+      SUBROUTINE GETRHO_srdft(DMAT,GSO,RHO,DMATGAO,DFTHRI,IPRINT)
 C*****************************************************************************
 C
 C     T. Helgaker feb 01
@@ -56,7 +56,7 @@ C
       real*8 :: DDOT
 C
       IF (IPRINT .GT. 100) THEN
-         write(lupri,*) 'GETRHO_OLD NBAST, NSYM',NBAST,NSYM
+         write(lupri,*) 'GETRHO_srdft NBAST, NSYM',NBAST,NSYM
          write(lupri,*) 'DFTHRI, DMAT(1,1)',DFTHRI,DMAT(1,1),GSO(1)
          write(lupri,*) 'IBAS',ibas(1:nsym)
          write(lupri,*) 'NBAS',nbas(1:nsym)

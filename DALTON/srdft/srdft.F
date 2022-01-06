@@ -1063,7 +1063,7 @@ CDBG  kpoint = npoint/10
             READ (LUQUAD) ! skip this record
             GO TO 200
          END IF
-         CALL REAQUA_OLD(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
 C   Loop over grid points -----------------------------------------------
          DO 300 IPNT = IPNT_ST, IPNT_END
             IF (IPRINT .GT. 100) THEN
@@ -1087,14 +1087,14 @@ C           =============================
 C           Density
 C           =============================
             IF (LSRHYBR) THEN
-               CALL GETRHO_OLD(DMAT(1,2),GSO(KSO0),RHOSR,
+               CALL GETRHO_srdft(DMAT(1,2),GSO(KSO0),RHOSR,
      &                     DMATGAOSR,THRINT,IPRINT)
                RHOSR13 = RHOSR ** DP3
-               CALL GETRHO_OLD(DMAT(1,1),GSO(KSO0),RHOTOT,
+               CALL GETRHO_srdft(DMAT(1,1),GSO(KSO0),RHOTOT,
      &                     DMATGAOT,THRINT,IPRINT)
                RHOT13 = RHOTOT ** DP3
             ELSE
-               CALL GETRHO_OLD(DMAT(1,1),GSO(KSO0),RHOSR,
+               CALL GETRHO_srdft(DMAT(1,1),GSO(KSO0),RHOSR,
      &                     DMATGAOSR,THRINT,IPRINT)
                RHOSR13 = RHOSR ** DP3
                RHOTOT = RHOSR
@@ -1672,7 +1672,7 @@ C
       READ(LUQUAD) NPOINT
       IF (NPOINT.GT.0) THEN
          NPNTS = NPNTS + NPOINT
-         CALL REAQUA_OLD(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
 #if defined (VAR_SRDFT_MPI)
          DO 300 IPNT = 1+MYNUM, NPOINT, NODTOT+1
 #else
@@ -1700,11 +1700,11 @@ C           =============================
 
 C           ... inactive part
             IF (DODCAO) THEN
-               CALL GETRHO_OLD(DCAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
+               CALL GETRHO_srdft(DCAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
                CELCTRN = CELCTRN + WGHT*RHO
             ENDIF
 C           ... active part
-            CALL GETRHO_OLD(DVAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
+            CALL GETRHO_srdft(DVAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
             VELCTRN = VELCTRN + WGHT*RHO
 
 C           Dump active density to file

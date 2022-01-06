@@ -298,7 +298,7 @@ C
             READ (LUQUAD) ! skip this record
             GO TO 200
          END IF
-         CALL REAQUA_OLD(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
 
 C   Loop over grid points -----------------------------------------------
 
@@ -331,7 +331,7 @@ C       Is this a bug or feature?
      &            THRINT,IPRINT_x)
 
 C     Density
-      CALL GETRHO_OLD(DMAT(1,1),GSO(KSO0),RHO(1),
+      CALL GETRHO_srdft(DMAT(1,1),GSO(KSO0),RHO(1),
      &       DMATGAOSR(1,1),THRINT,IPRINT_x)
 
 C     Contribution to electron number (N_alpha + N_beta)
@@ -362,7 +362,7 @@ C        ... skip this point, go to next grid point
 C     Spin density rho_s ( in RHO(2) )
       IF (SRDFT_SPINDNS) THEN
 C        DMAT(1,3) is the spin density matrix
-         CALL GETRHO_OLD(DMAT(1,3),GSO(KSO0),RHO(2),
+         CALL GETRHO_srdft(DMAT(1,3),GSO(KSO0),RHO(2),
      &                   DMATGAOSR(1,2),THRINT,IPRINT)
 
          IF (SRDFT_LOCALSPIN) THEN
@@ -425,20 +425,20 @@ C
          KSO1_gx = KSO1
          KSO1_gy = KSO1 + NBAST
          KSO1_gz = KSO1 + 2*NBAST
-         CALL GETRHO_OLD(DMAT(1,1),GSO(KSO1_gx),TAU_X,
+         CALL GETRHO_srdft(DMAT(1,1),GSO(KSO1_gx),TAU_X,
      &       DMATGAOSR(1,1),THRINT,IPRINT_x)
-         CALL GETRHO_OLD(DMAT(1,1),GSO(KSO1_gy),TAU_Y,
+         CALL GETRHO_srdft(DMAT(1,1),GSO(KSO1_gy),TAU_Y,
      &       DMATGAOSR(1,1),THRINT,IPRINT_x)
-         CALL GETRHO_OLD(DMAT(1,1),GSO(KSO1_gz),TAU_Z,
+         CALL GETRHO_srdft(DMAT(1,1),GSO(KSO1_gz),TAU_Z,
      &       DMATGAOSR(1,1),THRINT,IPRINT_x)
          TAU(1) = 0.5D0*(TAU_X + TAU_Y + TAU_Z)
          IF (SRDFT_SPINDNS) THEN
 C           DMAT(1,3) is the spin density matrix
-            CALL GETRHO_OLD(DMAT(1,3),GSO(KSO1_gx),TAU_X,
+            CALL GETRHO_srdft(DMAT(1,3),GSO(KSO1_gx),TAU_X,
      &          DMATGAOSR(1,1),THRINT,IPRINT_x)
-            CALL GETRHO_OLD(DMAT(1,3),GSO(KSO1_gy),TAU_Y,
+            CALL GETRHO_srdft(DMAT(1,3),GSO(KSO1_gy),TAU_Y,
      &          DMATGAOSR(1,1),THRINT,IPRINT_x)
-            CALL GETRHO_OLD(DMAT(1,3),GSO(KSO1_gz),TAU_Z,
+            CALL GETRHO_srdft(DMAT(1,3),GSO(KSO1_gz),TAU_Z,
      &          DMATGAOSR(1,1),THRINT,IPRINT_x)
             TAU(2) = 0.5D0*(TAU_X + TAU_Y + TAU_Z)
          ELSE
