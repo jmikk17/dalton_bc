@@ -589,6 +589,9 @@ C        SLV98,OC
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
          NSLV = MAX(1,NCCSLV)
+         if (use_pelib() .and. MP2) then
+             NSLV = 1
+         end if
 C
          DO 9999 ISLV = 1, NSLV
 C
@@ -645,6 +648,8 @@ C
                  WRITE(LUPRI,'(//A/A)')
      &              'WARNING: Please specify R12PRP in your input...',
      &              'WARNING: CCFOP will be ignored...'
+             ELSEIF (LTBAR0 .and. MP2 .and. use_pelib()) then
+                 LTBAR0 = .FALSE.
              ELSEIF (.NOT. (CCSDT .AND. (.NOT. CC3))) THEN
                  !...................................
                  !SONIA: I am not sure but let us try
@@ -684,6 +689,8 @@ C
          IF (CCSLV.OR.USE_PELIB()) THEN
             CCRSTR  = .TRUE.
             IF (LSLECVG.AND.LSLTCVG.AND.LSLLCVG) THEN
+              LSTBTR = .TRUE.
+            ELSE IF (USE_PELIB() .and. MP2) THEN
               LSTBTR = .TRUE.
             ELSE
               GOTO 31
