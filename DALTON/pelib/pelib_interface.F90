@@ -358,6 +358,27 @@ subroutine pelib_ifc_input_reader(word)
             read(lucmd, *) fmm_ncrit
         else if (trim(option(2:7)) == 'EXPANS') then
             read(lucmd, *) fmm_expansion_order
+        ! options for (approximate) qmmm interaction 
+        else if (trim(option(2:7)) == 'INT_TH') then ! INT_THETA
+            read(lucmd, *) qmmm_interaction_theta
+        else if (trim(option(2:7)) == 'INT_SC') then ! INT_SCHEME
+            read(lucmd, *) qmmm_interaction_scheme
+        else if (trim(option(2:7)) == 'INT_RC') then ! INT_RCUT
+            read(lucmd, *) qmmm_interaction_rcut
+        else if (trim(option(2:7)) == 'INT_RF') then ! INT_RFIT
+            read(lucmd, *) qmmm_interaction_rfit
+        else if (trim(option(2:7)) == 'INT_OR') then ! INT_ORDER
+            read(lucmd, *) qmmm_interaction_order
+        else if (trim(option(2:7)) == 'ESPF_S') then ! ESPF_SOLVER
+            read(lucmd, *) ESPF_solver
+        else if (trim(option(2:7)) == 'ESPF_G') then ! ESPF_GRID_TYPE
+            read(lucmd, *) ESPF_grid_type
+        else if (trim(option(2:7)) == 'SVDTOL') then ! SVDTOL
+            read(lucmd, *) svdtol
+        else if (trim(option(2:7)) == 'NF_INC') then ! NF_INCORE
+            incore_nearfield = .true.
+        else if (trim(option(2:7)) == 'NONF_I') then ! NONF_INCORE
+            incore_nearfield = .false.
         ! request calculation of effective dipole integrals
         else if (trim(option(2:7)) == 'EEF') then
             read(lucmd, '(a80)') option

@@ -5,9 +5,11 @@
 ### New features added
 - New features available through the Polarizable Embedding library (PElib)
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
-    - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput., (2021). DOI: 10.1021/acs.jctc.1c00225
+    - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput. 17, 6, 3445–3454 (2021)
   - Additional solvents available for the FixSol continuum solvation model (see 26.1.5 in the manual for a list of available solvents)
-  - Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
+  - Fast Approximate QM--environment coupling for PE (P. Reinholdt)
+    - P. Reinholdt, J. Kongsted, and F. Lipparini, J. Chem. Theory Comput. 18, 1, 344–356 (2022)
+- Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
 
 ### Fixed
 - Performance improvement: disable DFT_SPINDNS if true when singlet (H. J. Aa. Jensen)
