@@ -24,16 +24,16 @@ it checks out the master branch which is the main development branch. To
 checkout a specific release version, run the following commands from inside the
 *dalton* directory:
 ```
-$ git checkout Dalton2020.0
+$ git checkout Dalton2020.1
 $ git submodule update
 ```
-where you replace *Dalton2020.0* by the release version that you are
+where you replace *Dalton2020.1* by the release version that you are
 interested in. The list of past releases available in this repository can be
 found here: https://gitlab.com/dalton/dalton/-/releases.
 
 You can also clone the release version directly as:
 ```
-$ git clone --recursive -b Dalton2020.0 https://gitlab.com/dalton/dalton.git
+$ git clone --recursive -b Dalton2020.1 https://gitlab.com/dalton/dalton.git
 ```
 
 In case you did not include the `--recursive` argument when you cloned the
