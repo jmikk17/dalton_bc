@@ -30,7 +30,6 @@
 - Performance improvement: disable DFT\_SPINDNS if true when singlet (H. J. Aa. Jensen)
 - Fixed bug for molden.inp: empty orbitals got arbitrary occupation numbers. (H. J. Aa. Jensen)
 - Fixed bug for \*CUBE (crashed always) (H. J. Aa. Jensen)
-- Fixed combination of DFT in SCF for initial orbital guess error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen)
 - Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen)
 - Fixed error leading to test energy\_selected\_localize failed (H. J. Aa. Jensen)
 - Fixed PElib compile error when using explicit math libs
