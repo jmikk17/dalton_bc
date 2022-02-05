@@ -1022,7 +1022,7 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
                   WRITE (LUPRI,3040) ISYM,REP(ISYM-1),OCCSUM,
      &               (OCCNO(IORBI+I),I=1,NOCCI)
                   IF (NASH(ISYM) .GT. 0) THEN
-                     DO I = NISH(ISYM) + 1, NOCCI
+                     DO I = IORBI + NISH(ISYM) + 1, IORBI + NOCCI
                         ENUE_SYM = ENUE_SYM
      &                           + 2.0D0*OCCNO(I) - OCCNO(I)**2
                      END DO
@@ -1045,7 +1045,7 @@ C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
  3041 FORMAT(/'   Effective number of unpaired electrons this symmetry:'
      &       ,F8.4)
  3042 FORMAT(/' Total effective number of unpaired electrons :',F8.4,
-     &   / '   (ENUE = sum(i) (2*n_i - n_i**2) for natural orbitals)')
+     &   / '    ( = sum(i) (2 - n_i)*n_i  for natural orbitals)')
  3045 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Supersymmetry in parenthesis',
      &       /' -- Total occupation in this symmetry is',F14.9,
