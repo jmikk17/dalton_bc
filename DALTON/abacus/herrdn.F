@@ -779,9 +779,9 @@ C*****************************************************************************
 C     Card 2-3: Title cards
 C*****************************************************************************
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(1)
+      TTITLE(1) = MLINE(NMLINE)
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(2)
+      TTITLE(2) = MLINE(NMLINE)
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
          WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
