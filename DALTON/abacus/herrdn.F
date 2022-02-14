@@ -3810,13 +3810,18 @@ C
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
-            DPNUC(1) = DPNUC(1) + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(2) = DPNUC(2) + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(3) = DPNUC(3) + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
+
+            IF (ISYMAX(1,1) .EQ. 0)
+     &      DPNUC(1) = DPNUC(1) + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(2,1) .EQ. 0)
+     &      DPNUC(2) = DPNUC(2) + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(3,1) .EQ. 0)
+     &      DPNUC(3) = DPNUC(3) + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
+
          END IF
          II = 0
          DO 200 LA = 0,MAXREP
-            IF (IAND(IVARB,LA) .EQ. 0) THEN
+            IF (IAND(IVARB,LA) .EQ. 0) THEN ! filter out generator products containing generators that stabilise the center
                II = II + 1
                IF (N .LE. NUCIND) NUCDEP = NUCDEP + 1
                NCDTOT = NCDTOT + 1
