@@ -213,7 +213,7 @@ cxz        write(lupri,*)
 cxz        CALL Getmatrix(Labl(nlab),RTNLBLb,Vec1,number)
 cxz        CALL Matform(Vec1,Mat1,naos,RTNLBLb(2),number,lupri)
 cxzC
-cxz        CALL CuentaAB(MatKin,Mat1,CCMOS,Mat2,nelec,naos)
+cxz        CALL CuentaABold(MatKin,Mat1,CCMOS,Mat2,nelec,naos)
 cxzcz        if (JIMPRT.gt.2) then
 cxz             write(lupri,*) '  Despues de cuenta AB = A.1.B : '
 cxzc j2009            Call MatOut(Mat2,'        ', naos, lupri)
@@ -252,7 +252,7 @@ C
         CALL Getmatrix(Labl(nlab),RTNLBLb,Vec1,number)
         CALL Matform(Vec1,Mat1,naos,RTNLBLb(2),number,lupri)
 C  Do : A.B
-        CALL CuentaAB(MatKin,Mat1,CCMOS,Mat2,nelec,naos,NBAST)
+        CALL CuentaABold(MatKin,Mat1,CCMOS,Mat2,nelec,naos,NBAST)
         CALL Vecform(Vec1,Mat2,naos,RTNLBLb(2),number,lupri)
 C
         if (JIMPRT.gt.2) then
@@ -267,7 +267,7 @@ C
 C
 C
 C  Do : B.A
-        CALL CuentaAB(Mat1,MatKin,CCMOS,Mat2,nelec,naos,NBAST)
+        CALL CuentaABold(Mat1,MatKin,CCMOS,Mat2,nelec,naos,NBAST)
         CALL Vecform(Vec2,Mat2,naos,RTNLBLb(2),number,lupri)
 C
         if (JIMPRT.gt.2) then
@@ -397,7 +397,7 @@ C
 C =================================================================
 C =================================================================
 C
-        SUBROUTINE CuentaAB(A,B,Cmos,Cout,nelec,naos,NBAST)
+        SUBROUTINE CuentaABold(A,B,Cmos,Cout,nelec,naos,NBAST)
 C
 C ***************************************************
 C       PARAMETROS : A.B  --> A.1.B = Cout

@@ -170,6 +170,7 @@ C
          MODELPRI = ' CC3'
          WRITE(LUPRI,*)
      *    'CC3 X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CC1A) THEN
@@ -177,6 +178,7 @@ C
          MODEL = 'CCSDT-1a  '
          WRITE(LUPRI,*)
      *    'CCSDT-1a X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CC1B) THEN
@@ -184,6 +186,7 @@ C
          MODEL = 'CCSDT-1b  '
          WRITE(LUPRI,*)
      *    'CCSDT-1b X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CCSD) THEN

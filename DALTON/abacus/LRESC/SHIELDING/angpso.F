@@ -129,7 +129,7 @@ c      write(lupri,*) '*******************************************'
 c      write(lupri,*) '***** Debug : Starting Calculations *******' 
 c      write(lupri,*) '*******************************************' 
 c      write(lupri,*) 
-      CALL READAOP( OVERLP, naos, 'OVERLAP ')
+      CALL READAOPold( OVERLP, naos, 'OVERLAP ')
 c      write(lupri,*) ' ****** OVERLAP *******'
 C      write(lupri,*) ((OVELP(i,j),j=1,naos), i=1,naos)
       IF (B0(1).Eq.'ORBITAL') then
@@ -147,8 +147,8 @@ C  we keep the general form in case we use it somewhere else.
             A2(i1,i2) = 0.0
           enddo
         enddo
-        CALL READAOP( A1, naos, LABEL(j))
-        CALL READAOP( A2, naos, LABEL(k))
+        CALL READAOPold( A1, naos, LABEL(j))
+        CALL READAOPold( A2, naos, LABEL(k))
 c       write(lupri,*) 'Llamando Cuenta para : ', LABEL(j),'  ', LABEL(k)
         CALL cuenta(ORBC,A1, A2,Cmos,NOCCT,naos,nmos,NBAST)
         IF (B0(1).Eq.'ORBITAL') then
@@ -261,7 +261,7 @@ C     ------------------------
       END
 C ****************************************************************
 
-        SUBROUTINE READAOP(A, n, LABEL)
+        SUBROUTINE READAOPold(A, n, LABEL)
 C
 C Linux version, Melo, azua, giribet, alejandrito, aucar, romero, homero,
 C  bart y lisa

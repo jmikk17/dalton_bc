@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+#    prop_lresc_efg_HF
+#    -------------
+#    Molecule:         HF
+#    Wave Function:    Hartree Fock
+#    Test Purpose:     LRESC correction to FH EFG
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+
+f.add(from_string = 'Atoms and basis sets',
+      num_lines = 12,
+      rel_tolerance = 1.0e-2)
+
+f.add(from_string = 'Cartesian Coordinates',
+      num_lines = 6,
+      rel_tolerance = 1.0e-8)
+
+f.add(string = 'Gradient of the zz EFG component at the nuclei',
+        abs_tolerance=1.0e-8)
+f.add(string = 'Laplacian of the xx,yy and zz EFG component at the nuclei',
+        abs_tolerance=1.0e-8)
+
+f.add(from_string = 'Non-relativistic Values',
+      num_lines = 6,
+      abs_tolerance = 1.0e-3)
+
+f.add(from_string = 'First Order Corrections',
+      num_lines = 16,
+      abs_tolerance = 1.0e-3)
+
+
+test.run(['LRESC_HF_EFG.dal'], ['HF.mol'], f={'out': f})
+
+sys.exit(test.return_code)

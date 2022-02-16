@@ -322,7 +322,7 @@ C
 #include "maxaqn.h"
 C
 C     NTABLE has been increased 118 (WK/UniKA/07-25-2005).
-      PARAMETER (NDIR = 9, NTABLE = 146)
+      PARAMETER (NDIR = 9, NTABLE = 149)
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D4 = 4.0D0, D10 = 1.0D1)
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      &          WORD1*7
@@ -361,6 +361,7 @@ C
 #include "codata.h"
 #include "denfit.h"
 #include "infpar.h"
+#include "symmet.h"
 
 C     Keywords for R12 have been added (WK/UniKA/04-11-2002).
 cLig <> added RANGMO and RPSO
@@ -441,9 +442,11 @@ C     Bin Gao, Oct. 3, 2011
 !                    237        238        239        240
      &             '.NEWTRA', '.KINADI', '.GENINT', '.S2MBRA',
 !                    241        242        243        244
-     &             '.S2MKET', '.S2MMIX', '.LRINTS', '.NORMAO',
-!                    245        246
-     &             '.TWOBYT', '.LFDIPL'/
+     &             '.S2MKET', '.S2MMIX', '.LR-SHI', '.NORMAO',
+!                    245        246        247		  248
+     &             '.TWOBYT', '.LFDIPL', '.GZZEFG', '.LAPEFG',
+!                    249
+     &             '.LR-EFG'/
 C
 C
       CALL QENTER('HERINP')
@@ -534,7 +537,7 @@ C
      &                211,212,213,214,215,216,217,218,219,220,
      &                221,222,223,224,225,226,227,228,229,230,
      &                231,232,233,234,235,236,237,238,239,240,
-     &                241,242,243,244,245,246), I
+     &                241,242,243,244,245,246,247,248,249), I
             END IF
          END DO
             IF (WORD .EQ. '.OPTION') THEN
@@ -1262,8 +1265,9 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
             GO TO 100
   243    CONTINUE
 c jim-dbg : setting all integrals for LRESC module
+            IF (MAXREP.NE.0)
+     &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_SHIELDING')
             ONEPRP = .TRUE.
-            DOLRINTS=.TRUE.
             FERMI = .TRUE.  ! 115.Fermi 
             KINENE = .TRUE. ! 133.Kinenerg
             SOFLD  = .TRUE. ! 184.somf
@@ -1278,12 +1282,13 @@ c jim-dbg : setting all integrals for LRESC module
             OZKE   = .TRUE. ! 215.Lkin
             PSOKE  = .TRUE. ! 216.PsoKin
             DNSKE  = .TRUE. ! 217.DiaKin
-            PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso          
+            PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
+            SPNORB = .TRUE. ! 104 Spin-Orbit
 Cxx  el problema es que el origen de gauge debe estar en el atomo q elegimos, LRATOM. 
 c       1 - Leer INP file y buscar LRATOM 
 c       2 - hacer que GAGORG = CORD(LRATOM)
 c Por ahora GAGORG = (0.0 0.0 0.0)
-c  ACLARARLO EN OUT FILE !!
+c  ACLARADO EN OUT (buscar "Remember to set GAUGEO" en abadrv.F)
 cx            write(lupri,*)' At INTEGRAL SECT to do GAUGEO on LRATOM' 
 cx            write(lupri,*)' Calling lrscinp for SELECT' 
 cx            CALL LRSCINP('.SELECT')
@@ -1325,6 +1330,34 @@ cs            ENDIF
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal prompt in '//WORD1)
       END IF
+  247    CONTINUE
+            GZZEFG = .TRUE.
+            ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR GZZEFG')
+            GOTO 100
+  248    CONTINUE
+            LAPEFG = .TRUE.
+            ONEPRP = .TRUE.
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LAPEFG')
+            GOTO 100
+  249    CONTINUE
+c Setting all integrals for LRESC-EFG module
+            IF (MAXREP.NE.0)
+     &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
+               ONEPRP = .TRUE.
+               KINENE = .TRUE. ! 133.Kinenerg
+               DARWIN = .TRUE. ! 164
+               MASSVL = .TRUE. ! 163
+               DIPVEL = .TRUE. ! 108.DipVel
+               NELFLD = .TRUE.
+               DIPLEN = .TRUE.
+               GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
+               LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
+               SPNORB = .TRUE. ! 104 Spin-Orbit
+               EFGCAR = .TRUE. ! 147 Cartesian EFG components
+               GO TO 100
   300 CONTINUE
 
       IF (.NOT. BGWEIL) BGWEIN = WEINBG 
@@ -1648,6 +1681,10 @@ Cajt qdb
      &        '- small component potential energy for DPT'
          IF (DPTOVL) WRITE (LUPRI,'(10X,A)')
      &        '- small component overlap integrals for DPT'
+         IF (GZZEFG) WRITE (LUPRI,'(10X,A)')
+     &     '- Gradient of the zz EFG component at the nuclei'
+         IF (LAPEFG) WRITE (LUPRI,'(10X,A)')
+     &     '- Laplacian of the xx,yy and zz EFG component at the nuclei'
          IF (XDDXR3) WRITE (LUPRI,'(10X,A)')
      &        '-d/dB d/dK   < 1/Rk^3 > type of integrals. '
          IF (PROPRI) WRITE (LUPRI,'(/A)')
@@ -3192,6 +3229,26 @@ C
                CALL TIMER('NELFLD',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
             END IF
+            
+C     ***** Gradient of the zz EFG (electronic contribution) at the individual nuclei *****
+C
+            IF (GZZEFG) THEN
+               CALL TIMER('START ',TIMSTR,TIMEND)
+               CALL PR1INT('GRAZZEFG',WORK,LWORK,IDUMMY,
+     &                     IDUMMY,TRIANG,PROPRI,IPRONE)
+               CALL TIMER('GZZEFG',TIMSTR,TIMEND)
+               CALL FLSHFO(LUPRI)
+            END IF
+            
+C     ***** Laplacian of the xx,yy and zz EFG (electronic contribution) at the individual nuclei *****
+C
+            IF (LAPEFG) THEN
+               CALL TIMER('START ',TIMSTR,TIMEND)
+               CALL PR1INT('LAPEFG ',WORK,LWORK,IDUMMY,
+     &                     IDUMMY,TRIANG,PROPRI,IPRONE)
+               CALL TIMER('LEFG',TIMSTR,TIMEND)
+               CALL FLSHFO(LUPRI)
+            END IF
 C
 C     ***** Electric field gradient at the individual nuclei, cartesian *****
 C
@@ -4186,6 +4243,8 @@ C
       NSTTST = .FALSE.
       NSLTST = .FALSE.
       NELFLD = .FALSE.
+      GZZEFG = .FALSE.
+      LAPEFG = .FALSE.
       NSNLTS = .FALSE.
       EFGCAR = .FALSE.
       EFGSPH = .FALSE.
@@ -4309,8 +4368,6 @@ C     Initialize R12 logical variables R12CAL (WK/UniKA/04-11-2002).
 cLig setting RANGMO and RPSO false
       RANGMO = .FALSE.
       RPSO   = .FALSE.
-cLig
-      DOLRINTS=.FALSE. ! jim-dgb DOLRINT init to FALSE
 C
       CALL DZERO(ORIGIN,3)
 chj may 09: GAGORG and DIPORG now initialized in READIN
