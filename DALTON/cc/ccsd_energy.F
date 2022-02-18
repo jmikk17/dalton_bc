@@ -345,7 +345,7 @@ C
          GO TO 9999
 C        ... exit this routine
       ENDIF
-      IF (MP3 ) THEN
+      IF (MP3) THEN
          WRITE(LUPRI,'(//10X,A,I8)')
      *   'Perturbation calculation - NO WAVEFUNCTION OPTIMIZATION'
 C

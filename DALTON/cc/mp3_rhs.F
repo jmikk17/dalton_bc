@@ -33,7 +33,6 @@ C     NB! It is assumed that the vectors are allocated in the following
 C     order:
 C           T1AM(*), OMEGA1(*), OMEGA2(*), T2AM(*),  WORK(*).
 C
-      USE PELIB_INTERFACE, ONLY: USE_PELIB
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"

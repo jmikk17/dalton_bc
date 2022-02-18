@@ -582,6 +582,7 @@ C
       ! ITRNMR > 0 required for proper restart of CPHF solver
       ISAVITR = ITRNMR
       ITRNMR = 1
+
       CALL CC_DRV(WORK(1),LMWORK)
 
       ITRNMR = ISAVITR

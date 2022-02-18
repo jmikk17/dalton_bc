@@ -285,7 +285,7 @@ C
 C-------------------------------------
 C     Set logicals: 4,6,8 is obsolete.
 C-------------------------------------
-C     
+C
       LCCSAV(0)  = CIS
       LCCSAV(1)  = CCS
       LCCSAV(2)  = MP2
