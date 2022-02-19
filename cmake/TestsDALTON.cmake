@@ -416,10 +416,10 @@ add_dalton_runtest(choles_cc2_excdiis            "dalton;serial;runtest;cholesky
 add_dalton_test(choles_cc2_polar                 "dalton;serial;cholesky;medium")
 add_dalton_test(choles_ccsdpt_energy             "dalton;serial;cholesky;medium")
 
-add_dalton_runtest(mp3_energy                    "dalton;serial;mp3;runtest;short")
+add_dalton_runtest(mp3_energy                    "dalton;serial;mp3;runtest;short; essential")
 add_dalton_runtest(mp3_energy_sym                "dalton;serial;mp3;runtest;short")
 add_dalton_runtest(mp3_energy_nofc               "dalton;serial;mp3;runtest;short")
-add_dalton_runtest(mp3_energy_sym_nofc           "dalton;serial;mp3;runtest;short")
+add_dalton_runtest(mp3_energy_sym_nofc           "dalton;serial;mp3;runtest;short; essential")
 
 if(ENABLE_PELIB)
     add_dalton_runtest(pehf_iter                     "dalton;pelib;runtest;short")
