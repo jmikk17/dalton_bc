@@ -120,7 +120,7 @@ C
 #include "ccexcicvs.h"
 #include "ccxscvs.h"
 C
-      PARAMETER(NMODEL = 22)
+      PARAMETER(NMODEL = 23)
       !sonia: prevent projection in L0
       logical lcvsbck,lionbck,lrmcorebck
       !
@@ -311,6 +311,7 @@ C
       LCCSAV(21) = RTCCD
 !     AMT
       LCCSAV(22) = DCPT2
+      LCCSAV(23) = MP3
 
       APROXR12   = '   '
 C
@@ -511,6 +512,7 @@ C
          IF (I.EQ.21) RTCCD  = LCCSAV(21)
 !AMT
          IF (I.EQ.22) DCPT2   = LCCSAV(22)
+         IF (I.EQ.23) MP3     = LCCSAV(23)
 C
          IF (CCS  .AND. LCCSAV(3)) GOTO 100
          IF (MP2  .AND. LCCSAV(3)) GOTO 100
@@ -1196,7 +1198,7 @@ C
       RTCCD  = LCCSAV(21)
 !     AMT
       DCPT2  = LCCSAV(22)
-C
+      MP3    = LCCSAV(23)
 C     Close files.
 C
 C
@@ -1469,6 +1471,7 @@ C
 C
       CIS    = .FALSE.
       CCS    = .FALSE.
+      MP3    = .FALSE.
       MP2    = .FALSE.
       CCP2   = .FALSE.
       CC2    = .FALSE.

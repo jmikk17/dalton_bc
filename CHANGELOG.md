@@ -12,6 +12,7 @@
   - Laplacian of xx,yy and zz Electric Field Gradient components
 - LRESC
   - Implementation for the Electric Field Gradient at first order in 1/c2
+- The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
 
 
 ## [2020.1] (2022-01-20)

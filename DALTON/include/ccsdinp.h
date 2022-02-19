@@ -10,11 +10,11 @@
      &        CCP3, CCRT, CCR3, CCR1A, CCR1B, CCT,                      &
      &        rCCD, drCCD, SOSEX, rTCCD,                                &
      &        CCSDT,CCR12, MTRIP, CHOPT, DCPT2,                         &
-     &        ETACCPT, DIRKAPB, MLCC3, MLCCSDPT
+     &        ETACCPT, DIRKAPB, MLCC3, MLCCSDPT, MP3
 
       INTEGER MXDIIS, MXLRV,                                            &
      &        IT2UPD, IT2START,                                         &
-     &        ICHANG, IPRINT, KEEPAOTWO, CCSDGNINPLAST
+     &        ICHANG, IPRINT, KEEPAOTWO, CCSDGNINPLAST, CPORDER
 
       COMMON /CCSDGNINP/ SKIP, DIRECT, DIRGRD, CCRSTR,                  &
      &                   FROIMP,  FROEXP, NOCCIT,                       &
@@ -25,7 +25,7 @@
      &                   ETACCPT, DIRKAPB,                              &
      &                   FREEZE,  KEEPAOIN, NOEONL, NOSORT,             &
      &                   HURWITZ_CHECK, MLCC3, MLCCSDPT,                &
-     &                   SIRSOP,  LVVVV, ONLYMO, AOSOPPA
+     &                   SIRSOP,  LVVVV, ONLYMO, AOSOPPA, CPORDER
 
 
       COMMON /CCSDGNINP/ CCSDGNINPLAST 
@@ -39,7 +39,7 @@
      &                  MCC2, CCP2, CCD,  CCSD,  CC3,   CCPT,           &
      &                  CCP3, CCRT, CCR3, CCR1A, CCR1B, CCT,            &
      &                  rCCD, drCCD, SOSEX, rTCCD,                      &
-     &                  CCSDT,CCR12,MTRIP, CHOPT, DCPT2                 
+     &                  CCSDT,CCR12,MTRIP, CHOPT, DCPT2, MP3                 
       COMMON /CCMODELS/ CCMODELSLAST 
       !  Very important !!!
       !  Always keep CCMODELSLAST as the last variable in the common block. 

@@ -109,6 +109,7 @@ C
       IF (CCR1A) MODEL = 'CCSDR(1A) '
       IF (CCR1B) MODEL = 'CCSDR(1B) '
       IF (DCPT2) MODEL = 'DCPT2     '
+      IF (MP3)   MODEL = 'MP3       '
       MOPRPC = MODEL
       ! set model for CCR12
       CALL CCSD_MODEL(MODELR12,LENMOD,24,MODEL,10,APROXR12)
@@ -342,6 +343,56 @@ C
      *               ZERO,ZERO,ZERO,1,0,0,0)
 
          GO TO 9999
+C        ... exit this routine
+      ENDIF
+      IF (MP3) THEN
+         WRITE(LUPRI,'(//10X,A,I8)')
+     *   'Perturbation calculation - NO WAVEFUNCTION OPTIMIZATION'
+C
+         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ','UNFORMATTED',IDUMMY,
+     &               .FALSE.)
+         REWIND LUSIFC
+         CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+         READ (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,
+     *              LSYM,MS2
+         ESCF   = EMCSCF
+         ECCGRS = EMCSCF
+
+         
+         CALL GPCLOSE(LUSIFC,'KEEP')
+C        Run MP3 through the mp3_energy.F file 
+         CALL MP3_ENERGY(WORK,LWORK,EMP2_CORR,EMP3_CORR)
+C
+C        write SCF energy to summary file:
+         WRITE(LURES,'(/12X,A,A,A,F32.10)')
+     *               'Total ',ETY0,' energy:       ',ESCF
+C        Write CPS(D)/MP3 results to summary file:
+         IF (CPORDER .GE. 2) THEN 
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'MP2 correction:           ',EMP2_CORR
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'Total MP2 energy:         ',ESCF+
+     *                                           EMP2_CORR
+         ENDIF
+         IF (CPORDER .GE. 3) THEN 
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'MP3 correction:           ',EMP3_CORR
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'Total MP3 energy:         ',ESCF+
+     *                                 EMP3_CORR+EMP2_CORR
+         ENDIF
+C
+         LABEL1 = 'ENERGY  '
+         MODREF = 'CCS/SCF   '
+         CALL CC_PRPC(ESCF,MODREF,0,
+     *                LABEL1,LABEL1,LABEL1,LABEL1,
+     *                ZERO,ZERO,ZERO,1,0,0,0)
+         CALL WRIPRO(ESCF,MODREF,0,
+     *               LABEL1,LABEL1,LABEL1,LABEL1,
+     *               ZERO,ZERO,ZERO,1,0,0,0)
+         
+         GO TO 9999
+         
 C        ... exit this routine
       ENDIF
 C
