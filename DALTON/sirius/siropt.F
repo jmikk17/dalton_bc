@@ -3684,11 +3684,11 @@ C
 
             END DO
 
-            IF (NASH(ISYM) .GT. 0) THEN ! only doubly occupied in this symmetry
+            IF (NASHT .GT. 0) THEN ! only doubly occupied in this symmetry
                WRITE(lupri,"(/5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
      &         ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
      &         GROUP,' -- ',N_IP_strong,' principal poles'
-            ELSE
+            ELSE ! SCF case - no reason to print trivial Dyson coefficients
                WRITE(lupri,"(/5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
      &         ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
      &       GROUP,' -- ',N_IP_strong,
@@ -3704,7 +3704,7 @@ C
      &           E_IP(E_INDEX+k:E_INDEX+k_end)
             WRITE(lupri,'(1X,10F14.6)')
      &           E_IP(E_INDEX+k:E_INDEX+k_end) * XTEV
-            IF (NASH(ISYM) .GT. 0) THEN ! do not print the trivial pole strengths for SCF
+            IF (NASHT .GT. 0) THEN ! do not print the trivial pole strengths for SCF
                WRITE(lupri,'(1X,10A)') ('  ------------',i=k,k_end)
 
                ! print pole strengths
@@ -3714,7 +3714,7 @@ C
             WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
 
             ! print Dyson orbital coefficients
-            IF (NASH(ISYM) .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
+            IF (NASHT .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
                DO I = 1, MATRIX_SIZE
                   WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
                   DO J = K, K_END

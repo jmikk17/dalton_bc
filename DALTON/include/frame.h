@@ -1,5 +1,7 @@
 ! frame.h
 !  POTNUC : nuclear repulsion energy
-!  DPNUC  : nuclear dipole moment for origin (0,0,0)
-!  QPNUC  : nuclear quadrupole moment for origin (0,0,0)
-      COMMON /FRAME/ POTNUC, DPNUC(3), QPNUC(6)
+!  DIPNUC : nuclear dipole moment for origin DIPORG(1:3)
+!  QPNUC  : nuclear quadrupole moment (not used)
+      REAL*8  POTNUC, DIPNUC
+      COMMON /FRAME/ POTNUC, DIPNUC(3)
+!    & , QPNUC(6)
