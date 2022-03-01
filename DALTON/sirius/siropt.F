@@ -1792,7 +1792,15 @@ C           CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
 C
          IF (MAXCIT .LT. 0) THEN ! user not specified .MAX CI
             MAXCIT = 8
-            THRCIX = 1.D-2 ! Usually initial orbital gradient is larger ...
+            IF (DOMCSRDFT) THEN
+            ! Often initial orbital gradient is less than 0.01 in MC-srDFT,
+            ! probably because MC-srDFT is closer to HF-srDFT
+            ! than MCSCF is to HF
+               THRCIX = 1.D-3
+            ELSE
+            ! Usually initial orbital gradient is greater than 0.01 in MCSCF ...
+               THRCIX = 1.D-2
+            END IF
          ELSE
             THRCIX = DP5*THRGRD
          END IF
