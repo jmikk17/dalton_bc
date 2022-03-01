@@ -415,6 +415,7 @@ C        MCSCF type calculation
          WRITE (LUPRI,5030) GRDNRM
       ELSE IF (DOSCF) THEN
          IF (DOHFSRDFT) THEN
+           WRITE (LUPRI,5015) CHIVAL
            WRITE (LUPRI,5023) EMCSCF,POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE IF (.NOT.DODFT) THEN
 C        ... DIIS-HF or QC-HF optimization
@@ -453,6 +454,7 @@ C        ... DIIS-DFT or QC-DFT optimization
  5012 FORMAT(/'@    This was a CI calculation.')
  5013 FORMAT(/'@    This was an MCSCF calculation.')
  5014 FORMAT(/'@    This was an MC-srDFT calculation with mu =',F8.3)
+ 5015 FORMAT(/'@    This was an HF-srDFT calculation with mu =',F8.3)
  5020 FORMAT( '@    State number:',T31,I5,
      *      //'@    Final MCSCF energy:',T31,F20.12,A,
      *       /'@    Nuclear repulsion:',T31,F20.12,
