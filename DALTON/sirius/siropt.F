@@ -1792,7 +1792,15 @@ C           CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
 C
          IF (MAXCIT .LT. 0) THEN ! user not specified .MAX CI
             MAXCIT = 8
-            THRCIX = 1.D-2 ! Usually initial orbital gradient is larger ...
+            IF (DOMCSRDFT) THEN
+            ! Often initial orbital gradient is less than 0.01 in MC-srDFT,
+            ! probably because MC-srDFT is closer to HF-srDFT
+            ! than MCSCF is to HF
+               THRCIX = 1.D-3
+            ELSE
+            ! Usually initial orbital gradient is greater than 0.01 in MCSCF ...
+               THRCIX = 1.D-2
+            END IF
          ELSE
             THRCIX = DP5*THRGRD
          END IF
@@ -3411,7 +3419,7 @@ C
       REAL*8, DIMENSION(:,:), ALLOCATABLE :: UV, US, UZ, US_COPY
       REAL*8, DIMENSION(:), ALLOCATABLE   :: AR, AI, B, POLE_STRENGTH
       REAL*8  :: ASYM, LARGEST_ASYM, S_IJ, DYSON_NORM, TEMP
-      REAL*8  :: DDOT ! decalaration of function
+      REAL*8  :: DDOT ! declaration of function
       INTEGER :: I, J, ISYM, IERR, MATRIX_SIZE, IPRINT
       INTEGER :: K, K_END, l_wt, N_IP_strong
       INTEGER, PARAMETER :: K_STEP = 5
@@ -3458,8 +3466,13 @@ C
       END IF
 
       WRITE(LUPRI,'(/A)') SEPARATOR
-      CALL TITLER( EKT_TYPE(1:l_wt)//
+      IF (NASHT.GT.0) THEN
+         CALL TITLER( EKT_TYPE(1:l_wt)//
      &  ' IPs [a.u. & eV], pole strengths, and Dyson orbitals ',' ',204)
+      ELSE ! SCF
+         CALL TITLER( EKT_TYPE(1:l_wt)//
+     &  " IPs [a.u. & eV] from Koopmans' theorem",' ',204)
+      END IF
 
       IF (iprint .gt. 5) THEN
          write(lupri,'(/A)') 'Generalized Fock matrix V input sirekt'
@@ -3532,16 +3545,8 @@ C
 
          !Print UV and US matrices
 
-         IF (LARGEST_ASYM .GT. 1.0D-4) THEN
-            WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT WARNING: '//
-     &         'Largest asymmetry in V = generalized Fock matrix : ',
-     &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
-         ELSE IF (LARGEST_ASYM .GT. 1.0D-5) THEN
+         IF (LARGEST_ASYM .GT. THRGRD .OR. IPRINT .GE. 2) THEN
             WRITE(lupri,"(/A,1P,G16.8,A,2I5)") 'EKT INFO: '//
-     &         'Largest asymmetry in V = generalized Fock matrix : ',
-     &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
-         ELSE IF (IPRINT .GE. 1 .OR. LARGEST_ASYM .GT. 1.0D-6) THEN
-            WRITE(lupri,"(/A,1P,G16.5,A,2I5)") 'EKT : '//
      &         'Largest asymmetry in V = generalized Fock matrix : ',
      &         LARGEST_ASYM,' for I,J =',I_ASYM,J_ASYM
          END IF
@@ -3608,14 +3613,14 @@ C
             DO K = 1, MATRIX_SIZE ! IP # K
                ! save IP # K in E_IP(:)
                IF (AI(K) /= 0 .AND. B(K) == 0) THEN ! imaginary -infinty IP
-                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 102'
+                  WRITE(lupri,"(A)", ADVANCE="no") ' IERR: 102'
                   E_IP(E_INDEX+K) = -102
                ELSE IF (AI(K) /= 0) THEN ! imaginary IP
-                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 100'
+                  WRITE(lupri,"(A)", ADVANCE="no") ' IERR: 100'
                   E_IP(E_INDEX+K) = -100
                ELSE IF (B(K) == 0) THEN ! real infinity IP
                   E_IP(E_INDEX+K) = -101
-                  WRITE(lupri,"(A16)", ADVANCE="no") 'IERR: 101'
+                  WRITE(lupri,"(A)", ADVANCE="no") ' IERR: 101'
                ELSE ! real IP
                   E_IP(E_INDEX+K) = - AR(K)/B(K)
                END IF
@@ -3687,9 +3692,16 @@ C
 
             END DO
 
-            WRITE(lupri,"(5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
-     &       ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
-     &       GROUP,' -- ',N_IP_strong,' principal poles'
+            IF (NASHT .GT. 0) THEN ! only doubly occupied in this symmetry
+               WRITE(lupri,"(/5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
+     &         ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
+     &         GROUP,' -- ',N_IP_strong,' principal poles'
+            ELSE ! SCF case - no reason to print trivial Dyson coefficients
+               WRITE(lupri,"(/5X,2A,I2,5A,I0,A)") EKT_TYPE(1:l_wt),
+     &         ' symmetry',ISYM,' ( ',REP(ISYM-1),') in point group ',
+     &       GROUP,' -- ',N_IP_strong,
+     &         ' principal poles with pole strength 1'
+            END IF
 
             DO K = 1, MATRIX_SIZE, K_STEP ! K_STEP IPs in each output block
             K_END = MIN(K+K_STEP-1, MATRIX_SIZE)
@@ -3700,22 +3712,25 @@ C
      &           E_IP(E_INDEX+k:E_INDEX+k_end)
             WRITE(lupri,'(1X,10F14.6)')
      &           E_IP(E_INDEX+k:E_INDEX+k_end) * XTEV
-            WRITE(lupri,'(1X,10A)') ('  ------------',i=k,k_end)
+            IF (NASHT .GT. 0) THEN ! do not print the trivial pole strengths for SCF
+               WRITE(lupri,'(1X,10A)') ('  ------------',i=k,k_end)
 
-            ! print pole strengths
-            WRITE(lupri,'(1X,10F14.6)')
-     &         POLE_STRENGTH(E_INDEX+k:E_INDEX+k_end)
+               ! print pole strengths
+               WRITE(lupri,'(1X,10F14.6)')
+     &            POLE_STRENGTH(E_INDEX+k:E_INDEX+k_end)
+            END IF
             WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
 
             ! print Dyson orbital coefficients
-            DO I = 1, MATRIX_SIZE
-               WRITE(lupri,"(1X,10F14.6)") UZ(I,K:K_END)
-               DO J = K, K_END
-                  EZ(Z_INDEX+(J-1)*MATRIX_SIZE+I) = UZ(I,J)
-               END DO
-            END DO ! I
-            WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
-            WRITE(lupri,*) ' '
+            IF (NASHT .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
+               DO I = 1, MATRIX_SIZE
+                  WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
+                  DO J = K, K_END
+                     EZ(Z_INDEX+(J-1)*MATRIX_SIZE+I) = UZ(I,J)
+                  END DO
+               END DO ! I
+               WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+            END IF
 
             END DO ! K = 1, MATRIX_SIZE, K_STEP
 
@@ -3727,25 +3742,30 @@ C
          V_INDEX = V_INDEX + NORB(ISYM)**2 ! off-set to symmetry ISYM+1
       END DO ! ISYM
 
-      WRITE(lupri,"(/3A)") '@ Summary of ',EKT_TYPE(1:l_wt),
+      IF (NASHT .GT. 0) THEN
+         WRITE(lupri,'(/3A)') '@ Summary of ',EKT_TYPE(1:l_wt),
      &   ' ionization potentials [eV] and pole strengths:'
+      ELSE
+         WRITE(lupri,'(/3A)') '@ Summary of ',EKT_TYPE(1:l_wt),
+     &   ' ionization potentials [eV]:'
+      END IF
       DO ISYM = 1, NSYM
-         WRITE(lupri,"(/A,I2,3A)", ADVANCE="no")
+         WRITE(lupri,'(/A,I2,3A)', ADVANCE='no')
      &         '@ Symmetry', ISYM ,' (',REP(ISYM-1),') :'
          IF (NOCC(ISYM) > 0) THEN
             E_INDEX = IOCC(ISYM)
-            WRITE(lupri,"(F10.3,4F12.3,(:/'@',T19,5F12.3))")
+            WRITE(lupri,"(F10.3,4F12.3:/,('@',T19,5F12.3))")
      &        (E_IP(E_INDEX + I) * XTEV, I = 1, NOCC(ISYM))
-            WRITE(lupri,
-     &      "('@ Pole strengths   :',F10.3,4F12.3,(:/'@',T19,5F12.3))")
+            IF (NASHT .GT. 0) WRITE(lupri,
+     &      "('@ Pole strengths   :',F10.3,4F12.3:/,('@',T19,5F12.3))")
      &      (POLE_STRENGTH(E_INDEX+I), I = 1, NOCC(ISYM))
          ELSE
-            WRITE(lupri,"(A)") '  No IPs in this symmetry'
+            WRITE(lupri,'(A)') '  No IPs in this symmetry'
          END IF
       END DO
 
       DEALLOCATE (POLE_STRENGTH)
-      WRITE(lupri,"(/3A/A/)")
+      WRITE(lupri,'(/3A/A/)')
      &   '  === End of ',EKT_TYPE(1:l_wt),' output ===',
      &   SEPARATOR
       FLUSH(LUPRI)

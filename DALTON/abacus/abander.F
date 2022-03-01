@@ -3750,6 +3750,8 @@ C
          IF (ABS(HESMWT(IC12)).GT.DMTHR) THEN
             IFREQ = IFREQ + 1
             FREQ(IFREQ) = SQRT(ABS(HESMWT(IC12)))
+            IF (HESMWT(IC12) .LT. 0)
+     &      FREQ(IFREQ) = -FREQ(IFREQ) ! the minus signals that it is imaginary
          ELSE
             NUMZRO = NUMZRO + 1
             DO 2100 IC2 = IC-NUMZRO+1, NCOOR-1
@@ -3786,13 +3788,20 @@ C
 C
 C     *** Printing the frequencies. ***
 C
-      WRITE (LUPRI, '(10X,A,I3)')
-     &                  'Number of modes with zero frequency: ', NUMZRO
+      WRITE (LUPRI, '(10X,A,I4)')
+     &                  'Number of modes with zero frequency:', NUMZRO
       CALL HEADER('Vibrational frequencies harmonic approximation: ',-1)
-      WRITE (LUPRI,'(20X,A)') ' Mode     cm-1       hartrees  '
+      WRITE (LUPRI,'(20X,A)') ' Mode     cm-1       hartrees'
       DO 2500 IFREQ = 1, NCOOR-NUMZRO
-         WRITE (LUPRI,'(20X,I4,F12.2,F12.6)') ICRIRP(IFREQ,1),
-     &                                XTKAYS*FREQ(IFREQ), FREQ(IFREQ)
+         IF (FREQ(IFREQ) .LT. 0) THEN ! imaginary frequency
+            FREQ(IFREQ) = ABS(FREQ(IFREQ))
+            ! handling of imaginary frequencies not implemented below
+            WRITE (LUPRI,'(I24,F12.2,A,F10.6,A)') ICRIRP(IFREQ,1),
+     &                   XTKAYS*FREQ(IFREQ),' i', FREQ(IFREQ),' i'
+         ELSE
+            WRITE (LUPRI,'(I24,F12.2,F12.6)') ICRIRP(IFREQ,1),
+     &                   XTKAYS*FREQ(IFREQ), FREQ(IFREQ)
+         END IF
  2500 CONTINUE
 C
 C     *** Printing the cartesian components of the normal coordinates ***

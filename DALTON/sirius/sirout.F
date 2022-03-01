@@ -313,12 +313,20 @@ csonia 04/10/95: LUCME output
      &         ' The molecule is placed in a static field.',
      &         ' Field strength (a.u.)          Field operator',
      &         ' ---------------------          --------------'
-         DO 100 IFIELD = 1,NFIELD
+         FF_DIPNUC = 0.0D0
+         DO IFIELD = 1,NFIELD
             WRITE (LUPRI,'(1P,G18.8,18X,A8)')
      *         EFIELD(IFIELD),LFIELD(IFIELD)
             IF (LUCME.GT.0) WRITE (LUCME,'(1P,G18.8,18X,A8)')
      &         EFIELD(IFIELD), LFIELD(IFIELD)
-  100    CONTINUE
+            IF (LFIELD(IFIELD)(1:7) .EQ. 'XDIPLEN') THEN
+               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+            ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'YDIPLEN') THEN
+               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+            ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'ZDIPLEN') THEN
+               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+            END IF
+         END DO
          WRITE (LUPRI,'()')
       END IF
       IF (FLAG(16)) THEN
@@ -422,22 +430,25 @@ C        ... DIIS-DFT or QC-DFT optimization
          IF (LDUMP) THEN
             LAPRPC = 'ENERGY  '
             CALL WRIPRO(EMCSCF,"SCF/DFT   ",0,
-     *                  LAPRPC,LAPRPC,LAPRPC,LAPRPC,
-     *                  0.0D0,0.0D0,0.0D0,LSYM,0,ISPIN,0)
+     &                  LAPRPC,LAPRPC,LAPRPC,LAPRPC,
+     &                  0.0D0,0.0D0,0.0D0,LSYM,0,ISPIN,0)
          END IF
          IF (FLAG(16)) WRITE (LUPRI,5025) ESOLT
          IF (USE_PELIB()) WRITE(LUPRI,5026) ESOLT
          WRITE (LUPRI,5030) GRDNRM
       END IF
 
+      IF (FF_DIPNUC .GT. 0.0D0)
+     &   WRITE(LUPRI,5035) FF_DIPNUC, EMCSCF+FF_DIPNUC
+
       IF (QMMM .AND. MMPROP) THEN
         CALL MM_PROPS(WRK(KFREE),LFREE,IPQMMM)
       ENDIF
 
  5000 FORMAT(/'@    Spin multiplicity:',T31,I5,
-     *       /'@    Spatial symmetry:',T31,I5,
+     &       /'@    Spatial symmetry:',T31,I5,
      &        ' ( irrep  ',A,' in ',A,' )',
-     *       /'@    Total charge of molecule:',T31,I5)
+     &       /'@    Total charge of molecule:',T31,I5)
  5010 FORMAT(/'@    This was a CI-NO calculation.')
  5012 FORMAT(/'@    This was a CI calculation.')
  5013 FORMAT(/'@    This was an MCSCF calculation.')
@@ -462,6 +473,9 @@ C        ... DIIS-DFT or QC-DFT optimization
  5025 FORMAT( '@    Solvation  energy:',T31,F20.12)
  5026 FORMAT( '@    Embedding energy:',T31,F20.12)
  5030 FORMAT(/'@    Final gradient norm:',T31,F20.12)
+ 5035 FORMAT(/'@    Finite field energy contribution ',
+     &        'from nuclear dipole moment:',F20.12,
+     &       /'@    Final energy + FF nucdip:',T31,F20.12)
 C
 C       stamp date, time, and hostname to LUPRI
         CALL TSTAMP(' ',LUPRI)
@@ -676,4 +690,16 @@ C
       CALL QEXIT('SIROUT')
       RETURN
       END
+      SUBROUTINE ADD_FF_DIPNUC(IXYZ,EFIELD,FF_DIPNUC)
+! This cannot be done in SIROUT because
+! POTNUC is in both infinp.h and frame.h
+      implicit none
+      integer ixyz
+      real*8  efield, ff_dipnuc
+! frame.h  : dipnuc(1:3)
+#include "frame.h"
+      FF_DIPNUC = FF_DIPNUC + EFIELD*DIPNUC(IXYZ)
+      RETURN
+      END
+
 C --- end of sirius/sirout.F ---
