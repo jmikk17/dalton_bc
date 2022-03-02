@@ -3812,12 +3812,13 @@ C
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
 
+C           Calculate nuclear dipole moment with origin (0,0,0)
             IF (ISYMAX(1,1) .EQ. 0) DIPNUC(1) = DIPNUC(1)
-     &         + (CORD(1,N) - DIPORG(1))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(2,1) .EQ. 0) DIPNUC(2) = DIPNUC(2)
-     &         + (CORD(2,N) - DIPORG(2))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(3,1) .EQ. 0) DIPNUC(3) = DIPNUC(3)
-     &         + (CORD(3,N) - DIPORG(3))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
 
          END IF
          II = 0
