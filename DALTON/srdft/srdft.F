@@ -114,6 +114,7 @@ C C K. Sharkas and J. Toulouse end
 
 C Cut string SRFTMP
       call CUT_INTO_FIELDS(SRFTMP, ' ', maxfld, fields, lenfld, nfld)
+      SRDFT_ONTOP = .FALSE. ! not implemented yet
       IF (nfld .EQ. 1) THEN
          SRXCFUN = fields(1)
          SRXFUN = ' '

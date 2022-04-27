@@ -97,7 +97,8 @@ C
 
 C
       LOGICAL   FLAGSV(NFLAG), OLDWOP, RHFWOP, PCM_save
-      LOGICAL   SRDFT_SPINDNS_save, SRDFT_LOCALSPIN_save, USEDRC_save
+      LOGICAL   SRDFT_SPINDNS_save, SRDFT_LOCALSPIN_save
+      LOGICAL   SRDFT_ONTOP_save, USEDRC_save
       LOGICAL   dftadd_s, addsri_s
       DIMENSION NASHSV(8), NISHSV(8), NFROSV(8)
       real(8), allocatable :: tmp_space(:)
@@ -180,6 +181,9 @@ Cbm initialized PCM_save
          CALL PCMSOLVNT(WORK,LWORK)
       END IF
 C
+      SRDFT_SPINDNS_save   = SRDFT_SPINDNS
+      SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+      SRDFT_ONTOP_save     = SRDFT_ONTOP
 C
 C ***************************************************
 C        *** set SCF parameters for RHF/DFT and MP2 ***
@@ -253,6 +257,11 @@ C           ... this is one open shell RHF; reset wave function definition
             ISPIN  = NASHT + 1
             NACTEL = NASHT
             NASH(1:8) = NROHF(1:8)
+         END IF
+         IF (NASHT .EQ. 0) THEN
+            ! HF-srDFT is closed-shell although MC-srDFT might be open-shell.
+            ! MP2 will then also be closed-shell.
+            SRDFT_SPINDNS = .FALSE.
          END IF
          IF (LSYMSV .NE. LSYM  ) RHFWOP = .FALSE.
          IF (ISPISV .NE. ISPIN ) RHFWOP = .FALSE.
@@ -472,15 +481,14 @@ C
          IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
             FLAG(25) = .FALSE. ! do not write to SIRIFC if MP2 followed by MC or CI
          END IF
-         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN) THEN
+         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN .OR. SRDFT_ONTOP) THEN
             NWARN = NWARN + 1
-            WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//
-     &      'implemented in MP2 module and is ignored.'
+            WRITE(LUPRI,'(//A)') 'WARNING - srDFT spin density is '//
+     &      'not implemented in MP2 module and is ignored.'
          END IF
-         SRDFT_SPINDNS_save = SRDFT_SPINDNS
-         SRDFT_SPINDNS = .FALSE.
-         SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+         SRDFT_SPINDNS   = .FALSE.
          SRDFT_LOCALSPIN = .FALSE.
+         SRDFT_ONTOP     = .FALSE.
          NUMRUN = NUMRUN + 1
          IF (DOSCF .AND. ICONV .LE. 0) THEN
             WRITE (LUPRI,7020)
@@ -511,8 +519,6 @@ C
          CALL FLSHFO(LUSTAT)
          FLAG(14)   = .FALSE.
          FLAGSV(14) = .FALSE.
-         SRDFT_SPINDNS = SRDFT_SPINDNS_save
-         SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
       END IF
 C
 C ***************************************************
@@ -522,6 +528,10 @@ C
 C     ... otherwise error in some MCSCF routines
 C         where HSROHF specifications erroneously will be used
       MCTYPE = MCTYPE_save
+      ! restore some srdft variables - might have been changed for SCF and/or MP2
+      SRDFT_SPINDNS   = SRDFT_SPINDNS_save
+      SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
+      SRDFT_ONTOP     = SRDFT_ONTOP_save
       IF ( (DOSCF .OR. DOMP2) .AND.
      &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
          DOSCF = .FALSE.
