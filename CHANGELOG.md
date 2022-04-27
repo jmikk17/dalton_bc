@@ -4,29 +4,34 @@
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
-- SOPPA
+- SOPPA (Luna Zamok)
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver.
-- Atomic Integrals
+  - Added PE-AO-SOPPA/RPA (Peter Reinholdt)
+- Atomic Integrals (Juanjo Aucar)
   - Divergence of the zz Electric Field Gradient component
   - Laplacian of xx,yy and zz Electric Field Gradient components
-- LRESC
+- LRESC (Juanjo Aucar)
   - Implementation for the Electric Field Gradient at first order in 1/c2
+- The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
+- ENUE - print effective number of unpaired electrons ENUE = sum(i) (2\*n\_i - n\_i\*\*2) in final wave function output (H. J. Aa. Jensen)
 
-## [2020.1-dev] (unreleased, last update 2020-12-21)
+
+## [2020.1] (2022-01-20)
 
 ### New features added
 - New features available through the Polarizable Embedding library (PElib)
   - Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields (P. Reinholdt and J. M. H. Olsen)
-    - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput., (2021). DOI: 10.1021/acs.jctc.1c00225
+    - M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput. 17, 3445-3454 (2021)
   - Additional solvents available for the FixSol continuum solvation model (see 26.1.5 in the manual for a list of available solvents)
-  - Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
+  - Fast approximate environment coupling for PE (P. Reinholdt)
+    - P. Reinholdt, J. Kongsted, and F. Lipparini, J. Chem. Theory Comput. 18, 344-356 (2022)
+- Allow combination of DFT with CI/MCSCF, i.e. use DFT orbitals in CI or as initial guess in MCSCF (H. J. Aa. Jensen)
 
 ### Fixed
 - Performance improvement: disable DFT\_SPINDNS if true when singlet (H. J. Aa. Jensen)
 - Fixed bug for molden.inp: empty orbitals got arbitrary occupation numbers. (H. J. Aa. Jensen)
-- Fixed bug for \*CUBE (crashed always) (H. J. Aa. Jensen) 
-- Fixed combination of DFT in SCF for initial orbital guess error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
-- Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen) 
+- Fixed bug for \*CUBE (crashed always) (H. J. Aa. Jensen)
+- Fixed error in 2-el. integrals for FCKTRA with MPI and MC-srDFT (H. J. Aa. Jensen)
 - Fixed error leading to test energy\_selected\_localize failed (H. J. Aa. Jensen)
 - Fixed PElib compile error when using explicit math libs
 - Fixed error for SDKE, relativistic kinetic energy corrections to spin-dipole. Has never worked since it was introduced in 2004. (H. J. Aa. Jensen)

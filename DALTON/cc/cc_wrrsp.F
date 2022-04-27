@@ -218,6 +218,10 @@ C
      *    (.NOT.(MODFIL(1:4).EQ.'CCSD'))) THEN
         IOPT   = IAND(IOPT,1+4) 
         NWRITE = 2
+      ELSE IF ((MODFIL(1:3).EQ.'MP3').AND.
+     *    (.NOT.(MODFIL(1:4).EQ.'CCSD'))) THEN
+        IOPT   = IAND(IOPT,1+4) 
+        NWRITE = 2
       ELSE IF (MODFIL(1:3).EQ.'MP2'.OR.MODFIL(1:3).EQ.'CC2'.OR.
      *         MODFIL(1:4).EQ.'RCCD'.OR.MODFIL(1:5).EQ.'DRCCD'.OR.
      *         MODFIL(1:5).EQ.'SOSEX'.OR.

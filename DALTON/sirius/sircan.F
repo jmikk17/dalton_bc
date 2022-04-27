@@ -113,6 +113,8 @@ C
       CALL DZERO(OCC,NORBT)
       IF (NASHT .EQ. 1) WRK(KAOCC) = NACTEL
       IAOCC = KAOCC-1
+      ENUE = 0.0D0 ! Effective Number of Unpaired Electrons
+                   ! sum(i) (2*n_i - n_i**2)
       DO 300 ISYM = 1,NSYM
 C
          JOCC1  = IORB(ISYM)
@@ -125,19 +127,27 @@ C
       IF (NASHI.EQ.0) GO TO 300
          JOCC1  = JOCC1 + NISHI
          OCCSUM = 0.0D0
+         ENUE_SYM = 0.0D0
          DO 275 I=1,NASHI
             IAOCC = IAOCC + 1
             OCC(JOCC1 + I) = WRK(IAOCC)
             OCCSUM = OCCSUM + OCC(JOCC1 + I)
+            ENUE_SYM = ENUE_SYM + 2.0D0*WRK(IAOCC) - WRK(IAOCC)**2
   275    CONTINUE
-C
+         ENUE = ENUE + ENUE_SYM
          IF (NCONF.GT.1 .AND. .NOT.ONLYFD .AND. IPRCAN .GT. 0) THEN
             WRITE (LUW4,3040) ISYM, OCCSUM, (OCC(JOCC1+I),I=1,NASHI)
+            WRITE (LUW4,3041) ENUE_SYM
          END IF
   300 CONTINUE
+      WRITE(LUW4,3042) ENUE
 C
- 3040 FORMAT(/' Symmetry',I3,'  Total occupancy this symmetry',F14.9,
+ 3040 FORMAT(/'  Symmetry',I3,'  Total occupancy this symmetry',F14.9,
      &      //,(5F14.9))
+ 3041 FORMAT(/'@ Effective number of unpaired electrons this symmetry:',
+     &        F6.2)
+ 3042 FORMAT(/'@ Total effective number of unpaired electrons :',F6.2,
+     &       /'  (ENUE = sum(i) (2*n_i - n_i**2) for natural orbitals)')
 C
 C     Print natural orbitals
 C
@@ -287,20 +297,20 @@ C
      &      '   --- OUTPUT FROM SIRCNO     Keyword = ',KEYCNO
       END IF
       IF (KEYCNO .EQ. 'ONLYNO' .OR. KEYCNO .EQ. 'NATORB') THEN
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/)')
      *      ' Transformation of active orbitals to natural orbitals.'
          TRTONO = .TRUE.
          TRTOFC = .FALSE.
          TRTOCO = .FALSE.
       ELSE IF (KEYCNO .EQ. 'ONLYFD' .OR. KEYCNO .EQ. 'ONLYFC' .OR.
      &         KEYCNO .EQ. 'ONLYCO' .OR. KEYCNO .EQ. 'CANORB') THEN
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/)')
      *      ' Transformation of all orbitals to Fock type orbitals.'
          TRTONO = .FALSE.
          TRTOFC = .TRUE.
          TRTOCO = .TRUE.
       ELSE
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals to natural orbitals',
      *      ' and inactive/secondary orbitals to Fock type orbitals.'
          TRTONO = .TRUE.
@@ -314,13 +324,13 @@ C
          DO 100 ISYM = 1,NSYM
             IF (NASH(ISYM) .GT. 1) TRCVEC = .TRUE.
   100    CONTINUE
-         IF (IPRCNO .GE. 5 .AND. .NOT.TRCVEC) WRITE (LUPRI,'(A/A/)')
+         IF (IPRCNO .GE. 2 .AND. .NOT.TRCVEC) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals',
      *      ' abandoned, because nash(isym) .le. 1, all symmetries.'
       END IF
       IF ( TRCVEC .AND. NCONF.EQ.1 ) THEN
          TRCVEC = .FALSE.
-         IF ( IPRCNO .GE. 5 ) WRITE (LUPRI,'(A/A/)')
+         IF ( IPRCNO .GE. 2 ) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals to natural orbitals',
      *      ' abandoned, because only one configuration.'
       END IF
@@ -456,7 +466,7 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
                IF (ABS(WRK(JDV+I)) .GT. THRCAN) TRTONO = .TRUE.
    30       CONTINUE
    40    CONTINUE
-         IF (IPRCNO .GE. 5 .AND. .NOT.TRTONO)
+         IF (IPRCNO .GE. 2 .AND. .NOT.TRTONO)
      *      WRITE (LUPRI,'(A/A,1P,D10.1/)')
      *      ' Transformation of active orbitals to natural orbitals'//
      *      ' abandoned:',' max off-diagonal element in'//
@@ -994,7 +1004,11 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
      &      ' -------------------------------'
          IF (SUPSYM .AND. .NOT. NOAVER) WRITE (LUPRI,'(/A)')
      &      ' NOTE: degenerate orbitals have been averaged.'
-         DO 520 ISYM = 1,NSYM
+
+         ENUE = 0.0D0 ! Effective Number of Unpaired Electrons
+                      ! sum(i) (2*n_i - n_i**2)
+         DO ISYM = 1,NSYM
+            ENUE_SYM = 0.0D0
             NOCCI = NOCC(ISYM)
             IF (NOCCI .EQ. 0) THEN
                WRITE (LUPRI,3030) ISYM,REP(ISYM-1)
@@ -1007,16 +1021,31 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
                ELSE
                   WRITE (LUPRI,3040) ISYM,REP(ISYM-1),OCCSUM,
      &               (OCCNO(IORBI+I),I=1,NOCCI)
+                  IF (NASH(ISYM) .GT. 0) THEN
+                     DO I = IORBI + NISH(ISYM) + 1, IORBI + NOCCI
+                        ENUE_SYM = ENUE_SYM
+     &                           + 2.0D0*OCCNO(I) - OCCNO(I)**2
+                     END DO
+                     WRITE (LUPRI,3041) ENUE_SYM
+                     ENUE = ENUE + ENUE_SYM
+                  END IF
                END IF
             END IF
-  520    CONTINUE
+         END DO ! ISYM = 1,NSYM
 C  HJAAJ MAERKE TODO 921106: if (supsym) print also sorted after supsym
 C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
+         IF (NASHT .GT. 0) THEN
+            WRITE(LUPRI,3042) ENUE
+         END IF
       END IF
  3030 FORMAT(/' Symmetry',I2,'  ( ',A,') -- No occupied orbitals')
  3040 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Total occupation in this symmetry is',F14.9,
      &      //,(5F14.9))
+ 3041 FORMAT(/'   Effective number of unpaired electrons this symmetry:'
+     &       ,F8.4)
+ 3042 FORMAT(/' Total effective number of unpaired electrons :',F8.4,
+     &   / '    ( = sum(i) (2 - n_i)*n_i  for natural orbitals)')
  3045 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Supersymmetry in parenthesis',
      &       /' -- Total occupation in this symmetry is',F14.9,

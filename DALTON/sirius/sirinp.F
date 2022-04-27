@@ -416,7 +416,7 @@ Cholesky orbitals
 C
 C********** Default values section HAMINP *****
 C
-CWMK  NFIELD = 0
+CWMK  NFIELD = 0 (is initialized in HERINI)
 C
 C********** Default values section WAVINP and more *****
 C

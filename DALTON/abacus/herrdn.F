@@ -431,7 +431,7 @@ C               - common block NUCLEI:
 C                       - added GAUNUC, GNUEXP(MXCENT)
 C                       - added NAMN(MXCENT)
 C               - NEW common block FRAME
-C                       - added POTNUC, DPNUC(3)
+C                       - added POTNUC, DIPNUC(3)
 C               - common block CBIREA:
 C                       - IPRINT changed to IPREAD
 C                       - added FAMILY
@@ -779,9 +779,9 @@ C*****************************************************************************
 C     Card 2-3: Title cards
 C*****************************************************************************
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(1)
+      TTITLE(1) = MLINE(NMLINE)
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(2)
+      TTITLE(2) = MLINE(NMLINE)
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
          WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
@@ -3754,11 +3754,14 @@ C******************************************************************************
       PARAMETER (D0 = 0.0D0, DP5 = 0.5D0)
       DIMENSION WORK(LWORK)
 C
+C frame.h  : POTNUC, DIPNUC(1:3)
+C orgcom.h : DIPORG(1:3)
 #include "gnrinf.h"
 #include "cbirea.h"
 #include "ccom.h"
 #include "nuclei.h"
 #include "frame.h"
+#include "orgcom.h"
 #include "primit.h"
 #include "shells.h"
 #include "symmet.h"
@@ -3786,9 +3789,7 @@ C     * 30      - loop over second symmetry independent centre
 C     * 40+IF   - loop over dependent centers
 C     ************************************************************
 C
-      DPNUC(1) = D0
-      DPNUC(2) = D0
-      DPNUC(3) = D0
+      DIPNUC(1:3) = D0
       NUCDEP    = 0
       NCDTOT    = 0
       NFLOAT    = 0
@@ -3810,13 +3811,18 @@ C
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
-            DPNUC(1) = DPNUC(1) + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(2) = DPNUC(2) + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(3) = DPNUC(3) + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
+
+            IF (ISYMAX(1,1) .EQ. 0) DIPNUC(1) = DIPNUC(1)
+     &         + (CORD(1,N) - DIPORG(1))*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(2,1) .EQ. 0) DIPNUC(2) = DIPNUC(2)
+     &         + (CORD(2,N) - DIPORG(2))*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(3,1) .EQ. 0) DIPNUC(3) = DIPNUC(3)
+     &         + (CORD(3,N) - DIPORG(3))*CHARGE(N)*FMULT(IVARB)
+
          END IF
          II = 0
          DO 200 LA = 0,MAXREP
-            IF (IAND(IVARB,LA) .EQ. 0) THEN
+            IF (IAND(IVARB,LA) .EQ. 0) THEN ! filter out generator products containing generators that stabilise the center
                II = II + 1
                IF (N .LE. NUCIND) NUCDEP = NUCDEP + 1
                NCDTOT = NCDTOT + 1
@@ -5818,7 +5824,7 @@ C
      &                       ((CTRAN(I,J), J = 1,8), I = 1,NBASIS),
      &               NBASIS, ( INAMN(I),             I = 1,NBASIS),
      &                       ( IPTYP(I),             I = 1,NBASIS),
-     &               DPNUC,
+     &               DIPNUC,
      &               NUCDEP, ((COOO(I,J),J=1,3),I=1,NUCDEP),
      &               IFXYZ, DUMMY, QPOL, QQ, JFXYZ
 #endif

@@ -308,7 +308,7 @@ C
       END IF
 C
       I2TYP = 0
-      IF (IPRALL .GE. 1) THEN
+      IF (IPRALL .GE. 1 .OR. IPRINT .GE. 1) THEN
          CALL TIMER('START ',TIMEIN,TIMOUT)
          WRITE (LUPRI,'(/A/)')
      *     '  ---------- Output from TWOEXP ---------- '
@@ -321,7 +321,7 @@ C
          NOPV   = .TRUE.
          IF (HSROHF .AND. NASHT .GT. 1 .AND. (DIPDER .OR. MOLHES)) THEN
             WRITE(LUPRI,'(/A)')
-     &          ' ERROR: Dipole gradients and molecular '//
+     &          ' ERROR: Dipole gradients and molecular Hessian '//
      &          'not implemented for high-spin restricted open-shell HF'
             CALL QUIT('Option not available for HSROHF in TWOEXP')
          END IF 
@@ -452,7 +452,7 @@ C           dimension ISYMDM(MXDMAT), IFCTYP(MXDMAT)
          END IF
 C
 C        Is it OK to do parallel calculation here ??
-         PARHER_IS_OK = PARHER ! has user wanted PARHER ?
+         PARHER_IS_OK = PARHER ! PARHER true when MPI (NODTOT .ge. 1)
          IF ((NASHT .GT. 0) .AND. (.NOT.(HSROHF.OR.DFTADD)))
      &      PARHER_IS_OK = .FALSE. ! parallel TWOEXP only for SCF 
 C
@@ -497,7 +497,7 @@ cfrj-end
      &                  DUMMY,LDUMMY)
             HFXMU = HFXM0
             IF (HFXMU.NE.D0) THEN
-!           IF (SRDFTRUN .OR. HFXMU.NE.D0) THEN <-- TODO
+!           IF (SRDFTRUN .OR. HFXMU.NE.D0) THEN <-- TODO to implement PARHER here
 
                KFCTMP = KLAST
                KLAST  = KFCTMP + NFMAT*N2BASX

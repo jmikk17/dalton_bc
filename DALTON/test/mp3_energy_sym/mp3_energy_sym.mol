@@ -1,0 +1,12 @@
+ATOMBASIS
+Ethylene in D2H symmetry using 6-31G
+Test system for MP energies to 3. order using symmetry
+Atomtypes=2 Charge=0 Symmetry Angstrom
+  6.0000     2 Bas=6-31G
+C    0.000000000        0.000000000        0.657520000
+C    0.000000000        0.000000000       -0.657520000
+  1.0000     4 Bas=6-31G
+H    0.000000000        0.911700000        1.224590000
+H    0.000000000       -0.911700000        1.224590000
+H   -0.000000000       -0.911700000       -1.224590000
+H    0.000000000        0.911700000       -1.224590000

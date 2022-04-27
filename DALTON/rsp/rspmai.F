@@ -2134,24 +2134,32 @@ C
                   OPRANK( INDPRP('Z SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  21            CONTINUE
                   LLROP( INDPRP('X SPNORB')) = .TRUE.
                   OPRANK( INDPRP('X SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  22            CONTINUE
                   LLROP( INDPRP('Y SPNORB')) = .TRUE.
                   OPRANK( INDPRP('Y SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  23            CONTINUE
                   LLROP( INDPRP('Z SPNORB')) = .TRUE.
                   OPRANK( INDPRP('Z SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  24            CONTINUE
                   READ(LUCMD,'(BN,A,I8)')LABEL,IRANK

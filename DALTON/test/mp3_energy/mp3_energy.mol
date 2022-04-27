@@ -1,0 +1,7 @@
+BASIS
+6-31G
+Test system for CPS(D) energy series.
+
+Atomtypes=1 Nosymmetry Angstrom Charge=-1
+Charge=9 Atoms=1
+F   0.000000   0.000000        0.000000

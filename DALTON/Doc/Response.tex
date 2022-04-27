@@ -312,6 +312,8 @@ on the file \verb|AOPROPER| to both the $A$ and $B$ operator lists.
 (The calculation of the operator must be specified in the \Sec{*INTEGRALS} input module,
 see section \ref{ch:hermit}.)
 This keyword may be repeated for different properties.
+When using triplet operators the \Key{TRIPLET} keyword 
+must be set.
 
 \item{\Key{PV PSO}} Sets $A$ and $B$ in the linear response function
   to the parity-violating operator and the complete list of
@@ -353,11 +355,13 @@ response calculation.
 
 \item{\Key{SPIN-O}}
 Sets $A$ and $B$ to Breit-Pauli spin-orbit component operators,
-both the one- and two-electron parts\index{spin-orbit}.
+both the one- and two-electron parts\index{spin-orbit}. 
+The \Key{TRIPLET} keyword will also be set by this option.
 
 \item{\Key{SPNORX/Y/Z}}
 Sets $A$ and $B$ to the X, Y, or Z component of the spin--orbit
-operator, respectively\index{spin-orbit}.
+operator, respectively\index{spin-orbit}. 
+The \Key{TRIPLET} keyword will also be set by this option.
 
 \item{\Key{THCLR}}\\
 \verb|READ *, THCLR|\\

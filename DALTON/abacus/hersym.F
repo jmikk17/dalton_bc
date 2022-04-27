@@ -886,8 +886,8 @@ Cdbg     CALL OUTPUT(ATMARR(1,0),1,6,1,N_ATOMS+1,6,N_ATOMS+1,1,LUPRI)
       IF (ITURN .LE. 1) GO TO 10
 
  100  WRITE(LUPRI,'(/A/A)')
-     &   '@   The molecule is centered at center of mass and rotated',
-     &   '@   so principal axes of inertia are along coordinate axes.'
+     &'@  The molecule has been centered at center of mass and rotated',
+     &'@  so the principal axes of inertia are along coordinate axes.'
 Cdbg     CALL PRN_ATMARR('CENTER_MOLECULE: coord.s now', N_ATOMS, ATMARR)
       RETURN
       END

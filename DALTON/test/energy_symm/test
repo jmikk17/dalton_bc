@@ -37,8 +37,8 @@ f.add(string = 'Final MCSCF energy:',
       rel_tolerance = 1.0e-9)
 
 f.add(from_string = 'Occupancies of natural orbitals',
-      num_lines = 16,
-      abs_tolerance = 1.0e-6)
+      to_string = 'Total effective number',
+      abs_tolerance = 1.0e-5)
 
 
 test.run(['energy_symm.dal'], ['H2O_cc-pVDZ.mol'], f={'out': f})

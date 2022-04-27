@@ -261,7 +261,7 @@ C
      &//', see http://daltonprogram.org'
 C
          WRITE (LUPRI,'(3X,A)') SEPARATOR(1:76)
-         WRITE (LUPRI,'(/T5,A//,(T3,A,T29,A,T59,A,T71,A))')
+         WRITE (LUPRI,'(/T5,A//,(T3,A,T32,A,T59,A,T71,A))')
      *'Authors in alphabetical order '//
      &  '(Major contribution(s) in parenthesis):',
      *'Kestutis Aidas,','Vilnius University,','Lithuania',
@@ -334,8 +334,12 @@ C
      &  '(Parity violation)',
      *'Hinne Hettema,','University of Auckland,','New Zealand',
      &  '(Quadratic response in RESPONS; SIRIUS supersymmetry)',
+     *'Andreas E. Hillers-Bendtsen,','University of Copenhagen,',
+     &'Denmark', '(MP3)',
      *'Eirik Hjertenaes,', 'NTNU,','Norway',
      &  '(Cholesky decomposition)',
+     *'Nicolai Machholdt Hoeyer,','Aarhus University,','Denmark',
+     &  '(MP3)',
      *'Pi A. B. Haase,','University of Copenhagen,','Denmark',
      &  '(Triplet AO-SOPPA)',
      *'Maria Francesca Iozzi,','University of Oslo,','Norway',
@@ -356,6 +360,8 @@ C
      &  '(Complex polarization propagator (CPP) module)',
      *'Sheela Kirpekar,','Univ. of Southern Denmark,','Denmark',
      &  '(Mass-velocity & Darwin integrals)',
+     *'Frederik Oersted Kjeldal,','Technical Univ. of Denmark,',
+     &'Denmark', '(MP3)',
      *'Erik Kjellgren,','Univ. of Southern Denmark,','Denmark',
      &  '(MC-srDFT)',
      *'Wim Klopper,','KIT Karlsruhe,','Germany',
@@ -377,7 +383,7 @@ C
      *'Juan I. Melo,','University of Buenos Aires,','Argentina',
      &  '(LRESC, Relativistic Effects on NMR Shieldings)',
      *'Kurt V. Mikkelsen,','University of Copenhagen,','Denmark',
-     &  '(MC-SCRF and QM/MM)',
+     &  '(MC-SCRF, QM/MM, and MP3)',
      *'Rolf H. Myhre,', 'NTNU,','Norway',
      &  '(Subsystems and CC3)',
      *'Christian Neiss,','Univ. Erlangen-Nuernberg,','Germany',
