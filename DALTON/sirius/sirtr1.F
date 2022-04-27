@@ -316,7 +316,6 @@ C Jan 90 hjaaj
 C
 C *** Calculate EMYX(IOSIM), the inactive energy based on the one-
 C     index transformed Hamiltonian.
-C     Multiply with EMYX(IOSIM) with two, the value of DC(ii)
 C
 #include "implicit.h"
       DIMENSION FXC(NORBT,NORBT,NOSIM), EMYX(NOSIM)
@@ -340,28 +339,10 @@ C
 C
       DO 300 IOSIM = 1,NOSIM
          EMYX(IOSIM) = D0
-#ifdef TODO
-CHJAaJ TODO June 2001: the calculated EMYX is wrong;
-C only half of the one-index transformed contribution is
-C included in FXC (error found by Joern Thyssen).
-C Luckily it doesn't matter because the CREF component
-C is projected out of the sigma vector in the current
-C implementation !!!
-C
-C The correct is EMYX = sum(K) (HX1(K,K) + FXC(K,K))
-C        and not EMYX = sum(K) 2*FXC(K,K)
-C
-         IF (JWOPSY.EQ.1) THEN
-            DO 200 KW = 1,NISHT
-               K = ISX(KW)
-               EMYX(IOSIM) = EMYX(IOSIM) + FXC(K,K,IOSIM)
-  200       CONTINUE
-            EMYX(IOSIM) = EMYX(IOSIM)*D2
-            IF (P6FLAG(11) .OR. IPRLIN.GE.11)
-     &         WRITE (LUPRI,5010) IOSIM,EMYX(IOSIM)
- 5010 FORMAT(/' EMYX(',I2,') = ',F25.15)
-         END IF
-#endif
+CHJAaJ EMYX is not zero,
+C the correct value is EMYX = sum(K) (HX1(K,K) + FXC(K,K)).
+C However, it doesn't matter because the CREF component is
+C projected out of the sigma vector in the current implementation !!!
   300 CONTINUE
       RETURN
       END
@@ -594,21 +575,21 @@ C
       NDMAT  = 0
       IF (NISHT .GT. 0 .OR. ADDSRI) NDMAT = NDMAT + MOSIM
 C     ... for FXCAO
-      IF (NASHT .GT. 0) NDMAT = NDMAT + MOSIM
+      IF (NASHT .GT. 0)   NDMAT = NDMAT + MOSIM
 C     ... for FXVAO
       IF (SRDFT_SPINDNS)  NDMAT = NDMAT + MOSIM
 C     ... for FXSAO
 
-      IF (DOMCSRDFT)    NDMAT = NDMAT + MCSIM
+      IF (DOMCSRDFT)      NDMAT = NDMAT + MCSIM
 C     ... for MCSRDFT we also need "FTCAO" with sr-dft contribution
 C         from transition density matrix DTV
-                        NDMAT = NDMAT + MCSIM
+                          NDMAT = NDMAT + MCSIM
 C     ... for FTVAO (note that NCSIM .eq. 0 if NASHT .eq. 0)
       IF (SRDFT_SPINDNS)  NDMAT = NDMAT + MCSIM
 C     ... for FTSAO
 
       LDFAO  = 2*NDMAT*N2BASX ! Length for all Dmat and Fmat in AO basis
-      IF (DODFT .OR. DOHFSRDFT .OR. DOMCSRDFT) THEN
+      IF (DOHFSRDFT .OR. DOMCSRDFT) THEN
 C     ... allocate for DTOTAO and DXTOTAO for DFTADD calls in SIRFCK
          LDAO_DFT  = 2*N2BASX
          IF (SRDFT_SPINDNS) THEN
@@ -698,7 +679,7 @@ C            but we need it for SRDFT to handle the DFT part
          KFSCR  = KFTVAO
       END IF
 C
-C     If this is DFT (i.e. LDAO_DFT .gt. 0) then we must
+C     If this is srDFT (i.e. LDAO_DFT .gt. 0) then we must
 C     get DTOTAO = DCAO + DVAO in WRK(KDAO) for SIRFCK
 C     DFT call with DOATR .true. /Nov 2003
 C     If (SRDFT_SPINDNS) then FCKDEN returns DSAO in DVAO(1,2) = WRK(KDAO+2*N2BASX)
@@ -718,6 +699,7 @@ C
          ! to get the correct off-sets inside SIRFCK if both configuration and orbital trial vectors
          ! in SIRFCK call. The SIRFCK routine needs to be cleaned up! (But that takes too long time for me for now.)
          IF (NCSIM .GT. 0) THEN
+         ! density matrices: NOSIM dmat, NCSIM dmat, DAO for srDFT
             CALL TR1FCY(DIRFCK,NCSIM,0,FXC,FXV,FTV,
      *            UBO,CMO,DV,DTV,
      *            WRK(KDXCAO),WRK(KDXVAO),WRK(KDTCAO), ! if not MC-srDFT then KDTCAO = KDTVAO
@@ -726,6 +708,8 @@ C
          END IF
          IF (NOSIM .GT. 0) THEN
             IF (NCSIM .GT. 0) THEN
+            ! density matrices: NOSIM dmat, NCSIM dmat, DAO for srDFT, but SIRFCK expects
+            ! NOSIM dmat, DAO for srDFT; therefore we must copy the DAO for srDFT matrices
                KDAO_new = KDTCAO
                CALL DCOPY(LDAO_DFT,WRK(KDAO),1,WRK(KDAO_new),1)
             END IF
@@ -837,10 +821,6 @@ C
 #include "idbg.h"
 #endif
 
-#ifdef FOR_THE_FUTURE
-c  this is a hack, to transfer KSYMOP to DEQ27 inside DFTATR
-#include "wrkrsp.h"
-#endif
 C
       CALL QENTER('TR1FCY')
       KFRSAV = KFREE
@@ -1031,7 +1011,7 @@ C        CALL RDSUPM(NSIM,FMAT,DMAT,ISYMDM,WORK,LFREE)
       ELSE
 
          DFTADX = DFTADD
-         DFTADD = .FALSE.
+         DFTADD = .FALSE. ! second order Vxc
 C        ... Note : (.NOT.DFTADD) now tricks second order 
 C                   DFT contributions in SIRFCK /mc-srdft work
 C        ... if (AODRCT) construct Fock matrix directly
@@ -1071,21 +1051,6 @@ C            IFCTYP = 13 : singlet Fock matrix and DUNP symmetric
 
       END IF ! (NDMAT .GT. 0)
 
-#ifdef FOR_THE_FUTURE
-C
-C add DFT contribution in AO BASIS
-C
-      call quit(' sss ')
-      IF (DFTADD) THEN
-         IF (NASHT.GT.0) CALL QUIT('TR1FCY: open shell DFT not yet')
-c           TODO         DFTIMG = .FALSE.
-C           DXCAO contains effective
-            CALL DFTATR_new_in_ao(NDMAT,FXCAO,DXCAO,CMO,.FALSE.,
-     &                    JWOPSY,WRK(KFREE),LFREE)
-c-rsp       CALL DFTATR(FCONE(1,1,IOSIM),CMO,ZYMAT(1,IOSIM),TRPLET,
-c-rsp&                    KSYMOP,WRK(KWRK0),LFREE)
-      END IF      
-#endif
 C
 C
       IF (P6FLAG(24) .OR. IPRLIN.GE.24) THEN
@@ -1215,39 +1180,10 @@ C
             END IF
   300    CONTINUE
 C
-#if 0 && !defined(FOR_THE_FUTURE)
-C
-C     add DFT contribution in MO BASIS, this has been deprecated by
-c        the call in sirlintrn.F
-C
-      IF (DODFT .AND. .NOT. MOLHES) THEN
-         IF (NASHT.GT.0) CALL QUIT('TR1FCY: open shell DFT not yet')
-c        TODO         DFTIMG = .FALSE.
-         ksymop = jwopsy
-         call dft_lin_respf(1,fxc(1,1),cmo,ubo(1,1),.FALSE.,
-     &                      jwopsy,wrk(kfree),lfree,iprdft)
-c         CALL DFTATR(FXC(1,1),CMO,UBO(1,1),.false.,
-c                     JWOPSY,WRK(KFREE),LFREE)
-      END IF      
-#endif
        IF (SRHYBR .AND. MCTYPE.GT.0) THEN
 C hjaaj TODO
           WRITE(LUPRI,*) 'WARNING> SRHYBR_XV matrix missing!'
        END IF
-#ifdef FOR_THE_PAST
-C ... we have moved this to SIRFCK 26.nov.2003 jkp+hjaaj
-C
-C     add DFT contribution in MO BASIS
-C
-      IF (DFTADD) THEN
-         DFTIMG = .FALSE.
-         ksymop = jwopsy
-         CALL DFTATR(FXC(1,IOSIM),CMO,DV,UBO(1,IOSIM),.false.,
-     &               JWOPSY,WRK(KFREE),LFREE)
-c-rsp    CALL DFTATR(FCONE(1,1,IOSIM),CMO,ZYMAT(1,IOSIM),TRPLET,
-c-rsp&               KSYMOP,WRK(KWRK0),LFREE)
-      END IF
-#endif
  5900 CONTINUE
 C
 C *** End of subroutine TR1FCY

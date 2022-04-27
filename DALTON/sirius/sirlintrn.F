@@ -299,7 +299,7 @@ C
          CALL UPKWOP(NWOPT,JWOP,BOVECS(1,IOSIM),WRK(JUBO))
   200 CONTINUE
       DFTADX = DFTADD
-      DFTADD = .FALSE.
+      DFTADD = .FALSE. ! second order Vxc
       CALL SIRTR1(MCSIM,NOSIM,CMO,
      &            BCVECS,CREF,INDXCI,WRK(KDTV),WRK(KFTV),WRK(KFTQ),
      &            WRK(KUBO),DV,PV,FC,FV,
@@ -469,9 +469,9 @@ C *** end of electronic contribution to LINTRN
 C
   900 CONTINUE
       CALL GETTIM(T4,W4)
-      DFTADX = DFTADD
-      DFTADD = .TRUE.
       IF (DODFT) THEN
+         DFTADX = DFTADD
+         DFTADD = .TRUE. ! first order Vxc
          IF(NASHT.NE.0) CALL QUIT('QC-SCF not implemented for RO-DFT')
          DO IOSIM = 1,NOSIM
            CALL DZERO(WRK(KFXC),N2ORBX)
@@ -494,8 +494,8 @@ C
            END IF
            CALL DAXPY(NWOPT,D4,WRK(KUBO),1,WRK(KSOVEC+(IOSIM-1)*NVAR),1)
          END DO ! IOSIM
+         DFTADD = DFTADX 
       END IF ! DODFT
-      DFTADD = DFTADX 
 C
 C *** Now the solvent contribution, if any
 C

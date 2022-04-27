@@ -1710,7 +1710,7 @@ C
             CALL PRORB(CMO,(IPR_DIIS .LT. 20),LUPRI)
          END IF
 C
-      END IF
+      END IF !IPRENR .gt 0
       IF (USE_PELIB()) THEN
         ALLOCATE(PE_DENMAT(NNBASX))
         IF (NASHT == 0 .OR. HSROHF) THEN
@@ -1848,7 +1848,7 @@ C        CALL WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
 C    &               GORB,ERLM,ORBHES,XINDX,ONLY_EKT)
 C
          CALL MEMREL('DIIS_CTL.WR_SIRIFC',WRK,1,KPV,KFREE,LFREE)
-      END IF
+      END IF !  IF ( IWRIFC .EQ. 1 ) THEN
 C
 C        Transform integrals for abacus or response or something else,
 C        if converged and if not followed by higher level,
