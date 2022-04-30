@@ -47,11 +47,7 @@ c     adapted for CABS, Christian Neiss, winter 2005/2006
 
       logical locdbg
       parameter(locdbg=.false.)
-#if defined (SYS_CRAY)
-      real zero,one,two
-#else
       double precision zero,one,two
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
 
       character*(*) filback
@@ -78,15 +74,9 @@ c     adapted for CABS, Christian Neiss, winter 2005/2006
      &        lwrk4, igmaj(8), ngmaj, ngmgi, kcmo,kgmaj,ntotm,igmgi(8)
       integer koffrtf,imaklm(8,8),nmaklm(8),isymklm,icount1,isymij
       integer nalphaj(8),ialphaj(8,8)
-#if defined (SYS_CRAY)
-      real gabjd(*),tabjd(*),vajkl(*),cmo(*),xint(*),work(*)
-      real scr1(*), ddot, nbjd(*), tint(*),xlamdhs(*), xlamdps(*) 
-      real factor, xrnmr, xnrmg
-#else
       double precision gabjd(*),tabjd(*),vajkl(*),cmo(*),xint(*),work(*)
       double precision scr1(*),ddot,tint(*),xlamdhs(*),xlamdps(*)
       double precision factor, xnrmr, xnrmg,x1,x2,x3
-#endif
       save xnrmr, xnrmg,x1,x2,x3
       data xnrmr /0.0d0/
       data xnrmg /0.0d0/
@@ -805,11 +795,7 @@ c--------------------------------------------------------------------
  
       logical locdbg
       parameter (locdbg = .false.)
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer nr1orb(8),nr1bas(8),nr1xbas(8),n2bst1(8),nrgkl(8)
@@ -827,11 +813,7 @@ c--------------------------------------------------------------------
       integer iopt,length,isymij,idxij,idxki,idxijkl
       integer lr12f12htf
       
-#if defined (SYS_CRAY)
-      real vxykl(length),cmo(*),work(*), ddot
-#else
       double precision vxykl(length),cmo(*),work(*), ddot
-#endif
       
       call qenter('r12mkvamkl0')
 
@@ -1046,11 +1028,7 @@ c---------------------------------------------------------------------
 #include "ccorb.h"
 #include "ccsdsym.h"
 #include "r12int.h"
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       logical lres, locdbg
@@ -1067,11 +1045,7 @@ c---------------------------------------------------------------------
       integer lwork,ntota,ntoti,ntota1
       integer kvajkl,koffc,kscr1,kvijkl,ksing,ktrip,kend1 
       integer ik,il,ii,ij,idxij,iklij,lwrk1
-#if defined (SYS_CRAY)
-      real vajkl(*),cmo(*),work(*),vijkl(*),ddot,fac
-#else
       double precision vajkl(*),cmo(*),work(*),vijkl(*),ddot,fac
-#endif
 
       call qenter('r12mkvijkl')
 
@@ -1179,14 +1153,9 @@ c--------------------------------------------------------------------
 #include "r12int.h"
 
       integer ij,kl,nrhftria,nr12t
-#if defined (SYS_CRAY)
-      real vijkl(nr12t,nr12t,nr12t,nr12t),ff
-      real vsing(nrhftria,nrhftria),vtrip(nrhftria,nrhftria)
-#else
       double precision vijkl(nr12t,nr12t,nr12t,nr12t),ff
       double precision vsing(nrhftria,nrhftria)
       double precision vtrip(nrhftria,nrhftria)
-#endif
 
       ff = 1.0d0/sqrt(2.0d0)
 
@@ -1254,11 +1223,7 @@ c---------------------------------------------------------------------
 
       character*(*) fconst
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer nr1bas(8),ir1bas(8,8),nr2bas,ir2bas(8,8)
@@ -1271,11 +1236,7 @@ c---------------------------------------------------------------------
       integer isymd,isymdl,isymbk,kend1 
 
 
-#if defined (SYS_CRAY)
-      real r12bkl(*),work(*),ddot
-#else
       double precision r12bkl(*),work(*),ddot
-#endif
       
       call qenter('cc_r12getrint')
 
@@ -1415,11 +1376,7 @@ c---------------------------------------------------------------------
 
       character*(*) fconst
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer nr1bas(8),ir1bas(8,8),nr2bas,ir2bas(8,8)
@@ -1432,11 +1389,7 @@ c---------------------------------------------------------------------
       integer isymd,isymdl,isymbk,kend1 
 
 
-#if defined (SYS_CRAY)
-      real r12bkl(*),work(*),ddot
-#else
       double precision r12bkl(*),work(*),ddot
-#endif
       call qenter('cc_r12putrint') 
 
       kend1 = 1
@@ -1511,13 +1464,8 @@ c---------------------------------------------------------------------
 #include "ccorb.h"
 #include "ccsdsym.h"
 #include "r12int.h"
-#if defined (SYS_CRAY)
-      real zero,one
-      real vijkl(*)
-#else
       double precision zero,one
       double precision vijkl(*)
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer isymi,isymj,isymij,idxij,idxkl,idxijkl,icoun1
@@ -1569,11 +1517,7 @@ c---------------------------------------------------------------------
 #include "ccr12int.h" 
       logical ldum,etest,locdbg
       parameter(etest = .false., locdbg = .false.)
-#if defined (SYS_CRAY)
-      real zero,one,two
-#else
       double precision zero,one,two
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
       character*(*) fc12am 
       character     cdummy*(8) 
@@ -1586,11 +1530,7 @@ c---------------------------------------------------------------------
       integer icount7,isymak,kvint,kend2,lwrk2,ntota,ntoti
       integer koffo,koffc,index
       integer iamp
-#if defined (SYS_CRAY)
-      real work(*),lambp(*),omega1(*),er12,ddot
-#else
       double precision work(*),lambp(*),omega1(*),er12,ddot
-#endif
 
 C      index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 
@@ -1685,11 +1625,7 @@ c---------------------------------------------------------------------
 
       logical locdbg
       parameter(locdbg = .false.)
-#if defined (SYS_CRAY)
-      real zero,one,two
-#else
       double precision zero,one,two
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
 
       character*(*) fc12am, listr
@@ -1701,11 +1637,7 @@ c---------------------------------------------------------------------
      &     isymi,isymj,isyma,isymnj,isymn,ntotn,isymc
       integer icount7,isymak,kvint,kend2,lwrk2,ntoti
       integer koffo,koffc,index,ifile,lufc12,idlstr,idxnj
-#if defined (SYS_CRAY)
-      real work(*),lambp(*),eim(*),ddot, vnrm, vcprod
-#else
       double precision work(*),lambp(*),eim(*),ddot, vnrm, vcprod
-#endif
 
 C      index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 
@@ -1868,11 +1800,7 @@ c---------------------------------------------------------------------
       integer lwork, kend1, kpck, lwrk1, lu43, idum, 
      &        ifile, lufc12, isymc, iopt
       integer iamp,idlstr,lunit
-#if defined (SYS_CRAY) 
-      real work(*), ctilde(*), two, ddot, basscl2
-#else
       double precision work(*), ctilde(*), two, ddot, basscl2
-#endif
       parameter (two = 2.0d0)
       logical do_2cme, ldum, locdbg
       parameter (locdbg = .false.)
@@ -1954,13 +1882,8 @@ c---------------------------------------------------------------------
      &        isymmu,isymj,isymi,isymij,kvint,kend1,kend2,
      &        lwrk2,idxkl,koffl,kvmujkl,ntotmu,ntota,
      &        ntoti,koffo,koffc,isymv,isymp
-#if defined (SYS_CRAY)
-      real work(*),er12, vajkl(*), ctilde(*), lambp(*), 
-     &                 omega1(*), zero, one, ddot
-#else 
       double precision work(*),er12, vajkl(*), ctilde(*), lambp(*), 
      &                 omega1(*), zero, one, ddot
-#endif
       parameter (zero=0.0d0, one=1.0d0)
       logical etest, locdbg
 
@@ -2099,11 +2022,7 @@ c---------------------------------------------------------------------
       integer isymij,isymkl,isymi,isymj,isymk,isyml
       integer idxij,idxkl,idxji,idxklij,idxklji
 
-#if defined (SYS_CRAY)
-      real matrix(*),two,xklij,xklji,fac,one
-#else
       double precision matrix(*),two,xklij,xklji,fac,one
-#endif
       parameter (one = 1.0D0, two = 2.0d0)
 
       call qenter('cc_r12tcmesq')
@@ -2196,11 +2115,7 @@ C----------------------------------------------------------------------
       logical locdbg
       PARAMETER (locdbg = .FALSE.)      
 
-#if defined (SYS_CRAY)
-      real precision matrix(*), xkilj, xkjli, fac, one, two
-#else
       double precision matrix(*), xkilj, xkjli, fac, one, two
-#endif
       integer index 
       parameter (one = 1.0D0, two = 2.0D0)
 
@@ -2336,11 +2251,7 @@ c----------------------------------------------------------------------
  
       logical locdbg
       parameter (locdbg = .false.)
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer nr1orb(8),nr1bas(8),nr1xbas(8),n2bst1(8),nrgkl(8)
@@ -2354,11 +2265,7 @@ c----------------------------------------------------------------------
       integer koverlp,ksab,ksak,kend1,lwrk1,lwork,koff1,koffs
       integer nnbast,nlamdsx,idum
       integer kcmo,lusifc,lusak
-#if defined (SYS_CRAY)
-      real work(*)
-#else
       double precision work(*)
-#endif
       
       call qenter('cc_r12mkSak')
 
@@ -2472,11 +2379,7 @@ c---------------------------------------------------------------------
 #include "dummy.h"
 #include "priunit.h"
 
-#if defined (SYS_CRAY)
-      real vxykl(*),work(*),ddot,one,zero,cmo(*)
-#else
       double precision vxykl(*),work(*),ddot,one,zero,cmo(*)
-#endif
       parameter (one = 1.0d0, zero = 0.0d0)
 
       character*8 filename

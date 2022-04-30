@@ -8341,11 +8341,7 @@ C Sonia & Kristian, August 2010
       PARAMETER (LOCDBG=.false.)
       INTEGER ISYM, ICHAIN
 
-#if defined (SYS_CRAY)
-      REAL FRQNEW,TOL, FRQINP
-#else
       DOUBLE PRECISION FRQNEW,TOL, FRQINP
-#endif
       PARAMETER(TOL=1.0D-12)
 
       CHARACTER*8 NEWLBL

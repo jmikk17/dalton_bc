@@ -459,11 +459,7 @@ C  Christof Haettig, summer 2003
 #include "ccsdsym.h"    
 #include "ccfro.h"    
 
-#if defined (SYS_CRAY)
-      REAL XKAPPA(*)
-#else
       DOUBLE PRECISION XKAPPA(*)
-#endif
 
       CHARACTER FILCPHF*8, LIST*3
       INTEGER MALLAI, ISYM, JSYM, LUCPHF, IDXLST

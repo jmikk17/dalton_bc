@@ -3740,15 +3740,9 @@ C
 C
       CALL QENTER('CC_GATHER')
 C
-#if defined (SYS_CRAY)
-      CALL GATHER(LENGTH,VEC1,VEC2,INDEX)
-#else
       DO 100 I = 1,LENGTH
-C
          VEC1(I) = VEC2(INDEX(I))
-C
   100 CONTINUE
-#endif
 C
       CALL QEXIT('CC_GATHER')
 C

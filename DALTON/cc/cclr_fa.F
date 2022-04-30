@@ -69,11 +69,7 @@ c /* deck cclr_fa */
 * local parameters:
       CHARACTER MSGDBG*(17)
       PARAMETER (MSGDBG='[debug] CCLR_FA> ')
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE 
-#else
       DOUBLE PRECISION ONE, TWO, THREE 
-#endif
       PARAMETER (ONE = 1.0d0, TWO = 2.0d0, THREE = 3.0d0)
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
@@ -93,15 +89,9 @@ c /* deck cclr_fa */
       INTEGER LEND1, LEND2, LEND3, LEND1A, KGAMMA1, KGAMMA2, KEND0
       INTEGER IOPT, MAXJ, NIJ, NJI, NAB, NBA, KEMAT1, KEMAT2
 
-#if defined (SYS_CRAY)
-      REAL FREQB
-      REAL SWAP
-      REAL WORK(LWORK), XINT(*)
-#else
       DOUBLE PRECISION FREQB
       DOUBLE PRECISION SWAP
       DOUBLE PRECISION WORK(LWORK), XINT(*)
-#endif
 
       INTEGER ILSTSYM
   

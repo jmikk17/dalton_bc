@@ -124,15 +124,9 @@ c/* Deck CC_CMAT */
       INTEGER ICTRAN(4,NCTRAN)
       INTEGER ICDOTS(MXVEC,NCTRAN)
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL ZERO, ONE, TWO, HALF
-      REAL CCONS(MXVEC,NCTRAN)
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
       DOUBLE PRECISION CCONS(MXVEC,NCTRAN)
-#endif 
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0, HALF = 0.5d0)
 
 
@@ -161,11 +155,7 @@ c/* Deck CC_CMAT */
       INTEGER KENDB3, LENDB3, IOPTTCME
       INTEGER IDUM, IAN, KTR12AM, KVINT, LUNIT
       
-#if defined (SYS_CRAY) 
-      REAL XNORM
-#else 
-      DOUBLE PRECISION XNORM
-#endif 
+      DOUBLE PRECISION XNORM 
 
 
 
@@ -173,11 +163,7 @@ c/* Deck CC_CMAT */
 * external functions:
       INTEGER ILSTSYM
 
-#if defined (SYS_CRAY) 
-      REAL DDOT
-#else 
-      DOUBLE PRECISION DDOT
-#endif 
+      DOUBLE PRECISION DDOT 
   
       CALL QENTER('CC_CMAT')
 
@@ -1488,13 +1474,8 @@ c/* Deck CC_CTST */
       PARAMETER (MXCTRAN = 2)
 
       INTEGER LWORK
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL DDOT, RDUM
-#else 
       DOUBLE PRECISION WORK(LWORK) 
-      DOUBLE PRECISION DDOT, RDUM
-#endif 
+      DOUBLE PRECISION DDOT, RDUM 
 
       CHARACTER*(3) LISTA, LISTB, LISTC, LISTD
       CHARACTER*(8) FILCMA, LABELA
@@ -1698,11 +1679,7 @@ c/*  Deck CCC_OVOV */
 #include "ccsdsym.h"
 #include "ccorb.h"
  
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0)
 
       LOGICAL LOCDBG
@@ -1711,21 +1688,12 @@ c/*  Deck CCC_OVOV */
       INTEGER ISYMTA, ISYMTB, ISYXKI, ISYRES
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL THETA2(*)     ! dimension (NT2AM(ISYRES))
-      REAL XKINT(*)      ! dimension (N3ORHF(ISYXKI))
-      REAL T1AMPA(*)     ! dimension (NT1AM(ISYMTA))
-      REAL T1AMPB(*)     ! dimension (NT1AM(ISYMTB))
-      REAL WORK(LWORK)
-      REAL SUM1, DDOT, SUM2
-#else
       DOUBLE PRECISION THETA2(*)     ! dimension (NT2AM(ISYRES))
       DOUBLE PRECISION XKINT(*)      ! dimension (N3ORHF(ISYXKI))
       DOUBLE PRECISION T1AMPA(*)     ! dimension (NT1AM(ISYMTA))
       DOUBLE PRECISION T1AMPB(*)     ! dimension (NT1AM(ISYMTB))
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION SUM1, DDOT, SUM2
-#endif
 
       INTEGER ISYMA, ISYMI, ISYMB, ISYMJ, ISYMK, ISYML
       INTEGER ISYMAI, ISYMBJ, ISYMJL, ISYJLI, NAIBJ

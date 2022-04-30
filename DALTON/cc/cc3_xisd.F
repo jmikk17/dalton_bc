@@ -3544,11 +3544,7 @@ C
       WRITE(COMMAND,'(2A)') 'rm -f ', FILENAME(1:ILEN)
 C
       !Execute the command
-#if defined (SYS_CRAY)
-      CALL INFO = ISHELL(COMMAND)
-#else
       CALL SYSTEM(COMMAND)
-#endif
 
       RETURN
       END

@@ -81,27 +81,13 @@ c /* deck cc_ijcb */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
 
       LOGICAL LDERIV, LRELAX, LZERO, LNEWTA, LX2ISQ
       INTEGER IDEL, IGAM, ISY1ALBE, ISY2ALBE
       INTEGER ISYML1, ISYML2, ISYML3, ISYML4, LWORK, IOPT
       
-#if defined (SYS_CRAY)
-      REAL XLAMDP1(*), XLAMDH1(*)
-      REAL XLAMDP2(*), XLAMDH2(*)
-      REAL XLAMDP3(*), XLAMDH3(*)
-      REAL XLAMDP4(*), XLAMDH4(*)
-      REAL XINT1(*),  XINT2(*)
-      REAL X1IJCB(*), X1CJIB(*)
-      REAL X2IJCB(*), X2CJIB(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION XLAMDP1(*), XLAMDH1(*)
       DOUBLE PRECISION XLAMDP2(*), XLAMDH2(*)
       DOUBLE PRECISION XLAMDP3(*), XLAMDH3(*)
@@ -110,7 +96,6 @@ c /* deck cc_ijcb */
       DOUBLE PRECISION X1IJCB(*), X1CJIB(*)
       DOUBLE PRECISION X2IJCB(*), X2CJIB(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
 * local 
 
@@ -229,27 +214,13 @@ c /* deck ccijcb */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
 
       LOGICAL LDERIV, LRELAX, LZERO, LNEWTA
       INTEGER IDEL, IGAM, ISY1ALBE, ISY2ALBE, ISYML1, ISYML2
       INTEGER ISYML3, ISYML4, LWORK, IOPT, IDUMMY
       
-#if defined (SYS_CRAY)
-      REAL XLAMDP1(*), XLAMDH1(*)
-      REAL XLAMDP2(*), XLAMDH2(*)
-      REAL XLAMDP3(*), XLAMDH3(*)
-      REAL XLAMDP4(*), XLAMDH4(*)
-      REAL X1INT(*), X2INT(*)
-      REAL X1IJCB(*), X1CJIB(*)
-      REAL X2IJCB(*), X2CJIB(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION XLAMDP1(*), XLAMDH1(*)
       DOUBLE PRECISION XLAMDP2(*), XLAMDH2(*)
       DOUBLE PRECISION XLAMDP3(*), XLAMDH3(*)
@@ -258,7 +229,6 @@ c /* deck ccijcb */
       DOUBLE PRECISION X1IJCB(*), X1CJIB(*)
       DOUBLE PRECISION X2IJCB(*), X2CJIB(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
 * local 
 
@@ -933,11 +903,7 @@ c /* deck cc_ijcb2 */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL XIJG(*), XIJCB(*), XLAMDA(*)
-#else
       DOUBLE PRECISION XIJG(*), XIJCB(*), XLAMDA(*)
-#endif
 
       INTEGER IGAM, ISYMIJ, ISYGAM, ISYLAM, ISYMC, KLAMD, KRES
       INTEGER ISYMCJ, ISYMI, ISYMJ, KOFF5, NBASG

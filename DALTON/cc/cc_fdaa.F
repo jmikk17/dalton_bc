@@ -56,15 +56,9 @@ c/* Deck CC_AATST */
       PARAMETER (LOCDBG = .FALSE.)
 
       INTEGER LWORK
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL FREQ
-      REAL ZERO, ONE, TWO, FOUR, FIVE, DUMMY
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION FREQ
       DOUBLE PRECISION ZERO, ONE, TWO, FOUR, FIVE, DUMMY
-#endif 
       PARAMETER (ZERO = 0.0D0, ONE  = 1.0D0, TWO = 2.0D0)
       PARAMETER (FOUR = 4.0D0, FIVE = 5.0D0)
 
@@ -78,11 +72,7 @@ c/* Deck CC_AATST */
 * external functions:
       INTEGER IR1TAMP
       INTEGER IROPER
-#if defined (SYS_CRAY) 
-      REAL DSQRT, DDOT
-#else 
-      DOUBLE PRECISION DSQRT, DDOT
-#endif 
+      DOUBLE PRECISION DSQRT, DDOT 
     
 
 *---------------------------------------------------------------------*

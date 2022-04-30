@@ -55,19 +55,11 @@
       character*3 listab
       integer idlstab, lwork
 
-#if defined (SYS_CRAY) 
-      real tab3am(*), freqab, freqa, freqb
-      real scr1(*), work(*), xlamdp0(*), xlamdh0(*)
-      real fock0(*), fockd(*), xint1s0(*), xint2s0(*)
-      real field(*), fieldao(*)
-      real two, one, ddot
-#else
       double precision tab3am(*), freqab, freqa, freqb
       double precision scr1(*), work(*), xlamdp0(*), xlamdh0(*)
       double precision fock0(*), fockd(*), xint1s0(*), xint2s0(*)
       double precision field(*), fieldao(*)
       double precision two, one, ddot
-#endif
       parameter ( one = 1.0d0, two = 2.0d0 )
 
       character lista*3, listb*3, labela*8, labelb*8, model*10

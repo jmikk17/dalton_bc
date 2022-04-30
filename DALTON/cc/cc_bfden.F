@@ -172,15 +172,9 @@ C
       INTEGER KEND1,ISYMT1,ISYMT2,ISYDEN,ISYMD,ISYMM1,ISYMM2,NSCRM,NMGD
       INTEGER KSCRM,KMGD,LWRK1,ISYMGD,IOPT2AO,IDEL,IOPBFAO 
 C
-#if defined (SYS_CRAY)
-      REAL XLAMD1(*),XLAMD2(*),XLAMD3(*),XLAMD4(*)
-      REAL T2AM(*), MINT(*), WORK(*)
-      REAL TIMIO, DTIME, ZERO, ONE, DDOT, XNORM
-#else
       DOUBLE PRECISION XLAMD1(*),XLAMD2(*),XLAMD3(*),XLAMD4(*)  
       DOUBLE PRECISION T2AM(*), MINT(*), WORK(*)
       DOUBLE PRECISION TIMIO, DTIME, ZERO, ONE, DDOT, XNORM
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C
@@ -350,15 +344,9 @@ C  /* Deck cc_bfdenf */
 
       INTEGER LWORK, ISYCTR, ISYMIN, ISYXLP, ISYCHI, ISYTAM
 
-#if defined (SYS_CRAY)
-      REAL ZETA2(*), MINT(*), CHI(*), T1AM(*), XLAMDP(*)
-      REAL MGD(*), WORK(LWORK)
-      REAL ZERO, ONE, HALF, TWO, DDOT
-#else
       DOUBLE PRECISION ZETA2(*), MINT(*), CHI(*), T1AM(*), XLAMDP(*)
       DOUBLE PRECISION MGD(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, HALF, TWO, DDOT
-#endif
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 
       INTEGER ISYALP,ISYMM1,ISYMGD,ISYMAK,ISYMI,ISYMK,ISYMJ,ISYMIJ
@@ -489,13 +477,8 @@ C  /* Deck cc_bfao */
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL XMGD(*),T2AMP(*),XLAMD0(*),XLAMD1(*),XLAMD2(*)
-      REAL ONE, TWO, FACT
-#else
       DOUBLE PRECISION XMGD(*),T2AMP(*),XLAMD0(*),XLAMD1(*),XLAMD2(*)
       DOUBLE PRECISION ONE, TWO, FACT
-#endif
       PARAMETER(ONE = 1.0D0, TWO = 2.0D0)
 C
       INTEGER ISYMT, ISYML0, ISYMD, ISYML1, ISYML2, IOPT
@@ -648,13 +631,8 @@ C  /* Deck cc_bfmiao */
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL XMGD(*), MINT(*), XLAMD1(*), XLAMD2(*), WORK(*)
-      REAL ZERO, ONE, XHALF, XNORM, DDOT
-#else
       DOUBLE PRECISION XMGD(*), MINT(*), XLAMD1(*), XLAMD2(*), WORK(*)
       DOUBLE PRECISION ZERO, ONE, XHALF, XNORM, DDOT
-#endif
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0, XHALF = 0.5D0)
  
       INTEGER ISYMD,ISYXL1,ISYXL2,ISYMINT, ISYMN, ISYKIJ, ISYMJ, ISYMKI
@@ -847,13 +825,8 @@ C  /* Deck cc_bfmimo */
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL XMGD(*), MINT(*), XLAMD(*)
-      REAL ONE, XHALF, XNORM, DDOT
-#else
       DOUBLE PRECISION XMGD(*), MINT(*), XLAMD(*)
       DOUBLE PRECISION ONE, XHALF, XNORM, DDOT
-#endif
       PARAMETER (ONE = 1.0D0, XHALF = 0.5D0)
  
       INTEGER ISYMD, ISYML, ISYMINT, ISYMN, ISYKIJ, ISYMJ, ISYMKI
@@ -1079,13 +1052,8 @@ C  /* Deck cc_bfib */
 
       INTEGER LWORK, ISYMGD, ISYRHF
 
-#if defined (SYS_CRAY)
-      REAL BSRHF(*), BFI(*), XMGD(*), WORK(LWORK)
-      REAL ONE, HALF
-#else
       DOUBLE PRECISION BSRHF(*), BFI(*), XMGD(*), WORK(LWORK)
       DOUBLE PRECISION ONE, HALF
-#endif
       PARAMETER(HALF = 0.5D0, ONE = 1.0D0)
 C
       INTEGER ISYRES, ISYMIJ, ISYMAK, ISYMG
@@ -1198,11 +1166,7 @@ C  /* Deck cc_bfbsort */
       INTEGER ICOUNT, NBSRHF(8), IBSRHF(8,8)
       INTEGER NABK, NAKB, NAK, KOFF1, IJSQ
 
-#if defined (SYS_CRAY)
-      REAL DSRHF(*), BSRHF(*)
-#else
       DOUBLE PRECISION DSRHF(*), BSRHF(*)
-#endif
 C
 C     --------------------------------------
 C     precalculate symmetry array for BSRHF:

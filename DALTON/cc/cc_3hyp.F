@@ -64,11 +64,7 @@ c /* deck CC_3HYP */
       INTEGER MXTRAN3, MXTRAN4, MXVEC1, MXVEC2
       INTEGER KEND0, LEND0, IOPT
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
 *---------------------------------------------------------------------*
 * print header for hyperpolarizability section
@@ -404,13 +400,8 @@ c /* deck CC4HYPPRT */
       INTEGER IFREQ, IOPER, ISYOLD, ISYTOT
 
 
-#if defined (SYS_CRAY)
-      REAL HYPERPOL(N4RFREQ,N4ROPER,2)
-      REAL HALF
-#else
       DOUBLE PRECISION HYPERPOL(N4RFREQ,N4ROPER,2)
       DOUBLE PRECISION HALF
-#endif
       PARAMETER (HALF = 0.5D0)
 
 *---------------------------------------------------------------------*
@@ -629,28 +620,6 @@ c /* deck CC4R_SETUP */
       INTEGER IFREQ, IOPER
       INTEGER P, ISIGN
 
-#if defined (SYS_CRAY)
-      REAL HYPPOL(MXHYPPOL)
-      REAL SIGN, SUM, SSUM
-      REAL H0CON(10),  H1CON(5)
-      REAL G0CON(15),  G1CON(30),  G2CON(10)
-      REAL             F1CON(15),  F2CON(30)
-      REAL F0ACON(15), F1ACON(60), F2ACON(30)
-      REAL                         E2ACON(30)
-      REAL XCON(10)
-      REAL W0H(MXVEC2,MXTRAN3)
-      REAL W1H(MXVEC1,MXTRAN4)
-      REAL W0G(MXVEC2,MXTRAN3)
-      REAL W1G(MXVEC2,MXTRAN3)
-      REAL W2G(MXVEC1,MXTRAN4)
-      REAL W1F(MXVEC2,MXTRAN3)
-      REAL W2F(MXVEC2,MXTRAN3)
-      REAL W0FA(MXVEC2,MXTRAN3)
-      REAL W1FA(MXVEC2,MXTRAN3)
-      REAL W2FA(MXVEC1,MXTRAN4)
-      REAL W2EA(MXVEC2,MXTRAN3)
-      REAL WX(MXVEC2,MXTRAN3)
-#else
       DOUBLE PRECISION SIGN, SUM, SSUM
       DOUBLE PRECISION HYPPOL(MXHYPPOL)
       DOUBLE PRECISION H0CON(10),  H1CON(5)
@@ -671,7 +640,6 @@ c /* deck CC4R_SETUP */
       DOUBLE PRECISION W2FA(MXVEC1,MXTRAN4)
       DOUBLE PRECISION W2EA(MXVEC2,MXTRAN3)
       DOUBLE PRECISION WX(MXVEC2,MXTRAN3)
-#endif
 
 
       INTEGER IOP(5), ISY(5), IL1(5), IR1(5), IR2(10), IL2(10)

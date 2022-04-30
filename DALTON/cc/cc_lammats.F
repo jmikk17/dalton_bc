@@ -32,12 +32,8 @@ C
      &        ISYMP, ISYMB, NBASP, NVIRB, ISYMT, NVIRA, KOFF4, KOFF5,
      &        KOFF1, KOFF2, KOFF3, KEND, ICOUNT, ICOUNT2, ISYM1, ISYM2
       INTEGER NCMO(8), ICMO(8,8)
-#if defined (SYS_CRAY)
-      REAL XLAMDH(*),XLAMDP(*),WORK(*),T1AM(*),ONE,CMO(NLAMDS)
-#else
       DOUBLE PRECISION  XLAMDH(*),XLAMDP(*),WORK(*),T1AM(*),ONE,
      &                  CMO(NLAMDS)
-#endif
       PARAMETER (ONE = 1.0d0)
 C
 C----------------------------------------------

@@ -69,11 +69,7 @@ C#include "ccr1rsp.h"
       INTEGER KDUM
       PARAMETER (KDUM =  99 999 999) ! dummy address in work space
 
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE, HALF
-#else
       DOUBLE PRECISION ONE, TWO, THREE, HALF
-#endif
       PARAMETER (ONE = 1.0d0, TWO = 2.0d0, THREE = 3.0d0, HALF = 0.5d0)
 
       CHARACTER*8 LABELA
@@ -87,13 +83,8 @@ C#include "ccr1rsp.h"
       INTEGER KXINTTRI,KXINTSQ,KVXINTSQ,KT12AM0,KT12AMB,KSCR
       
 
-#if defined (SYS_CRAY)
-      REAL FREQB
-      REAL WORK(LWORK), XINT(*)
-#else
       DOUBLE PRECISION FREQB
       DOUBLE PRECISION WORK(LWORK), XINT(*)
-#endif
 
 * external functions:
       INTEGER ILSTSYM
