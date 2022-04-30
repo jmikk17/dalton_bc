@@ -37,13 +37,8 @@ C  /* Deck cc_sortz2 */
 #include "maxorb.h"
 #include "ccsdsym.h"
       INTEGER ISYZA2, IOPT
-#if defined (SYS_CRAY)
-      REAL ZKJAI(*), ZJKIA(*)
-      REAL ZERO, ONE, HALF, DDOT, XNORM, FAC
-#else
       DOUBLE PRECISION ZKJAI(*), ZJKIA(*)
       DOUBLE PRECISION ZERO, ONE, HALF, DDOT, XNORM, FAC
-#endif
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0)
 *
       INTEGER ISYKJI, ISYMI, ISYMKJ, ISYJKI, ISYMJK, ISYM

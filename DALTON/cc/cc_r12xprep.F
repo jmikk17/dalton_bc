@@ -315,11 +315,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer icoun1,kl,aj,ivir0(8),ajkl,nrhfst
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort')
 c
@@ -384,11 +380,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer icoun1,kl,aj,ivir0(8),ajkl,nrhfst
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort1')
 c
@@ -532,11 +524,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym
       integer nvir0(8),kt,idx,koffj,koffa,koffk,koffl
       integer nvir0t,icoun1,kl,aj,iorb1(8),ajkl,ivir0(8)
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort2')
 
@@ -604,11 +592,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer icoun1,kl,aj,ivir0(8),ajkl
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort3')
 c
@@ -670,11 +654,7 @@ c---------------------------------------------------------------------
       integer irhffr(8),isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer nrhffrt,nrhfst,icoun1,kl,aj,ivir0(8),ajkl
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort4')
 c
@@ -740,11 +720,7 @@ c---------------------------------------------------------------------
       integer kt,idx,koffj,koffa,koffk,koffl
       integer ibasi(8),icoun1,kl,aj,iorb1(8),ajkl
       integer imatmunu(8,8)
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12fsym')
 c
@@ -796,13 +772,8 @@ c---------------------------------------------------------------------
 #include "r12int.h"
 #include "ccfro.h"
 #include "ccsdinp.h"
-#if defined (SYS_CRAY)
-      real zero,one
-      real work(*),v2am(*),f2am(*)
-#else
       double precision zero,one
       double precision work(*),v2am(*),f2am(*)
-#endif
       logical ldum,test,fel
       parameter (test = .false.,zero = 0.0d0, one = 1.0d0)
       integer isymai,ISYMIP,ISYMI,ISYMP,ISYMK,NPK,KGX,npi,nki
@@ -1140,11 +1111,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer icoun1,kl,aj,ivir0(8),ajkl,nrhfst
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort5')
 c
@@ -1207,11 +1174,7 @@ c---------------------------------------------------------------------
       integer isymj,isyma,idxkl,isym,nvir0(8)
       integer kt,idx,nvir0t,koffj,koffa,koffk,koffl
       integer icoun1,kl,aj,ivir0(8),ajkl
-#if defined (SYS_CRAY)
-      real blajkl(*),sajkl(*)
-#else
       double precision blajkl(*),sajkl(*)
-#endif
 c
       call qenter('cc_r12xsort6')
 c

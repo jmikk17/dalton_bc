@@ -66,13 +66,8 @@ C#include "implicit.h"
 
       integer lwork, isyvec, isycim, luc, iv, iopt,ioptb, lucb,
      &        ioffb, iopte
-#if defined (SYS_CRAY) 
-      real zero,half,one,two,omega2,t2am,xlamdh,emat1,
-     &     work, facb
-#else 
       double precision zero,half,one,two,omega2,t2am,xlamdh,emat1,
      &     work, facb
-#endif 
 
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
       DIMENSION OMEGA2(*),T2AM(*),XLAMDH(*),EMAT1(*)
@@ -89,11 +84,7 @@ C#include "implicit.h"
      &        koff4, koff5, koff6, isyma, isymai, isymc, nak, kak,
      &        nck, iadr, nt1bj, koff7, isymb, isymj, isymaj, isymbi,
      &        naj, isymi, koff8, icoun3, icoun4
-#if defined (SYS_CRAY) 
-      real xnorm, ddot
-#else 
       double precision xnorm, ddot
-#endif 
       XNORM = 0.0d0
 C
       IF (OMEGSQ) THEN
@@ -1345,13 +1336,8 @@ c /* deck cc_iajb2 */
       INTEGER ISYIAJB, ISYM0, ISYMB, IOPT, LWORK, LU0IAJB, LUBIAJB
       INTEGER IT2DEL0(*), IT2DELB(*)
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO, DDOT, XNORM
-      REAL XIAJB(*), XLAMD0(*), XLAMDB(*), WORK(LWORK)
-#else
       DOUBLE PRECISION ONE, ZERO, DDOT, XNORM
       DOUBLE PRECISION XIAJB(*), XLAMD0(*), XLAMDB(*), WORK(LWORK)
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
       
       INTEGER ISYMB0, ISYMBB, ISYDEL, ISY0IAJ, ISYBIAJ, IRECORD
@@ -1530,20 +1516,12 @@ C#include "ccisao.h"
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
 
       INTEGER ISYAIJ, ISYLAM, ISYDEL
       
-#if defined (SYS_CRAY)
-      REAL XLAMDA(*), XIAJ(*), XIAJB(*)
-#else
       DOUBLE PRECISION XLAMDA(*), XIAJ(*), XIAJB(*)
-#endif
       
       LOGICAL LOCC, LCBS
       INTEGER ITAIKJ(8,8), ISYM, ISYM1, ISYM2, ICOUNT,
@@ -2418,19 +2396,11 @@ c/* deck cc_cd */
       CHARACTER*(*) TYPE
       INTEGER LWORK, ISYTAM, ISYCDBAR, ISYRES, IOPTR12
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL T2AMP(*)      ! dimension (NT2AM(ISYTAM))
-      REAL OMEGA2(*)     ! dimension (NT2AM(ISYRES))
-      REAL CDBAR(*)      ! dimension (NT2SQ(ISYCDBAR))
-      REAL HALF, ONE, TWO, XNORM, DDOT
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION T2AMP(*)      ! dimension (NT2AM(ISYTAM))
       DOUBLE PRECISION OMEGA2(*)     ! dimension (NT2AM(ISYRES))
       DOUBLE PRECISION CDBAR(*)      ! dimension (NT2SQ(ISYCDBAR))
       DOUBLE PRECISION HALF, ONE, TWO, XNORM, DDOT
-#endif
       PARAMETER (ONE = 1.0d0, HALF = 0.5D0, TWO = 2.0D0)
 
       INTEGER IOPTZWVI, ISYTIN, ISYCIN, ISIDE
@@ -2716,17 +2686,10 @@ c           CALL CC_PRP(WORK(NI),WORK,ISYMBJ,1,0)
       INTEGER LWORK, LUPQIM, IOPTY
       CHARACTER*(*) FILNAM
 
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE, HALF, XNORM, DDOT, ZERO, YCA
-      REAL WORK(*), CTR2(*), T2AM(*), YINT(*)
-      REAL TIMET, TIMIO, TIMZWV, TIMTAM, DTIME, TIMTI
-      REAL TIMZET,TIMSCL
-#else
       DOUBLE PRECISION ONE, TWO, THREE, HALF, XNORM, DDOT, ZERO, YCA
       DOUBLE PRECISION WORK(*), CTR2(*), T2AM(*), YINT(*)
       DOUBLE PRECISION TIMET,TIMIO,TIMTI,TIMZWV,TIMTAM,DTIME
       DOUBLE PRECISION TIMZET,TIMSCL
-#endif
       PARAMETER(ONE=1.0D0,TWO=2.0D0,THREE=3.0D0,HALF=0.5D0,ZERO=0.0D0)
 
       INTEGER IV, IADR, IADRW
@@ -3018,13 +2981,8 @@ C
       INTEGER ISYPQMO, ISYLAM, IADRPQ, ITRAN, LWORK, LUAO, LUMO
       INTEGER IADRAO(MXCORB_CC,*), IADRMO(MXCORB_CC,*)
 
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-      REAL XLAMD(*), WORK(*)
-#else
       DOUBLE PRECISION ZERO, ONE
       DOUBLE PRECISION XLAMD(*), WORK(*)
-#endif
       PARAMETER( ONE=1.0D0, ZERO=0.0D0 )
 
       INTEGER ISYMF,ISYEIJ,IVIRF,ISYDEL,NSCRM,INTERM,ISYRES,IDEL,IADR
@@ -3286,13 +3244,8 @@ C
       IMPLICIT NONE
 #include "ccorb.h"
       INTEGER ISYZIN,ISYMC2,ISYTIN,IOPT,LWORK
-#if defined (SYS_CRAY)
-      REAL ZINT(*), CTR2(*), TINT(*), WORK(LWORK)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION ZINT(*), CTR2(*), TINT(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
       CHARACTER TRANS*1
       INTEGER ITAIPJ(8,8),IT2PJI(8,8),NT2PJI(8),IT2BCD(8,8),NT2BCD(8),
@@ -3404,17 +3357,10 @@ C
       INTEGER LWORK, LUPQIM, IOPTY
       CHARACTER*(*) FILNAM
 
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE, HALF, XNORM, DDOT, ZERO
-      REAL WORK(*), CTR2(*), T2AM(*), YINT(*)
-      REAL TIMET, TIMIO, TIMZWV, TIMTAM, DTIME, TIMTI
-      REAL TIMZET,TIMSCL
-#else
       DOUBLE PRECISION ONE, TWO, THREE, HALF, XNORM, DDOT, ZERO
       DOUBLE PRECISION WORK(*), CTR2(*), T2AM(*), YINT(*)
       DOUBLE PRECISION TIMET,TIMIO,TIMTI,TIMZWV,TIMTAM,DTIME
       DOUBLE PRECISION TIMZET,TIMSCL
-#endif
       PARAMETER(ONE=1.0D0,TWO=2.0D0,THREE=3.0D0,HALF=0.5D0,ZERO=0.0D0)
 
       INTEGER IV, IADR, IADRW

@@ -41,12 +41,8 @@ c--------------------------------------------------------------------
      &        isymc,isymab,isymkl,lunit,idum
       integer ioptbas,iopt
 
-#if defined (SYS_CRAY)
-      real zero,one,work(*),ddummy,timrdao,timfr12,timintr12,ddot
-#else
       double precision zero,one,work(*),ddummy,timrdao,timfr12,timintr12
       double precision ddot
-#endif
       parameter (zero = 0.0D0, one = 1.0D0)
 
       call qenter('prepccsd')
@@ -214,12 +210,8 @@ c--------------------------------------------------------------------
      &        kvabkl,kvajkl
       integer luvajkl,lunit,idummy
       character*(*) filvajkl
-#if defined (SYS_CRAY)
-      real vabkl(*),vajkl(*),vijkl(*),cmo(*),work(*),one,zero,ddot
-#else
       double precision vabkl(*),vajkl(*),vijkl(*),cmo(*),work(*),one,
      &                 zero,ddot
-#endif
       parameter (one = 1.0d0, zero = 0.0d0)
 
       call qenter('r12mkvtf')
@@ -333,12 +325,8 @@ c--------------------------------------------------------------------
       integer kscr1,kscr2,isymb,isymga,isymgab,koff1,
      &        idxab,idxga,idxgab,isyma,kend2,lwrk2,isymgkl
 
-#if defined (SYS_CRAY)
-      real work(*),xint(*),vabkl(*),one,two,factor,ddot
-#else
       double precision work(*),xint(*),vabkl(*),one,two,factor,
      &                 ddot
-#endif
       parameter (one = 1.0d0, two = 2.0d0)
 
       call qenter('mkvabkl')
@@ -482,11 +470,7 @@ c--------------------------------------------------------------------
       integer kvijkl,kvajkl,isymc,
      &        kend1,lwrk1,lwork
 
-#if defined (SYS_CRAY)
-      real vabkl(*),work(*),cmo(*),ddot
-#else
       double precision vabkl(*),work(*),cmo(*),ddot
-#endif
       call qenter('r12vtest')
 
       kvijkl = 1
@@ -530,11 +514,7 @@ c--------------------------------------------------------------------
       integer lwork,kvsym,kend1,lwrk1,isyma,isymb,
      &        isymab,isymkl,isyml,isymk,idxkl,idxlk,idxab,idxba,idxabkl,
      &        idxbalk
-#if defined (SYS_CRAY)
-      real vabkl(*),work(*),half
-#else
       double precision vabkl(*),work(*),half
-#endif
       parameter (half = 0.5d0)
       call qenter('r12symv')
 
@@ -608,13 +588,8 @@ c--------------------------------------------------------------------
       character*10 model
       character*8 fc12am
       character*3 listr
-#if defined (SYS_CRAY)
-      real work(*),one,two,factor,zero,omega2(*),
-     &     four,ddot,x,basscl2
-#else
       double precision work(*),one,two,
      &                 factor,zero,omega2(*),four,ddot,x,basscl2
-#endif
       parameter (one = 1.0d0, two = 2.0d0, zero = 0.0d0, four = 4.0d0)
 
       call qenter('ccrhs_bp')
@@ -742,14 +717,9 @@ c--------------------------------------------------------------------
      &        idxabijp,idxabijm,idxbi,idxaj,idxaibj,idxbiaj,isymbi,
      &        isymaj,nab,kend3,lwrk3,maxj,maxb,ioptom 
       integer isymlj,idxljlj,idxlj,isymk,isyml,idxki,idxkilj
-#if defined (SYS_CRAY)
-      real work(*),vabkl(*),one,two,c2am(*),factor,zero
-      real half,omega2(*),ddot,x1,xv,xc,dummy
-#else
       double precision work(*),vabkl(*),one,two,c2am(*),
      &                 factor,zero,half,omega2(*),ddot,
      &                 x1,xv,xc,dummy
-#endif
       parameter (one = 1.0d0, two = 2.0d0, zero = 0.0d0, half = 0.5d0)
 
       index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
@@ -1063,11 +1033,7 @@ c--------------------------------------------------------------------
       integer isymb,isymv,isyma,index,isymamn,isymmn,isymm,isymn,
      &        isymam,isymbn, idxmn,idxamn
       integer idxab,idxabmn,isymab
-#if defined (SYS_CRAY)
-      real vs(*),vabkl(*)
-#else
       double precision vs(*),vabkl(*)
-#endif
 C      index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 
       call qenter('sortv')
@@ -1124,13 +1090,8 @@ c--------------------------------------------------------------------
       integer lunit,icon,index
       integer nck(8),ick(8,8),nvckdl(8),ivckdl(8,8),isymv,isymc1,isymc2
       character*(*) filename
-#if defined (SYS_CRAY)
-      real vabkl(*),xlamd1(*),xlamd2(*),work(*),one,zero,
-     &     ddot,x2,x3,x1
-#else
       double precision vabkl(*),xlamd1(*),xlamd2(*),work(*),one,zero,
      &                 ddot,x2,x3,x1
-#endif
       parameter(one = 1.0d0 , zero = 0.0d0)
       index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 
@@ -1367,11 +1328,7 @@ c--------------------------------------------------------------------
       integer icount1,isym1,isym2,isym,
      &        nck(8),ick(8,8),nvckdl(8),ivckdl(8,8)
       character*(*) filev
-#if defined (SYS_CRAY)
-      real omega(*),t2am(*),work(*),factor,ddot,one
-#else
       double precision omega(*),t2am(*),work(*),factor,ddot,one
-#endif
       parameter(one = 1.0d0)
 
       call qenter('ccrhs_bpp')
@@ -1491,11 +1448,7 @@ c--------------------------------------------------------------------
       integer iopt,lunit,iadr,len,koff,koffr
       character*10 model
       character*8 framnp
-#if defined (SYS_CRAY)
-      real work(*), tbjpk(*), ddot, one, zero 
-#else
       double precision work(*), tbjpk(*), ddot, one, zero
-#endif
       parameter(zero=0.0D0, one=1.0D0)
       parameter(framnp='R12RMNAP')
 
@@ -1659,11 +1612,7 @@ c--------------------------------------------------------------------
       integer kfgdp,isymfck,isymh,isyme1p,isymd,isyma,isymp
       integer isym,isym1,isym2,nbas2(8),ngdp(8),igdp(8,8),
      &        nadp(8),iadp(8,8),ilamdx(8,8),napp(8),iapp(8,8)
-#if defined (SYS_CRAY)
-      real work(*), e1pim(*), cmox(*), xlamdh(*), one, zero
-#else
       double precision work(*), e1pim(*), cmox(*), xlamdh(*), one, zero
-#endif
       parameter (one=1.0D0, zero=0.0D0)
 C
       call qenter('ccrhs_e1pim')

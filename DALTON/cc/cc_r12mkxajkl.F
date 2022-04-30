@@ -29,11 +29,7 @@ c---------------------------------------------------------------------
 #include "ccorb.h"
 #include "ccsdsym.h"
 #include "r12int.h"
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       logical ldum,test,fel
       parameter (test = .false.,zero = 0.0d0, one = 1.0d0)
 
@@ -245,12 +241,8 @@ C     Equations
       integer koffe,kctil2,idxijkl,lctil,ncvai
       integer res,kscr1
 
-#if defined (SYS_CRAY)
-      real work(lwork),one,two,zero
-      real orb(*),v2am(*)
-#else
       double precision work(lwork),one,zero,two,orb(*),v2am(*)
-#endif
+
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
 
@@ -655,12 +647,8 @@ C  /* Deck r12gradap */
       integer icou4,imataj(8,8),blajklf,kl,aj,ajkl,nrhfst
       integer imatmn(8,8),icou6,nmatkl1(8),imatkl1(8,8),icou5
       integer imatka(8,8),icou7,nmatak(8),nijkl(8)
-#if defined (SYS_CRAY)
-      real res(*),work(*),orb(*),v2am(*),one,two,zero
-#else
       double precision work(*),orb(*),v2am(*),one,zero,two
       double precision res(*)
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('r12gradap')
@@ -1113,13 +1101,8 @@ C  /* Deck r12gradaxd */
       integer isymja,isymka,ntoto,isymoj,isymo,idxlkij,kres,nikaj
       integer kiakjz,aj,ajkl,kl,isymkj,kiajkz,rklijz,index
       integer ipdd,resb,kxtil,kresz,icoun4,nmataj(8),ncvij,nijkl(8)
-#if defined (SYS_CRAY)
-      real work(*),dklij(*),v2am(*),kctil(*),kccr12(*),one,two,zero
-      real res(*) 
-#else
       double precision work(*),dklij(*),v2am(*),kctil(*),one,zero,two
       double precision kccr12(*),res(*)
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       index(i,j) = max(i,j)*(max(i,j)-3)/2 +i+j
@@ -1454,11 +1437,7 @@ C  /* Deck r12gradb */
 
       integer kccr12,krsing,krtrip,kctil,lccr12,lctil
       integer nrhftria,n2,lu43,ntotk
-#if defined (SYS_CRAY)
-      real dklij(*),res(*),work(*),one,two,zero
-#else
       double precision dklij(*),res(*),work(*),one,zero,two
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('r12gradb')
@@ -1721,11 +1700,7 @@ C  /* Deck r12gradbd */
       integer imatoi(8,8),icou8,isyman,isymn
       integer iglmrv1(8,8),noffset1,icou9,nrhffrt
       integer ksijklf,ij,ijkl,ksijkl,sijklf
-#if defined (SYS_CRAY)
-      real res(*),work(*),dklij(*),zero,one,two
-#else
       double precision res(*),work(*),dklij(*),zero,one,two
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('r12gradbd')

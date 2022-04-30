@@ -45,13 +45,8 @@ C
       INTEGER ISYRES, LWORK
       integer isym
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       CALL QENTER('AASD')
 C
@@ -228,17 +223,10 @@ C
 c
       integer kx3am
 c
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQRX,FREQRY,FREQXY
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQRX,FREQRY,FREQXY
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       CALL QENTER('AMATSDV')
 c
@@ -1473,15 +1461,9 @@ C
       INTEGER KFCLI,KEND0,LWRK0 
       INTEGER ISYMI,ISYML,KOFF1,KOFF2,ISYMBCA,KOFF3,NTOTBCA,NTOTL
 C
-#if defined (SYS_CRAY)
-      REAL WJK(*), TETAXJK(*), XOP(*), WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION WJK(*), TETAXJK(*), XOP(*), WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -1606,17 +1588,10 @@ C
 c
       integer kx3am
 c
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQRX,FREQRY,FREQXY
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA1(*),OMEGA2(*),OMEGA1EFF(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQRX,FREQRY,FREQXY
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       CALL QENTER('AASDOCC')
 C
@@ -2193,13 +2168,8 @@ C
       INTEGER ISYMI,ISYMBCA,ISYMA,ISYMBC,KOFF1,KOFF2,KOFF3,NTOTBC 
       INTEGER ISYMBCK,KBCK,KWCBAK,ISYMC,ISYMCK,ISYMB,ISYMABC,ISYMAB
       INTEGER NTOTA,ISYMCBJ,KCBJ,ISYMBJ,ISYMACB,ISYMAC,ISYMCB
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*), WMAT(*), TMAT(*), XIAJB(*), WORK(*)
-      REAL ONE
-#else
       DOUBLE PRECISION OMEGA1(*), WMAT(*), TMAT(*), XIAJB(*), WORK(*)
       DOUBLE PRECISION ONE
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -2479,13 +2449,8 @@ C                  w(cabj)                    *   f(c)  = O^I(abj)
       INTEGER KOFF,ISYMI,ISYMBA,ISYMCBA,ISYMA,ISYMCB,ISYMB
       INTEGER KOFF3,NTOTC,ISYMAB,KAB,KWCBAK,ISYMABC,NTOTAB
       INTEGER ISYMABJ,KABJ,KWACBJ,ISYMCAB,ISYMCA
-#if defined (SYS_CRAY)
-      REAL XI2(*), WMAT(*), TMAT(*), FOCK0(*), WORK(*)
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION XI2(*), WMAT(*), TMAT(*), FOCK0(*), WORK(*)
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
 
 C
 #include "priunit.h"
@@ -2797,13 +2762,8 @@ C
       INTEGER NTOTB,NTOTC,NTOTAB,NTOTJ,IOPT
       INTEGER ISYMJCL
 C
-#if defined (SYS_CRAY) 
-      REAL XI2(*), WMAT(*), TMAT(*), T3BOG2(*), WORK(*) 
-      REAL TWO, ONE
-#else
       DOUBLE PRECISION XI2(*), WMAT(*), TMAT(*), T3BOG2(*), WORK(*) 
       DOUBLE PRECISION TWO, ONE 
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -3123,13 +3083,8 @@ C
       INTEGER KRAB,KINT,KRABJ
       INTEGER NTOTA,NTOTDC 
       INTEGER NTOTB,ISYMABJ
-#if defined (SYS_CRAY)
-      REAL XI2(*), WMAT(*), TMAT(*), XGACDK(*), WORK(*)
-      REAL  ONE, TWO
-#else
       DOUBLE PRECISION XI2(*), WMAT(*), TMAT(*), XGACDK(*), WORK(*) 
       DOUBLE PRECISION  ONE, TWO
-#endif
 
 C
       PARAMETER ( ONE = 1.0D0, TWO = 2.0D0)
@@ -3425,11 +3380,7 @@ C
       INTEGER ISYMIJ
       INTEGER INDEX
 C
-#if defined (SYS_CRAY)
-      REAL XAIBJ(*),XAB(*)
-#else
       DOUBLE PRECISION XAIBJ(*),XAB(*) 
-#endif
 C
       INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
 C
@@ -3483,11 +3434,7 @@ C
       INTEGER ISYMAB
       INTEGER INDEX
 C
-#if defined (SYS_CRAY)
-      REAL XAIBJ(*),XBAI(*)
-#else
       DOUBLE PRECISION XAIBJ(*),XBAI(*) 
-#endif
 C
       INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
 C
@@ -3542,13 +3489,8 @@ C
       INTEGER ISYMA, ISYMB, ISYRES, INDEX
       INTEGER ISYAB, ISYIJ, ISYMJ, ISYMI, ISYMBJ, ISYMAI
       INTEGER NBJ, NAB, NAI, NAIBJ 
-#if defined (SYS_CRAY) 
-      REAL OMEGA2(*), XAB(*)
-      REAL TWO
-#else
       DOUBLE PRECISION OMEGA2(*), XAB(*)
       DOUBLE PRECISION TWO
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -3620,13 +3562,8 @@ C
       INTEGER ISYMI, ISYRES, INDEX
       INTEGER ISYABJ,ISYMA,ISYMBJ,ISYMAI,ISYMAA,NAI,NAAI,ISYMJ,ISYMB 
       INTEGER ISYMAB,NBJ,KOFF1,KOFF2,KOFF5,KOFF6
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*), XABJ(*)
-      REAL TWO
-#else
       DOUBLE PRECISION OMEGA2(*), XABJ(*)
       DOUBLE PRECISION TWO
-#endif
 C
       PARAMETER (TWO = 2.0D0)
 C
@@ -3749,11 +3686,7 @@ C
       INTEGER ISYMJ,ISYRES
       INTEGER ISYMABI,ISYMBAI,ISYMI,ISYMAB,ISYMBA,ISYMB,ISYMA,ISYAI 
       INTEGER KOFF1, KOFF2 
-#if defined (SYS_CRAY)
-      REAL RMAT1(*), RMAT2(*)
-#else
       DOUBLE PRECISION RMAT1(*), RMAT2(*)
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"

@@ -58,11 +58,7 @@ C
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.) 
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       LOGICAL SYM1ONLY

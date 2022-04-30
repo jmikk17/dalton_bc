@@ -1,4 +1,4 @@
-!
+ccfbint1.F !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) by the authors of Dalton.
 !
@@ -66,19 +66,11 @@ c
       INTEGER LUPQA0,  IADRPQAI0, IADRPQA0(MXCORB_CC,*)
       INTEGER LUPQA1,  IADRPQAI1, IADRPQA1(MXCORB_CC,*)
       
-#if defined (SYS_CRAY)
-      REAL XAINT(*), YAINT(*), MAINT(*), ZETA1(*), ZETA2(*)
-      REAL BZDENA(*), BZDENAB(*)
-      REAL XLAMDP(*), XLAMDH(*), XLAMDPQ(*), XLAMDHQ(*)
-      REAL TA1AMP(*), TA2AMP(*), WORK(*)
-      REAL DUMMY, ONE, TWO
-#else
       DOUBLE PRECISION XAINT(*), YAINT(*), MAINT(*), ZETA1(*), ZETA2(*)
       DOUBLE PRECISION BZDENA(*), BZDENAB(*)
       DOUBLE PRECISION XLAMDP(*), XLAMDH(*), XLAMDPQ(*), XLAMDHQ(*)
       DOUBLE PRECISION TA1AMP(*), TA2AMP(*), WORK(*)
       DOUBLE PRECISION DUMMY, ONE, TWO
-#endif
       PARAMETER (ONE = 1.0D0, TWO = 2.0D0)
 
       CHARACTER MODEL*(10)

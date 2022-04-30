@@ -49,17 +49,6 @@ C
  
       integer isym, imult, lwork, istartend(maxexci,2)
 
-#if defined (SYS_CRAY) 
-      real threig
-      real work(lwork), overlap(mxovlp)
-      real ovlpslr(mxovlp), ovlpdlr(mxovlp), 
-     &     ovlptlr(mxovlp), ovlpsrr(mxovlp), 
-     &     ovlpdrr(mxovlp), ovlptrr(mxovlp)
-      real seigr(maxexci), seigi(maxexci)
-      real srr, drr, trr, xnrmrr, slr, dlr, tlr, xnrmlr
-      real zero, one, xhund, tlovlp, xnrm, fac, xerror
-      real tiny
-#else 
       double precision threig
       double precision work(lwork), overlap(mxovlp)
       double precision ovlpslr(mxovlp), ovlpdlr(mxovlp), 
@@ -69,7 +58,6 @@ C
       double precision srr, drr, trr, xnrmrr, slr, dlr, tlr, xnrmlr
       double precision zero, one, xhund, tlovlp, xnrm, fac, xerror
       double precision tiny, xnrmr, xnrml
-#endif 
       parameter ( one = 1.0d0, xhund = 100.0d0, tlovlp = 0.5d0,
      &            zero = 0.0d0, tiny = 1.0d-10 )
 
@@ -82,11 +70,7 @@ C
      &        ilstnr, nleft, idxr, idxl, ndeg, matz, ierr, ludeg
 
       integer ilstsym
-#if defined (SYS_CRAY) 
-      real ddot
-#else
       double precision ddot
-#endif 
 
       call qenter('ccexnorm')
 
@@ -563,15 +547,9 @@ C FIX OF CCSDR(3) BUG. SAVE UNIT NORM IN APPROPRIATE VECTOR
       integer istartend(maxexci,2)
       integer idtran(ndtran), iddots(mxvec,ndtran)
 
-#if defined (SYS_CRAY) 
-      real work(lwork), overlap(*)
-      real tcon, sixth, freql, freqr, xcon(3)
-      real dotcon(mxvec,ndtran)
-#else 
       double precision work(lwork), overlap(*)
       double precision tcon, sixth, freql, freqr, xcon(3)
       double precision dotcon(mxvec,ndtran)
-#endif 
       parameter( sixth = 1.0d0/6.0d0 ) 
 
       character model*10
@@ -586,11 +564,7 @@ C FIX OF CCSDR(3) BUG. SAVE UNIT NORM IN APPROPRIATE VECTOR
 
 
       integer ilstsym
-#if defined (SYS_CRAY) 
-      real ddot
-#else
       double precision ddot
-#endif 
 
       kdum = 1
       call qenter('ccov-nod')
@@ -1037,17 +1011,10 @@ C
       LOGICAL locdbg
       PARAMETER (locdbg = .false.)
 C
-#if defined (SYS_CRAY) 
-      REAL overlap(*),work(lwork)
-      REAL tcon
-      REAL d0,dsixth
-      REAL dotcon(mxvec,ndtran)
-#else 
       DOUBLE PRECISION overlap(*),work(lwork)
       DOUBLE PRECISION tcon
       DOUBLE PRECISION d0,dsixth
       DOUBLE PRECISION dotcon(mxvec,ndtran)
-#endif 
       PARAMETER (d0 = 0.0d0)
       PARAMETER (dsixth = 1.0d0/6.0d0)
 C
@@ -1226,17 +1193,10 @@ C
 C
       PARAMETER(FNWEB = 'CC3_WEB_TMP', FNWE = 'CC3_WE_TMP')
 C
-#if defined (SYS_CRAY)
-      REAL TCON,FREQEB,FREQE,XDIANORM,XOFFDIA,D3,D6,TWO
-      REAL WORK(LWORK)
-      REAL DDOT
-      REAL THRSH
-#else
       DOUBLE PRECISION TCON,FREQEB,FREQE,XDIANORM,XOFFDIA,D3,D6,TWO
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION DDOT
       DOUBLE PRECISION THRSH
-#endif
 C
       PARAMETER (D3 = 3.0d0)
       PARAMETER (D6 = 6.0d0)
@@ -1998,11 +1958,7 @@ C
       INTEGER ISWEMAT,LENSQ,INDSQ(LENSQ,6)
       INTEGER I
 C
-#if defined (SYS_CRAY)
-      REAL WEMAT(*),TMAT(*)
-#else
       DOUBLE PRECISION WEMAT(*),TMAT(*)
-#endif
 C
       CALL QENTER('WE_TILDE')
 
@@ -2033,11 +1989,7 @@ C
       INTEGER ISAIBJ,ISYMB,ISYAIJ,ISYMJ,ISYMBJ,ISYMAI,ISYMI,ISYMA
       INTEGER NBJ,NAI,KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL AIBJ(*),BJAI(*)
-#else
       DOUBLE PRECISION AIBJ(*),BJAI(*)
-#endif
 C
       CALL QENTER('TRANS_AIBJ_BJAI')
 C

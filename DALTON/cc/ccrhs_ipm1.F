@@ -93,17 +93,10 @@ C
 C
          KOFF = NNBST(ISYMAB)*(IG - 1)
 C
-#if !defined (SYS_CRAY)
          DO 130 I = 1,NNBST(ISYMAB)
-C
             XINTP(KOFF + I) = SCRAB(INDV1(I))
             XINTM(KOFF + I) = SCRAB(INDV2(I))
-C
   130    CONTINUE
-#else
-         CALL GATHER(NNBST(ISYMAB),XINTP(KOFF + 1),SCRAB,INDV1)
-         CALL GATHER(NNBST(ISYMAB),XINTM(KOFF + 1),SCRAB,INDV2)
-#endif
 C
   100 CONTINUE
 C

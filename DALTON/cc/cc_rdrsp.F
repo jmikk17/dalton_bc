@@ -174,13 +174,8 @@ C
       LOGICAL LEXIST
       INTEGER IOS, IMUL, NVEC, IOPTSV, IOPTIN
 
-#if defined (SYS_CRAY)
-      REAL VEC1(*), VEC2(*)
-      REAL ZERO
-#else
       DOUBLE PRECISION VEC1(*), VEC2(*)
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d0)
 
 * external functions:
@@ -602,13 +597,8 @@ Cholesky
       INTEGER ISYFIL(MAXORDER), ISYLST(MAXORDER)
       INTEGER INDFIL(MAXORDER), INDLST(MAXORDER)
 
-#if defined (SYS_CRAY)
-      REAL FRQFIL(MAXORDER), FRQLST(MAXORDER), ZERO
-      REAL THRDIFF
-#else
       DOUBLE PRECISION FRQFIL(MAXORDER), FRQLST(MAXORDER), ZERO
       DOUBLE PRECISION THRDIFF
-#endif
       PARAMETER (ZERO = 0.0d0)
       PARAMETER (THRDIFF = 1.0d-08)
 
@@ -1658,11 +1648,7 @@ c /* deck CCPRPAO */
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
 
-#if defined (SYS_CRAY)
-      REAL CKMXPR
-#else
       DOUBLE PRECISION CKMXPR
-#endif
       PARAMETER (CKMXPR = 1.0d-12)
 
 
@@ -1670,13 +1656,8 @@ c /* deck CCPRPAO */
       CHARACTER*8 LABEL1
       INTEGER IRREP, ISYM, IERR, LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL PRPAO(*)
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION PRPAO(*)
-#endif
 
       CHARACTER*8 RTNLBL(2)
       LOGICAL LOPENED, LONLYAO
@@ -1926,11 +1907,7 @@ C     ENDIF
 
       INTEGER I
 
-#if defined (SYS_CRAY) 
-      REAL DDOT, CMO(NLAMDS)
-#else
       DOUBLE PRECISION DDOT, CMO(NLAMDS)
-#endif
 
 *---------------------------------------------------------------------*
 *     read MO coefficients from file:
@@ -1968,11 +1945,7 @@ C     ENDIF
       LOGICAL DELFRO, LOCDBG
       INTEGER IDX, NORBEN, LWORK
 
-#if defined (SYS_CRAY) 
-      REAL ORBENE(NORBTS), WORK(LWORK)
-#else
       DOUBLE PRECISION ORBENE(NORBTS), WORK(LWORK)
-#endif
 
 *---------------------------------------------------------------------*
 *     read canonical orbital energies from SIRIFC file:

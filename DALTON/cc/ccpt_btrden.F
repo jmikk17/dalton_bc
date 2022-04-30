@@ -46,15 +46,9 @@ C
       integer IDEL, ID
       integer KABIDS,KABICS,KEND1,LWRK1,LENGTH,LENGTH1,iii
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),XCMO(*)
-      REAL ZERO, ONE, TWO
-      real ddot,xtest,xnorm,xnorm1
-#else
       DOUBLE PRECISION WORK(LWORK),XCMO(*)
       DOUBLE PRECISION ZERO, ONE, TWO
       double precision ddot,xtest,xnorm,xnorm1
-#endif
 
 
       CHARACTER*9 FNDENSTY, FNDEN4MO
@@ -209,15 +203,9 @@ C
 
       CHARACTER*9 FNDENSTY, FNDEN4MO
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),XCMO(*)
-      REAL ZERO, ONE, TWO
-      REAL DDOT,XTEST,XNORM,XNORM1
-#else
       DOUBLE PRECISION WORK(LWORK),XCMO(*)
       DOUBLE PRECISION ZERO, ONE, TWO
       double precision ddot,xtest,xnorm,xnorm1
-#endif
 
 
       LOGICAL LOCDBG
@@ -376,15 +364,9 @@ C
       integer ntotaij
       integer LUDENSTY, LENAIJD
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),XCMO(*),XDENS(*)
-      REAL ZERO, ONE, TWO
-      real ddot,xnorm2,xnorm
-#else
       DOUBLE PRECISION WORK(LWORK),XCMO(*),XDENS(*)
       DOUBLE PRECISION ZERO, ONE, TWO
       double precision ddot,xnorm2,xnorm
-#endif
 
 
       CHARACTER FNDENSTY*9
@@ -508,15 +490,9 @@ C
       integer ntotiaj
       integer LUDENSTY, LENIJKD, LENIAJD
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),XCMO(*),XDENS1(*),XDENS2(*)
-      REAL ZERO, ONE, TWO
-      real ddot,xnorm2,xnorm
-#else
       DOUBLE PRECISION WORK(LWORK),XCMO(*),XDENS1(*),XDENS2(*)
       DOUBLE PRECISION ZERO, ONE, TWO
       double precision ddot,xnorm2,xnorm
-#endif
 
 
       CHARACTER FNDENSTY*9
@@ -659,15 +635,9 @@ C
       integer ntotiaj
       integer LUDENSTY, LENIJKD, LENIAJD
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),XCMO(*),XDENS(*)
-      REAL ZERO, ONE, TWO
-      real ddot,xnorm2,xnorm
-#else
       DOUBLE PRECISION WORK(LWORK),XCMO(*),XDENS(*)
       DOUBLE PRECISION ZERO, ONE, TWO
       double precision ddot,xnorm2,xnorm
-#endif
 
 
       CHARACTER FNDENSTY*9

@@ -11,13 +11,9 @@ C  /* Deck cc_t2sq3a */
 !--------------------------------------------------------
 !
       IMPLICIT NONE
-!if defined (SYS_CRAY)
-!     REAL T2AM(*), T2SQ(*)
-!else
       DOUBLE PRECISION, PARAMETER :: ONEM = -1.0D0
       DOUBLE PRECISION, INTENT(IN) :: T2AM(*), FACT
       DOUBLE PRECISION, INTENT(INOUT) :: T2SQ(*)
-!endif
       INTEGER, INTENT(IN) :: ISYM
       INTEGER KOFF1, KOFF2, ISYMBJ, KOFF, ISYMAI, NAMP, NAI
       INTEGER NBJ

@@ -110,17 +110,10 @@ c/* Deck CC_BAMAT */
       INTEGER IBATRAN(MXDIM_BATRAN,NBATRAN)
       INTEGER IBDOTS(MXVEC,NBATRAN)
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL BCONS(MXVEC,NBATRAN)
-      REAL ZERO, ONE, TWO, HALF
-      REAL XNORM
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION BCONS(MXVEC,NBATRAN)
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
       DOUBLE PRECISION XNORM
-#endif 
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0, HALF = 0.5d0)
 
       CHARACTER*(10) MODEL, MODELW
@@ -141,11 +134,7 @@ c/* Deck CC_BAMAT */
 
 * external functions:
       INTEGER ILSTSYM
-#if defined (SYS_CRAY) 
-      REAL DDOT, FREQLST, FREQB
-#else 
       DOUBLE PRECISION DDOT, FREQLST, FREQB
-#endif 
 
 *---------------------------------------------------------------------*
 * begin:

@@ -55,17 +55,10 @@ C
       INTEGER LU3VI2, LU3FOP2
       INTEGER ISYM0,KT1AMP,KLAMP0,KLAMH0,KEND1,LWRK1,IOPT
 C
-#if defined (SYS_CRAY)
-      REAL XLAMDP0(*),XLAMDH0(*),FOCK0(*)
-      REAL DAB(*),DIJ(*),DIA(*)
-      REAL YMMAT(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION XLAMDP0(*),XLAMDH0(*),FOCK0(*)
       DOUBLE PRECISION DAB(*),DIJ(*),DIA(*)
       DOUBLE PRECISION YMMAT(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       CALL QENTER('CC3_ADEN')
 
@@ -246,19 +239,11 @@ C
 C
       integer isymi,isyabc,koff1
 C
-#if defined (SYS_CRAY)
-      REAL XLAMDP0(*),XLAMDH0(*),FOCK0(*) 
-      REAL DAB(*),DIJ(*),DIA(*)
-      REAL WORK(LWORK)
-      REAL FREQL1,FREQR1,FREQL1R
-      REAL DDOT,XNORMVAL,ONE
-#else
       DOUBLE PRECISION XLAMDP0(*),XLAMDH0(*),FOCK0(*) 
       DOUBLE PRECISION DAB(*),DIJ(*),DIA(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQL1,FREQR1,FREQL1R
       DOUBLE PRECISION DDOT,XNORMVAL,ONE
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -994,11 +979,7 @@ C
 C
       CHARACTER*(*) FNDELD
 C
-#if defined (SYS_CRAY)
-      REAL XINTADCK(*), XLAMH(*), WORK(LWORK)
-#else
       DOUBLE PRECISION XINTADCK(*), XLAMH(*), WORK(LWORK)
-#endif
 C
       CALL QENTER('INTVIR_T30_IJ')
 C
@@ -1082,13 +1063,8 @@ C
 C
       CHARACTER*(*) FN3VI, FN3FOP 
 C
-#if defined (SYS_CRAY)
-      REAL XGADCK(*), XLADCK(*), XLAMP(*), WORK(LWORK)
-      real xnormval,ddot
-#else
       DOUBLE PRECISION XGADCK(*), XLADCK(*), XLAMP(*), WORK(LWORK) 
       double precision xnormval,ddot
-#endif
 C
       CALL QENTER('INTVIR_T3BX_JK')
 C
@@ -1210,11 +1186,7 @@ C
       INTEGER ISYMA,ISYMCK,ISYAD,ISYMC,ISYMK,ISYADC
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XINTADCK(*),XINTCKAD(*),WORK(LWORK)
-#else
       DOUBLE PRECISION XINTADCK(*),XINTCKAD(*),WORK(LWORK)
-#endif
 C
       CALL QENTER('SORT_INTVIR_T30')
 
@@ -1313,15 +1285,9 @@ C
 c
       integer isymci,isyab,isymi,isyabc
 C
-#if defined (SYS_CRAY)
-      REAL T30JK(*),T2TP(*),T3OG2(*),WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION T30JK(*),T2TP(*),T3OG2(*),WORK(LWORK)
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -1969,15 +1935,9 @@ C
       INTEGER KDCAI,KDBAI
       integer isyabc
 C
-#if defined (SYS_CRAY)
-      REAL T30JK(*), T2TP(*), T3VIJG1(*), WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION T30JK(*), T2TP(*), T3VIJG1(*), WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -2476,11 +2436,7 @@ C
       INTEGER ISYMT,ISYMI,ISYABC,ISYBAC,ISYMC,ISYAB,ISYBA,ISYMB,ISYMA
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TBACI(*)
-#else
       DOUBLE PRECISION TABCI(*),TBACI(*)
-#endif
 C
       CALL QENTER('FBACI')
 C
@@ -2540,11 +2496,7 @@ C
       INTEGER ISYMT,ISYMI,ISYABC,ISYBCA,ISYMC,ISYAB,ISYMB,ISYMA,ISYBC
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TBCAI(*)
-#else
       DOUBLE PRECISION TABCI(*),TBCAI(*)
-#endif
 C
       CALL QENTER('FBCAI')
 C
@@ -2604,11 +2556,7 @@ C
       INTEGER ISYMT,ISYMI,ISYABC,ISYACB,ISYMC,ISYAB,ISYMB,ISYAC,ISYMA
       INTEGER KOFF1,KOFF2 
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TACBI(*)
-#else
       DOUBLE PRECISION TABCI(*),TACBI(*)
-#endif
 C
       CALL QENTER('FACBI')
 
@@ -2668,11 +2616,7 @@ C
       INTEGER ISYMT,ISYMI,ISYABC,ISYCAB,ISYMC,ISYAB,ISYMB,ISYCA,ISYMA
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TCABI(*)
-#else
       DOUBLE PRECISION TABCI(*),TCABI(*)
-#endif
 C
       CALL QENTER('FCABI')
 C
@@ -2732,11 +2676,7 @@ C
       INTEGER ISYMT,ISYMI,ISYABC,ISYCBA,ISYMC,ISYAB,ISYMB,ISYMA,ISYCB
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TCBAI(*)
-#else
       DOUBLE PRECISION TABCI(*),TCBAI(*)
-#endif
 C
       CALL QENTER('FCBAI')
 C
@@ -2804,11 +2744,7 @@ C
       INTEGER KOFF1,KOFF2
       INTEGER IOPT
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TAB_CI(*)
-#else
       DOUBLE PRECISION TABCI(*),TAB_CI(*)
-#endif
 C
       CALL QENTER('FAB_CI')
 C
@@ -2886,11 +2822,7 @@ C
       INTEGER NBCI
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL TABCI(*),TAPBCI(*)
-#else
       DOUBLE PRECISION TABCI(*),TAPBCI(*)
-#endif
 C
       CALL QENTER('FA_BCI')
 C
@@ -2964,13 +2896,8 @@ C
       INTEGER KOFF1,KOFF2
       integer isyaj
 C
-#if defined (SYS_CRAY)
-      REAL XINTAJ(*),XINTAIJK(*)
-      real xnormval,ddot
-#else
       DOUBLE PRECISION XINTAJ(*),XINTAIJK(*)
       double precision xnormval,ddot
-#endif
 C
       CALL QENTER('SORT_INT_AJ_IK')
 C
@@ -3017,11 +2944,7 @@ C
       INTEGER ISYINT,ISYMI,ISYAKI,ISYMJ,ISYAK,ISYMK,ISYMA,ISYJA
       INTEGER KOFF1,KOFF2,NAK
 C
-#if defined (SYS_CRAY)
-      REAL XINTJAK(*),XINTAIJK(*)
-#else
       DOUBLE PRECISION XINTJAK(*),XINTAIJK(*)
-#endif
 C
       CALL QENTER('SORT_INT_JAK_I')
 C
@@ -3075,11 +2998,7 @@ C
       INTEGER ISYINT,ISYMK,ISYMI,ISYAKI,ISYMJ,ISYAK,ISYMA,ISYAI
       INTEGER KOFF1,KOFF2,NAI
 C
-#if defined (SYS_CRAY)
-      REAL XINTJAI(*),XINTAIJK(*)
-#else
       DOUBLE PRECISION XINTJAI(*),XINTAIJK(*)
-#endif
 C
       CALL QENTER('SORT_INT_JAI_K')
 C
@@ -3132,11 +3051,7 @@ C
       INTEGER ISYMBAC, ISYMABC, ISYMA, ISYMBA, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XBAC(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XBAC(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_BAC')
 C
@@ -3189,11 +3104,7 @@ C
       INTEGER ISYMCAB, ISYMABC, ISYMA, ISYMCA, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XCAB(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XCAB(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_CAB')
 C
@@ -3245,11 +3156,7 @@ C
       INTEGER ISYMCBA, ISYMABC, ISYMA, ISYMCB, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XCBA(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XCBA(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_CBA')
 C
@@ -3301,11 +3208,7 @@ C
       INTEGER ISYMABC, ISYMA, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XABC(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XABC(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_ABC')
 C
@@ -3355,11 +3258,7 @@ C
       INTEGER ISYMABC, ISYMBCA, ISYMBC, ISYMA, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XBCA(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XBCA(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_BCA')
 C
@@ -3411,11 +3310,7 @@ C
       INTEGER ISYMACB, ISYMABC, ISYMA, ISYMAC, ISYMC, ISYMB, ISYMAB
       INTEGER KOFF1, KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XACB(*), T3VIJG1(*)
-#else
       DOUBLE PRECISION XACB(*), T3VIJG1(*)
-#endif
 C
       CALL QENTER('SORT_INT_ACB')
 C
@@ -3469,11 +3364,7 @@ C
       INTEGER ISYMT2,ISYMB,ISYAIJ,ISYMJ,ISYAI,ISYIA,ISYIAB,ISYMI,ISYMA
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL T2IABJ(*),T2TP(*)
-#else
       DOUBLE PRECISION T2IABJ(*),T2TP(*)
-#endif
 C
       CALL QENTER('SORT_T2_IABJ')
 C
@@ -3535,11 +3426,7 @@ C
       INTEGER ISYMT2,ISYMB,ISYAIJ,ISYMJ,ISYAI,ISYMI,ISYMA,ISYAB,ISYABJ
       INTEGER KOFF1,KOFF2,NABJ
 C
-#if defined (SYS_CRAY)
-      REAL T2IABJ(*),T2TP(*)
-#else
       DOUBLE PRECISION T2IABJ(*),T2TP(*)
-#endif
 C
       CALL QENTER('SORT_T2_I_ABJ')
 C
@@ -3599,11 +3486,7 @@ C
       INTEGER ISYMI, ISYMT2
       INTEGER ISYMABJ, ISYMJ, ISYMAB, ISYMB, ISYMA, ISYMAIJ, ISYMAI
       INTEGER KOFF1, KOFF2
-#if defined (SYS_CRAY)
-      REAL XABJ(*), T2TP(*) 
-#else
       DOUBLE PRECISION XABJ(*), T2TP(*) 
-#endif
 C
       CALL QENTER('SORT_T2_ABJ')
 C
@@ -3656,11 +3539,7 @@ C
       INTEGER ISYMI, ISYMT2
       INTEGER ISYMABI, ISYMJ, ISYMAB, ISYMB, ISYMA, ISYMAIJ, ISYMAI
       INTEGER KOFF1, KOFF2
-#if defined (SYS_CRAY)
-      REAL XABI(*), T2TP(*) 
-#else
       DOUBLE PRECISION XABI(*), T2TP(*) 
-#endif
 C
       CALL QENTER('SORT_T2_ABI')
 C
@@ -3713,11 +3592,7 @@ C
       INTEGER ISYMI, ISYMT2
       INTEGER ISYMBAJ, ISYMJ, ISYMBA, ISYMB, ISYMA, ISYMAIJ, ISYMAI
       INTEGER KOFF1, KOFF2
-#if defined (SYS_CRAY)
-      REAL XBAJ(*), T2TP(*) 
-#else
       DOUBLE PRECISION XBAJ(*), T2TP(*) 
-#endif
 C
       CALL QENTER('SORT_T2_BAJ')
 C
@@ -3771,11 +3646,7 @@ C
       INTEGER ISYMI, ISYMJ, ISYMT2
       INTEGER ISYMIJ, ISYMAB, ISYMA, ISYMB, ISYMAIJ, ISYMAI
       INTEGER KOFF1, KOFF2
-#if defined (SYS_CRAY)
-      REAL XAB(*), T2TP(*)
-#else
       DOUBLE PRECISION XAB(*), T2TP(*)
-#endif
 C
       CALL QENTER('SORT_T2_AB')
 C
@@ -3824,13 +3695,8 @@ C
       INTEGER NJ, NK, ISYMI, ISYMBCA, ISYMC, ISYMBC, ISYMB,ISYMA
       INTEGER NI, NC, NB, NA, KOFF1 
 C
-#if defined (SYS_CRAY)
-      REAL TBCAI(*), FOCKD(*) 
-      REAL DEN 
-#else
       DOUBLE PRECISION TBCAI(*), FOCKD(*) 
       DOUBLE PRECISION DEN 
-#endif
 C
       CALL QENTER('T3JK_DIA')
 C
@@ -3900,15 +3766,9 @@ C
       INTEGER ISYMI,ISYMA,ISYMC,ISYMB
       INTEGER KOFF1,KOFF2,KOFF3,KOFF4,KOFF5,KOFF6,KOFF7,KH
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*)
-      REAL ONE,SIXTH,HALF,FACT
-      REAL t3sum(nvirt,nvirt,nvirt,nrhft,nrhft,nrhft)
-#else
       DOUBLE PRECISION TMAT(*)
       DOUBLE PRECISION ONE,SIXTH,HALF,FACT
       DOUBLE PRECISION t3sum(nvirt,nvirt,nvirt,nrhft,nrhft,nrhft)
-#endif
 C
       LOGICAL LDEBUG
 C
@@ -4052,13 +3912,8 @@ C
       INTEGER NJ, NK, ISYMI, ISYMBCA, ISYMC, ISYMBC, ISYMB,ISYMA
       INTEGER NI, NC, NB, NA, KOFF1 
 C
-#if defined (SYS_CRAY)
-      REAL TBCAI(*), FOCKD(*) 
-      REAL DEN,FREQ 
-#else
       DOUBLE PRECISION TBCAI(*), FOCKD(*) 
       DOUBLE PRECISION DEN,FREQ 
-#endif
 C
       CALL QENTER('W3JK_DIA')
 C
@@ -4119,11 +3974,7 @@ C
       INTEGER ISYMA,KOFF1,ISYMAA,ISYMJK,ISYMAI,ISYMI
       INTEGER ISYMABCI,ISYMABC
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*),ZERO
-#else
       DOUBLE PRECISION TMAT(*),ZERO
-#endif
 C
       PARAMETER (ZERO = 0.0D0)
 C
@@ -4228,11 +4079,7 @@ C
       INTEGER KH, ISYCAI, ISYMBC, ISYMAI, ISYBCA
       INTEGER IOPT
 C
-#if defined (SYS_CRAY)
-      REAL tmat(*)
-#else
       DOUBLE PRECISION tmat(*)
-#endif
 C
       CALL QENTER('print_t3jk')
 C
@@ -4398,15 +4245,9 @@ C
       INTEGER KEND2,LWRK2
 c
 C
-#if defined (SYS_CRAY)
-      REAL T3B0JK(*),L2TP(*),T3BOL2(*),T3BOG2(*),WORK(LWORK)
-      REAL ONE
-      REAL DDOT,XNORMVAL
-#else
       DOUBLE PRECISION T3B0JK(*),L2TP(*),T3BOL2(*),T3BOG2(*),WORK(LWORK)
       DOUBLE PRECISION ONE
       DOUBLE PRECISION DDOT,XNORMVAL
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -5663,11 +5504,7 @@ C
 C
       CHARACTER*(*) FN3VI, FN3FOP 
 C
-#if defined (SYS_CRAY)
-      REAL XGADCK(*), XLADCK(*), XLAMP(*), WORK(LWORK)
-#else
       DOUBLE PRECISION XGADCK(*), XLADCK(*), XLAMP(*), WORK(LWORK) 
-#endif
 C
       CALL QENTER('INTVIR_T3B0_JK')
 C
@@ -5792,11 +5629,7 @@ C
       INTEGER ISYMA,ISYMCK,ISYAD,ISYMC,ISYMK,ISYADC
       INTEGER KOFF1,KOFF2
 C
-#if defined (SYS_CRAY)
-      REAL XADCK(*),XCKA(*),WORK(LWORK)
-#else
       DOUBLE PRECISION XADCK(*),XCKA(*),WORK(LWORK)
-#endif
 C
       CALL QENTER('SORT_INTVIR_T30')
 C
@@ -5887,16 +5720,10 @@ C
 C
       INTEGER KEND2,LWRK2
 C
-#if defined (SYS_CRAY)
-      REAL T30JK(*), L2TP(*), XGADCK(*), XLADCK(*), WORK(LWORK)
-      REAL ONE
-      real ddot,xnormval
-#else
       DOUBLE PRECISION T30JK(*), L2TP(*), XGADCK(*), XLADCK(*)
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision ddot,xnormval
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -6901,15 +6728,9 @@ C
       INTEGER ISYMAIK, ISYMBJ
       INTEGER NTOTBC, NTOTD, NTOTBCA, NTOTI 
 C
-#if defined (SYS_CRAY)
-      REAL TB0JK(*), L2TP(*), WBXJK(*), XOP(*), WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION TB0JK(*), L2TP(*), WBXJK(*), XOP(*), WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -7197,13 +7018,8 @@ C
       INTEGER KOFF1
       INTEGER INDEX
 C
-#if defined (SYS_CRAY)
-      REAL T3B0JK(*),T1AM(*),XIAJB(*),T2AM(*),FOCKCK(*)
-      REAL TWO
-#else
       DOUBLE PRECISION T3B0JK(*),T1AM(*),XIAJB(*),T2AM(*),FOCKCK(*)
       DOUBLE PRECISION TWO
-#endif
 C
       PARAMETER (TWO = 2.0D0)
 C
@@ -7585,19 +7401,11 @@ C
 C
       INTEGER KEND2,LWRK2
 C
-#if defined (SYS_CRAY)
-      REAL T3B0JK(*),T2AM(*),FOCKCK(*),T3BOL2(*),T3BOG2(*)
-      REAL XGADCK(*),XLADCK(*)
-      REAL WORK(LWORK)
-      REAL ONE
-      real ddot,xnormval
-#else
       DOUBLE PRECISION T3B0JK(*),T2AM(*),FOCKCK(*),T3BOL2(*),T3BOG2(*)
       DOUBLE PRECISION XGADCK(*),XLADCK(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ONE
       double precision ddot,xnormval
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 #include "priunit.h"
@@ -8494,13 +8302,8 @@ C
       INTEGER KOFF1
       INTEGER INDEX
 C
-#if defined (SYS_CRAY)
-      REAL T3B0JK(*),T1AM(*),XIAJB(*)
-      REAL TWO
-#else
       DOUBLE PRECISION T3B0JK(*),T1AM(*),XIAJB(*)
       DOUBLE PRECISION TWO
-#endif
 C
       PARAMETER (TWO = 2.0D0)
 C
@@ -8610,15 +8413,9 @@ C
 
       INTEGER NTOTC, NTOTB, NTOTD
 C
-#if defined (SYS_CRAY)
-      REAL TB0JK(*), TETAXJK(*), XOP(*), WORK(LWORK)
-      REAL ONE
-      real ddot,xnormval
-#else
       DOUBLE PRECISION T0JK(*), TETAXJK(*), XOP(*), WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision ddot,xnormval
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -8759,15 +8556,9 @@ C
       INTEGER ISYMI, ISYMBCD, ISYMD, ISYMA, ISYMBCA, ISYMBC
       INTEGER NTOTBC, NTOTA
 C
-#if defined (SYS_CRAY)
-      REAL TB0JK(*), TETAXJK(*), XOP(*), WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION T0JK(*), TETAXJK(*), XOP(*), WORK(LWORK) 
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -8850,15 +8641,9 @@ C
       INTEGER ISYMTHLM,ISYMWLM
       INTEGER ISYMJ,ISYMDEF,ISYMI,KOFF1,KOFF2,KOFF3,NTOTDEF,NTOTI
 C
-#if defined (SYS_CRAY)
-      REAL DIJ(*),THLM(*),WLM(*)
-      REAL ONE,HALF
-      real xnormval,ddot
-#else
       DOUBLE PRECISION DIJ(*),THLM(*),WLM(*)
       DOUBLE PRECISION ONE,HALF
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (HALF = 0.5D0, ONE = 1.0D0)
 C
@@ -8904,15 +8689,9 @@ C
       INTEGER ISYMDBE,ISYMDAE,ISYME,ISYMDB,ISYMDA,ISYMEN,ISYMD
       INTEGER NTOTD
 C
-#if defined (SYS_CRAY)
-      REAL DAB(*),THLM(*),WLM(*)
-      REAL ONE,HALF
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION DAB(*),THLM(*),WLM(*)
       DOUBLE PRECISION ONE,HALF
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       PARAMETER (HALF = 0.5D0, ONE = 1.0D0)
 C
@@ -9032,15 +8811,9 @@ C
       INTEGER NTOTDE
       INTEGER ISYDE,ISYAI,ISYLM
 C
-#if defined (SYS_CRAY)
-      REAL DAI(*),T2TP(*),TETAXKL(*),WORK(LWORK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION DAI(*),T2TP(*),TETAXKL(*),WORK(LWORK)
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -9233,21 +9006,12 @@ C
       integer kx3am
 C
 
-#if defined (SYS_CRAY)
-      REAL      FREQL1,FREQL1R,FREQR1
-      REAL      WORK(LWORK)
-      REAL      XNORMVAL
-      REAL      DAB(*),DIJ(*),DIA(*)
-      REAL      YMMAT(*)
-      REAL      DDOT,HALF,ONE,TWO
-#else
       DOUBLE PRECISION      FREQL1,FREQL1R,FREQR1
       DOUBLE PRECISION      WORK(LWORK)
       DOUBLE PRECISION      XNORMVAL
       DOUBLE PRECISION      DAB(*),DIJ(*),DIA(*)
       DOUBLE PRECISION      YMMAT(*)
       DOUBLE PRECISION      DDOT,HALF,ONE,TWO
-#endif
 C
       PARAMETER(HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -10475,15 +10239,9 @@ C
       INTEGER ISYMJ, ISYMK, ISYMI, ISYML, ISYFI
       INTEGER ISYAIL,NAI,NAIK
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*), FOCKY(*), WMAT(*), WRK(*)
-      REAL HALF, ONE 
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION TMAT(*), FOCKY(*), WMAT(*), WRK(*)
       DOUBLE PRECISION HALF, ONE
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
 #include "priunit.h"
 #include "dummy.h"
@@ -10691,13 +10449,8 @@ C
 C
       INTEGER KOFF1,KOFF2,KOFF3
 C
-#if defined (SYS_CRAY)
-      REAL T2TP(*), FOCKY(*), WMAT(*), WRK(*)
-      REAL HALF, ONE, ZERO
-#else
       DOUBLE PRECISION T2TP(*), FOCKY(*), WMAT(*), WRK(*)
       DOUBLE PRECISION HALF, ONE, ZERO
-#endif
 C
 #include "priunit.h"
 #include "dummy.h"
@@ -11338,17 +11091,10 @@ C
       INTEGER ISYMAK,ISYAKI,NTOTAK,ISYAKIL,ISYMCB,KLJ,KAKIL,NTOTAKI
       INTEGER ISYALJ,ISYLKI
 C
-#if defined (SYS_CRAY)
-      REAL T2TP(*), TRVIR(*), TRVIR2(*), TRVIR3(*), TROCC(*)
-      REAL TRVIR4(*)
-      REAL TMAT(*), WMAT(*), WORK(LWORK)
-      REAL ZERO, ONE, DDOT, XNORM
-#else
       DOUBLE PRECISION T2TP(*), TRVIR(*), TRVIR2(*), TRVIR3(*), TROCC(*)
       DOUBLE PRECISION TRVIR4(*)
       DOUBLE PRECISION TMAT(*), WMAT(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, DDOT, XNORM
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C
@@ -12181,11 +11927,7 @@ C
       INTEGER ISYMEM,ISYMEML,NTOTEM,KOFF1,KOFF2
       INTEGER KIJMJI,KEND1,LWRK1
 C
-#if defined (SYS_CRAY)
-      REAL DAI(*), T2TP(*), TETA(*), WORK(LWORK), ONE, DM1
-#else
       DOUBLE PRECISION DAI(*), T2TP(*), TETA(*), WORK(LWORK), ONE, DM1 
-#endif
 C
       PARAMETER ( ONE = 1.0D0, DM1 =-1.0D0)
 C
@@ -12259,11 +12001,7 @@ C
       INTEGER ISWMAT,ISYMT2X,ISYMT2Y,IB,ISYMIB,ID,ISYMID,LWORK
       INTEGER LENSQ,INDSQ(LENSQ,6)
 C
-#if defined (SYS_CRAY)
-      REAL DIA(*),WMAT(*),T2TPX(*),T2TPY(*),WORK(LWORK)
-#else
       DOUBLE PRECISION DIA(*),WMAT(*),T2TPX(*),T2TPY(*),WORK(LWORK)
-#endif
 C
       CALL QENTER('CC_XI_DEN_IA')
 C
@@ -12323,11 +12061,7 @@ C
       INTEGER LENSQ,INDSQ(LENSQ,6)
       INTEGER ISYMIBID,ISYDEN
 C
-#if defined (SYS_CRAY)
-      REAL DIA(*),WMAT(*),T2TPX(*),T2TPY(*),WORK(LWORK),ONE,TWO
-#else
       DOUBLE PRECISION DIA(*),WMAT(*),T2TPX(*),T2TPY(*),WORK(*),ONE,TWO
-#endif
 C
       PARAMETER(ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -12891,15 +12625,9 @@ C
 C
       CHARACTER*(*) FNT3,FNWBMAT,FNTHETA
 C
-#if defined (SYS_CRAY)
-      REAL DAB(*),DIJ(*),DAI(*),WORK(LWORK),ONE,HALF
-      REAL FOCK(*),L2L1(*),FOCKD(*),FREQ
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION DAB(*),DIJ(*),DAI(*),WORK(LWORK),ONE,HALF
       DOUBLE PRECISION FOCK(*),L2L1(*),FOCKD(*),FREQ
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       PARAMETER(ONE = 1.0D0, HALF = 0.5D0)
 C
@@ -13256,15 +12984,9 @@ C
 C
       INTEGER ISYMDMF,ISYME,ISYMDM,ISYMM,NTOTE,NTOTD
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*),FOCKY(*),WMAT(*),WRK(LWRK)
-      REAL ONE
-      real xnormval,ddot
-#else
       DOUBLE PRECISION TMAT(*),FOCKY(*),WMAT(*),WRK(LWRK)
       DOUBLE PRECISION ONE
       double precision xnormval,ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -13411,13 +13133,8 @@ C
       INTEGER NL,ND,NI,NF,NM,NE
       INTEGER KFI,KOFF1
 C
-#if defined (SYS_CRAY)
-      REAL TEMFI(*),FOCKD(*)
-      REAL DEN,FREQ
-#else
       DOUBLE PRECISION TEMFI(*),FOCKD(*)
       DOUBLE PRECISION DEN,FREQ  
-#endif
 C
       CALL QENTER('W3DL_DIA')
 C
@@ -13487,11 +13204,7 @@ C
       INTEGER NFI,KOFF1
       INTEGER ISYLMI,ISYMI,ISYLM
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*),ZERO
-#else
       DOUBLE PRECISION TMAT(*),ZERO
-#endif
 C
       PARAMETER (ZERO = 0.0D0)
 C
@@ -13595,11 +13308,7 @@ C
       INTEGER ISYMAIBJL,ISYMAIBL,ISYML,ISYMAIB,ISYMAIBJ,ISYMB
       INTEGER ISYMBJ,ISYMBL,ISYMAI,NBJ,NBL,KOFFT2,IADR
 C
-#if defined (SYS_CRAY)
-      REAL T2SQ(*) 
-#else
       DOUBLE PRECISION T2SQ(*)
-#endif
 C
       CALL QENTER('READ_T3_AIBL')
 C
@@ -13654,13 +13363,8 @@ C
       INTEGER KOFFDBA,KOFFDIJ,KOFFDIA,KOFFTBI,KOFFTAJ
       INTEGER NVIRA,NVIRB,NRHFI
 C
-#if defined (SYS_CRAY)
-      REAL DIA(*),DAB0(*),DIJ0(*),T1R1(*)
-      REAL ONE
-#else
       DOUBLE PRECISION DIA(*),DAB0(*),DIJ0(*),T1R1(*)
       DOUBLE PRECISION ONE
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C
@@ -13728,13 +13432,8 @@ C
       INTEGER NBJ,NBI
       INTEGER KAIBJ,KAJBI
 C
-#if defined (SYS_CRAY)
-      REAL XIJMJI(*),XAIBJ(*)
-      REAL FAIBJ,FAJBI
-#else
       DOUBLE PRECISION XIJMJI(*),XAIBJ(*)
       DOUBLE PRECISION FAIBJ,FAJBI
-#endif
 C
       CALL QENTER('T2_AIBJ_EXC')
 C
@@ -13826,14 +13525,9 @@ C
 C
       CHARACTER*(*) FNTOC
 C
-#if defined (SYS_CRAY) 
-      REAL LAMHY(*),W3BXOGX1(*),W3BXOGX2(*)
-      REAL W3BXOLX1(*),W3BXOLX2(*),WORK(LWORK)
-#else
       DOUBLE PRECISION LAMHY(*),W3BXOGX2(*)
       DOUBLE PRECISION W3BXOGX1(*),W3BXOLX1(*),W3BXOLX2(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       CALL QENTER('INTOCC_T3BARX_JK')
 C
@@ -13951,15 +13645,9 @@ C
       INTEGER NDL,IADR,ISYMF,ISYMN,ISYMFN,ISYMEM,ISYMM,ISYME,ISYMI
       INTEGER ISYMIM
       INTEGER KOFF1,KFN,KOFF2,KOFF3,NVIRE,NRHFI
-#if defined (SYS_CRAY)
-      REAL YMMAT(*)
-      REAL ONE,FAC
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION YMMAT(*)
       DOUBLE PRECISION ONE,FAC
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 
@@ -14125,17 +13813,10 @@ C
       INTEGER NMI,KOFF3,NEL,NFN
       integer kim,kfn,Kel,NI
       INTEGER ISYMF,ISYMN
-#if defined (SYS_CRAY)
-      REAL YMMAT(*)
-      REAL ONE
-      REAL WORK(LWORK)
-      real xtmp
-#else
       DOUBLE PRECISION YMMAT(*)
       DOUBLE PRECISION ONE
       DOUBLE PRECISION WORK(LWORK)
       double precision xtmp
-#endif
 C
       PARAMETER (ONE = 1.0D0)
 C

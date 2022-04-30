@@ -59,11 +59,7 @@ c-----------------------------------------------------------------------
 #include "second.h"
       logical locdbg,lvijkl,lvabkl,lvajkl,temp_direct,lauxd,mkfock
       parameter(locdbg =.false.)
-#if defined (SYS_CRAY)
-      real zero,one,two
-#else
       double precision zero,one,two
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
 
       integer indexa(MXCORB_CC)
@@ -81,16 +77,10 @@ c-----------------------------------------------------------------------
       integer ibastyp,ibastypst,ibastypend,idum,ioptbas,ic,isyden
       integer kdens,kfgdp,lunit
 
-#if defined (SYS_CRAY)
-      real xlamdh(*),work(*),vijkl(*),vajkl(*)
-      real dtime,timrdao,timfr12,timintr12,ddot,xlamdhs(*),xlamdps(*)
-      real vabkl(*),xlamdhcs(*),facterm23
-#else
       double precision xlamdh(*),work(*),vijkl(*),vajkl(*)
       double precision dtime,timrdao,timfr12,timintr12,ddot,
      &                 xlamdhs(*),xlamdps(*)
       double precision vabkl(*),xlamdhcs(*),facterm23
-#endif
       
       character*8 filback
 C      index(i,j) = max(i,j)*(max(i,j) - 3)/2 + i + j
@@ -437,15 +427,9 @@ c---------------------------------------------------------------------
      &        idxai,idxij,idxaij,krtf,isymm,ntota,ntotm,koffc,
      &        koffg,koffgtf,isymhs,isymh,idelta,ianr12sv,
      &        nggij(8),iggij(8,8),imaklm(8,8),nmaklm(8)
-#if defined (SYS_CRAY)
-      real zero,one,two,xlamdh(*),xlamdhs(*),xlamdps(*),
-     &     xint(*),vijkl(*),vajkl(*),work(*),xgaijd(*),ddot,xlamdhcs(*),
-     &     facterm23
-#else
       double precision zero,one,two,xlamdh(*),xlamdhs(*),
      &                 xlamdps(*),xint(*),vijkl(*),vajkl(*),work(*),
      &                 xgaijd(*),ddot,xlamdhcs(*),facterm23
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
  
       call qenter('mofcc2')
@@ -689,11 +673,7 @@ c---------------------------------------------------------------------
 #include "r12int.h"
       logical locdbg,lauxd
       parameter(locdbg = .false.)
-#if defined (SYS_CRAY)
-      real zero,one,two
-#else
       double precision zero,one,two
-#endif
       parameter (zero = 0.0d0, one = 1.0d0, two = 2.0d0)
 
       integer lwork,isymd,idel,ir1xbas(8,8),irgkl(8,8),ir2xbas(8,8)
@@ -705,13 +685,8 @@ c---------------------------------------------------------------------
      &        nmaklm(8)
       integer kend2,lwrk2,krtf,isymm,koff1,koff2,ntotm,isymhcs,isymr
 
-#if defined (SYS_CRAY)
-      real gaijd(*),vijkl(*),work(*),xlamdh(*)
-      real factor, ddot,facterm23
-#else
       double precision gaijd(*),vijkl(*),work(*),xlamdh(*)
       double precision factor, ddot,facterm23
-#endif
       double precision xr
       save xr
       data xr /0.0d0/

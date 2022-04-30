@@ -126,15 +126,9 @@ c/* Deck CC_DMAT */
       INTEGER IDTRAN(5,NDTRAN)
       INTEGER IDDOTS(MXVEC,NDTRAN)
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL ZERO, ONE, TWO, HALF
-      REAL DCONS(MXVEC,NDTRAN)
-#else 
       DOUBLE PRECISION DCONS(MXVEC,NDTRAN)
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
-#endif 
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0, HALF = 0.5d0)
 
 
@@ -155,11 +149,7 @@ c/* Deck CC_DMAT */
       INTEGER NTAMP, NTOT, ISYMD1
       INTEGER KENDF1, LENDF1, KENDF2, LENDF2, KEND, LEND, KEND0, LEND0
       
-#if defined (SYS_CRAY) 
-      REAL XNORM
-#else 
-      DOUBLE PRECISION XNORM
-#endif 
+      DOUBLE PRECISION XNORM 
 
 
 
@@ -167,11 +157,7 @@ c/* Deck CC_DMAT */
 * external functions:
       INTEGER ILSTSYM
 
-#if defined (SYS_CRAY) 
-      REAL DDOT
-#else 
-      DOUBLE PRECISION DDOT
-#endif 
+      DOUBLE PRECISION DDOT 
   
 *---------------------------------------------------------------------*
 * begin:
@@ -766,13 +752,8 @@ c/* Deck CC_DTST */
       PARAMETER (MXCTRAN = 2)
 
       INTEGER LWORK
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL DDOT, RDUM, D1, D2
-#else 
       DOUBLE PRECISION WORK(LWORK) 
-      DOUBLE PRECISION DDOT, RDUM(2), D1, D2
-#endif 
+      DOUBLE PRECISION DDOT, RDUM(2), D1, D2 
 
       CHARACTER*(3) LISTA, LISTB, LISTC, LISTD, LISTL
       CHARACTER*(8) FILDMA, LABELA

@@ -49,11 +49,7 @@ C  /* Deck cc_bfbsort1 */
       INTEGER ICOUNT, NBSRHF(8), IBSRHF(8,8)
       INTEGER NABK, NAKB, NAK, KOFF1, IJSQ
 
-#if defined (SYS_CRAY)
-      REAL DSRHF(*), BSRHF(*)
-#else
       DOUBLE PRECISION DSRHF(*), BSRHF(*)
-#endif
 C
 C     --------------------------------------
 C     precalculate symmetry array for BSRHF:

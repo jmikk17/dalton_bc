@@ -40,11 +40,7 @@ C
       CHARACTER*(1) TRANS
       INTEGER ISYKAP
 
-#if defined (SYS_CRAY)
-      REAL KAPPASQ(*), KAPPA(*)
-#else
       DOUBLE PRECISION KAPPASQ(*), KAPPA(*)
-#endif
 
       INTEGER ISYMA, ISYMI, IORBA, IORBI, KKIA, KKAI, KSAI, KSIA
 

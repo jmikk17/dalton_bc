@@ -412,15 +412,9 @@ C
       CHARACTER NAME1*8
       dimension icfcco(8,8)
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL CMO(*), D1PTIA(*), ETAIFJ(*)
-      REAL ZERO, ONE, TWO, HALF
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
       DOUBLE PRECISION CMO(*), D1PTIA(*), ETAIFJ(*)
-#endif
 
       PARAMETER (ZERO = 0.0D0, TWO = 2.0D0, ONE = 1.0D0, HALF = 0.5D0)
 C

@@ -2196,22 +2196,14 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO, FACTOR
-#else
       DOUBLE PRECISION ZERO, ONE, TWO, FACTOR
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
 
       INTEGER ISYDEN, ISYDAB, ISYMLH, IDEL, ISYMD, LWORK
       INTEGER ISYMB, ISYMA, ISYMIJ, ISYMI, ISYMJ,
      &        KOFF1, KOFF2, NTOTA, NIJA
 
-#if defined (SYS_CRAY)
-      REAL D2IJA(*), DAB(*), XLAMDH(*), WORK(LWORK)
-#else
       DOUBLE PRECISION D2IJA(*), DAB(*), XLAMDH(*), WORK(LWORK)
-#endif
 C
       CALL QENTER('RPADIJA21')
 C

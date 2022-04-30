@@ -4209,13 +4209,8 @@ C-----------------------------------------------------------------------
       CHARACTER LISTR1*3, LISTR2*3, MODEL*10, LABELX*8, LABELY*8
       INTEGER IDLSTX, IDLSTY, LWORK
 
-#if defined (SYS_CRAY)  
-      REAL WORK(LWORK), VALUE, DDOT
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION WORK(LWORK), VALUE, DDOT
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
       PARAMETER (ZERO=0.0D0, ONE=1.0D0, TWO=2.0D0)
   
       INTEGER ISYMX, ISYMY, ISYMXY, KT1AM0, KLAMP0, KLAMH0, KT1AMX,
@@ -4355,11 +4350,7 @@ C----------------------------------------------------------------------
       INTEGER IDLSTR2, LWORK, IOPTTST, ISYM0
       PARAMETER (ISYM0 = 1)
 
-#if defined (SYS_CRAY)  
-      REAL PROPAVE, PROPRSP, WORK(*), VEC(*), DDOT
-#else
       DOUBLE PRECISION PROPAVE, PROPRSP, WORK(*), VEC(*), DDOT
-#endif
 
       LOGICAL LORX
       CHARACTER*10 MODEL
@@ -4587,11 +4578,7 @@ C
       DIMENSION   RQ(3,3,3)
       CHARACTER*7 CDIP
       LOGICAL     WARN
-#if defined (SYS_CRAY)
-      REAL              LEVICI(3,3,3)
-#else
       DOUBLE PRECISION  LEVICI(3,3,3)
-#endif
 
       PARAMETER (TINY = 1.0D-12)
 
