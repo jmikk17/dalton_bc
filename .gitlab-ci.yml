@@ -16,6 +16,12 @@ before_script:
   - gfortran --version
   - gcc --version
   - g++ --version
+  - module load mpi/openmpi-x86_64
+  - mpirun --version
+  - module unload mpi/openmpi-x86_64
+  - module load mpi/mpich-x86_64
+  - mpirun --version
+  - module unload mpi/mpich-x86_64
   - python3 --version
   - git --version
   - cmake --version
@@ -24,8 +30,10 @@ coverage:
   image: fedora:29
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q gcovr
     - module load mpi/mpich-x86_64
@@ -52,8 +60,10 @@ intel:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   allow_failure: true
   before_script:
     - dnf upgrade -y -q
@@ -85,8 +95,10 @@ intel-mpi:
   variables:
     DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   allow_failure: true
   before_script:
     - dnf upgrade -y -q
@@ -119,8 +131,10 @@ gcc-5:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -136,8 +150,10 @@ gcc-5-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
@@ -147,54 +163,15 @@ gcc-5-int64:
     - ctest --output-on-failure -L essential -E rsp_mnf
   interruptible: true
 
-gcc-5-ompi-1.8:
-  image: fedora:23
-  variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
-    OMP_NUM_THREADS: "1"
-  tags:
-    - parallel
-  except:
-    - schedules
-  script:
-    - module load mpi/openmpi-x86_64
-    - mpirun --version
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
-                   -DENABLE_PDE=ON
-    - cd build
-    - make -j 4
-    - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
-  interruptible: true
-
-gcc-5-ompi-1.8-int64:
-  image: fedora:23
-  variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
-    OMP_NUM_THREADS: "1"
-  tags:
-    - parallel
-  except:
-    - schedules
-  script:
-    - dnf install -y -q lapack64 lapack64-devel
-    - module load mpi/openmpi-x86_64
-    - mpirun --version
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - python setup --int64 --mpi --blas=none --lapack=builtin --explicit-libs="-lopenblas64" --type=release
-    - cd build
-    - make -j 4
-    - ctest --output-on-failure -L essential -LE serial -E rsp_mnf
-  interruptible: true
-
 gcc-6:
   image: fedora:25
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
     - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
@@ -209,8 +186,10 @@ gcc-6-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
@@ -225,8 +204,10 @@ gcc-7:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
     - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
@@ -241,8 +222,10 @@ gcc-7-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
@@ -257,8 +240,10 @@ gcc-8:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
     - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
@@ -273,8 +258,10 @@ gcc-8-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
@@ -291,8 +278,10 @@ gcc-8-ompi-2.1:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - module load mpi/openmpi-x86_64
     - mpirun --version
@@ -311,8 +300,10 @@ gcc-8-ompi-2.1-int64:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - module load mpi/openmpi-x86_64
@@ -329,27 +320,13 @@ gcc-9:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
-                   -DENABLE_PDE=ON
-    - cd build
-    - make
-    - ctest --output-on-failure -L essential
-  interruptible: true
-
-gcc-9-debug:
-  image: fedora:31
-  variables:
-    DALTON_LAUNCHER: ""
-    OMP_NUM_THREADS: "1"
-  except:
-    - schedules
-  script:
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=debug
                    -DENABLE_PDE=ON
     - cd build
     - make
@@ -361,8 +338,10 @@ gcc-9-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -379,8 +358,10 @@ gcc-9-ompi-4.0:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - module load mpi/openmpi-x86_64
     - mpirun --version
@@ -399,8 +380,10 @@ gcc-9-mpich-3.3:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - module load mpi/mpich-x86_64
     - mpirun --version
@@ -419,8 +402,10 @@ gcc-9-ompi-4.0-int64:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - module load mpi/openmpi-x86_64
@@ -439,8 +424,10 @@ gcc-9-mpich-3.3-int64:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   allow_failure: true
   script:
     - dnf install -y -q lapack64 lapack64-devel
@@ -458,8 +445,10 @@ gcc-10:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
@@ -474,8 +463,10 @@ gcc-10-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  except:
-    - schedules
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
   script:
     - dnf install -y -q lapack64 lapack64-devel
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -485,6 +476,149 @@ gcc-10-int64:
     - ctest --output-on-failure -L essential
   interruptible: true
 
+gcc-11:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make
+    - ctest --output-on-failure -L essential
+  interruptible: true
+
+gcc-11-debug:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=debug
+                   -DENABLE_PDE=ON
+    - cd build
+    - make
+    - ctest --output-on-failure -L essential
+  interruptible: true
+
+gcc-11-int64:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - dnf install -y -q lapack64
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make
+    - ctest --output-on-failure -L essential
+  interruptible: true
+
+gcc-11-ompi-4.1:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - parallel
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 4
+    - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-11-mpich-3.4:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - parallel
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 4
+    - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-11-ompi-4.1-int64:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - parallel
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - dnf install -y -q lapack64
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j 4
+    - ctest --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-11-mpich-3.4-int64:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - parallel
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  allow_failure: true
+  script:
+    - dnf install -y -q lapack64
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j 4
+    - ctest --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
+
 nightly-gcc-serial:
   image: fedora:31
   variables:
@@ -492,8 +626,10 @@ nightly-gcc-serial:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
   allow_failure: true
   script:
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -510,8 +646,10 @@ nightly-gcc-mpi:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
   allow_failure: true
   script:
     - module load mpi/openmpi-x86_64
@@ -530,8 +668,10 @@ nightly-gcc-mpi-int64:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
   allow_failure: true
   script:
     - dnf install -y -q lapack64 lapack64-devel
@@ -550,15 +690,17 @@ nightly-intel:
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
   allow_failure: true
   before_script:
     - dnf upgrade -y -q
     - dnf install -y -q gcc gcc-c++ gcc-gfortran git make cmake python python3
                         redhat-rpm-config findutils which procps-ng coreutils
     - mv maintenance/oneAPI.repo /etc/yum.repos.d
-    - dnf install -y intel-oneapi-ifort intel-oneapi-icc intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
+    - dnf install -y intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
     - set +e
     - . /opt/intel/inteloneapi/setvars.sh
     - set -e
