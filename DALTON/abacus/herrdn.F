@@ -4437,13 +4437,11 @@ C
 C
       REWIND(LUCMD)
       DO WHILE (.NOT. FNDEOI)
-         READ(LUCMD,'(A7)') TMPWRD
+         READ(LUCMD,'(A7)',END=100) TMPWRD
+            ! exit with go to 100 if *CHOACT has not been found before end of file
          CALL UPCASE(TMPWRD)
          IF (TMPWRD(1:7) .EQ. '*CHOACT') THEN
             ACTSEL = .TRUE.
-            FNDEOI = .TRUE.
-         ELSE IF ((TMPWRD(1:7) .EQ. '*END OF') .OR.
-     &            (TMPWRD(1:7) .EQ. '**END O')) THEN
             FNDEOI = .TRUE.
          END IF
       END DO
