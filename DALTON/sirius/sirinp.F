@@ -304,7 +304,8 @@ C     We also want to check the geometry prediction (ICI0=6)
 C     If excited state force ALWAYS Newton-Raphson
 C     because CI vectors for lower roots needed for NEO not available
 C
-         IF (ISTATE.GT.1 .AND. NMCAVER.EQ.1) FLAG(39) = .TRUE.
+! No, NEO does in fact work for excited state optimization /May2022 hjaaj
+!        IF (ISTATE.GT.1 .AND. NMCAVER.EQ.1) FLAG(39) = .TRUE.
          IREST = 0
       ELSE
 C

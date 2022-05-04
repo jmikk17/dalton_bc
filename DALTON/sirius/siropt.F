@@ -1968,7 +1968,7 @@ C        this is a new restart file (6-Aug-1986)
      *         WRITE (LUPRI,'(/A/)')
      *          ' *** absorption switched off in a previous iteration.'
          END IF
-         IF (.NOT.FLAG(38) .AND. .NOT. FLAG(39)) THEN
+         IF (.NOT.FLAG(38) .AND. .NOT.FLAG(39)) THEN
 C           if (not always neo and not always nr) then
             FLAG(39) = RSTFLG(4)
             IF (FLAG(39)) WRITE (LUPRI,'(/A/)')
@@ -1979,15 +1979,16 @@ C           if (not always neo and not always nr) then
 C        ... no TRCNO when restart, presumably done in prev. iteration
       ELSE IF (ICSTRT.EQ.6) THEN
 C        "GEOSAVE" restart
-         IF (ISTATE .GT. 1) THEN
-            IF (FLAG(39)) THEN
-               WRITE (LUPRI,6008) ISTATE
-            ELSE
-               WRITE (LUPRI,6010)
-               CALL QTRACE(LUPRI)
-               CALL QUIT('(OPTST) NEO and ISTATE .gt. 1 for GEO WALK')
-            END IF
-         END IF
+!hjaaj may2022: NEO also works for excited states
+!        IF (ISTATE .GT. 1) THEN
+!           IF (FLAG(39)) THEN
+!              WRITE (LUPRI,6008) ISTATE
+!           ELSE
+!              WRITE (LUPRI,6010)
+!              CALL QTRACE(LUPRI)
+!              CALL QUIT('(OPTST) NEO and ISTATE .gt. 1 for GEO WALK')
+!           END IF
+!        END IF
          IF ( FNDLAB(TABLE(7),LUIT1) ) THEN
             READ  (LUIT1)      EMCOLD,DEPRED,REJWMI,REJWMA
             WRITE (LUPRI,6000)EMCOLD,DEPRED,EMCOLD+DEPRED,REJWMI,REJWMA
