@@ -1823,7 +1823,7 @@ C     If there has been a completely failed step, the geometry has
 C     by default not converged.
 C
       IF (ABS(GEINFO(0,6)) .GT. 1.0D-3) GECONV = .FALSE.
-      CALL PRIALL(CSTEP,WORK(KTEMP1))
+      CALL PRIALL(CSTEP,WORK(KTEMP1),WORK(KWRK2),LWRK2)
 C
 C     Save this geometry and energy to MOLDEN file
 C
@@ -2041,7 +2041,7 @@ C
          END IF
          GECONV = MINEND(MXRCRD,SCLVEC,BMTRAN,WORK(KTEMP1),WORK(KTEMP2))
          IF (ABS(GEINFO(ITRNMR,6)) .GT. 1.0D-3) GECONV = .FALSE.
-         CALL PRIALL(CSTEP,WORK(KTEMP1))
+         CALL PRIALL(CSTEP,WORK(KTEMP1),WORK(KWRK2),LWRK2)
 C
 C        save this geometry and energy to MOLDEN file
 C
@@ -2303,14 +2303,14 @@ C
       END
 
 C  /* Deck priall */
-      SUBROUTINE PRIALL(CSTEP,CORDNW)
+      SUBROUTINE PRIALL(CSTEP,CORDNW,WORK,LWORK)
 C
 C     Prints important information for the current geometry iteration.
 C
 #include "implicit.h"
 #include "mxcent.h"
 
-      DIMENSION   CSTEP(MXCOOR), CORDNW(3,MXCENT)
+      DIMENSION   CSTEP(MXCOOR), CORDNW(3,MXCENT), WORK(LWORK)
 
 #include "optinf.h"
 #include "gnrinf.h"
@@ -2341,6 +2341,8 @@ C
          CALL HEADER('Next geometry (au)',-1)
          CALL PRIGEO(CORDNW)
          IF (PCM) CALL UPDCAV(CORDNW)
+         CALL GEOANA(CORDNW,.TRUE.,.FALSE.,NBONDS,-1,
+     &         WORK,LWORK)
       ELSE
          CALL HEADER('Final geometry (au)',-1)
          CALL PRIGEO(CORD)
