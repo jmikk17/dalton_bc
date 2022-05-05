@@ -2375,6 +2375,9 @@ CClark:end
      &          RMLEN(*), RQLEN(*), RLEN(*),
      &          RMVEL(*), RQVEL(*), RVEL(*), SLEN(*), SVEL(*)
       LOGICAL OD, FIRST
+
+! inftap.h : LUSIFC, LBSIFC, ?
+
 #include "gnrinf.h"
 #include "abainf.h"
 #include "nuclei.h"
@@ -2416,11 +2419,8 @@ C
      &                               IDUMMY,.FALSE.)
 
       REWIND LUSIFC
-      IF (.NOT.FNDLAB('SIR IPH ',LUSIFC)) THEN
-         REWIND LUSIFC
-      IF (.NOT.FNDLAB('CIRESPON',LUSIFC)) THEN
-         CALL QUIT('ERROR: no labels on SIRIFC')
-      END IF
+      IF (.NOT.FNDLAB(LBSIFC,LUSIFC)) THEN
+         CALL QUIT('ERROR: '//LBSIFC//' label not found on SIRIFC')
       END IF
 
       READ (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,

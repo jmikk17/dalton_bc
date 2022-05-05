@@ -2658,8 +2658,8 @@ C
      &        ' Rejection ratio, high  :',RTRJMX
       END IF
 ckr#endif
-      IF ((DOMP2 .AND. .NOT. DOMC) .OR. DOCCSD .OR. ((DOCI .OR. DOCINO)
-     &    .AND. .NOT. DOMC)) THEN
+      IF ((DOMP2 .AND. .NOT. DOMC) .OR. DOCCSD .OR.
+     &    (DOCI  .AND. .NOT. DOMC)) THEN
          ENERGY = ECORR
       ELSE
          ENERGY = EMCSCF

@@ -292,11 +292,10 @@ C     Modified to read full symmetry data     881006  PRT
 C     Used from LUSIFC: NCMOT_I, NNASHX, NSYM, MUL, NISH, NASH, NORB, NBAS
 C
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
+
       READ (LUSIFC)
       READ (LUSIFC) NISHI,NASHI,NOCCI,NORBI,NBASI,NCONF,NWOPT,NWOPH,
      *              NCDETS,NCMOT_I,NNASHX,NNASHY,NNORBT,N2ORBT,
@@ -498,13 +497,10 @@ C
 C     Read PMAT and MOs.  This form will handle symmetry as is.
 C
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
-      READ (LUSIFC)
-      READ (LUSIFC)
+
       CALL RD_SIRIFC('CMO',FOUND,CMO)
       IF (.NOT.FOUND)
      &   CALL QUIT('PT1TRA error: CMO not found on SIRIFC')
@@ -515,6 +511,7 @@ C
          IF (.NOT.FOUND)
      &        CALL QUIT('PT1TRA error: PV not found on SIRIFC')
       END IF
+
       IF (IPRINT .LT. 10) GOTO 800
       WRITE(LUPRI,2100)
       TU = 0
@@ -2002,12 +1999,12 @@ C  /* Deck ptrnod */
       LOGICAL FNDLAB
 
       CALL QENTER('PTRNOD')
+
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
+
       READ (LUSIFC)
       READ (LUSIFC) (IDUM, I = 1,9), NCMOT,NNASHX
 C
@@ -2240,11 +2237,10 @@ C  /* Deck makpv1 */
       CALL QENTER('MAKPV1')
 C
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
+
       READ (LUSIFC)
       READ (LUSIFC)
       READ (LUSIFC)
@@ -2307,11 +2303,10 @@ C
       LFREE = LWORK
       CALL MEMGET('REAL',KPV,N2ASHX*N2ASHX,WORK,KFREE,LFREE)
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
+
       READ (LUSIFC)
       READ (LUSIFC)
       READ (LUSIFC)
@@ -2457,11 +2452,10 @@ C  /* Deck makpvq */
       CALL QENTER('MAKPVQ')
 C
       REWIND LUSIFC
-      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
-      ! this might be a CI calculation
-         REWIND LUSIFC
-         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      IF ( .NOT. FNDLAB(LBSIFC,LUSIFC) ) THEN
+         CALL QUIT('ERROR: SIRIFC is not valid')
       END IF
+
       READ (LUSIFC)
       READ (LUSIFC)
       READ (LUSIFC)

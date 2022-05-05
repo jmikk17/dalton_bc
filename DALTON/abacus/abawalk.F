@@ -525,7 +525,8 @@ C
      *               (IZEROG(I),I = 1, NZEROG)
          END IF
          IF (.NOT. WFPRED) THEN
-            WRITE (LUPRI,'(/A)') ' No prediction of wave function.'
+!           WRITE (LUPRI,'(/A)') ' No prediction of wave function.'
+! .not.WFPRED is now default (and WFPRED is not working in current version)
          END IF
          IF (NOORTH) THEN
             WRITE (LUPRI,'(/A)')
@@ -599,7 +600,8 @@ C
       DO 400 I = 0, 7
          DOREPW(I) = DOSYM(I + 1)
   400 CONTINUE
-      WFPRED = .TRUE.
+!     WFPRED = .TRUE.
+      WFPRED = .FALSE. ! WFPRED is not implemented in current version
       REJECT = WLKREJ
       IF (REJECT) TRUSTD = 0.5D0
       KEEPSY = .FALSE.
@@ -6101,7 +6103,7 @@ C     B) Calculate predicted reference CI vector for new geometry
 C        Call abavar to make sure perturbation symmetry is one.
 C
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF
       POTNUC = EPOT
       READ (LUSIFC)

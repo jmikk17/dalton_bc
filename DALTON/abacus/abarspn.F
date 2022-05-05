@@ -100,7 +100,7 @@ C
 
       USEDRC_SAVE = USEDRC
       FLAG27_SAVE = FLAG(27) ! needs to be restored after triplet response
-      ! otherwise susequent call of ABARSPN for singlet response may fail /Feb.2018 - hjaaj
+      ! otherwise susequent call of ABARSP for singlet response may fail /Feb.2018 - hjaaj
       ! (SIRIFC is not read again, so it is not restored this way)
       TDA_save = TDA
 
@@ -168,15 +168,22 @@ C
 C
       IF (CICLC) THEN
          RSPCI = .TRUE.
+         IF (LBSIFC .NE. 'CIRESPON') THEN
+            CALL QUIT('ERROR: SIRIFC file not valid for CI response')
+         END IF
       ELSE
          RSPCI = .FALSE.
+         IF (LBSIFC .NE. 'SIR IPH ') THEN
+            CALL QUIT(
+     &         'ERROR: SIRIFC file does not contain "SIR IPH " label.')
+         END IF
       ENDIF
 C
       IF (CICLC.AND.HFCLC) THEN
          WRITE (LUPRI,'(//,A,/,A,/)')
      *   ' ERROR: THE CALCULATION IS SPECIFIED AS BOTH CI AND HF'
      *   ,' CONSEQUENTLY THE CALCULATION MUST STOP'
-         CALL QUIT('ABARSP: INCORRECT SPECIFICATION OF CICLC AND HFCLC')
+         CALL QUIT('ABARSP ERROR: BOTH CICLC AND HFCLC SPECIFIED')
       ENDIF
 C
       KSYMOP = IOPSYM

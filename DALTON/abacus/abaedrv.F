@@ -379,7 +379,7 @@ C
       LOGICAL INGD
 C
 C Used from common blocks:
-C   ABAINF : POLAR, DOSYM
+C   ABAINF : POLAR, DOSYM, ABAHF
 C   INFLIN : NCONRF,?
 C   INFDIM : LACIMX, LBCIMX, LCINDX, NVARMA,...
 C
@@ -593,7 +593,8 @@ C
      *          FC(*),FV(*),FCAC(*),H2AC(*),GORB(*),WRK(*)
 C
 C Used from common blocks:
-C  INFINP : LSYM,FLAG(1:NFLAG)
+C infinp.h : LSYM,FLAG(1:NFLAG)
+C inftap.h : LUSIFC, LBSIFC, ?
 C
 #include "infinp.h"
 #include "inflin.h"
@@ -604,18 +605,14 @@ C
 #include "infopt.h"
 #include "inforb.h"
 C
-      LOGICAL FNDLAB
+      LOGICAL :: FNDLAB
 C
       REWIND LUSIFC
-      IF (.NOT.FNDLAB('SIR IPH ',LUSIFC)) THEN
-         REWIND LUSIFC
-      IF (FNDLAB('CIRESPON',LUSIFC)) THEN
-         ! CIRESPON is not implemented for MOLHES or B response.
-         CALL QUIT(
-     &      'ERROR: CI properties not implemented for MOLHES and B')
+      IF (.NOT.FNDLAB(LBSIFC,LUSIFC)) THEN
+         CALL QENTER('READMC')
+         CALL QUIT('ERROR: '//LBSIFC//' label not found on SIRIFC')
       END IF
-         CALL QUIT("ERROR: label 'SIR IPH ' not found on SIRIFC")
-      END IF
+
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF
       POTNUC = EPOT
       READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,NWOPH,
