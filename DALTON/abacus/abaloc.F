@@ -26,6 +26,9 @@ C
 #include "implicit.h"
 #include "maxorb.h"
 C
+      PARAMETER (NTABLE = 10, D0 = 0.0D0, NLAB = 50)
+C 
+CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 #include "locinf.h"
 C
       CALL QENTER('LOCINI')
@@ -39,6 +42,11 @@ C
       FBOOCC = .FALSE.
       LABOCC = .FALSE.
       LABVIR = .FALSE.
+C
+      DO I = 1, NLAB
+         TABOCL(I) = '-**--**-'
+         TABVIL(I) = '-**--**-'
+      END DO
 C
       CALL QEXIT('LOCINI')
 C
@@ -2491,7 +2499,7 @@ C
             ISYMORB = 0
             IADD = 0
             ICMMO = 1
-            DO 1 I=1,NORBT
+            DO 1 I=1,NBAST
 C
                IF (ISYMORB .EQ. NAOS(ISYMCLAS)) THEN
                   ISYMORB = 0

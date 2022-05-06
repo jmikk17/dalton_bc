@@ -1167,7 +1167,7 @@ C  /* Deck spninp */
 #include "mxcent.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 16, D0 = 0.0D0)
+      PARAMETER (NTABLE = 17, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
@@ -1177,7 +1177,7 @@ C
       DATA TABLE /'.ABUNDA','.PRINT ','.SELECT','.NODSO ','.NOSD  ',
      &            '.NOFC  ','.NOPSO ','.SD+FC ','.SDXFC ','.ISOTOP',
      &            '.COUPLI','.SOS   ','.SOSOCC','.SINGST','.TRIPST',
-     &            '.SOSOCS'/
+     &            '.SOSOCS','.SOCVIR'/
 C
       NEWDEF = (WORD .EQ. '*SPIN-S')
       ICHANG = 0
@@ -1193,7 +1193,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16),I
+                     GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17),I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -1290,6 +1290,10 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
                   SOSOCS = .TRUE.
                   READ (LUCMD,*) NSTATI,NSTATF,NITRST
                GOTO 100
+ 17            CONTINUE
+                  SOSSPN = .TRUE.
+                  SOCVIR = .TRUE.
+               GOTO 100
 Cend-PFP
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
@@ -1331,6 +1335,9 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
          IF (SOSOCC) WRITE (LUPRI,'(A,A)')
      &      ' Only contributions from pairs of occupied ',
      &      ' orbitals are printed'
+         IF (SOCVIR) WRITE (LUPRI,'(A,A)')
+     &      ' Only contributions from one occupied and one virtual ',
+     &      ' orbital are printed'
          IF (NSTATS .GT. 0) 
      &      WRITE (LUPRI,'(A,I6,A)')' Only the contributions from the ',
      &           NSTATS,' lowest singlet states are included'
@@ -1368,6 +1375,7 @@ C
 CPFP: 27/03-2006: SOS for spin-spin coupling included
       SOSSPN= .FALSE.
       SOSOCC= .FALSE.
+      SOCVIR= .FALSE.
       NSTATS= 0
       NSTATT= 0
       SOSOCS= .FALSE.
@@ -2067,6 +2075,7 @@ ckr               IDORCT(IREC) = 1
                IF (IPRTRP .GT. 10) THEN
                   CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
                END IF
+               CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
  10         CONTINUE
          END IF
  50   CONTINUE

@@ -83,18 +83,36 @@ C
          NLOCCS = 1
       END IF  
 C
+CPFP:24/03-2022
       IF (FBOVIR) THEN
-         NLVIR  = NVSET*NOCCT
-         NLVIRS = NLVIR
+            NLVIR  = NVSET*NOCCT + NVSETR
+            NLVIRS = NLVIR
       ELSE IF (FBSETV) THEN
-         NLVIR  = NVSET*NOCCT
-         NLVIRS = NLVIR
+            NLVIR  = NVSET*NOCCT + NVSETR
+            NLVIRS = NLVIR
       ELSE IF (FBSTVO) THEN
-         NLVIR  = NVSET*NV2LOC
-         NLVIRS = NLVIR
+            NLVIR  = NVSET*NV2LOC + NVSETR
+            NLVIRS = NLVIR
       END IF
+Cend-PFP:24/03-2022
 C
       NLVAR2 = NLOCCS*NLOCCS*NLVIRS*NLVIRS
+C
+      IF (SOCVIR) THEN
+         IF (FBOVIR) THEN
+            NLVIR  = NVSET*NOCCT
+            NLVIRS = NLVIR
+         ELSE IF (FBSETV) THEN
+            NLVIR  = NVSET*NOCCT
+            NLVIRS = NLVIR
+         ELSE IF (FBSTVO) THEN
+            NLVIR  = NVSET*NV2LOC
+            NLVIRS = NLVIR
+         END IF
+         NLOCCS = NLOCC
+         NLVAR2 = NLOCCS*NLVIRS
+         NEXCIT = 0
+      END IF
 C
 C------------------------
 C     1. Work allocation:
@@ -195,7 +213,7 @@ C
       ENDIF
 C
 C----------------------------------
-C     6. Impresion work allocation:
+C     6. Impression work allocation:
 C----------------------------------
 C
       KSPTOT = KWORK5
@@ -206,6 +224,11 @@ C
          WRITE(LUPRI,*)'SOSDRV.6: Need :',KWORK6,'  Available :',LWORK6
          CALL QUIT('Insufficient memory in SOSDRV.6')
       ENDIF
+C
+C============================================================
+C     Calculate contributions from two occupied orbitals only
+C     using only a given set of excited states
+C============================================================
 C
       IF (SOSOCC) THEN
 C
@@ -243,56 +266,25 @@ C
                ILOCCF = 1
                ILOCCL = NLOCC
 C
-C-------------------------------------------------------
-C     Initialize temporary arrays for coupling constants
-C-------------------------------------------------------
+C-------------------------------------------------------------
+C     Calculate the contributions from the individual orbitals
+C-------------------------------------------------------------
 C
-               CALL DZERO(WORK(KSD),9*9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KFC),NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSDF),9*NUCDEP*NUCDEP*NLVAR2)
-C
-               CALL DZERO(WORK(KSPSD),9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSPFC),9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSPSDF),9*NUCDEP*NUCDEP*NLVAR2)
-C
-C==========================================================
-C     Calculate triplet contributions to coupling constants
-C==========================================================
-C
-               CALL SOSJTR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
-     &                     ILOCCL,JLOCCF,JLOCCL,NEXCIT,WORK(KCLOCO),
-     &                     WORK(KCLOCV),WORK(KEXCTR),WORK(KSD),
-     &                     WORK(KFC),WORK(KSDF),WORK(KSPSD),WORK(KSPFC),
-     &                     WORK(KSPSDF),WORK(KWORK6),LWORK6)
-C
-C-------------------------------------------------------
-C     Initialize temporary arrays for coupling constants
-C-------------------------------------------------------
-C
-              CALL DZERO(WORK(KSPPSO),9*NUCDEP*NUCDEP*NLVAR2)
-C
-C==========================================================
-C     Calculate singlet contributions to coupling constants
-C==========================================================
-C
-               CALL SOSJSN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
-     &                     ILOCCL,JLOCCF,JLOCCL,NEXCIS,WORK(KCLOCO),
-     &                     WORK(KCLOCV),WORK(KEXCSN),WORK(KSPPSO),
-     &                     WORK(KWORK6),LWORK6)
-C
-C=================================================
-C     Print the results for the coupling constants
-C=================================================
-C
-               CALL LSPRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,
-     &                     JLOCCL,WORK(KSPDSO),WORK(KSPPSO),WORK(KSPSD),
-     &                     WORK(KSPFC),WORK(KSPSDF),WORK(KSPTOT),
-     &                     WORK(KWORK6),LWORK6)
-C
-               CALL TIMER ('SOSDRV',TIMEIN,TIMOUT)
-               PASS   = .TRUE.
+               CALL SOSDRV_1(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2,
+     &                       ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,NEXCIT,
+     &                       WORK(KCLOCO),WORK(KCLOCV),
+     &                       WORK(KEXCSN),WORK(KEXCTR),
+     &                       WORK(KSD),WORK(KFC),WORK(KSDF),
+     &                       WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                       WORK(KSPPSO),WORK(KSPDSO),WORK(KSPTOT),
+     &                       WORK(KWORK6),LWORK6,PASS)
 C
             END DO
+C
+C============================================================
+C     Calculate contributions from two occupied orbitals only
+C     using all excited states
+C============================================================
 C
          ELSE
 C
@@ -306,9 +298,34 @@ C
             ILOCCF = 1
             ILOCCL = NLOCC
 C
+C-------------------------------------------------------------
+C     Calculate the contributions from the individual orbitals
+C-------------------------------------------------------------
+C
+            CALL SOSDRV_1(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2,
+     &                    ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,NEXCIT,
+     &                    WORK(KCLOCO),WORK(KCLOCV),
+     &                    WORK(KEXCSN),WORK(KEXCTR),
+     &                    WORK(KSD),WORK(KFC),WORK(KSDF),
+     &                    WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                    WORK(KSPPSO),WORK(KSPDSO),WORK(KSPTOT),
+     &                    WORK(KWORK6),LWORK6,PASS)
+C
+         END IF
+
+      ELSE IF (SOCVIR) THEN
+C            
+            ILOCCF = 1
+            ILOCCL = NLOCC
+C
+            JLOCCF = 1
+            JLOCCL = NLOCC
+C
 C-------------------------------------------------------
 C     Initialize temporary arrays for coupling constants
 C-------------------------------------------------------
+C            
+            CALL DZERO(WORK(KSPPSO),9*NUCDEP*NUCDEP*NLVAR2)
 C
             CALL DZERO(WORK(KSD),9*9*NUCDEP*NUCDEP*NLVAR2)
             CALL DZERO(WORK(KFC),NUCDEP*NUCDEP*NLVAR2)
@@ -317,44 +334,42 @@ C
             CALL DZERO(WORK(KSPSD),9*NUCDEP*NUCDEP*NLVAR2)
             CALL DZERO(WORK(KSPFC),9*NUCDEP*NUCDEP*NLVAR2)
             CALL DZERO(WORK(KSPSDF),9*NUCDEP*NUCDEP*NLVAR2)
-C
+C           
 C==========================================================
 C     Calculate triplet contributions to coupling constants
 C==========================================================
 C
-            CALL SOSJTR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
-     &                  ILOCCL,JLOCCF,JLOCCL,NEXCIT,WORK(KCLOCO),
-     &                  WORK(KCLOCV),WORK(KEXCTR),WORK(KSD),WORK(KFC),
-     &                  WORK(KSDF),WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
-     &                  WORK(KWORK6),LWORK6)
-C
-C-------------------------------------------------------
-C     Initialize temporary arrays for coupling constants
-C-------------------------------------------------------
-C
-            CALL DZERO(WORK(KSPPSO),9*NUCDEP*NUCDEP*NLVAR2)
+            CALL SOS_J_OCVIR_TR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
+     &                          ILOCCL,WORK(KCLOCO),WORK(KCLOCV),
+     &                          WORK(KSD),WORK(KFC),WORK(KSDF),
+     &                          WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                          WORK(KWORK6),LWORK6)
 C
 C==========================================================
 C     Calculate singlet contributions to coupling constants
 C==========================================================
 C
-            CALL SOSJSN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
-     &                  JLOCCF,JLOCCL,NEXCIS,WORK(KCLOCO),WORK(KCLOCV),
-     &                  WORK(KEXCSN),WORK(KSPPSO),WORK(KWORK6),LWORK6)
-C
+            CALL SOS_J_OCVIR_SN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
+     &                          ILOCCF,ILOCCL,WORK(KCLOCO),WORK(KCLOCV),
+     &                          WORK(KSPPSO),WORK(KWORK6),LWORK6)
+	 
 C=================================================
 C     Print the results for the coupling constants
 C=================================================
 C
-            CALL LSPRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,
-     &                  JLOCCL,WORK(KSPDSO),WORK(KSPPSO),WORK(KSPSD),
-     &                  WORK(KSPFC),WORK(KSPSDF),WORK(KSPTOT),
-     &                  WORK(KWORK6),LWORK6)
-C
+	       CALL LS_OCVIR_PRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                          JLOCCF,JLOCCL,WORK(KSPDSO),WORK(KSPPSO),
+     &                          WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                          WORK(KSPTOT),TOTNODSO,WORK(KWORK6),
+     &                          LWORK6)
+C	 
             CALL TIMER ('SOSDRV',TIMEIN,TIMOUT)
             PASS   = .TRUE.
 C
-         END IF
+C=======================================================================
+C     Calculate contributions from two occupied and two virtual orbitals
+C     using localized virtual orbitals
+C=======================================================================
 C
       ELSE IF (FBOVIR .OR. FBSETV .OR. FBSTVO) THEN
 C
@@ -372,54 +387,55 @@ C
                ILOCCF = I
                ILOCCL = I
 C
-C-------------------------------------------------------
-C     Initialize temporary arrays for coupling constants
-C-------------------------------------------------------
+C-------------------------------------------------------------
+C     Calculate the contributions from the individual orbitals
+C-------------------------------------------------------------
 C
-               CALL DZERO(WORK(KSD),9*9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KFC),NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSDF),9*NUCDEP*NUCDEP*NLVAR2)
+               CALL SOSDRV_1(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2,
+     &                       ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,NEXCIT,
+     &                       WORK(KCLOCO),WORK(KCLOCV),
+     &                       WORK(KEXCSN),WORK(KEXCTR),
+     &                       WORK(KSD),WORK(KFC),WORK(KSDF),
+     &                       WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                       WORK(KSPPSO),WORK(KSPDSO),WORK(KSPTOT),
+     &                       WORK(KWORK6),LWORK6,PASS)
 C
-               CALL DZERO(WORK(KSPSD),9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSPFC),9*NUCDEP*NUCDEP*NLVAR2)
-               CALL DZERO(WORK(KSPSDF),9*NUCDEP*NUCDEP*NLVAR2)
+            END DO
+         END DO
 C
-C==========================================================
-C     Calculate triplet contributions to coupling constants
-C==========================================================
+C=======================================================================
+C     Calculate contributions from two occupied and two virtual orbitals
+C     using canonical virtual orbitals
+C=======================================================================
 C
-               CALL SOSJTR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
-     &                     ILOCCL,JLOCCF,JLOCCL,NEXCIT,WORK(KCLOCO),
-     &                     WORK(KCLOCV),WORK(KEXCTR),WORK(KSD),
-     &                     WORK(KFC),WORK(KSDF),WORK(KSPSD),WORK(KSPFC),
-     &                     WORK(KSPSDF),WORK(KWORK6),LWORK6)
+      ELSE
 C
-C-------------------------------------------------------
-C     Initialize temporary arrays for coupling constants
-C-------------------------------------------------------
+C--------------------------------
+C     Loop over occupied orbitals
+C--------------------------------
 C
-               CALL DZERO(WORK(KSPPSO),9*NUCDEP*NUCDEP*NLVAR2)
+         DO  J = 1, NLOCC
 C
-C==========================================================
-C     Calculate singlet contributions to coupling constants
-C==========================================================
+            JLOCCF = J
+            JLOCCL = J
 C
-               CALL SOSJSN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,ILOCCF,
-     &                     ILOCCL,JLOCCF,JLOCCL,NEXCIS,WORK(KCLOCO),
-     &                     WORK(KCLOCV),WORK(KEXCSN),WORK(KSPPSO),
-     &                     WORK(KWORK6),LWORK6)
+            DO  I = 1, NLOCC
 C
-C=================================================
-C     Print the results for the coupling constants
-C=================================================
+               ILOCCF = I
+               ILOCCL = I
 C
-               CALL LSPRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,
-     &                     JLOCCL,WORK(KSPDSO),WORK(KSPPSO),WORK(KSPSD),
-     &                     WORK(KSPFC),WORK(KSPSDF),WORK(KSPTOT),
-     &                     WORK(KWORK6),LWORK6)
+C-------------------------------------------------------------
+C     Calculate the contributions from the individual orbitals
+C-------------------------------------------------------------
 C
-               CALL TIMER ('SOSDRV',TIMEIN,TIMOUT)
-               PASS   = .TRUE.
+               CALL SOSDRV_1(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2,
+     &                       ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,NEXCIT,
+     &                       WORK(KCLOCO),WORK(KCLOCV),
+     &                       WORK(KEXCSN),WORK(KEXCTR),
+     &                       WORK(KSD),WORK(KFC),WORK(KSDF),
+     &                       WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
+     &                       WORK(KSPPSO),WORK(KSPDSO),WORK(KSPTOT),
+     &                       WORK(KWORK6),LWORK6,PASS)
 C
             END DO
          END DO
@@ -427,6 +443,120 @@ C
       END IF
 C
       CALL QEXIT('SOSDRV')
+C
+      RETURN
+      END
+C**********************************************************************
+C  /* Deck sosdrv1 */
+      SUBROUTINE SOSDRV_1(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2,
+     &                    ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,NEXCIT,
+     &                    CLOCO,CLOCV,EXCSN,EXCTR,SD,FC,SDF,SPSD,SPFC,
+     &                    SPSDF,SPPSO,SPDSO,SPTOT,WORK,LWORK,PASS)
+C
+C      Stephan P. A. Sauer 21/03-2022
+C
+C      This routine contains the actual computational part 
+C      for the calculation of contributions
+C      to the indirect nuclear spin-spin coupling constants from 
+C      individual molecular orbitals.
+C
+#include "implicit.h"
+C
+C MXCOOR used from include file mxcent.h
+C LUPRI used from include file priunit.h
+#include "mxcent.h"
+#include "priunit.h"
+C
+C NUCDEP used from COMMON /NUCLEI/
+C NSYM, NORBT, NOCCT, NVIRT, NCMOT used from COMMON /INFORB/
+C ISPPRI used from COMMON /SPNOUT/
+C NVARPT used from COMMON /INFLIN/
+#include "nuclei.h"
+#include "inforb.h"
+C#include "spnout.h"
+C#include "inflin.h"
+C
+C#include "maxorb.h"
+C#include "locinf.h"
+C
+      INTEGER IPRSOS
+      INTEGER NLOCC,NLVIR,NLOCCS,NLVIRS,NLVAR2
+      INTEGER ILOCCF,ILOCCL,JLOCCF,JLOCCL
+      INTEGER NEXCIS,NEXCIT 
+      INTEGER LWORK
+      LOGICAL PASS
+C
+      DIMENSION SD(9*9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION FC(NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SDF(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPSD(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPFC(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPSDF(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPPSO(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPDSO(9*NUCDEP*NUCDEP*NLVAR2)
+      DIMENSION SPTOT(9*NUCDEP*NUCDEP*NLVAR2)
+C
+      DIMENSION CLOCO(NOCCT*NLOCC)
+      DIMENSION CLOCV(NVIRT*NLVIR)
+C
+      DIMENSION EXCTR(NEXCIT)
+      DIMENSION EXCSN(NEXCIS)
+C
+      DIMENSION WORK(LWORK)
+C
+      CALL QENTER('SOSDRV_1')
+C
+      CALL TIMER('START ',TIMEIN,TIMOUT)
+      IF (IPRSOS .GT. 0) WRITE (LUPRI,'(A,/)')
+     &     '1 ---------- Output from SOSDRV_1 ----------'
+C
+C-------------------------------------------------------
+C     Initialize temporary arrays for coupling constants
+C-------------------------------------------------------
+C
+      CALL DZERO(SD,9*9*NUCDEP*NUCDEP*NLVAR2)
+      CALL DZERO(FC,NUCDEP*NUCDEP*NLVAR2)
+      CALL DZERO(SDF,9*NUCDEP*NUCDEP*NLVAR2)
+C
+      CALL DZERO(SPSD,9*NUCDEP*NUCDEP*NLVAR2)
+      CALL DZERO(SPFC,9*NUCDEP*NUCDEP*NLVAR2)
+      CALL DZERO(SPSDF,9*NUCDEP*NUCDEP*NLVAR2)
+C
+C==========================================================
+C     Calculate triplet contributions to coupling constants
+C==========================================================
+C
+      CALL SOSJTR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
+     &            ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIT,CLOCO,CLOCV,
+     &            EXCTR,SD,FC,SDF,SPSD,SPFC,SPSDF,
+     &            WORK,LWORK)
+C
+C-------------------------------------------------------
+C     Initialize temporary arrays for coupling constants
+C-------------------------------------------------------
+C
+      CALL DZERO(SPPSO,9*NUCDEP*NUCDEP*NLVAR2)
+C
+C==========================================================
+C     Calculate singlet contributions to coupling constants
+C==========================================================
+C
+      CALL SOSJSN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
+     &            ILOCCF,ILOCCL,JLOCCF,JLOCCL,NEXCIS,CLOCO,CLOCV,
+     &            EXCSN,SPPSO,WORK,LWORK)
+C
+C=================================================
+C     Print the results for the coupling constants
+C=================================================
+C
+      CALL LSPRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,
+     &            JLOCCL,SPDSO,SPPSO,SPSD,SPFC,SPSDF,SPTOT,
+     &            WORK,LWORK)
+C
+      CALL TIMER ('SOSDRV_1',TIMEIN,TIMOUT)
+      PASS   = .TRUE.
+C
+      CALL QEXIT('SOSDRV_1')
 C
       RETURN
       END
@@ -953,7 +1083,7 @@ C
                NABATY = 1
                NABAOP = 1
                LABEL  = 'EXCITLAB' 
-C
+C 
                CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
      &                     SNEXE,NEXCI,NABATY,NABAOP,LABEL,
      &                     LUGDVES,LUSOVES,LUREVES,THRSOS,MAXSOS,IPRRSP,
@@ -1018,6 +1148,10 @@ C
 C------------------------------------------------------------------
 C                 transform property gradient to localized orbitals
 C------------------------------------------------------------------
+C                   
+                  WRITE(*,'(/3(A))') 'SOSJSN : analysis of coupling',
+     &                          ' constants only possible for HF',
+     &                          ' or DFT wavefunctions'
 C
                   CALL LOCAI(NLOCC,NLVIR,NVARPT,CLOCO,CLOCV,
      &                       WORK(KTEMP),WORK(KGD1))
@@ -1981,6 +2115,743 @@ C
       RETURN
 C
       END
+C
+C*********************************************************************
+C  /* Deck sos_j_ocvir_tr */
+C
+      SUBROUTINE SOS_J_OCVIR_TR(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
+     &                         ILOCCF,ILOCCL,CLOCO,CLOCV,SD,FC,SDF,
+     &                         SPNSD,SPNFC,SPSDFC,WORK,LWORK)
+C
+C      Ronan Gleeson 10/1-2022
+C      Based on SOSJTR by Stephan P. A. Sauer 30/9-1997
+C
+C      This routine calculates all contributions at the RPA level
+C      from individual orbitals to the triplet parts of the 
+C      spin-spin coupling constants.
+C
+#include "implicit.h"
+C
+C
+C IRAT used from include file iratdef.h
+C MAXASH used from include file maxash.h
+C MAXORB, MAXOCC used from include file maxorb.h
+C MXCOOR used from include file mxcent.h
+C LUPRI used from include file priunit.h
+#include "iratdef.h"
+#include "maxash.h"
+#include "maxorb.h"
+#include "mxcent.h"
+#include "priunit.h"
+#include "dummy.h"
+C
+      PARAMETER (ZERO = 0.0D+00, D05 = 0.5D+00)
+C
+#include "codata.h"
+C
+      DIMENSION CLOCO(NOCCT,NLOCC),CLOCV(NVIRT,NLVIR)
+      DIMENSION SD(NLOCCS*NLVIRS,9*NUCDEP,9*NUCDEP)
+      DIMENSION FC(NLOCCS*NLVIRS,NUCDEP,NUCDEP)
+      DIMENSION SDF(NLOCCS*NLVIRS,9*NUCDEP,NUCDEP)
+      DIMENSION SPNSD(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPSDFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION WORK(LWORK)
+C
+      LOGICAL HFCLC, CICLC, TRIPLE, EXECLC
+      LOGICAL OLDDX
+      CHARACTER*8 LABEL
+C
+C THRTRP, IPRTRP, MAXTRP, MXRM, MXPHP, OOTV 
+C used from COMMON /CBITRP/
+C NTRVEC used from COMMON /GDVEC/
+C NVARMA used from COMMON /INFDIM/
+C JTINAC, JTSEC, IOBTYP used from COMMON /INFIND/
+C NVARPT used from COMMON /INFLIN/
+C NASHT, NSYM, NOCCT, NVIRT used from COMMON /INFORB/
+C NCONF modified in COMMON /INFVAR/
+C JWOP used from COMMON /INFVAR/
+C NUCDEP used from COMMON /NUCLEI/
+C LUGDT, ABAGDT, LRGDT, NBGDT used from COMMON /NUCTAP/
+C DOSD, DOSDFC, DOFC used from COMMON /SPNOUT/
+C
+#include "cbitrp.h"
+#include "gdvec.h"
+#include "infdim.h"
+#include "infind.h"
+#include "inflin.h"
+#include "inforb.h"
+#include "infvar.h"
+#include "nuclei.h"
+#include "spnout.h"
+#include "inftap.h"
+C
+      CALL QENTER('SOS_J_OCVIR_TR')
+C
+CSPAS: 27/5-11: adjusting to changes in the GPOPEN routine
+C     LUGDVET = 0
+C     LUSOVET = 0
+C     LUREVET = 0
+      LUGDVET = -1
+      LUSOVET = -1
+      LUREVET = -1
+CKeinSPASmehr
+C
+      IPRRSP = IPRTRP
+      THRSOS = THRTRP
+      MAXSOS = MAXTRP
+C
+C----------------------------------------
+C     Check for Hartree-Fock wavefunction
+C----------------------------------------
+C
+      HFCLC = NASHT .LE. 1
+      IF (.NOT. HFCLC) THEN
+         WRITE(LUPRI,'(/3(A))') 'SOS_J_OCVIR_TR : analysis of',
+     &                          '  coupling constants only possible',
+     &                          ' for HF or DFT wavefunctions' 
+         CALL QUIT('SOS_J_OCVIR_TR : SOS only for HF/DFT wavefunct.')
+       ELSE
+         NCONF = 1
+      END IF
+C
+C------------------------------------------------------------
+C     Open direct access file with the property gradients,
+C     which were already calculated in the normal calculation 
+C     of the spin-spin coupling constants
+C------------------------------------------------------------
+C
+      NREC = 0
+      IF (DOSD .OR. DOSDFC) NREC = NREC + 9*NUCDEP
+      IF (DOFC) NREC = NREC + NUCDEP
+C
+      CALL GPOPEN(LUGDT,ABAGDT,'UNKNOWN','DIRECT',' ',                 
+     &            IRAT*NVARMA,OLDDX)
+C
+      IF (OLDDX) THEN
+         WRITE (LUPRI,'(/2A)') ' Old LUGDT file opened in', 
+     &                         ' SOS_J_OCVIR_TR.'    
+      ELSE
+         WRITE (LUPRI,'(/2A)') 'SOS_J_OCVIR_TR : Old LUGDT file', 
+     &                          'not found'
+         CALL QUIT('SOS_J_OCVIR_TR : Old LUGDT file not found')
+      END IF
+C
+      CALL GPOPEN(LUSOVET,ABARDT,'UNKNOWN','DIRECT',' ',
+     &            IRAT*NVARMA,OLDDX)
+      IF (OLDDX) THEN
+          WRITE (LUPRI,'(/2A)') ' Old LUSOVET file opened in', 
+     &                         ' SOS_J_OCVIR_TR.'    
+      ELSE
+          WRITE (LUPRI,'(/2A)') 'SOS_J_OCVIR_TR : Old LUSOVET file', 
+     &                          'not found'
+          CALL QUIT('SOS_J_OCVIR_TR : Old LUSOVET file not found')
+      END IF
+C
+C*************************
+C     Loop over symmetries
+C*************************
+C
+      DO ISYM = 1, NSYM
+         NREC = NTRVEC(ISYM)
+         IF (NREC .GT. 0) THEN
+C
+            TRIPLE = .TRUE.
+C
+           CALL ABAVAR(ISYM,TRIPLE,IPRSOS,WORK,LWORK)
+C
+            IF (NVARPT .GT. 0) THEN
+               IF (IPRSOS .GT. 5) THEN
+                  WRITE (LUPRI,'(/,1X,A,I10)') 'NCONST ', NCONST
+                  WRITE (LUPRI,'(1X,A,I10)')   'NVARPT ', NVARPT
+                  WRITE (LUPRI,'(1X,A,I10)')   'for symmetry ',ISYM
+               END IF
+C
+C--------------------------------
+C              Work allocation
+C--------------------------------
+C
+               NLVAR  = NLOCC*NLVIR
+               NLVARS = NLOCCS*NLVIRS
+C
+               KTEMP  = 1
+               KSLVZ  = KTEMP  + 2*NVARPT
+               KSLVY  = KSLVZ  + NLVAR
+               KGD1   = KSLVY  + NLVAR
+               KGD2   = KGD1   + NLVAR
+               KLCON = KGD2   + NLVAR
+               KWORK2 = KLCON + NLVARS
+               LWORK2 = LWORK  - KWORK2
+C
+               IF (LWORK2 .LT. 0) THEN
+                  WRITE(LUPRI,*) 'SOS_J_OCVIR_TR: Need :',KWORK2,
+     &                            '  Available :',LWORK
+                  CALL QUIT('Insufficient memory in SOS_J_OCVIR_TR')
+               ENDIF
+C
+C=====================================================
+C              1. Loop over operators in this symmetry
+C=====================================================
+C
+               DO IOP = 1, NREC
+                  IREC  = ITRREC(IOP,ISYM)
+                  ICOOR = ITRCOR(IOP,ISYM)
+C
+                  CALL READDX (LUGDT,IREC,IRAT*NVARPT,WORK(KTEMP))
+C
+                  IF (IPRSOS .GT. 10) THEN
+                     WRITE (LUPRI,'(/,A,I5)') ' Property Gradient'
+                     WRITE (LUPRI,'(A,I5)') ' Coordinate:', ICOOR
+                     WRITE (LUPRI,'(A,I5)') ' Record:    ', IREC
+                     CALL OUTPUT(WORK(KTEMP),1,NVARPT,1,1,NVARPT,1,1,
+     &                           LUPRI)
+                  END IF
+C
+C------------------------------------------------------------------
+C                 transform property gradient to localized orbitals
+C------------------------------------------------------------------
+C
+                  CALL LOCAI(NLOCC,NLVIR,NVARPT,CLOCO,CLOCV,
+     &                       WORK(KTEMP),WORK(KGD1))
+C
+                  IF (IPRSOS .GT. 10) THEN
+                     WRITE (LUPRI,'(/,A,I5)') 
+     &                     ' Localized Property Gradient'
+                     WRITE (LUPRI,'(A,I5)') ' Coordinate:', ICOOR
+                     WRITE (LUPRI,'(A,I5)') ' Record:    ', IREC
+                     CALL OUTPUT(WORK(KGD1),1,NLOCC*NLVIR,1,1,
+     &                           NLOCC*NLVIR,1,1,LUPRI)
+                  END IF
+C
+C========================================================
+C                 2. Loop over operators in this symmetry
+C========================================================
+C
+                  DO JOP = 1, IOP
+                     JREC  = ITRREC(JOP,ISYM)
+                     JCOOR = ITRCOR(JOP,ISYM)
+                     JREC2 = 2*JREC - 1 
+C
+                     CALL READDX (LUSOVET,JREC2,IRAT*NVARPT,WORK(KTEMP))
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        WRITE (LUPRI,'(/,A,I5)') 
+     &                        ' Solution Vector'
+                        WRITE (LUPRI,'(A,I5)') ' Coordinate:', JCOOR
+                        WRITE (LUPRI,'(A,I5)') ' Record:    ', JREC
+                        CALL OUTPUT(WORK(KTEMP),1,NVARPT,1,1,NVARPT,1,
+     &                              1,LUPRI)
+                     END IF
+C
+C---------------------------------------------------------------------
+C                    transform solution vector to localized orbitals
+C---------------------------------------------------------------------
+C
+                     CALL LOCAI(NLOCC,NLVIR,NVARPT,CLOCO,CLOCV,
+     &                          WORK(KTEMP),WORK(KGD2))
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        WRITE (LUPRI,'(/,A,I5)') 
+     &                         ' Localized Solution Vector'
+                        WRITE (LUPRI,'(A,I5)') ' Coordinate:', JCOOR
+                        WRITE (LUPRI,'(A,I5)') ' Record:    ', JREC
+                        CALL OUTPUT(WORK(KGD2),1,NLOCC*NLVIR,1,1,
+     &                              NLOCC*NLVIR,1,1,LUPRI)
+                     END IF
+C
+                     CALL DZERO (WORK(KLCON),NLVARS*NLVARS)
+C
+                     DO ILOCC = ILOCCF, ILOCCL
+C
+                        DO ILVIR = 1, NLVIR
+C
+                           ILVAR = (ILOCC-1)*NLVIR + ILVIR
+                           ILCON = KLCON - 1 + ILVAR
+C
+                           TERM = WORK(KGD1-1+ILVAR)*WORK(KGD2-1+ILVAR)
+C                              
+                           WORK(ILCON) = WORK(ILCON) + TERM
+C
+                           IF (IPRSOS .GT. 20) THEN
+                              WRITE (LUPRI,'(2X,A,I3,A,I3)') 
+     &                               'For operator pair ',ICOOR,
+     &                               ' and',JCOOR
+                              WRITE (LUPRI,'(2X,A)') 
+     &                                '========================'
+                              WRITE (LUPRI,'(2(A,D12.5))') 
+     &                               ' J :',term,
+     &                               ' J :',  WORK(ILCON)       
+C                           
+                           END IF
+                        END DO
+                     END DO
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        CALL HEADER('spin-spin coupling tensors',-1)
+                        WRITE (LUPRI,'(2X,A,I3,A,I3,/,2X,A)') 
+     &                      'For operator pair ',ICOOR,' and',JCOOR,
+     &                      '============================'
+C
+                        CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                                  WORK(KLCON))
+C
+                     END IF
+C
+C=====================================================================
+C                    Identify the operators and copy the contributions
+C                    from localized orbitals to the coupling constant
+C                    in the appropriate array
+C=====================================================================
+C
+                     IF ((ICOOR .GT. 0) .AND. (JCOOR .GT. 0)) THEN
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             SD(1,ICOOR,JCOOR),1)
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             SD(1,JCOOR,ICOOR),1)
+                     ELSE IF ((ICOOR .LT. 0) .AND. (JCOOR .LT. 0)) THEN
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             FC(1,-ICOOR,-JCOOR),1)
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             FC(1,-JCOOR,-ICOOR),1)
+                     ELSE IF ((ICOOR .LT. 0) .AND. (JCOOR .GT. 0)) THEN
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             SDF(1,JCOOR,-ICOOR),1)
+                     END IF
+C
+C                        
+                  END DO
+               END DO
+C
+C================================================================
+C              End of double loop over operators in this symmetry
+C================================================================
+C
+            END IF
+         END IF   
+C
+      END DO
+C
+C================================
+C     End of loop over symmetries
+C================================
+C
+      CALL GPCLOSE(LUGDT,'KEEP')
+C
+      CALL GPCLOSE(LUSOVET,'KEEP')
+C
+      IF (IPRSOS .GT. 10) THEN
+         CALL HEADER('FC part of spin-spin coupling tensors',-1)
+         DO IOP = 1, NUCDEP
+            DO JOP = 1, NUCDEP
+               WRITE (LUPRI,'(/,2X,A,I3,A,I3,/,2X,A)') 
+     &                'For operator pair ',IOP,' and',JOP,
+     &                '============================'
+C
+               CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         FC(1,IOP,JOP))
+C
+            END DO
+         END DO
+C
+C
+         CALL HEADER('SD(+FC) part of spin-spin coupling tensors',-1)
+         DO IOP = 1, 9*NUCDEP
+            DO JOP = 1, 9*NUCDEP
+               WRITE (LUPRI,'(/,2X,A,I3,A,I3,/,2X,A)') 
+     &                'For operator pair ',IOP,' and',JOP,
+     &                '============================'
+C
+               CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         SD(1,IOP,JOP))
+C
+            END DO
+         END DO
+C     
+C     
+         CALL HEADER('SD-FC part of spin-spin coupling tensors',-1)
+         DO IOP = 1, 9*NUCDEP
+            DO JOP = 1, NUCDEP
+               WRITE (LUPRI,'(/,2X,A,I3,A,I3,/,2X,A)') 
+     &              'For operator pair ',IOP,' and',JOP,
+     &              '============================'
+C
+               CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         SDF(1,IOP,JOP))
+C
+            END DO
+         END DO
+      END IF
+C     
+C===========================================
+C     Collect triplet contributions 
+C     to symmety adapated coupling constants
+C===========================================
+C
+      CALL SOS_OCVIR_COLLECT(NLOCCS,NLVIRS,IPRSOS,ILOCCF,ILOCCL,
+     &                       SPNSD,SPNFC,SPSDFC,SD,FC,SDF)
+C====================================
+C     Transform to non-symmetry basis
+C====================================
+C
+      CALL QEXIT('SOS_J_OCVIR_TR')
+C
+      RETURN
+C
+      END
+C
+C***********************************************************************
+C  /* Deck sos_j_ocvir_sn */
+C
+      SUBROUTINE SOS_J_OCVIR_SN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
+     &                          ILOCCF,ILOCCL,CLOCO,CLOCV,SPNPSO,
+     &                          WORK,LWORK)
+     &                               
+C                         
+C      Ronan Gleeson 09/01-2022
+C      Based on SOSJSN Stephan P. A. Sauer 13/11-1997
+C
+C      This routine calculates all contributions at the RPA level
+C      from individual orbitals to the singlet parts of the 
+C      spin-spin coupling constants.
+C
+#include "implicit.h"
+C
+C
+C IRAT used from include file iratdef.h
+C MAXASH used from include file maxash.h
+C MAXORB, MAXOCC used from include file maxorb.h
+C MXCOOR used from include file mxcent.h
+C LUPRI used from include file priunit.h
+#include "iratdef.h"
+#include "maxash.h"
+#include "maxorb.h"
+#include "mxcent.h"
+#include "priunit.h"
+#include "dummy.h"
+C
+      PARAMETER (ZERO = 0.0D+00, D05 = 0.5D+00, D1 = 1.0D+00)
+      PARAMETER (M1 = -1)
+C
+#include "codata.h"
+C
+      DIMENSION CLOCO(NOCCT,NLOCC),CLOCV(NVIRT,NLVIR)
+      DIMENSION SPNPSO(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION WORK(LWORK)
+C     
+      LOGICAL HFCLC, CICLC, TRIPLE, EXECLC
+      CHARACTER*8 LABEL
+      LOGICAL     OLDDX
+C
+C MXRM, MXPHP, OOTV used from COMMON /CBIEXC/
+C THRCLC, IPRCLC, MAXCLC used from COMMON /CBILRS1/
+C NTRVEC used from COMMON /GDVEC/
+C NVARMA used from COMMON /INFDIM/
+C JTINAC, JTSEC, IOBTYP used from COMMON /INFIND/
+C NVARPT used from COMMON /INFLIN/
+C NASHT, NSYM, NOCCT, NVIRT used from COMMON /INFORB/
+C NCONF modified in COMMON /INFVAR/
+C JWOP used from COMMON /INFVAR/
+C NUCDEP used from COMMON /NUCLEI/
+C LUGDT, ABAGDT, LRGDT, NBGDT used from COMMON /NUCTAP/
+C DOSD, DOSDFC, DOFC used from COMMON /SPNOUT/
+C
+#include "cbilrs.h"
+#include "gdvec.h"
+#include "infdim.h"
+#include "infind.h"
+#include "inflin.h"
+#include "inforb.h"
+#include "infvar.h"
+#include "nuclei.h"
+#include "spnout.h"
+#include "inftap.h"
+C
+      CALL QENTER('SOS_J_OCVIR_SN')
+C
+      LUGDVES = -1
+      LUSOVES = -1
+      LUREVES = -1
+C
+      IPRRSP = IPRCLC
+      THRSOS = THRCLC
+      MAXSOS = MAXCLC
+C
+C----------------------------------------
+C     Check for Hartree-Fock wavefunction
+C----------------------------------------
+C
+      HFCLC = NASHT .LE. 1
+      IF (.NOT. HFCLC) THEN
+         WRITE(*,'(/3(A))') 'SOS_J_OCVIR_SN : analysis of coupling',
+     &                       ' constants only possible for HF',
+     &                       ' or DFT wavefunctions'
+         CALL QUIT('SOS_J_OCVIR_SN : SOS only for HF/DFT wavefunct.')
+      ELSE
+         NCONF = 1
+      END IF
+C
+C------------------------------------------------------------
+C     Open direct access file with the property gradients,
+C     which were already calculated in the normal calculation 
+C     of the spin-spin coupling constants
+C------------------------------------------------------------
+C
+      CALL GPOPEN(LUGDI,ABAGDI,'UNKNOWN','DIRECT',' ',
+     &            IRAT*NVARMA,OLDDX)
+C
+      IF (OLDDX) THEN
+         WRITE (LUPRI,'(/2A)') ' Old LUGDI file opened in', 
+     &                         ' SOS_J_OCVIR_SN.'
+      ELSE
+         WRITE (LUPRI,'(/2A)') 'SOS_J_OCVIR_SN : Old LUGDI file',
+     &                         ' not found'
+         CALL QUIT('SOS_J_OCVIR_SN : Old LUGDI file not found')
+      END IF
+C
+      CALL GPOPEN(LUSOVES,ABARDI,'UNKNOWN','DIRECT',' ',
+     &            IRAT*NVARMA,OLDDX)
+C
+      IF (OLDDX) THEN
+         WRITE (LUPRI,'(/2A)') ' Old LUSOVES file opened in', 
+     &                         ' SOS_J_OCVIR_SN.'
+      ELSE
+         WRITE (LUPRI,'(/2A)') 'SOS_J_OCVIR_SN : Old LUSOVES file',
+     &                         ' not found'
+         CALL QUIT('SOS_J_OCVIR_SN : Old LUSOVES file not found')
+      END IF    
+C
+C*************************
+C     Loop over symmetries
+C*************************
+C
+      DO ISYM = 1, NSYM
+         NREC = NGDVEC(ISYM,2)
+         IF (NREC .GT. 0) THEN
+C
+           TRIPLE = .FALSE.
+C
+           CALL ABAVAR(ISYM,TRIPLE,IPRSOS,WORK,LWORK)
+C
+            IF (NVARPT .GT. 0) THEN
+               IF (IPRSOS .GT. 5) THEN
+                  WRITE (LUPRI,'(/,1X,A,I10)') 'NCONST ', NCONST
+                  WRITE (LUPRI,'(1X,A,I10)')   'NVARPT ', NVARPT
+                  WRITE (LUPRI,'(1X,A,I10)')   'for symmetry ',ISYM
+               END IF
+C
+C--------------------------------
+C              Work allocation
+C--------------------------------
+C
+               NLVAR  = NLOCC*NLVIR
+               NLVARS = NLOCCS*NLVIRS
+C
+               KTEMP  = 1
+               KSLVZ  = KTEMP  + 2*NVARPT
+               KSLVY  = KSLVZ  + NLVAR
+               KGD1   = KSLVY  + NLVAR
+               KGD2   = KGD1   + NLVAR
+               KLCON = KGD2   + NLVAR
+               KWORK2 = KLCON + NLVARS 
+               LWORK2 = LWORK  - KWORK2
+C
+               IF (LWORK2 .LT. 0) THEN
+                  WRITE(LUPRI,*) ' SOS_J_OCVIR_SN: Need :',KWORK2,
+     &                            '  Available :',LWORK
+                  CALL QUIT('Insufficient memory in SOS_J_OCVIR_SN')
+               END IF
+C
+C=====================================================
+C              1, Loop over operators in this symmetry
+C=====================================================
+C
+               DO IOP = 1, NREC
+                  IREC   = IGDREC(IOP,ISYM,2)
+                  ICOOR  = IGDCOR(IOP,ISYM,2)
+C
+                  CALL READDX (LUGDI,IREC,IRAT*NVARPT,WORK(KTEMP))
+C
+                  IF (IPRSOS .GT. 10) THEN
+                     WRITE (LUPRI,'(/,A,I5)') ' Property Gradient'
+                     WRITE (LUPRI,'(A,I5)') ' Coordinate:', ICOOR
+                     WRITE (LUPRI,'(A,I5)') ' Record:    ', IREC
+                     CALL OUTPUT(WORK(KTEMP),1,NVARPT,1,1,NVARPT,1,1,
+     &                           LUPRI)
+                  END IF
+C
+C------------------------------------------------------------------
+C                 transform property gradient to localized orbitals
+C------------------------------------------------------------------
+C
+                  CALL LOCAI(NLOCC,NLVIR,NVARPT,CLOCO,CLOCV,
+     &                       WORK(KTEMP),WORK(KGD1))
+C
+                  IF (IPRSOS .GT. 10) THEN
+                     WRITE (LUPRI,'(/,A,I5)') 
+     &                     ' Localised Property Gradient'
+                     WRITE (LUPRI,'(A,I5)') ' Coordinate:', ICOOR
+                     WRITE (LUPRI,'(A,I5)') ' Record:    ', IREC
+                     CALL OUTPUT(WORK(KGD1),1,NLOCC*NLVIR,1,1,
+     &                           NLOCC*NLVIR,1,1,LUPRI)
+                  END IF
+C
+C========================================================
+C                 2. Loop over operators in this symmetry
+C========================================================
+C
+                  DO JOP = 1, IOP
+                     JREC   = IGDREC(JOP,ISYM,2)
+                     JCOOR  = IGDCOR(JOP,ISYM,2)
+                     JREC2 = 2*JREC - 1
+C
+                     CALL READDX (LUSOVES,JREC2,IRAT*NVARPT,
+     &                            WORK(KTEMP))
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        WRITE (LUPRI,'(/,A,I5)') 
+     &                        ' Solution Vector'
+                        WRITE (LUPRI,'(A,I5)') ' Coordinate:', JCOOR
+                        WRITE (LUPRI,'(A,I5)') ' Record:    ', JREC
+                        CALL OUTPUT(WORK(KTEMP),1,NVARPT,1,1,NVARPT,1,
+     &                              1,LUPRI)
+C
+                     END IF
+C
+C---------------------------------------------------------------------
+C                    transform solution vector to localized orbitals
+C---------------------------------------------------------------------
+C
+                     CALL LOCAI(NLOCC,NLVIR,NVARPT,CLOCO,CLOCV,
+     &                          WORK(KTEMP),WORK(KGD2))
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        WRITE (LUPRI,'(/,A,I5)') 
+     &                         ' Localised Solution Vector'
+                        WRITE (LUPRI,'(A,I5)') ' Coordinate:', JCOOR
+                        WRITE (LUPRI,'(A,I5)') ' Record:    ', JREC
+                        CALL OUTPUT(WORK(KGD2),1,NLOCC*NLVIR,1,1,
+     &                              NLOCC*NLVIR,1,1,LUPRI)
+                     END IF
+C
+                     CALL DZERO (WORK(KLCON),NLVARS)
+C
+                     DO ILOCC = ILOCCF, ILOCCL
+C
+                        DO ILVIR = 1, NLVIR
+C
+                           ILVAR = (ILOCC-1)*NLVIR + ILVIR
+                           ILCON = KLCON - 1 + ILVAR
+C
+                           TERM = WORK(KGD1-1+ILVAR)*WORK(KGD2-1+ILVAR)
+C
+                           WORK(ILCON) = WORK(ILCON) + TERM
+C
+                           IF (IPRSOS .GT. 20) THEN
+                              WRITE (LUPRI,'(2X,A,I3,A,I3)') 
+     &                               'For operator pair ',ICOOR,
+     &                               ' and',JCOOR
+                              WRITE (LUPRI,'(2X,A)') 
+     &                               '========================'
+                              WRITE (LUPRI,'(2(A,D12.5))') 
+     &                               ' J :',term,
+     &                               ' J :',  WORK(ILCON)       
+C
+                           END IF
+                        END DO
+                     END DO
+C
+                     IF (IPRSOS .GT. 10) THEN
+                        CALL HEADER('spin-spin coupling tensors',-1)
+                        WRITE (LUPRI,'(2X,A,I3,A,I3,/,2X,A)') 
+     &                      'For operator pair ',ICOOR,' and',JCOOR,
+     &                      '============================'
+C
+                        CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                                  WORK(KLCON))
+C
+                     END IF
+C
+C=====================================================================
+C                    Identify the operators and copy the contributions
+C                    from localized orbitals to the coupling constant
+C                    in the appropriate array
+C=====================================================================
+C
+                     IF ((ICOOR .GT. 0) .AND. (JCOOR .GT. 0)) THEN
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             SPNPSO(1,ICOOR,JCOOR),1)
+                        CALL DCOPY(NLVARS,WORK(KLCON),1,
+     &                             SPNPSO(1,JCOOR,ICOOR),1)
+                     END IF
+C
+C                        
+                  END DO
+               END DO
+C
+C================================================================
+C              End of double loop over operators in this symmetry
+C================================================================
+C
+            END IF
+         END IF   
+C
+      END DO
+C
+C================================
+C     End of loop over symmetries
+C================================
+C
+      CALL GPCLOSE(LUGDI,'KEEP')
+C
+      CALL GPCLOSE(LUSOVES,'KEEP')
+C
+CRONAN Values wrong sign - multiplied by -1 to rectify 11/02/22 
+      SPNPSO = SPNPSO*M1
+C
+      IF (IPRSOS .GT. 10) THEN
+         CALL HEADER('PSO part of spin-spin coupling tensors',-1)
+         DO IOP = 1, 3*NUCDEP
+            DO JOP = 1, 3*NUCDEP
+               WRITE (LUPRI,'(/,2X,A,I3,A,I3,/,2X,A)') 
+     &                'For operator pair ',IOP,' and',JOP,
+     &                '============================'
+C
+               CALL PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         SPNPSO(1,IOP,JOP))
+C
+            END DO
+         END DO
+      END IF
+C
+C--------------------------------------------------
+C     Print contributions to the coupling constants
+C--------------------------------------------------
+C
+      IF (IPRSOS .GT. 5) THEN
+         DO IATOM = 1, NUCDEP
+            DO JATOM = 1, IATOM
+C
+               CALL TITLER(
+     &              'Indirect spin-spin-coupling between atoms '//
+     &             NAMDEP(IATOM)//' and '//NAMDEP(JATOM)//':','=',-1)
+C
+               CALL HEADER('Symmetry adapted PSO part of spin-spin '//
+     &                     'coupling tensors',-1)
+C
+C
+         CALL PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         3*NUCDEP,IATOM,JATOM,SPNPSO,D1)
+C
+            END DO
+         END DO
+      END IF
+C
+      CALL QEXIT('SOS_J_OCVIR_SN')
+C
+      RETURN
+C
+      END
+C
 C***********************************************************************
 C  /* Deck ltrpmv */
 C
@@ -2214,6 +3085,238 @@ C
 C
       END
 C*********************************************************************
+C  /* Deck sos_ocvir_collect */
+C
+      SUBROUTINE SOS_OCVIR_COLLECT(NLOCCS,NLVIRS,IPRSOS,ILOCCF,ILOCCL,
+     &                             SPNSD,SPNFC,SPSDFC,WRKSD,
+     &                             WRKFC,WRKSDF)
+C
+C      Ronan Gleeson 13/01-2021 
+C      based on LTRPMV by Stephan P. A. Sauer 29/10-1997
+C     
+C      This routine collects the different contributions to the elements
+C      of the spin-dipolar, Fermi contact and Fermi contact spin-dipolar
+C      cross term tensors. This is only for one pair of occupied and 
+C      virtual orbital contributions.
+C
+#include "implicit.h"
+#include "priunit.h"
+#include "mxcent.h"
+#include "maxaqn.h"
+CPFP
+C#include "mxorb.h"
+#include "maxorb.h"
+Cend-PFP
+      PARAMETER (ZERO = 0.0D+00, D1 = 1.0D+00)
+C
+      DIMENSION WRKSD(NLOCCS*NLVIRS,9*NUCDEP,9*NUCDEP)
+      DIMENSION WRKFC(NLOCCS*NLVIRS,NUCDEP,NUCDEP)
+      DIMENSION WRKSDF(NLOCCS*NLVIRS,9*NUCDEP,NUCDEP)
+      DIMENSION SPNSD(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPSDFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+C
+#include "nuclei.h"
+#include "cbitrp.h"
+#include "spnout.h"
+#include "symmet.h"
+
+C
+      CALL QENTER('SOS_OCVIR_COLLECT')
+C
+C=======================================
+C     Sum the spin-dipolar term over the 
+C     components of the electronic spin 
+C=======================================
+C
+C no need! it was initialized (zeroed) in sosdrv
+c      CALL DZERO(SPNSD,MXCOOR*MXCOOR*NLOCCS*NLOCCS*NLVIRS*NLVIRS)  
+      IF (DOSD .OR. DOSDFC) THEN
+         JATOM1 = 0
+         DO IREP = 0, MAXREP
+         DO IATOM1 = 1, NUCIND
+            IF (IAND(IREP,ISTBNU(IATOM1)).EQ.0) THEN
+               JATOM1 = JATOM1 + 1
+               JATOM2 = 0
+               DO  IREP1 = 0, MAXREP
+               DO  IATOM2 = 1, NUCIND
+                  IF (IAND(IREP1,ISTBNU(IATOM2)).EQ.0) THEN
+                     JATOM2 = JATOM2 + 1
+                     DO ICOOR = 1, 3
+                        IREP2 = IEOR(ISYMAX(ICOOR,2),IREP)
+                        ISCOR1 = IPTCNT(3*(IATOM1 - 1) + ICOOR,IREP2,2)
+                        DO JCOOR = 1, 3
+                           IREP3 = IEOR(ISYMAX(JCOOR,2),IREP1)
+                           ISCOR2 = IPTCNT(3*(IATOM2-1)+JCOOR,IREP3,2)
+                           IF (ISCOR1 .GT. 0 .AND. ISCOR2 .GT. 0) THEN
+                              DO KCOOR = 1, 3
+                                 IF (KCOOR .GT. ICOOR) THEN
+                                   IREP4 = IEOR(ISYMAX(KCOOR,2),IREP)
+                                   ISCOR3 = IPTCNT(3*(IATOM1-1)+KCOOR,
+     &                                             IREP4,2)
+                                   IADR1 = 3*(ISCOR3 - 1) + ICOOR
+                                 ELSE
+                                    IADR1 = 3*(ISCOR1 - 1) + KCOOR
+                                 END IF
+                                 IF (KCOOR .GT. JCOOR) THEN
+                                   IREP4 = IEOR(ISYMAX(KCOOR,2),IREP1)
+                                   ISCOR3 = IPTCNT(3*(IATOM2-1)+KCOOR,
+     &                                             IREP4,2)
+                                   IADR2 = 3*(ISCOR3 - 1) + JCOOR
+                                 ELSE
+                                    IADR2 = 3*(ISCOR2 - 1) + KCOOR
+                                 END IF
+                             DO ILVAR = 1, NLOCCS*NLVIRS
+                                SPNSD(ILVAR,ISCOR1,ISCOR2) =            
+     &                                    SPNSD(ILVAR,ISCOR1,ISCOR2) 
+     &                                  + WRKSD(ILVAR,IADR1,IADR2)  
+                             END DO
+                              END DO
+                           END IF
+                  END DO  
+               END DO
+                  END IF
+               END DO
+            END DO
+            END IF
+            END DO
+         END DO
+      END IF
+C
+C
+C====================================
+C     Collect the Fermi contact terms
+C====================================
+C
+      IF (DOFC) THEN
+         JATOM1 = 0
+         DO IREP = 0, MAXREP
+            KATOM1 = JATOM1
+            DO IATOM1 = 1, NUCIND
+               IF (IAND(IREP,ISTBNU(IATOM1)).EQ.0) THEN
+               JATOM1 = JATOM1 + 1
+               JATOM2 = KATOM1
+               DO IATOM2 = 1, NUCIND
+                  IF (IAND(IREP,ISTBNU(IATOM2)).EQ.0) THEN
+                  JATOM2 = JATOM2 + 1
+                  DO ICOOR = 1, 3
+                     IREP2 = IEOR(ISYMAX(ICOOR,2),IREP)
+                     ISCOR1 = IPTCNT(3*(IATOM1 - 1) + ICOOR,IREP2,2)
+                     ISCOR2 = IPTCNT(3*(IATOM2 - 1) + ICOOR,IREP2,2)
+                     IF (ISCOR1.GT.0 .AND. ISCOR2.GT.0) THEN
+C
+                        DO ILVAR = 1, NLOCCS*NLVIRS
+C
+                           SPNFC(ILVAR,ISCOR1,ISCOR2) = 
+     &                          WRKFC(ILVAR,JATOM1,JATOM2)
+                        END DO
+                     END IF
+                  END DO
+                  END IF
+               END DO
+               END IF
+            END DO
+         END DO
+      END IF
+C
+C====================================================
+C     Sum the Fermi-contact - spin-dipolar cross term
+C     over the  components of the electronic spin
+C====================================================
+C
+      IF (DOFC .AND. DOSD) THEN
+         JATOM1 = 0
+         DO IREP = 0, MAXREP
+            DO IATOM1 = 1, NUCIND
+               IF (IAND(IREP,ISTBNU(IATOM1)).EQ.0) THEN
+               JATOM1 = JATOM1 + 1
+               JATOM2 = 0
+               DO IREP1 = 0, MAXREP
+                  DO IATOM2 = 1, NUCIND
+                     IF (IAND(IREP1,ISTBNU(IATOM2)).EQ.0) THEN
+                     JATOM2 = JATOM2 + 1
+C
+                     DO ILVAR = 1, NLOCCS*NLVIRS
+C
+                        DO ICOOR = 1, 3
+                           IREP2 = IEOR(ISYMAX(ICOOR,2),IREP)
+                           ISCOR1 = IPTCNT(3*(IATOM1-1)+ICOOR,IREP2,2)
+                           DO JCOOR = 1, 3
+                              IREP3  = IEOR(ISYMAX(JCOOR,2),IREP1)
+                              ISCOR2 =
+     &                            IPTCNT(3*(IATOM2-1)+JCOOR,IREP3,2)
+                              IF (ISCOR1.GT.0 .AND. ISCOR2.GT.0) THEN
+                                 IADR1  = 3*(ISCOR1 - 1) + JCOOR
+                                 IREP4  = IEOR(ISYMAX(ICOOR,2),IREP1)
+                                 ISCOR3 = 
+     &                               IPTCNT(3*(IATOM2-1)+ICOOR,IREP4,2)
+                                 IADR2 = 3*(ISCOR3 - 1) + JCOOR
+                                 SPSDFC(ILVAR,ISCOR1,ISCOR2) = 
+     &                                 WRKSDF(ILVAR,IADR1,JATOM2)
+     &                               + WRKSDF(ILVAR,IADR2,JATOM1)
+                              END IF
+                           END DO
+                        END DO
+                     END DO
+                     END IF
+                  END DO
+               END DO
+               END IF
+            END DO
+         END DO
+C
+      END IF
+C
+C-------------------------------------------------------------------
+C     Print contributions to the symmetry adapted coupling constants
+C-------------------------------------------------------------------
+C
+      IF (IPRSOS .GT. 5) THEN
+         DO IATOM = 1, NUCDEP
+            DO JATOM = 1, IATOM
+C
+               CALL TITLER(
+     &              'Indirect spin-spin-coupling between atoms '//
+     &             NAMDEP(IATOM)//' and '//NAMDEP(JATOM)//':','=',-1)
+C 
+              IF (DOFC) THEN
+                  CALL HEADER('Symmetry adapted FC part of spin-spin'//
+     &                        ' coupling tensors',-1)
+C
+                  CALL PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                            3*NUCDEP,IATOM,JATOM,SPNFC,D1)
+C
+               END IF
+C     
+               IF (DOSD .OR. DOSDFC) THEN
+                  CALL HEADER(
+     &                 'Symmetry adapted SD(+FC) part of spin-spin '//
+     &                 'coupling tensors',-1)
+C
+                  CALL PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                            3*NUCDEP,IATOM,JATOM,SPNSD,D1)
+C
+               END IF
+C     
+               IF (DOFC .AND. DOSD) THEN
+                  CALL HEADER('Symmetry adapted SD-FC part of '//
+     &                        'spin-spin coupling tensors',-1)
+C
+                  CALL PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                            3*NUCDEP,IATOM,JATOM,SPSDFC,D1)
+C
+               END IF
+C
+            END DO
+         END DO
+      END IF
+C
+      CALL QEXIT('SOS_OCVIR_COLLECT')
+C
+      RETURN
+C
+      END
+C***********************************************************************
 C  /* Deck lspsym */
 C
       SUBROUTINE LSPSYM(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
@@ -2388,7 +3491,7 @@ C
 C
       RETURN
       END
-C*********************************************************************
+C****************************************************************
 C  /* Deck lspres */
 C
       SUBROUTINE LSPRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
@@ -2450,7 +3553,7 @@ C
 C
       LOGICAL TEST
 C
-
+C
 C
       CALL QENTER('LSPRES')
 C
@@ -2527,6 +3630,7 @@ C
                            NA1    = NINT(DISOTP(NZ1,ISO1,'A'))
                            NA2    = NINT(DISOTP(NZ2,ISO2,'A'))
                            FACTOR = AUTOHZ*GVAL1*GVAL2
+C
                            WRITE(LUPRI,'(/,2X,A,I3,10X,A,F8.3)')
      &                        'Mass number atom 1: ',NA1,'Abundance: ',
      &                         ABUND1
@@ -2713,6 +3817,7 @@ C
                   END IF
 C
                END DO
+C 
             END DO   
 C
             END IF
@@ -2726,6 +3831,216 @@ C
       RETURN
       END
 C***********************************************************************
+C  /* Deck ls_ocvir_pres */
+C
+      SUBROUTINE LS_OCVIR_PRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                         JLOCCF,JLOCCL,SPNDSO,SPNPSO,SPNSD,
+     &                         SPNFC,SPSDFC,SPNTOT,TOTNODSO,WORK,LWORK)    
+C
+C      Ronan Gleeson 29/01-22 based on LSPRES by
+C      Stephan P. A. Sauer 13/11-1997
+C
+C      This routine prints the contributions to the indirect nuclear
+C      spin-spin coupling constants from individual molecular orbitals
+C      after the symmetry adaptation was removed and the proper 
+C      g-factors were included.
+C
+C
+#include "implicit.h"
+C
+C ALPHAC used from include file codata.h
+C LUPRI used from include file priunit.h
+C XFAMU used from include file codata.h
+C PMASS used from include file pmass.h
+C
+#include "priunit.h"
+#include "codata.h"
+C#include "pmass.h"
+C
+      PARAMETER (D1 = 1.0D0, D3 = 3.0D0, D1O3 = 1.0D0/D3, D0 = 0.0D0)
+      PARAMETER (AUTOHZ = ALPHA2*ALPHA2/
+     &                    (4*XFAMU*XFAMU*PMASS*PMASS)
+     &                   *6.5796838999D15)
+C
+C MXQN, MXAQN used from include file maxaqn.h
+C MXCENT, MXCOOR used from include file mxcent.h
+C MXCORB used from include file mxorb.h
+#include "maxaqn.h"
+#include "mxcent.h"
+CPFP
+C#include "mxorb.h"
+#include "maxorb.h"
+Cend-PFP
+C
+C SOLVNT used from COMMON /CBISOL/
+C DOPERT used from COMMON /DORPS/
+C CHARGE, ISTBNU, NUCDEP, NUCIND used from COMMON /NUCLEI/
+C MAXOPR used from COMMON /SYMMET/
+C ABUND used from COMMON /SPNOUT/
+#include "cbisol.h"
+#include "dorps.h"
+#include "nuclei.h"
+#include "spnout.h"
+#include "symmet.h"
+C
+      DIMENSION SPNDSO(NLOCCS*NLOCCS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNPSO(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNSD(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPSDFC(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION SPNTOT(NLOCCS*NLVIRS,3*NUCDEP,3*NUCDEP)
+      DIMENSION WORK(LWORK)
+C
+      LOGICAL TEST
+      LOGICAL TOTNODSO
+C
+C
+      CALL QENTER('ls_ocvir_pres')
+C
+C----------------------------------------------------------------------
+C     Calculate the contributions to the total coupling constant tensor
+C----------------------------------------------------------------------
+C
+      NTOT = NLOCCS*NLVIRS*9*NUCDEP*NUCDEP
+C
+      CALL DZERO (SPNTOT,NTOT)
+      CALL DAXPY (NTOT,D1,SPNPSO,1,SPNTOT,1)
+      CALL DAXPY (NTOT,D1,SPNFC,1,SPNTOT,1)
+      CALL DAXPY (NTOT,D1,SPNSD,1,SPNTOT,1)
+      CALL DAXPY (NTOT,D1,SPSDFC,1,SPNTOT,1)
+C
+C-----------------------------------------------------------
+C     Calculate the isotropic contributions and print it out
+C-----------------------------------------------------------
+C
+      CALL AROUND
+     & ('Contributions to the indirect spin-spin coupling constant')
+C
+      IATOM1 = 0
+      NUCINS = NUCIND
+      IF (SOLVNT) NUCINS = NUCINS - 1
+      DO I1 = 1, NUCINS
+         DO ISYM1 = 0, MAXOPR
+            IF (IAND(ISTBNU(I1),ISYM1) .EQ. 0) THEN
+            IATOM1 = IATOM1 + 1
+            IF (DOPERT(I1,2)) THEN
+            IATOM2 = 0
+            DO I2 = 1, I1
+               IF (I2 .EQ. I1) THEN 
+                  MAXSYM = ISYM1 - 1
+               ELSE
+                  MAXSYM = MAXOPR
+               END IF
+               DO ISYM2 = 0, MAXSYM
+                  IF (IAND(ISTBNU(I2),ISYM2) .EQ. 0) THEN
+                  IATOM2 = IATOM2 + 1
+                  IF (DOPERT(I2,2)) THEN
+                  IATIJ = IATOM1*(IATOM1 -1 )/2 + IATOM2
+                  NZ1 = NINT(CHARGE(I1))
+                  NZ2 = NINT(CHARGE(I2))
+                  CALL TITLER('Indirect spin-spin-coupling between '//
+     &                        NAMDEP(IATOM1)//' and '//
+     &                        NAMDEP(IATOM2)//':','=',-1)
+                  TEST = .FALSE.
+                  DO ISO1 = 1, 5
+                     GVAL1 = DISOTP(NZ1,ISO1,'GVAL')
+                     IF (GVAL1 .NE. 0) THEN
+                     IF (IATOM1 .EQ. IATOM2) THEN
+                        ISOMAX = ISO1
+                     ELSE
+                        ISOMAX = 5
+                     END IF
+                     DO ISO2 = 1, ISOMAX
+                        GVAL2 = DISOTP(NZ2,ISO2,'GVAL')
+                        IF (GVAL2 .NE. 0) THEN
+                        ABUND1 = DISOTP(NZ1,ISO1,'ABUNDANCE')
+                        ABUND2 = DISOTP(NZ2,ISO2,'ABUNDANCE')
+                        IF (     ((ABUND1 .GE. ABUND)
+     &                      .AND. (ABUND2 .GE. ABUND))
+     &                      .OR.  (.NOT. TEST)) THEN
+                           TEST = .TRUE.
+                           NA1    = NINT(DISOTP(NZ1,ISO1,'A'))
+                           NA2    = NINT(DISOTP(NZ2,ISO2,'A'))
+                           FACTOR = AUTOHZ*GVAL1*GVAL2
+C
+                           WRITE(LUPRI,'(/,2X,A,I3,10X,A,F8.3)')
+     &                        'Mass number atom 1: ',NA1,'Abundance: ',
+     &                         ABUND1
+                           WRITE(LUPRI,'(2X,A,I3,10X,A,F8.3)')
+     &                        'Mass number atom 2: ',NA2,'Abundance: ',
+     &                         ABUND2
+C     
+C
+                           TOTNODSO = .TRUE.
+C
+                           CALL HEADER('DSO part of spin-spin '//
+     &                                    'coupling constant',-1)
+C
+                           CALL PLOPRI(NLOCCS,ILOCCF,ILOCCL,
+     &                                 JLOCCF,JLOCCL,3*NUCDEP,
+     &                                 IATOM1,IATOM2,SPNDSO,
+     &                                 FACTOR)                                      
+C     
+                           CALL HEADER('PSO part of spin-spin '//
+     &                                    'coupling constant',-1)
+C
+                           CALL PLOCVIR_PRI(NLOCCS,NLVIRS,ILOCCF,
+     &                                      ILOCCL,3*NUCDEP,IATOM1,
+     &                                      IATOM2,SPNPSO,
+     &                                      TOTNODSO,FACTOR)   
+C     
+                           CALL HEADER('FC part of spin-spin '//
+     &                                    'coupling constant',-1)
+C
+                           CALL PLOCVIR_PRI(NLOCCS,NLVIRS,ILOCCF,
+     &                                      ILOCCL,3*NUCDEP,IATOM1,
+     &                                      IATOM2,SPNFC,
+     &                                      TOTNODSO,FACTOR)   
+C
+                           CALL HEADER('SD(+FC) part of spin-spin'//
+     &                                    ' coupling constant',-1)
+C
+                           CALL PLOCVIR_PRI(NLOCCS,NLVIRS,ILOCCF,
+     &                                      ILOCCL,3*NUCDEP,IATOM1,
+     &                                      IATOM2,SPNSD,
+     &                                      TOTNODSO,FACTOR)   
+C
+C
+                           CALL HEADER('Total spin-spin coupling '//
+     &                                    'constant',-1)
+C
+                           TOTNODSO = .FALSE.
+C
+                           CALL PLOCVIR_PRI(NLOCCS,NLVIRS,ILOCCF,
+     &                                      ILOCCL,3*NUCDEP,IATOM1,
+     &                                      IATOM2,SPNTOT,
+     &                                      TOTNODSO,FACTOR)   
+C
+                           END IF
+                        END IF
+                     END DO
+C
+                     END IF
+C
+                  END DO
+C
+                  END IF
+                  END IF
+C
+               END DO
+            END DO   
+C
+            END IF
+            END IF
+C
+         END DO
+      END DO
+C
+      CALL QEXIT('ls_ocvir_pres')
+C
+      RETURN
+      END
+C*********************************************************************		  
 C  /* Deck plocpr */
 C
       SUBROUTINE PLOCPR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,JLOCCL,PROP)
@@ -2786,6 +4101,56 @@ C
 C
       END
 C*********************************************************************
+C  /* Deck plocvir_pr */
+C
+      SUBROUTINE PLOCVIR_PR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,PROP)
+C
+C      Ronan Gleeson 13/01-2021
+C      Based on PLOCPR by Stephan P. A. Sauer 12/11-1997
+C
+C      This routine prints the contributions from one occupied and one virtual orbital to
+C      a property.
+C
+C
+#include "implicit.h"
+C
+C LUPRI used from include file priunit.h
+C TABOCL(i), TABVIL(i) used from locif.h 
+#include "priunit.h"
+#include "locinf.h"
+C
+      PARAMETER (D0 = 0.0D+00, THRPR = 1.0D-06)
+C
+      DIMENSION PROP(NLVIRS*NLOCCS)
+C
+      CALL QENTER('PLOCVIR_PR')
+C
+      WRITE (LUPRI,'(A)') '   label    A  label    I'
+C
+      ILVAR = 0
+      TOT    = D0
+C
+      DO ILOCC = ILOCCF,ILOCCL
+C
+         DO ILVIR = 1, NLVIRS
+C
+            ILVAR = (ILOCC - 1)*NLVIRS*NLOCCS + ILVIR
+C           
+            IF (DABS(PROP(ILVAR)) .GT. THRPR)
+     &              WRITE (LUPRI,'(1X,1X,2(A8,I3,1X),F12.4)')
+     &                     TABVIL(ILVIR),ILVIR,TABOCL(ILOCC),ILOCC,
+     &                     PROP(ILVAR)
+                  TOT = TOT + PROP(ILVAR)
+         END DO
+      END DO
+      WRITE (LUPRI,'(10X,A,41X,D10.3,2X)') 'Total ',TOT
+C
+      CALL QEXIT('PLOCVIR_PR')
+C
+      RETURN
+C
+      END
+*********************************************************************
 C  /* Deck plcpri */
 C
       SUBROUTINE PLCPRI(NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,JLOCCL,
@@ -2805,7 +4170,7 @@ C TABOCL(i), TABVIL(i) used from locif.h
 #include "locinf.h"
 C
       PARAMETER (D0 = 0.0D+00, D3 = 3.0D0, D1O3 = 1.0D0/D3)
-      PARAMETER (THRPR = 1.0D-02)
+      PARAMETER (THRPR = 1.0D-04)
 C
       DIMENSION PROP(NLOCCS*NLOCCS*NLVIRS*NLVIRS,NCOOR,NCOOR)
 C
@@ -2856,7 +4221,75 @@ C
       RETURN
 C
       END
-C********************************************************************
+C*********************************************************************
+C  /* Deck plocvir_pri */
+C
+      SUBROUTINE PLOCVIR_PRI(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                       NCOOR,IATOM,JATOM,PROP,TOTNODSO,FACTOR)
+C
+C      Ronan Gleeson 01/02-2022 based on plcpri by
+C      Stephan P. A. Sauer 13/11-1997
+C
+C      This routine prints the contributions from one occupied and one
+C      virtual orbital to the isotropic part of a property 
+C      and scales it with a factor.
+C
+#include "implicit.h"
+C
+C LUPRI used from include file priunit.h
+C TABOCL(i), TABVIL(i) used from locif.h 
+#include "priunit.h"
+#include "locinf.h"
+C
+      PARAMETER (D0 = 0.0D+00, D3 = 3.0D0, D1O3 = 1.0D0/D3)
+      PARAMETER (THRPR = 1.0D-04)
+      LOGICAL TOTNODSO
+C
+      DIMENSION PROP(NLOCCS*NLVIRS,NCOOR,NCOOR)
+C
+      CALL QENTER('PLOCVIR_PRI')
+C
+      WRITE (LUPRI,'(A)') '   label    A  label    I'
+C
+      ILVAR = 0
+      TOT    = D0
+C
+	DO ILOCC = ILOCCF,ILOCCL
+C
+	   DO ILVIR = 1, NLVIRS
+C 
+	      ILVAR = (ILOCC- 1)*NLVIRS +  ILVIR
+C
+	      IC = 3*(IATOM-1) 
+		JC = 3*(JATOM-1) 
+C
+		AVEISO = ( PROP(ILVAR,IC+1,JC+1)
+     &                + PROP(ILVAR,IC+2,JC+2)
+     &                + PROP(ILVAR,IC+3,JC+3))
+     &                 * FACTOR * D1O3
+C
+		TOT = TOT + AVEISO
+C
+		IF (DABS(AVEISO) .GT. THRPR)
+     &         WRITE (LUPRI,'(2X,2(A8,I3,1X),F12.4)')
+     &                TABVIL(ILVIR),ILVIR,
+     &                TABOCL(ILOCC),ILOCC,
+     &                AVEISO
+	     END DO
+	  END DO
+C     
+      IF (TOTNODSO) THEN
+         WRITE (LUPRI,'(10X,A,20X,F12.4)') 'TOTAL',TOT
+      ELSE
+         WRITE (LUPRI,'(10X,A,20X,F12.4)') 'TOTAL(-DSO)',TOT
+      END IF
+C
+      CALL QEXIT('PLOCVIR_PRI')
+C
+      RETURN
+C
+      END
+********************************************************************
 C  /* Deck plopri */
 C
       SUBROUTINE PLOPRI(NLOCCS,ILOCCF,ILOCCL,JLOCCF,JLOCCL,
@@ -2883,7 +4316,7 @@ C
 C
       CALL QENTER('PLOPRI')
 C
-      WRITE (LUPRI,'(/,5X,A)') '           label     I  label     J'
+      WRITE (LUPRI,'(A)') '          label     I  label     J'
 C
       IJLVAR = 0
       TOT    = D0
@@ -2995,7 +4428,73 @@ C
       RETURN
 C
       END
-C*******************************************************************
+C*********************************************************************	  
+C  /* Deck plocvir_prt */
+C
+      SUBROUTINE PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+     &                       NCOOR,IATOM,JATOM,PROP,FACTOR)
+C      
+C      Ronan Gleeson 15/01-2021  
+C      based on PLCPRT by Stephan P. A. Sauer 13/11-1997
+C
+C      This routine prints the contributions from one occupied and one virtual orbital to
+C      a property tensor.
+C
+C
+#include "implicit.h"
+C
+C LUPRI used from include file priunit.h
+C TABOCL(i), TABVIL(i) used from locif.h 
+#include "priunit.h"
+#include "locinf.h"
+C
+      PARAMETER (D0 = 0.0D+00)
+      PARAMETER (THRPR = 1.0D-04)
+C
+      DIMENSION PROP(NLOCCS*NLVIRS,NCOOR,NCOOR)
+      DIMENSION TJ(3,3)
+C
+      CALL QENTER('PLOCVIR_PRT')
+C
+      WRITE (LUPRI,'(A,9(5X,A,5X))') '   label    A  label    I',
+     &                     'xx','xy','xz','yx','yy','yz','zx','zy','zz'
+C
+      ILVAR = 0
+      CALL DZERO(TJ,9)
+C
+      DO ILOCC = ILOCCF, ILOCCL
+C
+         DO ILVIR = 1, NLVIRS
+C           
+            ILVAR = (ILOCC - 1)*NLVIRS + ILVIR
+            IC = 3*(IATOM-1)
+            JC = 3*(JATOM-1)
+C     
+            TOT = D0
+            DO I = 1, 3
+               DO J = 1, 3
+                  TOT     = TOT + DABS(PROP(ILVAR,IC+I,JC+J)) 
+                  TJ(I,J) = TJ(I,J) + PROP(ILVAR,IC+I,JC+J)
+               END DO
+            END DO
+C
+            IF (DABS(TOT*FACTOR) .GT. THRPR)
+     &         WRITE (LUPRI,'(2X,2(A8,I3,1X),9(D10.3,2X))')
+     &               TABVIL(ILVIR),ILVIR,TABOCL(ILOCC),ILOCC,
+     &         ((PROP(ILVAR,IC+I,JC+J)*FACTOR,J=1,3),I=1,3)
+C
+         END DO
+      END DO
+C
+      WRITE (LUPRI,'(7X,A,7X,9(D10.3,2X))') 'TOTAL',
+     &                                    ((TJ(I,J)*FACTOR,J=1,3),I=1,3)
+C
+      CALL QEXIT('PLOCVIR_PRT')
+C     
+      RETURN
+C
+      END
+*******************************************************************
 C  /* Deck ploprt */
 C
       SUBROUTINE PLOPRT(NLOCCS,ILOCCF,ILOCCL,JLOCCF,JLOCCL,
@@ -3062,3 +4561,4 @@ C
       RETURN
 C
       END
+      

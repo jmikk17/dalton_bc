@@ -1,0 +1,10 @@
+BASIS
+6-31G
+water using the 6-31G basis
+Using automatic symmetry detection.
+Atomtypes=2 Generators=0 
+Charge=8.0 Atoms=1
+O .0000000000 -.2249058930 .0000000000
+Charge=1.0 Atoms=2
+H_a 1.4523499293 .8996235720 .0000000000
+H_b -1.4523499293 .8996235720 .0000000000
