@@ -14,6 +14,11 @@
   - Implementation for the Electric Field Gradient at first order in 1/c2
 - The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
 - ENUE - print effective number of unpaired electrons ENUE = sum(i) (2\*n\_i - n\_i\*\*2) in final wave function output (H. J. Aa. Jensen)
+- Analysis of SSCCs in terms of localized orbitals
+  - Implementation of an extra keyword .SOCVIR which initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
+
+### Fixed
+- Fixed error in PE-MCSCF calculation with GSPOL
 
 
 ## [2020.1] (2022-01-20)
