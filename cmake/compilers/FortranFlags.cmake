@@ -96,7 +96,6 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
 endif()
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES NVHPC)
-# Patrick: mcmodel=medium is not available on PGI Free for MacOS X
     if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
         if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "x86_64")
             set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -mcmodel=medium")
@@ -106,9 +105,9 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES NVHPC)
         endif()
     endif()
 # Simen: added to include c++ libraries needed for the final linking
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -pgc++libs")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -c++libs")
     set(CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -Mframe -traceback")
-    set(CMAKE_Fortran_FLAGS_RELEASE "-O3 -Mipa=fast")
+    set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
     set(CMAKE_Fortran_FLAGS_PROFILE "${CMAKE_Fortran_FLAGS_RELEASE} -g -pg")
     if(ENABLE_64BIT_INTEGERS)
         set(CMAKE_Fortran_FLAGS
