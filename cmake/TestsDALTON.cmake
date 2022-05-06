@@ -147,6 +147,7 @@ add_dalton_runtest(prop_spinspin2                "dalton;serial;runtest;prop;sho
 add_dalton_runtest(prop_spinspin3                "dalton;serial;runtest;prop;short")
 add_dalton_runtest(prop_spinspin4                "dalton;serial;runtest;prop;short")
 add_dalton_runtest(prop_spinspin5                "dalton;serial;runtest;prop;short")
+add_dalton_runtest(prop_socvir                   "dalton;serial;runtest;prop;short") 
 add_dalton_runtest(prop_vibvcd                   "dalton;runtest;prop;short")
 add_dalton_runtest(prop_ctocd                    "dalton;runtest;prop;short;essential")
 add_dalton_runtest(prop_soppactocd               "dalton;serial;runtest;prop;soppa;short;essential")

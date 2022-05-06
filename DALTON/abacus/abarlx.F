@@ -431,8 +431,8 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
          ELSE
             CALL GPCLOSE(LUGDI,'DELETE')
          END IF
-         IF (VCD) THEN
-            CALL GPCLOSE(LURDI,'KEEP')
+         IF (VCD .OR. SOCVIR) THEN
+           CALL GPCLOSE(LURDI,'KEEP')
          ELSE
             CALL GPCLOSE(LURDI,'DELETE')
          END IF
