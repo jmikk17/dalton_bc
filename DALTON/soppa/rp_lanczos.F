@@ -3,7 +3,7 @@ C  /* Deck rp_lanczos */
       SUBROUTINE RP_LANCZOS(MODEL,LABEL,ISYMTR,
      &                     DENSIJ,LDENSIJ,
      &                     DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,
-     &                     FOCKD,LFOCKD,
+     &                     T2MP3,LT2MP3,FOCKD,LFOCKD,
      &                     LCONV,S_0,L_0,I_0,
      &                     WORK,LWORK)
 C
@@ -24,8 +24,10 @@ C     DENSAB        Virt.-virt. part of MP2 density
 C     LDENSAB       Lenght of virt.-virt. part of MP2 density                     
 C     DENSAI        Virt.-occ. part of MP2 density
 C     LDENSAI       Lenght of virt.-occ. part of MP2 density 
-C     T2MP          Array of the T2 amplitudes
-C     LT2MP         Length of the T2 amplitudes array           
+C     T2MP          Array of the 1st order T2 amplitudes
+C     LT2MP         Length of the T2 amplitudes array
+C     T2MP3         Array of the 2nd order T2 amplitudes
+C     LT2MP3        Length of the T2MP3 array 
 C     FOCKD         Fock diagonal 
 C     LFOCKD        Length of Fock diagonal  
 C     LCONV         # of diagonalizations performed
@@ -77,12 +79,13 @@ C
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSAB) :: DENSAB 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSAI) :: DENSAI 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LT2MP) :: T2MP 
+      REAL(sop_dp), INTENT(INOUT), DIMENSION(LT2MP3) :: T2MP3 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LFOCKD) :: FOCKD 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LWORK) :: WORK 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LCONV) :: S_0, L_0, I_0
 C
       INTEGER, INTENT(IN) :: ISYMTR, LDENSIJ, LDENSAB, LDENSAI
-      INTEGER, INTENT(IN) :: LT2MP, LFOCKD, LWORK 
+      INTEGER, INTENT(IN) :: LT2MP, LT2MP3, LFOCKD, LWORK 
       INTEGER, INTENT(IN) :: LCONV 
 C
 C      
@@ -268,8 +271,8 @@ C ISYMTR is a non-local parameter, we need to copy it to the info-array
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,NOLDTR,NNEWTR,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2MP,LT2MP,FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,
-     &                IDTYPE,
+     &                T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,DENSAI,
+     &                LDENSAI,NIT,ISYMTR,IDTYPE,
 #ifdef VAR_MPI
      &                WORK(kAssignedIndices),maxnumjobs,
 #endif

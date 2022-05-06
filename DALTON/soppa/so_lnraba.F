@@ -18,6 +18,7 @@ C
      &                   so_get_active_models,
      &                   so_has_doubles,
      &                   so_singles_second,
+     &                   so_singles_third,
      &                   sop_dens_label, sop_model_rpad,
      &                   sop_model_rpa,
      &                   sop_conv_thresh,
@@ -63,7 +64,7 @@ C
 C
       integer :: num_active
       logical :: active_models(sop_num_models)
-      logical :: doubles, need_t2, rpa_only
+      logical :: doubles, need_t2, need_t2s, rpa_only
       character(len=4) :: old_denslab, denslab
       logical :: new_densai, imagprop
 #ifdef VAR_MPI
@@ -263,6 +264,7 @@ C
                FULLNAME = SOP_MOD_FULLNAME(IMODEL)
                DOUBLES = SO_HAS_DOUBLES(IMODEL)
                NEED_T2 = DOUBLES.OR.SO_SINGLES_SECOND(MODEL)
+               NEED_T2S = SO_SINGLES_THIRD(MODEL)
                DENSLAB = SOP_DENS_LABEL(IMODEL)
 C
                IF (IPRSOP .GE. 1) THEN
@@ -294,6 +296,42 @@ C
      &                          WORK(KEND1),LWORK1)
                   OLD_DENSLAB = DENSLAB
                ENDIF
+CJavier 16/11/21
+C-----------------------------------------------------
+C              Memory Allocation for the T2S Amplit.
+C-----------------------------------------------------
+C
+               LT2SAM = 0
+               IF (NEED_T2S) THEN
+                  LT2SAM = LT2AM
+                  KT2SAM = KEND1
+                  KEND1 = KT2SAM + LT2SAM
+                  LWORK1 = LWORK - KEND1
+                  CALL SO_MEMMAX ('SO_LNRABA.1A',LWORK1)
+                  IF (LWORK1 .LT.0) THEN
+                      CALL STOPIT('SO_LNRABA.1A',' ',
+     &                KEND1,LWORK)
+                  ENDIF
+C
+C-----------------------------------------------------
+C              Get 2nd order T2 amplitudes and density
+C              matrices. This should be changed s.t.
+C              is runs parallel. This can be changed
+C              if later we found they 1st order and
+C              2nd order can be added together.
+C-----------------------------------------------------
+C
+                  CALL SO_GETT2('MP3 ',
+     &                          WORK(KFOCKD),LFOCKD,
+     &                          WORK(KT2SAM),LT2SAM,
+     &                          WORK(KDENSAI),
+     &                          LDENSAI,WORK(KDENSIJ),LDENSIJ,
+     &                          WORK(KDENSAB),LDENSAB,
+     &                          WORK(KEND1),LWORK1)
+                  old_denslab = DENSLAB
+               ENDIF
+C
+CJavier:end
 C
 C-----------------------------------------
 C              Initialize DENSAI if needed
@@ -316,8 +354,8 @@ C
      &                        WORK(KDENSIJ),LDENSIJ,
      &                        WORK(KDENSAB),LDENSAB,
      &                        WORK(KDENSAI),LDENSAI,WORK(KT2AM),
-     &                        LT2AM,WORK(KFOCKD),LFOCKD,
-     &                        WORK(KEND1),LWORK1)
+     &                        LT2AM,WORK(KT2SAM),LT2SAM,WORK(KFOCKD),
+     &                        LFOCKD, WORK(KEND1),LWORK1)
 C
 C              Save AI density matrix, if it has been recalculated.
                IF (NEW_DENSAI) THEN

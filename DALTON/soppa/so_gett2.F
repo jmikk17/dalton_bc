@@ -70,6 +70,8 @@ C
          FNAME = 'CC2__TAM'
       ELSE IF ( KEY .EQ. 'CCSD' ) THEN
          FNAME = 'CCSD_TAM'
+      ELSE IF ( KEY .EQ. 'MP3 ' ) THEN
+         FNAME = 'MP3__TAM'
       ELSE
          CALL QUIT('Invalid KEY in SO_GETT2: '//KEY)
       END IF
@@ -80,8 +82,8 @@ C----------------------------------------------------------
 C
       INQUIRE (FILE=FNAME,EXIST=LEXIST)
       IF ((.NOT.LEXIST) .AND. (KEY .EQ. 'MP2 ')) THEN
-C             WRITE(LUPRI, '(2A)') 'The (ai|bj) integrals for the T2 ',
-C     & 'amplitudes is calculated in SOPPA'
+         WRITE(LUPRI, '(2A)') 'The (ai|bj) integrals for the T2 ',
+     &                        'amplitudes are calculated in SOPPA'
 C
 C----------------------------------------
 C        Calculate (ia|jb) integrals .
@@ -109,11 +111,12 @@ C
          WRITE (LUTAM) T2AM
 C
       ELSE IF (LEXIST) THEN
-C             WRITE(LUPRI, '(2A)') 'The (ai|bj) integrals for the T2 ',
-C     & 'ampliltudes from is read from the file: MP2__TAM'
+         WRITE(LUPRI, '(3A)') 'The T2 ampliltudes are read ',
+     &                        'from the file: ',FNAME
 C-----------------------------------------------
-C          Read T1 and T2-amplitudes from disk.
+C        Read T1 and T2-amplitudes from disk.
 C-----------------------------------------------
+C
          LUTAM = -1
          CALL GPOPEN(LUTAM,FNAME,'OLD',' ','UNFORMATTED',
      &               IDUMMY,.FALSE.)
@@ -125,33 +128,55 @@ C
             READ(LUTAM,END=901) (DENSAI(I), I = 1,LDENSAI)
             CALL DSCAL(LDENSAI,HALF,DENSAI,1)
          END IF
+C
          READ(LUTAM,END=902) (T2AM(I), I = 1,LT2AM)
+C
+C-------------------------------------------
+C        Write T2-amplitudes to output file.
+C-------------------------------------------
+C
+         IF ( IPRSOP .GT. 10 ) THEN
+            IF ( KEY .EQ. 'MP2 ' ) THEN
+               CALL HEADER('MP2 Amplitudes',-1)
+            ELSE IF ( KEY .EQ. 'CC2 ' ) THEN
+               CALL HEADER('CC2 Amplitudes',-1)
+            ELSE IF ( KEY .EQ. 'CCSD' ) THEN
+               CALL HEADER('CCSD Amplitudes',-1)
+            ELSE IF ( KEY .EQ. 'MP3 ' ) THEN
+               CALL HEADER('MP3 Amplitudes',-1)
+            END IF
+            WRITE(LUPRI, '(1X,D20.13)') (T2AM(I),I=1, LT2AM)
+         END IF
 C
 C------------------------------------------------------------
 C        Attempt to read the D(ij) and D(ab) density matrices
 C------------------------------------------------------------
 C
-         READ(LUTAM,IOSTAT=IOSTATR) DENSIJ
-         IF (IOSTATR.GT.0) THEN
-            CALL QUIT('Error reading file '//FNAME)
-         ELSE IF (IOSTATR.LT.0) THEN
-            FOUND_DENS = .FALSE.
-            BACKSPACE (LUTAM)
-         ELSE
-            READ(LUTAM) DENSAB
+CJavier
+C  For now, TOPPA does not require Density matrices
+         IF (KEY.NE.'MP3') THEN
+            READ(LUTAM,IOSTAT=IOSTATR) DENSIJ
+            IF (IOSTATR.GT.0) THEN
+               CALL QUIT('Error reading file '//FNAME)
+            ELSE IF (IOSTATR.LT.0) THEN
+               FOUND_DENS = .FALSE.
+               BACKSPACE (LUTAM)
+            ELSE
+               READ(LUTAM) DENSAB
 C
 C        And also for MP2 get D(ai) block
-            if ( (KEY(1:2).NE.'CC').and.sop_mp2ai_done) then
-               READ(LUTAM,END=901) (DENSAI(I), I = 1,LDENSAI)
-            end if
-            FOUND_DENS = .TRUE.
+               IF ( (KEY(1:2).NE.'CC').AND.sop_mp2ai_done) THEN
+                  READ(LUTAM,END=901) (DENSAI(I), I = 1,LDENSAI)
+               END IF
+               FOUND_DENS = .TRUE.
+            END IF
          END IF
 C
       ELSE
          CALL QUIT('SOPPA(CC) requires running the CC module')
       END IF
-
-      IF (.NOT.FOUND_DENS) THEN
+C  For now, TOPPA does not require Density matrices
+      IF (.NOT.FOUND_DENS .AND. (KEY.NE.'MP3')) THEN
 C
 101      CONTINUE ! Failed to read D(ij) above
 C

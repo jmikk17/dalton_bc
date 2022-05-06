@@ -1,9 +1,6 @@
 C  /* Deck so_check */
       SUBROUTINE SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-CPi 04.04.16
-C     &                    T2MP,LT2MP,
-     &                    DENSAI,LDENSAI,T2MP,LT2MP,
-Cend-Pi
+     &                    DENSAI,LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
      &                    FOCKD,LFOCKD,ISYMTR,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -223,7 +220,7 @@ C Pack INFO_ARRAY variables and send them off
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,0, 1, DENSIJ, LDENSIJ, DENSAB, LDENSAB,
-     &               T2MP, LT2MP,  FOCKD,   LFOCKD,
+     &               T2MP, LT2MP, T2MP3, LT2MP3, FOCKD,   LFOCKD,
      &               DENSAI, LDENSAI, ICOL, ISYMTR,
      &               0,
 #ifdef VAR_MPI

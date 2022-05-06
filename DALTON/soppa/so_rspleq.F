@@ -3,7 +3,7 @@ C  /* Deck so_rspleq */
       SUBROUTINE SO_RSPLEQ(MODEL,LABEL,IMAGPROP,ISYMTR,
      &                     FRVAL,NFRVAL,DENSIJ,
      &                     LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,
-     &                     LT2MP,FOCKD,LFOCKD,WORK,LWORK)
+     &                     LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
@@ -28,7 +28,7 @@ C
 C
       DIMENSION FRVAL(NFRVAL)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
-      DIMENSION T2MP(LT2MP),     FOCKD(LFOCKD)
+      DIMENSION T2MP(LT2MP), T2MP3(LT2MP3),    FOCKD(LFOCKD)
       DIMENSION WORK(LWORK)
 C
       PARAMETER ( D100 = 100.0D0 )
@@ -145,7 +145,8 @@ C
      &               NEXCI,MAXIT,FRVAL,NFRVAL,
      &               WORK(KRESINM),LRESINM,WORK(KCONV),LCONV,DENSIJ,
      &               LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,
-     &               FOCKD,LFOCKD,WORK(KREDE),WORK(KREDS),LMXRED,
+     &               T2MP3,LT2MP3,FOCKD,LFOCKD,
+     &               WORK(KREDE),WORK(KREDS),LMXRED,
      &               WORK(KEND),LWORK1)
 C
 C-----------------------

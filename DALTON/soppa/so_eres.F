@@ -1,6 +1,7 @@
 C  /* Deck so_eres */
       SUBROUTINE SO_ERES(MODEL,  NOLDTR, NNEWTR,  DENSIJ,  LDENSIJ,
-     &                   DENSAB, LDENSAB, T2MP,    LT2MP,   FOCKD,
+     &                   DENSAB, LDENSAB, T2MP, LT2MP, T2MP3,
+     &                   LT2MP3, FOCKD,
      &                   LFOCKD, DENSAI,  LDENSAI, NIT,     ISYMTR,
      &                   IDTYPE,
 #ifdef VAR_MPI
@@ -30,7 +31,7 @@ C
       use so_info, only: so_singles_first, so_singles_second,
      &                   so_has_doubles, so_needs_densai,
      &                   so_double_correction,
-     &                   sop_mp2ai_done
+     &                   sop_mp2ai_done, so_singles_third
 
 #ifdef VAR_MPI
       use so_parutils, only: soppa_comm_active, soppa_num_active,
@@ -62,10 +63,11 @@ C
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
       DIMENSION INDEXA(MXCORB)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), T2MP(LT2MP)
-      DIMENSION FOCKD(LFOCKD)
+      DIMENSION T2MP3(LT2MP3), FOCKD(LFOCKD)
       DIMENSION DENSAI(LDENSAI) !intent(inout)
       DIMENSION WORK(LWORK)
       CHARACTER MODEL*5
+      CHARACTER MC*2
       integer :: inewtr, nnewtr, isymd1, ntosym
       integer :: thisinewtr
 C     idtype = 0 for dynamic (handle D part explicitly),
@@ -93,7 +95,8 @@ C
 #include "soppinf.h"
 
 
-      logical :: singles_first, singles_second, doubles, calc_densai
+      logical :: singles_first, singles_second, doubles, singles_third
+      logical :: calc_densai
 C
 C     Logical variable which can be set to false if the dexcitation vector is
 C     to avoid calculating with only zeroes. Useful for static
@@ -145,9 +148,7 @@ C
       singles_second = so_singles_second(model)
       doubles = so_has_doubles(model)
       tr2_zero = so_double_correction(model)
-C
-      LT2MPH = LT2MP
-      IT2MPH = 0
+      singles_third = so_singles_third(model)
 C
 C------------------------------------------------------
 C     Write singlet and triplet T2 amplitudes to output
@@ -155,11 +156,15 @@ C------------------------------------------------------
 C
       IF ( IPRSOP. GE. 10 ) THEN
 C
-         CALL AROUND('singlet T2AM in HR_ERES')
-         CALL OUTPUT(T2MP,1,LT2MPH,1,1,LT2MPH,1,1,LUPRI)
+         CALL AROUND('singlet T2AM in SO_ERES')
+         CALL OUTPUT(T2MP,1,LT2MP,1,1,LT2MP,1,1,LUPRI)
          IF (TRIPLET) THEN
-            CALL AROUND('triplet T2AM in HR_ERES')
-            CALL OUTPUT(T2MP(LT2MPH+1),1,LT2MPH,1,1,LT2MPH,1,1,LUPRI)
+            CALL AROUND('triplet T2AM in SO_ERES')
+            CALL OUTPUT(T2MP(LT2MP+1),1,LT2MP,1,1,LT2MP,1,1,LUPRI)
+         END IF
+         IF (singles_third) THEN
+            CALL AROUND('second order singlet T2AM in SO_ERES')
+            CALL OUTPUT(T2MP3,1,LT2MP3,1,1,LT2MP3,1,1,LUPRI)
          END IF
 C
       END IF
@@ -785,10 +790,8 @@ C                    MP-amplitudes.
 C------------------------------------------------------------
 C
                      DTIME      = SECOND()
-CPi-140316 Change LT2MP -> LT2MPH
-CPi I think now we have this condition two times
                      IF (NVIR(ISYMD).GT.0) THEN
-                        CALL SO_T2M1(WORK(KT2M1),LT2M1,T2MP,LT2MPH,
+                        CALL SO_T2M1(WORK(KT2M1),LT2M1,T2MP,LT2MP,
 Cend-Pi
      &                               WORK(KCMO),LCMO,IDEL,ISYMD,ISYDIS,
      &                               WORK(KEND4),LWORK4)
@@ -818,7 +821,7 @@ C
                         CALL DZERO(WORK(KX2EM1),LX2M1)
                         IF (DO_DEX) CALL DZERO(WORK(KX2DM1),LX2M1)
                      END IF
-
+C
                      IF (SINGLES_SECOND) THEN
 C
 C---------------------------------------------------------------
@@ -828,12 +831,12 @@ C---------------------------------------------------------------
 C                    (This takes care of terms (1), and (5) of the B
 C                    matrix)
                         CALL SO_T2X1(WORK(KX2EM1),LX2M1,
-     &                               T2MP,LT2MPH,
+     &                               T2MP,LT2MP,
      &                               WORK(KBTJ1D),LBTJ1D,IDEL,ISYMD,
      &                               ISYMTR,WORK(KEND4),LWORK4)
                         IF (DO_DEX) THEN
                            CALL SO_T2X1(WORK(KX2DM1),LX2M1,
-     &                                  T2MP,LT2MPH,
+     &                                  T2MP,LT2MP,
      &                                  WORK(KBTJ1E),LBTJ1E,IDEL,ISYMD,
      &                                  ISYMTR,WORK(KEND4),LWORK4)
                         END IF
@@ -881,6 +884,41 @@ C
                      KEND4 = KEND3
                      LWORK4 = LWORK3
                   ENDIF
+CJavier 26/11/21
+C     Work Allocation if using second order T2 Amplitudes
+C     no triplets no densai, only A-matrix
+C
+                  IF (singles_third) THEN
+C
+                     LT2SM1 = LT2M1
+                     KT2SM1 = KEND4
+                     KEND4  = KT2SM1 + LT2SM1
+                     LWORK4 = LWORK  - KEND4
+C
+                     CALL SO_MEMMAX ('SO_ERES.4S',LWORK4)
+                     IF (LWORK4 .LT. 0)
+     &                   CALL STOPIT('SO_ERES.4S',' ',KEND4,LWORK)
+C
+C
+C------------------------------------------------------------
+C                    Construct the partially back-transformed T2
+C                    MP3-amplitudes.
+C------------------------------------------------------------
+C
+                     DTIME      = SECOND()
+                     IF (NVIR(ISYMD).GT.0) THEN
+                        CALL SO_T2M1(WORK(KT2SM1),LT2SM1,T2MP3,LT2MP3,
+     &                               WORK(KCMO),LCMO,IDEL,ISYMD,ISYDIS,
+     &                               WORK(KEND4),LWORK4)
+                     ELSE
+                        CALL DZERO(WORK(KT2SM1),LT2SM1)
+                     END IF
+
+                   ELSE
+                     KT2SM1 = HUGE(LWORK) ! Crash if this is accessed
+                     LT2SM1 = 0
+                   ENDIF
+CJavier end
 C
 C---------------------------------------------
 C                 Work space allocation no. 5.
@@ -1280,16 +1318,40 @@ C
 C
 C----------------------------------------------------------------------
 C           Calculate part of the result vectors RES1E and RES1D,
-C           specifically the first and the second term in eqs. (34,35).
-C           Also calculate Aij and Aab in eqs. (43,44).
+C           specifically the 3rd and 4th B contribution, and the
+C           terms: -0.5δab(sum_cdk((jc|kd)κ^cd_ik))−0.5δij
+C           (sum_ckl((kb|lc)κ^ac_kl))
 C----------------------------------------------------------------------
 C
+            MC = 'AB'
             DTIME      = SECOND()
-            CALL SO_RES_A(WORK(KRES1E),LRES1E,
+            CALL SO_RES_A(MC,WORK(KRES1E),LRES1E,
      &                    WORK(KRES1D),LRES1D,
      &                    WORK(KTR1E),LTR1E,WORK(KTR1D),LTR1D,
      &                    WORK(KDSRHF),LDSRHF,WORK(KCMO),LCMO,
      &                    WORK(KT2M1),LT2M1,WORK(KAIJ),LAIJ,
+     &                    WORK(KAAB),LAAB,INEWTR,ISYMD,ISYDIS,
+     &                    ISYRES,ISYMTR,DO_DEX,
+     &                    WORK(KEND5),LWORK5)
+            DTIME      = SECOND()   - DTIME
+            SOTIME(14) = SOTIME(14) + DTIME
+         ENDIF
+C
+         IF (singles_third) THEN
+C
+C----------------------------------------------------------------------
+C           Calculate part of the result vectors RES1E and RES1D,
+C           specifically,-0.5δab(sum_cdk((jc|kd)κ^cd_ik))
+C           −0.5δij(sum_ckl((kb|lc)κ^ac_kl))
+C----------------------------------------------------------------------
+C
+            MC = 'A '
+            DTIME      = SECOND()
+            CALL SO_RES_A(MC,WORK(KRES1E),LRES1E,
+     &                    WORK(KRES1D),LRES1D,
+     &                    WORK(KTR1E),LTR1E,WORK(KTR1D),LTR1D,
+     &                    WORK(KDSRHF),LDSRHF,WORK(KCMO),LCMO,
+     &                    WORK(KT2SM1),LT2SM1,WORK(KAIJ),LAIJ,
      &                    WORK(KAAB),LAAB,INEWTR,ISYMD,ISYDIS,
      &                    ISYRES,ISYMTR,DO_DEX,
      &                    WORK(KEND5),LWORK5)
@@ -1394,12 +1456,13 @@ C
 CRF         A^(2) Doesn't mix spins - Same for singlet and triplet
 C----------------------------------------------------------------------
 C           Calculate part of the result vectors RES1E and RES1D,
-C           specifically the first and the second term in eqs.
-C           (34,35). Also calculate Aij and Aab in eqs. (43,44).
+C           specifically  −0.5δab(sum_cdk((jc|kd)κ^cd_ik))
+C           -0.5δij(sum_ckl((kb|lc)κ^ac_kl))
 C----------------------------------------------------------------------
 C
+            MC = 'AB'
             DTIME      = SECOND()
-            CALL SO_RES_A(WORK(KRES1E),LRES1E,
+            CALL SO_RES_A(MC,WORK(KRES1E),LRES1E,
      &                    WORK(KRES1D),LRES1D,
      &                    WORK(KTR1E),LTR1E,WORK(KTR1D),LTR1D,
      &                    WORK(KDSRHF),LDSRHF,WORK(KCMO),LCMO,
@@ -1423,6 +1486,43 @@ C
             DTIME      = SECOND()   - DTIME
             SOTIME(12) = SOTIME(12) + DTIME
          END IF
+         IF (singles_third) THEN
+C
+CRF         A^(2) Doesn't mix spins - Same for singlet and triplet
+C----------------------------------------------------------------------
+C           Calculate part of the result vectors RES1E and RES1D,
+C           specifically  −0.5δab(sum_cdk((jc|kd)κ^cd_ik))
+C           −0.5δij(sum_ckl((kb|lc)κ^ac_kl))
+C----------------------------------------------------------------------
+C
+            MC = 'A '
+            DTIME      = SECOND()
+            CALL SO_RES_A(MC,WORK(KRES1E),LRES1E,
+     &                    WORK(KRES1D),LRES1D,
+     &                    WORK(KTR1E),LTR1E,WORK(KTR1D),LTR1D,
+     &                    WORK(KDSRHF),LDSRHF,WORK(KCMO),LCMO,
+     &                    WORK(KT2SM1),LT2SM1,WORK(KAIJ),LAIJ,
+     &                    WORK(KAAB),LAAB,INEWTR,ISYMD,ISYDIS,
+     &                    ISYRES,ISYMTR,DO_DEX,
+     &                    WORK(KEND5),LWORK5)
+            DTIME      = SECOND()   - DTIME
+            SOTIME(14) = SOTIME(14) + DTIME
+C
+C--------------------------------------------------------------------
+C           Transform the partially back-transformed T2 MP-amplitudes
+C           Currently they are stored as
+C              t2m1(ai,j) = 2t(ai,j) - t(aj,i)
+C           In the following we need to have
+C              t2m1(ai,j) = -t(aj,i)
+C--------------------------------------------------------------------
+C
+            DTIME      = SECOND()
+            CALL SO_M1SHUF(WORK(KT2SM1),LT2SM1,ISYMD,1)
+            DTIME      = SECOND()   - DTIME
+            SOTIME(12) = SOTIME(12) + DTIME
+         END IF
+
+
          IF (DOUBLES.OR.SINGLES_SECOND) THEN
 C
 C-------------------------------------------------------------------
@@ -1544,7 +1644,7 @@ C           Same for the D-part
                   END DO
                END DO
             ENDIF
-
+C
          END SUBROUTINE
 
          SUBROUTINE SO_AOFOCK3(XINT,DENSIT,FOCK,

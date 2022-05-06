@@ -285,6 +285,17 @@ C
             TIMEE2  = SECOND() - TIMEE2
 C
             CALL FLUSH(LUPRI)
+C-----------------------------------------------
+C      Write MP2 amplitudes to disk.
+C-----------------------------------------------
+C
+             LUTAM = -1
+             CALL GPOPEN(LUTAM,'MP2__TAM',' ',' ','UNFORMATTED',IDUMMY,
+     &       .FALSE.)
+             REWIND LUTAM
+             WRITE(LUTAM) (WORK(KT2P1+I-1),I = 1,NT2AMX)
+             CALL GPCLOSE(LUTAM,'KEEP')
+C---------------------------------------------
       ENDIF
 C
 C------------------------------------------------
@@ -416,6 +427,17 @@ C
      *'The third order correction to the energy is: ', ECPSD3
           TIMEE3  = SECOND() - TIMEE3
           CALL FLUSH(LUPRI)    
+C-----------------------------------------------
+C      Write MP3 amplitudes to disk.
+C-----------------------------------------------
+C
+             LUTAM = -1
+             CALL GPOPEN(LUTAM,'MP3__TAM',' ',' ','UNFORMATTED',IDUMMY,
+     &       .FALSE.)
+             REWIND LUTAM
+             WRITE(LUTAM) (WORK(KT2P2+I-1),I=1,NT2AMX)
+             CALL GPCLOSE(LUTAM,'KEEP')
+C---------------------------------------------
       END IF
 C
       IF (IPRINT .GT. 9) THEN
@@ -429,6 +451,14 @@ C
           WRITE(LUPRI,9999) 'ECPS(D-3)      ', TIMEE3
         END IF
 C
+      END IF
+      IF (IPRINT .GT. 10) THEN
+         WRITE (LUPRI,'(A,/)') '  '
+         CALL HEADER('MP2 Amplitudes',-1)
+         WRITE(LUPRI, '(1X, D20.13)') (WORK(KT2P1+I-1),I=1,NT2AMX)
+         WRITE (LUPRI,'(1x,A)')
+         CALL HEADER('MP3 Amplitudes',-1)
+         WRITE(LUPRI, '(1X, D20.13)') (WORK(KT2P2+I-1),I=1,NT2AMX)
       END IF
 C
  9999  FORMAT(7x,'Time used in',2x,A12,2x,': ',f10.2,' seconds')

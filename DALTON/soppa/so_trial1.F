@@ -10,7 +10,8 @@ C     Stephan P. A. Sauer, November 2003: merge with DALTON 2.0
 C
 C     PURPOSE: Determine the initial trialvectors.
 CW
-      use so_info, only: so_has_doubles, AOSOP, DCRPA, AORPA
+      use so_info, only: so_has_doubles, AOSOP, DCRPA, AORPA,
+     &                   AOTOP
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -72,7 +73,7 @@ C---------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ( (MODEL .EQ. 'AOCC2') .AND. AOSOP ) THEN
+      ELSE IF ( (MODEL .EQ. 'AOCC2') .AND. AOSOP) THEN
 C
 C---------------------------------------------------------------------
 C        Use SOPPA eigenvectors as first trial vectors in SOPPA(CC2).
@@ -115,7 +116,8 @@ C--------------------------------------------------------------------
 C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND.
+     &     (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in SOPPA.
@@ -124,7 +126,8 @@ C--------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND.
+     &     (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for SOPPA.
@@ -133,7 +136,8 @@ C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
       ELSE IF ((MODEL.EQ.'AOSOC') .OR. (MODEL.EQ.'AOSOP') .OR.
-     &         (MODEL.EQ.'AOHRP') .OR. (MODEL.EQ.'AOCC2')) THEN
+     &         (MODEL.EQ.'AOHRP') .OR. (MODEL.EQ.'AOCC2') .OR.
+     &         (MODEL.EQ.'AOTOP')) THEN
 C
 C----------------------------------------------------------------------
 C        Create brand new trial vectors for SOPPA, SOPPA(CCSD) or

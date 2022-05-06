@@ -33,14 +33,14 @@ C     RPA, HRPA, RPA(D), SOPPA and SOPPA(CCSD) calculations and several
 C     options concerning these calculations.
 C     
 C   
-        use so_info, only: AOSOP, AOSOC, AORPA, AOHRP, AOCC2, DCRPA,
-     &                     DCHRP, SDCHR, SOP_LANCZOS,
+        use so_info, only: AOSOP, AOSOC, AORPA, AOHRP, AOCC2, AOTOP,
+     &                     DCRPA, DCHRP, SDCHR, SOP_LANCZOS,
      &                     SOP_LANC_CHAIN_LEN, SOP_LANC_CONV_CHECK,
      &                     SOP_LANC_CONV_NR
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-      PARAMETER (NTABLE = 20)
+      PARAMETER (NTABLE = 21)
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       LOGICAL LNEXC2
 #include "abainf.h"
@@ -53,7 +53,8 @@ C
       DATA TABLE /'.HIRPA ', '.SOPW4 ', '.DIRECT', '.AORPA ', '.RPA(D)',
      &            '.HRPAD ', '.AOSOP ', '.AOSOC ', '.SOPCHK', '.AOTEST',
      &            '.NSAVMX', '.NEXCI2', '.THREX2', '.AOHRP ', '.AOCC2 ',
-     &            '.HRPA(D', '.DCRPA ', '.SHRPA(', '.LANCZO', '.LANCON'/
+     &            '.HRPA(D', '.DCRPA ', '.SHRPA(', '.LANCZO', '.LANCON',
+     &            '.AOTOP '/
 C
 C------------------
 C     Set defaults.
@@ -65,6 +66,7 @@ C
       AOTEST = .FALSE.
 C
       AOSOP = .FALSE.
+      AOTOP = .FALSE.
 C      
       NSAVMX = 3
       NSAVMXORIG = 3
@@ -86,8 +88,8 @@ C
          ICHANG = ICHANG + 1
          DO 200 I = 1, NTABLE
             IF (TABLE(I) .EQ. WORD) THEN
-               GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)
-     &              , I
+               GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
+     &               21), I
             END IF
   200    CONTINUE
          IF (WORD .EQ. '.OPTION') THEN
@@ -172,7 +174,9 @@ C           NSYM is set to 8 since NSYM has not yet been set !!
             SOP_LANC_CONV_CHECK  = .TRUE.
             READ (LUCMD,*) SOP_LANC_CONV_NR
             GOTO 100
-
+   21    CONTINUE !.AOTOP
+            AOTOP  = .TRUE.
+            GOTO 100
       ELSE IF (PROMPT .EQ. '*') THEN
          GOTO 300
       ELSE
@@ -184,7 +188,7 @@ C           NSYM is set to 8 since NSYM has not yet been set !!
   300 CONTINUE
 C
       IF (ICHANG .GT. 0) THEN
-         CALL HEADER('Changes of defaults in SOPPA:',0)
+         CALL HEADER('Changes of defaults in the SOPPA Module:',0)
          IF (HIRPA)  WRITE(LUPRI,'(A)')
      &       ' HRPA : Higher RPA Polarization Propagator Approximation'
          IF (SOPW4)  WRITE(LUPRI,'(A)')
@@ -205,6 +209,8 @@ C
      &       '    (Ref.: K. L. Bak, H. Koch, J. Oddershede,',
      &       ' O. Christiansen and S. P. A. Sauer',
      &       '     J. Chem. Phys. 112, 4173-4185 (2000))'
+         IF (AOTOP) WRITE(LUPRI, '(A/,A,A,/,A)')
+     &       ' AO integral driven TOPPA :'
 CPi
          IF (AOCC2)  WRITE(LUPRI,'(A)')
      &       ' AO integral driven SOPPA(CC2) :'

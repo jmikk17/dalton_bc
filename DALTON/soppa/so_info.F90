@@ -18,7 +18,7 @@ module so_info
    real(sop_dp), parameter :: sop_dthresh = 1.0D-4  ! Smallest denominator used when 
                                                     ! preconditioning trial-vectors.
 
-   integer, parameter :: sop_num_models = 8 ! Number of currently defined methods
+   integer, parameter :: sop_num_models = 9 ! Number of currently defined methods
 
    ! Parameter for calculation types
    integer, parameter :: sop_linres = 1, & ! linear response
@@ -36,21 +36,22 @@ module so_info
                          sop_model_shrpad  = 5, &
                          sop_model_soppa   = 6, &
                          sop_model_sopcc2  = 7, &
-                         sop_model_sopccsd = 8
+                         sop_model_sopccsd = 8, &
+                         sop_model_toppa   = 9
 
    ! Array of the allowed model labels
    character(len=5), dimension(sop_num_models), parameter :: sop_models = &
                   (/ 'AORPA','DCRPA','AOHRP','DCHRP','SDCHR', &
-                     'AOSOP','AOCC2','AOSOC' /)
+                     'AOSOP','AOCC2','AOSOC','AOTOP' /)
 
    ! Array of method full model names names
    character(len=11), dimension(sop_num_models), parameter :: sop_mod_fullname = &
       (/'RPA        ','RPA(D)     ','Higher RPA ','HRPA(D)    ', &
-        's-HRPA(D)  ','SOPPA      ','SOPPA(CC2) ','SOPPA(CCSD)'/)
+        's-HRPA(D)  ','SOPPA      ','SOPPA(CC2) ','SOPPA(CCSD)','TOPPA'/)
 
    ! Arrays of arguments the method needs to pass to GET_DENS
    character(len=4), dimension(sop_num_models), parameter :: sop_dens_label = &
-      (/'NONE','MP2 ','MP2 ','MP2 ','MP2 ','MP2 ','CC2 ','CCSD'/)
+      (/'NONE','MP2 ','MP2 ','MP2 ','MP2 ','MP2 ','CC2 ','CCSD','MP2 '/)
 
    ! Additional SOPPA filenames (Added here instead of soppinf.h)
    character(len=11), parameter :: FN_RDENS  = 'soppa_densp', &
@@ -61,7 +62,8 @@ module so_info
    ! Flags stating which models are active
    logical :: AORPA = .false., AOHRP = .false., DCRPA = .false., &
               DCHRP = .false., SDCHR = .false., &
-              AOSOP = .false., AOSOC = .false., AOCC2 = .false.
+              AOSOP = .false., AOSOC = .false., AOCC2 = .false., &
+              AOTOP = .false.
    ! Flag for ensuring that second order, first order density is written
    ! only once
    logical :: sop_mp2ai_done = .false.
@@ -127,7 +129,8 @@ contains
                                                 sop_model_shrpad, &
                                                 sop_model_soppa,  &
                                                 sop_model_sopcc2, &
-                                                sop_model_sopccsd /) )
+                                                sop_model_sopccsd, &
+                                                sop_model_toppa /) )
       return
    end function
 
@@ -136,7 +139,7 @@ contains
       !  (Work around to the fact that the models are controlled by
       !   individual logical variables)
       logical, intent(out) :: list(sop_num_models)
-      list = (/ AORPA, DCRPA, AOHRP, DCHRP, SDCHR, AOSOP, AOCC2, AOSOC /)
+      list = (/AORPA,DCRPA,AOHRP,DCHRP,SDCHR,AOSOP,AOCC2,AOSOC,AOTOP/)
       return
    end subroutine
 
@@ -165,7 +168,8 @@ contains
 
       so_has_doubles_name = (model.eq.'DCRPA').or.(model.eq.'AOSOP').or. &
                             (model.eq.'AOCC2').or.(model.eq.'AOSOC').or. &
-                            (model.eq.'DCHRP').or.(model.eq.'SDCHR')
+                            (model.eq.'DCHRP').or.(model.eq.'SDCHR').or. &
+                            (model.eq.'AOTOP')
       return
    end function
 
@@ -189,7 +193,7 @@ contains
       so_singles_second = (model.eq.'DCRPA').or.(model.eq.'AOSOP').or.&
                           (model.eq.'AOSOC').or.(model.eq.'AOHRP').or.&
                           (model.eq.'AOCC2').or.(model.eq.'DCHRP').or.&
-                          (model.eq.'SDCHR')
+                          (model.eq.'SDCHR').or.(model.eq.'AOTOP')
       return
    end function
 
@@ -200,6 +204,16 @@ contains
       logical :: so_singles_first
       so_singles_first = (model.ne.'DCRPA').or.(model.ne.'DCHRP').or.&
                          (model.ne.'SDCHR')
+   end function
+
+   pure function so_singles_third(model)
+      !  Return true if model includes third order singles
+      !  contributions
+      character(len=5), intent(in) :: model
+      logical :: so_singles_third
+
+      so_singles_third = (model.eq.'AOTOP')
+      return
    end function
 
    pure function so_model_number(model)

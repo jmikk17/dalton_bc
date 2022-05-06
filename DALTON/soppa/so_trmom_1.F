@@ -1,7 +1,7 @@
 C
 C  /* Deck so_trmom */
       SUBROUTINE SO_TRMOM_1(MODEL,LABEL,KSYMOP,ISYMTR,NEXCI,
-     &                    T2AM,LT2AM,DENSIJ,LDENSIJ,
+     &                    DENSIJ,LDENSIJ,
      &                    DENSAB,LDENSAB,DENSAI,LDENSAI,
      &                    TRLEN,TRVEL,TQLEN,TQVEL,TTLEN,TRLON,TRMAG,
      &                    BSRLON,EXENG,TRGOS,WORK,LWORK,
@@ -32,7 +32,7 @@ CSPAS:23/5-11: second and third moment sum rules
 CKeinSPASmehr
       DIMENSION TRLON(3,NSYM,MXNEXI), TRMAG(3,NSYM,MXNEXI)
       DIMENSION BSRLON(3,NSYM,MXNEXI), EXENG(NSYM,MXNEXI)
-      DIMENSION T2AM(LT2AM), WORK(LWORK)
+      DIMENSION WORK(LWORK)
 C
       PARAMETER( ONE=1.0D0 )
 C
