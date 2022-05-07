@@ -174,6 +174,7 @@ add_dalton_runtest(prop_exci_aorpad_trip         "dalton;runtest;prop;aosoppa;sh
 add_dalton_runtest(prop_exci_aohrpad             "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_exci_aoshrpad            "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_exci_aosoppa             "dalton;runtest;prop;aosoppa;short")
+add_dalton_runtest(prop_exci_aotoppa             "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_exci_aosoppcc            "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_exci_aosoc_trip          "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_exci_aosopcc2_sing       "dalton;serial;runtest;prop;aosoppa;short;essential")
@@ -181,8 +182,10 @@ add_dalton_runtest(prop_exci_aorpa_direct        "dalton;runtest;prop;aosoppa;sh
 add_dalton_runtest(prop_exci_aosopcc_direct      "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_alpha_aorpa              "dalton;runtest;prop;aosoppa;short;essential")
 add_dalton_runtest(prop_alpha_aosoppa            "dalton;runtest;prop;aosoppa;short")
+add_dalton_runtest(prop_alpha_aotoppa            "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(rsp_dipvel_aosoppa            "dalton;runtest;prop;aosoppa;short")
 add_dalton_runtest(prop_spinspin_aosoppa         "dalton;runtest;prop;aosoppa;medium")
+add_dalton_runtest(prop_spinspin_aotoppa         "dalton;runtest;prop;aosoppa;medium")
 
 add_dalton_runtest(prop_vibana                   "dalton;runtest;prop;long")
 add_dalton_runtest(prop_expgrad                  "dalton;runtest;prop;dft;short")

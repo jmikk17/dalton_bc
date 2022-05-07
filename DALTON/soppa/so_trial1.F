@@ -82,6 +82,15 @@ C---------------------------------------------------------------------
 C
          CONTINUE
 C
+      ELSE IF ( (MODEL .EQ. 'AOTOP') .AND. AOSOP) THEN
+C
+C---------------------------------------------------------------------
+C        Use SOPPA eigenvectors as first trial vectors in TOPPA.
+C        Since the SOPPA vectors are in place nothing shall be done.
+C---------------------------------------------------------------------
+C
+         CONTINUE
+C
       ELSE IF ((MODEL.EQ.'AOSOC') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
 C
 C----------------------------------------------------------------------
@@ -95,6 +104,24 @@ C
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in SOPPA(CC2).
+C        Since the RPA(D) vectors are in place nothing shall be done.
+C----------------------------------------------------------------------
+C
+         CONTINUE
+C
+      ELSE IF ((MODEL.EQ.'AOTOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+C
+C----------------------------------------------------------------------
+C        Use RPA(D) eigenvectors as first trial vectors in TOPPA.
+C        Since the RPA(D) vectors are in place nothing shall be done.
+C----------------------------------------------------------------------
+C
+         CONTINUE
+C
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+C
+C----------------------------------------------------------------------
+C        Use RPA(D) eigenvectors as first trial vectors in SOPPA.
 C        Since the RPA(D) vectors are in place nothing shall be done.
 C----------------------------------------------------------------------
 C
@@ -116,18 +143,15 @@ C--------------------------------------------------------------------
 C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND.
-     &     (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOTOP') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
 C
-C--------------------------------------------------------------------
-C        Use RPA(D) eigenvectors as first trial vectors in SOPPA.
-C        Since the RPA(D) vectors are in place nothing shall be done.
-C--------------------------------------------------------------------
+C--------------------------------------------------------------
+C        Use RPA eigenvectors as first trial vectors for TOPPA.
+C--------------------------------------------------------------
 C
-         CONTINUE
+         CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND.
-     &     (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for SOPPA.

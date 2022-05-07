@@ -274,10 +274,14 @@ C
       INTEGER :: LUTAM, I, IDUMMY
 C
 C     Set filename from key
-      FNAME = KEY//'_TAM'
-      if (FNAME(4:4).EQ.' ') THEN
-         FNAME(4:4) = '_'
-      end if
+      IF (FNAME .EQ. 'MP3 ') THEN
+         FNAME = 'MP2__TAM'
+      ELSE
+         FNAME = KEY//'_TAM'
+         IF (FNAME(4:4).EQ.' ') THEN
+            FNAME(4:4) = '_'
+         END IF
+      END IF
       LUTAM = -1
 C
       CALL GPOPEN(LUTAM,FNAME,'OLD',' ','UNFORMATTED',IDUMMY,
