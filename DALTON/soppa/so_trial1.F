@@ -73,7 +73,7 @@ C---------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ( (MODEL .EQ. 'AOCC2') .AND. AOSOP) THEN
+      ELSE IF ((MODEL .EQ. 'AOCC2') .AND. AOSOP) THEN
 C
 C---------------------------------------------------------------------
 C        Use SOPPA eigenvectors as first trial vectors in SOPPA(CC2).
