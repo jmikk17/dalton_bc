@@ -2065,8 +2065,8 @@ ckr               IDORCT(IREC) = 1
                IF (IPRTRP .GT. 5) THEN
                   CALL HEADER('Response and residual vectors in '//
      &                'TRPRS1 for symmetry '//CHRNOS(ISYM)//':',-1)
-                 WRITE (LUPRI,'(A,I5)') ' Coordinate:',ICOOR
-                 WRITE (LUPRI,'(A,I5)') ' Record:    ',IREC
+                  WRITE (LUPRI,'(A,I5)') ' Coordinate:',ICOOR
+                  WRITE (LUPRI,'(A,I5)') ' Record:    ',IREC
                   DN1 = DNRM2(NVARPT,WORK,1)
                   DN2 = DNRM2(NVARPT,WORK(1+NVARPT),1)
                   WRITE (LUPRI,'(A,2(D21.14,2X))')
