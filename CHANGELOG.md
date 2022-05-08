@@ -7,6 +7,7 @@
 - SOPPA (Luna Zamok)
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver.
   - Added PE-AO-SOPPA/RPA (Peter Reinholdt)
+  - First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coeffiients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
 - Atomic Integrals (Juanjo Aucar)
   - Divergence of the zz Electric Field Gradient component
   - Laplacian of xx,yy and zz Electric Field Gradient components
