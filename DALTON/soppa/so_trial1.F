@@ -82,7 +82,7 @@ C---------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ( (MODEL .EQ. 'AOTOP') .AND. AOSOP) THEN
+      ELSE IF ((MODEL .EQ. 'AOTOP') .AND. AOSOP) THEN
 C
 C---------------------------------------------------------------------
 C        Use SOPPA eigenvectors as first trial vectors in TOPPA.
