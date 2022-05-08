@@ -109,7 +109,7 @@ C----------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOTOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOTOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1)) THEN
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in TOPPA.
