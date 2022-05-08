@@ -91,7 +91,8 @@ C---------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOSOC') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOC') .AND. DCRPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in SOPPA(CCSD).
@@ -100,7 +101,8 @@ C----------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOCC2') .AND. DCRPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOCC2') .AND. DCRPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in SOPPA(CC2).
@@ -109,7 +111,8 @@ C----------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOTOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1)) THEN
+      ELSE IF ((MODEL.EQ.'AOTOP') .AND. DCRPA .AND. 
+     &         (NEXCI.LE.LTR1)) THEN
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in TOPPA.
@@ -118,7 +121,8 @@ C----------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND. (NEXCI.LE.LTR1)) THEN
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. DCRPA .AND. 
+     &         (NEXCI.LE.LTR1)) THEN
 C
 C----------------------------------------------------------------------
 C        Use RPA(D) eigenvectors as first trial vectors in SOPPA.
@@ -127,7 +131,8 @@ C----------------------------------------------------------------------
 C
          CONTINUE
 C
-      ELSE IF ((MODEL.EQ.'AOSOC') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOC') .AND. AORPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for SOPPA(CCSD).
@@ -135,7 +140,8 @@ C--------------------------------------------------------------------
 C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOCC2') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOCC2') .AND. AORPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for SOPPA(CC2).
@@ -143,7 +149,8 @@ C--------------------------------------------------------------------
 C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOTOP') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOTOP') .AND. AORPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for TOPPA.
@@ -151,7 +158,8 @@ C--------------------------------------------------------------
 C
          CALL SO_TR1RP(NNEWTR,LTR2,WORK,LWORK)
 C
-      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND. (NEXCI.LE.LTR1))THEN
+      ELSE IF ((MODEL.EQ.'AOSOP') .AND. AORPA .AND. 
+     &         (NEXCI.LE.LTR1))THEN
 C
 C--------------------------------------------------------------
 C        Use RPA eigenvectors as first trial vectors for SOPPA.
@@ -174,12 +182,8 @@ C
       ELSE
 C
          CALL QUIT('ERROR: Logical mistake occured in SO_TRIAL1')
-
 C
       END IF
-
-
-
 C
 C-----------------------------------------------
 C     Orthogonalize new trial vectors over S[2].
