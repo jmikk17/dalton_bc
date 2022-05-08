@@ -47,7 +47,7 @@ module so_info
    ! Array of method full model names names
    character(len=11), dimension(sop_num_models), parameter :: sop_mod_fullname = &
       (/'RPA        ','RPA(D)     ','Higher RPA ','HRPA(D)    ', &
-        's-HRPA(D)  ','SOPPA      ','SOPPA(CC2) ','SOPPA(CCSD)','TOPPA'/)
+        's-HRPA(D)  ','SOPPA      ','SOPPA(CC2) ','SOPPA(CCSD)','TOPPA      '/)
 
    ! Arrays of arguments the method needs to pass to GET_DENS
    character(len=4), dimension(sop_num_models), parameter :: sop_dens_label = &
