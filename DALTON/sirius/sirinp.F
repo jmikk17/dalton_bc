@@ -1077,6 +1077,7 @@ C
 C     If MAXCIT not specified in input:
       IF (MAXCIT .LT. 0) THEN
          IF (.NOT.(DOSCF .OR. DOMP2 .OR. DOCINO) .AND. FLAG(13)) THEN
+                  !DOSCF, DOMP2, DOCINO are changing the MOs
 C           ... only MC and reading orbitals from file:
 C               these may be converged orbitals thus MAXCIT = 20
             MAXCIT = 20
@@ -3806,6 +3807,7 @@ C
       WORD1 = WORD
       IF (ALLOPT) CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',
      &                       LUPRI)
+      NTYPES_CI = 0
   100    READ (LUCMD, '(A7)') WORD
          CALL UPCASE(WORD)
          PROMPT = WORD(1:1)
@@ -3838,8 +3840,8 @@ C
 C
 C *** Option 1 >CINO  < Calculate CI natural orbitals.
   101 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOCINO   = .TRUE.
-      FLAG(4)  = .TRUE.
       FLAG(67) = .TRUE.
       FLAG(68) = .TRUE.
       GO TO 100
@@ -3885,11 +3887,13 @@ C *** Option 9 >STATE <  Converge root number ISTATE to threshold
       GO TO 100
 C *** Option 10 >FULLCI<
   110 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOFCI  = .TRUE.
       MCTYPE = 1 ! CAS
       GO TO 100
 C *** Option 11 >CISD  <
   111 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOCISD = .TRUE.
       MCTYPE = 2 ! RAS
       GO TO 100
@@ -3905,18 +3909,23 @@ C     !> >SPDENS< set level (1-/2-particle) spin density calculation
       GO TO 100
 C
  8000 CONTINUE
+      IF (.NOT.DOCI) THEN
+         WRITE(LUPRI,'(/3A)') 'INFO: ',WORD1,
+     &      'CI input ignored because .CI not specified'
+         GO TO 9000
+      END IF
       IF (THR_REDFAC .GT. 0.0D0) THEN
 C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,
      &   ' thresholds multiplied with general factor',THR_REDFAC
          THRCI = THRCI*THR_REDFAC
       END IF
-      IF (DOFCI .AND. DOCISD) THEN
+      IF (NTYPES_CI .GT. 1) THEN
          INPERR = INPERR + 1
-         WRITE (LUPRI,'(/A)')
-     &      'INPUT ERROR, both .CISD and .FULLCI specified'
+         WRITE (LUPRI,'(/2A)') WORD1,
+     &  ' INPUT ERROR, more than one of .CINO, .CISD, .FULLCI specified'
       END IF
-      RETURN
+ 9000 RETURN
       END
 C  /* Deck orbinp */
       SUBROUTINE ORBINP(WORD,INPERR,IRDMO,ALLOPT)
@@ -3942,6 +3951,7 @@ C INFORB : NBAS
 C HUCKEL : DOHUCKEL
 C
 #include "maxorb.h"
+#include "dummy.h"
 #include "infinp.h"
 #include "inforb.h"
 #include "huckel.h"
@@ -4013,7 +4023,7 @@ C
       ELSE
          KDEL  = 1
 C        ... to specify this option and that DELETE is now illegal.
-         CALL CMODEL(CMO,.FALSE.)
+         CALL CMODEL(VDUMMY,.FALSE.)
 C        CALL CMODEL(CMO,GETCMO)
 C        ... call cmodel to get NORB(*); CMO will not be used.
 C            CMODEL will be called later to get CMO, if MOSTART 8.
@@ -5976,7 +5986,7 @@ C
       NFROT   = ISUM(NSYM,NFRO,1)
       NFRRHFT = ISUM(NSYM,NFRRHF,1)
       NFRMP2T = ISUM(NSYM,NFRMP2,1)
-      IF (DOSCF .AND. NFRHFT .GT. 0) THEN
+      IF (DOSCF .AND. NFRRHFT .GT. 0) THEN
          IF (DODFT) THEN
             WRITE (IWUNIT,6110) NFRRHFT,(NFRRHF(I),I=1,NSYM)
          ELSE IF (DOHFSRDFT) THEN
@@ -5992,7 +6002,7 @@ C
      &    '@INFO: Therefore frozen MP2 orbitals are set'//
      &    ' equal to frozen SCF orbitals (default).'
             NFRMP2(1:8) = NFRRHF(1:8)
-            NFRMP2T     = NVRRHFT
+            NFRMP2T     = NFRRHFT
          END IF
          WRITE (IWUNIT,6120) NFRMP2T,(NFRMP2(I),I=1,NSYM)
          IF (NFRMP2T .LT. NFRRHFT) THEN

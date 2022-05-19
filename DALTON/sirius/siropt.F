@@ -978,7 +978,7 @@ C     If (not noupdate or not neo_always or not nr_always) then
          I = ISTATE + 1 - IINFO(13)
          SHFLVL = DINFO(20+I)
          IF (IPRSTAT .GT. 5) WRITE (LUSTAT,'(/A,F20.10)')
-     *      ' Level shift used for UPDATE/SIRNR test:',SHFLVL
+     &      ' Level shift used for UPDATE/SIRNR test:',SHFLVL
          LOCAL = LOCAL .AND. (ABS(SHFLVL) .LT. SHFLCL)
          LOCAL = LOCAL .AND. ITBCK .EQ. 0
          IF ( LOCAL ) THEN
@@ -989,7 +989,8 @@ C     If (not noupdate or not neo_always or not nr_always) then
                ITRLVL = 0
             ELSE IF (.NOT. FLAG(38) .AND. ISTATE .GT. 1) THEN
 C              ... no reason to switch to NR for ground state
-               WRITE (LUPRI,'(/A)') ' Local region, DONR activated'
+               IF (.NOT.DONR)
+     &            WRITE (LUPRI,'(/A)') ' Local region, DONR activated'
                DONR     = .TRUE.
                FLAG(39) = .TRUE.
             END IF
@@ -1882,11 +1883,16 @@ C
             IF ( .NOT.FNDLAB(TABLE(2),LUIT1) ) GO TO 490     ! label 'OLDORB  ' for backstep after restart
             IF ( LBLINF(2).EQ.'NRSAVE  ') FLAG(39) = .TRUE.  ! if user has specified .RESTART, then respect shift to NR
          END IF
+         ! the record may have LBLINF(2) = 'CNOSAVE ', so we test also on
+         ! JSTA to see if saved information is for NR and not for NEO
+         READ (LBLINF(1),'(2I4)',ERR=405) LROIT1,JSTA
+         IF (LROIT1 .EQ. 1 .AND. JSTA .LT. 0) FLAG(39) = .TRUE.
          IF (FLAG(39)) GO TO 495
+
 C        ... if (ONLYNR) one vector is all that is needed,
 C            so no reason to do more checking.
 C        We now check if sufficient vectors available using label information.
-         READ (LBLINF(1),'(2I4)',ERR=405) LROIT1,JSTA
+
          IF (LROIT1 .LT. LROOTS) GO TO 493
          GO TO 495
 C        error reading LBLINF(1) -- use the old check
