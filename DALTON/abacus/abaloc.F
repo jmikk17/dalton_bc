@@ -503,7 +503,7 @@ C-------------------------
 C     Read MO coefficients
 C-------------------------
 C
-      CALL RD_SIRIFC('CMO',FOUND,CMO)
+      CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
       IF (.NOT.FOUND) CALL QUIT('CMO not found on SIRIFC')
 C     
 C***********************************************************
