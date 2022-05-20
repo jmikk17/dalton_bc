@@ -395,14 +395,15 @@ C
      &                           LUGDVE,LUSOVE,LUREVE,THRCLC,MAXCLC,
      &                           IPRCLC,MXRM,MXPHP,WORK,LWORK)
                      IF (NOCONV) THEN
+                        NWARN = NWARN + 1
                         WRITE (LUPRI,'(/3A,2F10.5,A,I0)')
      &    '@ WARNING No convergence for "',IMGLAB(IREC),
-     &    '". Last residual and threshold:', FINRES, THRTRP,
+     &    '". Last residual and threshold:', FINRES, THRCLC,
      &    ';  # trial vectors: ',KZRED_ABA
                      ELSE
                         WRITE (LUPRI,'(3A,2F10.5,A,I0)')
      &    '    Convergence for "',IMGLAB(IREC),
-     &    '". Last residual and threshold:', FINRES, THRTRP,
+     &    '". Last residual and threshold:', FINRES, THRCLC,
      &    ';  # trial vectors: ',KZRED_ABA
                      END IF
                   END IF

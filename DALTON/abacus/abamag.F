@@ -2074,7 +2074,6 @@ ckr               IDORCT(IREC) = 1
                IF (IPRTRP .GT. 10) THEN
                   CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
                END IF
-               CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
  10         CONTINUE
          END IF
  50   CONTINUE
