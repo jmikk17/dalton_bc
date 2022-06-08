@@ -1,0 +1,8 @@
+BASIS
+STO-3G
+
+
+Atomtypes=1 Charge=0 Angstrom NoSymmetry
+Charge=1 Atoms=2                                                         
+H     0 0 0
+H     0 0 1

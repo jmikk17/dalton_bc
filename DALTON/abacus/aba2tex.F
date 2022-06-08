@@ -284,6 +284,7 @@ C
       LOGICAL   DDFOCK, NOBLK, ZFS2EL, PARHER_IS_OK, PARHER_SAVE
       INTEGER   IFCTYP(MXDMAT), ISYMDM(MXDMAT)
       DIMENSION ALPGR1(MXPRIM)
+      DIMENSION GRADEE_copy(MXCOOR)
 C
 C     Control routine for calculation of expectation values
 C     of differentiated two-electron integrals
@@ -512,6 +513,8 @@ cfrj-end
      &                                      WORK(KFCTMP),1)
 cfrj-st
                CALL DZERO(ALPGRD,MXPRIM)
+               CALL DCOPY(MXCOOR,GRADEE,1,GRADEE_copy,1)
+               CALL DZERO(GRADEE,MXCOOR)
 cfrj-end
                CALL PARDRV(WORK(KFMAT),WORK(KDMAT),NDMAT,ISYMDM,IFCTYP,
      &              WORK(KLAST),WORK(KNSTAT),WORK(KHESEE),LWRK,
@@ -521,6 +524,7 @@ cfrj-end
      &              DUMMY,LDUMMY)
 cfrj-st camb3lyp looses the 1e-contribution during the second call to pardrv, reason unknown, kludge fix by zeroing array above and manually adding it again
                CALL DAXPY(MXPRIM,1.0D0,ALPGR1,1,ALPGRD,1)
+               CALL DAXPY(MXCOOR,1.0D0,GRADEE_copy,1,GRADEE,1)
 cfrj-end
                IF (NFMAT .GT. 0) CALL DAXPY(NFMAT*N2BASX,1D0,
      &                                     WORK(KFCTMP),1,WORK(KFMAT),1)
