@@ -19,6 +19,7 @@
 
 ### Fixed
 - Fixed error in PE-MCSCF calculation with GSPOL
+- Fixed parallel calculation of molecular gradient with CAMB3LYP
 
 
 ## [2020.1] (2022-01-20)
