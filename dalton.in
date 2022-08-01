@@ -558,7 +558,7 @@ if [ -n "$DALTON_LAUNCHER" ] ; then
        exit 1
     fi
     DALTON_EXE="$DALTON_LAUNCHER $DALTON_EXECUTABLE"
-elif [ $mpi_enabled = "ON" -a $optn -gt 1 ] ; then
+elif [ $mpi_enabled = "ON" ] ; then
     is_OpenMPI=`$MPIEXEC --version | grep -i -c 'open.*mpi'`
     if [ $is_OpenMPI -gt 0 ] ; then
        # For openMPI: if --bind-to none is not added, then e.g. "ctest -j 10" for "-np 1" will run all 10 jobs on CPU core 0
