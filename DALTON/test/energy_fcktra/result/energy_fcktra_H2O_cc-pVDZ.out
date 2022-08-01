@@ -58,110 +58,113 @@
 
     Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Juan J. Aucar,            Northeast National University,Argentina   (LRESC, Relativistic Effects on EFG)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Bruno N. Cabral Tenorio,  Technical Univ. of Denmark,   Denmark     (Lanczos-based CC methods)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC and RESPONS modules)
-  Janusz Cukras,            University of Warsaw,         Poland      (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding, TDA)
-  Rasmus Faber,             Technical Univ. of Denmark,   Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
-  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (Doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Emmanuel Fromager,        Univ. Strasbourg,             France      (MC-srDFT)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
-  Hanne Heiberg,            University of Oslo,           Norway      (Geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (Cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Erik Kjellgren,           Univ. of Southern Denmark,    Denmark     (MC-srDFT)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF, MC-srDFT)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Aarhus University,            Denmark     (Polarizable embedding and polarizable density embedding)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Peter Reinholdt,          Univ. of Southern Denmark,    Denmark     (Polarizable embedding and polarizable density embedding)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, polarizable embedding)
-  Casper Steinmann,         Aalborg University,           Denmark     (QFIT, polarizable embedding)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Julien Toulouse,          Sorbonne Univ.,               France      (MC-srDFT)
-  Olav Vahtras,             KTH Stockholm,                Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Luna Zamok,               University of Copenhagen,     Denmark     (Block Lanczos RPA solver in SOPPA module)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/hjj/progs/gitDalton_master/build_master-WIP_myompi/test/energy_fcktra
-   2) /home/hjj/progs/gitDalton_master/build_master-WIP_myompi/basis
+   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/test/energy_fcktra
+   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis
 
 
 Compilation information
@@ -169,23 +172,23 @@ Compilation information
 
  Who compiled             | hjj
  Host                     | adm-110765.pc.sdu.dk
- System                   | Linux-4.15.0-118-generic
+ System                   | Linux-5.15.0-41-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
  Fortran compiler         | /home/hjj/my_libs/openmpi/bin/mpif90
- Fortran compiler version | GNU Fortran (Ubuntu 8.4.0-1ubuntu1~18.04) 8.4.0
+ Fortran compiler version | GNU Fortran (Ubuntu 11.2.0-19ubuntu1) 11.2.0
  C compiler               | /home/hjj/my_libs/openmpi/bin/mpicc
- C compiler version       | gcc (Ubuntu 8.4.0-1ubuntu1~18.04) 8.4.0
+ C compiler version       | gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
  C++ compiler             | /home/hjj/my_libs/openmpi/bin/mpicxx
  C++ compiler version     | unknown
  BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
  LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | 2f723a697d83e8c02dc122cca9929157c56f3573
- Git branch               | hjaaj-master-minor-updates
- Configuration time       | 2022-02-25 13:08:08.717955
+ Last Git revision        | f63e026faccac4df20ea5914096621c383b74b40
+ Git branch               | WIP-master
+ Configuration time       | 2022-08-01 13:54:03.092008
 
  * Sequential calculation.
 
@@ -266,7 +269,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP_myompi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
 
   Atomic type no.    2
   --------------------
@@ -274,7 +277,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP_myompi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
 
 
                       SYMADD: Requested addition of symmetry
@@ -552,8 +555,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      0.99054276         2.51770841         8.39817128
 
 
-  Time used in ONEDRV     is       0.23 seconds
-  Total CPU  time used in HERMIT:   0.29 seconds
+  Time used in R4         is       0.20 seconds
+  Total CPU  time used in HERMIT:   0.41 seconds
   Total wall time used in HERMIT:   0.02 seconds
 
 
@@ -595,14 +598,14 @@ Calculation of 2-electron integrals are postponed until they are needed.
 
  Number of configurations:         492
 
- Time used in SETCI :      0.71s
+ Time used in SETCI :      1.03s
 
  **********************************************************************
  *SIRIUS* a direct, restricted step, second order MCSCF program       *
  **********************************************************************
 
  
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
@@ -737,7 +740,7 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      2.001217
 @    MULPOP   O      -0.32; H_a _1  0.16; H_a _2  0.16; 
  -----------------------------------------------------------------------------
-@ 10  -76.0256814839       9.58D-07  -2.56D-12     3   1   1   0
+@ 10  -76.0256814839       9.58D-07  -2.53D-12     3   1   1   0
 
 @ *** DIIS converged in  10 iterations !
 @     Converged SCF energy, gradient:    -76.025681483944    9.58D-07
@@ -788,7 +791,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.022       0.011
+ CPU and wall time for SCF :       0.048       0.009
 
 
  ----- Output from SIRIUS MP2 module -----
@@ -834,7 +837,7 @@ Calculating AO2_JINT
      (Precalculated AO two-electron integrals are resorted to new file.
       Threshold for discarding integrals :  1.00D-12 )
 
- 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.005       0.005
+ 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.004       0.004
 
  MP2 move   0.099313 electrons to unoccupied HF orbitals
 
@@ -870,9 +873,9 @@ Calculating AO2_JINT
 
          0.00417704     0.00068995
 
- Time used for MP2 natural orbitals :       0.006 CPU seconds,       0.006 wall seconds.
+ Time used for MP2 natural orbitals :       0.005 CPU seconds,       0.005 wall seconds.
 
- CPU and wall time for MP2 :       0.006       0.006
+ CPU and wall time for MP2 :       0.005       0.005
 
 
         SIRIUS MCSCF optimization (SIROPT)
@@ -885,7 +888,7 @@ Calculating AO2_JINT
 
 
 
- 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.001       0.001
+ 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.001       0.002
 
  (CIST1) 8 lowest diagonal elements:
 
@@ -992,9 +995,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4
        1       1.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
  The requested root number is now converged.
@@ -1014,13 +1017,13 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  1 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.006
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.006
 
- Total MCSCF energy       :           -76.145526989286509  (MACRO    1)
+ Total MCSCF energy       :           -76.145526989286495  (MACRO    1)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.277896083661304
- - Active energy          :           -23.922635431263100
+ - Inactive energy        :           -61.277896083661275
+ - Active energy          :           -23.922635431263121
 
  Norm of total gradient   :             0.043233669320
  -    of CI gradient      :             0.019207831232
@@ -1082,10 +1085,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4
-       1       1.00000000     0.00000000     0.00000000    -0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1111,10 +1114,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1142,10 +1145,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6
@@ -1185,15 +1188,15 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7
-       6       1.00000000    -0.00000000
-       7      -0.00000000     1.00000000
+       6       1.00000000     0.00000000
+       7       0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1231,15 +1234,15 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8
-       6       1.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000
+       6       1.00000000     0.00000000     0.00000000
+       7       0.00000000     1.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1270,13 +1273,13 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  2 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.005
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
 
- Total MCSCF energy       :           -76.147538073687087  (MACRO    2)
+ Total MCSCF energy       :           -76.147538073687002  (MACRO    2)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.281172525454714
- - Active energy          :           -23.921370073870257
+ - Inactive energy        :           -61.281172525454721
+ - Active energy          :           -23.921370073870175
 
  Norm of total gradient   :             0.027303472067
  -    of CI gradient      :             0.026478878398
@@ -1333,9 +1336,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4
        1       1.00000000    -0.00000000     0.00000000    -0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1362,9 +1365,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1393,9 +1396,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column   6
@@ -1436,9 +1439,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column   6     Column   7
@@ -1482,9 +1485,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column   6     Column   7     Column   8
@@ -1531,16 +1534,16 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9
-       6       1.00000000     0.00000000     0.00000000     0.00000000
+       6       1.00000000     0.00000000     0.00000000    -0.00000000
        7       0.00000000     1.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000
-       9       0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1583,16 +1586,16 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000    -0.00000000     0.00000000     1.00000000    -0.00000000
+       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
        5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
        7       0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
       10       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1623,13 +1626,13 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  3 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.006
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
 
- Total MCSCF energy       :           -76.147614077125766  (MACRO    3)
+ Total MCSCF energy       :           -76.147614077125723  (MACRO    3)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.283166029859856
- - Active energy          :           -23.919452572903804
+ - Inactive energy        :           -61.283166029859842
+ - Active energy          :           -23.919452572903783
 
  Norm of total gradient   :             0.000633591023
  -    of CI gradient      :             0.000487448164
@@ -1658,8 +1661,8 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3
-       1       1.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1685,10 +1688,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4
-       1       1.00000000    -0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1714,10 +1717,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1745,10 +1748,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6
@@ -1788,15 +1791,15 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7
-       6       1.00000000     0.00000000
-       7       0.00000000     1.00000000
+       6       1.00000000    -0.00000000
+       7      -0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1834,15 +1837,15 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8
-       6       1.00000000     0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1883,17 +1886,17 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9
-       6       1.00000000     0.00000000     0.00000000    -0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1917,10 +1920,10 @@ First 1 elements used as separate start vectors.
        6      -0.52384268     0.03004033     0.79153056    -0.13487853    -5.33603013
        7       0.01469433     0.04119699     0.04998412    -0.17891423    -0.01009418
        8      -1.04557438     0.03859056     0.14414758    -0.05360103     0.51842764
-       9      -0.46476857     0.01765872     0.00617980     0.00608799    -0.01707172
+       9      -0.46476856     0.01765872     0.00617980     0.00608799    -0.01707172
 
                Column   6     Column   7     Column   8     Column   9
-       1      -0.52384268     0.01469433    -1.04557438    -0.46476857
+       1      -0.52384268     0.01469433    -1.04557438    -0.46476856
        2       0.03004033     0.04119699     0.03859056     0.01765872
        3       0.79153056     0.04998412     0.14414758     0.00617980
        4      -0.13487853    -0.17891423    -0.05360103     0.00608799
@@ -1935,18 +1938,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
+      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1970,11 +1973,11 @@ First 1 elements used as separate start vectors.
        6      -0.52384268     0.03004033     0.79153056    -0.13487853    -5.33603013
        7       0.01469433     0.04119699     0.04998412    -0.17891423    -0.01009418
        8      -1.04557438     0.03859056     0.14414758    -0.05360103     0.51842764
-       9      -0.46476857     0.01765872     0.00617980     0.00608799    -0.01707172
+       9      -0.46476856     0.01765872     0.00617980     0.00608799    -0.01707172
       10      -0.15006186     0.04546083    -0.02852901     0.06030473    -0.09431809
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       1      -0.52384268     0.01469433    -1.04557438    -0.46476857    -0.15006186
+       1      -0.52384268     0.01469433    -1.04557438    -0.46476856    -0.15006186
        2       0.03004033     0.04119699     0.03859056     0.01765872     0.04546083
        3       0.79153056     0.04998412     0.14414758     0.00617980    -0.02852901
        4      -0.13487853    -0.17891423    -0.05360103     0.00608799     0.06030473
@@ -1990,18 +1993,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
+      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column  11
       11       1.00000000
@@ -2028,12 +2031,12 @@ First 1 elements used as separate start vectors.
        6      -0.52384268     0.03004033     0.79153056    -0.13487853    -5.33603013
        7       0.01469433     0.04119699     0.04998412    -0.17891423    -0.01009418
        8      -1.04557438     0.03859056     0.14414758    -0.05360103     0.51842764
-       9      -0.46476857     0.01765872     0.00617980     0.00608799    -0.01707172
+       9      -0.46476856     0.01765872     0.00617980     0.00608799    -0.01707172
       10      -0.15006186     0.04546083    -0.02852901     0.06030473    -0.09431809
       11       0.39890928     0.01685160    -0.22005944     0.01054598     0.02073274
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       1      -0.52384268     0.01469433    -1.04557438    -0.46476857    -0.15006186
+       1      -0.52384268     0.01469433    -1.04557438    -0.46476856    -0.15006186
        2       0.03004033     0.04119699     0.03859056     0.01765872     0.04546083
        3       0.79153056     0.04998412     0.14414758     0.00617980    -0.02852901
        4      -0.13487853    -0.17891423    -0.05360103     0.00608799     0.06030473
@@ -2063,18 +2066,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
+      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column  11     Column  12
       11       1.00000000     0.00000000
@@ -2102,13 +2105,13 @@ First 1 elements used as separate start vectors.
        6      -0.52384268     0.03004033     0.79153056    -0.13487853    -5.33603013
        7       0.01469433     0.04119699     0.04998412    -0.17891423    -0.01009418
        8      -1.04557438     0.03859056     0.14414758    -0.05360103     0.51842764
-       9      -0.46476857     0.01765872     0.00617980     0.00608799    -0.01707172
+       9      -0.46476856     0.01765872     0.00617980     0.00608799    -0.01707172
       10      -0.15006186     0.04546083    -0.02852901     0.06030473    -0.09431809
       11       0.39890928     0.01685160    -0.22005944     0.01054598     0.02073274
       12      -0.22399747     0.00301860     0.08730410    -0.00286378    -0.02803266
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       1      -0.52384268     0.01469433    -1.04557438    -0.46476857    -0.15006186
+       1      -0.52384268     0.01469433    -1.04557438    -0.46476856    -0.15006186
        2       0.03004033     0.04119699     0.03859056     0.01765872     0.04546083
        3       0.79153056     0.04998412     0.14414758     0.00617980    -0.02852901
        4      -0.13487853    -0.17891423    -0.05360103     0.00608799     0.06030473
@@ -2132,31 +2135,31 @@ First 1 elements used as separate start vectors.
        8       0.18503003     0.24164086
        9      -4.22603341     0.19196777
       10      -0.09422379    -0.02310568
-      11       9.59454778    -4.26824132
-      12      -4.26824132    12.61074429
+      11       9.59454778    -4.26824133
+      12      -4.26824133    12.61074429
     ==== End of matrix output ====
 
 
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
+      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column  11     Column  12     Column  13
       11       1.00000000     0.00000000     0.00000000
-      12       0.00000000     1.00000000     0.00000000
-      13       0.00000000     0.00000000     1.00000000
+      12       0.00000000     1.00000000    -0.00000000
+      13       0.00000000    -0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -2180,14 +2183,14 @@ First 1 elements used as separate start vectors.
        6      -0.52384268     0.03004033     0.79153056    -0.13487853    -5.33603013
        7       0.01469433     0.04119699     0.04998412    -0.17891423    -0.01009418
        8      -1.04557438     0.03859056     0.14414758    -0.05360103     0.51842764
-       9      -0.46476857     0.01765872     0.00617980     0.00608799    -0.01707172
+       9      -0.46476856     0.01765872     0.00617980     0.00608799    -0.01707172
       10      -0.15006186     0.04546083    -0.02852901     0.06030473    -0.09431809
       11       0.39890928     0.01685160    -0.22005944     0.01054598     0.02073274
       12      -0.22399747     0.00301860     0.08730410    -0.00286378    -0.02803266
       13      -0.08440267    -0.01429123    -0.08668552     0.09826190    -0.11966969
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       1      -0.52384268     0.01469433    -1.04557438    -0.46476857    -0.15006186
+       1      -0.52384268     0.01469433    -1.04557438    -0.46476856    -0.15006186
        2       0.03004033     0.04119699     0.03859056     0.01765872     0.04546083
        3       0.79153056     0.04998412     0.14414758     0.00617980    -0.02852901
        4      -0.13487853    -0.17891423    -0.05360103     0.00608799     0.06030473
@@ -2212,8 +2215,8 @@ First 1 elements used as separate start vectors.
        8       0.18503003     0.24164086    -0.17569417
        9      -4.22603341     0.19196777    -0.14780064
       10      -0.09422379    -0.02310568    -0.00421152
-      11       9.59454778    -4.26824132    -0.10539214
-      12      -4.26824132    12.61074429    -0.03030552
+      11       9.59454778    -4.26824133    -0.10539214
+      12      -4.26824133    12.61074429    -0.03030552
       13      -0.10539214    -0.03030552     0.43397455
     ==== End of matrix output ====
 
@@ -2221,24 +2224,24 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
+       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
+      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
 
                Column  11     Column  12     Column  13     Column  14
-      11       1.00000000     0.00000000     0.00000000     0.00000000
-      12       0.00000000     1.00000000     0.00000000     0.00000000
-      13       0.00000000     0.00000000     1.00000000     0.00000000
-      14       0.00000000     0.00000000     0.00000000     1.00000000
+      11       1.00000000     0.00000000     0.00000000    -0.00000000
+      12       0.00000000     1.00000000    -0.00000000     0.00000000
+      13       0.00000000    -0.00000000     1.00000000     0.00000000
+      14      -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
  Residual norm when dim(red L) =  14
@@ -2268,13 +2271,13 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  4 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.006
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
 
- Total MCSCF energy       :           -76.147614159016555  (MACRO    4)
+ Total MCSCF energy       :           -76.147614159016626  (MACRO    4)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.283287725210684
- - Active energy          :           -23.919330959443769
+ - Inactive energy        :           -61.283287725210748
+ - Active energy          :           -23.919330959443773
 
  Norm of total gradient   :             0.000008421699
  -    of CI gradient      :             0.000007744290
@@ -2285,8 +2288,8 @@ First 1 elements used as separate start vectors.
  *** Optimization control: MCSCF converged ***
      Number of macro iterations used            4
      Number of micro iterations used           26
-     Total number of CPU seconds used         0.11
-     Total WALL time used (seconds)           0.11
+     Total number of CPU seconds used         0.09
+     Total WALL time used (seconds)           0.09
 
 --------------------------------------------------------------------------------
 
@@ -2352,7 +2355,7 @@ First 1 elements used as separate start vectors.
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for MCSCF :       0.106       0.106
+ CPU and wall time for MCSCF :       0.088       0.088
 
 
                      .----------------------------------------.
@@ -2361,16 +2364,16 @@ First 1 elements used as separate start vectors.
 
 
  
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
 
   ITER ITMIC     EMCSCF           GRDNRM        RATIO      STPLNG
  ---------------------------------------------------------------------
-    1    6    -76.145526989287   0.0432336693  0.000000   0.2406116041
+    1    6    -76.145526989286   0.0432336693  0.000000   0.2406116041
     2    8    -76.147538073687   0.0273034721  0.910215   0.0212281900
     3   12    -76.147614077126   0.0006335910  1.009508   0.0010877889
-    4    0    -76.147614159017   0.0000084217  1.000220   0.0000000000
+    4    0    -76.147614159017   0.0000084217  1.000222   0.0000000000
 
 
   ITER  INDGCM  GCIMAX      GCINRM     INDGOM  GOBMAX      GOBNRM      GRDNRM
@@ -2384,15 +2387,15 @@ First 1 elements used as separate start vectors.
   ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
  ------------------------------------------------------------------------------
 
-    1     6     4     3      0.02      0.01      0.02      0.01      0.00
-    2     8     6     3      0.03      0.01      0.02      0.02      0.00
-    3    12     8     5      0.04      0.01      0.03      0.03      0.00
-    4     0     0     0      0.01      0.01      0.00      0.00
+    1     6     4     3      0.02      0.01      0.01      0.01      0.00
+    2     8     6     3      0.02      0.00      0.02      0.02      0.00
+    3    12     8     5      0.03      0.00      0.02      0.02      0.00
+    4     0     0     0      0.01      0.00      0.00      0.00
 
 
  ITER         EMY                 EACTIV              EMCSCF
 
-    1    -61.277896083661    -23.922635431263    -76.145526989287
+    1    -61.277896083661    -23.922635431263    -76.145526989286
     2    -61.281172525455    -23.921370073870    -76.147538073687
     3    -61.283166029860    -23.919452572904    -76.147614077126
     4    -61.283287725211    -23.919330959444    -76.147614159017
@@ -2401,16 +2404,16 @@ First 1 elements used as separate start vectors.
  ITER         DEPRED              DEACT               RATIO
 
     1      0.000000000000      0.000000000000      0.000000000000
-    2     -0.002209461695     -0.002011084401      0.910214648855
-    3     -0.000075287591     -0.000076003439      1.009508172184
-    4     -0.000000081873     -0.000000081891      1.000220199138
+    2     -0.002209461695     -0.002011084401      0.910214648823
+    3     -0.000075287591     -0.000076003439      1.009508172751
+    4     -0.000000081873     -0.000000081891      1.000221587715
 
 
  ITER    BETA           GAMMA             STPLNG              RTRUST
 
     1      0.20000000  1.00000000      0.240611604105      0.700000000000
     2      0.20000000  1.00000000      0.021228190026      0.700000000000
-    3      0.20000000  1.00000000      0.001087788856      0.700000000000
+    3      0.20000000  1.00000000      0.001087788859      0.700000000000
     4      0.00000000  0.00000000      0.000000000000      0.700000000000
 
 
@@ -2437,12 +2440,12 @@ First 1 elements used as separate start vectors.
 
 @    Final MCSCF energy:          -76.147614159017                 
 @    Nuclear repulsion:             9.055004525638
-@    Electronic energy:           -85.202618684654
+@    Electronic energy:           -85.202618684655
 
 @    Final gradient norm:           0.000008421699
 
  
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Occupancies of natural orbitals
@@ -2452,26 +2455,28 @@ First 1 elements used as separate start vectors.
 
    2.000000000   1.989080666   1.976436743   0.024209305   0.011251159
 
-   Effective number of unpaired electrons this symmetry:  0.1385
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  0.14  0.01
 
  Symmetry 2  ( B1 ) -- Total occupation in this symmetry is   1.999179444
 
    1.981380814   0.017798629
 
-   Effective number of unpaired electrons this symmetry:  0.0722
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  0.07  0.00
 
  Symmetry 3  ( B2 ) -- Total occupation in this symmetry is   1.999842683
 
    1.974627753   0.025214931
 
-   Effective number of unpaired electrons this symmetry:  0.0999
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  0.10  0.00
 
  Symmetry 4  ( A2 ) -- No occupied orbitals
 
- Total effective number of unpaired electrons :  0.3106
-    ( = sum(i) (2 - n_i)*n_i  for natural orbitals)
+  Total effective number of unpaired electrons :
+  Eq. 1) sum(i) [(2 - n_i) n_i]    =  0.3106
+  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =  0.0130
+ (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508–511)
 
-File label for MO orbitals:  25Feb22   (CNOORB)
+File label for MO orbitals:   1Aug22   (CNOORB)
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -2588,11 +2593,11 @@ File label for MO orbitals:  25Feb22   (CNOORB)
   10- 7 to 10- 6         1    0.54326431E-12      1.0000000000
   Number of coefficients less than 10^-11 times norm is            0
 
-  Total CPU  time used in SIRIUS :   0.14 seconds
-  Total wall time used in SIRIUS :   0.12 seconds
+  Total CPU  time used in SIRIUS :   0.20 seconds
+  Total wall time used in SIRIUS :   0.11 seconds
 
  
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
@@ -2603,9 +2608,9 @@ File label for MO orbitals:  25Feb22   (CNOORB)
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.50 seconds
-  Total wall time used in DALTON:   0.16 seconds
+  Total CPU  time used in DALTON:   0.68 seconds
+  Total wall time used in DALTON:   0.13 seconds
 
  
-     Date and time (Linux)  : Fri Feb 25 13:14:10 2022
+     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
      Host name              : adm-110765.pc.sdu.dk                    
