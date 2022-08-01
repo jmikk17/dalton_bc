@@ -352,17 +352,17 @@ C
             CALL SOS_J_OCVIR_SN(IPRSOS,NLOCC,NLVIR,NLOCCS,NLVIRS,
      &                          ILOCCF,ILOCCL,WORK(KCLOCO),WORK(KCLOCV),
      &                          WORK(KSPPSO),WORK(KWORK6),LWORK6)
-	 
+ 
 C=================================================
 C     Print the results for the coupling constants
 C=================================================
 C
-	       CALL LS_OCVIR_PRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
+             CALL LS_OCVIR_PRES(IPRSOS,NLOCCS,NLVIRS,ILOCCF,ILOCCL,
      &                          JLOCCF,JLOCCL,WORK(KSPDSO),WORK(KSPPSO),
      &                          WORK(KSPSD),WORK(KSPFC),WORK(KSPSDF),
      &                          WORK(KSPTOT),TOTNODSO,WORK(KWORK6),
      &                          LWORK6)
-C	 
+C 
             CALL TIMER ('SOSDRV',TIMEIN,TIMOUT)
             PASS   = .TRUE.
 C
@@ -4040,7 +4040,7 @@ C
 C
       RETURN
       END
-C*********************************************************************		  
+C*********************************************************************  
 C  /* Deck plocpr */
 C
       SUBROUTINE PLOCPR(NLOCCS,NLVIRS,ILOCCF,ILOCCL,JLOCCF,JLOCCL,PROP)
@@ -4254,29 +4254,29 @@ C
       ILVAR = 0
       TOT    = D0
 C
-	DO ILOCC = ILOCCF,ILOCCL
+      DO ILOCC = ILOCCF,ILOCCL
 C
-	   DO ILVIR = 1, NLVIRS
+         DO ILVIR = 1, NLVIRS
 C 
-	      ILVAR = (ILOCC- 1)*NLVIRS +  ILVIR
+            ILVAR = (ILOCC- 1)*NLVIRS +  ILVIR
 C
-	      IC = 3*(IATOM-1) 
-		JC = 3*(JATOM-1) 
+            IC = 3*(IATOM-1) 
+            JC = 3*(JATOM-1) 
 C
-		AVEISO = ( PROP(ILVAR,IC+1,JC+1)
-     &                + PROP(ILVAR,IC+2,JC+2)
-     &                + PROP(ILVAR,IC+3,JC+3))
+            AVEISO = ( PROP(ILVAR,IC+1,JC+1)
+     &               + PROP(ILVAR,IC+2,JC+2)
+     &               + PROP(ILVAR,IC+3,JC+3))
      &                 * FACTOR * D1O3
 C
-		TOT = TOT + AVEISO
+            TOT = TOT + AVEISO
 C
-		IF (DABS(AVEISO) .GT. THRPR)
+            IF (DABS(AVEISO) .GT. THRPR)
      &         WRITE (LUPRI,'(2X,2(A8,I3,1X),F12.4)')
      &                TABVIL(ILVIR),ILVIR,
      &                TABOCL(ILOCC),ILOCC,
      &                AVEISO
-	     END DO
-	  END DO
+         END DO
+      END DO
 C     
       IF (TOTNODSO) THEN
          WRITE (LUPRI,'(10X,A,20X,F12.4)') 'TOTAL',TOT
@@ -4428,7 +4428,7 @@ C
       RETURN
 C
       END
-C*********************************************************************	  
+C*********************************************************************  
 C  /* Deck plocvir_prt */
 C
       SUBROUTINE PLOCVIR_PRT(NLOCCS,NLVIRS,ILOCCF,ILOCCL,
