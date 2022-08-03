@@ -2621,7 +2621,7 @@ C     the norm of the calculated molecular gradient changed with 1.0d-6.
      &        'Energy change  ',THRERG
          GRDTHR = MAX(GRDTHR,2.0D0*THRGRD)
          THRSTP = MAX(THRSTP,GRDTHR)
-         THRERG = GRDTHR
+         THRERG = GRDTHR**2 * 10.0D0
          THRSYM = SQRT(THRERG)
          NINFO = NINFO + 1
          WRITE (LUPRI,'(/A/,1P,3(/20X,A,D10.2))') ' New thresholds:',
@@ -6842,9 +6842,15 @@ C     Otherwise we give up...
 C
          ELSE
             CALL PRIINF(GEINFO,WORK(2),LWORK)
-            WRITE(LUPRI,*) 'Maximum number of rejected steps (',MAXREJ,
+            WRITE(LUPRI,'(/A,I0,A)')
+     &      '@ Maximum number of rejected steps (',MAXREJ,
      &        ') reached.'
-            WRITE(LUPRI,'(A)') 'No acceptable step found. Aborting.'
+            WRITE(LUPRI,'(A)') '@ No acceptable step found. Aborting.'
+            IF (ISTATE .GT. 0) THEN
+               WRITE(LUPRI,'(/A/A)')
+     &         '@ This is a geometry optimization for an excited state.'
+     &        ,'@ You might want to try the .NEO ALWAYS option.'
+            END IF
             CALL QUIT('*** FNDGEO *** No acceptable step found.')
          END IF
       END IF
