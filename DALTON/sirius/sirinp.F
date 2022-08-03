@@ -3742,6 +3742,12 @@ C
         ci_program = 'SIRIUS-CI'
       end if
 
+      if (flag(38) .and. flag(39)) then
+         INPERR = INPERR + 1
+         write(lupri,'(//A)')
+     &   ' Fatal input error, both .NR ALW and .NEO ALW specified'
+      end if
+
       IF (THR_REDFAC .GT. 0.0D0) THEN
 C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,

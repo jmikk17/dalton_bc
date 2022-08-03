@@ -762,7 +762,9 @@ C                    need higher int. transf. level for NEO/NR
      &                                  WRK(KWRKG), LWRKG)
                   END IF
 #endif
-               ELSE
+               ELSE IF (ISTATE .EQ. 1) THEN
+               ! we cannot go back to NEO if excited state - info about
+               ! the lower lying roots has been lost
                   WRITE (LUPRI,'(/A,F10.5)')
      &            ' Local NR disabled because 0.02 .lt. abs(ratio-1) =',
      &            RATCHK
@@ -993,6 +995,9 @@ C              ... no reason to switch to NR for ground state
      &            WRITE (LUPRI,'(/A)') ' Local region, DONR activated'
                DONR     = .TRUE.
                FLAG(39) = .TRUE.
+               IF (ISTATE .GT. 1) NRALW = .TRUE.
+               ! cannot go back to NEO if excited state,
+               ! because info about lower lying roots have been lost
             END IF
          END IF
       END IF
