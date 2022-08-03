@@ -1050,7 +1050,7 @@ C
             END IF
             CALL WLKMOL(COOR)
             ERGSEC = 0.0D0
-            IF (WFPRED) CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
+            CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
          END IF
 C
 C     b) Continue walk
@@ -1148,7 +1148,7 @@ C        *****************************************
 C        ***** Save wave function prediction *****
 C        *****************************************
 C
-         IF (WFPRED) CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
+         CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
       END IF
 C
 C     *************************
@@ -2653,9 +2653,9 @@ C
       WRITE (LUPRI,'(/2A)')       '@ Walk type: ', WLKTYP(IWKTYP_PR)
       WRITE (LUPRI,'(/A,I5)')     '@ Iteration number:', IPOINT
       WRITE (LUPRI,'(/A,F17.10)') '@ Norm of molecular gradient:',GRDNRM
-      WRITE (LUPRI,'(/A,F17.10)') '@ Energy at current point:   ',ERGMOL
+      WRITE (LUPRI,'(/A,F20.10)') '@ Energy at current point:',ERGMOL
       IF (IPOINT .GT. 0) THEN
-         WRITE (LUPRI,'( A,F17.10)')
+         WRITE (LUPRI,'( A,F20.10)')
      &                      '  Energy at initial point:', ESTART
          WRITE (LUPRI,'(/A,F13.10,A,2(/,39X,F13.2,A))')
      &         '  Change in energy since start of walk:',
@@ -6061,7 +6061,7 @@ C
 C
 C Used from common blocks:
 C
-C   CBIWLK : STEP, STEPCO(3,*), SCALCO(3,*), IPRWLK, ENRSEC
+C   CBIWLK : STEP, STEPCO(3,*), SCALCO(3,*), IPRWLK, ENRSEC, WFPRED
 C   INFTAP : LUSIFC
 C   NUCLEI : NUCDEP,CORD(3,*)
 C   INFDIM : LBUFMA
