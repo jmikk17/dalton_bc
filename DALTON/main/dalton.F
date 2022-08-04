@@ -250,7 +250,7 @@ C
      &'   O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski',
      &'   and H. Agren,',
      &'   "The Dalton quantum chemistry program system",',
-     &'   WIREs Comput. Mol. Sci. 2014, 4:269–284 '//
+     &'   WIREs Comput. Mol. Sci. 2014, 4:269-284 '//
      &    '(doi: 10.1002/wcms.1172)',
      &' ',
      &'and',

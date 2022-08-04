@@ -156,7 +156,7 @@ C
      &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
      &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
      &       /' (Reference: M. Head-Gordon, ',
-     &        'Chemical Physics Letters 372 (2003) 508–511)')
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
 C
 C     Print natural orbitals
 C
@@ -1062,7 +1062,7 @@ C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
      &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
      &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
      &       /' (Reference: M. Head-Gordon, ',
-     &        'Chemical Physics Letters 372 (2003) 508–511)')
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
  3045 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Supersymmetry in parenthesis',
      &       /' -- Total occupation in this symmetry is',F14.9,
