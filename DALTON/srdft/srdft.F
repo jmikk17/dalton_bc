@@ -435,8 +435,8 @@ C mu independt VWN5 spin-unpolarized correlation functional (erk 01 mar. 19)
   20  CONTINUE
 
       IF ((nfld .EQ. 1) .AND. (.NOT.SETXFUN) .AND. (.NOT.SETCFUN)) THEN
-          WRITE(LUPRI,'(/2A/,A/)')
-     & '  SRFUN_INPUT : Invalid or no SR exchange func. specified : ',
+          WRITE(LUPRI,'(/2A/,A/)') '  SRFUN_INPUT : '//
+     & 'Invalid or no SR exchange-correlation functional specified : ',
      &    SRXCFUN,'             Currently implemented functionals are :'
           DO J = 1,NXCTABLE
               WRITE(LUPRI,'(13X,A)') XCTABLE(J)

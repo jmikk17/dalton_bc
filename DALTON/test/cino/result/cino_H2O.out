@@ -48,7 +48,7 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Aug  1 14:11:34 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:53 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/test/cino
-   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis
+   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/test/cino
+   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis
 
 
 Compilation information
@@ -172,23 +172,23 @@ Compilation information
 
  Who compiled             | hjj
  Host                     | adm-110765.pc.sdu.dk
- System                   | Linux-5.15.0-41-generic
+ System                   | Linux-5.15.0-43-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /home/hjj/my_libs/openmpi/bin/mpif90
+ Fortran compiler         | /usr/bin/mpif90
  Fortran compiler version | GNU Fortran (Ubuntu 11.2.0-19ubuntu1) 11.2.0
- C compiler               | /home/hjj/my_libs/openmpi/bin/mpicc
+ C compiler               | /usr/bin/mpicc
  C compiler version       | gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
- C++ compiler             | /home/hjj/my_libs/openmpi/bin/mpicxx
+ C++ compiler             | /usr/bin/mpicxx
  C++ compiler version     | unknown
  BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
  LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | f63e026faccac4df20ea5914096621c383b74b40
- Git branch               | WIP-master
- Configuration time       | 2022-08-01 13:54:03.092008
+ Last Git revision        | 95e9f3a80a0dbeaafe70e2445b4e71d3737e21d2
+ Git branch               | WIP3
+ Configuration time       | 2022-08-04 21:14:32.751356
 
  * Sequential calculation.
 
@@ -288,7 +288,7 @@ H2   -1.45235 0.899623 0.0
   Number of basis sets to read;    2
   The basis set is "3-21G" from the basis set library.
   Basis set file used for this atomic type with Z =   8 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/3-21G"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/3-21G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21G                                                                           
@@ -300,7 +300,7 @@ H2   -1.45235 0.899623 0.0
   Number of basis sets to read;    2
   The basis set is "3-21G" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/3-21G"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/3-21G"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: 3-21G                                                                           
@@ -566,8 +566,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      0.99054276         2.51770841         8.39817128
 
 
-  Total CPU  time used in HERMIT:   0.17 seconds
-  Total wall time used in HERMIT:   0.01 seconds
+  Total CPU  time used in HERMIT:   0.00 seconds
+  Total wall time used in HERMIT:   0.00 seconds
 
 
                         .----------------------------------.
@@ -611,14 +611,14 @@ Calculation of 2-electron integrals are postponed until they are needed.
 
  Number of configurations:          15
 
- Time used in SETCI :      2.58s
+ Time used in SETCI :      0.09s
 
  **********************************************************************
  *SIRIUS* a direct, restricted step, second order MCSCF program       *
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Aug  1 14:11:34 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:54 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
@@ -805,7 +805,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.196       0.006
+ CPU and wall time for SCF :       0.003       0.003
 
 
  ----- Output from SIRIUS CI module (CICTL) -----
@@ -817,7 +817,7 @@ Calculating AO2_JINT
      (Precalculated AO two-electron integrals are resorted to new file.
       Threshold for discarding integrals :  1.00D-12 )
 
- 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.024       0.001
+ 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.000       0.001
 
 
  --- SIRCI.CIST1: plus combination of all degenerate
@@ -922,14 +922,14 @@ Start CI vector is configuration no.         5
   Total effective number of unpaired electrons :
   Eq. 1) sum(i) [(2 - n_i) n_i]    =  0.0359
   Eq. 2) sum(i) [(2 - n_i) n_i]**2 =  0.0004
- (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508–511)
+ (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508-511)
 
  GETNO: the orbital coefficients are transformed to natural orbitals.
 
  The natural orbitals are saved with label "NEWORB  ".
 
 
- CPU and wall time for CI :       0.078       0.003
+ CPU and wall time for CI :       0.001       0.002
 
 
                        .-----------------------------------.
@@ -942,12 +942,19 @@ Start CI vector is configuration no.         5
 @    Total charge of molecule:    0
 
 @    This was a CI-NO calculation.
+@    State number:                1
+
+@    Final CI energy:             -75.598302061528
+@    Nuclear repulsion:             9.055004525638
+@    Electronic energy:           -84.653306587166
+
+@    Final gradient norm:           0.000000229532
 
  
-     Date and time (Linux)  : Mon Aug  1 14:11:34 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:54 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
-File label for MO orbitals:   1Aug22   CINOSAVE
+File label for MO orbitals:   4Aug22   CINOSAVE
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -979,11 +986,11 @@ File label for MO orbitals:   1Aug22   CINOSAVE
    3 H1  :1s     0.2307   0.0405  -0.9597  -0.1502
    4 H1  :1s     0.1875   1.1521   0.7062  -0.4832
 
-  Total CPU  time used in SIRIUS :   0.36 seconds
+  Total CPU  time used in SIRIUS :   0.01 seconds
   Total wall time used in SIRIUS :   0.01 seconds
 
  
-     Date and time (Linux)  : Mon Aug  1 14:11:34 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:54 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
@@ -994,9 +1001,9 @@ File label for MO orbitals:   1Aug22   CINOSAVE
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.99 seconds
-  Total wall time used in DALTON:   0.03 seconds
+  Total CPU  time used in DALTON:   0.02 seconds
+  Total wall time used in DALTON:   0.02 seconds
 
  
-     Date and time (Linux)  : Mon Aug  1 14:11:34 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:54 2022
      Host name              : adm-110765.pc.sdu.dk                    

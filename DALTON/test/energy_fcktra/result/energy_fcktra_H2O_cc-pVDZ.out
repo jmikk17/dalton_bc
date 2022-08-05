@@ -48,7 +48,7 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/test/energy_fcktra
-   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis
+   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/test/energy_fcktra
+   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis
 
 
 Compilation information
@@ -172,23 +172,23 @@ Compilation information
 
  Who compiled             | hjj
  Host                     | adm-110765.pc.sdu.dk
- System                   | Linux-5.15.0-41-generic
+ System                   | Linux-5.15.0-43-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /home/hjj/my_libs/openmpi/bin/mpif90
+ Fortran compiler         | /usr/bin/mpif90
  Fortran compiler version | GNU Fortran (Ubuntu 11.2.0-19ubuntu1) 11.2.0
- C compiler               | /home/hjj/my_libs/openmpi/bin/mpicc
+ C compiler               | /usr/bin/mpicc
  C compiler version       | gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
- C++ compiler             | /home/hjj/my_libs/openmpi/bin/mpicxx
+ C++ compiler             | /usr/bin/mpicxx
  C++ compiler version     | unknown
  BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
  LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | f63e026faccac4df20ea5914096621c383b74b40
- Git branch               | WIP-master
- Configuration time       | 2022-08-01 13:54:03.092008
+ Last Git revision        | 95e9f3a80a0dbeaafe70e2445b4e71d3737e21d2
+ Git branch               | WIP3
+ Configuration time       | 2022-08-04 21:14:32.751356
 
  * Sequential calculation.
 
@@ -269,7 +269,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/cc-pVDZ"
 
   Atomic type no.    2
   --------------------
@@ -277,7 +277,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/cc-pVDZ"
 
 
                       SYMADD: Requested addition of symmetry
@@ -555,9 +555,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      0.99054276         2.51770841         8.39817128
 
 
-  Time used in R4         is       0.20 seconds
-  Total CPU  time used in HERMIT:   0.41 seconds
-  Total wall time used in HERMIT:   0.02 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -598,14 +597,14 @@ Calculation of 2-electron integrals are postponed until they are needed.
 
  Number of configurations:         492
 
- Time used in SETCI :      1.03s
+ Time used in SETCI :      0.09s
 
  **********************************************************************
  *SIRIUS* a direct, restricted step, second order MCSCF program       *
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
@@ -791,7 +790,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.048       0.009
+ CPU and wall time for SCF :       0.016       0.016
 
 
  ----- Output from SIRIUS MP2 module -----
@@ -837,7 +836,7 @@ Calculating AO2_JINT
      (Precalculated AO two-electron integrals are resorted to new file.
       Threshold for discarding integrals :  1.00D-12 )
 
- 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.004       0.004
+ 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.009       0.010
 
  MP2 move   0.099313 electrons to unoccupied HF orbitals
 
@@ -873,9 +872,9 @@ Calculating AO2_JINT
 
          0.00417704     0.00068995
 
- Time used for MP2 natural orbitals :       0.005 CPU seconds,       0.005 wall seconds.
+ Time used for MP2 natural orbitals :       0.010 CPU seconds,       0.011 wall seconds.
 
- CPU and wall time for MP2 :       0.005       0.005
+ CPU and wall time for MP2 :       0.010       0.011
 
 
         SIRIUS MCSCF optimization (SIROPT)
@@ -888,7 +887,7 @@ Calculating AO2_JINT
 
 
 
- 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.001       0.002
+ 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.002       0.002
 
  (CIST1) 8 lowest diagonal elements:
 
@@ -1017,7 +1016,7 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  1 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.006
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.010       0.010
 
  Total MCSCF energy       :           -76.145526989286495  (MACRO    1)
 
@@ -1273,7 +1272,7 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  2 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.006
 
  Total MCSCF energy       :           -76.147538073687002  (MACRO    2)
 
@@ -1626,7 +1625,7 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  3 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.008       0.007
 
  Total MCSCF energy       :           -76.147614077125723  (MACRO    3)
 
@@ -2271,7 +2270,7 @@ First 1 elements used as separate start vectors.
  --- MACRO ITERATION  4 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.005       0.005
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.007       0.007
 
  Total MCSCF energy       :           -76.147614159016626  (MACRO    4)
 
@@ -2288,8 +2287,8 @@ First 1 elements used as separate start vectors.
  *** Optimization control: MCSCF converged ***
      Number of macro iterations used            4
      Number of micro iterations used           26
-     Total number of CPU seconds used         0.09
-     Total WALL time used (seconds)           0.09
+     Total number of CPU seconds used         0.14
+     Total WALL time used (seconds)           0.14
 
 --------------------------------------------------------------------------------
 
@@ -2355,7 +2354,7 @@ First 1 elements used as separate start vectors.
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for MCSCF :       0.088       0.088
+ CPU and wall time for MCSCF :       0.138       0.138
 
 
                      .----------------------------------------.
@@ -2364,7 +2363,7 @@ First 1 elements used as separate start vectors.
 
 
  
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
 
@@ -2387,10 +2386,10 @@ First 1 elements used as separate start vectors.
   ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
  ------------------------------------------------------------------------------
 
-    1     6     4     3      0.02      0.01      0.01      0.01      0.00
-    2     8     6     3      0.02      0.00      0.02      0.02      0.00
-    3    12     8     5      0.03      0.00      0.02      0.02      0.00
-    4     0     0     0      0.01      0.00      0.00      0.00
+    1     6     4     3      0.03      0.01      0.02      0.02      0.00
+    2     8     6     3      0.03      0.01      0.02      0.02      0.00
+    3    12     8     5      0.05      0.01      0.04      0.03      0.00
+    4     0     0     0      0.01      0.01      0.00      0.00
 
 
  ITER         EMY                 EACTIV              EMCSCF
@@ -2445,7 +2444,7 @@ First 1 elements used as separate start vectors.
 @    Final gradient norm:           0.000008421699
 
  
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Occupancies of natural orbitals
@@ -2474,9 +2473,9 @@ First 1 elements used as separate start vectors.
   Total effective number of unpaired electrons :
   Eq. 1) sum(i) [(2 - n_i) n_i]    =  0.3106
   Eq. 2) sum(i) [(2 - n_i) n_i]**2 =  0.0130
- (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508–511)
+ (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508-511)
 
-File label for MO orbitals:   1Aug22   (CNOORB)
+File label for MO orbitals:   4Aug22   (CNOORB)
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -2593,11 +2592,11 @@ File label for MO orbitals:   1Aug22   (CNOORB)
   10- 7 to 10- 6         1    0.54326431E-12      1.0000000000
   Number of coefficients less than 10^-11 times norm is            0
 
-  Total CPU  time used in SIRIUS :   0.20 seconds
-  Total wall time used in SIRIUS :   0.11 seconds
+  Total CPU  time used in SIRIUS :   0.17 seconds
+  Total wall time used in SIRIUS :   0.17 seconds
 
  
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
@@ -2608,9 +2607,9 @@ File label for MO orbitals:   1Aug22   (CNOORB)
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.68 seconds
-  Total wall time used in DALTON:   0.13 seconds
+  Total CPU  time used in DALTON:   0.19 seconds
+  Total wall time used in DALTON:   0.19 seconds
 
  
-     Date and time (Linux)  : Mon Aug  1 13:59:35 2022
+     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
      Host name              : adm-110765.pc.sdu.dk                    
