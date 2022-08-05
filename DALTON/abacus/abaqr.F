@@ -245,7 +245,7 @@ cs
 #include "inftap.h"
 #include "nuclei.h"
 #include "symmet.h"
-      LOGICAL PASS, HFCLC, CICLC, TRIPLE, EXECLC, FOUND
+      LOGICAL PASS, TRIPLE, EXECLC, FOUND
       CHARACTER*8 LABEL, DLAB(9*MXCENT)
       DIMENSION WORK(LWORK)
 C
@@ -369,8 +369,6 @@ C
 C     We might need a somewhat more intelligent test for NEWCMO
 C
       NEWCMO = .TRUE.
-      CICLC  = .FALSE.
-      HFCLC  = NASHT .LE. 1
       TRIPLE = .FALSE.
       EXECLC = .TRUE.
       NABATY = 1
@@ -382,7 +380,7 @@ C     The following two lines are needed in order to pass
 C     consistency checks in RSPMC
 C
       CALL ABAVAR(1,.FALSE.,0,WORK(KWORK2),LWORK2)
-      IF (HFCLC) NCONF = 1
+      IF (ABAHF) NCONF = 1
 C
 cs    Probabilmente con questa chiamata parte il calcolo vero e proprio
 cs    ABARSP e' in abarspn.F
@@ -397,7 +395,7 @@ cs
 cjim      CALL QUIT('ABARSP call in ABAQR needs to be updated')
 C     hjaaj mar 2004: inserted 'LABEL', then number of arguments fits.
 C      LABEL needs to be defined.
-      CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
+      CALL ABARSP(ABACI,ABAHF,TRIPLE,OOTV,ISYM,EXECLC,
      *            DUMMY,NEXENG,NABATY,NABAOP,LABEL,LUGDVE,LUSOVE,LUREVE,
      *            THRESH,MAXITE,IPRQR,MXRM,MXPHP,WORK(KWORK2),
      *            LWORK2)

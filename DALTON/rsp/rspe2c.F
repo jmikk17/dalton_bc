@@ -4161,6 +4161,9 @@ C ---------------------------- not non-adiabatic coupling:
             END IF
             IF ( NGPPP(KSYMOP) .GT. 0 ) THEN
                JOP = 0
+               OSCIL_L = 0.0D0
+               OSCIL_L_EEF = 0.0D0
+               OSCIL_V = 0.0D0
                DO 545 IOP = 1,NGPPP(KSYMOP)
                IF (LBLPP(KSYMOP,IOP)(1:3) .EQ. 'HDO' ) GO TO 545
 C                 ... skip HDO
@@ -4174,18 +4177,21 @@ C
 C
                   IF ( LBLPP(KSYMOP,IOP)(2:8) .EQ. 'DIPLEN ' ) THEN
                      OSCIL = D2R3*XMOM*XMOM*WRK(KEIVAL-1+ISIM-1+INUM)
+                     OSCIL_L = OSCIL_L + OSCIL
                      WRITE(LUPRI,'(A,1P,G16.8,3A)')
-     *                  '@ Oscillator strength (LENGTH)   :',OSCIL,
+     &                  '@ Oscillator strength (LENGTH)   :',OSCIL,
      &                  '  (',LBLPP_1,'-polarization)'
                   ELSE IF ( LBLPP(KSYMOP,IOP)(2:8) .EQ. 'LFDIPLN' ) THEN
                      OSCIL = D2R3*XMOM*XMOM*WRK(KEIVAL-1+ISIM-1+INUM)
+                     OSCIL_L_EEF = OSCIL_L_EEF + OSCIL
                      WRITE(LUPRI,'(A,1P,G16.8,3A)')
-     *                  '@ Oscillator strength (PE-EEF)   :',OSCIL,
+     &                  '@ Oscillator strength (PE-EEF)   :',OSCIL,
      &                  '  (',LBLPP_1,'-polarization)'
                   ELSE IF ( LBLPP(KSYMOP,IOP)(2:8) .EQ. 'DIPVEL ' ) THEN
                      OSCIL = D2R3*XMOM*XMOM/WRK(KEIVAL-1+ISIM-1+INUM)
+                     OSCIL_V = OSCIL_V + OSCIL
                      WRITE(LUPRI,'(A,1P,G16.8,3A)')
-     *                  '@ Oscillator strength (VELOCITY) :',OSCIL,
+     &                  '@ Oscillator strength (VELOCITY) :',OSCIL,
      &                  '  (',LBLPP_1,'-polarization)'
                   ELSE IF ( LBLPP(KSYMOP,IOP)(1:5) .EQ. 'COS K' ) THEN
                      OSCIL = D2*XMOM*XMOM*WRK(KEIVAL-1+ISIM-1+INUM)
@@ -4201,11 +4207,23 @@ C
      &                     LBLPP(KSYMOP,IOP)(3:8).EQ.'MNF-SO' .OR.
      &                     LBLPP(KSYMOP,IOP)(3:8).EQ.'SPNSCA') THEN
                      WRITE(LUPRI,'(3A,1P,G16.8,A,G16.8,A)')
-     *                  '@ Spin-orbit coupling constant (',
-     *                    LBLPP(KSYMOP,IOP),') :',
-     *                  XMOM*XTKAYS,' cm-1; ',XMOM,' au'
+     &                  '@ Spin-orbit coupling constant (',
+     &                    LBLPP(KSYMOP,IOP),') :',
+     &                  XMOM*XTKAYS,' cm-1; ',XMOM,' au'
                   END IF
   545          CONTINUE
+               IF (OSCIL_L .GT. 0.0D0) THEN
+                  WRITE(LUPRI,'(A,1P,G16.8,3A)')
+     &            '@ Total oscillator strength (LENGTH)   :',OSCIL_L
+               END IF
+               IF (OSCIL_L_EEF .GT. 0.0D0) THEN
+                  WRITE(LUPRI,'(A,1P,G16.8,3A)')
+     &            '@ Total oscillator strength (PE-EEF)   :',OSCIL_L_EEF
+               END IF
+               IF (OSCIL_V .GT. 0.0D0) THEN
+                  WRITE(LUPRI,'(A,1P,G16.8,3A)')
+     &            '@ Total oscillator strength (VELOCITY) :',OSCIL_L
+               END IF
             END IF
 ! Jan. 2017 hjaaj: always print eigenvector analysis
 !           IF (IPRRSP .GT. 3) THEN

@@ -1451,7 +1451,7 @@ C           **********************
 C
             IF (RUNGDY) THEN
                REWIND LUSIFC
-               CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+               CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
                READ (LUSIFC)
                READ (LUSIFC)
                READ (LUSIFC)
@@ -3431,7 +3431,7 @@ C
       IPRRSP = IPRALL - 2
 C
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
       READ (LUSIFC)
       READ (LUSIFC)
       CALL READI(LUSIFC,IRAT*NCMOT,CMO)

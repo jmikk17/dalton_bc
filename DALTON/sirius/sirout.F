@@ -71,6 +71,7 @@ C   INFINP : ISPIN,LSYM,ISTATE, NACTEL,POTNUC, THRPWF, DOCINO, MCTYPE
 C   INFVAR : NCONF,NWOPT
 C   INFORB : NCMOT,NORBT,NNASHX,NISHT,?
 C   INFDIM : LCINDX
+C   dipole.h : DIPMN(1:3)
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -86,6 +87,7 @@ C
 #include "infopt.h"
 #include "inftap.h"
 #include "infpri.h"
+#include "dipole.h"
 ! MM, PCM
 #include "pcmdef.h"
 #include "pcm.h"
@@ -319,12 +321,13 @@ csonia 04/10/95: LUCME output
      *         EFIELD(IFIELD),LFIELD(IFIELD)
             IF (LUCME.GT.0) WRITE (LUCME,'(1P,G18.8,18X,A8)')
      &         EFIELD(IFIELD), LFIELD(IFIELD)
+!           Energy contribution is -\mu Efield
             IF (LFIELD(IFIELD)(1:7) .EQ. 'XDIPLEN') THEN
-               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(1)
             ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'YDIPLEN') THEN
-               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(2)
             ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'ZDIPLEN') THEN
-               CALL ADD_FF_DIPNUC(1,EFIELD(IFIELD),FF_DIPNUC)
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(3)
             END IF
          END DO
          WRITE (LUPRI,'()')
@@ -399,6 +402,11 @@ C        CI calculation
          ELSE
             WRITE (LUPRI,5012)
          END IF
+         IF (ISTACI .GT. 0) THEN
+            WRITE (LUPRI,5027) ISTACI,EMCSCF,
+     &         POTNUC,(EMCSCF-POTNUC-ESOLT)
+            WRITE (LUPRI,5030) GRDNRM
+         END IF
       ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
@@ -415,6 +423,7 @@ C        MCSCF type calculation
          WRITE (LUPRI,5030) GRDNRM
       ELSE IF (DOSCF) THEN
          IF (DOHFSRDFT) THEN
+           WRITE (LUPRI,5015) CHIVAL
            WRITE (LUPRI,5023) EMCSCF,POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE IF (.NOT.DODFT) THEN
 C        ... DIIS-HF or QC-HF optimization
@@ -438,7 +447,7 @@ C        ... DIIS-DFT or QC-DFT optimization
          WRITE (LUPRI,5030) GRDNRM
       END IF
 
-      IF (FF_DIPNUC .GT. 0.0D0)
+      IF (ABS(FF_DIPNUC) .GT. 0.0D0)
      &   WRITE(LUPRI,5035) FF_DIPNUC, EMCSCF+FF_DIPNUC
 
       IF (QMMM .AND. MMPROP) THEN
@@ -453,6 +462,7 @@ C        ... DIIS-DFT or QC-DFT optimization
  5012 FORMAT(/'@    This was a CI calculation.')
  5013 FORMAT(/'@    This was an MCSCF calculation.')
  5014 FORMAT(/'@    This was an MC-srDFT calculation with mu =',F8.3)
+ 5015 FORMAT(/'@    This was an HF-srDFT calculation with mu =',F8.3)
  5020 FORMAT( '@    State number:',T31,I5,
      *      //'@    Final MCSCF energy:',T31,F20.12,A,
      *       /'@    Nuclear repulsion:',T31,F20.12,
@@ -472,6 +482,10 @@ C        ... DIIS-DFT or QC-DFT optimization
      *       /'@    Electronic energy:',T31,F20.12)
  5025 FORMAT( '@    Solvation  energy:',T31,F20.12)
  5026 FORMAT( '@    Embedding energy:',T31,F20.12)
+ 5027 FORMAT( '@    State number:',T31,I5,
+     *      //'@    Final CI energy:',T31,F20.12,
+     *       /'@    Nuclear repulsion:',T31,F20.12,
+     *       /'@    Electronic energy:',T31,F20.12)
  5030 FORMAT(/'@    Final gradient norm:',T31,F20.12)
  5035 FORMAT(/'@    Finite field energy contribution ',
      &        'from nuclear dipole moment:',F20.12,
@@ -690,16 +704,4 @@ C
       CALL QEXIT('SIROUT')
       RETURN
       END
-      SUBROUTINE ADD_FF_DIPNUC(IXYZ,EFIELD,FF_DIPNUC)
-! This cannot be done in SIROUT because
-! POTNUC is in both infinp.h and frame.h
-      implicit none
-      integer ixyz
-      real*8  efield, ff_dipnuc
-! frame.h  : dipnuc(1:3)
-#include "frame.h"
-      FF_DIPNUC = FF_DIPNUC + EFIELD*DIPNUC(IXYZ)
-      RETURN
-      END
-
 C --- end of sirius/sirout.F ---

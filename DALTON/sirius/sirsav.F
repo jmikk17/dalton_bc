@@ -118,6 +118,7 @@ C
       END IF
       DOCNO = FLAG(15)
 !     write(lupri,*) ' sirsav... keywrd ==> ',keywrd
+      ICTL = -100 ! to quench compiler warnings
       IF (KEYWRD .EQ. 'NEOSAVE') THEN
          ICTL = 1
          NRS  = MIN (NROOTS,NREDL,NCONF)
@@ -304,6 +305,7 @@ C
 C     Now get them:
 C
       JOFF = 0
+      JYVEC = KY ! to quench compiler message maybe uninitialized
  1100 CONTINUE
       REWIND LUIT3
       CALL DZERO(WRK(KY),NSIM*NVAR)
@@ -808,7 +810,7 @@ C Print XKAP, if so requested.
 C
       IF (P6FLAG(29) .AND. NWOPT .GT. 0) THEN
          WRITE (LUPRI,'(/A/A)') ' MO_ROTATE: Orbital rotation vector',
-     *                          ' ----------------------------------'
+     &                          ' ----------------------------------'
          IF (IPRI6.GT.100) THEN
             PRFAC = 0.0D0
          ELSE

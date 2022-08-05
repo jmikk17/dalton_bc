@@ -1231,6 +1231,7 @@ C     matrix explicitly by carrying out linear transformations of unit
 C     vectors
 C
 #include "inflin.h"
+#include "abainf.h"
 #include "linaba.h"
 #include "infpri.h"
 C

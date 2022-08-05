@@ -588,6 +588,9 @@ C
 C  /* Deck smoinp */
       SUBROUTINE SMOINP(WORD)
 C
+C Input for Second order moments
+C from quadratic response single residue
+C
 C Sonia: added MCDBTE section (1999)
 C
       use pelib_interface, only: use_pelib
@@ -660,16 +663,16 @@ C
                   BSMOP( INDPRP(LABEL)) = .TRUE.
                GO TO 100
  2             CONTINUE
-                  READ (LUCMD,*) NBSMFR
+                  READ (LUCMD,*,ERR=9000) NBSMFR
                   IF (NBSMFR.LE.MBSMFR) THEN
-                     READ (LUCMD,*) (BSMFR(J),J=1,NBSMFR)
+                     READ (LUCMD,*,ERR=9000) (BSMFR(J),J=1,NBSMFR)
                   ELSE
                      WRITE (LUPRI,'(3(/,A,I5),/)')
      *               ' NUMBER OF B FREQUENCIES SPECIFIED  :',NBSMFR,
      *               ' IS GREATER THAN THE ALLOWED NUMBER :',MBSMFR,
      *               ' THE NUMBER IS RESET TO THE MAXIMUM :',MBSMFR
-                     READ (LUCMD,*) (BSMFR(J),J=1,MBSMFR),
-     *                              (FFFF,J=MBSMFR+1,NBSMFR)
+                     READ (LUCMD,*,ERR=9000) (BSMFR(J),J=1,MBSMFR),
+     &                              (FFFF,J=MBSMFR+1,NBSMFR)
                      NBSMFR = MBSMFR
                   END IF
                GO TO 100
@@ -678,25 +681,26 @@ C
                   ASMOP( INDPRP(LABEL)) = .TRUE.
                GO TO 100
  4             CONTINUE
-                  READ (LUCMD,*) (NSMCNV(MULD2H(J,LSYMRF)),J=1,NSYM)
+                  READ (LUCMD,*,ERR=9000)
+     &               (NSMCNV(MULD2H(J,LSYMRF)),J=1,NSYM)
                GO TO 100
  5             CONTINUE
-                  READ (LUCMD,*) MAXITL
+                  READ (LUCMD,*,ERR=9000) MAXITL
                GO TO 100
  6             CONTINUE
-                  READ (LUCMD,*) THCLR
+                  READ (LUCMD,*,ERR=9000) THCLR
                GO TO 100
  7             CONTINUE
-                  READ (LUCMD,*) MAXITP
+                  READ (LUCMD,*,ERR=9000) MAXITP
                GO TO 100
  8             CONTINUE
-                  READ (LUCMD,*) THCPP
+                  READ (LUCMD,*,ERR=9000) THCPP
                GO TO 100
  9             CONTINUE
-                  READ (LUCMD,*) MAXITO
+                  READ (LUCMD,*,ERR=9000) MAXITO
                GO TO 100
  10            CONTINUE
-                  READ (LUCMD,*) IPRSMO
+                  READ (LUCMD,*,ERR=9000) IPRSMO
                GO TO 100
  11            CONTINUE
                   LABEL='XDIPLEN'
@@ -725,7 +729,7 @@ C
                GO TO 100
  13            CONTINUE
                   JSPABC = JSPABC + 1
-                  READ (LUCMD,*) ISPINA,ISPINB,ISPINC
+                  READ (LUCMD,*,ERR=9000) ISPINA,ISPINB,ISPINC
                GO TO 100
 C              Option 14 .TPACD calculates tensor components for Tinoco
 C              original, gauge invariant formulation
@@ -1167,6 +1171,10 @@ C
 C *** END OF SMOINP
 C
       RETURN
+ 9000 CONTINUE ! error exit
+      Write (Lupri,'(///2A)') 'Input error for option ',WORD,
+     &   ' in group ',WORD1
+      CALL QUIT('Input error, see output')
       END
 C  /* Deck exiind */
       SUBROUTINE EXIIND(NEVAL)

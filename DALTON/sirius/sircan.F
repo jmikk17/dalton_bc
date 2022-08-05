@@ -113,8 +113,9 @@ C
       CALL DZERO(OCC,NORBT)
       IF (NASHT .EQ. 1) WRK(KAOCC) = NACTEL
       IAOCC = KAOCC-1
-      ENUE = 0.0D0 ! Effective Number of Unpaired Electrons
-                   ! sum(i) (2*n_i - n_i**2)
+      ! Effective Number of Unpaired Electrons
+      ENUE_1 = 0.0D0 ! sum(i) (2*n_i - n_i**2)
+      ENUE_2 = 0.0D0 ! sum(i) (2*n_i - n_i**2)**2
       DO 300 ISYM = 1,NSYM
 C
          JOCC1  = IORB(ISYM)
@@ -127,27 +128,35 @@ C
       IF (NASHI.EQ.0) GO TO 300
          JOCC1  = JOCC1 + NISHI
          OCCSUM = 0.0D0
-         ENUE_SYM = 0.0D0
+         ENUE1_SYM = 0.0D0
+         ENUE2_SYM = 0.0D0
          DO 275 I=1,NASHI
             IAOCC = IAOCC + 1
             OCC(JOCC1 + I) = WRK(IAOCC)
             OCCSUM = OCCSUM + OCC(JOCC1 + I)
-            ENUE_SYM = ENUE_SYM + 2.0D0*WRK(IAOCC) - WRK(IAOCC)**2
+            TMP = 2.0D0*WRK(IAOCC) - WRK(IAOCC)**2
+            ENUE1_SYM = ENUE1_SYM + TMP
+            ENUE2_SYM = ENUE2_SYM + TMP**2
   275    CONTINUE
-         ENUE = ENUE + ENUE_SYM
+         ENUE_1 = ENUE_1 + ENUE1_SYM
+         ENUE_2 = ENUE_2 + ENUE2_SYM
          IF (NCONF.GT.1 .AND. .NOT.ONLYFD .AND. IPRCAN .GT. 0) THEN
             WRITE (LUW4,3040) ISYM, OCCSUM, (OCC(JOCC1+I),I=1,NASHI)
-            WRITE (LUW4,3041) ENUE_SYM
+            WRITE (LUW4,3041) ENUE1_SYM, ENUE2_SYM
          END IF
   300 CONTINUE
-      WRITE(LUW4,3042) ENUE
+      WRITE(LUW4,3042) ENUE_1, ENUE_2
 C
  3040 FORMAT(/'  Symmetry',I3,'  Total occupancy this symmetry',F14.9,
      &      //,(5F14.9))
- 3041 FORMAT(/'@ Effective number of unpaired electrons this symmetry:',
-     &        F6.2)
- 3042 FORMAT(/'@ Total effective number of unpaired electrons :',F6.2,
-     &       /'  (ENUE = sum(i) (2*n_i - n_i**2) for natural orbitals)')
+ 3041 FORMAT(/'  Effective numbers of unpaired electrons ',
+     &        'this symmetry Eqs. 1) and 2):'
+     &        ,2F6.2)
+ 3042 FORMAT(/'  Total effective number of unpaired electrons :',
+     &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
+     &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
+     &       /' (Reference: M. Head-Gordon, ',
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
 C
 C     Print natural orbitals
 C
@@ -1005,10 +1014,12 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
          IF (SUPSYM .AND. .NOT. NOAVER) WRITE (LUPRI,'(/A)')
      &      ' NOTE: degenerate orbitals have been averaged.'
 
-         ENUE = 0.0D0 ! Effective Number of Unpaired Electrons
-                      ! sum(i) (2*n_i - n_i**2)
+         ! Effective Number of Unpaired Electrons
+         ENUE_1 = 0.0D0 ! sum(i) (2*n_i - n_i**2)
+         ENUE_2 = 0.0D0 ! sum(i) (2*n_i - n_i**2)**2
          DO ISYM = 1,NSYM
-            ENUE_SYM = 0.0D0
+            ENUE1_SYM = 0.0D0
+            ENUE2_SYM = 0.0D0
             NOCCI = NOCC(ISYM)
             IF (NOCCI .EQ. 0) THEN
                WRITE (LUPRI,3030) ISYM,REP(ISYM-1)
@@ -1023,11 +1034,13 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
      &               (OCCNO(IORBI+I),I=1,NOCCI)
                   IF (NASH(ISYM) .GT. 0) THEN
                      DO I = IORBI + NISH(ISYM) + 1, IORBI + NOCCI
-                        ENUE_SYM = ENUE_SYM
-     &                           + 2.0D0*OCCNO(I) - OCCNO(I)**2
+                        TMP = 2.0D0*OCCNO(I) - OCCNO(I)**2
+                        ENUE1_SYM = ENUE1_SYM + TMP
+                        ENUE2_SYM = ENUE2_SYM + TMP**2
                      END DO
-                     WRITE (LUPRI,3041) ENUE_SYM
-                     ENUE = ENUE + ENUE_SYM
+                     WRITE (LUPRI,3041) ENUE1_SYM, ENUE2_SYM
+                     ENUE_1 = ENUE_1 + ENUE1_SYM
+                     ENUE_2 = ENUE_2 + ENUE2_SYM
                   END IF
                END IF
             END IF
@@ -1035,17 +1048,21 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
 C  HJAAJ MAERKE TODO 921106: if (supsym) print also sorted after supsym
 C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
          IF (NASHT .GT. 0) THEN
-            WRITE(LUPRI,3042) ENUE
+            WRITE(LUPRI,3042) ENUE_1, ENUE_2
          END IF
       END IF
  3030 FORMAT(/' Symmetry',I2,'  ( ',A,') -- No occupied orbitals')
  3040 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Total occupation in this symmetry is',F14.9,
      &      //,(5F14.9))
- 3041 FORMAT(/'   Effective number of unpaired electrons this symmetry:'
-     &       ,F8.4)
- 3042 FORMAT(/' Total effective number of unpaired electrons :',F8.4,
-     &   / '    ( = sum(i) (2 - n_i)*n_i  for natural orbitals)')
+ 3041 FORMAT(/'  Effective numbers of unpaired electrons ',
+     &        'this symmetry Eqs. 1) and 2):'
+     &        ,2F6.2)
+ 3042 FORMAT(/'  Total effective number of unpaired electrons :',
+     &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
+     &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
+     &       /' (Reference: M. Head-Gordon, ',
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
  3045 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Supersymmetry in parenthesis',
      &       /' -- Total occupation in this symmetry is',F14.9,

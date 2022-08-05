@@ -2134,31 +2134,29 @@ C Revision 2000/05/24 HJAaJ: new options (read CMO and others)
 C Revision 2011/05/02 HJAaJ: new keys FC, FCDIAG
 C
 C The following records have been written by WR_SIRIFC:
+C (First label is "CIRESPON" if CI calculation,
+C  those records marked CI are also included after CIRESPON)
 C
-C    0) label LBSIFC ("SIR IPH ")
-C    1) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,LSYM,MS2
-C    2) NISHT,NASHT,...
-C    3) CMO
-C    4) CREF
-C    5) DV
+CI   0) label LBSIFC ("SIR IPH ") or "CIRESPON"
+CI   1) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,LSYM,MS2
+CI   2) NISHT,NASHT,...
+CI   3) CMO
+CI   4) CREF
+CI   5) DV
 C    6) FOCK
 C    7) PV
 C    8) FC
 C    9) FV
-C   10) FCAC
-C   11) H2AC
+CI  10) FCAC
+CI  11) H2AC
 C   12) GORB
-C   If (GUGA) then
-C      13) label "CIDIAG1 "
-C      14) CIDIAG1
-C   end if
-C   15) label "CIDIAG2 "
-C   16) CIDIAG2
-C   17) label "ORBDIAG "
-C   18) ORBDIAG
+CI  13) label "CIDIAG2 "
+CI  14) CIDIAG2
+C   15) label "ORBDIAG "
+C   16) ORBDIAG
 C
-C    *) label "SIRFLAGS"
-C    *) FLAG(1:NFLAG)
+CI   *) label "SIRFLAGS"
+CI   *) FLAG(1:NFLAG)
 C    *) GRDNRM,POTNUC,EMY,EACTIV,ESOLT,EMCSCF
 C   If (fields) then
 C    *) label "EXTFIELD"
@@ -2176,10 +2174,10 @@ C    *) NSYM, NBAS
 C    *) label "SOLVTMAT"
 C    *) TMAT(1:NNORBX)
 C   end if
-C   If (CSF's) then
-C    *) label "CREFDETS"
-C    *) CREF in dets
-C   end if
+CI  If (CSF's) then
+CI   *) label "CREFDETS"
+CI   *) CREF in dets
+CI  end if
 C    *) label 'TRCCINT"
 C    *) NSYM, NORBT, ...
 C    *) FCDIA, ISMO
@@ -2203,7 +2201,7 @@ C
 #include "inforb.h"
 #include "inftap.h"
 C
-      LOGICAL CLSIFC, FNDLAB
+      LOGICAL CLSIFC, FNDLAB, CIRESPON
 C
       CALL QENTER('RD_SIRIFC')
       IF (LUSIFC .GT. 0) THEN
@@ -2213,24 +2211,27 @@ C
          CALL GPOPEN(LUSIFC,FNSIFC,
      &      'UNKNOWN',' ','UNFORMATTED',IDUMMY,.FALSE.)
       END IF
+
+      CIRESPON = .FALSE.
       REWIND LUSIFC
+      IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) THEN
+          REWIND LUSIFC
+          IF (.NOT. FNDLAB('CIRESPON',LUSIFC)) GO TO 8888
+          CIRESPON = .TRUE.
+      END IF
+
       IF (KEY .EQ. 'CMO') THEN
-         IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) THEN
-            REWIND LUSIFC
-            IF (.NOT. FNDLAB('CIRESPON',LUSIFC)) GO TO 8888
-         ENDIF
          READ (LUSIFC)
          READ (LUSIFC)
          CALL READT(LUSIFC,NCMOT,AMAT)
       ELSE IF (KEY .EQ. 'DV') THEN
-         IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) GO TO 8888
          READ (LUSIFC)
          READ (LUSIFC)
          READ (LUSIFC)
          READ (LUSIFC)
          CALL READT(LUSIFC,NNASHX,AMAT)
       ELSE IF (KEY .EQ. 'PV') THEN
-         IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) GO TO 8888
+         IF (CIRESPON) GOTO 8888
          READ (LUSIFC)
          READ (LUSIFC)
          READ (LUSIFC)
@@ -2239,7 +2240,7 @@ C
          READ (LUSIFC)
          CALL READT(LUSIFC,NNASHX*NNASHX,AMAT)
       ELSE IF (KEY .EQ. 'FOCK') THEN
-         IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) GO TO 8888
+         IF (CIRESPON) GOTO 8888
          READ (LUSIFC)
          READ (LUSIFC)
          READ (LUSIFC)
@@ -2247,7 +2248,7 @@ C
          READ (LUSIFC)
          CALL READT(LUSIFC,N2ORBT,AMAT)
       ELSE IF (KEY .EQ. 'FC for MP2') THEN ! 3-May-2011 hjaaj, specifically for use in MP2FCK
-         IF (.NOT. FNDLAB(LBSIFC,LUSIFC)) GO TO 8888
+         IF (CIRESPON) GOTO 8888
          ! rec no. 1
 !        WRITE (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,
 !    &               ISTATE,ISPIN,NACTEL,LSYM,MS2
@@ -2274,15 +2275,18 @@ C
          END DO
          CALL READT(LUSIFC,NNORBT,AMAT) ! FC matrix is in rec. no. 8
       ELSE IF (KEY .EQ. 'SOLTLM') THEN
+         IF (CIRESPON) GOTO 8888
          IF (.NOT. FNDLAB('SOLVINFO',LUSIFC)) GO TO 8888
          READ (LUSIFC)
          READ (LUSIFC)
          READ (LUSIFC)
          CALL READT(LUSIFC,NLMSOL,AMAT)
       ELSE IF (KEY .EQ. 'SOLVTMAT') THEN
+         IF (CIRESPON) GOTO 8888
          IF (.NOT. FNDLAB('SOLVTMAT',LUSIFC)) GO TO 8888
          CALL READT(LUSIFC,NNORBT,AMAT)
       ELSE IF (KEY .EQ. 'FCDIAG') THEN
+         IF (CIRESPON) GOTO 8888
          IF (.NOT. FNDLAB('TRCCINT ',LUSIFC)) GO TO 8888
          READ (LUSIFC) NSYM_SIRIFC
          IF (NSYM .NE. NSYM_SIRIFC) THEN
@@ -2305,7 +2309,7 @@ C  /* Deck rdcref */
       SUBROUTINE RDCREF(CREF,set_cref_xc_flag_lucita)
 C
 C 26-Sep-1990 Hans Joergen Aa. Jensen
-C Read reference CI vector from LUIT1
+C Read reference CI vector from SIRIUS.RST (unit LUIT1)
 C
       use lucita_mcscf_ci_cfg
 #include "implicit.h"
@@ -2331,9 +2335,8 @@ C
       IF ( NCONF .GT. 1 ) THEN
          REWIND LUIT1
          CALL MOLLB2 ('STARTVEC',RTNLBL,LUIT1,LUPRI)
-         IF (RTNLBL(1) .NE. STAR8) THEN
-            READ (RTNLBL(1),'(2I4)') NRS,I
-            IF (ABS(I) .NE. ISTATE) THEN
+         READ (RTNLBL(1),'(2I4)') NRS,I
+         IF (ABS(I) .NE. ISTATE) THEN
             IF (I .EQ. 0 .AND. RTNLBL(2).EQ.'CISAVE  ') THEN
                IF (NRS .LT. ISTATE) THEN
                   WRITE (LUPRI,'(//2(A,I4/))')
@@ -2348,11 +2351,8 @@ C
      *      ' WARNING from RDCREF: ISTATE specified in input:',ISTATE,
      *      '                      ISTATE read from LUIT1   :',ABS(I)
             END IF
-            END IF
-         ELSE
-C           this is an old LUIT1 file (before 5-Aug-1986)
-            I = ISTATE
          END IF
+
          IF (I .GT. 0) THEN
             DO 110 I = 1,(ISTATE-1)
                READ (LUIT1)
