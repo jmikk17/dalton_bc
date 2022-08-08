@@ -227,7 +227,7 @@ C    *                 XNDXCI,WORK,KFREE,LFREE)
 C |OR> has minus sign, scale density with minus
             CALL DSCAL(NCSIM*N2ASHX,DM1,WRK(KDVTTR),1)
          END IF
-      END IF
+      END IF ! NCSIM.gt.0 .and. not.rspci
 C
       IF (TRPLET) THEN
 C
@@ -254,7 +254,7 @@ C
             CALL OUTPUT(WRK(KUDVTR),1,NASHT,1,NASHT,NASHT,NASHT,
      *                                            -1,LUPRI)
          END IF
-      END IF
+      END IF ! trplet
 C
 C TRIANGULAR PACKING OF ONE ELECTRON DENSITY MATRIX
 C
@@ -316,7 +316,7 @@ C
 #if defined(VAR_MPI)
          END IF
 #endif
-      ENDIF
+      ENDIF ! QM3 .AND. .not.mmpcm
       IF (PCM .AND. (.NOT. MMPCM)) THEN
          LADDMM = .TRUE.
          IF (IPRRSP .GT. 2) WRITE(LUPRI,*)
@@ -325,7 +325,7 @@ C
      &               UDV,WRK(KDV),WRK(KUDVTR),WRK(KDVTR),
      &               WRK(KDVT),WRK(KDVTTR),
      &               EVECS,EVECS(NCSIM*KZYVAR+1),WRK(KFREE),LFREE)
-      ENDIF
+      ENDIF ! PCM .AND. (.NOT. MMPCM)
 
       IF (MMPCM) THEN
          IF (NOSIM .GT. MXEPCM) THEN
@@ -360,20 +360,20 @@ C
      &        WRK(KDVT),WRK(KDVTTR),
      &        EVECS,EVECS(NCSIM*KZYVAR+1),WRK(KFREE),LFREE)
          FIRST1 = .FALSE.
-      ENDIF
+      ENDIF ! MMPCM
       IF (USE_PELIB()) THEN
         CALL PELIB_IFC_LR(NCSIM, NOSIM, BCVECS, BOVECS, WRK(KCREF), CMO,
      &                    INDXCI, UDV, WRK(KDV), WRK(KUDVTR),
      &                    WRK(KDVTR), WRK(KDVT), WRK(KDVTTR), EVECS,
      &                    EVECS(NCSIM*KZYVAR+1), WRK(KFREE), LFREE)
-      END IF
+      END IF ! USE_PELIB
 #if defined (HAS_PCMSOLVER)
       if (pcm_cfg%do_pcm) then
          call pcm_lr_driver(nosim,bovecs,cmo,indxci,
      &               udv,wrk(kdv),wrk(kudvtr),wrk(kdvtr),
      &               wrk(kdvt),wrk(kdvttr),
      &               evecs(ncsim*kzyvar+1),wrk(kfree),lfree)
-      end if
+      end if ! pcm_cfg%do_pcm
 #endif
       IF (QMMM) THEN
          IF (IPQMMM .GT. 1) CALL TIMER('START ',TIMSTR,TIMEND)
@@ -384,7 +384,7 @@ C
      &               WRK(KDVT),WRK(KDVTTR),
      &               EVECS,EVECS(NCSIM*KZYVAR+1),WRK(KFREE),LFREE)
          IF (IPQMMM .GT. 1) CALL TIMER('QMMMLNO',TIMSTR,TIMEND)
-      ENDIF
+      ENDIF ! QMMM
       IF (FLAG(16)) THEN
          IF (IPRRSP .GT. 2) WRITE(LUPRI,*)
      *   ' CONTRIBUTIONS FROM SLVLTR TO LINEAR TRANSFORMATION'
@@ -392,14 +392,14 @@ C
      &               UDV,WRK(KDV),WRK(KUDVTR),WRK(KDVTR),
      &               WRK(KDVT),WRK(KDVTTR),
      &               EVECS,EVECS(NCSIM*KZYVAR+1),WRK(KFREE),LFREE)
-      END IF
+      END IF ! spherical cavity (flag(16))
       IF (QMNPMM) THEN
          IF (IPRRSP .GT. 2) WRITE(LUPRI,*)
      *   ' CONTRIBUTIONS FROM QMCMM_LR TO LINEAR TRANSFORMATION'
          CALL qmcmm_lr(NOSIM,BOVECS,WRK(KCREF),CMO,
      &                 UDV,WRK(KDV),WRK(KUDVTR),WRK(KDVTR),
      &                 EVECS(NCSIM*KZYVAR+1),WRK(KFREE),LFREE)
-      ENDIF
+      ENDIF ! QMNPMM
 C
       IF ((NCSIM.GT.0).AND.(IPRRSP.GT.101)) THEN
          WRITE(LUPRI,*)' LINEAR TRANSFORMED CONFIGURATION VECTORS'
@@ -1230,7 +1230,7 @@ C
                END IF
 C              then  SVECS(NA) = SVECS(NA) + < NA | 2*RY | BCVECS > -Note: Tg is called "Ry" 
                IF (IPRRSP.GT.100) THEN
-                  WRITE(LUPRI,*)' Z part,-1.0*RYAC MATRIX, ICSIM=', ICSIM
+                  WRITE(LUPRI,*)' Z part,-1.0*RYAC MATRIX, ICSIM=',ICSIM
                   CALL OUTPUT(WRK(KURYAC),1,NASHT,1,NASHT,
      *                                    NASHT,NASHT,1,LUPRI)
                END IF

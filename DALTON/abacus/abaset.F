@@ -62,7 +62,7 @@ C   INFINP : ISTATE,ISPIN,NACTEL,POTNUC,LSOLMX,RSOL(3)
 C   INFOPT : EMCSCF,EPOT,EMY,EACTIV,ESOLT
 C   PAST   : PASDIP, PASORT, PASRES
 C   CBISOL : SOLVNT, ...
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C   pcmlog.h : PCM
 C
 #include "gnrinf.h"
@@ -129,11 +129,11 @@ C
      *            NELMN1, NELMX1, NELMN3, NELMX3, MCTYPE,
      *            NAS1, NAS2, NAS3
       IF (MCTYPE .GT. 900) THEN
-         IF (.NOT. DFT_SPINDNS .AND. ISPIN.NE.1) THEN
-         ! it is OK to have reset DFT_SPINDNS to false in RESPONS or ABACUS
+         IF (.NOT. SRDFT_SPINDNS .AND. ISPIN.NE.1) THEN
+         ! it is OK to have reset SRDFT_SPINDNS to false in RESPONS or ABACUS
          ! for singlet reference states.
             CALL QUIT('ERROR in SETSIR:'//
-     &      'DFT_SPINDNS true on SIRIFC, but not in input')
+     &      'SRDFT_SPINDNS true on SIRIFC, but not in input')
          END IF
          MCTYPE = MCTYPE - 1000
       END IF

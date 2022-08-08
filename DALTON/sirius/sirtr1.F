@@ -71,7 +71,7 @@ C   INFLIN : NCONRF,IPRLIN
 C   INFDIM : NCONDI
 C   INFTRA : USEDRC
 C   INFPRI : P6FLAG(*), ?
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -139,7 +139,7 @@ C *** Calculate the NCSIM transition DV and PV density matrices
 C
       IF (NCSIM.GT.0) THEN
          L_DTV = NCSIM*NNASHX
-         IF (DFT_SPINDNS) L_DTV = 2*L_DTV ! also DTS
+         IF (SRDFT_SPINDNS) L_DTV = 2*L_DTV ! also DTS
          CALL DZERO( DTV, L_DTV )
          CALL DZERO( WRK(KPTV), NCSIM*NNASHX*NNASHX )
 C
@@ -152,7 +152,7 @@ C
                IF (P6FLAG(20) .OR. IPRLIN .GE. 20) THEN
                   WRITE (LUPRI,1010) ICSIM,NCSIM
                   CALL OUTPAK(DTV(1,ICSIM),NASHT,1,LUPRI)
-               IF (DFT_SPINDNS) THEN
+               IF (SRDFT_SPINDNS) THEN
                   WRITE (LUPRI,1011) ICSIM,NCSIM
                   CALL OUTPAK(DTV(1,NCSIM+ICSIM),NASHT,1,LUPRI)
                END IF
@@ -197,7 +197,7 @@ C               are added in TR1H2M
          L_FXV = NOSIM*N2ORBX
          IF (DOMCSRDFT)
      &      L_FTV = L_FTV + MCSIM*N2ORBX ! we also need "FTC" when MC-srDFT
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             L_FTV = L_FTV + MCSIM*N2ORBX ! for FTS
             L_FXV = L_FXV + NOSIM*N2ORBX ! for FXS
          END IF
@@ -246,7 +246,7 @@ C
                WRITE (LUPRI,4021) ICSIM,NCSIM
                CALL OUTPUT(FTV(1,NCSIM+ICSIM),1,NORBT,1,NORBT,
      &                  NORBT,NORBT,-1,LUPRI)
-               IF (DFT_SPINDNS) THEN
+               IF (SRDFT_SPINDNS) THEN
                   WRITE (LUPRI,4022) ICSIM,NCSIM
                   CALL OUTPUT(FTV(1,2*NCSIM+ICSIM),1,NORBT,1,NORBT,
      &                  NORBT,NORBT,-1,LUPRI)
@@ -274,7 +274,7 @@ C
                WRITE (LUPRI,5030) IOSIM,NOSIM
                CALL OUTPUT(FXV(1,IOSIM),1,NORBT,1,NORBT,
      &                     NORBT,NORBT,-1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE (LUPRI,5040) IOSIM,NOSIM
                CALL OUTPUT(FXV(1,NOSIM+IOSIM),1,NORBT,1,NORBT,
      &                     NORBT,NORBT,-1,LUPRI)
@@ -316,7 +316,6 @@ C Jan 90 hjaaj
 C
 C *** Calculate EMYX(IOSIM), the inactive energy based on the one-
 C     index transformed Hamiltonian.
-C     Multiply with EMYX(IOSIM) with two, the value of DC(ii)
 C
 #include "implicit.h"
       DIMENSION FXC(NORBT,NORBT,NOSIM), EMYX(NOSIM)
@@ -340,28 +339,10 @@ C
 C
       DO 300 IOSIM = 1,NOSIM
          EMYX(IOSIM) = D0
-#ifdef TODO
-CHJAaJ TODO June 2001: the calculated EMYX is wrong;
-C only half of the one-index transformed contribution is
-C included in FXC (error found by Joern Thyssen).
-C Luckily it doesn't matter because the CREF component
-C is projected out of the sigma vector in the current
-C implementation !!!
-C
-C The correct is EMYX = sum(K) (HX1(K,K) + FXC(K,K))
-C        and not EMYX = sum(K) 2*FXC(K,K)
-C
-         IF (JWOPSY.EQ.1) THEN
-            DO 200 KW = 1,NISHT
-               K = ISX(KW)
-               EMYX(IOSIM) = EMYX(IOSIM) + FXC(K,K,IOSIM)
-  200       CONTINUE
-            EMYX(IOSIM) = EMYX(IOSIM)*D2
-            IF (P6FLAG(11) .OR. IPRLIN.GE.11)
-     &         WRITE (LUPRI,5010) IOSIM,EMYX(IOSIM)
- 5010 FORMAT(/' EMYX(',I2,') = ',F25.15)
-         END IF
-#endif
+CHJAaJ EMYX is not zero,
+C the correct value is EMYX = sum(K) (HX1(K,K) + FXC(K,K)).
+C However, it doesn't matter because the CREF component is
+C projected out of the sigma vector in the current implementation !!!
   300 CONTINUE
       RETURN
       END
@@ -406,7 +387,7 @@ C
 C Used from common blocks:
 C  INFORB : NSYM,NASHT,...
 C  INFVAR : JWOPSY
-C  DFTCOM : DFT_SPINDNS
+C  DFTCOM : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -431,7 +412,7 @@ C     DXVAO: loop over symmetries
 C
       IF (NASHT .GT. 0) THEN
          CALL MEMGET('REAL',KDXV1,NASHT*NBAST,WRK,KFREE,LFREE)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL MEMGET('REAL',KUDV ,2*N2ASHX,WRK,KFREE,LFREE)
             KUDS = KUDV + N2ASHX
             CALL DSPTSI(NASHT,DV,WRK(KUDV))
@@ -464,7 +445,7 @@ C         in inner loop in order to improve vectorization)
 C        DXV(p,u) = sum(v) DV(v,u) Bo(v,p) = sum(v) DV(u,v) Bo(v,p)
 C        DXVAO(a,b) =
 C        sum(u) CMO(b,u) ( sum(v) (sum(p) CMO(a,p) Bo(v,p)) DV(v,u) )
-C        If (DFT_SPINDNS) DXSAO(a,b) =
+C        If (SRDFT_SPINDNS) DXSAO(a,b) =
 C        sum(u) CMO(b,u) ( sum(v) (sum(p) CMO(a,p) Bo(v,p)) DS(v,u) )
          IOFMOV = ICMOI + 1 + NISHI*NBASI
          IF (NASHI*NORBJ .NE. 0) THEN
@@ -480,7 +461,7 @@ C        sum(u) CMO(b,u) ( sum(v) (sum(p) CMO(a,p) Bo(v,p)) DS(v,u) )
      &                 WRK(KDXV1),NBASJ,
      &                 CMO(IOFMOV),NBASI,0.D0,
      &                 DXVAO(1+IBAS(JSYM),1+IBAS(ISYM),1),NBAST)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL DGEMM('N','N',NBASJ,NASHI,NASHI,1.D0,
      &                 WRK(KDXAO1),NBASJ,
      &                 WRK(KUDS+(NASHT+1)*IASHI),NASHT,0.D0,
@@ -496,7 +477,7 @@ C **  this symmetry block finished
 C **  add transposed matrix to get final result
          CALL MTRSP(NBAST,NBAST,DXVAO,NBAST,WRK(KDXAO1),NBAST)
          CALL DAXPY(N2BASX,D1,WRK(KDXAO1),1,DXVAO,1)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL MTRSP(NBAST,NBAST,DXVAO(1,1,2),NBAST,WRK(KDXAO1),NBAST)
             CALL DAXPY(N2BASX,D1,WRK(KDXAO1),1,DXVAO(1,1,2),1)
          END IF
@@ -573,7 +554,7 @@ C Used from common blocks:
 C   INFINP : DIRFCK
 C   INFORB : NNORBX, N2ORBX, N2BASX, NISHT,NASHT, ...
 C   INFVAR : JWOPSY
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "infinp.h"
@@ -594,30 +575,30 @@ C
       NDMAT  = 0
       IF (NISHT .GT. 0 .OR. ADDSRI) NDMAT = NDMAT + MOSIM
 C     ... for FXCAO
-      IF (NASHT .GT. 0) NDMAT = NDMAT + MOSIM
+      IF (NASHT .GT. 0)   NDMAT = NDMAT + MOSIM
 C     ... for FXVAO
-      IF (DFT_SPINDNS)  NDMAT = NDMAT + MOSIM
+      IF (SRDFT_SPINDNS)  NDMAT = NDMAT + MOSIM
 C     ... for FXSAO
 
-      IF (DOMCSRDFT)    NDMAT = NDMAT + MCSIM
+      IF (DOMCSRDFT)      NDMAT = NDMAT + MCSIM
 C     ... for MCSRDFT we also need "FTCAO" with sr-dft contribution
 C         from transition density matrix DTV
-                        NDMAT = NDMAT + MCSIM
+                          NDMAT = NDMAT + MCSIM
 C     ... for FTVAO (note that NCSIM .eq. 0 if NASHT .eq. 0)
-      IF (DFT_SPINDNS)  NDMAT = NDMAT + MCSIM
+      IF (SRDFT_SPINDNS)  NDMAT = NDMAT + MCSIM
 C     ... for FTSAO
 
       LDFAO  = 2*NDMAT*N2BASX ! Length for all Dmat and Fmat in AO basis
-      IF (DODFT .OR. DOHFSRDFT .OR. DOMCSRDFT) THEN
+      IF (DOHFSRDFT .OR. DOMCSRDFT) THEN
 C     ... allocate for DTOTAO and DXTOTAO for DFTADD calls in SIRFCK
          LDAO_DFT  = 2*N2BASX
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             LDAO_DFT = LDAO_DFT + 2*N2BASX ! for DSAO and DXSAO
          END IF
          LSRAO = 0
          IF (SRHYBR .AND. .NOT.DOHFSRDFT) THEN
-            IF (DFT_SPINDNS)
-     &      CALL QUIT('SRHYBF and DFT_SPINDNS not compatible')
+            IF (SRDFT_SPINDNS)
+     &      CALL QUIT('SRHYBF and SRDFT_SPINDNS not compatible')
             LDAO_DFT = LDAO_DFT + 2*N2BASX
             LSRAO = N2BASX
          END IF
@@ -642,7 +623,7 @@ C            but we need it for SRDFT to handle the DFT part
       END IF
       IF (NASHT .GT. 0) THEN
          KDXSAO = KDXVAO + MOSIM*N2BASX
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KDTCAO = KDXSAO + MOSIM*N2BASX
          ELSE
             KDTCAO = KDXSAO
@@ -653,7 +634,7 @@ C            but we need it for SRDFT to handle the DFT part
             KDTVAO = KDTCAO
          END IF
          KDTSAO = KDTVAO + MCSIM*N2BASX
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KDAO   = KDTSAO + MCSIM*N2BASX
          ELSE
             KDAO   = KDTSAO
@@ -674,7 +655,7 @@ C            but we need it for SRDFT to handle the DFT part
       END IF
       IF (NASHT .GT. 0) THEN
          KFXSAO = KFXVAO + MOSIM*N2BASX
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KFTCAO = KFXSAO + MOSIM*N2BASX
          ELSE
             KFTCAO = KFXSAO
@@ -685,7 +666,7 @@ C            but we need it for SRDFT to handle the DFT part
             KFTVAO = KFTCAO
          END IF
          KFTSAO = KFTVAO + MCSIM*N2BASX
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KFSCR  = KFTSAO + MCSIM*N2BASX
          ELSE
             KFSCR  = KFTSAO
@@ -698,10 +679,10 @@ C            but we need it for SRDFT to handle the DFT part
          KFSCR  = KFTVAO
       END IF
 C
-C     If this is DFT (i.e. LDAO_DFT .gt. 0) then we must
+C     If this is srDFT (i.e. LDAO_DFT .gt. 0) then we must
 C     get DTOTAO = DCAO + DVAO in WRK(KDAO) for SIRFCK
 C     DFT call with DOATR .true. /Nov 2003
-C     If (DFT_SPINDNS) then FCKDEN returns DSAO in DVAO(1,2) = WRK(KDAO+2*N2BASX)
+C     If (SRDFT_SPINDNS) then FCKDEN returns DSAO in DVAO(1,2) = WRK(KDAO+2*N2BASX)
 C
       IF (LDAO_DFT .GT. 0) THEN
          CALL FCKDEN(.TRUE.,(NASHT.GT.0),WRK(KDAO),
@@ -718,6 +699,7 @@ C
          ! to get the correct off-sets inside SIRFCK if both configuration and orbital trial vectors
          ! in SIRFCK call. The SIRFCK routine needs to be cleaned up! (But that takes too long time for me for now.)
          IF (NCSIM .GT. 0) THEN
+         ! density matrices: NOSIM dmat, NCSIM dmat, DAO for srDFT
             CALL TR1FCY(DIRFCK,NCSIM,0,FXC,FXV,FTV,
      *            UBO,CMO,DV,DTV,
      *            WRK(KDXCAO),WRK(KDXVAO),WRK(KDTCAO), ! if not MC-srDFT then KDTCAO = KDTVAO
@@ -726,6 +708,8 @@ C
          END IF
          IF (NOSIM .GT. 0) THEN
             IF (NCSIM .GT. 0) THEN
+            ! density matrices: NOSIM dmat, NCSIM dmat, DAO for srDFT, but SIRFCK expects
+            ! NOSIM dmat, DAO for srDFT; therefore we must copy the DAO for srDFT matrices
                KDAO_new = KDTCAO
                CALL DCOPY(LDAO_DFT,WRK(KDAO),1,WRK(KDAO_new),1)
             END IF
@@ -814,7 +798,7 @@ C   INFVAR : JWOPSY
 C   INFLIN : IPRLIN
 C   INFDIM : NBASMA,?
 C   INFTAP : LUSUPM
-C   DFTCOM : DFT_SPINDNS, ?
+C   DFTCOM : SRDFT_SPINDNS, ?
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -837,19 +821,15 @@ C
 #include "idbg.h"
 #endif
 
-#ifdef FOR_THE_FUTURE
-c  this is a hack, to transfer KSYMOP to DEQ27 inside DFTATR
-#include "wrkrsp.h"
-#endif
 C
       CALL QENTER('TR1FCY')
       KFRSAV = KFREE
-      IF (DFT_SPINDNS .AND. (NOSIM .GT. 1 .OR. NCSIM .GT. 1)) THEN
+      IF (SRDFT_SPINDNS .AND. (NOSIM .GT. 1 .OR. NCSIM .GT. 1)) THEN
       ! hjaaj 17-Oct-2016: TR1DEN is called for each IOSIM below
       ! which overwrites DXSAO from IOSIM.eq.1 when IOSIM.eq.2 etc.
       ! Analogous problem for FCKDEN calls below in ICSIM loop.
          CALL QUIT(
-     &      'TR1FCY: DFT_SPINDNS not implemented for >1 trial vector')
+     &      'TR1FCY: SRDFT_SPINDNS not implemented for >1 trial vector')
       END IF
 C
 C *** Prepare for reading LUSUPM by constructing ao density
@@ -876,7 +856,7 @@ C
             WRITE (LUPRI,2020) IOSIM,NOSIM
             CALL OUTPUT(DXVAO(1,IOSIM),1,NBAST,1,NBAST,NBAST,NBAST,
      &         -1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE (LUPRI,2021) IOSIM,NOSIM
                CALL OUTPUT(DXVAO(1,NOSIM+IOSIM),1,NBAST,1,NBAST,
      &            NBAST,NBAST,-1,LUPRI)
@@ -917,7 +897,7 @@ C
                WRITE (LUPRI,2030) ICSIM,NCSIM
                CALL OUTPUT(DTVAO(1,IOFF_DTVAO+ICSIM),1,NBAST,1,NBAST,
      &                     NBAST,NBAST,-1,LUPRI)
-               IF (DFT_SPINDNS) THEN
+               IF (SRDFT_SPINDNS) THEN
                   WRITE (LUPRI,2031) ICSIM,NCSIM
                   CALL OUTPUT(DTVAO(1,IOFF_DTVAO+NCSIM+ICSIM),
      &                     1,NBAST,1,NBAST,NBAST,NBAST,-1,LUPRI)
@@ -978,7 +958,7 @@ C     ... for FXVAO :
             NDMAT = NDMAT + MOSIM
          END IF
 C     ... for FXSAO :
-         IF (DFT_SPINDNS ) THEN
+         IF (SRDFT_SPINDNS ) THEN
             IFCTYP(NDMAT+1:NDMAT+MOSIM) = IFCTYP_SPINDNS
             NDMAT = NDMAT + MOSIM
          END IF
@@ -998,7 +978,7 @@ C          to signal only SOVECS wanted) :
          IFCTYP(NDMAT+1:NDMAT+MCSIM) = IFCTYP_TR1
          NDMAT = NDMAT + MCSIM
 C     ... for FTSAO :
-         IF (DFT_SPINDNS ) THEN
+         IF (SRDFT_SPINDNS ) THEN
             IFCTYP(NDMAT+1:NDMAT+MCSIM) = IFCTYP_SPINDNS
             NDMAT = NDMAT + MCSIM
          END IF
@@ -1031,7 +1011,7 @@ C        CALL RDSUPM(NSIM,FMAT,DMAT,ISYMDM,WORK,LFREE)
       ELSE
 
          DFTADX = DFTADD
-         DFTADD = .FALSE.
+         DFTADD = .FALSE. ! second order Vxc
 C        ... Note : (.NOT.DFTADD) now tricks second order 
 C                   DFT contributions in SIRFCK /mc-srdft work
 C        ... if (AODRCT) construct Fock matrix directly
@@ -1071,21 +1051,6 @@ C            IFCTYP = 13 : singlet Fock matrix and DUNP symmetric
 
       END IF ! (NDMAT .GT. 0)
 
-#ifdef FOR_THE_FUTURE
-C
-C add DFT contribution in AO BASIS
-C
-      call quit(' sss ')
-      IF (DFTADD) THEN
-         IF (NASHT.GT.0) CALL QUIT('TR1FCY: open shell DFT not yet')
-c           TODO         DFTIMG = .FALSE.
-C           DXCAO contains effective
-            CALL DFTATR_new_in_ao(NDMAT,FXCAO,DXCAO,CMO,.FALSE.,
-     &                    JWOPSY,WRK(KFREE),LFREE)
-c-rsp       CALL DFTATR(FCONE(1,1,IOSIM),CMO,ZYMAT(1,IOSIM),TRPLET,
-c-rsp&                    KSYMOP,WRK(KWRK0),LFREE)
-      END IF      
-#endif
 C
 C
       IF (P6FLAG(24) .OR. IPRLIN.GE.24) THEN
@@ -1103,7 +1068,7 @@ C
           WRITE (LUPRI,3030) ICSIM,NCSIM
           CALL OUTPUT(FTVAO(1,ICOFF+ICSIM),1,NBAST,1,NBAST,
      &                NBAST,NBAST,-1,LUPRI)
-          IF (DFT_SPINDNS) THEN
+          IF (SRDFT_SPINDNS) THEN
             WRITE (LUPRI,3032) ICSIM,NCSIM
             CALL OUTPUT(FTVAO(1,ICOFF+NCSIM+ICSIM),1,NBAST,1,NBAST,
      &                  NBAST,NBAST,-1,LUPRI)
@@ -1119,11 +1084,11 @@ C
             WRITE (LUPRI,3020) IOSIM,NOSIM
             CALL OUTPUT(FXVAO(1,IOSIM),1,NBAST,1,NBAST,
      &                  NBAST,NBAST,-1,LUPRI)
-           IF (DFT_SPINDNS) THEN
+           IF (SRDFT_SPINDNS) THEN
             WRITE (LUPRI,3022) IOSIM,NOSIM
             CALL OUTPUT(FXVAO(1,NOSIM+IOSIM),1,NBAST,1,NBAST,
      &                  NBAST,NBAST,-1,LUPRI)
-           END IF ! DFT_SPINDNS
+           END IF ! SRDFT_SPINDNS
           END IF ! NASHT .gt. 0
   215   CONTINUE
       END IF
@@ -1171,7 +1136,7 @@ C
      &                 FTV(1,JCSIM),NORB,NORBT, WRK(KFREE),LFREE)
 C           CALL AUTPV(ISYM,JSYM,U,V,PRPAO,NBAS,NBAST,PRPMO,NORB,NORBT,
 C    &                 WRK,LWRK)
-           IF (DFT_SPINDNS .AND. ICSIM .LE. NCSIM) THEN ! FTS
+           IF (SRDFT_SPINDNS .AND. ICSIM .LE. NCSIM) THEN ! FTS
             CALL AUTPV(ISYM,JSYM,CMO(ICMO(ISYM)+1),CMO(ICMO(JSYM)+1),
      &                 FTVAO(1,2*NCSIM+ICSIM),NBAS,NBAST,
      &                 FTV(1,NCSIM+JCSIM),NORB,NORBT, WRK(KFREE),LFREE)
@@ -1206,7 +1171,7 @@ C
      &                    FXVAO(1,IOSIM),NBAS,NBAST,
      &                    FXV(1,IOSIM),NORB,NORBT,
      &                    WRK(KFREE),LFREE)
-             IF (DFT_SPINDNS) THEN
+             IF (SRDFT_SPINDNS) THEN
                CALL AUTPV(ISYM,JSYM,CMO(ICMO(ISYM)+1),CMO(ICMO(JSYM)+1),
      &                    FXVAO(1,NOSIM+IOSIM),NBAS,NBAST,
      &                    FXV(1,NOSIM+IOSIM),NORB,NORBT,
@@ -1215,39 +1180,10 @@ C
             END IF
   300    CONTINUE
 C
-#if 0 && !defined(FOR_THE_FUTURE)
-C
-C     add DFT contribution in MO BASIS, this has been deprecated by
-c        the call in sirlintrn.F
-C
-      IF (DODFT .AND. .NOT. MOLHES) THEN
-         IF (NASHT.GT.0) CALL QUIT('TR1FCY: open shell DFT not yet')
-c        TODO         DFTIMG = .FALSE.
-         ksymop = jwopsy
-         call dft_lin_respf(1,fxc(1,1),cmo,ubo(1,1),.FALSE.,
-     &                      jwopsy,wrk(kfree),lfree,iprdft)
-c         CALL DFTATR(FXC(1,1),CMO,UBO(1,1),.false.,
-c                     JWOPSY,WRK(KFREE),LFREE)
-      END IF      
-#endif
        IF (SRHYBR .AND. MCTYPE.GT.0) THEN
 C hjaaj TODO
           WRITE(LUPRI,*) 'WARNING> SRHYBR_XV matrix missing!'
        END IF
-#ifdef FOR_THE_PAST
-C ... we have moved this to SIRFCK 26.nov.2003 jkp+hjaaj
-C
-C     add DFT contribution in MO BASIS
-C
-      IF (DFTADD) THEN
-         DFTIMG = .FALSE.
-         ksymop = jwopsy
-         CALL DFTATR(FXC(1,IOSIM),CMO,DV,UBO(1,IOSIM),.false.,
-     &               JWOPSY,WRK(KFREE),LFREE)
-c-rsp    CALL DFTATR(FCONE(1,1,IOSIM),CMO,ZYMAT(1,IOSIM),TRPLET,
-c-rsp&               KSYMOP,WRK(KWRK0),LFREE)
-      END IF
-#endif
  5900 CONTINUE
 C
 C *** End of subroutine TR1FCY
@@ -1277,7 +1213,7 @@ C Used from common blocks:
 C   INFORB : N2ORBX,N2BASX,NNASHX
 C   INFLIN : IPRLIN
 C   INFPRI : P6FLAG(*)
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "priunit.h"
 #include "inforb.h"
@@ -1304,7 +1240,7 @@ C
          CALL MEMGET('REAL',KFV  ,N2ORBX,WRK,KFREE,LFREE)
          CALL PKSYM1(WRK(KFTMP),FV,NORB,NSYM,-1)
          CALL DSPTSI(NORBT,WRK(KFTMP),WRK(KFV))
-        IF (DFT_SPINDNS) THEN
+        IF (SRDFT_SPINDNS) THEN
          CALL MEMGET('REAL',KFS  ,N2ORBX,WRK,KFREE,LFREE)
          CALL PKSYM1(WRK(KFTMP),FV(1,2),NORB,NSYM,-1)
          CALL DSPTSI(NORBT,WRK(KFTMP),WRK(KFS))
@@ -1320,7 +1256,7 @@ C        ... to avoid compiler messages
          CALL TR1UH1(UBO(1,IOSIM),WRK(KFC),FXC(1,IOSIM),1)
          IF (NASHT .GT. 0) THEN
             CALL TR1UH1(UBO(1,IOSIM),WRK(KFV),FXV(1,IOSIM),1)
-           IF (DFT_SPINDNS) THEN
+           IF (SRDFT_SPINDNS) THEN
             CALL TR1UH1(UBO(1,IOSIM),WRK(KFS),FXV(1,NOSIM+IOSIM),1)
            END IF
          END IF
@@ -1333,7 +1269,7 @@ C
                WRITE (LUPRI,5030) IOSIM,NOSIM
                CALL OUTPUT(FXV(1,IOSIM),1,NORBT,1,NORBT,
      &                     NORBT,NORBT,1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE (LUPRI,5040) IOSIM,NOSIM
                CALL OUTPUT(FXV(1,NOSIM+IOSIM),1,NORBT,1,NORBT,
      &                     NORBT,NORBT,1,LUPRI)

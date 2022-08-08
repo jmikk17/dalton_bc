@@ -70,7 +70,7 @@ C
 C Used from common blocks:
 C inftra.h : USEDRC
 C infinp.h : ?
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -138,7 +138,7 @@ C Read **RESPONS input
 C
       CALL RSPREA
 
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          WRITE(LUPRI,'(A)') ' using spin-density in srDFT part'
          NDV = 2 ! DV,DS and FV,FS
       ELSE
@@ -409,7 +409,7 @@ C
             WRITE(LUPRI,'(/A)')
      &           ' ***** ONE BODY DENSITY MATRIX from SIRIFC file'
             CALL OUTPUT(WRK(KUDV),1,NASHT,1,NASHT,NASHT,NASHT,-1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE(LUPRI,'(/A)')
      &           ' ***** ONE BODY spin DENSITY MATRIX from SIRIFC file'
                CALL OUTPUT(WRK(KUDV+N2ASHX),1,NASHT,1,NASHT,
@@ -472,8 +472,8 @@ C
       CALL AVEPRP(WRK(KCMO),WRK(KUDV),WRK(KPVX),WRK(KTOT),LFREE)
       CALL FLSHFO(LUPRI)
 
-      IF (DFT_SPINDNS) THEN
-         CALL QUIT('DFT_SPINDNS not implemented in **RESPONS')
+      IF (SRDFT_SPINDNS) THEN
+         CALL QUIT('SRDFT_SPINDNS not implemented in **RESPONS')
       END IF
 
 C     Call ZFS (Zero-Field Splitting) submodule
@@ -2861,7 +2861,7 @@ C    Used from common blocks:
 C    gnrinf.h : DIRCAL
 C    infinp.h : SUPSYM, ISPIN, DIRFCK, DOHFSRDFT, DOMCSRDFT
 C    inforb.h : NSYM, NSSYM
-C    dftcom.h : DFT_SPINDNS
+C    dftcom.h : SRDFT_SPINDNS
 C
 #include "implicit.h"
 C
@@ -2897,13 +2897,13 @@ C
          DIRFCK = .TRUE.
       END IF
       END IF
-      IF (DFT_SPINDNS .AND. ISPIN .EQ. 1) THEN
-      ! May2018: DFT_SPINDNS may be true for singlet reference and triplet response
+      IF (SRDFT_SPINDNS .AND. ISPIN .EQ. 1) THEN
+      ! May2018: SRDFT_SPINDNS may be true for singlet reference and triplet response
       ! in current srDFT implementation (spin version of functionals is needed
       ! for triplet response).
          WRITE(LUPRI,'(/A)')
-     &     'srDFT INFO: DFT_SPINDNS set to false for singlet reference.'
-         DFT_SPINDNS = .FALSE.
+     &   'srDFT INFO: SRDFT_SPINDNS set to false for singlet reference.'
+         SRDFT_SPINDNS = .FALSE.
       END IF
 C
 C ****** Used unit names: ******
@@ -4374,13 +4374,13 @@ C
      &              MCDETS,MCMOT,MNASHX,MNASHY,MNORBT,M2ORBT,
      &              (IDUM,I=1,NDUM),MCTYPE_IFC
       IF (MCTYPE_IFC .GT. 900) THEN
-         IF ( (.NOT. DFT_SPINDNS) .AND. ISPIN .NE. 1 ) THEN
+         IF ( (.NOT. SRDFT_SPINDNS) .AND. ISPIN .NE. 1 ) THEN
             CALL QUIT('ERROR in RSPMC:'//
-     &      'DFT_SPINDNS true on SIRIFC, but not in input')
+     &      'SRDFT_SPINDNS true on SIRIFC, but not in input')
          END IF
          MCTYPE_IFC = MCTYPE_IFC - 1000
       END IF
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2 ! DV and DS
       ELSE
          NDV = 1 ! DV
@@ -4535,7 +4535,7 @@ C
 C        read and unpack DV
          CALL READT (LUSIFC,NDV*NNASHX,WRK(KDV))
          CALL DSPTSI(NASHT,WRK(KDV),UDV)
-         IF (DFT_SPINDNS) CALL DSPTSI(NASHT,WRK(KDV+NNASHX),UDV(1,2))
+         IF (SRDFT_SPINDNS) CALL DSPTSI(NASHT,WRK(KDV+NNASHX),UDV(1,2))
          IF (.NOT.RSPCI) THEN
             CALL READT (LUSIFC,N2ORBT,FOCK)
             IF (HSROHF) THEN
@@ -4649,8 +4649,8 @@ C
             CALL OUTPUT(PV,1,2,1,LPVMAT,2,LPVMAT,-1,LUPRI)
          END IF
 C
-         IF (DFT_SPINDNS) THEN
-            CALL QUIT('DFT_SPINDNS not implemented for SOPPA')
+         IF (SRDFT_SPINDNS) THEN
+            CALL QUIT('SRDFT_SPINDNS not implemented for SOPPA')
          END IF
          CALL READT (LUSIFC,NACTT*NACTT,UDV)
 C

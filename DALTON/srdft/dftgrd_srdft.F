@@ -474,7 +474,7 @@ C
 C        Write to file LUQUAD
 C        ====================
 C
-         CALL WRTQUA_OLD(X8,Y8,Z8,WT8,LUQUAD,NTHIS)
+         CALL WRTQUA_srdft(X8,Y8,Z8,WT8,LUQUAD,NTHIS)
          NTOTAL = NTOTAL + NTHIS
          NALL = NALL + NTHAT
          NATOM = NATOM + NDEG
@@ -485,7 +485,7 @@ C
 15    CONTINUE
 
       NLAST = -1
-      CALL WRTQUA_OLD(X8,Y8,Z8,WT8,LUQUAD,NLAST)
+      CALL WRTQUA_srdft(X8,Y8,Z8,WT8,LUQUAD,NLAST)
 
       WRITE (LUPRI,'(/,2X,A,I10,A,F5.1,A/)') 
      &     ' Number of grid points in quadrature:',NTOTAL,
@@ -500,7 +500,7 @@ C
 
 
 C*****************************************************************************
-      SUBROUTINE WRTQUA_OLD(X,Y,Z,WT,LUQUAD,NPOINT)
+      SUBROUTINE WRTQUA_srdft(X,Y,Z,WT,LUQUAD,NPOINT)
 C*****************************************************************************
 C
 C     T. Helgaker
@@ -515,7 +515,7 @@ C*****************************************************************************
 
 
 C*****************************************************************************
-      SUBROUTINE REAQUA_OLD(X,Y,Z,WT,LUQUAD,NPOINT)
+      SUBROUTINE REAQUA_srdft(X,Y,Z,WT,LUQUAD,NPOINT)
 C*****************************************************************************
 C
 C     T. Helgaker

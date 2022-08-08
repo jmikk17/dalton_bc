@@ -222,7 +222,7 @@ C.. 1.1.1 .. (GETCIX, TRACTL, READMO)
       KWRK10 = KCMO   + NCMOT
       LWRK10 = LFREE  + 1 - KWRK10
 C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2
       ELSE
          NDV = 1
@@ -234,7 +234,7 @@ C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
       KFV    = KFC    + NNORBT
 !HJJ - FRAN KFS added for the SR_DFT Spin Dens. contribution
       KFS    = KFV    + NNORBT
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KSRHYB = KFS + NNORBT
       ELSE
          KSRHYB = KFS
@@ -246,7 +246,7 @@ C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
          KFQ = KSRHYB
       END IF
       KFCAC  = KFQ    + NASHT*NORBT
-      KCREF  = KFCAC  + NDV*NNASHX ! FCAC, FSAC for DFT_SPINDNS
+      KCREF  = KFCAC  + NDV*NNASHX ! FCAC, FSAC for SRDFT_SPINDNS
       KH2AC  = KCREF  + NCONF
       KWRK12 = KH2AC  + NNASHX*NNASHX
 C.. 1.2.1 .. (GRAD,SOLGRD,WR_SIRIFC)
@@ -1620,7 +1620,7 @@ C
 C *** Local variables:
 C
       LOGICAL     HFCALC,    RSTFLG(4), TRCNO,     LSAV15
-      LOGICAL     DFT_SPINDNS_SAVE, DFT_LOCALSPIN_SAVE
+      LOGICAL     SRDFT_SPINDNS_SAVE, SRDFT_LOCALSPIN_SAVE
       CHARACTER*8 TABLE(8),  LBLINF(2), LBLDAT(2), STAR8
       CHARACTER*6 CNOLBL
 C
@@ -1839,14 +1839,14 @@ C
          IF (DOMCSRDFT) THEN
             ADDSRI    = .FALSE.
             DOCISRDFT = .TRUE.
-            IF (DFT_SPINDNS .OR. DFT_LOCALSPIN)THEN
+            IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN)THEN
                WRITE(LUPRI,'(/A)')
      &           'INFO : spin density ignored in initial CI iterations.'
             END IF
-            DFT_SPINDNS_SAVE = DFT_SPINDNS
-            DFT_SPINDNS = .FALSE.
-            DFT_LOCALSPIN_SAVE = DFT_LOCALSPIN
-            DFT_LOCALSPIN = .FALSE.
+            SRDFT_SPINDNS_SAVE = SRDFT_SPINDNS
+            SRDFT_SPINDNS = .FALSE.
+            SRDFT_LOCALSPIN_SAVE = SRDFT_LOCALSPIN
+            SRDFT_LOCALSPIN = .FALSE.
          END IF
          CALL CICTL(1,LROOTS,MAXCIT,THRCIX,WRK(KCMO),INDXCI,
      *              WRK(KECI),ICONV,WRK(KICROO),WRK(KW22),LW22)
@@ -1855,8 +1855,8 @@ C    *              ECI,ICONV,ICROOT,WRK,LFREE)
          IF (DOMCSRDFT) THEN
             ADDSRI    = .TRUE.
             DOCISRDFT = .FALSE.
-            DFT_SPINDNS   = DFT_SPINDNS_SAVE
-            DFT_LOCALSPIN = DFT_LOCALSPIN_SAVE
+            SRDFT_SPINDNS   = SRDFT_SPINDNS_SAVE
+            SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_SAVE
          END IF
          FLAG(15) = LSAV15
          ISTACI   = ISTASV
@@ -2679,7 +2679,7 @@ C   INFPRI : ?
 C CBGETDIS : IADH2
 C   CBIREA : LMULBS
 C   R12INT : R12CAL
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -2737,7 +2737,7 @@ C
 C
 C     Calculate Fock matrix
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2 ! DV in DV(:,1) and DS in DV(:,2)
       ELSE
          NDV = 1 ! only DV
@@ -2818,7 +2818,7 @@ C        active-general
      &                 WRK(JFCI),NORBI,0.D0,
      &                 WRK(IFOCKJ),NORBI)
 
-            IF (DFT_SPINDNS) THEN ! add FS contribution
+            IF (SRDFT_SPINDNS) THEN ! add FS contribution
                JUDV = JUDV + N2ASHX ! address for DS
                CALL DSPTSI(NORBI,FV(1+IIORB(ISYM),2),WRK(KFCI))
                CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
@@ -2883,7 +2883,7 @@ C
       ELSE
          MCTYPE_IFC = MCTYPE
       END IF
-      IF (DFT_SPINDNS) MCTYPE_IFC = MCTYPE_IFC + 1000
+      IF (SRDFT_SPINDNS) MCTYPE_IFC = MCTYPE_IFC + 1000
       WRITE (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,NWOPH,
      &               NCDETS, NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT,
      &               NSYM,MULD2H, NRHF,NFRO,
@@ -2893,7 +2893,7 @@ C
 C
 C 880920-hjaaj: later write label here for orbitals
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2  ! DV, DS; singlet and triplet active density matrices
       ELSE
          NDV = 1
@@ -3396,7 +3396,7 @@ C
 #include "infinp.h"
 #include "pgroup.h"
 
-! debug DFT_SPINDNS
+! debug SRDFT_SPINDNS
 #include "dftcom.h"
 
       REAL*8, DIMENSION(N2ORBT), INTENT(IN)  :: V  ! symmetry packed
@@ -3470,7 +3470,7 @@ C
          write(lupri,'(/A)')
      &      'Metric = Active density matrix DV input sirekt'
          call outpak(S,nasht,-1,lupri)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             WRITE(lupri,"(/A)") 'spin-density DS input sirekt :'
             call outpak(S(NNASHX+1),NASHT,-1,LUPRI)
          END IF
