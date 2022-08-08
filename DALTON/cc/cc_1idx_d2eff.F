@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -55,17 +55,10 @@ C
 
       INTEGER ISYMG, ISYMD, ISYMQ, ICON
 
-#if defined (SYS_CRAY)
-      REAL BAODEN(*)
-      REAL DHFAO(*),  B1DHFAO(*), B2DHFAO(*)
-      REAL ZKABAO(*), B1KABAO(*), B2KABAO(*)
-      REAL ONE, HALF, TWO, ZERO, FACI, FAC1, FAC2
-#else
       DOUBLE PRECISION BAODEN(*)
       DOUBLE PRECISION DHFAO(*),  B1DHFAO(*), B2DHFAO(*)
       DOUBLE PRECISION ZKABAO(*), B1KABAO(*), B2KABAO(*)
       DOUBLE PRECISION ONE, HALF, TWO, ZERO, FACI, FAC1, FAC2
-#endif
       PARAMETER(HALF=0.5D0, ONE=1.0D0, ZERO=0.0D0, TWO=2.0D0)
 
       INTEGER KOFFGD, KOFFAB, KOFFAD, KOFFGB, ISYMA, ISYMB

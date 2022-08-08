@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -69,15 +69,9 @@ C
 
       INTEGER IOPT, ISYMQ, IREAL, LWORK
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-      REAL XLAMDPQ(*), XLAMDHQ(*), CMOPQ(*), CMOHQ(*), T1AMP0(*)
-      REAL XKAPPA(*), RMAT(*), WORK(LWORK) 
-#else
       DOUBLE PRECISION ONE, ZERO
       DOUBLE PRECISION XLAMDPQ(*),XLAMDHQ(*),CMOPQ(*),CMOHQ(*),T1AMP0(*)
       DOUBLE PRECISION XKAPPA(*), RMAT(*), WORK(LWORK) 
-#endif
       PARAMETER(ONE=1.0D0, ZERO=0.0D0)
 
       LOGICAL NOKAPPA

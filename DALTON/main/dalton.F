@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -250,7 +250,7 @@ C
      &'   O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski',
      &'   and H. Agren,',
      &'   "The Dalton quantum chemistry program system",',
-     &'   WIREs Comput. Mol. Sci. 2014, 4:269–284 '//
+     &'   WIREs Comput. Mol. Sci. 2014, 4:269-284 '//
      &    '(doi: 10.1002/wcms.1172)',
      &' ',
      &'and',
@@ -344,9 +344,9 @@ C
      &  '(Triplet AO-SOPPA)',
      *'Maria Francesca Iozzi,','University of Oslo,','Norway',
      &  '(RPA)',
-     *'Christoph Jacob','TU Braunschweig','Germany',
+     *'Christoph Jacob,','TU Braunschweig','Germany',
      &  '(Frozen density embedding)',
-     *'Brano Jansik','Technical Univ. of Ostrava','Czech Rep.',
+     *'Brano Jansik,','Technical Univ. of Ostrava','Czech Rep.',
      &  '(DFT cubic response)',
      *'Hans Joergen Aa. Jensen,','Univ. of Southern Denmark,','Denmark',
      &  '(DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)'
@@ -376,7 +376,7 @@ C
      &  '(Polarizable embedding, polarizable density embedding, QM/MM)',
      *'Andrea Ligabue,','University of Modena,','Italy',
      &  '(CTOCD, AOSOPPA)',
-     *'Nanna H. List','Univ. of Southern Denmark,','Denmark',
+     *'Nanna H. List,','Univ. of Southern Denmark,','Denmark',
      &  '(Polarizable embedding)',
      *'Ola B. Lutnaes,','University of Oslo,','Norway',
      &  '(DFT Hessian)',
@@ -420,7 +420,7 @@ C
      &  '(DALTON; ABACUS magnetic properties and much more)',
      *'Pawel Salek,','KTH Stockholm,','Sweden',
      &  '(DALTON; DFT code)',
-     *'Claire C. M. Samson','University of Karlsruhe','Germany',
+     *'Claire C. M. Samson,','University of Karlsruhe','Germany',
      &  '(Boys localization, r12 integrals in ERI)',
      *'Alfredo Sanchez de Meras,','University of Valencia,','Spain',
      &  '(CC module, Cholesky decomposition)',

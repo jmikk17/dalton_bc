@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -3812,12 +3812,13 @@ C
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
 
+C           Calculate nuclear dipole moment with origin (0,0,0)
             IF (ISYMAX(1,1) .EQ. 0) DIPNUC(1) = DIPNUC(1)
-     &         + (CORD(1,N) - DIPORG(1))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(2,1) .EQ. 0) DIPNUC(2) = DIPNUC(2)
-     &         + (CORD(2,N) - DIPORG(2))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(3,1) .EQ. 0) DIPNUC(3) = DIPNUC(3)
-     &         + (CORD(3,N) - DIPORG(3))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
 
          END IF
          II = 0
@@ -4436,13 +4437,11 @@ C
 C
       REWIND(LUCMD)
       DO WHILE (.NOT. FNDEOI)
-         READ(LUCMD,'(A7)') TMPWRD
+         READ(LUCMD,'(A7)',END=100) TMPWRD
+            ! exit with go to 100 if *CHOACT has not been found before end of file
          CALL UPCASE(TMPWRD)
          IF (TMPWRD(1:7) .EQ. '*CHOACT') THEN
             ACTSEL = .TRUE.
-            FNDEOI = .TRUE.
-         ELSE IF ((TMPWRD(1:7) .EQ. '*END OF') .OR.
-     &            (TMPWRD(1:7) .EQ. '**END O')) THEN
             FNDEOI = .TRUE.
          END IF
       END DO

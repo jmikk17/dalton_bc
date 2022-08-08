@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -40,11 +40,7 @@ C
       CHARACTER*(1) TRANS
       INTEGER ISYKAP
 
-#if defined (SYS_CRAY)
-      REAL KAPPASQ(*), KAPPA(*)
-#else
       DOUBLE PRECISION KAPPASQ(*), KAPPA(*)
-#endif
 
       INTEGER ISYMA, ISYMI, IORBA, IORBI, KKIA, KKAI, KSAI, KSIA
 

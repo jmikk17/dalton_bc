@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -77,11 +77,7 @@ C-----------------------------------------------------------------------
       integer luvxint
       integer kappa,beta,ienddelta,istartdelta
 
-#if defined (SYS_CRAY)
-      real zero,one,work(*),fac,ddot,time,dummy
-#else
       double precision zero,one,work(*),fac,ddot,time,dummy
-#endif
       parameter (zero = 0.0D0, one = 1.0D0, dummy = -1.23D45)
       data lab123/'********','********','********'/
 
@@ -841,12 +837,8 @@ C-----------------------------------------------------------------------
       integer ierr,iprp,imatrix,iopt
       integer luvxint
 
-#if defined (SYS_CRAY)
-      real zero,one,work(*),rpkql(*),fac,ddot,time,dummy
-#else
       double precision zero,one,work(*),rpkql(*),fac,ddot,
      &   time,dummy
-#endif
       parameter (zero = 0.0D0, one = 1.0D0, dummy = -1.23D45)
       data lab123/'********','********','********'/
 
@@ -1370,11 +1362,7 @@ C----------------------------------------------------------------------
       logical locdbg 
       parameter(locdbg = .false.)
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (one = 1.0d0)
 
       integer isymxi,isymv,isymc
@@ -1382,13 +1370,8 @@ C----------------------------------------------------------------------
       integer lwork,kend1,lwrk1
       character*1 trv,trxi !allowed are 'N' and 'T'
 
-#if defined (SYS_CRAY)
-      real xir12(*),tr12(*),xint(*),vxint(*),prpao(*),lamh(*),
-     &     cmo(*),work(*)
-#else
       double precision xir12(*),tr12(*),xint(*),vxint(*),prpao(*),
      &                 lamh(*),cmo(*),work(*)
-#endif
 
       call qenter('cc_r12xi')
 
@@ -1475,11 +1458,7 @@ C----------------------------------------------------------------------
       logical locdbg 
       parameter(locdbg = .false.)
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer isymvc,isymv,isymij,isymkl,isymc,isymh,isym1,isym2,
@@ -1489,12 +1468,8 @@ C----------------------------------------------------------------------
       integer lwork,kend1,kend2,lwrk1,lwrk2
       character*1 trv !allowed are 'N' and 'T'
 
-#if defined (SYS_CRAY)
-      real vcint(*),tr12(*),prpao(*),lamh(*),cmo(*),work(*),ddot
-#else
       double precision vcint(*),tr12(*),prpao(*),lamh(*),cmo(*),work(*),
      &                 ddot
-#endif
 
       call qenter('cc_r12xi2a')
 
@@ -1731,22 +1706,14 @@ C----------------------------------------------------------------------
       logical locdbg
       parameter(locdbg = .false.)
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer isym1,isym2,isymmn,isymij,isymkl
       integer koff1,koff2,koffr
       character*1 tr1,tr2,trr
 
-#if defined (SYS_CRAY)
-      real result(*),mat1(*),mat2(*),fac,ddot
-#else
       double precision result(*),mat1(*),mat2(*),fac,ddot 
-#endif
 
       call qenter('cc_r12xi2b')
 
@@ -1947,11 +1914,7 @@ C----------------------------------------------------------------------
       logical locdbg
       parameter(locdbg = .false.)
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       character*8 labpt
@@ -1959,11 +1922,7 @@ C----------------------------------------------------------------------
       integer kvxint,kvxintsq,luvxint
       integer lwork,kend1,lwrk1,idum,iopt
 
-#if defined (SYS_CRAY)
-      real matrix(*),work(*),ff,ddot
-#else
       double precision matrix(*),work(*),ff,ddot
-#endif
 
       call qenter('cc_r12rdvxint')
 
@@ -2040,11 +1999,7 @@ C----------------------------------------------------------------------
       logical locdbg
       parameter(locdbg = .false.)
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       character*1 trans
@@ -2053,11 +2008,7 @@ C----------------------------------------------------------------------
       integer kscr1,kscr2,koff
       integer lwork,kend1,lwrk1,iopt
 
-#if defined (SYS_CRAY)
-      real work(*),matrix(*),dnrm2
-#else
       double precision work(*),matrix(*),dnrm2
-#endif
 
 
       call qenter('cc_r12pklij')
@@ -2166,11 +2117,7 @@ C----------------------------------------------------------------------
 #include "r12int.h"
 #include "ccr12int.h"
 
-#if defined (SYS_CRAY)
-      real zero,one,work(*)
-#else
       double precision zero,one,work(*)
-#endif
       parameter (zero = 0.0d0, one = 1.0d0)
 
       integer lwork, lwrk0, kend0
@@ -2289,11 +2236,7 @@ C-----------------------------------------------------------------------
       integer kvajkl,kvijkl,kend1,lwrk1
       integer lwork,luvajkl
       
-#if defined (SYS_CRAY)
-      real cmo(*),etar12sq(*),WORK(LWORK),one,two,ddot
-#else
       double precision cmo(*),etar12sq(*),WORK(LWORK),one,two,ddot
-#endif
 
       parameter (one = 1.0D0, two = 2.0D0)
 
@@ -2387,11 +2330,7 @@ C-----------------------------------------------------------------------
       ! external function:
       integer IRHSR1,ILSTSYM       
 
-#if defined (SYS_CRAY)
-      real work(*),propr12,ddot,one,diacont
-#else
       double precision work(*),propr12,ddot,one,diacont
-#endif
 
       parameter(one = 1.0D0)
 
@@ -2596,13 +2535,8 @@ C-----------------------------------------------------------------------
       integer lwork,kend1,kend2,lwrk1,lwrk2,kvint,kscr1,kscr2
       integer koffv,koffc,koffscr1,koffscr2,koffres,koffctr
 
-#if defined (SYS_CRAY)
-      real work(*),etaa(*),ctr12(*),tr12(*),xint(*),prpao(*),
-     &     lamdp(*),lamdh(*),zero,one
-#else
       double precision work(*),etaa(*),ctr12(*),tr12(*),xint(*),
      &                 prpao(*),lamdp(*),lamdh(*),zero,one
-#endif
 
       parameter(zero = 0.0D0, one = 1.0D0)
 
@@ -2874,11 +2808,7 @@ c----------------------------------------------------------------------
      &        isymxk,isymyl,xdimout
       integer idxkl,idxxk,idxyl,idxxkl,idxxkyl
       integer i,j,k,l,index
-#if defined (SYS_CRAY)
-      real rxkyl(*),rxkly(*)
-#else
       double precision rxkyl(*),rxkly(*)
-#endif
       index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 
       call qenter('cc_r12sort')
@@ -2976,11 +2906,7 @@ c----------------------------------------------------------------------
       integer kcmox,kend1,lwrk1,koffc,koff1,koff2,lwork
       logical locdbg
       parameter (locdbg=.FALSE.)
-#if defined (SYS_CRAY)
-      real cmo(*),work(*)
-#else
       double precision cmo(*),work(*)
-#endif
 
       call qenter('cc_r12cmo')
 C-----------------------------------------------------------------------

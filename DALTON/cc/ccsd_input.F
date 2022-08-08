@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -2502,11 +2502,7 @@ C=====================================================================*
       INTEGER IXSYM, IXSTATE, IXSYM2, IXSTATE2, IJUMP
       INTEGER INDPRP_CC, MSYM, I, J
 
-#if defined (SYS_CRAY)
-      REAL SMFREQ
-#else
       DOUBLE PRECISION SMFREQ
-#endif
 
 * data:
       DATA SETGSTOPA /.FALSE./
@@ -4461,11 +4457,7 @@ CTOCD
       INTEGER NTABLE
       PARAMETER (NTABLE = 25)
 
-#if defined (SYS_CRAY)
-      REAL ZERO, TOLFRQ
-#else
       DOUBLE PRECISION ZERO, TOLFRQ
-#endif
       PARAMETER (ZERO = 0.0d00)
       PARAMETER (TOLFRQ = 1.0D-09)
 
@@ -5273,11 +5265,7 @@ c /* deck cc_qrinp */
       INTEGER NTABLE
       PARAMETER (NTABLE = 20)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -5867,11 +5855,7 @@ C#include "ccrspprp.h"
       INTEGER NTABLE
       PARAMETER (NTABLE = 20)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -6566,11 +6550,7 @@ c /* deck CC_4RINP */
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -6900,11 +6880,7 @@ c /* deck CC_5RINP */
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -7413,11 +7389,7 @@ c /* deck cc_exlrinp */
       INTEGER NTABLE
       PARAMETER (NTABLE = 12)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -7788,11 +7760,7 @@ C#endif
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
 
       PARAMETER (ZERO = 0.0d00)
 
@@ -7807,11 +7775,7 @@ C#endif
       CHARACTER*70 LABHELP
       CHARACTER TABLE(NTABLE)*(7)
 
-#if defined (SYS_CRAY)
-      REAL FREQB, FREQC
-#else
       DOUBLE PRECISION  FREQB, FREQC
-#endif
 
 
       INTEGER IDX, IJUMP
@@ -8131,11 +8095,7 @@ C           _______________________________________________
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
 
       PARAMETER (ZERO = 0.0d00)
 

@@ -7,6 +7,7 @@
 !
       INTEGER NSYML, IPRDEF, NWNABA, IRVIBG
       PARAMETER (NSYML = 8)
+      LOGICAL ABAHF,  ABACI
       LOGICAL MOLGRD, MOLHES, DIPDER, POLAR,  TSTINP,                   &
      &        VIB,    RESTAR, DOWALK, GDALL,  CCSD,                     &
      &        H2MO,   DOSYM(NSYML),   DOEXCI, SHIELD,                   &
@@ -21,6 +22,7 @@
      &        GSDIP,  GSQUAD, GSOCT,  GSDIDI, GSDIQU, GSQUQU,           &
      &        VIBGIR, RNLRSCSHI, TDA_SINGLET, TDA_TRIPLET, RNLRSCEFG
       COMMON /ABAINF/ IPRDEF, NWNABA, IRVIBG,                           &
+     &        ABAHF,  ABACI,                                            &
      &        MOLGRD, MOLHES, DIPDER, POLAR,  TSTINP,                   &
      &        VIB,    RESTAR, DOWALK, GDALL,  CCSD,                     &
      &        H2MO,   DOSYM,          DOEXCI, SHIELD,                   &

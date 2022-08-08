@@ -55,14 +55,6 @@ C--------------------------------------------------------------------
       INTEGER KFTRANS, kftransIm
       INTEGER kLe1,lensym, length_check,msym,NTRIP,IEX,krod,lentot
       INTEGER JOLDTST,iexidx
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL FREQ, ECURR, rxs, test
-      REAL DDOT
-      REAL ZERO, ONE, TWO, FOUR, FIVE, Q1norm, factor
-      REAL ovlpLR, xnorm1, ovlpRR, ovlpLL
-      real sum11,csinorm, etanorm
-#else 
       !sonia: enlarge alpha by 1 to check residuals
       DOUBLE PRECISION WORK(LWORK)
       !DOUBLE PRECISION ALPHA(JCHAIN+1), BETA(jChain), xgamma(jchain)
@@ -74,7 +66,6 @@ C--------------------------------------------------------------------
       DOUBLE PRECISION ovlpLR, xnorm1
       DOUBLE PRECISION ovlpRR, ovlpLL, sum11, csinorm,etanorm, excien
       
-#endif 
       PARAMETER (ZERO = 0.0D0, ONE  = 1.0D0, TWO = 2.0D0)
       PARAMETER (FOUR = 4.0D0, FIVE = 5.0D0)
       PARAMETER (thrshold = 1.0d-12)

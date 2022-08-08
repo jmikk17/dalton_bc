@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -39,11 +39,7 @@ C     C. Neiss, C. Hättig, summer 2004
       logical locdbg
       parameter(locdbg=.false.)
 
-#if defined (SYS_CRAY)
-      real RHO1(*),XLAMDH(*),WORK(LWORK),ddot
-#else
       double precision RHO1(*),XLAMDH(*),WORK(LWORK),ddot
-#endif
 
       call qenter('cclhtr_fp')
 
@@ -125,12 +121,8 @@ C     C. Neiss, C. Hättig, summer 2004
      &        ntotmu,ntota,isyctr,isyres,isylam
       integer klamdpb,kend1,lwrk1,lwork
 
-#if defined (SYS_CRAY)
-      real ctr1(*),XLAMDP(*),rhor12(*),WORK(LWORK),zero,one,ddot
-#else
       double precision ctr1(*),XLAMDP(*),rhor12(*),WORK(LWORK),zero,one,
      &                 ddot
-#endif
 
       parameter (one = 1.0d0, zero = 0.0d0)
 
@@ -219,11 +211,7 @@ C     C. Neiss october/november 2005
       integer lwork,kend1,lwrk1,koff1,koff2,koff3,kscr,iopt,
      &        idxik,idxjl,kcamp,kvint,ioptres,isym1,isym2
 
-#if defined (SYS_CRAY)
-      real XGAMMA(*),C12AMP(*),VINT(*),WORK(LWORK),zero,one
-#else
       double precision XGAMMA(*),C12AMP(*),VINT(*),WORK(LWORK),zero,one
-#endif
       logical locdbg
       parameter (locdbg = .FALSE.)
       parameter (one = 1.0d0, zero = 0.0d0)
@@ -349,12 +337,8 @@ C     INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
 C
       integer lwork,kend1,lwrk1,kvint,kmint,iopt,isymtr
       integer isymij,isymmn,isymkl,koffv,koffm,koffr,isym1,isym2
-#if defined (SYS_CRAY)
-      real RHOR12(*),VINT(*),XMINT(*),WORK(LWORK),zero,one,two
-#else
       double precision RHOR12(*),VINT(*),XMINT(*),WORK(LWORK),zero,one,
      &                 two
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
       logical locdbg
       parameter (locdbg = .FALSE.)
@@ -437,12 +421,8 @@ C     C. Neiss october 2005
       integer idxkl,koffx,kvinkl,kvijkl,isymtr 
       integer lwork,kend1,lwrk1,iopt,kvint0
 
-#if defined (SYS_CRAY)
-      real RHOR12(*),VINT(*),XMAT(*),WORK(LWORK),zero,one,two
-#else
       double precision RHOR12(*),VINT(*),XMAT(*),WORK(LWORK),zero,one,
      &                 two
-#endif
       logical locdbg
       parameter (locdbg = .FALSE.)
       parameter (one = 1.0d0, zero = 0.0d0, two = 2.0d0)

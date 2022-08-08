@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -43,11 +43,7 @@ C
       INTEGER NSYMX,NORBTSX,NBASTX,NLAMDSX,NRHFSX(8),NORBSX(8)
       INTEGER NR12xVIR,IR12xVIR(8),KFCKMIX,LUNIT
       LOGICAL LOCDBG
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK),T1AM(NT1AMX),T2AM(NT2AMX)
-#else
       DOUBLE PRECISION WORK(LWORK),T1AM(NT1AMX),T2AM(NT2AMX)
-#endif
 C
       PARAMETER (LOCDBG = .FALSE.)       
 C

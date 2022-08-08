@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1823,7 +1823,7 @@ C     If there has been a completely failed step, the geometry has
 C     by default not converged.
 C
       IF (ABS(GEINFO(0,6)) .GT. 1.0D-3) GECONV = .FALSE.
-      CALL PRIALL(CSTEP,WORK(KTEMP1))
+      CALL PRIALL(CSTEP,WORK(KTEMP1),WORK(KWRK2),LWRK2)
 C
 C     Save this geometry and energy to MOLDEN file
 C
@@ -2041,7 +2041,7 @@ C
          END IF
          GECONV = MINEND(MXRCRD,SCLVEC,BMTRAN,WORK(KTEMP1),WORK(KTEMP2))
          IF (ABS(GEINFO(ITRNMR,6)) .GT. 1.0D-3) GECONV = .FALSE.
-         CALL PRIALL(CSTEP,WORK(KTEMP1))
+         CALL PRIALL(CSTEP,WORK(KTEMP1),WORK(KWRK2),LWRK2)
 C
 C        save this geometry and energy to MOLDEN file
 C
@@ -2303,14 +2303,14 @@ C
       END
 
 C  /* Deck priall */
-      SUBROUTINE PRIALL(CSTEP,CORDNW)
+      SUBROUTINE PRIALL(CSTEP,CORDNW,WORK,LWORK)
 C
 C     Prints important information for the current geometry iteration.
 C
 #include "implicit.h"
 #include "mxcent.h"
 
-      DIMENSION   CSTEP(MXCOOR), CORDNW(3,MXCENT)
+      DIMENSION   CSTEP(MXCOOR), CORDNW(3,MXCENT), WORK(LWORK)
 
 #include "optinf.h"
 #include "gnrinf.h"
@@ -2341,6 +2341,8 @@ C
          CALL HEADER('Next geometry (au)',-1)
          CALL PRIGEO(CORDNW)
          IF (PCM) CALL UPDCAV(CORDNW)
+         CALL GEOANA(CORDNW,.TRUE.,.FALSE.,NBONDS,-1,
+     &         WORK,LWORK)
       ELSE
          CALL HEADER('Final geometry (au)',-1)
          CALL PRIGEO(CORD)
@@ -2619,7 +2621,7 @@ C     the norm of the calculated molecular gradient changed with 1.0d-6.
      &        'Energy change  ',THRERG
          GRDTHR = MAX(GRDTHR,2.0D0*THRGRD)
          THRSTP = MAX(THRSTP,GRDTHR)
-         THRERG = GRDTHR
+         THRERG = GRDTHR**2 * 10.0D0
          THRSYM = SQRT(THRERG)
          NINFO = NINFO + 1
          WRITE (LUPRI,'(/A/,1P,3(/20X,A,D10.2))') ' New thresholds:',
@@ -2656,8 +2658,8 @@ C
      &        ' Rejection ratio, high  :',RTRJMX
       END IF
 ckr#endif
-      IF ((DOMP2 .AND. .NOT. DOMC) .OR. DOCCSD .OR. ((DOCI .OR. DOCINO)
-     &    .AND. .NOT. DOMC)) THEN
+      IF ((DOMP2 .AND. .NOT. DOMC) .OR. DOCCSD .OR.
+     &    (DOCI  .AND. .NOT. DOMC)) THEN
          ENERGY = ECORR
       ELSE
          ENERGY = EMCSCF
@@ -6840,9 +6842,15 @@ C     Otherwise we give up...
 C
          ELSE
             CALL PRIINF(GEINFO,WORK(2),LWORK)
-            WRITE(LUPRI,*) 'Maximum number of rejected steps (',MAXREJ,
+            WRITE(LUPRI,'(/A,I0,A)')
+     &      '@ Maximum number of rejected steps (',MAXREJ,
      &        ') reached.'
-            WRITE(LUPRI,'(A)') 'No acceptable step found. Aborting.'
+            WRITE(LUPRI,'(A)') '@ No acceptable step found. Aborting.'
+            IF (ISTATE .GT. 0) THEN
+               WRITE(LUPRI,'(/A/A)')
+     &         '@ This is a geometry optimization for an excited state.'
+     &        ,'@ You might want to try the .NEO ALWAYS option.'
+            END IF
             CALL QUIT('*** FNDGEO *** No acceptable step found.')
          END IF
       END IF

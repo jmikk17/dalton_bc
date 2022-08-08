@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -59,17 +59,10 @@ c /* deck ccexlr */
 
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL TIM0, TIM1, TIMG, TIMF, TIMB
-      REAL TIMFA, TIMAA, TIMEA, TIMO
-      REAL ZERO
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION TIM0, TIM1, TIMG, TIMF, TIMB
       DOUBLE PRECISION TIMFA, TIMAA, TIMEA, TIMO
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER ( ZERO = 0.0d0 )
 
       INTEGER NBEXLR, MXTRAN, MXVEC 
@@ -382,13 +375,8 @@ c /* deck ccexlrprt */
       INTEGER IFREQ, IOPER, IDXS, IEXCII, IEXCIF
 
 
-#if defined (SYS_CRAY)
-      REAL EXLRPRP(NEXLRFREQ,NEXLROPER,NEXLRST,2)
-      REAL HALF, FREQA, FREQB, EIGVI, EIGVF
-#else
       DOUBLE PRECISION EXLRPRP(NEXLRFREQ,NEXLROPER,NEXLRST,2)
       DOUBLE PRECISION HALF, FREQA, FREQB, EIGVI, EIGVF
-#endif
       PARAMETER (HALF = 0.5d0)
 
 *---------------------------------------------------------------------*
@@ -704,20 +692,6 @@ c /* deck ccexlr_setup */
 
       INTEGER MXG, MXF, MXFA, MXEA, MXO, MXF1VEC, MXAA
 
-#if defined (SYS_CRAY)
-      REAL EIGVI, EIGVF, FREQA, FREQB
-      REAL EXLRPRP(2*MXPROP)
-      REAL WG(MXVEC,MXTRAN)
-      REAL WF(MXVEC,MXTRAN)
-      REAL F1CONS(MXVEC,MXTRAN)
-      REAL WFA(MXVEC,MXTRAN)
-      REAL WAA(MXVEC,MXTRAN)
-      REAL WEA(MXVEC,MXTRAN)
-      REAL WO(MXVEC,MXTRAN)
-      REAL GCON, FCON1, FCON2, FACON1, FACON2
-      REAL EACON1, EACON2, OCON, F1CON, AACON1, AACON2
-      REAL HALF, ZERO
-#else
       DOUBLE PRECISION EIGVI, EIGVF, FREQA, FREQB
       DOUBLE PRECISION EXLRPRP(2*MXPROP)
       DOUBLE PRECISION WG(MXVEC,MXTRAN)
@@ -730,7 +704,6 @@ c /* deck ccexlr_setup */
       DOUBLE PRECISION GCON, FCON1, FCON2, FACON1, FACON2
       DOUBLE PRECISION EACON1, EACON2, OCON, F1CON, AACON1, AACON2
       DOUBLE PRECISION HALF, ZERO
-#endif
       PARAMETER ( HALF = 0.5d0, ZERO = 0.0d0 )
 
 

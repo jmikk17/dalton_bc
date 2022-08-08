@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -37,11 +37,7 @@ C
  
       INTEGER ISYMA, ISYMB, ISYMC
 
-#if defined (SYS_CRAY)
-      REAL AMAT(*), BMAT(*), CMAT(*), ONE
-#else
       DOUBLE PRECISION AMAT(*), BMAT(*), CMAT(*), ONE
-#endif
       PARAMETER( ONE = 1.0D0 )
 
       INTEGER ISYMP,ISYMQ,ISYMR,NBASP,NBASQ,NBASR,KOFF1,KOFF2,KOFF3

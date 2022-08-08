@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -61,13 +61,8 @@ c/* Deck CC_GMATRIX */
       INTEGER IGTRAN(4,NGTRAN)
       INTEGER IGDOTS(MXVEC,NGTRAN)
       
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL GCON(MXVEC,NGTRAN)
-#else 
       DOUBLE PRECISION WORK(LWORK) 
-      DOUBLE PRECISION GCON(MXVEC,NGTRAN)
-#endif 
+      DOUBLE PRECISION GCON(MXVEC,NGTRAN) 
 
       INTEGER NTRAN, ISTART, IBATCH, NBATCH
       INTEGER KTIMTRN, KDELTA1, KT1AMPB, KLAMDHB, KLAMDPB, KT1AMPC  
@@ -255,11 +250,7 @@ c/* Deck CC_GMAT */
 * local parameters:
       CHARACTER MSGDBG*(16)
       PARAMETER (MSGDBG='[debug] CC_GMAT>')
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO, THREE
-#else
       DOUBLE PRECISION ZERO, ONE, TWO, THREE
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0, THREE = 3.0d0)
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
@@ -286,21 +277,12 @@ c/* Deck CC_GMAT */
      *           FN3FOPX='PTFOPX' ,FNDKBC3='DKBC3')
 
 
-#if defined (SYS_CRAY)
-      REAL GCON(MXVEC,NGTRAN)
-      REAL WORK(LWORK)
-      REAL DDOT, FACT, XNORM, TIMTRN(NGTRAN)
-      REAL DTIME, TIMALL, TIMFCK, TIMIO, TIMCCS, TIMRDAO
-      REAL TIM21CD, TIM21SD, TIMDBL, TIMINT, TIMTRBT,CONVRT
-      REAL TIMTRIP
-#else
       DOUBLE PRECISION GCON(MXVEC,NGTRAN)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION DDOT, FACT, XNORM, TIMTRN(NGTRAN)
       DOUBLE PRECISION DTIME, TIMALL, TIMFCK, TIMIO, TIMCCS, TIMRDAO
       DOUBLE PRECISION TIM21CD, TIM21SD, TIMDBL, TIMINT, TIMTRBT,CONVRT
       DOUBLE PRECISION TIMTRIP
-#endif
 
       INTEGER KT1AMP0, KT1AMPB(NGTRAN), KT1AMPC(NGTRAN), KCTR1(NGTRAN) 
       INTEGER KLAMDP0, KLAMDPB(NGTRAN), KLAMDPC(NGTRAN)
@@ -2013,15 +1995,9 @@ c/* Deck CCG_1ITROO */
    
       INTEGER ISYMTF, ISYMT1, ISYMFM
       
-#if defined (SYS_CRAY)
-      REAL TFMAT(*)  ! dimension (NMATIJ(ISYMTF))
-      REAL FMAT(*)   ! dimension (NT1AM(ISYMFM))
-      REAL T1(*)     ! dimension (NT1AM(ISYMT1))
-#else
       DOUBLE PRECISION TFMAT(*)  ! dimension (NMATIJ(ISYMTF))
       DOUBLE PRECISION FMAT(*)   ! dimension (NT1AM(ISYMFM))
       DOUBLE PRECISION T1(*)     ! dimension (NT1AM(ISYMT1))
-#endif
 
       INTEGER ISYMI, ISYMJ, ISYMB, NIJ, NBI, NBJ
 
@@ -2092,17 +2068,10 @@ c/* Deck CCG_1ITRVO */
    
       INTEGER ISYMTF, ISYMT1, ISYMFM, IOPT
       
-#if defined (SYS_CRAY)
-      REAL TF(*)      ! dimension (NT1AM(ISYMTF))
-      REAL FOO(*)     ! dimension (NMATIJ(ISYMFM))
-      REAL FVV(*)     ! dimension (NMATAB(ISYMFM))
-      REAL T1(*)      ! dimension (NT1AM(ISYMT1))
-#else
       DOUBLE PRECISION TF(*)    ! dimension (NT1AM(ISYMTF))
       DOUBLE PRECISION FOO(*)   ! dimension (NMATIJ(ISYMFM))
       DOUBLE PRECISION FVV(*)   ! dimension (NMATAB(ISYMFM))
       DOUBLE PRECISION T1(*)    ! dimension (NT1AM(ISYMT1))
-#endif
 
       INTEGER ISYMI,ISYMJ,ISYMA,ISYMB,NAI,NAB,NBA,NBI,NAJ,NJI,NIJ
 
@@ -2199,13 +2168,8 @@ c/* Deck CCG_1ITRVV */
    
       INTEGER ISYMTF, ISYMT1, ISYMFM
       
-#if defined (SYS_CRAY)
-      REAL TFMAT(*)
-      REAL FMAT(*), T1(*)
-#else
       DOUBLE PRECISION TFMAT(*)
       DOUBLE PRECISION FMAT(*), T1(*)
-#endif
 
       INTEGER ISYMA, ISYMI, ISYMB, NAI, NBI, NAB
 
@@ -2299,11 +2263,7 @@ c/* Deck CCG_21CCSD */
 * local parameters:
       CHARACTER MSGDBG*(19)
       PARAMETER (MSGDBG='[debug] CC_21CCSD> ')
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO, HALF, TWO
-#else
       DOUBLE PRECISION ONE, ZERO, HALF, TWO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0, HALF = 0.5d0, TWO = 2.0d0)
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
@@ -2315,17 +2275,10 @@ c/* Deck CCG_21CCSD */
       INTEGER ISYRES, ISYCTR, ISYMFB, ISYMTB, ISYMTC, LWORK, IZETVA
       INTEGER IDLSTC
 
-#if defined (SYS_CRAY)
-      REAL DELTA1(*), FOCKB(*), T1AMPB(*), T2AMPC(*)
-      REAL XIAJK(*), EIAJK(*), ZIAJK(*), CIAJK(*)
-      REAL WORK(LWORK)     
-      REAL SWAP
-#else
       DOUBLE PRECISION DELTA1(*), FOCKB(*), T1AMPB(*), T2AMPC(*)   
       DOUBLE PRECISION XIAJK(*), EIAJK(*), ZIAJK(*), CIAJK(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION SWAP
-#endif
 
 * local variables:
       LOGICAL LMOINT
@@ -2344,11 +2297,7 @@ c/* Deck CCG_21CCSD */
       INTEGER KWTINT, KVTINT, KWHINT, KVHINT, KEXC, NTOTDKL, NTOTA
       INTEGER IOPTTCME, KTR12AM, KVINT, IAN, LUNIT 
    
-#if defined (SYS_CRAY)
-      REAL DDOT
-#else
       DOUBLE PRECISION DDOT
-#endif
 
       INTEGER ILSTSYM
 
@@ -2990,30 +2939,13 @@ c/* Deck CCG_21CD */
 #include "ccorb.h"
  
 
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO, FACT, FACTOR
-#else
       DOUBLE PRECISION ZERO, ONE, TWO, FACT, FACTOR
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0)
 
       LOGICAL LSAME
       INTEGER ISYRES, ISYCTR, ISYDEL, ISYMLA, ISYMLB, ISYMXC
       INTEGER IDEL, LWORK
 
-#if defined (SYS_CRAY)
-      REAL RESVEC(*)    ! dimension (NT1AM(ISYRES))
-      REAL CTR2(*)      ! dimension (NT2AM(ISYCTR))
-      REAL DSRHFC(*)
-      REAL XLAMDH0(*)   ! dimension (NLAMDT)
-      REAL XLAMDP0(*)   ! dimension (NLAMDT)
-      REAL XLAMDHA(*)   ! dimension (NGLMDT(ISYMLA))
-      REAL XLAMDPA(*)   ! dimension (NGLMDT(ISYMLA))
-      REAL XLAMDHB(*)   ! dimension (NGLMDT(ISYMLB))
-      REAL XLAMDPB(*)   ! dimension (NGLMDT(ISYMLB))
-      REAL WORK(LWORK)
-      REAL DDOT
-#else
       DOUBLE PRECISION RESVEC(*)    ! dimension (NT1AM(ISYRES))
       DOUBLE PRECISION CTR2(*)      ! dimension (NT2AM(ISYCTR))
       DOUBLE PRECISION DSRHFC(*)
@@ -3025,7 +2957,6 @@ c/* Deck CCG_21CD */
       DOUBLE PRECISION XLAMDPB(*)   ! dimension (NGLMDT(ISYMLB))
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION DDOT
-#endif
 
       INTEGER ISYLALB, ISYMAO, ISYMMO
       INTEGER KDRES, KCRES, KEND0, LEND0, KEND1, LEND1
@@ -3340,17 +3271,10 @@ c/* Deck CCG_22CD */
       LOGICAL LSAME
       INTEGER ISYRES, ISYMXB, ISYMZB, ISYMXC, ISYMZC, LWORK
 
-#if defined (SYS_CRAY)
-      REAL ZERO, HALF, ONE, TWO, THREE, FACT, DDOT
-      REAL DELTA2(*), CDTERM(*), WORK(LWORK)
-      REAL XBIAJK(*),EBIAJK(*),ZBIAJK(*),CBIAJK(*)
-      REAL XCIAJK(*),ECIAJK(*),ZCIAJK(*),CCIAJK(*)
-#else
       DOUBLE PRECISION DELTA2(*), CDTERM(*), WORK(LWORK)
       DOUBLE PRECISION XBIAJK(*),EBIAJK(*),ZBIAJK(*),CBIAJK(*)         
       DOUBLE PRECISION XCIAJK(*),ECIAJK(*),ZCIAJK(*),CCIAJK(*)         
       DOUBLE PRECISION ZERO, HALF, ONE, TWO, THREE, FACT, DDOT
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0)
       PARAMETER (THREE = 3.0d0, HALF = 0.5d0)
 
@@ -3667,19 +3591,11 @@ c/* Deck CCG_4O */
       INTEGER ISYM4O, ISYOVOV, ISYMTB, ISYMTC, IOPT
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL X4O(*)
-      REAL XOVOV(*)
-      REAL T1AMPB(*)      ! dimension (NT1AM(ISYMTB))
-      REAL T1AMPC(*)      ! dimension (NT1AM(ISYMTC))
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION X4O(*)
       DOUBLE PRECISION XOVOV(*)
       DOUBLE PRECISION T1AMPB(*)      ! dimension (NT1AM(ISYMTB))
       DOUBLE PRECISION T1AMPC(*)      ! dimension (NT1AM(ISYMTC))
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       INTEGER KEND0, ISYMB, ISYMIAJ, ISYCIKJ, ISYBIKJ, KXCIKJ, KXBIKJ
       INTEGER KEND1, LEND1, ISYTCTB, IOPT2
@@ -3799,15 +3715,9 @@ c/* Deck CCG_4OS */
 
       INTEGER ISYM4O, ISYIKJ, ISYMT1, ISYMB, IOPT
 
-#if defined (SYS_CRAY)
-      REAL X4O(*)
-      REAL XIKJB(*)   ! dimension (NMAIJK(ISYIKJ))
-      REAL T1(*)      ! dimension (NT1AM(ISYMT1))
-#else
       DOUBLE PRECISION X4O(*)
       DOUBLE PRECISION XIKJB(*)   ! dimension (NMAIJK(ISYIKJ))
       DOUBLE PRECISION T1(*)      ! dimension (NT1AM(ISYMT1))
-#endif
 
       INTEGER ISYML, NBL, ISYMJ, ISYMJL, ISYMIK, NJL, NIK, NIKJ, NIKJL
       INTEGER NLJ, NLJKI, OFFIK, OFFI, ISYLJK, ISYMI, ISYMLJ, ISYMK
@@ -3980,31 +3890,18 @@ c/*  Deck CCG_OOVV */
 #include "ccsdsym.h"
 #include "ccorb.h"
  
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION ZERO, ONE
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0)
 
       INTEGER ISYJKINT, ISYOVOV, ISYMTB, ISYMTC, ISYMD
       INTEGER IPCK, LWORK, IOPT
 
-#if defined (SYS_CRAY)
-      REAL Kint(*)       ! dimension (NT2BCD(ISYJKINT))
-      REAL Jint(*)       ! dimension (NT2BCD(ISYJKINT))
-      REAL XOVOV(*)
-      REAL B1AMP(*)       ! dimension (NT1AM(ISYMTB))
-      REAL C1AMP(*)       ! dimension (NT1AM(ISYMTC))
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION Kint(*)       ! dimension (NT2BCD(ISYJKINT))
       DOUBLE PRECISION Jint(*)       ! dimension (NT2BCD(ISYJKINT))
       DOUBLE PRECISION XOVOV(*)
       DOUBLE PRECISION B1AMP(*)       ! dimension (NT1AM(ISYMTB))
       DOUBLE PRECISION C1AMP(*)       ! dimension (NT1AM(ISYMTC))
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       INTEGER ISYTCTB, ISYMIAJ, ISYCJLI, ISYBJLI, ISYJLE, ISYMEL
       INTEGER KXCJLI, KXBJLI, JXCJLI, JXBJLI, KEND1, LEND1, ISYML
@@ -4210,11 +4107,7 @@ c/* Deck CCG_RDIAJB */
 
       INTEGER LIAJB
       
-#if defined (SYS_CRAY)
-      REAL XIAJB(LIAJB)
-#else
       DOUBLE PRECISION XIAJB(LIAJB)
-#endif
 
       CALL QENTER('CCG_RDIAJB')
 
@@ -4264,13 +4157,8 @@ c/* Deck CCG_TI */
 #include "ccorb.h"
 #include "ccsdsym.h"
  
-#if defined (SYS_CRAY)
-      REAL T2amp(*)       ! dimension (NT2AM(ISYMTAM))
-      REAL Tint(*)       ! dimension (NT2BCD(ISYMTI))
-#else
       DOUBLE PRECISION T2amp(*)       ! dimension (NT2AM(ISYMTAM))
       DOUBLE PRECISION Tint(*)       ! dimension (NT2BCD(ISYMTI))
-#endif
 
       INTEGER ISYMTI, ISYMTAM, ISYMC, ISYMDK, ISYMCJ, ISYMJ
       INTEGER NCJ, NDK, NDKCJ, NDKJ
@@ -4367,17 +4255,10 @@ c/* Deck CCG_TRANS13 */
 
       INTEGER ISYMIAE, ISYOVOV, ISYMB1, ISYMC, LWORK, IPOS
 
-#if defined (SYS_CRAY)
-      REAL XIAEC(*)       ! dimension (NCKATR(ISYMIAE))
-      REAL XOVOV(*)       ! dimension (NT2AM(ISYOVOV))
-      REAL B1AMP(*)       ! dimension (NT1AM(ISYMB1))
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION XIAEC(*)       ! dimension (NCKATR(ISYMIAE))
       DOUBLE PRECISION XOVOV(*)       ! dimension (NT2AM(ISYOVOV))
       DOUBLE PRECISION B1AMP(*)       ! dimension (NT1AM(ISYMB1))
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       INTEGER ISYMAIK, KAIK, KFREE, LFREE, ISYMAI, ISYMK, ISYME
       INTEGER NEK, NAI, NAIE, NAIK
@@ -4480,15 +4361,9 @@ c/* Deck CCG_TRANS2 */
  
       INTEGER ISYMJLI, ISYMB1, ISYOVOV, ISYMC, IOPT
 
-#if defined (SYS_CRAY)
-      REAL XJLIC(*)       ! dimension (NMAIJK(ISYMJLI))
-      REAL XOVOV(*)
-      REAL B1AMP(*)       ! dimension (NT1AM(ISYMB1))
-#else
       DOUBLE PRECISION XJLIC(*)       ! dimension (NMAIJK(ISYMJLI))
       DOUBLE PRECISION XOVOV(*)
       DOUBLE PRECISION B1AMP(*)       ! dimension (NT1AM(ISYMB1))
-#endif
 
       INTEGER ISYMDJ, ISYMCI, ISYMJL, ISYMI, ISYMJ, ISYML, ISYMD
       INTEGER NCI, NDJ, NDL, NJL, NJLI, NDJCI
@@ -4622,13 +4497,8 @@ c/* Deck CCG_TRANS4 */
  
       INTEGER ISYMIAJK, ISYMT1, ISYOVOV
 
-#if defined (SYS_CRAY)
-      REAL XIAJK(*), XOVOV(*), T1AMP(*)    
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION XIAJK(*), XOVOV(*), T1AMP(*) 
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0)
 
       INTEGER ITAIKJ(8,8), NTAIKJ(8)
@@ -4719,11 +4589,7 @@ c/* Deck CCG_SORT1 */
  
       INTEGER ISYMX, IOPT
 
-#if defined (SYS_CRAY)
-      REAL X(*), Y(*)
-#else
       DOUBLE PRECISION X(*), Y(*)
-#endif
       INTEGER ITAIKJ(8,8), NTAIKJ(8)
       INTEGER ISYM,ICOUNT,ISYMJ,ISYMAIK,ISYMAI,ISYMK,KOFF1,KOFF2,NJK
       INTEGER ISYMJK,ISYMAJ,ISYMI,ISYMA,ISYMAJK,ISYJIK,NAI,NJKI
@@ -4932,13 +4798,8 @@ c/* Deck CCG_LXD */
 
       INTEGER ISYFCK, ISYDNS, ISYOVOV, IOPT, KOFF1
       
-#if defined (SYS_CRAY)
-      REAL FTWO(*), DENS(*), XLIAJB(*)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION FTWO(*), DENS(*), XLIAJB(*)
       DOUBLE PRECISION ZERO, ONE
-#endif
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0)
 
       INTEGER ISYMAI, ISYMBJ, NAI, NBJ, NAIBJ, NTOTAI, NTOTBJ
@@ -5039,15 +4900,9 @@ c/* Deck CCG_LXD */
       CHARACTER*3 LISTL, LISTB, LISTC
       INTEGER LWORK, IDLSTL, IDLSTB, IDLSTC
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL OMEGA1(NT1AMX), OMEGA2(NT2AMX)
-      REAL DDOT, TWO, XNORMVAL, FREQL
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION OMEGA1(NT1AMX), OMEGA2(NT2AMX)
       DOUBLE PRECISION DDOT, TWO, XNORMVAL, FREQL
-#endif
       PARAMETER (TWO = 2.0D0)
 
       CHARACTER*10 MODEL

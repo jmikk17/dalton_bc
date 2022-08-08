@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -203,7 +203,7 @@ C  /* Deck lrsdrv */
 #include "iratdef.h"
 #include "priunit.h"
       LOGICAL PASS
-      LOGICAL INTTRS, CICLC, HFCLC, TRPCLC
+      LOGICAL INTTRS, TRPCLC
       DIMENSION WORK(LWORK)
 C
 #include "cbilrs.h"
@@ -262,7 +262,7 @@ C  /* Deck lrsdr1 */
 #include "iratdef.h"
 #include "priunit.h"
       LOGICAL PASS
-      LOGICAL INTTRS, CICLC, HFCLC, TRPCLC, ZERNRM(*)
+      LOGICAL INTTRS, TRPCLC, ZERNRM(*)
       DIMENSION WORK(LWORK), NABATY(*)
 C
 #include "cbilrs.h"
@@ -273,8 +273,7 @@ C
 #include "inforb.h"
 #include "nuclei.h"
 C
-      HFCLC  = NASHT .LE. 1
-      IF (HFCLC) NCONF = 1
+      IF (ABAHF) NCONF = 1
       LUREVE = -1
       LUSOVE = -1
       LUGDVE = -1
@@ -283,7 +282,7 @@ C
       CALL GPOPEN(LUREVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
       IF (VCD .OR. SHIELD .OR. SPNSPN .OR. MAGSUS .OR. SPINRO .OR.
      &    MOLGFA) THEN
-         CALL GETMRH(HFCLC,OOTV,NABATY,NABAOP,LUGDVE,LUSOVE,LUREVE,
+         CALL GETMRH(OOTV,NABATY,NABAOP,LUGDVE,LUSOVE,LUREVE,
      &               THRCLC,MAXCLC,IPRCLC,MXRM,MXPHP,ZERNRM,WORK,LWORK)
       ELSE
 #ifndef use_getrhs
@@ -293,14 +292,13 @@ c is the following old code for NACME which we might want to reactivate?
 c -- hjaaj Aug 2004
          TRPCLC = .FALSE.
          INTTRS = .TRUE.
-         CICLC  = .FALSE.
          IOPSYM = 1
          NABAOP = 1
          CALL GETRHS(IOPSYM,NEXVAL,LUGDVE,IPRCLC,WORK,LWORK)
          DO 100 I = 1, NABAOP
             NABATY(I) = 1
  100     CONTINUE
-         CALL ABARSP(CICLC,HFCLC,TRPCLC,OOTV,IOPSYM,EXCLC,
+         CALL ABARSP(ABACI,ABAHF,TRPCLC,OOTV,IOPSYM,EXCLC,
      &               EXVAL,NEXVAL,NABATY,NABAOP,'NACME   ',LUGDVE,
      &               LUSOVE,LUREVE,THRCLC,MAXCLC,IPRCLC,MXRM,MXPHP,
      &               WORK,LWORK)
@@ -313,7 +311,7 @@ C
       RETURN
       END
 C  /* Deck getmrh */
-      SUBROUTINE GETMRH(HFCLC,OOTV,NABATY,NABAOP,LUGDVE,LUSOVE,LUREVE,
+      SUBROUTINE GETMRH(OOTV,NABATY,NABAOP,LUGDVE,LUSOVE,LUREVE,
      &                  THRCLC,MAXCLC,IPRCLC,MXRM,MXPHP,ZERNRM,WORK,
      &                  LWORK)
 #include "implicit.h"
@@ -323,7 +321,7 @@ C  /* Deck getmrh */
 #include "mxcent.h"
       PARAMETER (D10 = 10.D0, DP5 = 0.5D0)
 C
-      LOGICAL EXCLC, TRPCLC, CICLC, HFCLC, OOTV, ZERNRM(*), OLDDX
+      LOGICAL EXCLC, TRPCLC, OOTV, ZERNRM(*), OLDDX
       DIMENSION NABATY(*), WORK(LWORK)
 #include "inftap.h"
 #include "infvar.h"
@@ -344,7 +342,6 @@ C
 C
       EXCLC  = .FALSE.
       TRPCLC = .FALSE.
-      CICLC  = .FALSE.
       EXVAL  = 0.0D0
       NEXVAL = 1
 C
@@ -353,7 +350,7 @@ C
          IF (NREC .GT. 0) THEN
             CALL ABAVAR(ISYM,TRPCLC,IPRCLC,WORK,LWORK)
          IF (NVARPT .EQ. 0) GO TO 50
-            IF (HFCLC) NCONF = 1
+            IF (ABAHF) NCONF = 1
 C
 C           Collect RHS's
 C
@@ -393,19 +390,20 @@ C
                      NOCONV = .FALSE.
                      FINRES = 0.0D0
                      KZRED_ABA = 0
-                     CALL ABARSP(CICLC,HFCLC,TRPCLC,OOTV,ISYM,EXCLC,
+                     CALL ABARSP(ABACI,ABAHF,TRPCLC,OOTV,ISYM,EXCLC,
      &                           EXVAL,NEXVAL,NABATY,1,IMGLAB(IREC),
      &                           LUGDVE,LUSOVE,LUREVE,THRCLC,MAXCLC,
      &                           IPRCLC,MXRM,MXPHP,WORK,LWORK)
                      IF (NOCONV) THEN
+                        NWARN = NWARN + 1
                         WRITE (LUPRI,'(/3A,2F10.5,A,I0)')
      &    '@ WARNING No convergence for "',IMGLAB(IREC),
-     &    '". Last residual and threshold:', FINRES, THRTRP,
+     &    '". Last residual and threshold:', FINRES, THRCLC,
      &    ';  # trial vectors: ',KZRED_ABA
                      ELSE
                         WRITE (LUPRI,'(3A,2F10.5,A,I0)')
      &    '    Convergence for "',IMGLAB(IREC),
-     &    '". Last residual and threshold:', FINRES, THRTRP,
+     &    '". Last residual and threshold:', FINRES, THRCLC,
      &    ';  # trial vectors: ',KZRED_ABA
                      END IF
                   END IF

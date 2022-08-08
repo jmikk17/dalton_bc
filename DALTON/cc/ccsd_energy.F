@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -114,14 +114,6 @@ C
       ! set model for CCR12
       CALL CCSD_MODEL(MODELR12,LENMOD,24,MODEL,10,APROXR12)
       MODEL = MODELR12(1:10)
-C
-#if defined (SYS_CRAY)
-C     Open file for diis extrapolation
-C
-      CALL WOPEN('CC_DIIS',64,0,IERR)
-C
-      IF (IERR .NE. 0) CALL QUIT('Error opening CC_DIIS')
-#endif
 C
       ETY0 = 'SCF  '
 C
@@ -1073,13 +1065,8 @@ C     end of loop.
 C-----------------
 C
 
-#if defined (SYS_CRAY)
-      CALL WCLOSE('CC_DIIS',IERR)
-      INFO = ISHELL('rm CC_DIIS')
-#else
       CALL GPCLOSE(LUTDIS,'DELETE')
       CALL GPCLOSE(LUSDIS,'DELETE')
-#endif
 C
 C--------------------------------------------------------------
 C     Print largest amplitudes in the zero order wave function.
@@ -5367,7 +5354,6 @@ c     end do
 c     write(lupri,*) 'ii_sum in ccsd_symsq', ii_sum
 c     call flshfo(lupri)
 
-#if !defined (SYS_CRAY)
       DO 100 IJSQ = 1,N2BST(ISYMAB)
 C
          KOFF = I2BST(ISYMAB) + IJSQ
@@ -5376,13 +5362,6 @@ C
          SCR(IJSQ) = DISTAB(IJPK)
 C
   100 CONTINUE
-#else
-
-C     SYS_CRAY code
-
-      KOFF = I2BST(ISYMAB) + 1
-      CALL GATHER(N2BST(ISYMAB),SCR,DISTAB,IADRPK(KOFF))
-#endif
 C
       CALL QEXIT('CCSD_SYMSQ')
 C
@@ -5401,11 +5380,6 @@ C
 #include "symsq.h"
 C
       CALL QENTER('CCSD_SYMSQT')
-C
-#if defined (SYS_CRAY)
-       WRITE(LUPRI,*) 'computation of Bijal on SYS_CRAY not implemented'
-       CALL QUIT('computation of Bijal on SYS_CRAY not implemented')
-#endif
 C
        DO IJSQ = 1,N2BST(ISYMAB)
          KOFF = I2BST(ISYMAB) + IJSQ

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -186,13 +186,8 @@ C
       INTEGER NBYTE, NDATA
       INTEGER IPCKTABLE(0:255)
 C
-#if defined (SYS_CRAY)
-      REAL BUFFER(NDATA)
-      REAL ZERO
-#else
       DOUBLE PRECISION BUFFER(NDATA)
       DOUBLE PRECISION R8WORD, ZERO
-#endif
 C
       PARAMETER (ZERO = 0.0D0)
 C
@@ -327,13 +322,8 @@ C
       INTEGER IPCKTABLE(0:255)
       LOGICAL ENABLED
 C
-#if defined (SYS_CRAY)
-      REAL THRESHOLD, ZERO, ERRMAX(8)
-      REAL R8WORD0, R8WORD1, PCKTHRS
-#else
       DOUBLE PRECISION THRESHOLD, ZERO, ERRMAX(8)
       DOUBLE PRECISION R8WORD0, R8WORD1, PCKTHRS
-#endif
 C
       PARAMETER (ZERO = 0.0D0)
 C

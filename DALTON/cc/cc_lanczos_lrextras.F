@@ -25,15 +25,6 @@
 #include "codata.h"
      
       INTEGER J,IFREQ,NFREQ
-#if defined (SYS_CRAY) 
-      REAL U,V
-      REAL FSTART,FSTOP,FSTEP
-      REAL ER(J),EI(J),R(J,J),L(J,J),F(J,J)
-      REAL ZERO, ONE, TWO, PDIFFI,PSUMI,PSUMK,XGAMMA
-      REAL LR_OM_RE,LR_OM_RE_T,LR_OM_RE_F
-      REAL LR_OM_IM,LR_OM_IM_T,LR_OM_IM_F
-      REAL DPI, DPK,FACTOR,FACTOR2, FREQ, DMI
-#else 
       DOUBLE PRECISION U,V
       DOUBLE PRECISION FSTART,FSTOP,FSTEP
       DOUBLE PRECISION ER(J),EI(J),R(J,J),L(J,J),F(J,J)
@@ -45,7 +36,6 @@
       Double precision add_to_real, add_to_im
       Double precision tot_add_real, tot_add_im
       double precision weight(j,2)
-#endif 
       LOGICAL NOIMAG
       INTEGER I, K, IDAMP, IDUMMY
 !
@@ -271,15 +261,9 @@ C--------------------------------------------------------------------
       IMPLICIT NONE
 #include "priunit.h"
       INTEGER J,LWORK
-#if defined (SYS_CRAY) 
-      REAL ER(J),EI(J),EVR(J,J),EVL(J,J),WORK(LWORK)
-      REAL XNORM,THRESH
-      REAL ONE,ZERO,DDOT
-#else 
       DOUBLE PRECISION ER(J),EI(J),EVR(J,J),EVL(J,J),WORK(LWORK)
       DOUBLE PRECISION XNORM,THRESH
       DOUBLE PRECISION ONE,ZERO,DDOT
-#endif 
       PARAMETER (ONE=1.0d0,ZERO=0.0d0,THRESH=1.0d-16)
       INTEGER K, IDAMP, KLRO, KLIO
       LOGICAL SKIPNEXT 
@@ -352,17 +336,12 @@ C
       IMPLICIT NONE
 #include "priunit.h"
       INTEGER N 
-#if defined (SYS_CRAY) 
-      REAL EVRR(N),EVRI(N),EVLR(N),EVLI(N),EVLRO(N),EVLIO(N) 
-      REAL CR,CI,CNSQ,DDOT
-#else 
       !input
       DOUBLE PRECISION EVRR(N),EVRI(N),EVLR(N),EVLI(N)
       !output
       Double precision EVLRO(N),EVLIO(N)
       !local
       DOUBLE PRECISION CR,CI,CNSQ,DDOT
-#endif 
 
       write(lupri,*)'I AM INSIDE BIORTCOMP1'
       call flshfo(lupri)
@@ -442,17 +421,12 @@ C
       IMPLICIT NONE
 #include "priunit.h"
       INTEGER N 
-#if defined (SYS_CRAY) 
-      REAL EVRR(N),EVRI(N),EVLR(N),EVLI(N),EVLRO(N),EVLIO(N) 
-      REAL CR,CI,CNSQ,DDOT
-#else 
       !input
       DOUBLE PRECISION EVRR(N),EVRI(N),EVLR(N),EVLI(N)
       !output
       Double precision EVLRO(N),EVLIO(N)
       !local
       DOUBLE PRECISION CR,CI,CNSQ,DDOT
-#endif 
 
       write(lupri,*)'INSIDE BIORTCOMP1'
       call flshfo(lupri)
@@ -520,17 +494,11 @@ C
 #include "priunit.h"
 #include "ccsdsym.h"
       INTEGER Lchain,Lspace,IFQTRAN(3,*),LWORK,ioptrw 
-#if defined (SYS_CRAY) 
-      REAL XVEC(Lspace,Lchain),EVR(Lchain,Lchain),ER(Lchain), EI(Lchain)
-      REAL Ftrans(Lchain,Lchain), FQX(Lchain,Lchain)
-      REAL DDOT, WORK(LWORK)
-#else 
       DOUBLE PRECISION XVEC(Lspace,Lchain),EVR(Lchain,Lchain),ER(Lchain)
       DOUBLE PRECISION EI(Lchain)
       DOUBLE PRECISION Ftrans(Lchain,Lchain), FQX(Lchain,Lchain)
       DOUBLE PRECISION DDOT, WORK(LWORK)
       DOUBLE PRECISION ONE,ZERO
-#endif 
       INTEGER kFq1,kFq2,kend,lend,isyhop,ivec, n2vec
       CHARACTER*(10) MODEL
       PARAMETER (ONE=1.0d0,ZERO=0.0d0)
@@ -921,18 +889,11 @@ C
 #include "ccsdsym.h"
       INTEGER Lchain,Lspace,LWORK,LUMAT 
       CHARACTER FMAT*(*)
-#if defined (SYS_CRAY) 
-      REAL XVEC(Lspace*Lchain),EVR(Lchain*Lchain)
-      !REAL XVEC(Lspace,Lchain),EVR(Lchain,Lchain)
-      REAL ER(Lchain), EI(Lchain)
-      REAL DDOT, WORK(LWORK)
-#else 
       !DOUBLE PRECISION XVEC(Lspace,Lchain),EVR(Lchain,Lchain)
       DOUBLE PRECISION XVEC(Lspace*Lchain),EVR(Lchain*Lchain)
       DOUBLE PRECISION ER(Lchain), EI(Lchain)
       DOUBLE PRECISION DDOT, WORK(LWORK)
       DOUBLE PRECISION ONE,ZERO
-#endif 
       INTEGER kend,lend,isyhop,ivec, n2vec
       INTEGER KQMAT, IOFF
       CHARACTER*(10) MODEL
@@ -1204,16 +1165,10 @@ C--------------------------------------------------------------------
 #include "ccsdsym.h"
       INTEGER Lchain,Lspace,LWORK,LUMAT,nexci
       CHARACTER FMAT*(*)
-#if defined (SYS_CRAY) 
-      REAL XVEC(Lspace*nexci),EVR(Lchain*nexci)
-      REAL ER(nexci), EI(nexci)
-      REAL DDOT, WORK(LWORK)
-#else 
       DOUBLE PRECISION XVEC(Lspace*nexci),EVR(Lchain*nexci)
       DOUBLE PRECISION ER(nexci), EI(nexci)
       DOUBLE PRECISION DDOT, WORK(LWORK)
       DOUBLE PRECISION ONE,ZERO
-#endif 
       INTEGER kend,lend,isyhop,ivec, n2vec
       INTEGER KQMAT, IOFF
       CHARACTER*(10) MODEL
@@ -1410,14 +1365,9 @@ C--------------------------------------------------------------------
 #include "ccsdsym.h"
 #include "dummy.h"
       INTEGER length,nex,isyhop,lwork,ioptrw
-#if defined (SYS_CRAY) 
-      REAL XVEC(length,nex),work(lwork)
-      REAL DDOT
-#else 
       DOUBLE PRECISION XVEC(length,nex), work(lwork)
       DOUBLE PRECISION DDOT
       DOUBLE PRECISION ONE,ZERO
-#endif 
       INTEGER kend,lend,ivec,n2vec
       INTEGER IOFF
       CHARACTER*(10) MODEL

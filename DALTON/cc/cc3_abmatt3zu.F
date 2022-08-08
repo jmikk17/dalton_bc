@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -29,13 +29,8 @@ C
 C
       INTEGER ISYRES, LWORK
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       CALL QENTER('ABT3ZU')
 C
@@ -85,13 +80,8 @@ C
       INTEGER ISYRES, LWORK
       integer isym
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 C
       CALL QENTER('AT3ZU')
 C
@@ -256,17 +246,10 @@ c
 c
       integer kx3am
 c
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQRZ,FREQRU,FREQZU
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQRZ,FREQRU,FREQZU
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       CALL QENTER('AT3ZUV')
 c
@@ -1538,17 +1521,10 @@ c
 c
       integer kx3am
 c
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQRZ,FREQRU,FREQZU
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQRZ,FREQRU,FREQZU
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       CALL QENTER('AT3ZUOCC')
 C
@@ -2250,17 +2226,10 @@ c
       integer kx3am
 c
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQZ,FREQU,FREQZU
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQZ,FREQU,FREQZU
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
 
       CALL QENTER('CC3_BMATT3ZU')

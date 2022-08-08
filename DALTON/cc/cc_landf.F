@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -2142,11 +2142,7 @@ C#include "ccsdsym.h"
       INTEGER LWORK,ISYINT
       INTEGER IT2BCD(8,8),NT2BCD(8),IT1AM(8,8),NT1AM(8),MVIR(8)
       INTEGER ISYMJ, J, ISYMI, I, ISYMA, ISYMAI, ISYMAJ, NAIJ, NAJI
-#if defined (SYS_CRAY)
-      REAL X21INT(*), WORK(LWORK)
-#else
       DOUBLE PRECISION X21INT(*), WORK(LWORK)
-#endif
 C
       CALL QENTER('CCLT_P21I')
 C

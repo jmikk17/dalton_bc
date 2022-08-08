@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -2375,6 +2375,9 @@ CClark:end
      &          RMLEN(*), RQLEN(*), RLEN(*),
      &          RMVEL(*), RQVEL(*), RVEL(*), SLEN(*), SVEL(*)
       LOGICAL OD, FIRST
+
+! inftap.h : LUSIFC, LBSIFC, ?
+
 #include "gnrinf.h"
 #include "abainf.h"
 #include "nuclei.h"
@@ -2395,6 +2398,7 @@ C
 #include "trkoor.h"
 #include "taymol.h"
       REAL*8, allocatable ::  GRDMOL(:), HESMOL(:,:)
+      LOGICAL :: FNDLAB
 
       CALL QENTER('ABARESULT')
 C
@@ -2413,8 +2417,12 @@ C
 C
       IF (LUSIFC .LE. 0) CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',
      &                               IDUMMY,.FALSE.)
+
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      IF (.NOT.FNDLAB(LBSIFC,LUSIFC)) THEN
+         CALL QUIT('ERROR: '//LBSIFC//' label not found on SIRIFC')
+      END IF
+
       READ (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,
      *            LSYM,MS2
       READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT

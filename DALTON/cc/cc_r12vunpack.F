@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -34,11 +34,7 @@ c----------------------------------------------------------------------
 
       logical locdbg,lprojv
       parameter(locdbg = .false.)
-#if defined (SYS_CRAY)
-      real half
-#else
       double precision half
-#endif
       parameter ( half = 0.5d0 )
 
       integer idxkl,idxlk,idxij,idxijkl,idxijlk,nrhftria,idxjikl,idxjilk
@@ -47,13 +43,8 @@ c----------------------------------------------------------------------
       integer nrhforb(8),irhforb(8),nij(8),iij(8,8),iijkl(8,8)
       integer nr12orb(8),ir12orb(8),nkl(8),ikl(8,8),nr12t
       integer index
-#if defined (SYS_CRAY)
-      real vijkl(*),vsing(*)
-      real vtrip(*),ff
-#else
       double precision vijkl(*),vsing(*)
       double precision vtrip(*),ff
-#endif
 
       index(i,j) = max(i,j)*(max(i,j) - 3)/2 + i + j
 
@@ -201,15 +192,9 @@ c---------------------------------------------------------------------
       integer it,jt,kt,lt,index,kl,ij,klij,isymv,isym,icoun1,icoun2
       integer nr12orb(8),nrhforb(8),irhforb(8),ir12orb(8),
      &        nij(8),nkl(8),iij(8,8),ikl(8,8),nijkl(8),iijkl(8,8),nr12t
-#if defined (SYS_CRAY)
-      real vijkl(*),vsing(*)
-      real vtrip(*),ff
-      real ffkl,half
-#else
       double precision vijkl(*),vsing(*)
       double precision vtrip(*),ff
       double precision ffkl,half
-#endif
       logical locdbg
       parameter(locdbg = .false.)
       parameter (half = 0.5D0)
@@ -383,12 +368,8 @@ c---------------------------------------------------------------------
       character*3 aprox
       character*10 model
       character*(*) aproxr12
-#if defined (SYS_CRAY)
-      real vijkl(*),work(*), cont(2), ddot, basscl1, basscl2
-#else
       double precision vijkl(*),work(*), cont(2), ddot, basscl1,
      &                 basscl2
-#endif
       logical locdbg
       parameter (locdbg = .false.)
 
@@ -661,15 +642,9 @@ c---------------------------------------------------------------------
 #include "priunit.h"
 #include "r12int.h"
       integer n,ij,kl,mn
-#if defined (SYS_CRAY)
-      real e(n),vsing(n),vtrip(n),csing(n),ctrip(n),
-     &                 bsing(n,n),btrip(n,n),xsing(n,n),xtrip(n,n), 
-     &                 b,half,two,fact
-#else
       double precision e(n),vsing(n),vtrip(n),csing(n),ctrip(n),
      &                 bsing(n,n),btrip(n,n),xsing(n,n),xtrip(n,n), 
      &                 b,half,two,fact
-#endif
       parameter (half = 0.5d0, two = 2d0)
 
       call qenter('ccrhs_ep0')
@@ -746,13 +721,8 @@ c---------------------------------------------------------------------
       character*3 cdum
       character*10 model
       character*3 aproxr12,aprox
-#if defined (SYS_CRAY)
-      real vijkl(*),work(*), cont(2), ddot, basscl1, basscl2, one,
-     &     factor, half
-#else
       double precision vijkl(*),work(*), cont(2), ddot, basscl1,
      &                 basscl2, one, factor, half
-#endif
       logical locdbg
       parameter (locdbg = .false.)
       parameter (one = 1.0D0, half = 0.5D0)
@@ -1045,13 +1015,8 @@ c----------------------------------------------------------------------
       integer kscr,kvint,lu43,kepsij,kepsoff
       integer kbb,kuu,kpp,kqq,krr,ian,iap,iopt,isym
       integer nkilj(8),nij,isymij,inmatij(8),it,jt,isymi,isymj,norbtsx
-#if defined (SYS_CRAY)
-      real tamp12(*),omeg12(*),er12,work(*)
-      real ensing,entrip,delta,xf,fs,ft,ws,wt,ddot,timnxtam
-#else
       double precision tamp12(*),omeg12(*),er12,work(*)
       double precision ensing,entrip,delta,xf,fs,ft,ws,wt,ddot,timnxtam
-#endif
       character*3 aprox
       character*10 model
       integer index
@@ -1440,11 +1405,7 @@ c---------------------------------------------------------------------
       integer idum,n2,lunit,ijrsvc,ijrtvc,ijsvc,ijtvc
       integer ian, iap,ks2,krabkl,krmnab,ksr
       integer nkilj(8)
-#if defined (SYS_CRAY)
-      real work(*), ddot,two,one,half,basscl1,basscl2
-#else
       double precision work(*), ddot,two,one,half,basscl1,basscl2
-#endif
       parameter (one = 1.0d0, two = 2.0d0, half = 0.5d0)
 
       call qenter('cc_r12metric')
@@ -1633,13 +1594,8 @@ c---------------------------------------------------------------------
       implicit none
 #include "priunit.h"
       integer n,ij,kl,mn
-#if defined (SYS_CRAY)
-      real rsing(n),rtrip(n),xsing(n,n),xtrip(n,n),srsing(n),srtrip(n) 
-     &                 
-#else
       double precision rsing(n),rtrip(n),xsing(n,n),
      & xtrip(n,n),srsing(n),srtrip(n) 
-#endif
       call qenter('cc_r12metric0')
 
       do kl = 1, n 
@@ -1695,12 +1651,8 @@ c---------------------------------------------------------------------
       integer lufc12,lufs12,lufc2,lufs2
       integer kxint,ij,kpck,kxintsq,kr12sq,kres,krabkl,krmnab
       integer idum,lunit,ifile,ian,iopt
-#if defined (SYS_CRAY)
-      real work(*), ddot, one, half, two, basscl1, basscl2, vec(*)
-#else
       double precision work(*), ddot, one, half, two, basscl1, basscl2,
      &                 vec(*)
-#endif
       parameter (one = 1.0D0, half = 0.5D0, two = 2.0D0)
 
       call qenter('cc_r12metric')
@@ -1865,11 +1817,7 @@ c
 
       integer lufc2,lufc12,lufs2,ifile,isymt,lwork,kend1,lwrk1
       integer krabkl,krmnab,krijkl,lunit,idummy
-#if defined (SYS_CRAY)
-      real work(*),two,one,half,factor,vec(*)
-#else
       double precision work(*),two,one,half,factor,vec(*)
-#endif
       parameter (one = 1.0d0, two = 2.0d0, half = 0.5d0)
 
       call qenter('getsr22')
@@ -1959,12 +1907,8 @@ c---------------------------------------------------------------------
       integer isymij,isymkl,isymmn
       integer inmatkl(8),inmatij(8)
 
-#if defined (SYS_CRAY)
-      real bmatsq(*),bmatsq0(*),xintsq(*),epskl(*),epsij(*),factor,two
-#else
       double precision bmatsq(*),bmatsq0(*),xintsq(*),epskl(*),
      &                 epsij(*),factor,two
-#endif
       parameter (two = 2.0D0)
 
       call qenter('cc_r12buildbmat')
@@ -2034,13 +1978,8 @@ c----------------------------------------------------------------------
       integer lwork,ian,iap,iopt,isym,lunit,idum
       integer isymij,isymmn,isymkl,idxij,isymom
       integer nij,nkl,inmatij(8),inmatkl(8),norbtsx
-#if defined (SYS_CRAY)
-      real tamp12(*),omeg12(*),er12,work(*),ddot,one,half,zero,factor,
-     &     rcond,thrzero,timnxtam
-#else
       double precision tamp12(*),omeg12(*),er12,work(*),ddot,one,half,
      &                 zero,factor,rcond,thrzero,timnxtam
-#endif
       character*3 aprox
       character*10 model
       parameter (one = 1.0D0, half = 0.5D0, zero = 0.0D0)
@@ -2310,11 +2249,7 @@ c----------------------------------------------------------------------
       integer lwork,idummy,icount,isym
       integer isymij,isymi,isymj,mi,mj,idxij 
       integer nrhf1(8),inmat(8),imat(8,8),ioff(8)
-#if defined (SYS_CRAY)
-      real evlout(length),evlin(*),ei,ej
-#else
       double precision evlout(length),evlin(*),ei,ej
-#endif
 c
       call qenter('cc_r12epair')
       if (locdbg) then

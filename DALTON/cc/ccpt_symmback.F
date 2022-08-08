@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -68,15 +68,9 @@ C
       integer kd1kjia, kd2jkia, kdiajk, kdaijk,isycmo
       integer kbicr4,ioffbic_a,ioffcib_a
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL ZERO, ONE, TWO, FACT
-      REAL DDOT,XNORM2,XNORM,XNABI1,XNABI3
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, TWO, FACT
       DOUBLE PRECISION DDOT,XNORM2,XNORM,XNABI1,XNABI3
-#endif
 
 
       CHARACTER MODEL*10
@@ -649,15 +643,9 @@ Csonia
 
       integer LUABICA, LUABIDA,LUIJKDA, KOCCA1, KABIA
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL ZERO, ONE, TWO, FACT
-      real ddot,xnorm2,xnorm,xnabi1,xnabi3
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, TWO, FACT
       double precision ddot,xnorm2,xnorm,xnabi1,xnabi3
-#endif
 
 
       CHARACTER MODEL*10

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -40,13 +40,8 @@ c/* Deck CC_GATHEROO */
 
       INTEGER ISYINT, KOFF1, KOFF2, ISYMJ, ISYMI
       
-#if defined (SYS_CRAY)
-      REAL XMO(*)
-      REAL XOO(*)      ! dimension (NMATIJ(ISYINT))
-#else
       DOUBLE PRECISION XMO(*)
       DOUBLE PRECISION XOO(*)      ! dimension (NMATIJ(ISYINT))
-#endif
 
       DO ISYMJ = 1, NSYM
         ISYMI = MULD2H(ISYMJ,ISYINT)
@@ -83,13 +78,8 @@ c/* Deck CC_GATHEROV */
 
       INTEGER ISYINT, KOFF1, KOFF2, ISYMJ, ISYMB
       
-#if defined (SYS_CRAY)
-      REAL XMO(*)
-      REAL XOO(*)     ! dimension (NT1AM(ISYINT))
-#else
       DOUBLE PRECISION XMO(*)
       DOUBLE PRECISION XOV(*)     ! dimension (NT1AM(ISYINT))
-#endif
 
       DO ISYMJ = 1, NSYM
         ISYMB = MULD2H(ISYMJ,ISYINT)
@@ -126,13 +116,8 @@ c/* Deck CC_GATHERVV */
 
       INTEGER ISYINT, KOFF1, KOFF2, ISYMB, ISYMC
       
-#if defined (SYS_CRAY)
-      REAL XMO(*)
-      REAL XOO(*)  ! dimension (NMATAB(ISYINT))
-#else
       DOUBLE PRECISION XMO(*)
       DOUBLE PRECISION XVV(*)  ! dimension (NMATAB(ISYINT))
-#endif
 
       DO ISYMC = 1, NSYM
         ISYMB = MULD2H(ISYMC,ISYINT)
@@ -176,19 +161,11 @@ c/* Deck CC_XBAR */
       INTEGER ISYMX, ISYMI, ISYMJ, MAXJ, NIJ, NJI
       INTEGER ISYOVOV, ISYAMP, LWORK
       
-#if defined (SYS_CRAY)
-      REAL XBAR(*)      ! dimension (NMATIJ(MULD2H(ISYOVOV,ISYAMP)))
-      REAL XLIAJB(*)    ! dimension (NT2SQ(ISYOVOV))
-      REAL T2AMP(*)     ! dimension (NT2AM(ISYAMP))
-      REAL WORK(LWORK)
-      REAL SWAP
-#else
       DOUBLE PRECISION XBAR(*)   ! dim. (NMATIJ(MULD2H(ISYOVOV,ISYAMP)))
       DOUBLE PRECISION XLIAJB(*) ! dim. (NT2SQ(ISYOVOV))
       DOUBLE PRECISION T2AMP(*)  ! dim. (NT2AM(ISYAMP))
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION SWAP
-#endif
 
 
 * call CC_XI for the expansive part:
@@ -246,17 +223,10 @@ c/* Deck CC_YBAR */
       INTEGER ISYMY, LEN
       INTEGER ISYOVOV, ISYAMP, LWORK
       
-#if defined (SYS_CRAY)
-      REAL YBAR(*)       ! dimension (NMATAB(MULD2H(ISYOVOV,ISYAMP)))
-      REAL XLIAJB(*)     ! dimension (NT2SQ(ISYOVOV))
-      REAL T2AMP(*)      ! dimension (NT2AM(ISYAMP))
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION YBAR(*)   ! dim. (NMATAB(MULD2H(ISYOVOV,ISYAMP)))
       DOUBLE PRECISION XLIAJB(*) ! dim. (NT2SQ(ISYOVOV))
       DOUBLE PRECISION T2AMP(*)  ! dim. (NT2AM(ISYAMP))
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
 
 * call CC_YI for the expansive part:

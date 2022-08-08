@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -51,11 +51,7 @@ C
       CHARACTER MODELPRI*4
       CHARACTER LABEL*8
 C
-#if defined (SYS_CRAY)
-      REAL              DEMMMM
-#else
       DOUBLE PRECISION  DEMMMM
-#endif
 C
 C--------------------------------------------------
 C     Header for the CCMM output in each iteration:
@@ -1945,11 +1941,7 @@ C
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
 C
-#if defined (SYS_CRAY)
-      REAL CKMXPR
-#else
       DOUBLE PRECISION CKMXPR
-#endif
       PARAMETER (CKMXPR = 1.0d-12)
 C
 C input:
@@ -1958,13 +1950,8 @@ C
       CHARACTER*8 RRAO
       INTEGER IRREP, ISYM, IERR, LWORK, LU
 C
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL RAAOx(*),Xint(*)
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION RAAOx(*),Xint(*)
-#endif
 C
       LOGICAL LOPENED
       INTEGER IDX, IDXI, IDXJ

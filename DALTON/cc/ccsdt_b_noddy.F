@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -55,19 +55,11 @@ C
       INTEGER LWORK, IOPTRES, ITRAN, MXVEC, NBTRAN, IDLSTA, IDLSTB
       INTEGER IDOTS(MXVEC,NBTRAN)
 
-#if defined (SYS_CRAY)
-      REAL FREQA, FREQB, FREQ, DDOT, FF
-      REAL DOTPROD(MXVEC,NBTRAN), WORK(LWORK), TWO, ONE
-      REAL XLAMDP0(*), XLAMDH0(*), SIGN
-      REAL OMEGA1(*), OMEGA2(*)
-      REAL OMEGA1EFF(*), OMEGA2EFF(*)
-#else
       DOUBLE PRECISION FREQA, FREQB, FREQ, DDOT, FF
       DOUBLE PRECISION DOTPROD(MXVEC,NBTRAN), WORK(LWORK), TWO, ONE
       DOUBLE PRECISION XLAMDP0(*), XLAMDH0(*), SIGN
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*)
       DOUBLE PRECISION OMEGA1EFF(*), OMEGA2EFF(*)
-#endif
       PARAMETER(ONE = 1.0D0,  TWO = 2.0D0 )
 
       CHARACTER*10 MODEL
@@ -703,17 +695,10 @@ C     end if
       CHARACTER*3 LISTA, LISTB
       INTEGER LWORK, IDLSTB, IDLSTA
 
-#if defined (SYS_CRAY)
-      REAL B3AM(*), SCR1(*), T2AM(*), WORK(*)
-      REAL XINT1SA(*), XINT2SA(*), XINT1SB(*), XINT2SB(*)
-      REAL XINT1SAB(*), XINT2SAB(*), FOCKD(*)
-      REAL TWO, ZERO
-#else
       DOUBLE PRECISION B3AM(*), SCR1(*), T2AM(*), WORK(*)
       DOUBLE PRECISION XINT1SA(*), XINT2SA(*), XINT1SB(*), XINT2SB(*)
       DOUBLE PRECISION XINT1SAB(*), XINT2SAB(*), FOCKD(*)
       DOUBLE PRECISION TWO, ZERO
-#endif
       PARAMETER( TWO = 2.0D0, ZERO = 0.0D0 )
 
       CHARACTER*10 MODEL
@@ -774,17 +759,10 @@ C     end if
 #include "ccorb.h"
 
       INTEGER LWORK
-#if defined (SYS_CRAY)
-      REAL WORK(*), XINT1SAB(*), XINT2SAB(*)
-      REAL XLAMDP0(*), XLAMDH0(*)
-      REAL XLAMDPA(*), XLAMDHA(*)
-      REAL XLAMDPB(*), XLAMDHB(*)
-#else
       DOUBLE PRECISION WORK(*), XINT1SAB(*), XINT2SAB(*)
       DOUBLE PRECISION XLAMDP0(*), XLAMDH0(*)
       DOUBLE PRECISION XLAMDPA(*), XLAMDHA(*)
       DOUBLE PRECISION XLAMDPB(*), XLAMDHB(*)
-#endif
 
       INTEGER ISYMD, ILLL, IDEL, ISYDIS, KXINT, KEND2, LWRK2, IRECNR
 

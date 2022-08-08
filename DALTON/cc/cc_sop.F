@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -69,24 +69,15 @@ CTOCD
       CHARACTER*(17) MSGDBG
       PARAMETER (MSGDBG = '[debug] CC_SOP> ')
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER*10 MODEL
       LOGICAL LADD
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL TIM0, TIM1, TIMF, TIMXE, TIMXI, TIMR, TIMJ
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION TIM0, TIM1, TIMF, TIMXE, TIMXI, TIMR, TIMJ
-#endif
 
       INTEGER NBSOP, MXTRAN, MXVEC
       INTEGER MXFTRAN, MXXITRAN, MXRTRAN, MXJTRAN
@@ -442,15 +433,6 @@ c /* deck ccsopprt */
       INTEGER IFRZER, IBLRFR
 
 
-#if defined (SYS_CRAY)
-      REAL SOPROP(NBLRFR,NLROP,2), WORK(LWORK)
-      REAL GLEN(3,MBLRFR), GVEL(3,MBLRFR), DELTA(3,MBLRFR)
-      REAL GTST(3,MBLRFR)
-      REAL SIGN, ANI, ALPHA, PROP, ERROR, ALPHASI, ANISI
-      REAL ALFSQ, BETSQ, APAR, APEN, XKAPPA
-      REAL TENS(3,3), PVALUES(3), PAXIS(3,3)
-      REAL ZERO, HALF, ONE, DPOLAUTSI
-#else
       DOUBLE PRECISION SOPROP(NBLRFR,NLROP,2), WORK(LWORK)
       DOUBLE PRECISION GLEN(3,MBLRFR), GVEL(3,MBLRFR), DELTA(3,MBLRFR)
       DOUBLE PRECISION GTST(3,MBLRFR)
@@ -458,7 +440,6 @@ c /* deck ccsopprt */
       DOUBLE PRECISION ALFSQ, BETSQ, APAR, APEN, XKAPPA
       DOUBLE PRECISION TENS(3,3), PVALUES(3), PAXIS(3,3)
       DOUBLE PRECISION ZERO, HALF, ONE, DPOLAUTSI
-#endif
       PARAMETER (ZERO = 0.0d0, HALF = 0.5d0, ONE = 1.0d0)
       PARAMETER (DPOLAUTSI =  1.648778D-41)
 
@@ -475,13 +456,8 @@ CTOCD
 C           
       LOGICAL JUMP
       INTEGER IY, IDUM, LU29
-#if defined (SYS_CRAY)
-      REAL FACTOR, PRP2
-      REAL SOPRP(MXLROP)
-#else
       DOUBLE PRECISION FACTOR, PRP2 
       DOUBLE PRECISION SOPRP2(MXLROP)
-#endif
 CTOCD
 
 

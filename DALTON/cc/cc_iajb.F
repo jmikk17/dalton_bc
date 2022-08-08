@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -138,32 +138,19 @@ c /* deck cc_iabj */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
 
       LOGICAL LDERIV, LRELAX, LZERO, LTRIANG, LX2ISQ, LLAO, LAUXG
       INTEGER IDEL,IGAM,ISY1ALBE,ISY2ALBE,ISYM1,ISYM2,LWORK,IOPT,IREAL
       INTEGER ISYB1, ISYB2, IBASX(*)
       
-#if defined (SYS_CRAY)
-      REAL XLAMDP1(*), XLAMDH1(*), XLMDPB1(*), XLMDHB1(*)
-      REAL XLAMDP2(*), XLAMDH2(*), XLMDPB2(*), XLMDHB2(*)
-      REAL X1INT(*), X2INT(*)
-      REAL XIAJB(*),  XIABJ(*),  XIJBA(*)
-      REAL X2IAJB(*), X2IABJ(*), X2IJBA(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION XLAMDP1(*), XLAMDH1(*), XLMDPB1(*), XLMDHB1(*)
       DOUBLE PRECISION XLAMDP2(*), XLAMDH2(*), XLMDPB2(*), XLMDHB2(*)
       DOUBLE PRECISION X1INT(*), X2INT(*)
       DOUBLE PRECISION XIAJB(*),  XIABJ(*),  XIJBA(*)
       DOUBLE PRECISION X2IAJB(*), X2IABJ(*), X2IJBA(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       INTEGER ISYM11, ISYM12, ISYRES1, ISYRES2, ISYGAM, ISYDEL
       INTEGER KX1IA, KX2GDIA, KX2DGIA, KX1IJ, KX2IJ, KEND1, LWRK1
@@ -412,32 +399,19 @@ c /* deck cc_iabj0 */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL ONE, ZERO
-#else
       DOUBLE PRECISION ONE, ZERO
-#endif
       PARAMETER (ONE = 1.0d0, ZERO = 0.0d0)
 
       LOGICAL LDERIV, LRELAX, LAO, LX2ISQ
       INTEGER IDEL, IGAM, ISY1ALBE, ISY2ALBE, ISYM1, ISYM2, LWORK, IOPT
       INTEGER IREAL
       
-#if defined (SYS_CRAY)
-      REAL XLAMDP1(*), XLAMDH1(*)
-      REAL XLAMDP2(*), XLAMDH2(*)
-      REAL XINT1(*), XINT2(*)
-      REAL X1IA(*), X2GDIA(*), X2DGIA(*), X1IJ(*), X2IJ(*)
-      REAL WORK(LWORK)
-      REAL FAC
-#else
       DOUBLE PRECISION XLAMDP1(*), XLAMDH1(*)
       DOUBLE PRECISION XLAMDP2(*), XLAMDH2(*)
       DOUBLE PRECISION XINT1(*), XINT2(*)
       DOUBLE PRECISION X1IA(*), X2GDIA(*), X2DGIA(*), X1IJ(*), X2IJ(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FAC
-#endif
 
       INTEGER ISYM11, ISYM12, ISYMJ, ISYMB, ISYRES1, ISYRES2
       INTEGER ISYMI, ISYMA, ISYALP, ISYBET, ISYDEL, ISYGAM, LENHLF
@@ -886,11 +860,7 @@ c /* deck cc_iajb1 */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL XIAG(*), XIABJ(*), XLAMDA(*)
-#else
       DOUBLE PRECISION XIAG(*), XIABJ(*), XLAMDA(*)
-#endif
 
       LOGICAL LAUXG
       INTEGER IGAM, ISYMAI, ISYGAM, ISYLAM, ISYMJ, KLAMD, KOFF0,
@@ -935,11 +905,7 @@ c /* deck cc_ijba1 */
 #include "maxorb.h"
 #include "ccisao.h"
 
-#if defined (SYS_CRAY)
-      REAL XIJG(*), XIJBA(*), XLAMDA(*)
-#else
       DOUBLE PRECISION XIJG(*), XIJBA(*), XLAMDA(*)
-#endif
 
       LOGICAL LAUXG
       INTEGER IGAM, ISYMIJ, ISYGAM, ISYLAM, ISYMA, KLAMD, KOFF0

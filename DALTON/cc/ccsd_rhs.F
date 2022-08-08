@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -7128,7 +7128,6 @@ C
             CALL QUIT('Not enough space for DGEDI in CCSD_INVLDP')
          END IF
 C
-#if !defined (SYS_CRAY)
          IF (NBAS(ISYMA) .GT. 1) THEN
             CALL DGEFA(WORK(KSCR),NBAS(ISYMA),NBAS(ISYMA),
      *                 WORK(KIPVT),IERR)
@@ -7136,15 +7135,6 @@ C
 C
          CALL DGEDI(WORK(KSCR),NBASA2,NBASA1,WORK(KIPVT),DET,
      *              WORK(KEND2),1)
-#else
-         IF (NBAS(ISYMA) .GT. 1) THEN
-            CALL SGEFA(WORK(KSCR),NBAS(ISYMA),NBAS(ISYMA),
-     *                 WORK(KIPVT),IERR)
-         END IF
-C
-         CALL SGEDI(WORK(KSCR),NBASA2,NBASA1,WORK(KIPVT),DET,
-     *              WORK(KEND2),1)
-#endif
 #endif
 C
          DO 110 I = 1,NRHF(ISYMA)
@@ -7629,17 +7619,10 @@ C
 C
          KOFF = NNBST(ISYMAB)*(IG - 1)
 C
-#if !defined (SYS_CRAY)
          DO 130 I = 1,NNBST(ISYMAB)
-C
             XINTP(KOFF + I) = SCRAB(INDV1(I))
             XINTM(KOFF + I) = SCRAB(INDV2(I))
-C
   130    CONTINUE
-#else
-         CALL GATHER(NNBST(ISYMAB),XINTP(KOFF + 1),SCRAB,INDV1)
-         CALL GATHER(NNBST(ISYMAB),XINTM(KOFF + 1),SCRAB,INDV2)
-#endif
 C
   100 CONTINUE
 C

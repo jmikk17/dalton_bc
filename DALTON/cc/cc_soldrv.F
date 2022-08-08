@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -94,17 +94,10 @@ C
       INTEGER ISYMS(MAXVEC,NSTAT), ISTAT(MAXVEC,NSTAT)
       INTEGER ISYMO(MAXVEC,ORDER), ICAU(MAXVEC,ORDER)
 
-#if defined (SYS_CRAY)
-      REAL FREQS(MAXVEC,ORDER), EIGVAL(MAXVEC,NSTAT)
-      REAL SIGN
-      REAL ZERO, ONE
-      PARAMETER (ZERO = 0.0, ONE = 1.0)
-#else
       DOUBLE PRECISION FREQS(MAXVEC,ORDER), EIGVAL(MAXVEC,NSTAT)
       DOUBLE PRECISION SIGN
       DOUBLE PRECISION ZERO, ONE
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0)
-#endif
 
       CHARACTER*8 FC1AM,FC2AM,FRHO1,FRHO2,FRHO12,FC12AM,FS12AM,FS2AM
       PARAMETER (FC1AM ='CCR_C1AM',FC2AM ='CCR_C2AM')
@@ -873,11 +866,7 @@ Cholesky
 #include "ccdeco.h"
 Cholesky
 
-#if defined (SYS_CRAY)
-      REAL VEC(*), DDOT
-#else
       DOUBLE PRECISION VEC(*), DDOT
-#endif
 
       LOGICAL TRIPLET
       CHARACTER FC1AM*(*), FC2AM*(*), FC12AM*(*)
@@ -932,11 +921,7 @@ Cholesky
 #include "ccdeco.h"
 Cholesky
 
-#if defined (SYS_CRAY)
-      REAL VEC(*), DDOT
-#else
       DOUBLE PRECISION VEC(*), DDOT
-#endif
 
       LOGICAL TRIPLET
       CHARACTER FC1AM*(*),FC2AM*(*),FC12AM*(*)

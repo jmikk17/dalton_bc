@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -55,19 +55,11 @@ c /* deck cc_tmcal */
       INTEGER IX3AC0F, IX3DF0F, IO3AC0F, IO3ACF0, IO3DF0F, IO3DFF0
       INTEGER NCCVAR1, NCCVAR2
 
-#if defined (SYS_CRAY)
-      REAL HALF, FREQEX, FREQB, FREQC, EIGV, WRK(LWRK)
-      REAL SMLM, SMCLM, SMRM, SMCRM
-      REAL ABCLM,DEFLM,ABCRM,DEFRM
-      REAL X1, X2, Y1, Y2
-      REAL DDOT, ZERO
-#else
       DOUBLE PRECISION HALF, FREQEX, FREQB, FREQC, EIGV, WRK(LWRK) 
       DOUBLE PRECISION SMLM, SMCLM, SMRM, SMCRM
       DOUBLE PRECISION ABCLM,DEFLM,ABCRM,DEFRM,THREEPH
       DOUBLE PRECISION X1, X2, Y1, Y2
       DOUBLE PRECISION DDOT, ZERO
-#endif
 
       PARAMETER ( HALF = 0.5D00, ZERO = 0.0D00 )
 
@@ -395,11 +387,7 @@ C         END IF
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
 
-#if defined (SYS_CRAY)
-      REAL D3, BTMFRSV, CTMFRSV
-#else
       DOUBLE PRECISION D3, BTMFRSV, CTMFRSV
-#endif
       PARAMETER ( D3 = 3.0D00 )
 
 C

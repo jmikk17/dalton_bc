@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -731,6 +731,7 @@ end subroutine pelib_ifc_molgrad
 
 subroutine pelib_ifc_response(denmats, fckmats, nmats)
     use pelib, only: pelib_master
+    use pelib_options, only: pelib_gspol
 #include "inforb.h"
     integer, intent(in) :: nmats
     real*8, dimension(nmats*nnbasx), intent(in) :: denmats
@@ -738,7 +739,11 @@ subroutine pelib_ifc_response(denmats, fckmats, nmats)
     call qenter('pelib_ifc_response')
     if (.not. use_pelib()) call quit('PElib not active')
 #if defined(VAR_MPI)
-    call pelib_ifc_start_slaves(3)
+    if (.not. pelib_gspol) then
+        ! handle early return of pelib_master in case of pelib_gspol
+        ! so the mpi calls don't get stuck
+        call pelib_ifc_start_slaves(3)
+    end if
 #endif
     call pelib_master(runtype='dynamic_response', &
                    triang=.true., &
@@ -1212,7 +1217,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
 !    INFVAR : NWOPH
 !    INFLIN : NCONST, NVARPT, NWOPPT
 !
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
@@ -1230,6 +1235,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     real*8, dimension(nwrk) :: wrk
 
     logical :: fndlab
+    logical :: pelib_gspol_save
     integer :: i, j, jscvec, mwoph
     real*8 :: tfxc, tfyc, tfycac, solelm, energy
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fycao
@@ -1249,6 +1255,9 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     fxcs = 0.0d0
     fxcacs = 0.0d0
     tfxcacs = 0.0d0
+
+    pelib_gspol_save = pelib_gspol
+    pelib_gspol = .false.
 
     if (pelib_polar) then
         ! Fxc = -R<0|Fe|B>Fe in fxcaos
@@ -1312,6 +1321,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     deallocate(fyc, fxcs)
 
     srdft_spindns = srdft_spindns_save
+    pelib_gspol   = pelib_gspol_save
     call qexit('pelib_lnc')
 
 end subroutine pelib_lnc
@@ -1332,7 +1342,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
 !    INFVAR : JWOP
 !    INFLIN : NWOPPT, NVARPT, NCONST, NCONRF
 !
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
@@ -1350,6 +1360,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
 
     integer :: i, j, jsovec, mwoph, ncolim
     logical :: fulhes, fndlab
+    logical :: pelib_gspol_save
     real*8 :: solelm
     real*8 :: txyo
     real*8 :: energy
@@ -1387,7 +1398,10 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
         end do
         deallocate(ubodcao, ubodvao)
         allocate(fxoaos(nosim*nnbasx))
+        pelib_gspol_save = pelib_gspol
+        pelib_gspol = .false.
         call pelib_ifc_response(bodtaos, fxoaos, nosim)
+        pelib_gspol = pelib_gspol_save
         deallocate(bodtaos)
         allocate(fxos(nnorbx,nosim))
         do i = 1, nosim
@@ -1483,7 +1497,7 @@ subroutine pelib_ifc_lr(ncsim, nosim, bcvecs, bovecs, cref, cmo, cindx, udv,&
     real*8, dimension(*) :: udvtr, dvtr, dtv, dtvtr
     real*8, dimension(*) :: scvecs, sovecs
     real*8, dimension(nwrk) :: wrk
-
+    
     call qenter('pelib_ifc_lr')
     if (.not. use_pelib()) call quit('PElib not active')
 
@@ -1503,7 +1517,7 @@ end subroutine pelib_ifc_lr
 
 subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
                      udvtr, dvtr, dtv, dtvtr, scvecs, wrk, nwrk)
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
@@ -1562,7 +1576,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
     tfxcacs = 0.0d0
 
     ! Fxc = R*(<0(L)|Fe|0> + <0|Fe|0(R)>)Fe
-    if (pelib_polar .or. .not. trplet) then
+    if (.not. pelib_gspol .and. (pelib_polar .or. .not. trplet)) then
         call getref(cref, ncref)
         ! ...Construct <0(L)|...|0> + <0|...|0(R)>
         allocate(udtv(n2ashx,ncsim))
@@ -1720,6 +1734,8 @@ subroutine pelib_rsplno(nosim, bovecs, cref, cmo, cindx, udv, dv,&
     real*8, dimension(:), allocatable :: txyoacs
     real*8, dimension(:), allocatable :: ovlp
     logical :: lexist, lopen
+    logical :: pelib_gspol_save
+
 
     call qenter('pelib_rsplno')
     if (.not. use_pelib()) call quit('PElib not active')
@@ -1734,7 +1750,7 @@ subroutine pelib_rsplno(nosim, bovecs, cref, cmo, cindx, udv, dv,&
         call qexit('pelib_rsplno')
         return
     ! ground state polarization approximation
-    else if (pelib_gspol) then
+    else if (pelib_gspol .and. tdhf) then
         call qexit('pelib_rsplno')
         return
     ! triplet response for open shell (and MCSCF) not ready yet

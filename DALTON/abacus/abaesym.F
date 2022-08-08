@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -301,8 +301,8 @@ C  INFDIM : NCONDI, NWOPDI
 C  INFTAP : LUINDX
 C  INFVAR : JWOPSY, NCONF, NWOPT, NWOPH, NVAR, NVARH
 C  INFLIN : LSYMRF, LSYMST, LSYMPT, NCONST, NWOPPT, NVARPT
-C  LINABA : ABAHF, ABACI, LOFFRD
-C  ABAINF : ABASOP
+C  LINABA : LOFFRD
+C  ABAINF : ABASOP, ABAHF, ABACI
 C  INFSOP : N2P2HS, N2P2HT, NS2P2H, NT2P2H, N12P2H, N22P2H, N32P2H
 C
 #include "inforb.h"

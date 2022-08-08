@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -53,11 +53,7 @@ c /* deck cc_cauchy */
       PARAMETER (ISYMREF = 1)
     
 
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0D0)
 
       CHARACTER*80 STRING
@@ -72,13 +68,8 @@ c /* deck cc_cauchy */
       INTEGER MXXETRAN,KXETRAN,KECDOTS,KECCONS,KXCDOTS,KXCCONS,NXETRAN
       INTEGER KTRK, ISTRT, IORDER, IDISP0
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL TRKBAS, SMOM, SIGN, ECONAB, ECONBA, FCON, XCONAB
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION TRKBAS, SMOM, SIGN, ECONAB, ECONBA, FCON, XCONAB
-#endif
 
 * external functions:
       INTEGER ILRCAMP
@@ -829,11 +820,7 @@ c /* deck CCCM_VEC */
 
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK), ZERO, ONE
-#else
       DOUBLE PRECISION WORK(LWORK), ZERO, ONE
-#endif
       PARAMETER (ZERO=0.0d0, ONE=1.0d0)
 
       CHARACTER*(10) MODEL, MODELW

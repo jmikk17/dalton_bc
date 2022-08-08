@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -52,13 +52,8 @@ C
 
       INTEGER IOPER, ISYHOP, LWORK, ORDER
 
-#if defined (SYS_CRAY)
-      REAL RMAT(*), WORK(LWORK) 
-      REAL HALF, ONE, ZERO
-#else
       DOUBLE PRECISION RMAT(*), WORK(LWORK) 
       DOUBLE PRECISION HALF, ONE, ZERO
-#endif
       PARAMETER(HALF=0.5D0, ONE=1.0D0, ZERO=0.0D0)
 
       CHARACTER*8 LABELH, LABELS

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -115,17 +115,10 @@ c
       integer kx3am
 c
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*),OMEGA1EFF(*),OMEGA2(*),OMEGA2EFF(*)
-      REAL WORK(LWORK)
-      REAL FREQB,FREQC,FREQBC
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION OMEGA1(*),OMEGA1EFF(*),OMEGA2(*),OMEGA2EFF(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQB,FREQC,FREQBC
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
 
       CALL QENTER('CC3_BMATSD')

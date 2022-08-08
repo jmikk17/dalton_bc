@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1773,20 +1773,12 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION ZERO, ONE
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 
       INTEGER ISYPQG, ISYDMO, ISYMLP, ICON
 
-#if defined (SYS_CRAY)
-      REAL D2PQG(*), D2PQMO(*), XLAMDP(*)
-#else
       DOUBLE PRECISION D2PQG(*), D2PQMO(*), XLAMDP(*)
-#endif
     
       INTEGER ISYMK, ISYMG, ISYMA, ISYMB, KOFF1, KOFF2, KOFF3,
      *        NTOTIJ, NTOTAI, NTOTAB, NTOTG, ISYMIJ, ISYMAB, ISYMAI
@@ -1992,22 +1984,14 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
 
       INTEGER ISYDEN, ISYDAI, ISYMLH, LWORK, IDEL, ISYMD
       INTEGER ISYMK, ISYMA, ISYMIJ, ISYMI, ISYMJ, ISYMAJ,
      &        KOFF1, KOFF2, NTOTA, NIJA, NDEI, NAJ
 
-#if defined (SYS_CRAY)
-      REAL D2IJA(*), DAI(*), XLAMDH(*), WORK(LWORK)
-#else
       DOUBLE PRECISION D2IJA(*), DAI(*), XLAMDH(*), WORK(LWORK)
-#endif
 
       CALL QENTER('DIJA11')
 C
@@ -2185,22 +2169,14 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
 
       INTEGER ISYDEN, ISYDAB, ISYMLH, IDEL, ISYMD, LWORK
       INTEGER ISYMB, ISYMA, ISYMIJ, ISYMI, ISYMJ,
      &        KOFF1, KOFF2, NTOTA, NIJA
 
-#if defined (SYS_CRAY)
-      REAL D2IJA(*), DAB(*), XLAMDH(*), WORK(LWORK)
-#else
       DOUBLE PRECISION D2IJA(*), DAB(*), XLAMDH(*), WORK(LWORK)
-#endif
 C
       CALL QENTER('DIJA21')
 C
@@ -3427,20 +3403,12 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION ZERO, ONE
-#endif
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 
       INTEGER ISYDEN, ISYMTI, ISYMZI, ISYMG, LWORK
 
-#if defined (SYS_CRAY)
-      REAL D2ABG(*), T2INT(*), Z2INT(*), WORK(LWORK)
-#else
       DOUBLE PRECISION D2ABG(*), T2INT(*), Z2INT(*), WORK(LWORK)
-#endif
 
       INTEGER ISYMA,ISYMAB,ISYMB,ISYMM, ISYMAM, ISYMBM, ISYMMN, ISYMN, 
      &        KZREOR, KTREOR, KEND1, LWRK1, kOFF1, NTOTA, NTOTMN, 

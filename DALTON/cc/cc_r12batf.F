@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -72,11 +72,7 @@ c----------------------------------------------------------------------
       character*(*) fback,fback2
       logical lauxbeta, projvir, modifyinttyp1
 
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       parameter (zero = 0.0D0, one = 1.0D0)
 
       integer nr1orb(8),nrgkl(8),irgkl(8,8)
@@ -99,11 +95,7 @@ celena
       integer isymdk,kr2sm2,kr2gk2,kr2pk2,icount1
       integer koffs 
 celena
-#if defined (SYS_CRAY)
-      real r2am(*), work(*), dnrm2, ddot
-#else
       double precision r2am(*), work(*), dnrm2, ddot
-#endif
 
 c-----------------------------------------------------------------------
 c     some initializations: 
@@ -586,11 +578,7 @@ c----------------------------------------------------------------------
       integer npkql,istartq,iendq,nql,istartp,iendp,norbp
       integer isymq,isyml,isympk,isymql, iqloff
       integer index
-#if defined (SYS_CRAY)
-      real rpkq(*), r2am(*)
-#else
       double precision rpkq(*), r2am(*)
-#endif
       index(i,j) = max(i,j)*(max(i,j)-3)/2 + i + j
 c
       if (locdbg) then

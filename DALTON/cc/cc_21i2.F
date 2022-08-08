@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -58,17 +58,10 @@ C
       LOGICAL LRHOAO, LDERIV, LX2ISQ
       INTEGER LWORK,ISYDIS,ISYDIS2,ISYVWZ0,ISYVWZ2,ISYXL0,ISYXL2,IOPT
 C
-#if defined (SYS_CRAY)
-      REAL RHO1(*), PINT0(*), PINT2(*), QINT0(*), QINT2(*), 
-     *     XINT(*), XINT2(*), WORK(LWORK),
-     *     XLAMP0(*), XLAMH0(*),XLAMP2(*)
-      REAL DUMMY, ZERO, ONE, TWO
-#else
       DOUBLE PRECISION RHO1(*), PINT0(*), PINT2(*), QINT0(*), QINT2(*),
      *                 XINT(*), XINT2(*), WORK(LWORK),
      *                 XLAMP0(*), XLAMH0(*),XLAMP2(*)
       DOUBLE PRECISION DUMMY, ZERO, ONE, TWO
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -372,13 +365,8 @@ C
       CHARACTER*(*) FLAG
       INTEGER LWORK, ISYGIJ, ISYDEN, ISYMXL, IOPT, IT3BAO(8,8)
 C
-#if defined (SYS_CRAY)
-      REAL PQAO(*), PQDEN(*), XLAMDP(*), WORK(LWORK)
-      REAL ZERO, ONE, FACT
-#else
       DOUBLE PRECISION PQAO(*), PQDEN(*), XLAMDP(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, FACT
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C
@@ -511,13 +499,8 @@ C
       INTEGER ISYRES, ISYDEN, ISYDIS, IT3BAO(8,8), LWORK
       INTEGER IOPT 
 C
-#if defined (SYS_CRAY)
-      REAL RHOAO(*), PQDEN(*), XINT(*), WORK(LWORK)
-      REAL ZERO, ONE
-#else
       DOUBLE PRECISION RHOAO(*), PQDEN(*), XINT(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C

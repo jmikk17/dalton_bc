@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -48,13 +48,8 @@ C
       CHARACTER*(8) LABEL
       INTEGER ISYFCK, LWORK
 
-#if defined (SYS_CRAY)
-      REAL FOCK1(*), CMO(*), WORK(LWORK)
-      REAL ONE, TWO, ZERO, FTRACE, TEMP, SIGN
-#else
       DOUBLE PRECISION FOCK1(*), CMO(*), WORK(LWORK)
       DOUBLE PRECISION HALF, ONE, TWO, ZERO, FTRACE, TEMP, SIGN
-#endif
       PARAMETER( HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0, ZERO = 0.0D0 )
 
       INTEGER IFOCK, IADRF, IOPT, ISYM, IEXPV, IREAL

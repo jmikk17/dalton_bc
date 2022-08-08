@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1167,7 +1167,7 @@ C  /* Deck spninp */
 #include "mxcent.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 16, D0 = 0.0D0)
+      PARAMETER (NTABLE = 17, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
@@ -1177,7 +1177,7 @@ C
       DATA TABLE /'.ABUNDA','.PRINT ','.SELECT','.NODSO ','.NOSD  ',
      &            '.NOFC  ','.NOPSO ','.SD+FC ','.SDXFC ','.ISOTOP',
      &            '.COUPLI','.SOS   ','.SOSOCC','.SINGST','.TRIPST',
-     &            '.SOSOCS'/
+     &            '.SOSOCS','.SOCVIR'/
 C
       NEWDEF = (WORD .EQ. '*SPIN-S')
       ICHANG = 0
@@ -1193,7 +1193,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16),I
+                     GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17),I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -1290,6 +1290,10 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
                   SOSOCS = .TRUE.
                   READ (LUCMD,*) NSTATI,NSTATF,NITRST
                GOTO 100
+ 17            CONTINUE
+                  SOSSPN = .TRUE.
+                  SOCVIR = .TRUE.
+               GOTO 100
 Cend-PFP
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
@@ -1331,6 +1335,9 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
          IF (SOSOCC) WRITE (LUPRI,'(A,A)')
      &      ' Only contributions from pairs of occupied ',
      &      ' orbitals are printed'
+         IF (SOCVIR) WRITE (LUPRI,'(A,A)')
+     &      ' Only contributions from one occupied and one virtual ',
+     &      ' orbital are printed'
          IF (NSTATS .GT. 0) 
      &      WRITE (LUPRI,'(A,I6,A)')' Only the contributions from the ',
      &           NSTATS,' lowest singlet states are included'
@@ -1368,6 +1375,7 @@ C
 CPFP: 27/03-2006: SOS for spin-spin coupling included
       SOSSPN= .FALSE.
       SOSOCC= .FALSE.
+      SOCVIR= .FALSE.
       NSTATS= 0
       NSTATT= 0
       SOSOCS= .FALSE.
@@ -1923,10 +1931,11 @@ C  /* Deck trprs1 */
 #include "mxcent.h"
 #include "maxorb.h"
 #include "maxaqn.h"
-      LOGICAL   INTTRS, CICLC, HFCLC, TRPCLC, ZERNRM, EXCLC, OLDDX
+      LOGICAL   INTTRS, TRPCLC, ZERNRM, EXCLC, OLDDX
       PARAMETER (D10 = 10.0D0, DPM5 = -0.50D0)
       DIMENSION WORK(LWORK), NABATY(*), ZERNRM(*)
 C
+#include "abainf.h"
 #include "cbitrp.h"
 #include "spnout.h"
 #include "nuclei.h"
@@ -1939,11 +1948,9 @@ C
 #include "abares.h"
 #include "chrnos.h"
 C
-      HFCLC  = NASHT .LE. 1
-      IF (HFCLC) NCONF = 1
+      IF (ABAHF) NCONF = 1
       EXCLC  = .FALSE.
       TRPCLC = .TRUE.
-      CICLC  = .FALSE.
       EXVAL  = 0.0D0
       NEXVAL = 1
 C
@@ -1964,7 +1971,7 @@ C
          IF (NREC .GT. 0) THEN
             CALL ABAVAR(ISYM,TRPCLC,IPRTRP,WORK,LWORK)
          IF (NVARPT .EQ. 0) GOTO 50
-            IF (HFCLC) NCONF = 1
+            IF (ABAHF) NCONF = 1
 C
 C     Collect right-hand sides
 C
@@ -2016,7 +2023,7 @@ C
                   NOCONV = .TRUE.
                   FINRES = 0.0D0
                   KZRED_ABA = 0
-                  CALL ABARSP(CICLC,HFCLC,TRPCLC,OOTV,ISYM,EXCLC,EXVAL,
+                  CALL ABARSP(ABACI,ABAHF,TRPCLC,OOTV,ISYM,EXCLC,EXVAL,
      &                        NEXVAL,NABATY,1,TRPLAB(IREC),LUGDVE,
      &                        LUSOVE,LUREVE,THRTRP,MAXTRP,IPRTRP,MXRM,
      &                        MXPHP,WORK,LWORK)

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -177,13 +177,8 @@ Cholesky
      &        KSINGLEFF, KDOUBLEFF, NVECR, IBIT32, IDXVEC
       INTEGER IDXLST, ISYM, IMUL, IDXFIL, IOPT, KEND, LWRK, NWRITE
 
-#if defined (SYS_CRAY)
-      REAL VEC0(*), VEC1(*),VEC2(*), WORK(LWORK)
-      REAL DDOT, XXNORM
-#else
       DOUBLE PRECISION VEC0(*), VEC1(*),VEC2(*), WORK(LWORK)
       DOUBLE PRECISION DDOT, XXNORM
-#endif
 
 * external functions:
       INTEGER IDXSYM
@@ -1001,13 +996,8 @@ C---------------------------------------------------------------------*
 
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK), DDOT
-      REAL VEC0(*), VEC1(*),VEC2(*)
-#else
       DOUBLE PRECISION WORK(LWORK), DDOT
       DOUBLE PRECISION VEC0(*), VEC1(*),VEC2(*)
-#endif
  
       CHARACTER MODFIL*(10)
       INTEGER KVEC0, KVEC1, KVEC2, KEND, LEND, NTAMP

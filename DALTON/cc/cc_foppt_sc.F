@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -78,17 +78,6 @@ C
       INTEGER LU3FOP2, LU3FOPX, LU3FOP2X
       integer KENDSV,NTOT
 C
-#if defined (SYS_CRAY)
-      REAL T1AM(*), T2TP(*)
-      REAL L1AM(*), L2TP(*)
-      REAL WORK(LWORK), ONE
-      REAL TITRAN, TISORT, TISMAT, TIQMAT, TIOME1
-      REAL RHO1N, RHO2N
-      REAL XT2TP, DDOT, XIAJB, XINT, XTROC, XTROC1, XTROC0
-      REAL XTRVI0, XTRVI2, XTRVI3, XTRVI, XTRVI1, XDIA
-      REAL XSMAT, XTMAT, XQMAT, XRMAT, ZERO, TWO, HALF
-      REAL DTIME
-#else
       DOUBLE PRECISION T1AM(*), T2TP(*)
       DOUBLE PRECISION L1AM(*), L2TP(*)
       DOUBLE PRECISION WORK(LWORK), ONE
@@ -98,7 +87,6 @@ C
       DOUBLE PRECISION XTRVI0, XTRVI2, XTRVI3, XTRVI, XTRVI1, XDIA
       DOUBLE PRECISION XSMAT, XTMAT, XQMAT, XRMAT, ZERO, TWO, HALF
       DOUBLE PRECISION DTIME
-#endif
 C
       LOGICAL   C3LRSV, CC1ASV, CC1BSV, LDEBUG
       LOGICAL LOCDBG
@@ -2095,15 +2083,9 @@ C
       INTEGER ISYMK, ISYCIJ, ISYMC, ISYMAB, ISYMCK, NTOTCK, NTOTIJ
       INTEGER ISYBIJ, ISYMBJ, NTOTA, KEND1, LWRK1
 C
-#if defined (SYS_CRAY)
-      REAL RINTE1(*), RINTE2(*), SMAT(*), QMAT(*)
-      REAL TMAT(*), T2TCME(*), WORK(LWORK)
-      REAL ZERO, ONE, TWO, HALF
-#else
       DOUBLE PRECISION RINTE1(*), RINTE2(*), SMAT(*), QMAT(*)
       DOUBLE PRECISION TMAT(*), T2TCME(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
-#endif
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0, HALF = 0.5D0)
 C
 C
@@ -2392,14 +2374,9 @@ C
       INTEGER NTOTEL, NTOTK, KOFF1, KOFF2, KOFF3, ISYML, ISYME
       INTEGER ISYMEK, NTOTIJ, isyres
 C
-#if defined (SYS_CRAY)
-      REAL OCC(*), SMAT(*), QMAT(*), TMAT(*), T2AM(*)
-      REAL WORK(LWORK), TWO, ONE, HALF
-#else
       DOUBLE PRECISION OCC(*), SMAT(*), QMAT(*), TMAT(*), T2AM(*)
       DOUBLE PRECISION WORK(LWORK), TWO, ONE, HALF
       double precision xnorm, ddot
-#endif
 C
       PARAMETER (ONE = 1.0D0, TWO = 2.0D0, HALF = 0.5D0)
 C
@@ -2684,11 +2661,7 @@ COMMENT COMMENT
       integer khcount
 COMMENT COMMENT
 C
-#if defined (SYS_CRAY)
-      REAL VIRREAL(*), VIRTMP(*)
-#else
       DOUBLE PRECISION VIRREAL(*), VIRTMP(*), tmp
-#endif
 C
       CALL QENTER('DEN_BIASORT')
 C

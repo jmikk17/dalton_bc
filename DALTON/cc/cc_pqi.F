@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -50,17 +50,10 @@ C
       INTEGER LWORK, LUPQIM
       CHARACTER*(*) FILNAM
 
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE, HALF, XNORM, DDOT, ZERO
-      REAL WORK(*), CTR2(*), T2AM(*)
-      REAL TIMET, TIMIO, TIMZWV, TIMTAM, DTIME, TIMTI
-      REAL TIMZET,TIMSCL
-#else
       DOUBLE PRECISION ONE, TWO, THREE, HALF, DDOT, ZERO
       DOUBLE PRECISION WORK(*), CTR2(*), T2AM(*)
       DOUBLE PRECISION TIMET,TIMIO,TIMTI,TIMZWV,TIMTAM,DTIME
       DOUBLE PRECISION TIMZET,TIMSCL
-#endif
       PARAMETER(ONE=1.0D0,TWO=2.0D0,THREE=3.0D0,HALF=0.5D0,ZERO=0.0D0)
 
       INTEGER IV, IADR, IADRQ

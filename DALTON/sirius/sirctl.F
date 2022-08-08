@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -194,7 +194,7 @@ C
          IF (DOMP2 ) THEN
             FLAG(25) = .TRUE. ! SIRIFC from RHF needed for MP2 if embedding
          END IF
-         IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
+         IF (DOCI .OR. DOMC .OR. DOLUCITA) THEN
 C        ... no continuum models if RHF followed by MP2 and CI or MC
             FLAG(16) = .FALSE.
             PCM = .FALSE.
@@ -478,7 +478,7 @@ C ***************************************************
 C        *** MP2 ***
 C
       IF (DOMP2) THEN
-         IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
+         IF (DOCI .OR. DOMC .OR. DOLUCITA) THEN
             FLAG(25) = .FALSE. ! do not write to SIRIFC if MP2 followed by MC or CI
          END IF
          IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN .OR. SRDFT_ONTOP) THEN
@@ -533,7 +533,7 @@ C         where HSROHF specifications erroneously will be used
       SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
       SRDFT_ONTOP     = SRDFT_ONTOP_save
       IF ( (DOSCF .OR. DOMP2) .AND.
-     &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
+     &     (DOMC .OR. DOCI .OR. FCVORB) ) THEN
          DOSCF = .FALSE.
          IF (DODFT) THEN
             DODFT = .FALSE.
@@ -565,7 +565,7 @@ C           ... orbital super symmetries may have been reordered
             OLDWOP = .TRUE.
          END IF
          JWOPSY = 1
-         IF  (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) THEN
+         IF  (DOMC .OR. DOCI .OR. FCVORB) THEN
             ! do not call SIRSET if next step is LUCITA:
             ! SETCI will return NCONF=0 and cause error exit.
             CALL SIRSET(WORK,LWORK,OLDWOP)
@@ -619,7 +619,7 @@ C
 C ***************************************************
 C        *** CI ***
 C
-      IF (DOCI .OR. DOCINO) THEN
+      IF (DOCI) THEN
          IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN) THEN
             NWARN = NWARN + 1
             WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//

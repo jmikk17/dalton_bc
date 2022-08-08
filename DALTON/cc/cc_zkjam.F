@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -38,13 +38,8 @@ C  /* Deck cc_zkjai */
 
       INTEGER ISYCTR,ISYTAM
 
-#if defined (SYS_CRAY)
-      REAL CTR2(*), TAMP(*), ZKJAM(*)
-      REAL ZERO, ONE, HALF, DDOT, XNORM
-#else
       DOUBLE PRECISION CTR2(*), TAMP(*), ZKJAI(*)
       DOUBLE PRECISION ZERO, ONE, HALF, DDOT, XNORM
-#endif
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0)
 C
       INTEGER AI, ISYMAI, ISYMBJ, ISYMB, ISYMJ, ISYMK, ISYMKJ

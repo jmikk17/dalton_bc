@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -4734,12 +4734,12 @@ C        ... Hartree-Fock case ....
             REWIND LUSIFC
             CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
          END IF
-         READ (LUSIFC)
+         READ (LUSIFC) ! skip energy info
          READ (LUSIFC) MISHT,MASHT,MOCCT,MORBT,MBAST,
      *                 MCONF,MWOPT,MWOPH,MDETS
          IF (LCREF .EQ. MCONF) THEN
 C
-            READ (LUSIFC)
+            READ (LUSIFC) ! skip CMO
          ELSE IF (LCREF .EQ. MDETS) THEN
             CALL MOLLAB('CREFDETS',LUSIFC,LUPRI)
          ELSE
@@ -4906,7 +4906,7 @@ C
       CALL PPINP(WORD)
       RETURN
 C
- 2100 CALL QUIT('**QUADRA not found in DALTON input')
+ 2100 CALL QUIT('*QUADRA not found in DALTON input')
 C
       RETURN
       END
@@ -5066,7 +5066,7 @@ C
                WRITE (LUPRI,'(/,3A,/)') '@KEYWORD "',WORD,
      *            '" NOT RECOGNIZED IN ESG.'
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
-               CALL QUIT(' ILLEGAL KEYWORD IN ESG INPUT ')
+               CALL QUIT(' ILLEGAL KEYWORD IN *ESG INPUT ')
                GO TO 100
 C
  1             CONTINUE
@@ -5107,7 +5107,7 @@ C
             ELSE
                WRITE (LUPRI,'(/,3A,/)') '@PROMPT "',WORD,
      *            '" NOT RECOGNIZED IN ESG INPUT.'
-               CALL QUIT(' ILLEGAL PROMPT IN ESG INPUT ')
+               CALL QUIT(' ILLEGAL PROMPT IN *ESG INPUT ')
             END IF
       END IF
   300 CONTINUE

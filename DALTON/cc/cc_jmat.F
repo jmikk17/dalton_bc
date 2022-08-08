@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -48,13 +48,8 @@ C
       INTEGER IJTRAN(3,NJTRAN)
       INTEGER IJDOTS(MXVEC,NJTRAN)
       
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL CJCON(MXVEC,NJTRAN)
-#else 
       DOUBLE PRECISION WORK(LWORK) 
-      DOUBLE PRECISION CJCON(MXVEC,NJTRAN)
-#endif 
+      DOUBLE PRECISION CJCON(MXVEC,NJTRAN) 
 
       INTEGER MAXJTRAN, NTRAN, ISTART, IBATCH, NBATCH
 
@@ -179,17 +174,10 @@ c/* Deck CC_JMAT */
       INTEGER IJTRAN(3,NJTRAN)
       INTEGER IJDOTS(MXVEC,NJTRAN)
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL ZERO, ONE, TWO
-      REAL DUM, XNORM, DUMMY
-      REAL CJCON(MXVEC,NJTRAN)
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION ZERO, ONE, TWO
       DOUBLE PRECISION DUM, XNORM, DUMMY
-      DOUBLE PRECISION CJCON(MXVEC,NJTRAN)
-#endif 
+      DOUBLE PRECISION CJCON(MXVEC,NJTRAN) 
       PARAMETER (ZERO = 0.0d0, ONE = 1.0d0, TWO = 2.0d0)
 
       CHARACTER*(10) MODEL, MODELW
@@ -211,11 +199,7 @@ c/* Deck CC_JMAT */
 * external functions:
       INTEGER ILSTSYM
 
-#if defined (SYS_CRAY) 
-      REAL DDOT, DTIME, TIMALL, TIMTRN
-#else 
-      DOUBLE PRECISION DDOT, DTIME, TIMALL, TIMTRN
-#endif 
+      DOUBLE PRECISION DDOT, DTIME, TIMALL, TIMTRN 
   
 *---------------------------------------------------------------------*
 * begin:

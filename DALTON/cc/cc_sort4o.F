@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -37,13 +37,8 @@ C  /* Deck cc_sort4o */
 #include "maxorb.h"
 #include "ccsdsym.h"
       INTEGER ISYM4O, IOPT
-#if defined (SYS_CRAY)
-      REAL XKJIL(*), XJKLI(*)
-      REAL ZERO, ONE, HALF, DDOT, XNORM, FAC
-#else
       DOUBLE PRECISION XKJIL(*), XJKLI(*)
       DOUBLE PRECISION ZERO, ONE, HALF, DDOT, XNORM, FAC
-#endif
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0)
 *
       INTEGER ISYML, ISYKJI, ISYMI, ISYMKJ, ISYJKL, ISYMJK
@@ -121,13 +116,8 @@ C  /* Deck cc_sort4o2 */
 #include "ccsdsym.h"
       LOGICAL LINV
       INTEGER ISYM4O, IOPT
-#if defined (SYS_CRAY)
-      REAL XMINT(*), XGAMSQ(*)
-      REAL ZERO, ONE, HALF, DDOT, XNORM, FAC
-#else
       DOUBLE PRECISION XMINT(*), XGAMSQ(*)
       DOUBLE PRECISION ZERO, ONE, HALF, DDOT, XNORM, FAC
-#endif
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0)
 *
       INTEGER ISYML, ISYKJI, ISYMI, ISYMKJ, ISYJKL, ISYMJK

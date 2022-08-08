@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -111,8 +111,7 @@ C
       use pcm_linrsp, only: pcm_lr_driver
 #endif
       use qmcmm_response, only: qmcmm_lr
-      use pelib_interface, only: use_pelib, pelib_ifc_lr,
-     &                           pelib_ifc_gspol
+      use pelib_interface, only: use_pelib, pelib_ifc_lr
 C
 #include "implicit.h"
 #include "maxorb.h"
@@ -363,12 +362,10 @@ C
          FIRST1 = .FALSE.
       ENDIF ! MMPCM
       IF (USE_PELIB()) THEN
-       IF (.NOT. PELIB_IFC_GSPOL()) THEN
         CALL PELIB_IFC_LR(NCSIM, NOSIM, BCVECS, BOVECS, WRK(KCREF), CMO,
      &                    INDXCI, UDV, WRK(KDV), WRK(KUDVTR),
      &                    WRK(KDVTR), WRK(KDVT), WRK(KDVTTR), EVECS,
      &                    EVECS(NCSIM*KZYVAR+1), WRK(KFREE), LFREE)
-       END IF
       END IF ! USE_PELIB
 #if defined (HAS_PCMSOLVER)
       if (pcm_cfg%do_pcm) then
