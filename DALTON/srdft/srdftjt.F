@@ -226,9 +226,7 @@ C     THRELCTRN makes sure that error in no. of electrons
 C     from grid integration less than DFTHR
       !real*8, parameter :: THRELCTOT = 1.0D-7
       !real*8, parameter :: THRESRHO  = 1.0D-8
-      DFTHRI    = D0 ! real*8 from dftcom.h
-      DFTHRL    = D0 ! real*8 from dftcom.h
-      THRELCTRN = D0
+      THRELCTRN = 1.0D-9
 
 C     Skipped grid points and nb of electrons
 C     NSKIP1 is not used anywhere? -E. R. K.
