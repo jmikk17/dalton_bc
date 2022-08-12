@@ -189,6 +189,74 @@ C           and subtract from input CMO matrix
       call GETDAT(LAB123(2),LAB123(3))   ! place date in LAB123(2) and time in LAB123(3)
       WRITE (LUINTM) LAB123,INT_LABEL
       WRITE (LUINTM) NNORBX, ICDTRA
+
+
+      CALL FCKTRA_CTL(TYPE_TEXT, ICDTRA, THR_MOTWOINT, CMO,
+     &   WORK, LWORK, IPRTRA)
+
+
+      WRITE (LUINTM) LAB123,TABLE(3)
+      REWIND(LUINTM)
+      CALL GPCLOSE(LUINTM, 'KEEP')
+
+      deallocate ( ICDTRA )
+ 9999 call QEXIT('SIR_FCKTRA_CTL')
+      return
+      end
+
+! ===================================================================
+!     sirfcktra.F section 1: calculate MO integrals
+! ===================================================================
+      subroutine FCKTRA_CTL( TYPE_TEXT, ICDTRA, THR_MOTWOINT, CMO,
+     &   WORK, LWORK, IPRTRA_in)
+!
+!  Written by Hans Joergen Aa. Jensen 2016
+!
+      implicit none
+      character*4 TYPE_TEXT
+      integer     ICDTRA(1:NNORBX), LWORK, IPRTRA_in
+      real*8      THR_MOTWOINT, CMO(*), WORK(LWORK)
+#include "priunit.h"
+
+! Used from include files:
+!  gnrinf.h : PARCAL
+!  inforb.h : NNORBX, NORBT, ???
+!  inftap.h : LUSUPM
+!  cbihr2.h : IFTHRS
+!  ccom.h   : THRS
+#include "iratdef.h"
+#include "maxaqn.h"
+#include "gnrinf.h"
+#include "inforb.h"
+#include "inftap.h"
+#include "cbihr2.h"
+#include "ccom.h"
+
+      integer MX_NDMAT, LUSUPM_save, IFTHRS_save
+      integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J
+      integer MISH_TEST(8), MASH_TEST(8), IDAMAX
+      integer, allocatable :: ICD_NODE(:)
+      character*8 TABLE(2),LAB123(3)
+      data        TABLE /'MUL_2INT','END INTM'/
+      data        LAB123/'********','********','********'/
+      logical     FEXIST, OLDDX, FNDLAB
+
+C --- start of executable code
+
+      call QENTER('FCKTRA_CTL')
+
+      IPRTRA = MAX(IPRTRA_in,FCKTRA_DEBUG)
+#if FCKTRA_DEBUG > 0
+      write(lupri,*) 'FCKTRA_DEBUG: IPRTRA set to',IPRTRA
+      write(lupri,*) 'FCKTRA_DEBUG: THR_MOTWOINT ',THR_MOTWOINT
+      flush(lupri)
+#endif
+
+      IF (IPRTRA .GT. 0) THEN
+         WRITE(LUPRI,'(A,1P,D10.2)')
+     &   ' FCKTRA transformation screening threshold:', THR_MOTWOINT
+         FLUSH(LUPRI)
+      END IF
 !
 !...  Open direct access file for final MO integrals
 !     (the ICDTRA array which links a C,D to a record has been saved on LUINTM)
@@ -218,75 +286,6 @@ C           and subtract from input CMO matrix
       else
          call QUIT('Unknown TYPE_TEXT : '//TYPE_TEXT)
       end if
-
-
-      CALL FCKTRA_CTL(TYPE_TEXT, ICDTRA, THR_MOTWOINT, CMO, WORK, LWORK)
-
-
-      WRITE (LUINTM) LAB123,TABLE(3)
-      REWIND(LUINTM)
-      CALL GPCLOSE(LUINTM, 'KEEP')
-
-      deallocate ( ICDTRA )
- 9999 call QEXIT('SIR_FCKTRA_CTL')
-      return
-      end
-
-! ===================================================================
-!     sirfcktra.F section 1: calculate MO integrals
-! ===================================================================
-      subroutine FCKTRA_CTL( TYPE_TEXT, ICDTRA, THR_MOTWOINT, CMO,
-     &   WORK, LWORK)
-!
-!  Written by Hans Joergen Aa. Jensen 2016
-!
-      implicit none
-      character*4 TYPE_TEXT
-      integer   ICDTRA(1:NNORBX), LWORK
-      real*8    THR_MOTWOINT, CMO(*), WORK(LWORK)
-#include "priunit.h"
-
-! Used from include files:
-!  gnrinf.h : PARCAL
-!  inforb.h : NNORBX, NORBT, ???
-!  inftra.h : IPRTRA, LBUF
-!  inftap.h : LUSUPM
-!  cbihr2.h : IFTHRS
-!  ccom.h   : THRS
-#include "iratdef.h"
-#include "maxaqn.h"
-#include "gnrinf.h"
-#include "inforb.h"
-#include "inftra.h"
-#include "inftap.h"
-#include "cbihr2.h"
-#include "ccom.h"
-
-      integer MX_NDMAT, LUSUPM_save, IFTHRS_save
-      integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J
-      integer MISH_TEST(8), MASH_TEST(8), IDAMAX
-      integer, allocatable :: ICD_NODE(:)
-      character*8 TABLE(2),LAB123(3)
-      data        TABLE /'MUL_2INT','END INTM'/
-      data        LAB123/'********','********','********'/
-      logical     FEXIST, OLDDX, FNDLAB
-
-C --- start of executable code
-
-      call QENTER('FCKTRA_CTL')
-
-#if FCKTRA_DEBUG > 0
-      IPRTRA = MAX(IPRTRA,FCKTRA_DEBUG)
-      write(lupri,*) 'FCKTRA_DEBUG: IPRTRA set to',IPRTRA
-      write(lupri,*) 'FCKTRA_DEBUG: THR_MOTWOINT ',THR_MOTWOINT
-      flush(lupri)
-#endif
-
-      IF (IPRTRA .GT. 0) THEN
-!        WRITE(LUPRI,'(A,1P,D10.2)')
-!    &   ' Transformation screening threshold:', THR_MOTWOINT
-         FLUSH(LUPRI)
-      END IF
 
       IFTHRS_save = IFTHRS
       IFTHRS = NINT(-LOG10(THR_MOTWOINT))
@@ -1163,28 +1162,152 @@ C --- start of executable code
       return
       end
 
-      subroutine FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,IDIST)
+      subroutine FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,WORK,IDIST)
 !
-!  Written by Hans Joergen Aa. Jensen 2016
+!  Written by Hans Joergen Aa. Jensen 2021
 !  This version is interface routine for .FCKTRA integral transformation.
 !
 ! Purpose:
 !    Read next Dirac two-electron integral distribution <**|cd> = (*c|*d)
 !    where (cd) distribution is needed according to NEEDTP(ITYPCD)
+!    Note: unless IC.eq.ID then H2CD(a,b).ne.H2CD(b,a) :
+!       H2CD(a,b) = <ab|cd> = (ac|bd)
+!       H2CD(b,a) = <ba|cd> = (bc|ad)
 !
+! Usage:
+! 1) Set IDIST = 0 before first call.
+!    Do **NOT** change IDIST in calling routine
+!    until last distribution has been read (signalled by IDIST .eq. -1)
+! 2) if IDIST<0 on input, then IC, ID must be set to correspond to
+!    the distribution wanted in H2CD
 !
 
       implicit none
 #include "priunit.h"
 
-      integer  IC, ID, NEEDTP(*), IDIST
-      real*8   H2CD(NORBT,NORBT)
+      integer  :: IC, ID, NEEDTP(-4:6), IDIST
+      real*8   :: H2CD(NORBT,NORBT), WORK(*)
 
 ! Used from include files:
-!  inforb.h : NORBT, ???
+!  inforb.h : NORBT, NNORBT, NNORBX, ???
+!  infind.h : ISMO(:)
+!  inftra.h : LBUF
+!  inftap.h : LUINTM, LUMINT
+#include "maxorb.h"
+#include "maxash.h"
+#include "dummy.h"
+#include "iratdef.h"
 #include "inforb.h"
+#include "infind.h"
+#include "inftra.h"
+#include "inftap.h"
+#include "orbtypdef.h"
 
-      call quit('ERROR: FCKTRA_NXTH2D is not implemented')
+      integer       :: MMORBX, ICD, ICD_1, ICDSYM
+      integer       :: ITYPC, ITYPD, ITYPCD
+      integer, save :: ICD_SAVE
+      integer, save, allocatable :: ICDTRA(:)
+      logical       :: OLDDX
+
+#if FCKTRA_DEBUG > 3
+      write(LUPRI,*) 'FCKTRA_NXTH2D called, IC, ID, IDIST =',
+     &   IC, ID, IDIST
+      flush(LUPRI)
+#endif
+
+      if (IDIST .le. 0) then
+         if (allocated(ICDTRA)) deallocate(ICDTRA)
+         allocate(ICDTRA(1:NNORBX))
+         if (LUINTM .le. 0) THEN
+            CALL GPOPEN(LUINTM,FNINTM,'OLD',' ',
+     &                  'UNFORMATTED',IDUMMY,.FALSE.)
+         END IF
+         rewind (LUINTM)
+         call MOLLAB('DRC_2INT',LUINTM,LUPRI)
+         read (LUINTM) MMORBX
+         if (NNORBX .ne. MMORBX) then
+            call QENTER('FCKTRA_NXTH2D')
+            write (LUPRI,'(//A,2I10)')  'FATAL ERROR '//
+     &      'NNORBX on DRC2INT_FCKTRA .ne. NNORBX',MMORBX,NNORBX
+            call QUIT(
+     &      'NNORBX on DRC2INT_FCKTRA .ne. NNORBX in FCKTRA_NXTH2D')
+         end if
+         rewind (LUINTM)
+         call MOLLAB('DRC_2INT',LUINTM,LUPRI)
+         read (LUINTM) MMORBX,ICDTRA(1:NNORBX)
+         LBUF = IRAT*N2ORBT
+         IF (LUMINT .LE. 0) THEN
+            CALL GPOPEN(LUMINT,'DRC2INT_FCKTRA','OLD','DIRECT',' ',
+     &         LBUF,OLDDX)
+         END IF
+         ICD_SAVE = 0
+      end if
+
+      if (IDIST .lt. 0) then
+
+         if (IC .le. 0 .or. IC .gt. NORBT .and.
+     &       ID .le. 0 .or. ID .gt. NORBT) then
+            write (LUPRI,*) 'FCKTRA_NXTH2D: invalid input IC, ID',IC,ID
+            call quit('FCKTRA_NXTH2D: invalid input IC, ID')
+         end if
+         if (IC .ge. ID) then
+            ICD = IC*(IC-1)/2 + ID
+         else
+            ICD = ID*(ID-1)/2 + IC
+         end if
+         IDIST = ICDTRA(ICD)
+         if (IDIST .le. 0) then
+            call QUIT('IC,ID record no. .le. 0 in FCKTRA_NXTH2D')
+         end if
+         deallocate(ICDTRA)
+
+      else ! IDIST .ge. 0
+
+  100    continue
+         IDIST = -1
+
+         ICD_1 = ICD_SAVE + 1
+         do ICD = ICD_1,NNORBX
+            if (ICDTRA(ICD) .gt. 0) then
+               IDIST    = ICDTRA(ICD)
+               ICD_SAVE = ICD
+               exit
+            end if
+         end do
+         if (IDIST .eq. -1) then
+            ! finished
+            deallocate(ICDTRA)
+            return
+         end if
+
+         do IC = 1, NORBT
+            ICD = IC*(IC+1)/2
+            if (ICD .lt. ICD_SAVE) cycle
+            ID = ICD_SAVE - ICD + IC
+            exit
+         end do
+         ITYPC  = IOBTYP(IC)
+         ITYPD  = IOBTYP(ID)
+         ITYPCD = IDBTYP(ITYPC,ITYPD)
+         if ( NEEDTP(ITYPCD) .eq. 0 ) go to 100
+
+      end if
+
+         ICDSYM = MULD2H( ISMO(IC), ISMO(ID) )
+         read ( LUMINT, rec=IDIST ) WORK(1:NNORBT)
+         call TRDPAK(WORK(1+NNORBT),WORK,NORB,IORB,NORBT,
+     &      ICDSYM,-1)
+         call DSPTGE(NORBT,WORK(1+NNORBT),H2CD)
+
+#if FCKTRA_DEBUG > 9
+         write (LUPRI,*) 'FCKTRA_NXTH2D, rec,IC,ID',IDIST,IC,ID
+         write (LUPRI,*) 'Unpacked H2CD, ICDSYM',ICDSYM
+         call output(H2CD,1,NORBT,1,NORBT,NORBT,NORBT,-1,LUPRI)
+         if (ICDSYM.eq.1) then ! only print some of them, of ICDSYM.eq.1
+            write (LUPRI,*) 'Packed H2CDPK'
+            call outpkb(WORK,NORB,NSYM,-1,LUPRI)
+         end if
+#endif
 
 
       end
