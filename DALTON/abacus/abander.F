@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -343,6 +343,7 @@ C
       ELSE IF (CCD. OR. CCSD .OR. CCS .OR. CC2 .OR. MP2 .OR. CCPT .OR.  ! MP2 is MP2 from CC code
      &        DOROSCF .OR.  ! high spin HF or DFT, no symmetry
      &        (DFTRUN .AND. (NSYM.GT.1.OR.HFXMU.NE.D0)) .OR.
+!    &        DOHFSRDFT .OR. DOMCSRDFT .OR.   ! TODO use analytical gradient and hessian for srDFT !!!
      &        DRCCD .OR. SOSEX .OR. RCCD .OR.  !RPA Methods with analytic gradient only
      &        DPCM .OR.
      &        DODFTD .OR. !AMT Only gradients for empirical disp correction so far
@@ -3749,6 +3750,8 @@ C
          IF (ABS(HESMWT(IC12)).GT.DMTHR) THEN
             IFREQ = IFREQ + 1
             FREQ(IFREQ) = SQRT(ABS(HESMWT(IC12)))
+            IF (HESMWT(IC12) .LT. 0)
+     &      FREQ(IFREQ) = -FREQ(IFREQ) ! the minus signals that it is imaginary
          ELSE
             NUMZRO = NUMZRO + 1
             DO 2100 IC2 = IC-NUMZRO+1, NCOOR-1
@@ -3785,13 +3788,20 @@ C
 C
 C     *** Printing the frequencies. ***
 C
-      WRITE (LUPRI, '(10X,A,I3)')
-     &                  'Number of modes with zero frequency: ', NUMZRO
+      WRITE (LUPRI, '(10X,A,I4)')
+     &                  'Number of modes with zero frequency:', NUMZRO
       CALL HEADER('Vibrational frequencies harmonic approximation: ',-1)
-      WRITE (LUPRI,'(20X,A)') ' Mode     cm-1       hartrees  '
+      WRITE (LUPRI,'(20X,A)') ' Mode     cm-1       hartrees'
       DO 2500 IFREQ = 1, NCOOR-NUMZRO
-         WRITE (LUPRI,'(20X,I4,F12.2,F12.6)') ICRIRP(IFREQ,1),
-     &                                XTKAYS*FREQ(IFREQ), FREQ(IFREQ)
+         IF (FREQ(IFREQ) .LT. 0) THEN ! imaginary frequency
+            FREQ(IFREQ) = ABS(FREQ(IFREQ))
+            ! handling of imaginary frequencies not implemented below
+            WRITE (LUPRI,'(I24,F12.2,A,F10.6,A)') ICRIRP(IFREQ,1),
+     &                   XTKAYS*FREQ(IFREQ),' i', FREQ(IFREQ),' i'
+         ELSE
+            WRITE (LUPRI,'(I24,F12.2,F12.6)') ICRIRP(IFREQ,1),
+     &                   XTKAYS*FREQ(IFREQ), FREQ(IFREQ)
+         END IF
  2500 CONTINUE
 C
 C     *** Printing the cartesian components of the normal coordinates ***

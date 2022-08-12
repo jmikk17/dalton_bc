@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -38,7 +38,6 @@ C
 C
 C -- local variables and constants
 C
-      PARAMETER ( D0 = 0.0D0, DP5 = 0.5D0, D1 = 1.0D0, D2 = 2.0D0 )
 #include "dummy.h"
 C
 C Used from common blocks:
@@ -114,33 +113,52 @@ C
       CALL DZERO(OCC,NORBT)
       IF (NASHT .EQ. 1) WRK(KAOCC) = NACTEL
       IAOCC = KAOCC-1
+      ! Effective Number of Unpaired Electrons
+      ENUE_1 = 0.0D0 ! sum(i) (2*n_i - n_i**2)
+      ENUE_2 = 0.0D0 ! sum(i) (2*n_i - n_i**2)**2
       DO 300 ISYM = 1,NSYM
 C
          JOCC1  = IORB(ISYM)
          NISHI  = NISH(ISYM)
-         DO 271 J = 1,NISHI
-            OCC(JOCC1+J) = D2
-  271    CONTINUE
+         DO J = 1,NISHI
+            OCC(JOCC1+J) = 2.0D0
+         END DO
 C
          NASHI  = NASH(ISYM)
       IF (NASHI.EQ.0) GO TO 300
          JOCC1  = JOCC1 + NISHI
-         OCCSUM = D0
+         OCCSUM = 0.0D0
+         ENUE1_SYM = 0.0D0
+         ENUE2_SYM = 0.0D0
          DO 275 I=1,NASHI
             IAOCC = IAOCC + 1
             OCC(JOCC1 + I) = WRK(IAOCC)
             OCCSUM = OCCSUM + OCC(JOCC1 + I)
+            TMP = 2.0D0*WRK(IAOCC) - WRK(IAOCC)**2
+            ENUE1_SYM = ENUE1_SYM + TMP
+            ENUE2_SYM = ENUE2_SYM + TMP**2
   275    CONTINUE
-C
+         ENUE_1 = ENUE_1 + ENUE1_SYM
+         ENUE_2 = ENUE_2 + ENUE2_SYM
          IF (NCONF.GT.1 .AND. .NOT.ONLYFD .AND. IPRCAN .GT. 0) THEN
             WRITE (LUW4,3040) ISYM, OCCSUM, (OCC(JOCC1+I),I=1,NASHI)
+            WRITE (LUW4,3041) ENUE1_SYM, ENUE2_SYM
          END IF
   300 CONTINUE
+      WRITE(LUW4,3042) ENUE_1, ENUE_2
 C
- 3040 FORMAT(/' Symmetry',I3,'  Total occupancy this symmetry',F14.9,
+ 3040 FORMAT(/'  Symmetry',I3,'  Total occupancy this symmetry',F14.9,
      &      //,(5F14.9))
+ 3041 FORMAT(/'  Effective numbers of unpaired electrons ',
+     &        'this symmetry Eqs. 1) and 2):'
+     &        ,2F6.2)
+ 3042 FORMAT(/'  Total effective number of unpaired electrons :',
+     &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
+     &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
+     &       /' (Reference: M. Head-Gordon, ',
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
 C
-C     Print out natural orbitals
+C     Print natural orbitals
 C
       IF (P6FLAG(59)) THEN
          IF (ONLYFD .OR. (NASHT .LE. 1 .AND. .NOT.ONLYNO)) THEN
@@ -188,7 +206,7 @@ C
 C        if (int.transf. needed in optimization)
          NCROOT = NROOTS
          MAXITC = MAXMAC
-         THRCIX = DP5*THRGRD
+         THRCIX = 0.5D0*THRGRD
          CALL MEMGET('REAL',KECI,NCROOT,WRK,KFREE,LFREE)
          CALL MEMGET('INTE',KICROO,NCROOT,WRK,KFREE,LFREE)
          CALL MEMGET('WORK',KWRK,LWRK,WRK,KFREE,LFREE)
@@ -250,8 +268,7 @@ C
 C
 C -- local variables and constants
 C
-      LOGICAL   DFT_SPINDNS_SAVE
-      PARAMETER ( D0 = 0.0D0, D1 = 1.0D0, DM1 = -1.0D0 )
+      LOGICAL   SRDFT_SPINDNS_SAVE
       PARAMETER ( THRCAN = 1.0D-10 )
 C
 C Used from common blocks:
@@ -281,28 +298,28 @@ C
       LOGICAL TRTONO, GETOCC, TRTOFC, TRTOCO, TRCVEC, TSTFLG
 C
       CALL QENTER('SIRCNO')
-      DFT_SPINDNS_SAVE = DFT_SPINDNS
-      DFT_SPINDNS = .FALSE.  ! no spin densities needed for canonical orbitals
+      SRDFT_SPINDNS_SAVE = SRDFT_SPINDNS
+      SRDFT_SPINDNS = .FALSE.  ! no spin densities needed for canonical orbitals
       IF (IPRCNO .GE. 2) CALL GETTIM (T0,W0)
       IF (IPRCNO .GE. 1) THEN
          WRITE (LUPRI,'(/2A/)')
      &      '   --- OUTPUT FROM SIRCNO     Keyword = ',KEYCNO
       END IF
       IF (KEYCNO .EQ. 'ONLYNO' .OR. KEYCNO .EQ. 'NATORB') THEN
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/)')
      *      ' Transformation of active orbitals to natural orbitals.'
          TRTONO = .TRUE.
          TRTOFC = .FALSE.
          TRTOCO = .FALSE.
       ELSE IF (KEYCNO .EQ. 'ONLYFD' .OR. KEYCNO .EQ. 'ONLYFC' .OR.
      &         KEYCNO .EQ. 'ONLYCO' .OR. KEYCNO .EQ. 'CANORB') THEN
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/)')
      *      ' Transformation of all orbitals to Fock type orbitals.'
          TRTONO = .FALSE.
          TRTOFC = .TRUE.
          TRTOCO = .TRUE.
       ELSE
-         IF (IPRCNO .GE. 5) WRITE (LUPRI,'(A/A/)')
+         IF (IPRCNO .GE. 2) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals to natural orbitals',
      *      ' and inactive/secondary orbitals to Fock type orbitals.'
          TRTONO = .TRUE.
@@ -316,13 +333,13 @@ C
          DO 100 ISYM = 1,NSYM
             IF (NASH(ISYM) .GT. 1) TRCVEC = .TRUE.
   100    CONTINUE
-         IF (IPRCNO .GE. 5 .AND. .NOT.TRCVEC) WRITE (LUPRI,'(A/A/)')
+         IF (IPRCNO .GE. 2 .AND. .NOT.TRCVEC) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals',
      *      ' abandoned, because nash(isym) .le. 1, all symmetries.'
       END IF
       IF ( TRCVEC .AND. NCONF.EQ.1 ) THEN
          TRCVEC = .FALSE.
-         IF ( IPRCNO .GE. 5 ) WRITE (LUPRI,'(A/A/)')
+         IF ( IPRCNO .GE. 2 ) WRITE (LUPRI,'(A/A/)')
      *      ' Transformation of active orbitals to natural orbitals',
      *      ' abandoned, because only one configuration.'
       END IF
@@ -387,7 +404,7 @@ C
       LWRK   = LFRSAV + KFRSAV - 1
 C .. 1.1 .. (MAKDV, TRACI)
 C     If spin-dependent srDFT then both charge and spin density 1-el matrices
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2
       ELSE
          NDV = 1
@@ -399,7 +416,7 @@ C     If spin-dependent srDFT then both charge and spin density 1-el matrices
 C .. 1.2 .. (FCKMAT)
       KFC    = KWRK1
       KFV    = KFC    + NNORBT
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KWRK2  = KFV    + 2*NNORBT
       ELSE
          KWRK2  = KFV    + NNORBT
@@ -424,7 +441,7 @@ C
 C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
          IF (SUPSYM) CALL AVEDV(WRK(KDV))
          IF (NDV .EQ. 2) THEN
-            IF (DFT_LOCALSPIN) THEN
+            IF (SRDFT_LOCALSPIN) THEN
 #ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(WRK(KDV),WRK(KDSV),
      &            WRK(KWRK1),LWRK1)
@@ -440,8 +457,8 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       ELSE IF (HSROHF) THEN
          DO I = 1, NASHT
             II = KDV + I*(I+1)/2 - 1
-            WRK(II) = D1
-            IF (NDV.EQ.2) WRK(NNASHX+II)=D1
+            WRK(II) = 1.0D0
+            IF (NDV.EQ.2) WRK(NNASHX+II)=1.0D0
          END DO 
       ELSE IF (NASHT .EQ. 1) THEN
          WRK(KDV) = NACTEL
@@ -458,7 +475,7 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
                IF (ABS(WRK(JDV+I)) .GT. THRCAN) TRTONO = .TRUE.
    30       CONTINUE
    40    CONTINUE
-         IF (IPRCNO .GE. 5 .AND. .NOT.TRTONO)
+         IF (IPRCNO .GE. 2 .AND. .NOT.TRTONO)
      *      WRITE (LUPRI,'(A/A,1P,D10.1/)')
      *      ' Transformation of active orbitals to natural orbitals'//
      *      ' abandoned:',' max off-diagonal element in'//
@@ -481,9 +498,9 @@ C
      *            WRK(KWRK2),LWRK2)
 C     CALL FCKMAT(ONLYFC,DV,CMO,EMY,FC,FV,WRK,LFREE)
       IF (NASHT .GT. 0) THEN
-         CALL DAXPY(NNORBT,D1,WRK(KFV),1,WRK(KFC),1)
-         IF (DFT_SPINDNS) THEN
-            CALL DAXPY(NNORBT,D1,WRK(KFV+NNORBT),1,WRK(KFC),1)
+         CALL DAXPY(NNORBT,1.0D0,WRK(KFV),1,WRK(KFC),1)
+         IF (SRDFT_SPINDNS) THEN
+            CALL DAXPY(NNORBT,1.0D0,WRK(KFV+NNORBT),1,WRK(KFC),1)
          END IF
       END IF
       IF (SUPSYM) CALL AVEFCK(WRK(KFC))
@@ -522,7 +539,7 @@ C           zero off-diagonal frozen-frozen elements
                JSTA = JFC + IROW(I)
                JEND = JSTA + I - 2
                DO J = JSTA,JEND
-                  WRK(J) = D0
+                  WRK(J) = 0.0D0
                END DO
             END DO
          END IF
@@ -633,7 +650,8 @@ C
          DO 410 I = 1,NASHT
             IF (TRTONO) AOCC(I) = WRK(KDV-1 + IROW(I+1))
             JUNOMX = JUNO-1 + IDAMAX(NASHT,WRK(JUNO),1)
-            IF (WRK(JUNOMX) .LT. D0) CALL DSCAL(NASHT,DM1,WRK(JUNO),1)
+            IF (WRK(JUNOMX) .LT. 0.0D0)
+     &         CALL DSCAL(NASHT,-1.0D0,WRK(JUNO),1)
             JUNO   = JUNO + NASHT
   410    CONTINUE
 CHJ-S-860827
@@ -688,7 +706,7 @@ C
 C900801-hjaaj: If transformation is unit matrix, skip TRACI.
 C
          CALL DUNIT(WRK(KBIG),NASHT)
-         CALL DAXPY(N2ASHX,DM1,WRK(KUNO),1,WRK(KBIG),1)
+         CALL DAXPY(N2ASHX,-1.0D0,WRK(KUNO),1,WRK(KBIG),1)
          I = IDAMAX(N2ASHX,WRK(KBIG),1)
          IF (ABS(WRK(KBIG-1+I)) .LE. THRCAN) THEN
             IF (IPRCNO .GE. 5) WRITE (LUPRI,'(/A/A,1P,D10.1/)')
@@ -757,7 +775,7 @@ C        ... redo JWOP in case ISSMO should have changed in ORDRSS /hjaaj aug 04
          CALL GETTIM (TEND,WEND)
          WRITE (LUPRI,'(/A,F9.2)') ' CPU time used in SIRCNO :',TEND-T0
       END IF
-      DFT_SPINDNS = DFT_SPINDNS_SAVE
+      SRDFT_SPINDNS = SRDFT_SPINDNS_SAVE
       CALL QEXIT('SIRCNO')
       RETURN
 C
@@ -775,7 +793,6 @@ C
 C
 #include "implicit.h"
       DIMENSION DV(NNASHX),DVZRAS(3)
-      PARAMETER ( D0 = 0.0D0 )
 C
 C Used from common blocks:
 C   INFORB : NASHT, NNASHX
@@ -797,7 +814,7 @@ C
             IF (IACTI .NE. IACTJ) THEN
                DVZTMP(IACTI,IACTJ) = DVZTMP(IACTI,IACTJ)
      &            + DV(JR + I) ** 2
-               DV(JR + I) = D0
+               DV(JR + I) = 0.0D0
             END IF
   100    CONTINUE
   200 CONTINUE
@@ -840,7 +857,6 @@ C
       DIMENSION CVEC(*), OCCNO(*), UNO(NASHT,*), CMO(*), INDXCI(*),
      *          WRK(*)
       LOGICAL   ORDER_in, ORDER, NATORB, MOISNO, NOAVER
-      PARAMETER (D0 = 0.0D0, D1 = 1.0D0, DM1 = -1.0D0, D2 = 2.0D0)
 #include "thrzer.h"
 C
 C Used from common blocks:
@@ -889,7 +905,7 @@ C
          CALL DZERO(WRK(KDV),NNASHX)
          DO I = 1, NASHT
             II = KDV + I*(I+1)/2 - 1
-            WRK(II) = D1
+            WRK(II) = 1.0D0
          END DO 
       ELSE IF (NASHT .GT. 1) THEN
          LSYMSV = LSYM
@@ -915,10 +931,10 @@ C
                CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
             END IF
          END IF
-         DVMAX = D0
-         DO, I = 2,NASHT
+         DVMAX = 0.0D0
+         DO I = 2,NASHT
             II = (I*I-I)/2
-            DO, J = 1,I-1
+            DO J = 1,I-1
                DVMAX = MAX(DVMAX,ABS(WRK(KDV-1+II+J)))
             END DO
          END DO
@@ -941,9 +957,10 @@ C
          CALL JACO_THR(WRK(KDV),UNO,NASHT,NASHT,NASHT,0.0D0)
 
 C        select positive phase of MO-NO transformation vectors:
-         DO, I = 1,NASHT
+         DO I = 1,NASHT
             JUNOMX = IDAMAX(NASHT,UNO(1,I),1)
-            IF (UNO(JUNOMX,I) .LT. D0) CALL DSCAL(NASHT,DM1,UNO(1,I),1)
+            IF (UNO(JUNOMX,I) .LT. 0.0D0)
+     &         CALL DSCAL(NASHT,-1.0D0,UNO(1,I),1)
          END DO
 
       END IF
@@ -951,19 +968,18 @@ C
 C     extract natural occupation numbers
 C
       CALL DZERO(OCCNO, NORBT)
-      JORB = 0
       JACT = 0
-      DO, ISYM = 1,NSYM
-         DO, I = 1,NISH(ISYM)
+      DO ISYM = 1,NSYM
+         JORB = IORB(ISYM)
+         DO I = 1,NISH(ISYM)
             JORB = JORB + 1
-            OCCNO(JORB) = D2
+            OCCNO(JORB) = 2.0D0
          END DO
-         DO, I = 1,NASH(ISYM)
+         DO I = 1,NASH(ISYM) ! assume natural orbitals
             JORB = JORB + 1
             JACT = JACT + 1
             OCCNO(JORB) = WRK(KDV-1 + (JACT*JACT+JACT)/2)
          END DO
-         JORB = JORB + NSSH(ISYM)
       END DO
       IF (ORDER) THEN
 C     ... reasons why reordering of active orbitals may not be desired:
@@ -982,8 +998,8 @@ C            for non-zero diagonal elements.
          IF (SUPSYM) CALL AVEORD()
 C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
          IF (MOISNO) THEN
-            DO, I = 1,NASHT
-               IF (UNO(I,I) .NE. D1) MOISNO = .FALSE.
+            DO I = 1,NASHT
+               IF (UNO(I,I) .NE. 1.0D0) MOISNO = .FALSE.
             END DO
             IF (IPRINT .GE. 2 .AND. .NOT. MOISNO) THEN
                WRITE(LUPRI,'(/A)')
@@ -997,7 +1013,13 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
      &      ' -------------------------------'
          IF (SUPSYM .AND. .NOT. NOAVER) WRITE (LUPRI,'(/A)')
      &      ' NOTE: degenerate orbitals have been averaged.'
-         DO 520 ISYM = 1,NSYM
+
+         ! Effective Number of Unpaired Electrons
+         ENUE_1 = 0.0D0 ! sum(i) (2*n_i - n_i**2)
+         ENUE_2 = 0.0D0 ! sum(i) (2*n_i - n_i**2)**2
+         DO ISYM = 1,NSYM
+            ENUE1_SYM = 0.0D0
+            ENUE2_SYM = 0.0D0
             NOCCI = NOCC(ISYM)
             IF (NOCCI .EQ. 0) THEN
                WRITE (LUPRI,3030) ISYM,REP(ISYM-1)
@@ -1010,16 +1032,37 @@ C        ... regenerate ISSORD() as ISSMO() may have been changed in ORD2SS
                ELSE
                   WRITE (LUPRI,3040) ISYM,REP(ISYM-1),OCCSUM,
      &               (OCCNO(IORBI+I),I=1,NOCCI)
+                  IF (NASH(ISYM) .GT. 0) THEN
+                     DO I = IORBI + NISH(ISYM) + 1, IORBI + NOCCI
+                        TMP = 2.0D0*OCCNO(I) - OCCNO(I)**2
+                        ENUE1_SYM = ENUE1_SYM + TMP
+                        ENUE2_SYM = ENUE2_SYM + TMP**2
+                     END DO
+                     WRITE (LUPRI,3041) ENUE1_SYM, ENUE2_SYM
+                     ENUE_1 = ENUE_1 + ENUE1_SYM
+                     ENUE_2 = ENUE_2 + ENUE2_SYM
+                  END IF
                END IF
             END IF
-  520    CONTINUE
+         END DO ! ISYM = 1,NSYM
 C  HJAAJ MAERKE TODO 921106: if (supsym) print also sorted after supsym
 C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
+         IF (NASHT .GT. 0) THEN
+            WRITE(LUPRI,3042) ENUE_1, ENUE_2
+         END IF
       END IF
  3030 FORMAT(/' Symmetry',I2,'  ( ',A,') -- No occupied orbitals')
  3040 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Total occupation in this symmetry is',F14.9,
      &      //,(5F14.9))
+ 3041 FORMAT(/'  Effective numbers of unpaired electrons ',
+     &        'this symmetry Eqs. 1) and 2):'
+     &        ,2F6.2)
+ 3042 FORMAT(/'  Total effective number of unpaired electrons :',
+     &       /'  Eq. 1) sum(i) [(2 - n_i) n_i]    =',F8.4,
+     &       /'  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =',F8.4,
+     &       /' (Reference: M. Head-Gordon, ',
+     &        'Chemical Physics Letters 372 (2003) 508-511)')
  3045 FORMAT(/' Symmetry',I2,'  ( ',A,
      &        ') -- Supersymmetry in parenthesis',
      &       /' -- Total occupation in this symmetry is',F14.9,

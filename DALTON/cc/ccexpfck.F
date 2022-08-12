@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -54,17 +54,10 @@ C
 
       INTEGER I1DXORD, LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL AODENCC(*), AODENHF(*)
-      REAL FTRACE, XNORM
-      REAL ZERO, HALF, ONE, TWO
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION AODENCC(*), AODENHF(*)
       DOUBLE PRECISION FTRACE, XNORM
       DOUBLE PRECISION ZERO, HALF, ONE, TWO
-#endif
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 
       CHARACTER LABEL*8, LSTRLX*3, FILFCK*8, MODEL*10
@@ -78,11 +71,7 @@ C
 * external functions:
       INTEGER IROPER
       INTEGER ILSTSYM, ILSTSYMRLX
-#if defined (SYS_CRAY)
-      REAL DDOT
-#else
       DOUBLE PRECISION DDOT
-#endif
 
       CALL QENTER('EFFFOCK1')
 *---------------------------------------------------------------------*
@@ -459,17 +448,6 @@ c            CALL CC_PRONELAO(WORK(K1INT),ISYFCK)
       INTEGER ISYMG, ISYMD, ISCOOR,ICOOR,ICORSY, MXCOMP, ISYDEN, ISYRLX
       INTEGER IRECNR(*), NRECS(*), MXBUF
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL XLAMDP(*), XLAMDH(*)
-      REAL D1HFAO(*), QAOS(*), DNS1D(*), XKAPAO(*)
-      REAL XKAPAOB1(*), D1HFAOB1(*), XKAPAOB2(*), D1HFAOB2(*)
-      REAL D2GAI(*),  D2GAB(*),  D2GIJ(*),  D2GIA(*)
-      REAL D2GAIB1(*),D2GABB1(*),D2GIJB1(*),D2GIAB1(*)
-      REAL D2GAIB2(*),D2GABB2(*),D2GIJB2(*),D2GIAB2(*)
-      REAL FTRACE, XNORM
-      REAL ZERO, HALF, ONE, TWO
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION XLAMDP(*),XLAMDH(*)
       DOUBLE PRECISION D1HFAO(*), XKAPAO(*), QAOS(*), DNS1D(*)
@@ -479,7 +457,6 @@ c            CALL CC_PRONELAO(WORK(K1INT),ISYFCK)
       DOUBLE PRECISION D2GAIB2(*),D2GABB2(*),D2GIJB2(*),D2GIAB2(*)
       DOUBLE PRECISION FTRACE, XNORM
       DOUBLE PRECISION ZERO, HALF, ONE, TWO
-#endif
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 
       LOGICAL SQRINT
@@ -491,11 +468,7 @@ c            CALL CC_PRONELAO(WORK(K1INT),ISYFCK)
       INTEGER KOFFAD, KOFFGB, KOFFAB, NBASA, ISYMA, ISYMB
 
 * external functions:
-#if defined (SYS_CRAY)
-      REAL DDOT
-#else
       DOUBLE PRECISION DDOT
-#endif
 
 *---------------------------------------------------------------------*
 * if LOCDBG set, print some debug output:
@@ -998,11 +971,7 @@ C  /* Deck cc_expfck_init */
       CHARACTER*8 LABEL
       INTEGER I, IDX, IATOM, ICOOR, ICORSY, ISCOOR
  
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER( ZERO = 0.0D0 )
  
 
@@ -1300,11 +1269,7 @@ C  /* Deck i1dxfck */
       INTEGER ISYMX
       CHARACTER NEWLBL*(8), LSTRLX*(3), LABELX*(8)
 
-#if defined (SYS_CRAY)
-      REAL FREQX, TOL
-#else
       DOUBLE PRECISION FREQX, TOL
-#endif
       PARAMETER(TOL=1.0D-12)            
 
       INTEGER I, INUM, ISYMO
@@ -1522,19 +1487,11 @@ C  /* Deck ccefffockhlp2 */
       INTEGER IDLST, JATOM, IATOM, LWORK, ISYRLX, IOPER, ISYMOPR
       INTEGER ISYFCK, ISCOOR, ICOOR, ICORSY, MXCOMP
 
-#if defined (SYS_CRAY)
-      REAL KAPPA(*), RMAT(*), QAOS(*), OVERLP(*), T1AM(*)
-      REAL XLAMDPQ(*), XLAMDHQ(*), CMOPQ(*), CMOHQ(*)
-      REAL B1DHFAO(*), B2DHFAO(*), B1KABAO(*), B2KABAO(*)
-      REAL XLAMDPQ2(*), XLAMDHQ2(*), CMO(*), KABAR(*)
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION KAPPA(*), RMAT(*), QAOS(*), OVERLP(*), T1AM(*)
       DOUBLE PRECISION XLAMDPQ(*), XLAMDHQ(*), CMOPQ(*), CMOHQ(*)
       DOUBLE PRECISION B1DHFAO(*), B2DHFAO(*), B1KABAO(*), B2KABAO(*)
       DOUBLE PRECISION XLAMDPQ2(*), XLAMDHQ2(*), CMO(*), KABAR(*)
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       CHARACTER LSTRLX*3, MODEL*10, LAB1*5
       INTEGER IDXRLX, IOPT, IOPRMAT, ISYRMAT, JSCOOR, JCOOR
@@ -1735,11 +1692,7 @@ C  /* Deck ccefffockhlp3 */
       INTEGER ISYMOPR, ISYFCK, IORDER, IOPER, ISIGN
       CHARACTER LABEL*8
 
-#if defined (SYS_CRAY)
-      REAL DNS1D(*), WORK(LWORK)
-#else
       DOUBLE PRECISION DNS1D(*), WORK(LWORK)
-#endif
 
       CHARACTER LABELA*8, LABELB*8, LAB1*5
       INTEGER IOPERA, IOPERB, JCOOR, JSCOOR, ISYMA, ISYMB, ISYM

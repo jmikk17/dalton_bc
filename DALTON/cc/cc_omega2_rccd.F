@@ -930,17 +930,10 @@ C-------------------------------------------------------
       INTEGER ISYABG, KOOV, ISYMG, ISYMIJ, KINT, NBASAL, NBASBE
       INTEGER NRHFI, NIJ, NBASG, ISAIJD
 !
-#if defined (SYS_CRAY)
-      REAL AOINT(*),  XOOVV(*)
-      REAL XLAMP0(*), XLAMH0(*)
-      REAL XLAMP1(*), XLAMH1(*)
-      REAL WORK(LWORK), ZERO, ONE
-#else
       DOUBLE PRECISION AOINT(*),  XOOVV(*)
       DOUBLE PRECISION XLAMP0(*), XLAMH0(*)
       DOUBLE PRECISION XLAMP1(*), XLAMH1(*)
       DOUBLE PRECISION WORK(LWORK), ZERO, ONE
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -72,16 +72,6 @@ C
       INTEGER LUBFDA,  IADBFA,  IADRBFA(MXCORB_CC,*)
       INTEGER LUBFDQA, IADBFQA, IADRBFQA(MXCORB_CC,*)
       
-#if defined (SYS_CRAY)
-      REAL DENSPKQ(*), ONEHQ(*), FOCKQ(*)
-      REAL FOCKA(*), FOCKQA(*)
-      REAL XLAMDH(*), XLAMDHQ(*)
-      REAL XLAMDHA(*), XLAMHQA(*)
-      REAL DENSQ(*), TA2AMP(*), WORK(*)
-      REAL DENSA(*), DENSPKA(*)
-      REAL DENSQA(*), DENPKQA(*)
-      REAL ZERO, THREE, DUMMY
-#else
       DOUBLE PRECISION DENSPKQ(*), ONEHQ(*), FOCKQ(*)
       DOUBLE PRECISION FOCKA(*), FOCKQA(*)
       DOUBLE PRECISION XLAMDH(*), XLAMDHQ(*)
@@ -90,7 +80,6 @@ C
       DOUBLE PRECISION DENSA(*), DENSPKA(*)
       DOUBLE PRECISION DENSQA(*), DENPKQA(*)
       DOUBLE PRECISION ZERO, THREE, DUMMY
-#endif
       PARAMETER (ZERO = 0.0D0, THREE = 3.0D0)
 
       CHARACTER MODEL*(10)

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -72,13 +72,8 @@ C  /* Deck cc3_xi_cont */
       INTEGER IXDOTS(MXVEC,NXETRAN)
       INTEGER IDXL_XIDEN(NXIDEN)
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK), DUMMY, TRIPCON
-      REAL DOTPROD(MXVEC,NXETRAN),ONE
-#else
       DOUBLE PRECISION WORK(LWORK), DUMMY, TRIPCON
       DOUBLE PRECISION DOTPROD(MXVEC,NXETRAN),ONE
-#endif
 
       CHARACTER MODEL*10, LABELH*8
       LOGICAL LTWOEL, LRELAX, SKIPXI
@@ -96,11 +91,7 @@ C
       PARAMETER (ONE = 1.0D0)
 C
       INTEGER ILSTSYM
-#if defined (SYS_CRAY)
-      REAL CC_XIETA_DENCON
-#else
       DOUBLE PRECISION CC_XIETA_DENCON
-#endif
 
       
 *---------------------------------------------------------------------*
@@ -415,17 +406,10 @@ C
 COMMENT COMENT
 C
 
-#if defined (SYS_CRAY)
-      REAL      FREQ, FREQY, HALF, DDOT
-      REAL      WORK(LWORK)
-      REAL      XNORMVAL
-      REAL      DAB(*),DIJ(*),DIA(*)
-#else
       DOUBLE PRECISION      FREQ, FREQY, HALF, DDOT
       DOUBLE PRECISION      WORK(LWORK)
       DOUBLE PRECISION      XNORMVAL
       DOUBLE PRECISION      DAB(*),DIJ(*),DIA(*)
-#endif
 C
       PARAMETER(HALF = 0.5D0)
 C
@@ -1283,15 +1267,9 @@ C
       INTEGER INDEX, INDSQ(LENSQ,6)
       INTEGER LWORK
 C
-#if defined (SYS_CRAY)
-      REAL T1AM(*), TMAT(*), XIAJB(*) 
-      REAL WMAT(*),WORK(LWORK)
-      real xnormval,ddot
-#else
       DOUBLE PRECISION T1AM(*), TMAT(*), XIAJB(*) 
       DOUBLE PRECISION WMAT(*),WORK(LWORK)  
       double precision xnormval,ddot
-#endif
 C
 #include "priunit.h"
 #include "ccorb.h"
@@ -1484,13 +1462,8 @@ C
 C
       CHARACTER*(*) FNT3,FNWBMAT
 C
-#if defined (SYS_CRAY)
-      REAL DAB(*),DIJ(*),WORK(LWORK),ONE,HALF
-      REAL XNORMVAL,DDOT
-#else
       DOUBLE PRECISION DAB(*),DIJ(*),WORK(LWORK),ONE,HALF
       DOUBLE PRECISION XNORMVAL,DDOT
-#endif
 C
       PARAMETER(ONE = 1.0D0, HALF = 0.5D0)
 C
@@ -1644,11 +1617,7 @@ C
       INTEGER LENSQ,INDSQ(LENSQ,6)
       INTEGER ISYMIBID,ISYDEN
 C
-#if defined (SYS_CRAY)
-      REAL DIA(*),WMAT(*),T2TP(*),WORK(LWORK),ONE,TWO
-#else
       DOUBLE PRECISION DIA(*),WMAT(*),T2TP(*),WORK(*),ONE,TWO
-#endif
 C
       PARAMETER(ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -2131,11 +2100,7 @@ C
       INTEGER ISYMIJ,ISYMJ,ISYMI
       INTEGER KOFF1
 C
-#if defined (SYS_CRAY)
-      REAL MATIJ(*)
-#else
       DOUBLE PRECISION MATIJ(*)
-#endif
 C
       CALL QENTER('PRINT_MATIJ')
 C
@@ -2180,11 +2145,7 @@ C
       INTEGER ISYMAB,ISYMB,ISYMA
       INTEGER KOFF1
 C
-#if defined (SYS_CRAY)
-      REAL MATAB(*)
-#else
       DOUBLE PRECISION MATAB(*)
-#endif
 C
       CALL QENTER('PRINT_MATAB')
 C
@@ -2229,11 +2190,7 @@ C
       INTEGER ISYMIA,ISYMA,ISYMI
       INTEGER KOFF1
 C
-#if defined (SYS_CRAY)
-      REAL MATIA(*)
-#else
       DOUBLE PRECISION MATIA(*)
-#endif
 C
       CALL QENTER('PRINT_MATIA')
 C
@@ -2278,11 +2235,7 @@ C
       INTEGER ISYMAI,ISYMI,ISYMA
       INTEGER KOFF1
 C
-#if defined (SYS_CRAY)
-      REAL MATAI(*)
-#else
       DOUBLE PRECISION MATAI(*)
-#endif
 C
       CALL QENTER('PRINT_MATAI')
 C

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -2886,13 +2886,8 @@ ccs          CHECKL = DDOT(NDIMV,VECT,1,WORK(KLEVT1),1)
       LOGICAL TRIPLET, LCCEQ
       INTEGER NVEC, NCCVAR, ISYMTR, LWORK
 
-#if defined (SYS_CRAY)
-      REAL VECTORS(NCCVAR,NVEC), WORK(*), DTEST,
-     &                 EIVAL(NVEC)
-#else
       DOUBLE PRECISION VECTORS(NCCVAR,NVEC), WORK(*), DTEST,
      &                 EIVAL(NVEC)
-#endif
       PARAMETER ( DTEST = 1.0D-04 )
 
       INTEGER KDIA, KEND1, KSCR, LWRK1, NCCVAR0, JVEC

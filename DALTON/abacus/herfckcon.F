@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -63,7 +63,7 @@ C       ... only Coulomb contribution
          DP5X  =  DP5*HFXFAC
          DP25X = DP25*HFXFAC
       END IF
-      IF (HFXMU.NE.D0) IY = 2 
+      IF (HFXMU.NE.D0) IY = 2  ! only exchange
       IF (IY .EQ. 0) GO TO 9999
 C     ... nothing to do!
 C

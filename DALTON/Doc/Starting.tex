@@ -180,9 +180,11 @@ RAS3 space.
 
 In this input we once more use water as input molecule,
 where we keep
-the 1s orbital inactive, correlate 8 electrons in 6 orbitals (Full-Valence
+the 1s orbital inactive, correlate 8 electrons in 6 orbitals (full valence
 CAS) and in addition allow single- and double-excitations into
 7 additional orbitals.
+The order of the irreps is assumed to be $a_1 b_1 b_2 a_2$, as it will be if automatic symmetry detection is used.
+(The user can enforce another order of the irreps if explicity symmetry input is used in the .mol file.)
 
 \begin{verbatim}
 **DALTON INPUT
@@ -203,15 +205,15 @@ CAS) and in addition allow single- and double-excitations into
  1 0 0 0
 .RAS1 SPACE            # orbitals in RAS1 space
  0 0 0 0
-.RAS2 SPACE            The ``Cas Space''
- 3 2 1 0
+.RAS2 SPACE            The ``full valence CAS Space''
+ 3 1 2 0               for symmetry order a1 b1 b2 a2
 .RAS3 SPACE
- 3 1 2 1
+ 3 2 1 1               for symmetry order a1 b1 b2 a2
 .ELECTRONS             Number of electrons to correlate
  8                     The valence electrons
 .RAS1 HOLES            # elect. that may be removed from RAS1
  0 0
-.RAS3 ELECTRONS        From 0 to 2 electrons excited into here
+.RAS3 ELECTRONS        From 0 to 2 electrons excited into RAS3
  0 2
 **PROPERTIES           Input for single geometry run
 .SHIELD

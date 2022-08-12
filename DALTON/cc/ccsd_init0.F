@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -75,6 +75,7 @@ C
       DCPT2  = .FALSE.
       CIS    = .FALSE.
       CCS    = .FALSE.
+      MP3    = .FALSE.
       CCD    = .FALSE.
 !SONIA/FRAN
       rCCD   = .FALSE.
@@ -199,6 +200,9 @@ C
 C     Multi-Level CC3 OR CCSD(T)
       MLCC3 = .FALSE.
       MLCCSDPT = .FALSE.
+
+C     CP ORDER
+      CPORDER = 0
 C
 C DRCCD/DRPA related stuff
 C

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -103,17 +103,10 @@ C
       INTEGER kx3am
 C
 
-#if defined (SYS_CRAY)
-      REAL      FREQ, HALF, DDOT
-      REAL      FOCKY(*), FOCK0(*), WORK(LWORK)
-      REAL      ETA1(*), ETA2(*), ETA1EFF(*), ETA2EFF(*)
-      REAL      XNORM
-#else
       DOUBLE PRECISION      FREQ, HALF, DDOT
       DOUBLE PRECISION      FOCKY(*), FOCK0(*), WORK(LWORK)
       DOUBLE PRECISION      ETA1(*), ETA2(*), ETA1EFF(*), ETA2EFF(*)
       DOUBLE PRECISION      XNORM
-#endif
 C
       PARAMETER(HALF = 0.5D0)
 C
@@ -1138,13 +1131,8 @@ C
       INTEGER ISTMAT, ISYFKY, ISWMAT, ISFIKJ, ISYFIK 
       INTEGER ISYMA, ISYAI, ISYAIK, NA
       INTEGER ISYMF, ISYMJ, ISYMK, ISYMI, ISYFI
-#if defined (SYS_CRAY)
-      REAL TMAT(*), FOCKY(*), WMAT(*), WRK(*)
-      REAL HALF, ONE
-#else
       DOUBLE PRECISION TMAT(*), FOCKY(*), WMAT(*), WRK(*)
       DOUBLE PRECISION HALF, ONE
-#endif
 C
 #include "priunit.h"
 #include "dummy.h"
@@ -1250,13 +1238,8 @@ C
       INTEGER ISYMA, ISYAI, ISYAIK, ISYALK, ISYAL, NA
       INTEGER ISYMJ, ISYMK, ISYMI, ISYML, ISYFI
 C
-#if defined (SYS_CRAY)
-      REAL TMAT(*), FOCKY(*), WMAT(*), WRK(*)
-      REAL MHALF, ONE 
-#else
       DOUBLE PRECISION TMAT(*), FOCKY(*), WMAT(*), WRK(*)
       DOUBLE PRECISION MHALF, ONE
-#endif
 C
 #include "priunit.h"
 #include "dummy.h"
@@ -1360,11 +1343,7 @@ C
       INTEGER ISYMA, ISYAI, ISYAIK, ISYAIJ, KAIKD, KAIJD, KAIJB
       INTEGER KAIKB, KAIKJ
 C
-#if defined (SYS_CRAY)
-      REAL T2TP(*), FOCKY(*), WMAT(*)
-#else
       DOUBLE PRECISION T2TP(*), FOCKY(*), WMAT(*)
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -1583,18 +1562,10 @@ C
       INTEGER NTOTFIN, NTOTFNK, NTOTL, IOPT, ISYMFMN, NTOTFMN, ISYMB
       INTEGER ISYFNIM, ISYMFNI, NTOTFNI, ISYMFNM, NTOTFNM, KSCR4
 C
-#if defined (SYS_CRAY)
-      REAL ZERO, ONE
-      REAL OMEGA1(*), WMAT(*), TMAT(*)
-      REAL XOOOO(*), XOVVO(*), XOOVV(*), XVVVV(*)
-      REAL T2TP(*), WORK(LWORK)
-      REAL ZERO, ONE, DDOT, XNORM
-#else
       DOUBLE PRECISION OMEGA1(*), WMAT(*), TMAT(*)
       DOUBLE PRECISION XOOOO(*), XOVVO(*), XOOVV(*), XVVVV(*)
       DOUBLE PRECISION T2TP(*), WORK(LWORK)
       DOUBLE PRECISION ZERO, ONE, DDOT, XNORM
-#endif
 C
 #include "priunit.h"
 #include "ccorb.h"
@@ -4051,11 +4022,7 @@ C
       INTEGER ISCKIJ, ISYMJ, ISYCKI, ISYMI, ISYMCK, ISYMIJ, ISYMC, ISYMK
       INTEGER ISYMKI, ISYKIJ, NKIJ, KVPOOO, KVOOO 
 C
-#if defined (SYS_CRAY)
-      REAL GVPOOO(*),GVOOO(*)
-#else
       DOUBLE PRECISION GVPOOO(*),GVOOO(*)
-#endif
 C
 #include "priunit.h"
 #include "ccorb.h"
@@ -4166,15 +4133,9 @@ C
       INTEGER ISYDK, NTOTDK, ISBJIK, ISYCKA
       INTEGER ISYKA, KINT, ISYBJI, KOFFT, KOFFM, KOFFR
       INTEGER NTOK, NTOBJI, ISYMK, ISYMC, ISYMI
-#if defined (SYS_CRAY)
-      REAL XI2(*), RBJIA(*), WMAT(*), TMAT(*), TRVIR(*), TRVIR1(*) 
-      REAL WORK(*)
-      REAL ZERO, ONE, TWO
-#else
       DOUBLE PRECISION XI2(*), RBJIA(*), WMAT(*), TMAT(*) 
       DOUBLE PRECISION TRVIR(*), TRVIR1(*), WORK(*)
       DOUBLE PRECISION ZERO, ONE, TWO
-#endif
 
 C
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
@@ -4462,16 +4423,10 @@ C
       INTEGER ISYAIJ, ISYBJI, ISYIJ 
       INTEGER KTMATX
 C
-#if defined (SYS_CRAY) 
-      REAL XI2(*), WMAT(*), TMAT(*), TROCC(*), TROCC1(*)
-      REAL WORK(*) 
-      REAL TWO, ONE, ZERO, XTMAT, XRMAT, DDOT
-#else
       DOUBLE PRECISION XI2(*), WMAT(*), TMAT(*)
       DOUBLE PRECISION TROCC(*), TROCC1(*) 
       DOUBLE PRECISION WORK(*) 
       DOUBLE PRECISION TWO, ONE, ZERO, XTMAT, XRMAT, DDOT
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -4822,15 +4777,9 @@ C
       INTEGER KDKL,KKJL,KKLJ,KTMAT,KRMAT,KEND1,KT2KL,KKB
       INTEGER LWRK,LWRK1
 
-#if defined (SYS_CRAY)
-      REAL TMAT(*),FOCKYCK(*),T2TP(*),ETA2EFF(*),RAIJB(*)
-      REAL WRK(*)
-      REAL ONE,XRMAT,DDOT
-#else
       DOUBLE PRECISION TMAT(*),FOCKYCK(*),T2TP(*),ETA2EFF(*),RAIJB(*)
       DOUBLE PRECISION WRK(*)
       DOUBLE PRECISION ONE,XRMAT,DDOT
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"
@@ -5132,11 +5081,7 @@ C
       INTEGER LWRK,LWRK1
       INTEGER LUPTIJ, LUPTAB
 C
-#if defined (SYS_CRAY)
-      REAL FOCKYCK(*),ETA1EFF(*),WRK(*),ONE
-#else
       DOUBLE PRECISION FOCKYCK(*),ETA1EFF(*),WRK(*),ONE
-#endif
 C
 #include "priunit.h"
 #include "ccsdsym.h"

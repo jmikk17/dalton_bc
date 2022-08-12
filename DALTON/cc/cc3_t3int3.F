@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -40,13 +40,8 @@ C
       INTEGER KXCKD2, KXCKJ2, KXCKD3, KXCKJ3
       INTEGER LU3SRT, LU3SRT2, LU3SRT3, LUCKJD, LUCKJD2, LUCKJD3
 !
-#if defined (SYS_CRAY)
-      REAL XINT(*),WORK(LWORK), XDOT, DDOT
-      REAL XLAMDP(*), XLAMDH(*), C1AM(*), ZERO, ONE, XMONE
-#else
       DOUBLE PRECISION XINT(*),WORK(LWORK), XDOT, DDOT
       DOUBLE PRECISION XLAMDP(*), XLAMDH(*), C1AM(*), ZERO, ONE, XMONE
-#endif
 !
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0, XMONE = -1.0D0)
 !
@@ -289,11 +284,7 @@ C
       INTEGER LWORK, ISYCKJ, ISYMJ, ISYMCK, ISYMK, ISYMC, ISYMCJ
       INTEGER NCKJ, NCJK
 !
-#if defined (SYS_CRAY)
-      REAL XCKD(*),WORK(LWORK)
-#else
       DOUBLE PRECISION XCKJ(*), WORK(LWORK)
-#endif
 !
 #include "ccorb.h"
 #include "ccsdsym.h"

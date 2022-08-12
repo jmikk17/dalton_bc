@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -39,11 +39,7 @@ C
      &        iopt,kt0amp0,kt12,lenmod,ISYCTR,ISYAMP,ISYRES,
      &        isymkl,isymij
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK), ERRNRM, DDOT
-#else
       DOUBLE PRECISION WORK(LWORK), ERRNRM, DDOT
-#endif
      
       !external functions:
       INTEGER ILSTSYM
@@ -282,17 +278,10 @@ C
       PARAMETER (LOCDBG = .FALSE.)
 
       INTEGER LWORK
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL RHODIF1(*), RHODIF2(*), RHODIF12(*)
-      REAL ECURR, FAC, DDOT
-      REAL HALF, ZERO, ONE, TWO, DELTA, DELINV
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION RHODIF1(*), RHODIF2(*), RHODIF12(*)
       DOUBLE PRECISION ECURR, FAC, DDOT
-      DOUBLE PRECISION HALF, ZERO, ONE, TWO, DELTA, DELINV
-#endif 
+      DOUBLE PRECISION HALF, ZERO, ONE, TWO, DELTA, DELINV 
 
       CHARACTER*(3) LISTR, LISTL, APROXR12
       CHARACTER*(10) MODEL, MODELW

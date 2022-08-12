@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -70,17 +70,10 @@ Csonia
 
       CHARACTER*8 LABEL(MAXVEC,*)
 
-#if defined (SYS_CRAY)
-      REAL FREQS(MAXVEC,*), EIGV(MAXVEC,*)
-      REAL WORK(LWORK)
-      REAL ZERO
-      REAL DDOT, XNORM, RDUM
-#else
       DOUBLE PRECISION FREQS(MAXVEC,*), EIGV(MAXVEC,*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO
       DOUBLE PRECISION DDOT, XNORM, RDUM
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER MODEL*(10), CDUM*3
@@ -544,11 +537,7 @@ c /* deck CC_ETA_SETUP1 */
       INTEGER ISTAT(MAXVEC,*), ICAU(MAXVEC,*), ISYMO(MAXVEC,*)
       LOGICAL LORX(MAXVEC,*)
 
-#if defined (SYS_CRAY)
-      REAL FREQ(MAXVEC,*), EIGV(MAXVEC,*)
-#else
       DOUBLE PRECISION FREQ(MAXVEC,*), EIGV(MAXVEC,*)
-#endif
 
       INTEGER I0KTRAN(5,MXTRAN)
       INTEGER I0GTRAN(MXDIM_GTRAN,MXTRAN)

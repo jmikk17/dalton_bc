@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -45,17 +45,10 @@
       CHARACTER FC2AM(*)
       INTEGER LWORK, ISYMC1, LUFC2, IVEC
 
-#if defined (SYS_CRAY)
-      REAL FREQC, DDOT, ONE, TWO, FF
-      REAL WORK(LWORK), FOCK0(*), FOCKC(*)
-      REAL XLAMDP0(*), XLAMDH0(*), C1AM(*)
-      REAL OMEGA1(*), OMEGA2(*)
-#else
       DOUBLE PRECISION FREQC, DDOT, ONE, TWO, FF
       DOUBLE PRECISION WORK(LWORK), FOCK0(*), FOCKC(*)
       DOUBLE PRECISION XLAMDP0(*), XLAMDH0(*), C1AM(*)
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*)
-#endif
       PARAMETER ( ONE = 1.0D0, TWO = 2.0D0 )
 
       CHARACTER*10 MODEL
@@ -283,21 +276,12 @@
       PARAMETER (LOCDBG = .FALSE.)
       INTEGER ISYMC, LWORK
   
-#if defined (SYS_CRAY)
-      REAL A3AM(*), XINT1SC(*), XINT2SC(*)
-      REAL XINT1S0(*), XINT2S0(*), FOCKD(*)
-      REAL TC1AM(*), TC2AM(*), T02AM(*), T03AM(*)
-      REAL WORK(*), SCR1(*), XLAMDP0(*), XLAMDH0(*)
-      REAL FIELDAO(*), FIELD(*)
-      REAL ONE, FREQC, DDOT
-#else
       DOUBLE PRECISION A3AM(*), XINT1SC(*), XINT2SC(*)
       DOUBLE PRECISION XINT1S0(*), XINT2S0(*), FOCKD(*)
       DOUBLE PRECISION TC1AM(*), TC2AM(*), T02AM(*), T03AM(*)
       DOUBLE PRECISION WORK(*), SCR1(*), XLAMDP0(*), XLAMDH0(*)
       DOUBLE PRECISION FIELDAO(*), FIELD(*)
       DOUBLE PRECISION ONE, FREQC, DDOT
-#endif
       PARAMETER (ONE = 1.0D0)
    
       INTEGER KLAMPC, KLAMHC, KFLDC1, KINT1SC, KINT2SC, KEND1, LWRK1,
@@ -411,15 +395,9 @@
 #include "ccorb.h"
 
       INTEGER LWORK
-#if defined (SYS_CRAY)
-      REAL FREQ, FIELD(*)
-      REAL OMEGA1(*), OMEGA2(*), R3AM(*), FOCKD(*), FOCK0(*)
-      REAL WORK(*), XIAJB(*), XINT1T(*), XINT2T(*)
-#else
       DOUBLE PRECISION FREQ, FIELD(*)
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*), R3AM(*), FOCKD(*), FOCK0(*)
       DOUBLE PRECISION WORK(*), XIAJB(*), XINT1T(*), XINT2T(*)
-#endif
  
       LOGICAL TRANSPOSE
       INTEGER KSCR1, KEND1, LWRK1, KT3SCR, KOMEGA1, KOMEGA2, IJ, NIJ
@@ -514,21 +492,12 @@
       INTEGER LWORK, MXVEC, ITRAN
       INTEGER IDOTS(MXVEC,*)
 
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*), OMEGA2(*), OMEGA3(*), WORK(*)
-      REAL XLAMDP(*), XLAMDH(*), FOCK0(*), FOCKD(*)
-      REAL XIAJB(*), XINT1T(*), XINT2T(*)
-      REAL YIAJB(*), XINT1S(*), XINT2S(*)
-      REAL DOTPROD(MXVEC,*), DDOT, FREQC, SCON, DCON, TCON
-      REAL SIXTH, TWO, SIGN
-#else
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*), OMEGA3(*), WORK(*)
       DOUBLE PRECISION XLAMDP(*), XLAMDH(*), FOCK0(*), FOCKD(*)
       DOUBLE PRECISION XIAJB(*), XINT1T(*), XINT2T(*)
       DOUBLE PRECISION YIAJB(*), XINT1S(*), XINT2S(*)
       DOUBLE PRECISION DOTPROD(MXVEC,*), DDOT, FREQC, SCON, DCON, TCON
       DOUBLE PRECISION SIXTH, TWO, SIGN
-#endif
       PARAMETER ( SIXTH=1.0D0/6.0D0, TWO=2.0D0 )
  
       CHARACTER MODEL*(10)

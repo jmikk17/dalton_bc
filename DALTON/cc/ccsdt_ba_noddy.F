@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -56,17 +56,10 @@ C
       INTEGER LWORK, IOPTRES, ITRAN, MXVEC, NXTRAN,ISYMB,IDLSTC,IDLSTD
       INTEGER IDOTS(MXVEC,NXTRAN)
 
-#if defined (SYS_CRAY)
-      REAL DOTPROD(MXVEC,NXTRAN), FREQC, FREQE, FREQ, FREQRES
-      REAL WORK(LWORK), SIXTH, ONE, TWO, DUMMY, TCON, DDOT
-      REAL OMEGA1(*), OMEGA2(*), FREQD, FF, SIGN
-      REAL OMEGA1EFF(*), OMEGA2EFF(*)
-#else
       DOUBLE PRECISION DOTPROD(MXVEC,NXTRAN), FREQC, FREQE, FREQRES
       DOUBLE PRECISION WORK(LWORK), SIXTH, ONE, TWO, DUMMY, TCON, DDOT
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*), FREQD, FF, SIGN
       DOUBLE PRECISION OMEGA1EFF(*), OMEGA2EFF(*)
-#endif
       PARAMETER( SIXTH = 1.0D0/6.0D0, ONE = 1.0D0, TWO = 2.0D0 )
 
       CHARACTER*10 MODEL

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -170,6 +170,8 @@ C     Cosine and Sine integrals (24.06.93)
 C     Mass-velocity and Darwin integrals (23.07.93 ShKi+HJAaJ)
 C     Magnetic field derivatives of electric field (280893 KRu)
 C     DPT correction to dipole (WK/UniKA/09-03-2004)
+C     Divergence of the zz EFG component at the nuclei - (2021)
+C     Laplacian of the xx,yy and zz EFG component at the nuclei - (2021)
 C
 C     Changes for writing symmetry information to property file
 C     (OV 08.03.90)
@@ -191,7 +193,7 @@ C
 #include "efield.h"
 #include "ccom.h"
 #include "qm3.h"
-      PARAMETER (NTABLE = 107)
+      PARAMETER (NTABLE = 109)
       PARAMETER (D2 = 2.D0)
 C
       LOGICAL ANTI, TRASPH, SOLVNT, TRIANG, SQUARE
@@ -249,7 +251,8 @@ C Bin Gao, December 17, 2009; adds integrals S2MBRA, S2MKET, and S2MMIX
      &            'HUCKEL ', 'SQHD2OR', 'EFIELB1', 'EFIELB2', !  93:96
      &            'MAGQDP ', 'DERANGM', 'DIPANH ', 'POPOVLP', !  97:100
      &            'KINADIA', 'S2MBRA ', 'S2MKET ', 'S2MMIX ', ! 101:104
-     &            'LFDIPLN', 'R2     ', 'R4     '/ ! 104:108
+     &            'LFDIPLN', 'R2     ', 'R4     ', 'GRAZZEFG',! 105:108
+     &            'LAPEFG ' / !109
 C
       LOGICAL   RGAUGE, RCHRG
       DIMENSION GAGSAV(3)
@@ -287,7 +290,8 @@ C
      &             71,72,73,74,75,76,77,78,79,80,
      &             81,82,83,84,85,86,87,88,89,90,
      &             91,92, 1,94,95,96,97,98,99,100,
-     &             101,102,103,104,105,106,107), I
+     &             101,102,103,104,105,106,107,
+     &             108,109), I
          END IF
       END DO
       WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
@@ -899,6 +903,7 @@ C
      &               INTTYP)
          ANTI = .FALSE.
       GOTO 200
+C
 C
 C     Electric field gradient at the individual nuclei, cartesian ELFGRDC
 C     -----------------------------------------------------------
@@ -2466,6 +2471,32 @@ C  R4 integrals
          INTREP(1) = 0
          ANTI = .FALSE.
       GO TO 200
+C
+C     Gradient of the zz EFG (electronic) component at the individual nuclei
+C     --------------------------------------
+C
+  108   CONTINUE
+      INTTYP = 109
+      IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &        'Calculation of the gradient of q_zz at the nuclei'
+      CALL SETATM(DOATOM,NATOM,INTTYP)
+      CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+      ANTI = .FALSE.
+      GOTO 200
+C
+C     Laplacian of the qxx,qyy and qzz EFGs components (electronic) at the individual nuclei!
+C     --------------------------------------
+C
+  109   CONTINUE
+      INTTYP = 110
+      IF (IPRINT .GT. 5) WRITE (LUPRI,'(/A/)')
+     &     'Calculation of laplacian of qxx,qyy,qzz at the nuclei'
+      CALL SETATM(DOATOM,NATOM,INTTYP)
+      CALL EFNTYP(NOPTYP,INTREP,LABINT,DOATOM,NATOM,INTADR,
+     &               INTTYP)
+      ANTI = .FALSE.
+      GOTO 200
   200 CONTINUE
 C
 C     ***** Print section *****
@@ -3632,17 +3663,17 @@ C  /* Deck sdtyp */
                   ITHIRD = MOD(MOD(ISCOR1,100),10)
                   DO 400 ICOOR2 = 1, 3
                      ITYP = ITYP + 1
-                     IF (INTTYP .EQ. 11) THEN
+                     IF (INTTYP .EQ. 11) THEN ! SD only
                         LABINT(ITYP) = 'SD '//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 13) THEN
+                     ELSE IF (INTTYP .EQ. 13) THEN ! SD+FC
                         LABINT(ITYP) = 'SDC'//CHRNOS(IFIRST)
      &                                      //CHRNOS(ISECND)
      &                                      //CHRNOS(ITHIRD)//' '
      &                                      //CHRXYZ(-ICOOR2)
-                     ELSE IF (INTTYP .EQ. 68) THEN
+                     ELSE IF (INTTYP .EQ. 94) THEN ! SDKE
                IF (ISCOR1 .GT. 99) THEN
          CALL QUIT('Error: SDKE only implemented for max 33 atoms')
                END IF
@@ -4010,6 +4041,7 @@ C  /* Deck hdotyp */
       END
 C  /* Deck npetyp */
       SUBROUTINE NPETYP(NOPTYP,INTREP,NPETBL,LABINT,DOATOM,NATOM)
+!     Property labels for potential energy at the nuclei (NUCPOT)
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
@@ -4026,7 +4058,7 @@ C  /* Deck npetyp */
 C
       NOPTYP = NATOM
       CALL NTYPTS(NOPTYP)
-      CALL DZERO(NPETBL,NCTOT*(MAXREP + 1))
+      CALL IZERO(NPETBL,NCTOT*(MAXREP + 1))
 C
       ITYP = 0
 C
@@ -4147,6 +4179,14 @@ C
                     LABINT(ITYP) = '1DHAM'//CHRNOS(ISCOOR/100)
      &                       //CHRNOS(MOD(ISCOOR,100)/10)
      &                       //CHRNOS(MOD(ISCOOR,10))
+                  ELSEIF (INTTYP .EQ. 109) THEN
+                    LABINT(ITYP) = 'GEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
+                  ELSEIF (INTTYP .EQ. 110) THEN
+                    LABINT(ITYP) = 'LEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
                   ELSE
                     LABINT(ITYP) = 'NEF '//CHRNOS(ISCOOR/100)
      &                       //CHRNOS(MOD(ISCOOR,100)/10)
@@ -4171,6 +4211,15 @@ C     ... FORQM3
                   LABINT(ITYP) = '1DHAM'//CHRNOS(ISCOOR/100)
      &                     //CHRNOS(MOD(ISCOOR,100)/10)
      &                     //CHRNOS(MOD((MOD(ISCOOR,100)),10))
+                ELSEIF (INTTYP .EQ. 109) THEN
+                  LABINT(ITYP) = 'GEFG '//CHRNOS(ISCOOR/100)
+     &                     //CHRNOS(MOD(ISCOOR,100)/10)
+     &                     //CHRNOS(MOD((MOD(ISCOOR,100)),10))
+                  ELSEIF (INTTYP .EQ. 110) THEN
+                    LABINT(ITYP) = 'LEFG '//CHRNOS(ISCOOR/100)
+     &                       //CHRNOS(MOD(ISCOOR,100)/10)
+     &                       //CHRNOS(MOD(ISCOOR,10))//' '
+
                 ELSE
                   LABINT(ITYP) = 'NEF '//CHRNOS(ISCOOR/100)
      &                     //CHRNOS(MOD(ISCOOR,100)/10)
@@ -4927,7 +4976,7 @@ C     when reaching this routine.
      &         '"EOFLABEL" label not found in AOPROPER'
             CALL GPINQ_print(LUPROP,'NAME')
             REWIND LUPROP
-            CALL QDUMP(LUPROP)
+            CALL DMPLAB(LUPROP,LUPRI)
             CALL QUIT('Internal error, EOF not found in AOPROPER')
          END IF
          BACKSPACE LUPROP

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -58,13 +58,8 @@ C
       CHARACTER*(*) FNDELD, FNCKJD, FNDKBC, FNTOC, FN3VI, FNDKBC3
       CHARACTER*(*) FN3FOPX, FN3FOP2X
 
-#if defined (SYS_CRAY)
-      REAL DOTPROD(MXVEC,NXETRAN), TRIPCON, CC_XIETA_DENCON
-      REAL WORK(LWORK)
-#else
       DOUBLE PRECISION DOTPROD(MXVEC,NXETRAN), TRIPCON, CC_XIETA_DENCON
       DOUBLE PRECISION WORK(LWORK)
-#endif
 
       CHARACTER MODEL*(10), LABELH*(8)
       LOGICAL SKIPXI, SKIPETA
@@ -374,17 +369,10 @@ C
 C
       INTEGER NCAU
 
-#if defined (SYS_CRAY)
-      REAL XLAMDP(*), XLAMDH(*), FOCK0(*)
-      REAL PRECISION FREQY, WORK(*), DDOT
-      REAL ZERO, ONE, TWO, HALF
-      REAL DENIJ(*),DENAB(*),DENIA(*)
-#else
       DOUBLE PRECISION XLAMDP(*), XLAMDH(*), FOCK0(*)
       DOUBLE PRECISION FREQY, WORK(*), DDOT
       DOUBLE PRECISION ZERO, ONE, TWO, HALF
       DOUBLE PRECISION DENIJ(*),DENAB(*),DENIA(*)
-#endif
 C
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -751,16 +739,6 @@ C
 C
       integer kx3am
  
-#if defined (SYS_CRAY)
-      REAL XLAMDP(*), XLAMDH(*), FOCK0(*)
-      REAL WORK(LWORK)
-      REAL FREQY, DDOT
-      REAL ZERO, ONE, TWO, HALF
-      REAL DAB(*),DIJ(*),DIA(*)
-      REAL XMMAT(*),YMMAT(*)
-      REAL T2TP(*),ZL2TP(*),ZL1AM(*)
-      REAL FREQL
-#else
       DOUBLE PRECISION XLAMDP(*), XLAMDH(*), FOCK0(*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION FREQY, DDOT
@@ -769,7 +747,6 @@ C
       DOUBLE PRECISION XMMAT(*),YMMAT(*)
       DOUBLE PRECISION T2TP(*),ZL2TP(*),ZL1AM(*)
       DOUBLE PRECISION FREQL
-#endif
 C
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
@@ -2269,11 +2246,7 @@ C
 #include "ccsdsym.h"
 #include "ccorb.h"
 
-#if defined (SYS_CRAY)
-      REAL T2AMP(*), XAIBJ, XBJAI, FAC
-#else
       DOUBLE PRECISION T2AMP(*), XAIBJ, XBJAI, FAC
-#endif
 
       INTEGER ISYMAI, ISYMBJ, NAI, NBJ, NAIBJ, NBJAI, NAIAI, ISYAMP
 
@@ -2350,13 +2323,8 @@ C
 #include "ccsdsym.h"
 #include "ccorb.h"
 
-#if defined (SYS_CRAY)
-      REAL DIA(*), XMMAT(*), T2TP(*), WORK(*)
-      REAL ONE
-#else
       DOUBLE PRECISION DIA(*), XMMAT(*), T2TP(*), WORK(*)
       DOUBLE PRECISION ONE
-#endif
       PARAMETER(ONE=1.0D0)
 
       CHARACTER*(*) FNT2
@@ -2453,11 +2421,7 @@ C
 #include "ccsdsym.h"
 #include "ccorb.h"
 
-#if defined (SYS_CRAY)
-      REAL FIA(*), FIJ(*), FAI(*), FAB(*), FOCK(*)
-#else
       DOUBLE PRECISION FIA(*), FIJ(*), FAI(*), FAB(*), FOCK(*)
-#endif
 
       LOGICAL LOV, LOO, LVV, LVO
       INTEGER ISYFCK, ISYMK, ISYMC, ISYMI, ISYMJ, ISYMA, ISYMB,
@@ -2702,11 +2666,7 @@ C     -------------------------------------------------------
       END 
 *=====================================================================* 
 *=====================================================================*
-#if defined (SYS_CRAY)
-      REAL
-#else
       DOUBLE PRECISION 
-#endif
      & FUNCTION CC_XIETA_DENCON(IDENS,LABELH,ISYHOP,XLAMDP,XLAMDH,
      &                          LUDEFF,FNDEFF,M2BST,WORK,LWORK)
 *---------------------------------------------------------------------*
@@ -2728,11 +2688,7 @@ C     -------------------------------------------------------
       CHARACTER LABELH*(*), FNDEFF*(*)
       INTEGER IDENS, ISYHOP, LUDEFF, M2BST, LWORK
 
-#if defined (SYS_CRAY)
-      REAL 
-#else
       DOUBLE PRECISION
-#endif
      &  WORK(LWORK), XLAMDP(*), XLAMDH(*), DDOT
 
       INTEGER KDAB,KDIJ,KDIA,KEND1,KFOCK,KFOCKIJ,KFOCKIA,KFOCKAB,

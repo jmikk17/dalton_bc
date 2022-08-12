@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -3093,11 +3093,7 @@ C
       parameter (locdbg = .false.)
 
       integer ivec, jvec, ndeg, nvec, nred
-#if defined (SYS_CRAY) 
-      real fac, ddot, thrld, solvec(maxred,*), eigval(*)
-#else
       double precision fac, ddot, thrld, solvec(maxred,*), eigval(*)
-#endif
 
       if (locdbg) then
         write(lupri,*) 'Matrix with solution vectors in reduced space:'
@@ -3144,11 +3140,7 @@ C
       LOGICAL TRIPLET
       INTEGER ISTATE,ISYM
      
-#if defined (SYS_CRAY)
-      REAL CONT(*), SCONT(*), EAE, ESE
-#else
       DOUBLE PRECISION CONT(*), SCONT(*), EAE, ESE
-#endif
 
       MULTIPLICITY = 'singlet '
       IF (TRIPLET) MULTIPLICITY = 'triplet '

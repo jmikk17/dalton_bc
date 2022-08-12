@@ -1,7 +1,7 @@
 #define HERFCK_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -786,7 +786,7 @@ c             calculation.
          END IF
 
          CALL MEMREL('HERFCK_1.PARDRV',WORK,KWORK,KNSTAT,KFREE,LFREE)
-      ELSE
+      ELSE ! not PARHER
 #endif
 C
 C        Calculate full Coulomb and exchange weighted with hfxfac 

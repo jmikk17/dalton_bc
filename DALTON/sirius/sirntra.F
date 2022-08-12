@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -3274,9 +3274,9 @@ C     otherwise use KTRLVL = 0.
 C
 C     JTRLVL  INDEX 1  INDEX 2  INDEX 3  INDEX 4   comment
 C        0       a        a        a        a      CI calc. (0. ord.)
-C        1       a        a        a        g      first-order
-C        2       a        g        a        g      Sirius (2. ord.)
-C        3       a        g        g        g      third-order
+C        1       g        a        a        a      first-order
+C        2       g        g        a        a      Sirius (2. ord.), used for both <gg|aa> and (gg|aa)
+C        3       g        g        g        a      third-order
 C       >3       g        g        g        g      full transf.
 C
 C     ITRTYP(1:NORBT) = number of integral indices in which this orbital
@@ -3413,9 +3413,9 @@ C     otherwise use KTRLVL = 0.
 C
 C     JTRLVL  INDEX 1  INDEX 2  INDEX 3  INDEX 4   comment
 C        0       a        a        a        a      CI calc. (0. ord.)
-C        1       a        a        a        g      first-order
-C        2       a        g        a        g      Sirius (2. ord.)
-C        3       a        g        g        g      third-order
+C        1       g        a        a        a      first-order
+C        2       g        g        a        a      Sirius (2. ord.) (both (gg|aa) and <gg|aa>)
+C        3       g        g        g        a      third-order
 C        4       g        g        g        g      full transf.
 C
 C
@@ -3427,19 +3427,16 @@ C
       CALL QENTER('N_TRALVL')
       ! a: active, o:occupied, g:general in comments for JTRSIR
       JTRSIR = ABS(ITRSIR)
-      IF (JTRSIR .EQ. 0) THEN      ! (aa|aa)
-         JTRLVL = 0
-         KTRLVL = 1
-      ELSE IF (JTRSIR .EQ. 1) THEN ! (ga|aa)
+      IF (JTRSIR .EQ. 0) THEN ! (ga|aa)
          JTRLVL = 1
          KTRLVL = 1
-      ELSE IF (JTRSIR .EQ. 2) THEN ! (gg|oo) + <gg|oo> (for (aa|ii) and (ai|ai)
+      ELSE IF (JTRSIR .EQ. 2) THEN ! (gg|oo) + <gg|oo> (need (aa|ii) and (ai|ai))
          JTRLVL = 2
          KTRLVL = 0
       ELSE IF (JTRSIR .EQ. 3) THEN ! (gg|aa) + <gg|aa>
          JTRLVL = 2
          KTRLVL = 1
-      ELSE IF (JTRSIR .EQ. 4) THEN ! (gg|oo) + <gg|oo>
+      ELSE IF (JTRSIR .EQ. 4 .OR. JTRSIR .EQ. 1) THEN ! (gg|oo) + <gg|oo>
          JTRLVL = 2
          KTRLVL = 0
       ELSE IF (JTRSIR .EQ. 5) THEN ! (gg|go)

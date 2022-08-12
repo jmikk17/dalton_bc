@@ -1,6 +1,6 @@
-!
+cc_xetst.F !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -58,19 +58,11 @@ c/* Deck CC_XETST */
       INTEGER MXXETRAN, MXVEC
       PARAMETER (MXXETRAN = 20, MXVEC = 10)
       INTEGER LWORK
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL FREQ, WRKDLM
-      REAL XCONS(MXVEC,MXXETRAN), ECONS(MXVEC,MXXETRAN)
-      REAL DDOT, PROPRSP, PROPAVE, FF
-      REAL ZERO, ONE, TWO, FOUR, FIVE, FACUP
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION FREQ, FREQ1, FREQ2, WRKDLM
       DOUBLE PRECISION XCONS(MXVEC,MXXETRAN), ECONS(MXVEC,MXXETRAN)
       DOUBLE PRECISION DDOT, PROPRSP, PROPAVE, FF
-      DOUBLE PRECISION ZERO, ONE, TWO, FOUR, FIVE, FACUP
-#endif 
+      DOUBLE PRECISION ZERO, ONE, TWO, FOUR, FIVE, FACUP 
       PARAMETER (ZERO = 0.0D0, ONE  = 1.0D0, TWO = 2.0D0)
       PARAMETER (FOUR = 4.0D0, FIVE = 5.0D0)
 

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -30,11 +30,7 @@ c---------------------------------------------------------------------
 #include "ccsdsym.h"
 #include "r12int.h"
       logical ldum
-#if defined (SYS_CRAY)
-      real zero,one
-#else
       double precision zero,one
-#endif
       logical fel,test
       parameter (test = .true.,zero = 0.0d0, one = 1.0d0)
 
@@ -48,11 +44,7 @@ c---------------------------------------------------------------------
       integer icou3,iglmro(8,8),noffset,nb1fro(8),lu43,ntotj
       character*10 fnelena
       data fnelena/'FFR12xxxxx'/
-#if defined (SYS_CRAY)
-      real cmo(*),work(*),kvajkl(*)
-#else
       double precision cmo(*),work(*),kvajkl(*)
-#endif
 c
       call qenter('cc_r12mkxijkl')
       fnelena = fnelena(1:5)//fnvajkl(6:10)
@@ -218,13 +210,8 @@ C     Calculate MP2-R12 contributions for frozen core gradients
       integer kxij,ir1xbas(8,8),nijkl(8)
       integer ipdd,res,koffe,kctil2,idxijkl,lctil,ncvai
 
-#if defined (SYS_CRAY)
-      real work(*),one,two,zero
-      real orb(*),v2am(*)
-#else
       double precision work(*),one,zero,two
       double precision orb(*),v2am(*)
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('cc_r12gradfr')
@@ -628,12 +615,8 @@ C  /* Deck r12gradapfr */
       integer imataj(8,8),imatka(8,8),nmatkl1(8),nmatak(8)
       integer icou4,icou5,icou6,icou7,imatmn(8,8),imatkl1(8,8)
       integer nijkl(8)
-#if defined (SYS_CRAY)
-      real res(*),work(*),orb(*),v2am(*),one,two,zero
-#else
       double precision work(*),orb(*),v2am(*),one,zero,two
       double precision res(*)
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('r12gradapfr')
@@ -1088,13 +1071,8 @@ C  /* Deck r12gradaxd */
       integer nt1fm(8),nij,LUCJDK,kintfr,icoun1
       integer iv1fro(8,8),it1vm(8,8),icoun3,iv2fro(8,8)
       integer ir2fro(8,8)
-#if defined (SYS_CRAY)
-      real work(*),dklij(*),v2am(*),kctil(*),kccr12(*),one,two,zero
-      real res(*) 
-#else
       double precision work(*),dklij(*),v2am(*),kctil(*),one,zero,two
       double precision kccr12(*),res(*)
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
 C      index(i,j) = max(i,j)*(max(i,j)-3)/2 +i+j
@@ -1313,11 +1291,7 @@ C  /* Deck r12gradbfr */
 
       integer kccr12,krsing,krtrip,kctil,lccr12,lctil
       integer lusifc,nrhftria,n2,lu43,ntotk
-#if defined (SYS_CRAY)
-      real dklij(*),res(*),work(*),one,two,zero
-#else
       double precision dklij(*),res(*),work(*),one,zero,two
-#endif
       parameter (zero = 0.0d0,one = 1.0d0, two = 2.0d0)
 
       call qenter('r12gradbfr')

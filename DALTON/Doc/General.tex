@@ -1035,7 +1035,10 @@ containing the Cartesian components of the electric field from the
 embedding potential will be created.
 
 \item[\Key{SKIPMUL}]\verb| |\newline
-Skip calculation of multipole--multipole interaction energy.
+Skip calculation of multipole--multipole interaction energy (default)
+
+\item[\Key{NOSKIPMUL}]\verb| |\newline
+Do not skip calculation of multipole--multipole interaction energy.
 
 \item[\Key{ISOPOL}]\verb| |\newline
 Converts all anisotropic polarizabilities into isotropic polarizabilities.
@@ -1052,6 +1055,66 @@ Verbose output. Currently this will print the final converged induced dipole mom
 
 \item[\Key{DEBUG}]\verb| |\newline
 Debug output. Prints the total electric field and the induced dipole moments in each iteration. WARNING: for large systems this will produce very large output files.
+
+\item[\Key{OLDFIELD}]\verb| |\newline
+Activates the legacy implementation of direct multipole field evaluation. For debugging purposes.
+
+\item[\Key{FMM}]\verb| |\newline
+Activate FMM for evaluations of static and induced multipole fields.
+
+\item[\Key{THETA}]\verb| |\newline
+\verb|READ (LUCMD, *) THETA|\verb| |\newline
+Value of the multipole acceptance criterion for FMM.
+
+\item[\Key{EXPANSION ORDER}]\verb| |\newline
+\verb|READ (LUCMD, *) EXPANSION_ORDER|\verb| |\newline
+Multipole expansion order used in FMM.
+
+\item[\Key{NCRIT}]\verb| |\newline
+\verb|READ (LUCMD, *) NCRIT|\verb| |\newline
+Maximum number of particles in an FMM box (before it is split).
+
+\item[\Key{INT\_SCHEME}]\verb| |\newline
+\verb|READ (LUCMD, *) INT_SCHEME|\verb| |\newline
+Approximate coupling scheme to use (if any). Choices are EXACT (no approximation, default), SINGLE\_CENTER (single-center multipole expansion), ESPF (multicenter ESP-fitted multipole expansion), and FMM\_FOCK (FMM-like environment-centered expansion).
+
+\item[\Key{INT\_ORDER}]\verb| |\newline
+\verb|READ (LUCMD, *) INT_ORDER|\verb| |\newline
+Order of the multipole expansion (ESPF or SINGLE\_CENTER) or environment local expansion (FMM\_FOCK) used in the approximate environment coupling.
+
+\item[\Key{INT\_THETA}]\verb| |\newline
+\verb|READ (LUCMD, *) INT_THETA|\verb| |\newline
+Relevant only for FMM\_FOCK. Parameter controlling near-field/far-field splitting for the FMM\_FOCK coupling method. Typical values are somewhere between 0.0 and 1.0. Lower values the parameter places more interactions in the near-field.
+
+\item[\Key{INT\_RCUT}]\verb| |\newline
+\verb|READ (LUCMD, *) INT_RCUT|\verb| |\newline
+Relevant only for SINGLE\_CENTER and ESPF. Cutoff radius (in bohrs) beyond which the approximate coupling is used. Larger values of the radius place more interactions in the near-field.
+
+\item[\Key{ESPF\_GRID\_TYPE}]\verb| |\newline
+\verb|READ (LUCMD, *) ESPF_GRID_TYPE|\verb| |\newline
+Relevant only for ESPF. Type of grid to use when building the ESP-fitting equations. Options are SOLVENT or VDW. 
+The SOLVENT grid uses the positions of the environment sites as grid points (as specified in the potential file), provided they are within a certain cutoff radius of the quantum region INT\_RFIT.
+The VDW grid uses a molecular VDW surface as grid points. The grid is created using the method by Saff and Kuijlaars.
+
+\item[\Key{INT\_RFIT}]\verb| |\newline
+\verb|READ (LUCMD, *) INT_RFIT|\verb| |\newline
+Relevant only for ESPF with the SOLVENT ESPF\_GRID\_TYPE. Radius (in bohrs) within which solvent sites are used in the ESP-fitting. 
+
+\item[\Key{ESPF\_SOLVER}]\verb| |\newline
+\verb|READ (LUCMD, *) ESPF_SOLVER|\verb| |\newline
+Relevant only for ESPF. Type of numerical solver to use in ESPF when solving the ESP-fitting equations. Choices are SPTRS (linear equation solver) or SVD (singular value decomposition).
+
+\item[\Key{SVDTOL}]\verb| |\newline
+\verb|READ (LUCMD, *) SVDTOL|\verb| |\newline
+Relevant only for ESPF with the SVD numerical solver. Tolerance below which singular values in the SVD are discarded.
+
+\item[\Key{NF\_INCORE}]\verb| |\newline
+\verb|READ (LUCMD, *) NF_INCORE|\verb| |\newline
+Keep near-field interaction integrals in memory (default for approximate couplings). 
+
+\item[\Key{NO\_NF\_INCORE}]\verb| |\newline
+\verb|READ (LUCMD, *) NO_NF_INCORE|\verb| |\newline
+Do not keep near-field interaction integrals in memory. 
 
 \end{description}
 

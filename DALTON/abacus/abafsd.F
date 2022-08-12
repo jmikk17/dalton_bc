@@ -1,7 +1,7 @@
 c -*-mode:fortran; fortran-continuation-string: "&" -*-
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -19,14 +19,14 @@ c -*-mode:fortran; fortran-continuation-string: "&" -*-
 C
 C  /* Deck getfd */
       SUBROUTINE GETFD(IATOM,NOORBI,TWOH1,NOH1,NOH2,NODC,NODV,IPRINT,
-     &                 DERIV,EMYD,CMO,DV,FCD,FVD,FDFTD,WORK,LWORK,AOMAT,
+     &                 DERIV,EMYD,CMO,DV,FCD,FVD,FDFTD,WORK,LWORK,
      &                 DOREAL,INTPRI)
 C
 C  3-Nov-1988 hjaaj -- interface routine for GETFD
 C
 #include "implicit.h"
       LOGICAL   TWOH1, NOH1, NOH2, NODC, NODV, DERIV(3),
-     *          NOORBI, AOMAT, DOREAL
+     *          NOORBI, DOREAL
       DIMENSION CMO(*), DV(*), FCD(N2BASX,3), FVD(N2ORBX,3),
      *          EMYD(3), FDFTD(N2BASX,3), WORK(LWORK)
 #include "priunit.h"
@@ -38,6 +38,9 @@ C
 #include "inforb.h"
 C
       CALL QENTER('GETFD')
+      IF (IATOM .lt. 0) THEN
+         CALL QUIT('GETFD error: IATOM is negative')
+      END IF
       KFCAOX = 1
       KFCAOY = KFCAOX + NNBASX
       KFCAOZ = KFCAOY + NNBASX
@@ -65,7 +68,7 @@ C
      &            WORK(KFCAOX),WORK(KFCAOY),WORK(KFCAOZ),
      &            WORK(KFVAOX),WORK(KFVAOY),WORK(KFVAOZ),
      &            WORK(KDCAO), WORK(KDVAO), WORK(KDCFO),
-     &            WORK(KIINDX4),WORK(KGETFD),LGETFD,AOMAT,DOREAL,
+     &            WORK(KIINDX4),WORK(KGETFD),LGETFD,DOREAL,
      &            INTPRI)
       CALL QEXIT('GETFD')
       RETURN
@@ -74,7 +77,7 @@ C  /* Deck getfd1 */
       SUBROUTINE GETFD1(IATOM,NOORBI,TWOH1,NOH1,NOH2,NODC,NODV,IPRINT,
      &                  DERIV,EMYD,CMO,DV,FCD,FVD,FDFTD,FCSOX,FCSOY,
      &                  FCSOZ,FVSOX,FVSOY,FVSOZ,DCSO,DVSO,DCFOLD,
-     &                  IINDX4,WORK,LWORK,AOMAT,DOREAL,INTPRI)
+     &                  IINDX4,WORK,LWORK,DOREAL,INTPRI)
 C
 C     This subroutine calculates the AO-differentiated Fock (inactive
 C     and active) in MO basis.
@@ -89,7 +92,7 @@ C
 #include "iratdef.h"
       PARAMETER (D0 = 0.00 D00, D1 = 1.0D0, DP5 = 0.50D00)
       LOGICAL TWOH1, NOH1, NOH2, NODC, NODV, DERIV(3), DERX, DERY, DERZ,
-     *        NOORBI, AOMAT, DOFV, DOREAL
+     *        NOORBI, DOFV, DOREAL
 #include "inforb.h"
       DIMENSION IINDX4(4,600), CMO(*), DV(*),
      *          FCD(N2BASX,3), FVD(N2ORBX,3), FDFTD(N2BASX,3),
@@ -108,7 +111,7 @@ C
       DERX = DERIV(1)
       DERY = DERIV(2)
       DERZ = DERIV(3)
-      IF (IPRINT .GT. 05 .OR. AOMAT) THEN
+      IF (IPRINT .GT. 05) THEN
          CALL TITLER('Output from GETFD','*',103)
       END IF
       IF (IPRINT .GT. 05) THEN
@@ -117,7 +120,6 @@ C
          WRITE (LUPRI, '(A,L5)') ' NOH2  ', NOH2
          WRITE (LUPRI, '(A,L5)') ' NODC  ', NODC
          WRITE (LUPRI, '(A,L5)') ' NODV  ', NODV
-         WRITE (LUPRI, '(A,L5)') ' AOMAT ', AOMAT
       END IF
       CALL ERIBUF_INI
       LBUF = 600
@@ -300,24 +302,14 @@ C
       LFREE  = LWORK  - KLAST + 1
       IF (KLAST .GT. LWORK) CALL STOPIT('GETFD1',' ',KLAST,LWORK)
       IF (DERX) THEN
-         IF (IPRINT .GE. 5 .OR. AOMAT) CALL TITLER
-     *      ('Differentiation in x direction',' ',200)
+         IF (IPRINT .GE. 5) CALL TITLER
+     &      ('Differentiation in x direction',' ',200)
          ISIM = 1
          IF (IATOM .GT. 0) THEN
-            IF (AOMAT) THEN
-               CALL AROUND('Inactive Fock matrix diff. in x direction')
-               CALL TRSOAO(FCSOX,WORK,LWORK,NBAST,IATOM,IPRINT)
-               IF (DOFV) THEN
-                  CALL AROUND('Active Fock matrix diff. in x direction')
-                  CALL TRSOAO(FVSOX,WORK,LWORK,NBAST,IATOM,IPRINT)
-               END IF
-            END IF
             EMYD(ISIM) = DP5*(EMY1X + DDOT(NNBASX,DCFOLD,1,FCSOX,1))
-         END IF
-         IF (IATOM .EQ. 0) THEN
-            CALL DAPTGE(NBAST,FCSOX,WORK(KFSOSQ))
-         ELSE
             CALL DSPTSI(NBAST,FCSOX,WORK(KFSOSQ))
+         ELSE ! IATOM .eq. 0, i.e. B-field
+            CALL DAPTGE(NBAST,FCSOX,WORK(KFSOSQ))
          END IF
          CALL ONETRA(CMO,FCD(1,ISIM),WORK(KFSOSQ),WORK(KLAST),LFREE,
      &               IATOM,1,IPRINT)
@@ -351,21 +343,11 @@ C     y direction
 C     ===========
 C
       IF (DERY) THEN
-         IF (IPRINT .GE. 5 .OR. AOMAT) CALL TITLER
+         IF (IPRINT .GE. 5) CALL TITLER
      *      ('Differentiation in y direction',' ',200)
          ISIM = 2
          IF (IATOM .GT. 0) THEN
-            IF (AOMAT) THEN
-               CALL AROUND('Inactive Fock matrix diff. in y direction')
-               CALL TRSOAO(FCSOY,WORK,LWORK,NBAST,IATOM,IPRINT)
-               IF (DOFV) THEN
-                  CALL AROUND('Active Fock matrix diff. in y direction')
-                  CALL TRSOAO(FVSOY,WORK,LWORK,NBAST,IATOM,IPRINT)
-               END IF
-            END IF
             EMYD(ISIM) = DP5*(EMY1Y + DDOT(NNBASX,DCFOLD,1,FCSOY,1))
-         END IF
-         IF (IATOM .GT. 0) THEN
             CALL DSPTSI(NBAST,FCSOY,WORK(KFSOSQ))
          ELSE
             CALL DAPTGE(NBAST,FCSOY,WORK(KFSOSQ))
@@ -402,21 +384,11 @@ C     z direction
 C     ===========
 C
       IF (DERZ) THEN
-         IF (IPRINT .GE. 5 .OR. AOMAT) CALL TITLER
+         IF (IPRINT .GE. 5) CALL TITLER
      *      ('Differentiation in z direction',' ',200)
          ISIM = 3
          IF (IATOM .GT. 0) THEN
-            IF (AOMAT) THEN
-               CALL AROUND('Inactive Fock matrix diff. in z direction')
-               CALL TRSOAO(FCSOZ,WORK,LWORK,NBAST,IATOM,IPRINT)
-               IF (DOFV) THEN
-                  CALL AROUND('Active Fock matrix diff. in z direction')
-                  CALL TRSOAO(FVSOZ,WORK,LWORK,NBAST,IATOM,IPRINT)
-               END IF
-            END IF
             EMYD(ISIM) = DP5*(EMY1Z + DDOT(NNBASX,DCFOLD,1,FCSOZ,1))
-         END IF
-         IF (IATOM .GT. 0) THEN
             CALL DSPTSI(NBAST,FCSOZ,WORK(KFSOSQ))
          ELSE
             CALL DAPTGE(NBAST,FCSOZ,WORK(KFSOSQ))

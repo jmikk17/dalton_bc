@@ -1,24 +1,18 @@
 !
-!...   Copyright (c) 2014 by the authors of Dalton (see below).
-!...   All Rights Reserved.
-!...
-!...   The source code in this file is part of
-!...   "Dalton, a molecular electronic structure program,
-!...    Release DALTON2014 (2014), see http://daltonprogram.org"
-!...
-!...   This source code is provided under a written licence and may be
-!...   used, copied, transmitted, or stored only in accord with that
-!...   written licence.
-!...
-!...   In particular, no part of the source code or compiled modules may
-!...   be distributed outside the research group of the licence holder.
-!...   This means also that persons (e.g. post-docs) leaving the research
-!...   group of the licence holder may not take any part of Dalton,
-!...   including modified files, with him/her, unless that person has
-!...   obtained his/her own licence.
-!...
-!...   For further information, including how to get a licence, see:
-!...      http://daltonprogram.org
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
 C File: sir_srdft.F
@@ -36,10 +30,10 @@ C      Purpose: calculate DCAO and DVAO matrices for srDFT
 C               (done in a new routine for future flexibility
 C                for e.g. also  on-top pair density)
 C
-C      July 2017 hjaaj: If (DFT_SPINDNS) then UDV and DVAO are doubled,
+C      July 2017 hjaaj: If (SRDFT_SPINDNS) then UDV and DVAO are doubled,
 C      containing both "DV" active charge density matrix
 C      and "DS" active spin density matrix. This is done
-C      inside GTDMSO, thus we do not need to check for DFT_SPINDNS here.
+C      inside GTDMSO, thus we do not need to check for SRDFT_SPINDNS here.
 C
 C*****************************************************************************
 #include "implicit.h"
@@ -50,8 +44,8 @@ C
 #include "dftcom.h"
 C
       CALL QENTER('SRDFT_DENS')
-      IF (DFT_SPINDNS) THEN
-         call quit('DFT_SPINDNS not implemented in SRDFT_DENS yet')
+      IF (SRDFT_SPINDNS) THEN
+         call quit('SRDFT_SPINDNS not implemented in SRDFT_DENS yet')
       END IF
       IF (LFREE .LT. N2BASX) CALL QUIT('Insufficient WRK dim')
       CALL GTDMSO(UDV,CMO,DAO(1,1),DAO(1,2),WRK(KFREE))
@@ -134,7 +128,7 @@ C     pack the correction matrix
       call outpkb(wrk(kufs),norb,nsym,-1,lupri)
 #endif
 C     Add the effective FS (spin-density Fock matrix) contribution
-C     to the FC matrix for the effective DFT_LOCALSPIN FC matrix.
+C     to the FC matrix for the effective SRDFT_LOCALSPIN FC matrix.
       CALL DAXPY(NNORBT,1.0D0,WRK(KUFS),1,FC,1)
       write (lupri,*) ' FCK_MAKE_FCEFF_LOCALSPIN: FC packed'
       call outpkb(fc,norb,nsym,-1,lupri)
@@ -276,7 +270,7 @@ C     pack the correction matrix
       call outpkb(wrk(kufs),norb,nsym,-1,lupri)
 #endif
 C     Add the effective FS (spin-density Fock matrix) contribution
-C     to the FC matrix for the effective DFT_LOCALSPIN FC matrix.
+C     to the FC matrix for the effective SRDFT_LOCALSPIN FC matrix.
       CALL DAXPY(NNORBT,1.0D0,WRK(KUFS),1,FC,1)
       CALL MEMREL('FCK_MAKE_FCEFF_LOCALSPIN',WRK,KFRSAV,KFRSAV,
      &            KFREE,LFREE)

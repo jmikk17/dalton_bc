@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,9 @@ C
 #include "implicit.h"
 #include "maxorb.h"
 C
+      PARAMETER (NTABLE = 10, D0 = 0.0D0, NLAB = 50)
+C 
+CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 #include "locinf.h"
 C
       CALL QENTER('LOCINI')
@@ -39,6 +42,11 @@ C
       FBOOCC = .FALSE.
       LABOCC = .FALSE.
       LABVIR = .FALSE.
+C
+      DO I = 1, NLAB
+         TABOCL(I) = '-**--**-'
+         TABVIL(I) = '-**--**-'
+      END DO
 C
       CALL QEXIT('LOCINI')
 C
@@ -423,7 +431,7 @@ C
       DIMENSION   PRPMO(NORBT,NORBT,3)
       DIMENSION   WORK(LWORK)
 C
-      LOGICAL     FNDLB2
+      LOGICAL     FNDLB2,FOUND
       DIMENSION   LABSYM(3)
       CHARACTER*8 LABEL, LABAPP(3), RTNLBL(2)
 C
@@ -495,15 +503,8 @@ C-------------------------
 C     Read MO coefficients
 C-------------------------
 C
-      IF (LUSIFC .LE. 0) CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',
-     &                               IDUMMY,.FALSE.)
-      REWIND LUSIFC
-C
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
-C
-      READ (LUSIFC)
-      READ (LUSIFC)
-      CALL READT (LUSIFC,NCMOT,WORK(KCMO))
+      CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+      IF (.NOT.FOUND) CALL QUIT('CMO not found on SIRIFC')
 C     
 C***********************************************************
 C     Generate transformation matrices to localized orbitals

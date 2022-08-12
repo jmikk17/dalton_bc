@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -114,11 +114,7 @@ C     INTEGER IAEATRAN(3,MXTRAN2)
       INTEGER MXV0H, MXV0G, MXVAG, MXV0F, MXVAF, MXV0FA, MXVAFA
       INTEGER MXVAEA, MXX, MXO, MXL
 
-#if defined (SYS_CRAY)
-      REAL SIGN
-#else
       DOUBLE PRECISION SIGN
-#endif
 
       INTEGER IOP(4), ISY(4), IZT(4), IR1(4), IR2(6), IX2(6)
       INTEGER IO3(4), IO2(6), IL2(6), IE1(4), IKAP(4)
@@ -776,24 +772,6 @@ c /* deck CCCR_DISP_SETUP */
       INTEGER MXV0H, MXV0G, MXVAG, MXV0F, MXVAF, MXV0FA, MXVAFA, MXVAEA
       INTEGER MXX, MXO, MXL
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-      REAL EXPCOF(MXEXPCF)
-      REAL W0K(MXVEC1,MXTRAN3)
-      REAL W0G(MXVEC2,MXTRAN2)
-      REAL WAG(MXVEC1,MXTRAN3)
-      REAL W0F(MXVEC2,MXTRAN2)
-      REAL WAF(MXVEC2,MXTRAN2)
-      REAL W0FA(MXVEC2,MXTRAN2)
-      REAL WAFA(MXVEC1,MXTRAN3)
-      REAL WAEA(MXVEC2,MXTRAN2)
-      REAL WX(MXVEC2,MXTRAN2)
-      REAL WO(MXVEC2,MXTRAN2)
-      REAL WL(MXVEC2,MXTRAN2)
-      REAL K0CON, G0CON(6), GACON(4), F0CON(3), FACON(12)
-      REAL F0ACON(12), FAACON(12), EAACON(12), SUM
-      REAL XCON(6), OCON(3)
-#else
       DOUBLE PRECISION ZERO
       DOUBLE PRECISION EXPCOF(MXEXPCF)
       DOUBLE PRECISION W0K(MXVEC1,MXTRAN3)
@@ -810,7 +788,6 @@ c /* deck CCCR_DISP_SETUP */
       DOUBLE PRECISION K0CON, G0CON(6), GACON(4), F0CON(3), FACON(12)
       DOUBLE PRECISION F0ACON(12), FAACON(12), EAACON(12), SUM
       DOUBLE PRECISION XCON(6), OCON(3)
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER*8 LBL1, LBL2, LBL3, LBL4

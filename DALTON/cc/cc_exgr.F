@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -105,6 +105,18 @@ C
       END IF
 C
       IF (CCR12) CALL QUIT('R12 not yet implemented in CC_EXGR.')
+      IF (RELORB) THEN
+         WRITE(LUPRI,*) 'ERROR: Orbital relaxation is active but not'
+     *      //' supported for excited-state'
+         WRITE(LUPRI,*) '       first-order properties (*CCEXGR).'
+         WRITE(LUPRI,*) '       To find results in a consistent'
+     *      //' approximation turn orbital'
+         WRITE(LUPRI,*) '       relaxation off for the ground state'
+     *      //' calculation'
+         WRITE(LUPRI,*) '       (add .NONREL in *CCFOP section).'
+         CALL QUIT('Orbital relaxation is active but not supported'
+     *           //' for *CCEXGR (see output for more information).')
+      END IF
 C      
       WRITE (LUPRI,'(1X,A,/)') '  '
       WRITE (LUPRI,'(1X,A)')
@@ -158,6 +170,7 @@ C
          MODELPRI = ' CC3'
          WRITE(LUPRI,*)
      *    'CC3 X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CC1A) THEN
@@ -165,6 +178,7 @@ C
          MODEL = 'CCSDT-1a  '
          WRITE(LUPRI,*)
      *    'CCSDT-1a X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CC1B) THEN
@@ -172,6 +186,7 @@ C
          MODEL = 'CCSDT-1b  '
          WRITE(LUPRI,*)
      *    'CCSDT-1b X-state first order properties not implemented'
+         CALL QEXIT('CC_EXGR')
          RETURN
       ENDIF
       IF (CCSD) THEN
@@ -468,7 +483,7 @@ C
 C
 Casm        ifort does not like LIST. Use 'E0' instead.
 C
-            CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),DUM,WORK(KWRK2),
+            CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),VDUMMY,WORK(KWRK2),
      &                   LWRK2,MODEL,'E0',ILLNR,.FALSE.,
      &                   FNDPTIA, FNDPTIA2, FNDPTAB, FNDPTIJ)
 casm        CALL CC_D1AO(IDUMMY,.FALSE.,WORK(KDENS),DUM,WORK(KWRK2),

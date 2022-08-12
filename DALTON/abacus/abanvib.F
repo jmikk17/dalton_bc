@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1010,7 +1010,7 @@ C     /* Deck prpnvba */
      &                   NDIM1,NDIM2,NDIM3,NPPDER,NDERIV,LWORK,KTNRDR,
      &                   IPRINT,PRPTXT)
 C     **************************************************************
-C     *** This sorts out the nescecary information and calculate ***
+C     *** This sorts out the necessary information and calculate ***
 C     *** vibrational average of property in funval.             ***
 C     **************************************************************
 #include "implicit.h"
@@ -1180,7 +1180,7 @@ C     /* Deck clcvba */
 #include "priunit.h"
 #include "codata.h"
 #include "mxcent.h"
-      PARAMETER (D0=0.0D0, D025 = 0.25D0, D15=1.5D0, D2 = 2.0D0)
+      PARAMETER (D0=0.0D0, D025 = 0.25D0)
 #include "trkoor.h"
 #include "numder.h"
 #include "nuclei.h"
@@ -1255,7 +1255,7 @@ C
             TMP = TMP
      &          + TDER(ICOOR1,ICOOR1,ICOOR2)/FREQ(ICOOR1)
          END DO
-         PFAC = -D025*TMP*RNNORM(ICOOR2)/(FREQ(ICOOR2)**D2)
+         PFAC = -D025*TMP*RNNORM(ICOOR2)/(FREQ(ICOOR2)**2)
 C
          IF (IPRINT.GE.2) THEN
             WRITE (LUPRI,*) 'Prefactor for anharmonic contribution.'
@@ -1482,7 +1482,7 @@ C     /* Deck modean */
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-      PARAMETER (D0=0.0D0, D025 = 0.25D0, D2 = 2.0D0)
+      PARAMETER (D0=0.0D0, D025 = 0.25D0)
 #include "trkoor.h"
 #include "numder.h"
 #include "nuclei.h"
@@ -1528,7 +1528,7 @@ C
             TMP = TMP
      &          + TDER(ICOOR1,ICOOR1,ICOOR2)/FREQ(ICOOR1)
          END DO
-         PFAC = -D025*TMP*RNNORM(ICOOR2)/(FREQ(ICOOR2)**D2)
+         PFAC = -D025*TMP*RNNORM(ICOOR2)/(FREQ(ICOOR2)**2)
 C
          DO IDIM3 = 1, NDIM3
          DO IDIM2 = 1, NDIM2

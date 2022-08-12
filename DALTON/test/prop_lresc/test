@@ -23,8 +23,8 @@ f.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-f.add(string = 'LRESC Corrections for Shielding',
-      rel_tolerance = 1.0e-7)
+#f.add(string = 'LRESC Corrections for Shielding',
+#      rel_tolerance = 1.0e-7)
 f.add(string = 'Selected Atom ',
       rel_tolerance = 1.0e-7)
 f.add(string = 'Atom coordinates :',

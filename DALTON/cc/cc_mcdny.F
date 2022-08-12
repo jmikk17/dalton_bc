@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -54,29 +54,17 @@ C#include "ccropr2.h"
 #include "dummy.h"
 * arguments
       INTEGER LWORK
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-#else 
       DOUBLE PRECISION WORK(LWORK)
-#endif
 * local parameters:
       CHARACTER*(19) MSGDBG
       PARAMETER (MSGDBG = '[debug] CC_MCDCAL> ')
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
-#if defined (SYS_CRAY)
-      REAL DDOT,DNRM2
-      REAL ZERO, D05, TWO
-      REAL FREQEX, XLEFTC, XRIGHTC, XRIGHTAB,XLEFTAB
-      REAL BTERM_A,BTERM_S, XMAB_MC, XMC_MAB
-      REAL FORZADIP, SQRFORZA
-#else
       DOUBLE PRECISION DDOT,DNRM2
       DOUBLE PRECISION ZERO, D05, TWO, ONE
       DOUBLE PRECISION FREQEX,  XLEFTC, XRIGHTC, XRIGHTAB,XLEFTAB
       DOUBLE PRECISION BTERM_A,BTERM_S,XMAB_MC,XMC_MAB
       DOUBLE PRECISION FORZADIP, SQRFORZA
-#endif
       PARAMETER (ZERO=0.0D00, D05=0.5D00, TWO=2.0D00, ONE=1.0D00)
 C      PARAMETER (DUMMY = -12345.67890)
 
@@ -118,17 +106,10 @@ C      PARAMETER (DUMMY = -12345.67890)
       INTEGER KXKSIA_1,KXKSIA_2
       INTEGER KXKSIC_1,KXKSIC_2,KETAC_1,KETAC_2
 
-#if defined (SYS_CRAY)
-      REAL GCON, FACON1, FACON2, BCON1, BCON2
-      REAL EACON1, EACON2, EACON3, EACON4
-      REAL DOTCON1, DOTCON2, DOTCON3, DOTCON4, DOTCON5
-      REAL DWFB0, XE2CON1, XE2CON2, XE2CON3
-#else
       DOUBLE PRECISION GCON, FACON1, FACON2, BCON1, BCON2
       DOUBLE PRECISION EACON1, EACON2, EACON3, EACON4
       DOUBLE PRECISION DOTCON1, DOTCON2, DOTCON3, DOTCON4, DOTCON5 
       DOUBLE PRECISION DWFB0, XE2CON1, XE2CON2, XE2CON3
-#endif
 * external functions
       INTEGER IROPER
       INTEGER IR1TAMP

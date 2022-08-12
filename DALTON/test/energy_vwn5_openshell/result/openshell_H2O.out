@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2019.alpha (2019)
+    This is output from DALTON release Dalton2022.0-dev (2022)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -25,9 +25,9 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
        L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
        C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
@@ -48,137 +48,147 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2019.alpha (2019), see http://daltonprogram.org
+       Release Dalton2022.0-dev (2022), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
-    Authors in alphabetical order (major contribution(s) in parenthesis):
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
-  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
-  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
-  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
-  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Mar 25 16:50:47 2019
-     Host name              : fe1.deic.sdu.dk                         
+     Date and time (Linux)  : Thu Aug  4 21:15:46 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
- * Work memory size             :   320000000 =  2.384 gigabytes.
+ * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /work/sdujk/kjellgren/make_tests
-   2) /gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_kjellgren/basis
+   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/test/energy_vwn5_openshell
+   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | kjellgren
- Host                     | fe1.deic.sdu.dk
- System                   | Linux-3.10.0-327.36.3.el7.x86_64
+ Who compiled             | hjj
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-5.15.0-43-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
-                          | n/mpiifort
- Fortran compiler version | unknown
- C compiler               | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
-                          | n/mpiicc
- C compiler version       | unknown
- C++ compiler             | /opt/sys/apps/intel/2018.05/impi_latest/intel64/bi
-                          | n/mpiicpc
+ Fortran compiler         | /usr/bin/mpif90
+ Fortran compiler version | GNU Fortran (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+ C compiler               | /usr/bin/mpicc
+ C compiler version       | gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+ C++ compiler             | /usr/bin/mpicxx
  C++ compiler version     | unknown
+ BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
+ LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | f0ba9eed7f8f4db8bbc492b7a0adccc8bec4cfdc
- Git branch               | srdft-kjellgren
- Configuration time       | 2019-03-25 16:27:40.844249
+ Last Git revision        | 95e9f3a80a0dbeaafe70e2445b4e71d3737e21d2
+ Git branch               | WIP3
+ Configuration time       | 2022-08-04 21:14:32.751356
 
  * Sequential calculation.
 
@@ -199,7 +209,7 @@ Compilation information
 .MP2
 .MCSRDFT
 .SRFUN
- NULL CVWN5NOMUS
+ NULL CVWN5
 *SCF INPUT
 .DOUBLY OCCUPIED
  3 1 1 0
@@ -260,15 +270,6 @@ H2   -1.45235 0.899623 0.0
  2: Basis set specified with ATOMBASIS                                      
     ------------------------------------------------------------------------
 
-
-
-@ INFO - deprecated old .mol fixed format input has been detected:
-    2                                                                           
-@ INFO - this input format may not be supported in future releases.
-
-
-
-
   Atomic type no.    1
   --------------------
   Nuclear charge:   8.00000
@@ -276,7 +277,7 @@ H2   -1.45235 0.899623 0.0
   Number of basis sets to read;    2
   The basis set is "MINI(Scaled)" from the basis set library.
   Basis set file used for this atomic type with Z =   8 :
-     "/gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_kjellgren/basis/MINI(Scaled)"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/MINI(Scaled)"
 
   Atomic type no.    2
   --------------------
@@ -285,7 +286,7 @@ H2   -1.45235 0.899623 0.0
   Number of basis sets to read;    2
   The basis set is "MINI(Scaled)" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/gpfs/gss1/work/sdujk/kjellgren/programs/dalton/srdft_dalton_kjellgren/basis/MINI(Scaled)"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/MINI(Scaled)"
 
 
                       SYMADD: Requested addition of symmetry
@@ -293,8 +294,8 @@ H2   -1.45235 0.899623 0.0
 
  Symmetry test threshold:  5.00E-06
 
-@   The molecule is centered at center of mass and rotated
-@   so principal axes of inertia are along coordinate axes.
+@  The molecule has been centered at center of mass and rotated
+@  so the principal axes of inertia are along coordinate axes.
 
  Symmetry class found: C(2v)          
 
@@ -357,8 +358,8 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
                        Total mass:    18.010565 amu
                        Natural abundance:  99.730 %
 
- Center-of-mass coordinates (a.u.):    0.000000   -0.000000   -0.000000
- Center-of-mass coordinates (Angs):    0.000000   -0.000000   -0.000000
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.000000
+ Center-of-mass coordinates (Angs):    0.000000    0.000000    0.000000
 
 
   Atoms and basis sets
@@ -524,10 +525,11 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 
  Calculation of one-electron Hamiltonian integrals.
 
- Center of mass  (bohr):      0.000000000000     -0.000000000000     -0.000000000000
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.000000000000
  Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
- Gauge origin    (bohr):      0.000000000000     -0.000000000000     -0.000000000000
- Dipole origin   (bohr):      0.000000000000     -0.000000000000     -0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+ INFO: .DOSRIN option is obsolete
 
 
   Set-up from HR2INP:
@@ -535,8 +537,8 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 
  Print level in TWOINT:    1
 
- DFT-hybrid : Using a Erf type two-elec. operator
-              with the coupling parameter :    0.00001
+ srDFT-hybrid : Using an Erf type two-elec. operator
+                with the coupling parameter :  1.00000E-05
  * Direct calculation of Fock matrices in AO-basis.
  * Program controlled screening thresholds used for this.
  * Separate density screening of Coulomb integral batches
@@ -572,6 +574,8 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
                    `--------------------------------------------'
 
 
+ mu value for srDFT is 0.00 (user input)
+
  *** Output from Huckel module :
 
      Using EWMO model:          F
@@ -596,15 +600,15 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 
  Number of configurations:           5
 
- Time used in SETCI :      0.07s
+ Time used in SETCI :      0.10s
 
  **********************************************************************
  *SIRIUS* a direct, restricted step, second order MCSCF program       *
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Mar 25 16:50:47 2019
-     Host name              : fe1.deic.sdu.dk                         
+     Date and time (Linux)  : Thu Aug  4 21:15:46 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
      MC-srDFT Energy calculation with symmetry                               
@@ -613,7 +617,7 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
 
-@    MC-SCF optimization.
+@    MC-srDFT optimization.
 @              Type: complete active space calculation (CAS).
 
 @    This is a combination run starting with
@@ -627,7 +631,7 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 
      Wave function specification
      ============================
-@    Wave function type        --- MC-SCF ---
+@    Wave function type        --- MC-srDFT ---
 @    Number of closed shell electrons           6
 @    Number of electrons in active shells       4
 @    Total charge of the molecule               0
@@ -637,8 +641,8 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 @    Reference state symmetry                   2 (irrep name : B1 )
 
 @    This is a lrWFT-srDFT calculation using the 
-@      NULL       short range exchange functional
-@      CVWN5NOMUS short range correlation functional
+@      NULL                    short range exchange functional
+@      CVWN5                   short range correlation functional
 
 @    sr-DFT and exact sr-HF exchange weights:    1.000000    0.000000
 
@@ -668,7 +672,7 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
      Maximum number of micro iterations     600
      Threshold for MCSCF gradient      1.00D-05
      Number of initial trial vectors          1
-     Number of initial CI iterations          3
+     Number of initial CI iterations         -1
      Number of simultaneous trial vectors     1
 
 @    This calculation converges to the lowest state for the specified symmetry and spin species.
@@ -689,8 +693,8 @@ H1     1 :      0.00000000     1.45235000     0.99867739  Isotope  1
 ** Atom O   
 * Grid spacing
  Value chosen:  0.131
- AH =    563.733160000000     
- RADERR =   1.000000000000000E-013
+ AH =    563.73316000000000     
+ RADERR =    1.0000000000000000E-013
 * Inner grid point: 3.68284E-06
 * Outer point:
  Value chosen:     7.417
@@ -700,8 +704,8 @@ O     1   19128      96     434
 ** Atom H1  
 * Grid spacing
  Value chosen:  0.142
- AH =    14.0681260000000     
- RADERR =   1.000000000000000E-013
+ AH =    14.068125999999999     
+ RADERR =    1.0000000000000000E-013
 * Inner grid point: 2.33132E-05
 * Outer point:
  Value chosen:     8.165
@@ -712,6 +716,8 @@ H1    2   18274      77     434
    Number of grid points in quadrature:     37402 (100.0%)
 
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6663969205
    Ex-sr + Ec-sr                         -0.6663969205
  + EJsr = sr Coulomb energy              46.9968583727
  = Total E(srDFT)                        46.3304614521
@@ -721,13 +727,15 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3729433670
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  6.21D-02  6.30D-02
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  7.59D-02  7.60D-02
 @  1    -67.1066655144        2.70175D+00   -6.71D+01    1
       Virial theorem: -V/T =      1.884476
 @    MULPOP   O      -0.50; H1  _1  0.25; H1  _2  0.25; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6575380818
    Ex-sr + Ec-sr                         -0.6575380818
  + EJsr = sr Coulomb energy              44.6779473389
  = Total E(srDFT)                        44.0204092571
@@ -737,13 +745,15 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3682840557
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    2    F  4.18D-02  4.30D-02
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    2    F  4.74D-02  4.80D-02
 @  2    -67.2141825802        7.36345D-01   -1.08D-01    2
       Virial theorem: -V/T =      1.908593
 @    MULPOP   O       0.21; H1  _1 -0.11; H1  _2 -0.11; 
    2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6636268125
    Ex-sr + Ec-sr                         -0.6636268125
  + EJsr = sr Coulomb energy              46.2546936037
  = Total E(srDFT)                        45.5910667913
@@ -753,13 +763,15 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3714903407
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    3    F  4.14D-02  4.20D-02
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    3    F  4.86D-02  4.80D-02
 @  3    -67.2354805326        4.57240D-01   -2.13D-02    3
       Virial theorem: -V/T =      1.896724
 @    MULPOP   O      -0.33; H1  _1  0.16; H1  _2  0.16; 
    3  Level shift: doubly occupied orbital energies shifted by -1.00D-01
  -----------------------------------------------------------------------------
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6614181810
    Ex-sr + Ec-sr                         -0.6614181810
  + EJsr = sr Coulomb energy              45.6977589901
  = Total E(srDFT)                        45.0363408092
@@ -769,13 +781,15 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3703274898
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    4    F  4.14D-02  4.20D-02
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    4    F  4.12D-02  4.10D-02
 @  4    -67.2486955984        4.42619D-02   -1.32D-02    3
       Virial theorem: -V/T =      1.901176
 @    MULPOP   O      -0.14; H1  _1  0.07; H1  _2  0.07; 
    4  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6611873044
    Ex-sr + Ec-sr                         -0.6611873044
  + EJsr = sr Coulomb energy              45.6372757856
  = Total E(srDFT)                        44.9760884812
@@ -785,12 +799,14 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3702058721
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    5    F  4.11D-02  4.20D-02
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    5    F  4.08D-02  4.10D-02
 @  5    -67.2488227168        1.07843D-03   -1.27D-04    3
       Virial theorem: -V/T =      1.901544
 @    MULPOP   O      -0.12; H1  _1  0.06; H1  _2  0.06; 
  -----------------------------------------------------------------------------
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6611923343
    Ex-sr + Ec-sr                         -0.6611923343
  + EJsr = sr Coulomb energy              45.6386315722
  = Total E(srDFT)                        44.9774392379
@@ -800,7 +816,7 @@ H1    2   18274      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   0.3702085221
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    6    F  4.12D-02  4.10D-02
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    6    F  3.98D-02  4.00D-02
 @  6    -67.2488227960        3.55581D-05   -7.92D-08    3
 
 @ *** DIIS converged in   6 iterations !
@@ -809,7 +825,50 @@ H1    2   18274      77     434
 
  --- Writing SIRIFC interface file
 
- CPU and wall time for SCF :       0.274       0.278
+--------------------------------------------------------------------------------
+
+
+     .----------------------------------------------------.
+     | HF-srDFT KT IPs [a.u. & eV] from Koopmans' theorem |
+     `----------------------------------------------------'
+
+
+     HF-srDFT KT symmetry 1 ( A1 ) in point group C2v -- 2 principal poles with pole strength 1
+
+   ============  ============  ============
+      15.846626      0.321362     -0.342605
+     431.208642      8.744694     -9.322749
+   ============  ============  ============
+
+     HF-srDFT KT symmetry 2 ( B1 ) in point group C2v -- 0 principal poles with pole strength 1
+
+   ============
+      -0.402523
+     -10.953208
+   ============
+
+     HF-srDFT KT symmetry 3 ( B2 ) in point group C2v -- 0 principal poles with pole strength 1
+
+   ============
+      -0.050904
+      -1.385169
+   ============
+
+@ Summary of HF-srDFT KT ionization potentials [eV]:
+
+@ Symmetry 1 (A1 ) :   431.209       8.745      -9.323
+
+@ Symmetry 2 (B1 ) :   -10.953
+
+@ Symmetry 3 (B2 ) :    -1.385
+
+@ Symmetry 4 (A2 ) :  No IPs in this symmetry
+
+  === End of HF-srDFT KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       0.295       0.295
 
 
 WARNING - DFT spin density is not implemented in MP2 module and is ignored.
@@ -827,6 +886,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 
  Generating Fock matrix
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6611923343
    Ex-sr + Ec-sr                         -0.6611923343
  + EJsr = sr Coulomb energy              45.6386315722
  = Total E(srDFT)                        44.9774392379
@@ -876,7 +937,7 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  HERMIT - Megabytes written:                              0.007
 
 
- 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.003       0.007
+ 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.002       0.002
 
  MP2 move   0.000000 electrons to unoccupied HF orbitals
 
@@ -905,9 +966,9 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 
          2.00000000     0.00000000
 
- Time used for MP2 natural orbitals :       0.045 CPU seconds,       0.050 wall seconds.
+ Time used for MP2 natural orbitals :       0.044 CPU seconds,       0.044 wall seconds.
 
- CPU and wall time for MP2 :       0.045       0.050
+ CPU and wall time for MP2 :       0.044       0.044
 
 
         SIRIUS MC-srDFT optimization (SIROPT)
@@ -919,6 +980,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
    --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
 
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6573732265
    Ex-sr + Ec-sr                         -0.6573732265
  + EJsr = sr Coulomb energy              44.5865408178
  = Total E(srDFT)                        43.9291675914
@@ -947,10 +1010,12 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  --- MACRO ITERATION  1 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.003
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.000       0.000
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6437141610
    Ex-sr + Ec-sr                         -0.6437141610
  + EJsr = sr Coulomb energy              44.5865408178
  = Total E(srDFT)                        43.9428266568
@@ -964,9 +1029,9 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  Total MC-srDFT energy    :           -66.709232258031520  (MACRO    1)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -63.408724791411977
- - Active energy          :             1.128098097464642
- - srDFT effective energy :           -13.483610089722086
+ - Inactive energy        :           -63.408724791411991
+ - Active energy          :             1.128098097464656
+ - srDFT effective energy :           -13.483610089722083
 
  Norm of total gradient   :             0.365088123508
  -    of CI gradient      :             0.340096035303
@@ -983,6 +1048,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
    --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
 
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6596667778
    Ex-sr + Ec-sr                         -0.6596667778
  + EJsr = sr Coulomb energy              45.2344281439
  = Total E(srDFT)                        44.5747613661
@@ -1011,10 +1078,12 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  --- MACRO ITERATION  2 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.003
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.000       0.000
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6460794021
    Ex-sr + Ec-sr                         -0.6460794021
  + EJsr = sr Coulomb energy              45.2344281439
  = Total E(srDFT)                        44.5883487418
@@ -1025,12 +1094,12 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  -     Tr(Vxc-sr Dval)                    0.2671157509
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )      -13.6681873380
 
- Total MC-srDFT energy    :           -66.730165697590380  (MACRO    2)
+ Total MC-srDFT energy    :           -66.730165697590351  (MACRO    2)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -63.239503829130527
- - Active energy          :             1.259084299551223
- - srDFT effective energy :           -13.804750693648966
+ - Inactive energy        :           -63.239503829130499
+ - Active energy          :             1.259084299551222
+ - srDFT effective energy :           -13.804750693648973
 
  Norm of total gradient   :             0.022593749905
  -    of CI gradient      :             0.021732652648
@@ -1047,6 +1116,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
    --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
 
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6596005134
    Ex-sr + Ec-sr                         -0.6596005134
  + EJsr = sr Coulomb energy              45.2159668945
  = Total E(srDFT)                        44.5563663811
@@ -1075,10 +1146,12 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  --- MACRO ITERATION  3 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.002
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.000       0.000
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6460168264
    Ex-sr + Ec-sr                         -0.6460168264
  + EJsr = sr Coulomb energy              45.2159668945
  = Total E(srDFT)                        44.5699500681
@@ -1092,9 +1165,9 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  Total MC-srDFT energy    :           -66.730243977847365  (MACRO    3)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -63.249250305072856
- - Active energy          :             1.254545529492106
- - srDFT effective energy :           -13.790543727904511
+ - Inactive energy        :           -63.249250305072863
+ - Active energy          :             1.254545529492115
+ - srDFT effective energy :           -13.790543727904520
 
  Norm of total gradient   :             0.000058813695
  -    of CI gradient      :             0.000054934914
@@ -1111,6 +1184,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
    --- OUTPUT FROM SIRCNO     Keyword = FD+NO 
 
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6596001973
    Ex-sr + Ec-sr                         -0.6596001973
  + EJsr = sr Coulomb energy              45.2158774324
  = Total E(srDFT)                        44.5562772351
@@ -1139,10 +1214,12 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  --- MACRO ITERATION  4 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.003
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.000       0.000
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
+   Ex-sr                                  0.0000000000
+   Ec-sr                                 -0.6460165327
    Ex-sr + Ec-sr                         -0.6460165327
  + EJsr = sr Coulomb energy              45.2158774324
  = Total E(srDFT)                        44.5698608997
@@ -1156,9 +1233,9 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  Total MC-srDFT energy    :           -66.730243978390519  (MACRO    4)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -63.249282319013091
- - Active energy          :             1.254524570541019
- - srDFT effective energy :           -13.790490755556345
+ - Inactive energy        :           -63.249282319013105
+ - Active energy          :             1.254524570541039
+ - srDFT effective energy :           -13.790490755556352
 
  Norm of total gradient   :             0.000005285902
  -    of CI gradient      :             0.000005258943
@@ -1173,9 +1250,72 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  *** Optimization control: MC-srDFT converged ***
      Number of macro iterations used            4
      Number of micro iterations used           11
-     Total number of CPU seconds used         1.20
+     Total number of CPU seconds used         1.83
+     Total WALL time used (seconds)           1.84
 
- CPU and wall time for MCSCF :       1.202       1.256
+--------------------------------------------------------------------------------
+
+
+     .------------------------------------------------------------------.
+     | MC-srDFT EKT IPs [a.u. & eV], pole strengths, and Dyson orbitals |
+     `------------------------------------------------------------------'
+
+
+     MC-srDFT EKT symmetry 1 ( A1 ) in point group C2v -- 2 principal poles
+
+   ============  ============  ============  ============
+      15.890798      0.323376     -0.878526     -0.249517
+     432.410614      8.799507    -23.905900     -6.789700
+   ------------  ------------  ------------  ------------
+       1.000000      0.999994     -0.500006     -1.000000
+   ============  ============  ============  ============
+       1.000000      0.000019      0.000135      0.000000
+       0.000019     -0.999994      0.003559     -0.000238
+      -0.000000     -0.000239     -0.000299      1.000000
+       0.000095     -0.002517     -0.707102     -0.000212
+   ============  ============  ============  ============
+
+     MC-srDFT EKT symmetry 2 ( B1 ) in point group C2v -- 0 principal poles
+
+   ============
+      -0.274746
+      -7.476230
+   ------------
+      -0.500000
+   ============
+       0.707107
+   ============
+
+     MC-srDFT EKT symmetry 3 ( B2 ) in point group C2v -- 0 principal poles
+
+   ============  ============
+      -0.077575     -0.063020
+      -2.110919     -1.714871
+   ------------  ------------
+      -0.127943     -0.872057
+   ============  ============
+       0.357690     -0.933840
+      -0.000914     -0.000350
+   ============  ============
+
+@ Summary of MC-srDFT EKT ionization potentials [eV] and pole strengths:
+
+@ Symmetry 1 (A1 ) :   432.411       8.800     -23.906      -6.790
+@ Pole strengths   :     1.000       1.000      -0.500      -1.000
+
+@ Symmetry 2 (B1 ) :    -7.476
+@ Pole strengths   :    -0.500
+
+@ Symmetry 3 (B2 ) :    -2.111      -1.715
+@ Pole strengths   :    -0.128      -0.872
+
+@ Symmetry 4 (A2 ) :  No IPs in this symmetry
+
+  === End of MC-srDFT EKT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for MCSCF :       1.831       1.840
 
 
                      .----------------------------------------.
@@ -1184,8 +1324,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 
 
  
-     Date and time (Linux)  : Mon Mar 25 16:50:49 2019
-     Host name              : fe1.deic.sdu.dk                         
+     Date and time (Linux)  : Thu Aug  4 21:15:48 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
   ITER ITMIC     EMCSCF           GRDNRM        RATIO      STPLNG
@@ -1207,10 +1347,10 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
   ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
  ------------------------------------------------------------------------------
 
-    1     3     2     1      0.34      0.00      0.27      0.23      0.09
-    2     5     3     2      0.43      0.00      0.38      0.34      0.08
-    3     3     2     1      0.34      0.00      0.29      0.25      0.10
-    4     0     0     0      0.05      0.00      0.00      0.00
+    1     3     2     1      0.53      0.00      0.42      0.36      0.14
+    2     5     3     2      0.71      0.00      0.62      0.56      0.12
+    3     3     2     1      0.46      0.00      0.38      0.32      0.13
+    4     0     0     0      0.08      0.00      0.00      0.00
 
 
  ITER         EMY                 EACTIV              EMCSCF
@@ -1224,15 +1364,15 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
  ITER         DEPRED              DEACT               RATIO
 
     1      0.000000000000      0.000000000000      0.000000000000
-    2     -0.021546807155     -0.020933439559      0.971533248894
-    3     -0.000078181462     -0.000078280257      1.001263657079
+    2     -0.021546807155     -0.020933439559      0.971533248893
+    3     -0.000078181462     -0.000078280257      1.001263657442
     4     -0.000000000543     -0.000000000543      1.000000000000
 
 
  ITER    BETA           GAMMA             STPLNG              RTRUST
 
     1      0.20000000  1.00000000      0.121276565898      0.700000000000
-    2      0.20000000  1.00000000      0.007350707605      0.700000000000
+    2      0.20000000  1.00000000      0.007350707606      0.700000000000
     3      0.20000000  1.00000000      0.000019417877      0.700000000000
     4      0.00000000  0.00000000      0.000000000000      0.700000000000
 
@@ -1254,6 +1394,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 @    Spin multiplicity:           3
 @    Spatial symmetry:            2 ( irrep  B1  in C2v )
 @    Total charge of molecule:    0
+
+@    This was an MC-srDFT calculation with mu =   0.000
 @    State number:                1
 
 @    Final MC-SRDFT energy:       -66.730243978391                 
@@ -1263,8 +1405,8 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 @    Final gradient norm:           0.000005285902
 
  
-     Date and time (Linux)  : Mon Mar 25 16:50:49 2019
-     Host name              : fe1.deic.sdu.dk                         
+     Date and time (Linux)  : Thu Aug  4 21:15:48 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Occupancies of natural orbitals
  -------------------------------
@@ -1273,17 +1415,28 @@ WARNING - DFT spin density is not implemented in MP2 module and is ignored.
 
    2.000000000   2.000000000   2.000000000   1.000000000
 
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  1.00  1.00
+
  Symmetry 2  ( B1 ) -- Total occupation in this symmetry is   1.000000000
 
    1.000000000
+
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  1.00  1.00
 
  Symmetry 3  ( B2 ) -- Total occupation in this symmetry is   2.000000000
 
    1.999998085   0.000001915
 
+  Effective numbers of unpaired electrons this symmetry Eqs. 1) and 2):  0.00  0.00
+
  Symmetry 4  ( A2 ) -- No occupied orbitals
 
-File label for MO orbitals:  25Mar19   (CNOORB)
+  Total effective number of unpaired electrons :
+  Eq. 1) sum(i) [(2 - n_i) n_i]    =  2.0000
+  Eq. 2) sum(i) [(2 - n_i) n_i]**2 =  2.0000
+ (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508-511)
+
+File label for MO orbitals:   4Aug22   (CNOORB)
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -1337,18 +1490,15 @@ File label for MO orbitals:  25Mar19   (CNOORB)
   10- 3 to 10- 2         1    0.12766400E-05      0.9999993617
   10- 4 to 10- 3         1    0.63831999E-06      1.0000000000
   10- 6 to 10- 5         1    0.13681674E-11      1.0000000000
-  10- 7 to 10- 6         1    0.91506188E-13      1.0000000000
+  10- 7 to 10- 6         1    0.91506189E-13      1.0000000000
   Number of coefficients less than 10^-11 times norm is            0
 
-  Total CPU  time used in SIRIUS :   1.53 seconds
-  Total wall time used in SIRIUS :   1.60 seconds
+  Total CPU  time used in SIRIUS :   2.17 seconds
+  Total wall time used in SIRIUS :   2.64 seconds
 
  
-     Date and time (Linux)  : Mon Mar 25 16:50:49 2019
-     Host name              : fe1.deic.sdu.dk                         
-
- NOTE:    1 informational messages have been issued.
- Check output, result, and error files for "INFO".
+     Date and time (Linux)  : Thu Aug  4 21:15:48 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
  Check output, result, and error files for "WARNING".
@@ -1358,9 +1508,9 @@ File label for MO orbitals:  25Mar19   (CNOORB)
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   1.56 seconds
-  Total wall time used in DALTON:   1.74 seconds
+  Total CPU  time used in DALTON:   2.19 seconds
+  Total wall time used in DALTON:   2.66 seconds
 
  
-     Date and time (Linux)  : Mon Mar 25 16:50:49 2019
-     Host name              : fe1.deic.sdu.dk                         
+     Date and time (Linux)  : Thu Aug  4 21:15:48 2022
+     Host name              : adm-110765.pc.sdu.dk                    

@@ -34,11 +34,7 @@ C=====================================================================*
       CHARACTER TABLE(NTABLE)*(8)
       LOGICAL LRELAX
 
-#if defined (SYS_CRAY)
-      REAL d0, d1
-#else
       DOUBLE PRECISION d0, d1
-#endif
       PARAMETER (D0=0.0D0, D1=1.0D0)
 
 * data:

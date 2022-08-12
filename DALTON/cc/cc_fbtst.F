@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -51,19 +51,11 @@ c/* Deck CC_FBTST */
       PARAMETER (MXFBTRAN = 20)
       INTEGER LWORK
 
-#if defined (SYS_CRAY) 
-      REAL WORK(LWORK) 
-      REAL FREQB, FREQA, WRKDLM, DUMMY
-      REAL DDOT
-      REAL ZERO, ONE, TWO, FOUR, FIVE
-      REAL RDUM
-#else 
       DOUBLE PRECISION WORK(LWORK) 
       DOUBLE PRECISION FREQB, FREQA, WRKDLM, DUMMY
       DOUBLE PRECISION DDOT
       DOUBLE PRECISION ZERO, ONE, TWO, FOUR, FIVE
-      DOUBLE PRECISION RDUM
-#endif 
+      DOUBLE PRECISION RDUM 
       PARAMETER (ZERO = 0.0D0, ONE  = 1.0D0, TWO = 2.0D0)
       PARAMETER (FOUR = 4.0D0, FIVE = 5.0D0)
 

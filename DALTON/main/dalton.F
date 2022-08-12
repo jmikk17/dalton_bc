@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -227,9 +227,9 @@ C
      &'If results obtained with this code are published,',
      &'the appropriate citations would be both of:',
      &' ',
-     &'   K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,',
-     &'   L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,',
-     &'   P. Dahle, E. K. Dalskov, U. Ekstroem,',
+     &'   K. Aidas, C. Angeli, K. L. Bak, V. Bakken,',
+     &'   R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,',
+     &'   S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,',
      &'   T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,',
      &'   L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,',
      &'   C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,',
@@ -250,7 +250,7 @@ C
      &'   O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski',
      &'   and H. Agren,',
      &'   "The Dalton quantum chemistry program system",',
-     &'   WIREs Comput. Mol. Sci. 2014, 4:269–284 '//
+     &'   WIREs Comput. Mol. Sci. 2014, 4:269-284 '//
      &    '(doi: 10.1002/wcms.1172)',
      &' ',
      &'and',
@@ -261,13 +261,15 @@ C
      &//', see http://daltonprogram.org'
 C
          WRITE (LUPRI,'(3X,A)') SEPARATOR(1:76)
-         WRITE (LUPRI,'(/T5,A//,(T3,A,T29,A,T59,A,T71,A))')
+         WRITE (LUPRI,'(/T5,A//,(T3,A,T32,A,T59,A,T71,A))')
      *'Authors in alphabetical order '//
      &  '(Major contribution(s) in parenthesis):',
      *'Kestutis Aidas,','Vilnius University,','Lithuania',
      &  '(QM/MM)',
      *'Celestino Angeli,','University of Ferrara,','Italy',
      &  '(NEVPT2)',
+     *'Juan J. Aucar,','Northeast National University,','Argentina',
+     & '(LRESC, Relativistic Effects on EFG)',
      *'Keld L. Bak,','UNI-C,','Denmark',
      &  '(AOSOPPA, non-adiabatic coupling, magnetic properties)',
      *'Vebjoern Bakken,','University of Oslo,','Norway',
@@ -332,15 +334,19 @@ C
      &  '(Parity violation)',
      *'Hinne Hettema,','University of Auckland,','New Zealand',
      &  '(Quadratic response in RESPONS; SIRIUS supersymmetry)',
+     *'Andreas E. Hillers-Bendtsen,','University of Copenhagen,',
+     &'Denmark', '(MP3)',
      *'Eirik Hjertenaes,', 'NTNU,','Norway',
      &  '(Cholesky decomposition)',
+     *'Nicolai Machholdt Hoeyer,','Aarhus University,','Denmark',
+     &  '(MP3)',
      *'Pi A. B. Haase,','University of Copenhagen,','Denmark',
      &  '(Triplet AO-SOPPA)',
      *'Maria Francesca Iozzi,','University of Oslo,','Norway',
      &  '(RPA)',
-     *'Christoph Jacob','TU Braunschweig','Germany',
+     *'Christoph Jacob,','TU Braunschweig','Germany',
      &  '(Frozen density embedding)',
-     *'Brano Jansik','Technical Univ. of Ostrava','Czech Rep.',
+     *'Brano Jansik,','Technical Univ. of Ostrava','Czech Rep.',
      &  '(DFT cubic response)',
      *'Hans Joergen Aa. Jensen,','Univ. of Southern Denmark,','Denmark',
      &  '(DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)'
@@ -354,6 +360,8 @@ C
      &  '(Complex polarization propagator (CPP) module)',
      *'Sheela Kirpekar,','Univ. of Southern Denmark,','Denmark',
      &  '(Mass-velocity & Darwin integrals)',
+     *'Frederik Oersted Kjeldal,','Technical Univ. of Denmark,',
+     &'Denmark', '(MP3)',
      *'Erik Kjellgren,','Univ. of Southern Denmark,','Denmark',
      &  '(MC-srDFT)',
      *'Wim Klopper,','KIT Karlsruhe,','Germany',
@@ -368,14 +376,14 @@ C
      &  '(Polarizable embedding, polarizable density embedding, QM/MM)',
      *'Andrea Ligabue,','University of Modena,','Italy',
      &  '(CTOCD, AOSOPPA)',
-     *'Nanna H. List','Univ. of Southern Denmark,','Denmark',
+     *'Nanna H. List,','Univ. of Southern Denmark,','Denmark',
      &  '(Polarizable embedding)',
      *'Ola B. Lutnaes,','University of Oslo,','Norway',
      &  '(DFT Hessian)',
      *'Juan I. Melo,','University of Buenos Aires,','Argentina',
      &  '(LRESC, Relativistic Effects on NMR Shieldings)',
      *'Kurt V. Mikkelsen,','University of Copenhagen,','Denmark',
-     &  '(MC-SCRF and QM/MM)',
+     &  '(MC-SCRF, QM/MM, and MP3)',
      *'Rolf H. Myhre,', 'NTNU,','Norway',
      &  '(Subsystems and CC3)',
      *'Christian Neiss,','Univ. Erlangen-Nuernberg,','Germany',
@@ -412,7 +420,7 @@ C
      &  '(DALTON; ABACUS magnetic properties and much more)',
      *'Pawel Salek,','KTH Stockholm,','Sweden',
      &  '(DALTON; DFT code)',
-     *'Claire C. M. Samson','University of Karlsruhe','Germany',
+     *'Claire C. M. Samson,','University of Karlsruhe','Germany',
      &  '(Boys localization, r12 integrals in ERI)',
      *'Alfredo Sanchez de Meras,','University of Valencia,','Spain',
      &  '(CC module, Cholesky decomposition)',
@@ -446,6 +454,8 @@ C
      &  '(Frozen density embedding)',
      *'David J. Wilson,','La Trobe University,','Australia',
      &  '(DFT Hessian and DFT magnetizabilities)',
+     *'Luna Zamok,','University of Copenhagen,','Denmark',
+     &  '(Block Lanczos RPA solver in SOPPA module)',
      *'Hans Agren,','KTH Stockholm,','Sweden',
      &  '(SIRIUS module, RESPONS, MC-SCRF solvation)'
 C
@@ -946,7 +956,7 @@ C
       LUMMOV = -9045
       LUOVER = -9046
       LUNDPF = -9047
-      LUSRINT =-9048
+      LUINTA_SR =-9048
       LUNMPF = -9049
       LUMOLDEN    =-9050
       LUMOLDEN_MOS=-9051

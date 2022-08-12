@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -109,18 +109,11 @@ C
       IF (CCR1A) MODEL = 'CCSDR(1A) '
       IF (CCR1B) MODEL = 'CCSDR(1B) '
       IF (DCPT2) MODEL = 'DCPT2     '
+      IF (MP3)   MODEL = 'MP3       '
       MOPRPC = MODEL
       ! set model for CCR12
       CALL CCSD_MODEL(MODELR12,LENMOD,24,MODEL,10,APROXR12)
       MODEL = MODELR12(1:10)
-C
-#if defined (SYS_CRAY)
-C     Open file for diis extrapolation
-C
-      CALL WOPEN('CC_DIIS',64,0,IERR)
-C
-      IF (IERR .NE. 0) CALL QUIT('Error opening CC_DIIS')
-#endif
 C
       ETY0 = 'SCF  '
 C
@@ -342,6 +335,56 @@ C
      *               ZERO,ZERO,ZERO,1,0,0,0)
 
          GO TO 9999
+C        ... exit this routine
+      ENDIF
+      IF (MP3) THEN
+         WRITE(LUPRI,'(//10X,A,I8)')
+     *   'Perturbation calculation - NO WAVEFUNCTION OPTIMIZATION'
+C
+         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ','UNFORMATTED',IDUMMY,
+     &               .FALSE.)
+         REWIND LUSIFC
+         CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+         READ (LUSIFC) POTNUC,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,
+     *              LSYM,MS2
+         ESCF   = EMCSCF
+         ECCGRS = EMCSCF
+
+         
+         CALL GPCLOSE(LUSIFC,'KEEP')
+C        Run MP3 through the mp3_energy.F file 
+         CALL MP3_ENERGY(WORK,LWORK,EMP2_CORR,EMP3_CORR)
+C
+C        write SCF energy to summary file:
+         WRITE(LURES,'(/12X,A,A,A,F32.10)')
+     *               'Total ',ETY0,' energy:       ',ESCF
+C        Write CPS(D)/MP3 results to summary file:
+         IF (CPORDER .GE. 2) THEN 
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'MP2 correction:           ',EMP2_CORR
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'Total MP2 energy:         ',ESCF+
+     *                                           EMP2_CORR
+         ENDIF
+         IF (CPORDER .GE. 3) THEN 
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'MP3 correction:           ',EMP3_CORR
+            WRITE(LURES,'(/12X,A,F32.10)')
+     *               'Total MP3 energy:         ',ESCF+
+     *                                 EMP3_CORR+EMP2_CORR
+         ENDIF
+C
+         LABEL1 = 'ENERGY  '
+         MODREF = 'CCS/SCF   '
+         CALL CC_PRPC(ESCF,MODREF,0,
+     *                LABEL1,LABEL1,LABEL1,LABEL1,
+     *                ZERO,ZERO,ZERO,1,0,0,0)
+         CALL WRIPRO(ESCF,MODREF,0,
+     *               LABEL1,LABEL1,LABEL1,LABEL1,
+     *               ZERO,ZERO,ZERO,1,0,0,0)
+         
+         GO TO 9999
+         
 C        ... exit this routine
       ENDIF
 C
@@ -1022,13 +1065,8 @@ C     end of loop.
 C-----------------
 C
 
-#if defined (SYS_CRAY)
-      CALL WCLOSE('CC_DIIS',IERR)
-      INFO = ISHELL('rm CC_DIIS')
-#else
       CALL GPCLOSE(LUTDIS,'DELETE')
       CALL GPCLOSE(LUSDIS,'DELETE')
-#endif
 C
 C--------------------------------------------------------------
 C     Print largest amplitudes in the zero order wave function.
@@ -5316,7 +5354,6 @@ c     end do
 c     write(lupri,*) 'ii_sum in ccsd_symsq', ii_sum
 c     call flshfo(lupri)
 
-#if !defined (SYS_CRAY)
       DO 100 IJSQ = 1,N2BST(ISYMAB)
 C
          KOFF = I2BST(ISYMAB) + IJSQ
@@ -5325,13 +5362,6 @@ C
          SCR(IJSQ) = DISTAB(IJPK)
 C
   100 CONTINUE
-#else
-
-C     SYS_CRAY code
-
-      KOFF = I2BST(ISYMAB) + 1
-      CALL GATHER(N2BST(ISYMAB),SCR,DISTAB,IADRPK(KOFF))
-#endif
 C
       CALL QEXIT('CCSD_SYMSQ')
 C
@@ -5350,11 +5380,6 @@ C
 #include "symsq.h"
 C
       CALL QENTER('CCSD_SYMSQT')
-C
-#if defined (SYS_CRAY)
-       WRITE(LUPRI,*) 'computation of Bijal on SYS_CRAY not implemented'
-       CALL QUIT('computation of Bijal on SYS_CRAY not implemented')
-#endif
 C
        DO IJSQ = 1,N2BST(ISYMAB)
          KOFF = I2BST(ISYMAB) + IJSQ

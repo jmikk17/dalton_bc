@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+#    dft_camb3lyp_molgrad
+#    --------------
+#    Molecule:         hydrogen molecule
+#    Wave Function:    DFT CAM-B3LYP / STO-3G
+#    Test Purpose:     DFT energy, dipole moment, molecular gradient terms
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+f.add(string='Final DFT energy', rel_tolerance=1.0e-8)
+
+f.add(from_string='Dipole moment', abs_tolerance=1.0e-6, num_lines=5, mask=[1])
+
+for term in (
+        'Kinetic energy integral gradient',
+        'Nuclear attraction integral gradient',
+        'Reorthonormalization gradient',
+        'DFT contribution to gradient',
+        'Two-electron integral gradient',
+        'Potential energy (NN + NE + EE) gradient',
+        'Molecular gradient',
+):
+    f.add(from_string=term, abs_tolerance=1.0e-3, num_lines=5)
+
+test.run(['dft_camb3lyp_molgrad.dal'], ['H2.mol'], f={'out': f})
+
+sys.exit(test.return_code)

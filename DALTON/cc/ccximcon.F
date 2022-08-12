@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -67,13 +67,8 @@ C
 
       INTEGER IXIM(NXIM), IXDOTS(MXVEC,NXIM)
 
-#if defined (SYS_CRAY)
-      REAL FREQ, XCONS(MXVEC,NXIM), WORK(LWORK)
-      REAL HALF, ONE, TWO, ZERO, FTRACE
-#else
       DOUBLE PRECISION FREQ, XCONS(MXVEC,NXIM), WORK(LWORK)
       DOUBLE PRECISION HALF, ONE, TWO, ZERO, FTRACE
-#endif
       PARAMETER( ONE = 1.0D0, TWO = 2.0D0, ZERO = 0.0D0, HALF = 0.5D0 )
 
       CHARACTER*(10) MODEL
@@ -92,11 +87,7 @@ C
       INTEGER IROPER
       INTEGER I1DXFCK
       INTEGER ILSTSYMRLX
-#if defined (SYS_CRAY)
-      REAL DDOT
-#else
       DOUBLE PRECISION DDOT
-#endif
 
 *---------------------------------------------------------------------*
 *     check, if there is anything at all to do:

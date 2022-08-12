@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -38,11 +38,7 @@ C
       INTEGER KTRVI1, KTRVI2, KEND1, LWRK1, IOFF1, IOFF2, ISYMBK
       INTEGER KOFF1, KOFF2, KOFF3
 C
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK), HALF, ONE, TWO, FACT
-#else
       DOUBLE PRECISION WORK(LWORK), HALF, ONE, TWO, FACT
-#endif
 C
 #include "priunit.h"
 #include "ccinftap.h"

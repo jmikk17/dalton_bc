@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -200,24 +200,21 @@ C
      *          SOPACK(NNBASX,3), DIPRHS(NVARMA), DIPREO(3*NUCDEP),
      *          WORK(LWORK), SOINT(NBAST,NBAST)
 C
-      LOGICAL OLDDX
+      LOGICAL OLDDX, FOUND
 #include "chrxyz.h"
 C
       IF (IPRINT .GT. 5) CALL TITLER('Output from DIPCT1','*',103)
 C
 C     ***** Read orbitals *****
 C
-      REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
-      READ (LUSIFC)
-      READ (LUSIFC)
-      CALL READI(LUSIFC,IRAT*NCMOT,CMO)
+      CALL RD_SIRIFC('CMO',FOUND,CMO)
+      IF (.NOT.FOUND) CALL QUIT('CMO not found on SIRIFC')
 C
 C     ***** Read one-electron density *****
 C
       IF (NASHT .GT. 0) THEN
-         READ (LUSIFC)
-         CALL READI(LUSIFC,IRAT*NNASHX,DVSP)
+         CALL RD_SIRIFC('DV',FOUND,DVSP)
+         IF (.NOT.FOUND) CALL QUIT('DV not found on SIRIFC')
          CALL DSPTSI(NASHT,DVSP,DV)
          IF (IPRINT .GT. 10) THEN
             CALL HEADER('Active density matrix in DIPCT1',-1)
@@ -300,7 +297,7 @@ C
          IOFFAX = IOFFAX + NAXIS
   100 CONTINUE
 C
-C     ***** Print static constribution to dipole gradient *****
+C     ***** Print static contribution to dipole gradient *****
 C
       CALL GPCLOSE(LUGDR,'KEEP')
       IF (IPRINT .GT. 1 .AND. DIPDER) THEN

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -98,15 +98,9 @@ C     Functions :
 C
       INTEGER ILSTSYM,ILRCAMP
 C
-#if defined (SYS_CRAY)
-      REAL DOTPROD(MXVEC,NBTRAN), WORK(LWORK)
-      REAL FREQB, FREQC, TCON
-      REAL XNORMVAL, DDOT, HALF, TWO, ZERO
-#else
       DOUBLE PRECISION DOTPROD(MXVEC,NBTRAN), WORK(LWORK)
       DOUBLE PRECISION FREQB, FREQC, TCON
       DOUBLE PRECISION XNORMVAL, DDOT, HALF, TWO, ZERO
-#endif
 C
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, TWO = 2.0D0)
 C

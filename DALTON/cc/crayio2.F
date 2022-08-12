@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -45,11 +45,7 @@ C
       IF (DEBUG) WRITE(LUPRI,*) 'WOPEN2 : open file "',FILE(1:ILEN),
      & '" with unit number ',LUNIT
 C
-#if defined (SYS_CRAY)
-      CALL WOPEN(FILE,ILEN,BLOCKSIZE,STATUS,IERR)
-#else
       CALL WOPEN(LUNIT,FILE,ILEN,BLOCKSIZE,STATUS,IERR)
-#endif
 C
       IF (IERR.NE.0) THEN
         WRITE (LUPRI,*) 'I/O ERROR IN WOPEN2:'
@@ -113,13 +109,8 @@ C
             LREAD = LEN   - LETOT
          END IF
 C
-#if defined (SYS_CRAY)
-C        CALL PUTWA(FILE,DATA(1),IADR,LEN,IERR)
-         CALL PUTWA(FILE,DATA(IOFF),JADR,LREAD,IERR)
-#else
 C        CALL PUTWA(LUNIT,DATA(1),IADR,LEN,IERR)
          CALL PUTWA(LUNIT,DATA(IOFF),JADR,LREAD,IERR)
-#endif
 C
          IF (IERR.NE.0) THEN
            WRITE (LUPRI,*) 'I/O ERROR IN PUTWA2:'
@@ -175,13 +166,8 @@ C
             LREAD = LEN   - LETOT
          END IF
 C
-#if defined (SYS_CRAY)
-C        CALL GETWA(FILE,DATA(1),IADR,LEN,IERR)
-         CALL GETWA(FILE,DATA(IOFF),JADR,LREAD,IERR)
-#else
 C        CALL GETWA(LUNIT,DATA(1),IADR,LEN,IERR)
          CALL GETWA(LUNIT,DATA(IOFF),JADR,LREAD,IERR)
-#endif
 C
          IF (IERR.NE.0) THEN
            WRITE (LUPRI,*) 'I/O ERROR IN GETWA2:'
@@ -218,19 +204,15 @@ c/* Deck WCLOSE2 */
       CHARACTER*(80) COMMAND
       COMMON /UNICRAYIO/ IUNCRAY(1:99)
 C
-#if defined (SYS_CRAY)
-      CALL WCLOSE(FILE,IERR)
-#else
       IF (LUNIT .LT. 1 .OR. LUNIT .GT. 99) THEN
          WRITE(LUPRI,*) 'WCLOSE2 called with illegal unit number',LUNIT
          IERR = -1
       ELSE
          CALL WCLOSE(LUNIT,IERR)
       END IF
-#endif
 C
       IF (IERR.NE.0) THEN
-        WRITE (LUPRI,*) 'I/O ERROR IN CLOSE2:'
+        WRITE (LUPRI,*) 'I/O ERROR IN WCLOSE2:'
         WRITE (LUPRI,*) 'FILE:', FILE
         WRITE (LUPRI,*) 'UNIT:', LUNIT
         WRITE (LUPRI,*) 'MODE:', MODE
@@ -249,11 +231,7 @@ C
         IF (ILEN .LE. 74) THEN
            WRITE(COMMAND,'(2A)') 'rm -f ', FILE(1:ILEN)
 
-#if defined (SYS_CRAY)
-           CALL INFO = ISHELL(COMMAND)
-#else
            CALL SYSTEM(COMMAND)
-#endif
         ELSE
            NWARN = NWARN + 1
            WRITE(LUPRI,*) 'WARNING! "rm -f ',FILE(1:ILEN),'" failed!'
@@ -311,11 +289,7 @@ C
 
            IF (DEBUG) WRITE(LUPRI,*) 'WCLOSEALL> close unit ',LUNIT
 
-#          if defined (SYS_CRAY)
-             CONTINUE
-#          else
              CALL WCLOSE(LUNIT,IERR)
-#          endif
 C
            IF (IERR.NE.0) THEN
              WRITE (LUPRI,*) 'I/O ERROR IN WCLOSEALL:'

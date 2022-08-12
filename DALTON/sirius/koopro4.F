@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -5158,7 +5158,7 @@ C        calculate the srH potential (for the MCSCF-srDFT density)
          NSRDMAT = 1 ! only one density matrix (the MCSCF-srDFT one)
          ISYMDM  = 1 ! DMAT of symmetry 1
 
-         CALL SIRFCK2(LUSRINT,'AOSR2INT',WRK(KVSRAO),
+         CALL SIRFCK2(LUINTA_SR,'AOSR2INT',WRK(KVSRAO),
      &                WRK(KDAO),NSRDMAT,ISYMDM,IFCTMP,WRK(KFREE),LFREE)
 
 

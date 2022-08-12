@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -284,6 +284,7 @@ C
       LOGICAL   DDFOCK, NOBLK, ZFS2EL, PARHER_IS_OK, PARHER_SAVE
       INTEGER   IFCTYP(MXDMAT), ISYMDM(MXDMAT)
       DIMENSION ALPGR1(MXPRIM)
+      DIMENSION GRADEE_copy(MXCOOR)
 C
 C     Control routine for calculation of expectation values
 C     of differentiated two-electron integrals
@@ -308,7 +309,7 @@ C
       END IF
 C
       I2TYP = 0
-      IF (IPRALL .GE. 1) THEN
+      IF (IPRALL .GE. 1 .OR. IPRINT .GE. 1) THEN
          CALL TIMER('START ',TIMEIN,TIMOUT)
          WRITE (LUPRI,'(/A/)')
      *     '  ---------- Output from TWOEXP ---------- '
@@ -321,7 +322,7 @@ C
          NOPV   = .TRUE.
          IF (HSROHF .AND. NASHT .GT. 1 .AND. (DIPDER .OR. MOLHES)) THEN
             WRITE(LUPRI,'(/A)')
-     &          ' ERROR: Dipole gradients and molecular '//
+     &          ' ERROR: Dipole gradients and molecular Hessian '//
      &          'not implemented for high-spin restricted open-shell HF'
             CALL QUIT('Option not available for HSROHF in TWOEXP')
          END IF 
@@ -452,7 +453,7 @@ C           dimension ISYMDM(MXDMAT), IFCTYP(MXDMAT)
          END IF
 C
 C        Is it OK to do parallel calculation here ??
-         PARHER_IS_OK = PARHER ! has user wanted PARHER ?
+         PARHER_IS_OK = PARHER ! PARHER true when MPI (NODTOT .ge. 1)
          IF ((NASHT .GT. 0) .AND. (.NOT.(HSROHF.OR.DFTADD)))
      &      PARHER_IS_OK = .FALSE. ! parallel TWOEXP only for SCF 
 C
@@ -497,6 +498,7 @@ cfrj-end
      &                  DUMMY,LDUMMY)
             HFXMU = HFXM0
             IF (HFXMU.NE.D0) THEN
+!           IF (SRDFTRUN .OR. HFXMU.NE.D0) THEN <-- TODO to implement PARHER here
 
                KFCTMP = KLAST
                KLAST  = KFCTMP + NFMAT*N2BASX
@@ -511,6 +513,8 @@ cfrj-end
      &                                      WORK(KFCTMP),1)
 cfrj-st
                CALL DZERO(ALPGRD,MXPRIM)
+               CALL DCOPY(MXCOOR,GRADEE,1,GRADEE_copy,1)
+               CALL DZERO(GRADEE,MXCOOR)
 cfrj-end
                CALL PARDRV(WORK(KFMAT),WORK(KDMAT),NDMAT,ISYMDM,IFCTYP,
      &              WORK(KLAST),WORK(KNSTAT),WORK(KHESEE),LWRK,
@@ -520,12 +524,13 @@ cfrj-end
      &              DUMMY,LDUMMY)
 cfrj-st camb3lyp looses the 1e-contribution during the second call to pardrv, reason unknown, kludge fix by zeroing array above and manually adding it again
                CALL DAXPY(MXPRIM,1.0D0,ALPGR1,1,ALPGRD,1)
+               CALL DAXPY(MXCOOR,1.0D0,GRADEE_copy,1,GRADEE,1)
 cfrj-end
                IF (NFMAT .GT. 0) CALL DAXPY(NFMAT*N2BASX,1D0,
      &                                     WORK(KFCTMP),1,WORK(KFMAT),1)
                HFXFAC = HFXFC0
             END IF
-         ELSE
+         ELSE ! PARHER is not OK for MPI for this wave function type
             PARHER_SAVE = PARHER
             PARHER = .FALSE.
 #endif

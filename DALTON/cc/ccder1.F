@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -49,12 +49,8 @@ c /* deck ccder1 */
       INTEGER IATOM, NDMAT, MAXDIF, MXCOMP
       INTEGER KDMAT, KEND, KFMAT, KISYMDM, KIFCTYP, LEND
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL TIM0
-#else
       DOUBLE PRECISION WORK(LWORK)
-#endif
+
 
 
       CALL QENTER('CCDER1')
@@ -716,22 +712,12 @@ c /* deck ccgeth2d */
       INTEGER ICOOR, ICORSY, JR, JS, JP, JQ, JRS, JPQ, I
       INTEGER MXCOMP, ISYM, IPRHER
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL DMAT(*), FMAT(*)
-      REAL TIM0, TIM1, TIM2, TIM3
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION DMAT(*), FMAT(*)
       DOUBLE PRECISION TIM0, TIM1, TIM2, TIM3
-#endif
 
 * external functions
-#if defined (SYS_CRAY)
-      REAL BUF(NBUFS)
-#else
       DOUBLE PRECISION BUF(NBUFS)
-#endif
 
       CALL QENTER('CCGETH2D')
 *---------------------------------------------------------------------*

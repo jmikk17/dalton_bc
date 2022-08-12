@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -68,17 +68,10 @@ C
 C
       integer kx3am
 C
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL OMEGA1(*)
-      REAL FREQB,  TCON
-      REAL XNORMVAL, DDOT, HALF, TWO, XT2TP, XUMAT
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION OMEGA1(*)
       DOUBLE PRECISION FREQB,  TCON
       DOUBLE PRECISION XNORMVAL, DDOT, HALF, TWO, XT2TP, XUMAT
-#endif
       CHARACTER*(*) FNCKJD, FNDKBC, FNDELD, FNTOC
       CHARACTER*12 FN3SRTR, FNCKJDR, FNDELDR, FNDKBCR, FNDKBCR4
       CHARACTER*10 MODEL
@@ -784,14 +777,9 @@ C
       INTEGER ISENLM, ISYENL, NUMENL, NUMM, NUMA
       INTEGER ISYRE2
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*), WMAT(*),  TMAT(*), XIAJB(*), XAIJB(*), YAIJB(*)
-      REAL YIAJB(*), C2TP(*), WORK(LWORK), ZERO, ONE
-#else
       DOUBLE PRECISION OMEGA1(*), WMAT(*),  TMAT(*), XIAJB(*), XAIJB(*)
       DOUBLE PRECISION YAIJB(*)
       DOUBLE PRECISION YIAJB(*), C2TP(*), WORK(LWORK), ZERO, ONE
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C
@@ -1253,13 +1241,8 @@ C
       INTEGER KINTIL, ISYMIL, ISYMBI, NBI, ISYENM, NUMENM, NUML, NUMA
       INTEGER ISYRE2
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*), WMAT(*),  TMAT(*), XIAJB(*)
-      REAL YIAJB(*), C2TP(*), WORK(LWORK), ZERO, ONE
-#else
       DOUBLE PRECISION OMEGA1(*), WMAT(*),  TMAT(*), XIAJB(*)
       DOUBLE PRECISION YIAJB(*), C2TP(*), WORK(LWORK), ZERO, ONE
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C
@@ -1750,15 +1733,9 @@ C
       INTEGER NUMFN, NUMAI
       INTEGER ISYRE2, IS1FLM
 C
-#if defined (SYS_CRAY)
-      REAL OMEGA1(*), WMAT(*),  TMAT(*), XIAJB(*)
-      REAL C2TP(*), WORK(LWORK), ZERO, ONE, XAIBJ(*)
-      REAL DDOT
-#else
       DOUBLE PRECISION OMEGA1(*), WMAT(*), TMAT(*), XIAJB(*)
       DOUBLE PRECISION C2TP(*), WORK(LWORK), ZERO, ONE, XAIBJ(*)
       DOUBLE PRECISION DDOT
-#endif
 C
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
 C

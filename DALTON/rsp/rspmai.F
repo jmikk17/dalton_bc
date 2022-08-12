@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -70,7 +70,7 @@ C
 C Used from common blocks:
 C inftra.h : USEDRC
 C infinp.h : ?
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -138,7 +138,7 @@ C Read **RESPONS input
 C
       CALL RSPREA
 
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          WRITE(LUPRI,'(A)') ' using spin-density in srDFT part'
          NDV = 2 ! DV,DS and FV,FS
       ELSE
@@ -409,7 +409,7 @@ C
             WRITE(LUPRI,'(/A)')
      &           ' ***** ONE BODY DENSITY MATRIX from SIRIFC file'
             CALL OUTPUT(WRK(KUDV),1,NASHT,1,NASHT,NASHT,NASHT,-1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE(LUPRI,'(/A)')
      &           ' ***** ONE BODY spin DENSITY MATRIX from SIRIFC file'
                CALL OUTPUT(WRK(KUDV+N2ASHX),1,NASHT,1,NASHT,
@@ -472,8 +472,8 @@ C
       CALL AVEPRP(WRK(KCMO),WRK(KUDV),WRK(KPVX),WRK(KTOT),LFREE)
       CALL FLSHFO(LUPRI)
 
-      IF (DFT_SPINDNS) THEN
-         CALL QUIT('DFT_SPINDNS not implemented in **RESPONS')
+      IF (SRDFT_SPINDNS) THEN
+         CALL QUIT('SRDFT_SPINDNS not implemented in **RESPONS')
       END IF
 
 C     Call ZFS (Zero-Field Splitting) submodule
@@ -1027,7 +1027,7 @@ C                  IF (DIRCAL) AOSOP = .TRUE.
      *               '@ **RESPONS: NUMBER OF OPERATORS FOR .PROPAV'
      *               ,'CALCULATION EXCEEDS THE ALLOWED NUMBER :'
      *               ,MAX1AV
-                   CALL QUIT('RSPINP, TOO MANY .PROPAV OPERATORS')
+                   CALL QUIT('**RESPONS, TOO MANY .PROPAV OPERATORS')
                   END IF
                   READ(LUCMD,'(A)') LBL1AV(N1AVTOT)
                GO TO 100
@@ -2134,24 +2134,32 @@ C
                   OPRANK( INDPRP('Z SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  21            CONTINUE
                   LLROP( INDPRP('X SPNORB')) = .TRUE.
                   OPRANK( INDPRP('X SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  22            CONTINUE
                   LLROP( INDPRP('Y SPNORB')) = .TRUE.
                   OPRANK( INDPRP('Y SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  23            CONTINUE
                   LLROP( INDPRP('Z SPNORB')) = .TRUE.
                   OPRANK( INDPRP('Z SPNORB')) = 1
                   DOSO1 = .TRUE.
                   DOSO2 = .TRUE.
+                  TRPLET=.TRUE.
+                  TRPFLG=.TRUE.
                GO TO 100
  24            CONTINUE
                   READ(LUCMD,'(BN,A,I8)')LABEL,IRANK
@@ -2853,7 +2861,7 @@ C    Used from common blocks:
 C    gnrinf.h : DIRCAL
 C    infinp.h : SUPSYM, ISPIN, DIRFCK, DOHFSRDFT, DOMCSRDFT
 C    inforb.h : NSYM, NSSYM
-C    dftcom.h : DFT_SPINDNS
+C    dftcom.h : SRDFT_SPINDNS
 C
 #include "implicit.h"
 C
@@ -2889,13 +2897,13 @@ C
          DIRFCK = .TRUE.
       END IF
       END IF
-      IF (DFT_SPINDNS .AND. ISPIN .EQ. 1) THEN
-      ! May2018: DFT_SPINDNS may be true for singlet reference and triplet response
+      IF (SRDFT_SPINDNS .AND. ISPIN .EQ. 1) THEN
+      ! May2018: SRDFT_SPINDNS may be true for singlet reference and triplet response
       ! in current srDFT implementation (spin version of functionals is needed
       ! for triplet response).
          WRITE(LUPRI,'(/A)')
-     &     'srDFT INFO: DFT_SPINDNS set to false for singlet reference.'
-         DFT_SPINDNS = .FALSE.
+     &   'srDFT INFO: SRDFT_SPINDNS set to false for singlet reference.'
+         SRDFT_SPINDNS = .FALSE.
       END IF
 C
 C ****** Used unit names: ******
@@ -4366,13 +4374,13 @@ C
      &              MCDETS,MCMOT,MNASHX,MNASHY,MNORBT,M2ORBT,
      &              (IDUM,I=1,NDUM),MCTYPE_IFC
       IF (MCTYPE_IFC .GT. 900) THEN
-         IF ( (.NOT. DFT_SPINDNS) .AND. ISPIN .NE. 1 ) THEN
+         IF ( (.NOT. SRDFT_SPINDNS) .AND. ISPIN .NE. 1 ) THEN
             CALL QUIT('ERROR in RSPMC:'//
-     &      'DFT_SPINDNS true on SIRIFC, but not in input')
+     &      'SRDFT_SPINDNS true on SIRIFC, but not in input')
          END IF
          MCTYPE_IFC = MCTYPE_IFC - 1000
       END IF
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2 ! DV and DS
       ELSE
          NDV = 1 ! DV
@@ -4527,7 +4535,7 @@ C
 C        read and unpack DV
          CALL READT (LUSIFC,NDV*NNASHX,WRK(KDV))
          CALL DSPTSI(NASHT,WRK(KDV),UDV)
-         IF (DFT_SPINDNS) CALL DSPTSI(NASHT,WRK(KDV+NNASHX),UDV(1,2))
+         IF (SRDFT_SPINDNS) CALL DSPTSI(NASHT,WRK(KDV+NNASHX),UDV(1,2))
          IF (.NOT.RSPCI) THEN
             CALL READT (LUSIFC,N2ORBT,FOCK)
             IF (HSROHF) THEN
@@ -4641,8 +4649,8 @@ C
             CALL OUTPUT(PV,1,2,1,LPVMAT,2,LPVMAT,-1,LUPRI)
          END IF
 C
-         IF (DFT_SPINDNS) THEN
-            CALL QUIT('DFT_SPINDNS not implemented for SOPPA')
+         IF (SRDFT_SPINDNS) THEN
+            CALL QUIT('SRDFT_SPINDNS not implemented for SOPPA')
          END IF
          CALL READT (LUSIFC,NACTT*NACTT,UDV)
 C
@@ -4726,12 +4734,12 @@ C        ... Hartree-Fock case ....
             REWIND LUSIFC
             CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
          END IF
-         READ (LUSIFC)
+         READ (LUSIFC) ! skip energy info
          READ (LUSIFC) MISHT,MASHT,MOCCT,MORBT,MBAST,
      *                 MCONF,MWOPT,MWOPH,MDETS
          IF (LCREF .EQ. MCONF) THEN
 C
-            READ (LUSIFC)
+            READ (LUSIFC) ! skip CMO
          ELSE IF (LCREF .EQ. MDETS) THEN
             CALL MOLLAB('CREFDETS',LUSIFC,LUPRI)
          ELSE
@@ -4898,7 +4906,7 @@ C
       CALL PPINP(WORD)
       RETURN
 C
- 2100 CALL QUIT('**QUADRA not found in DALTON input')
+ 2100 CALL QUIT('*QUADRA not found in DALTON input')
 C
       RETURN
       END
@@ -5058,7 +5066,7 @@ C
                WRITE (LUPRI,'(/,3A,/)') '@KEYWORD "',WORD,
      *            '" NOT RECOGNIZED IN ESG.'
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
-               CALL QUIT(' ILLEGAL KEYWORD IN ESG INPUT ')
+               CALL QUIT(' ILLEGAL KEYWORD IN *ESG INPUT ')
                GO TO 100
 C
  1             CONTINUE
@@ -5099,7 +5107,7 @@ C
             ELSE
                WRITE (LUPRI,'(/,3A,/)') '@PROMPT "',WORD,
      *            '" NOT RECOGNIZED IN ESG INPUT.'
-               CALL QUIT(' ILLEGAL PROMPT IN ESG INPUT ')
+               CALL QUIT(' ILLEGAL PROMPT IN *ESG INPUT ')
             END IF
       END IF
   300 CONTINUE

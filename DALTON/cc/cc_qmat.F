@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -60,13 +60,8 @@ C
       LOGICAL NOKAPPA
       INTEGER IREAL, ISYMQ, LWORK
 
-#if defined (SYS_CRAY)
-      REAL QMATP(*), QMATH(*), RMAT(*), XKAPPA(*), CMO(*)
-      REAL WORK(LWORK), ONE, ZERO, SIGN
-#else
       DOUBLE PRECISION QMATP(*), QMATH(*), RMAT(*), XKAPPA(*), CMO(*)
       DOUBLE PRECISION WORK(LWORK), ONE, ZERO, SIGN
-#endif
       PARAMETER(ONE=1.0D0, ZERO=0.0D0)
 
       INTEGER ISYALP, ISYBET, NBASA, NBASB, NORBSA, IORBI, IORBA

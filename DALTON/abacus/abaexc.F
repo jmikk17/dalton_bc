@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1837,15 +1837,15 @@ C
 #include "dummy.h"
 #include "priunit.h"
       CHARACTER*8 LABEL
-      LOGICAL INTTRS, CICLC, HFCLC, TRIPLE, EXECLC
+      LOGICAL INTTRS, TRIPLE, EXECLC
       DIMENSION WORK(LWORK), EXVAL(NEXENG)
 C
+! abainf.h : ABAHF, ABACI
 #include "cbiexc.h"
+#include "abainf.h"
 #include "infvar.h"
 #include "inforb.h"
 C
-      CICLC  = .FALSE.
-      HFCLC  = NASHT .LE. 1
       TRIPLE = EXCTRP
       EXECLC = .TRUE.
       NABATY = 1
@@ -1856,13 +1856,12 @@ C     The following line is needed in order to pass
 C     consistency checks in RSPMC
 C
       CALL ABAVAR(1,.FALSE.,0,WORK,LWORK)
-      IF (HFCLC) NCONF = 1
 C
       LUREVE = -9801
       LUGDVE = -9802
       CALL GPOPEN(LUGDVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
       CALL GPOPEN(LUREVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
-      CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
+      CALL ABARSP(ABACI,ABAHF,TRIPLE,OOTV,ISYM,EXECLC,
      *            EXVAL,NEXENG,NABATY,NABAOP,LABEL,LUGDVE,LUSOVE,LUREVE,
      *            THREXC,MAXITE,IPREXC,MXRM,MXPHP,WORK,LWORK)
       CALL GPCLOSE(LUGDVE,'DELETE')

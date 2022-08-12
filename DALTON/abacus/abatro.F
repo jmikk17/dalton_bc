@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1390,7 +1390,10 @@ C
       DIMENSION HESTR(MXCOOR,MXCOOR), CSTRA(*), SCTRA(*)
 #include "abainf.h"
 #include "trkoor.h"
+
       REAL*8 ERGMOL, GRDMOL(NCOOR), HESMOL(NCOOR,NCOOR) ! automatic arrays
+
+      PARAMETER (THR_DIFMAX = 1.0D-5) ! corresponding to a wave function convergence of 1.d-5
 
       CALL ABAREAD_TAYMOL(ERGMOL,GRDMOL,HESMOL,NCOOR)
       DIFMAX = 0.0D0
@@ -1409,7 +1412,7 @@ C
   200    CONTINUE
   100 CONTINUE
       IF (IPRINT .GE. 2 .OR. DIFMAX .GE. 1.0D-06) THEN
-         IF (DIFMAX .GE. 1.0D-06) THEN
+         IF (DIFMAX .GE. THR_DIFMAX) THEN
             WRITE (LUPRI,'(///7X,A)') ' WARNING from TRAROT:'
             NWNABA = NWNABA + 1
          END IF

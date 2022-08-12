@@ -39,6 +39,10 @@ C
       use mpi
 #endif
 #endif
+      use pelib_interface, only: use_pelib, pelib_ifc_response
+#ifdef VAR_MPI
+      use pelib_interface, only: pelib_ifc_slave
+#endif
 
 #include "implicit.h"
 
@@ -68,6 +72,8 @@ C     idtype = 0 for dynamic (handle D part explicitly),
 C     idtype = 1 for real, static (Tr1D = - Tr1E)
 C     idtype = 2 for imaginary, static ( Tr1D = Tr1E )
       integer, intent(in) :: idtype
+
+      logical :: pe_enabled = .false.
 
 #ifdef VAR_MPI
       integer :: maxnumjobs, nloopidx
@@ -204,6 +210,13 @@ C Should probably use non-blocking collectives, where implemented
 
 !      ENDIF
 #endif
+
+! Do we need memory for PE?
+        pe_enabled = use_pelib()
+#ifdef VAR_MPI
+        call mpi_bcast(pe_enabled, 1, mpi_logical, sop_master,
+     &                 soppa_comm_active, ierr_mpi)
+#endif
 C
 C---------------------------------
 C     Work space allocation no. 2.
@@ -273,6 +286,16 @@ C
       KAIJ    = KBTJ1D  + LBTJ1D
       KAAB    = KAIJ    + LAIJ
       KEND2   = KAAB    + LAAB
+
+      if (pe_enabled) then
+          LPEDENMAT = nnbst(1)
+          LPEFOCKMAT = nnbst(1)
+          LPEFOCKMATFULL = LFOCK
+          KPEDENMAT = KEND2
+          KPEFOCKMAT = KPEDENMAT + LPEDENMAT
+          KPEFOCKMATFULL = KPEFOCKMAT + LPEFOCKMAT
+          KEND2 = KPEFOCKMATFULL + LPEFOCKMATFULL
+      end if
 #ifdef VAR_MPI
 C     MPI -- Allocate timings array
       if ( loadbal_dyn ) then
@@ -499,6 +522,40 @@ C
      &                  WORK(KEND2),LWORK2)
          DTIME     = SECOND()  - DTIME
          SOTIME(6) = SOTIME(6) + DTIME
+C
+C---------------------------------------------
+C        Add solvent (polarizable embedding) contributions
+C        (coupling is only at the RPA level)
+C---------------------------------------------
+C
+        if (pe_enabled) then
+            ! Triplet has no PE induction contribution
+            if (.not. TRIPLET) then
+                call dzero(work(kpefockmat), lpefockmat)
+                ! fold density matrix for pelib
+                call dgefsp(nbas(1), work(kdens), work(kpedenmat))
+                ! get induction operator from the density
+#ifdef VAR_MPI  
+                if (mynum == master) then
+                    call pelib_ifc_response(work(kpedenmat),
+     &                                      work(kpefockmat), 1)
+                else
+                    call mpixbcast(iprtyp, 1, 'INTEGER', master)
+                    call mpixbcast(iprint, 1, 'INTEGER', master)
+                    if (iprtyp /= POLARIZABLE_EMBEDDING) error stop
+                    call pelib_ifc_slave(iprint)
+                end if
+#else
+                call pelib_ifc_response(work(kpedenmat), 
+     &                                  work(kpefockmat), 1)
+#endif
+                ! unpack and add to the Fock matrix
+                call dsptsi(nbas(1), work(kpefockmat),
+     &                      work(kpefockmatfull))
+                call daxpy(lfock, 2.0d0, work(kpefockmatfull), 1, 
+     &                     work(kfock), 1)
+            end if
+        end if
 C
 C--------------------------------------------
 C        Backtransformation of trial vectors.
@@ -1098,8 +1155,8 @@ C
 C Redo the loadbalancing based on the timings and distribute them
             ksorted = kend2
             ktmp    = (soppa_num_active*maxnumjobs)
-            knasjob = ksorted + ktmp/irat + mod(ktmp,irat)
-            kswork  = knasjob + soppa_num_active/irat + mod(ktmp,irat)
+            knasjob = ksorted + ktmp/irat + 1
+            kswork  = knasjob + soppa_num_active/irat + 1
             kendf   = kswork + soppa_num_active
 C
             call dynloadbal_parsoppa( AssignedIndices, maxnumjobs,

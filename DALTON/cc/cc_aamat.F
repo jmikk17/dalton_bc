@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -64,13 +64,8 @@ c /* deck CC_AAMAT */
     
       INTEGER LWORK, NATRAN, MXVEC
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK), ACONS(MXVEC,NATRAN)
-      REAL ZERO, TWO, FREQ
-#else
       DOUBLE PRECISION WORK(LWORK), ACONS(MXVEC,NATRAN)
       DOUBLE PRECISION ZERO, TWO, FREQ
-#endif
       PARAMETER (ZERO = 0.0d0, TWO = 2.0D0)
 
       CHARACTER LISTO*(*), LISTR*(*), FILAAM*(*)

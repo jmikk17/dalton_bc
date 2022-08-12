@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -65,12 +65,13 @@ C
       DIMENSION IINFO(LIINFO,*),DINFO(LDINFO,*),WRK(LWRK)
 C
 C Used from common blocks:
-C   gnrinf : WFTYPE, ?
+C   gnrinf : WFTYPE, CHIVAL, ?
 C   pgroup : REP,GROUP
 C   INFINP : ISPIN,LSYM,ISTATE, NACTEL,POTNUC, THRPWF, DOCINO, MCTYPE
 C   INFVAR : NCONF,NWOPT
 C   INFORB : NCMOT,NORBT,NNASHX,NISHT,?
 C   INFDIM : LCINDX
+C   dipole.h : DIPMN(1:3)
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -86,6 +87,7 @@ C
 #include "infopt.h"
 #include "inftap.h"
 #include "infpri.h"
+#include "dipole.h"
 ! MM, PCM
 #include "pcmdef.h"
 #include "pcm.h"
@@ -269,7 +271,6 @@ C
      *         ' ABACUS/RESPONSE interface.'
          END IF
          IF (FLAG(3)) THEN
-            KREL1 = KFREE
             CALL SIRCAN(IPRI4,WRK(KCREF),WRK(KCMO),WRK(KOCCNO),
      *                  WRK,KFREE,LFREE)
 C           CALL SIRCAN(IPRCAN,CREF,CMO,OCC,WRK,KFREE,LFREE)
@@ -287,7 +288,7 @@ C
       IF ( FNDLAB('NATOCC  ',LUIT1) ) THEN
          CALL READT(LUIT1,NORBT,WRK(KOCCNO))
       ELSE IF (MCTYPE .LE. 0) THEN
-         DO, ISYM = 1,NSYM
+         DO ISYM = 1,NSYM
             JOCC1  = KOCCNO -1 + IORB(ISYM)
             NISHI  = NISH(ISYM)
             WRK(JOCC1+1:JOCC1+NISHI) = 2.0D0
@@ -314,12 +315,21 @@ csonia 04/10/95: LUCME output
      &         ' The molecule is placed in a static field.',
      &         ' Field strength (a.u.)          Field operator',
      &         ' ---------------------          --------------'
-         DO 100 IFIELD = 1,NFIELD
+         FF_DIPNUC = 0.0D0
+         DO IFIELD = 1,NFIELD
             WRITE (LUPRI,'(1P,G18.8,18X,A8)')
      *         EFIELD(IFIELD),LFIELD(IFIELD)
             IF (LUCME.GT.0) WRITE (LUCME,'(1P,G18.8,18X,A8)')
      &         EFIELD(IFIELD), LFIELD(IFIELD)
-  100    CONTINUE
+!           Energy contribution is -\mu Efield
+            IF (LFIELD(IFIELD)(1:7) .EQ. 'XDIPLEN') THEN
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(1)
+            ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'YDIPLEN') THEN
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(2)
+            ELSE IF (LFIELD(IFIELD)(1:7) .EQ. 'ZDIPLEN') THEN
+               FF_DIPNUC = FF_DIPNUC - EFIELD(IFIELD)*DIPMN(3)
+            END IF
+         END DO
          WRITE (LUPRI,'()')
       END IF
       IF (FLAG(16)) THEN
@@ -392,10 +402,15 @@ C        CI calculation
          ELSE
             WRITE (LUPRI,5012)
          END IF
+         IF (ISTACI .GT. 0) THEN
+            WRITE (LUPRI,5027) ISTACI,EMCSCF,
+     &         POTNUC,(EMCSCF-POTNUC-ESOLT)
+            WRITE (LUPRI,5030) GRDNRM
+         END IF
       ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
-            WRITE (LUPRI,5014)
+            WRITE (LUPRI,5014) CHIVAL
             WRITE (LUPRI,5024) ISTATE,EMCSCF,CONV_text,
      &         POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE
@@ -408,6 +423,7 @@ C        MCSCF type calculation
          WRITE (LUPRI,5030) GRDNRM
       ELSE IF (DOSCF) THEN
          IF (DOHFSRDFT) THEN
+           WRITE (LUPRI,5015) CHIVAL
            WRITE (LUPRI,5023) EMCSCF,POTNUC,(EMCSCF-POTNUC-ESOLT)
          ELSE IF (.NOT.DODFT) THEN
 C        ... DIIS-HF or QC-HF optimization
@@ -423,26 +439,30 @@ C        ... DIIS-DFT or QC-DFT optimization
          IF (LDUMP) THEN
             LAPRPC = 'ENERGY  '
             CALL WRIPRO(EMCSCF,"SCF/DFT   ",0,
-     *                  LAPRPC,LAPRPC,LAPRPC,LAPRPC,
-     *                  0.0D0,0.0D0,0.0D0,LSYM,0,ISPIN,0)
+     &                  LAPRPC,LAPRPC,LAPRPC,LAPRPC,
+     &                  0.0D0,0.0D0,0.0D0,LSYM,0,ISPIN,0)
          END IF
          IF (FLAG(16)) WRITE (LUPRI,5025) ESOLT
          IF (USE_PELIB()) WRITE(LUPRI,5026) ESOLT
          WRITE (LUPRI,5030) GRDNRM
       END IF
 
+      IF (ABS(FF_DIPNUC) .GT. 0.0D0)
+     &   WRITE(LUPRI,5035) FF_DIPNUC, EMCSCF+FF_DIPNUC
+
       IF (QMMM .AND. MMPROP) THEN
         CALL MM_PROPS(WRK(KFREE),LFREE,IPQMMM)
       ENDIF
 
  5000 FORMAT(/'@    Spin multiplicity:',T31,I5,
-     *       /'@    Spatial symmetry:',T31,I5,
+     &       /'@    Spatial symmetry:',T31,I5,
      &        ' ( irrep  ',A,' in ',A,' )',
-     *       /'@    Total charge of molecule:',T31,I5)
+     &       /'@    Total charge of molecule:',T31,I5)
  5010 FORMAT(/'@    This was a CI-NO calculation.')
  5012 FORMAT(/'@    This was a CI calculation.')
  5013 FORMAT(/'@    This was an MCSCF calculation.')
- 5014 FORMAT(/'@    This was an MC-srDFT calculation.')
+ 5014 FORMAT(/'@    This was an MC-srDFT calculation with mu =',F8.3)
+ 5015 FORMAT(/'@    This was an HF-srDFT calculation with mu =',F8.3)
  5020 FORMAT( '@    State number:',T31,I5,
      *      //'@    Final MCSCF energy:',T31,F20.12,A,
      *       /'@    Nuclear repulsion:',T31,F20.12,
@@ -462,7 +482,14 @@ C        ... DIIS-DFT or QC-DFT optimization
      *       /'@    Electronic energy:',T31,F20.12)
  5025 FORMAT( '@    Solvation  energy:',T31,F20.12)
  5026 FORMAT( '@    Embedding energy:',T31,F20.12)
+ 5027 FORMAT( '@    State number:',T31,I5,
+     *      //'@    Final CI energy:',T31,F20.12,
+     *       /'@    Nuclear repulsion:',T31,F20.12,
+     *       /'@    Electronic energy:',T31,F20.12)
  5030 FORMAT(/'@    Final gradient norm:',T31,F20.12)
+ 5035 FORMAT(/'@    Finite field energy contribution ',
+     &        'from nuclear dipole moment:',F20.12,
+     &       /'@    Final energy + FF nucdip:',T31,F20.12)
 C
 C       stamp date, time, and hostname to LUPRI
         CALL TSTAMP(' ',LUPRI)
@@ -514,8 +541,10 @@ C
          CALL MEMGET('REAL', KOVEC, NBAST,       WRK, KFREE, LFREE)
          CALL MOLDEN_MOS(1,WRK(KCMO), WRK(KOCCNO), WRK(KAOSO),
      &                   WRK(KUCMO), WRK(KOVEC))
+!        CALL  MOLDEN_MOS(ITASK,CMO,OCCUP,ORBTRA,UCMO,ORBVEC)
          CALL MEMREL('SIROUT.MOLDEN_MOS',WRK,KREL2,KREL2,KFREE,LFREE)
       END IF ! (MOLDEN)
+
 C
 C ***  Print final MCSCF orbitals ***
 C

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -88,19 +88,11 @@ C
       INTEGER LUBFDE0,IADRE0(MXCORB_CC)
       INTEGER LUBFDE1,IADRE1(MXCORB_CC)
       
-#if defined (SYS_CRAY)
-      REAL XLAMDP0(*), XLAMDH0(*), XLAMDPQ(*), XLAMDHQ(*)
-      REAL XLAMDPA(*), XLAMDHA(*), XLAMPQA(*), XLAMHQA(*)
-      REAL FAIM(*), FQAIM(*)
-      REAL XMGD1(*), XMGD2(*), BF0RHF(*), BF1RHF(*)
-      REAL X0INT(*), X1INT(*), WORK(LWORK), DUMMY
-#else
       DOUBLE PRECISION XLAMDP0(*), XLAMDH0(*), XLAMDPQ(*), XLAMDHQ(*)
       DOUBLE PRECISION XLAMDPA(*), XLAMDHA(*), XLAMPQA(*), XLAMHQA(*)
       DOUBLE PRECISION FAIM(*), FQAIM(*)
       DOUBLE PRECISION XMGD1(*), XMGD2(*), BF0RHF(*), BF1RHF(*)
       DOUBLE PRECISION X0INT(*), X1INT(*), WORK(LWORK), DUMMY
-#endif
       LOGICAL LSQRUP
       INTEGER ISYDEL, ISYZTA, NMGD, IADRSTR, KEND1, LWRK1
       INTEGER KPINT0, KQINT0, KPINT1, KQINT1, IOPT
@@ -111,11 +103,7 @@ C
       INTEGER ISYHZE, ISYABK, ISQABK, ISMGD0, ISMGD1
       INTEGER KDSRHF, KMGD, KEND2, IGZ
       INTEGER IADRBZ1, IADRBZ2
-#if defined (SYS_CRAY)
-      REAL SIGN, ONE
-#else
       DOUBLE PRECISION SIGN, ONE
-#endif
       PARAMETER (ONE = 1.0D0)
 
 *---------------------------------------------------------------------*

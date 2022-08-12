@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -91,11 +91,7 @@ C
 
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL TOL, ONE, TWO, WORK(LWORK), DDOT, X1, X2, FREK
-#else
       DOUBLE PRECISION TOL, ONE, TWO, WORK(LWORK), DDOT, X1, X2, FREK
-#endif
       LOGICAL LDUMMY
       INTEGER ISYM0, IZERO
 
@@ -1755,15 +1751,9 @@ C
       INTEGER ISYMS(MAXVEC,NSTAT), ISTAT(MAXVEC,NSTAT)
       INTEGER ISYMO(MAXVEC,ORDER), ICAU(MAXVEC,ORDER)
 
-#if defined (SYS_CRAY)
-      REAL FREQS(MAXVEC,ORDER), EIGVAL(MAXVEC,NSTAT)
-      REAL WORK(LWORK)
-      REAL X1, X2, X12, DDOT
-#else
       DOUBLE PRECISION FREQS(MAXVEC,ORDER), EIGVAL(MAXVEC,NSTAT)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION X1, X2, X12, DDOT
-#endif
                                                             
       INTEGER ILSTSYM
 

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -63,13 +63,8 @@ c /* deck ccmcd_setup */
 
       INTEGER MXVEC, MXTRAN, LWORK
 
-#if defined (SYS_CRAY)
-      REAL ZERO, D05, TWO
-      REAL EIGVAF, WORK(LWORK)
-#else
       DOUBLE PRECISION ZERO, D05, TWO
       DOUBLE PRECISION EIGVAF, WORK(LWORK)
-#endif
       PARAMETER (ZERO = 0.0D00, D05  = 0.5D00, TWO = 2.0D00)
 
       INTEGER IGTRAN(MXDIM_GTRAN,MXTRAN)

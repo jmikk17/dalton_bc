@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -177,7 +177,7 @@ C  /* Deck titler */
 C
       LHEAD  = LNBLNK(HEAD)
       LENGTH = LHEAD
-      IF (IN .EQ. 200) THEN
+      IF (IN .GE. 200) THEN
          LENGTH = LENGTH + 2
       ELSE IF (IN .GE. 100) THEN
          MARG = IN - 100
@@ -186,10 +186,12 @@ C
       END IF
       IF (IN .GE. 0 .AND. IN .LT. 100) THEN
          INDENT = IN + 1
+      ELSE IF (IN .GT. 200) THEN
+         INDENT = IN-199
       ELSE
          INDENT = MAX(1,(80 - LENGTH)/2 + 1)
       END IF
-      IF (IN .EQ. 200) THEN
+      IF (IN .GE. 200) THEN
          WRITE (LUPRI, '(//150A)')
      *      (' ',I=1,INDENT),'.', ('-',I=1,LENGTH),'.'
          WRITE (LUPRI, '(150A)')

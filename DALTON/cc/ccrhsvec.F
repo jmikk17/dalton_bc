@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -73,17 +73,10 @@ Cholesky
 
       CHARACTER*8 LABEL(MAXVEC,*)
 
-#if defined (SYS_CRAY)
-      REAL FREQS(MAXVEC,*), EIGV(MAXVEC,*)
-      REAL WORK(LWORK)
-      REAL ZERO, RDUM
-      REAL XNORM, DDOT
-#else
       DOUBLE PRECISION FREQS(MAXVEC,*), EIGV(MAXVEC,*)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO, RDUM
       DOUBLE PRECISION XNORM, DDOT
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER MODEL*(10), MODELW*(10)
@@ -727,11 +720,7 @@ c /* deck CC_RHS_SETUP */
       INTEGER ISTAT(MAXVEC,*), ICAU(MAXVEC,*), ISYMO(MAXVEC,*)
       LOGICAL LORX(MAXVEC,*), NEW_RHS
 
-#if defined (SYS_CRAY)
-      REAL FREQ(MAXVEC,*), EIGV(MAXVEC)
-#else
       DOUBLE PRECISION FREQ(MAXVEC,*), EIGV(MAXVEC)
-#endif
 
       INTEGER IDTRAN( MXDIM_DTRAN, MXTRAN)
       INTEGER ICTRAN( MXDIM_CTRAN, MXTRAN)

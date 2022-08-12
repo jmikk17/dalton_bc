@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -60,17 +60,12 @@ C
       character(len=10):: model
       character(len=3), parameter :: list_type = 'RE '!'LE '
 !
-#if defined (SYS_CRAY)
-      real, intent(out):: work(lwork)
-      real :: one, half, ddot
-#else
       double precision, intent(out):: work(lwork)
       double precision, parameter :: one = 1.d0, half = 0.5d0,
      &                               zero = 0d0,
      &                               thresh_nto = 1.0D-2
       double precision :: ddot, DNRM2
       double precision trace, dummy
-#endif
 !
       model ='CCSD      '
 !

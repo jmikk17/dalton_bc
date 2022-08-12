@@ -1,0 +1,10 @@
+BASIS
+6-31G
+Test system for MP3 energy series.
+
+Atomtypes=2 Symmetry Angstrom Charge=0
+Charge=8 Atoms=1
+O  0.000000  0.000000  0.000000
+Charge=1 Atoms=2
+H  0.758602  0.000000  0.504284
+H  0.758602  0.000000  -0.504284

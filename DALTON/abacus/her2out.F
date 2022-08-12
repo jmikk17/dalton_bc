@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@ C
 #include "nuclei.h"
 #include "twocom.h"
 #include "symmet.h"
-C inftap.h: LUINTA, LUSRINT
+C inftap.h: LUINTA, LUINTA_SR
 #include "inftap.h"
 #include "eribuf.h"
 C
@@ -60,7 +60,7 @@ C
 C
 
       LUINTA_save = LUINTA
-      IF (SRINTS) LUINTA = LUSRINT ! saving short-range undifferentiated 2-el. integrals
+      IF (SRINTS) LUINTA = LUINTA_SR ! saving short-range undifferentiated 2-el. integrals
 
       IF (IPRINT .GT. 6) CALL HEADER('Subroutine UN2OUT',-1)
       IF (IPRINT .GT. 10) THEN
@@ -226,7 +226,7 @@ C
          CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,1,NBITS,0,IPRINT)
       END IF
       IF (SRINTS) THEN
-         LUSRINT = LUINTA ! to signal if closed or not
+         LUINTA_SR = LUINTA ! to signal if closed or not
          LUINTA  = LUINTA_save
       END IF
       RETURN

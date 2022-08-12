@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -431,7 +431,7 @@ C               - common block NUCLEI:
 C                       - added GAUNUC, GNUEXP(MXCENT)
 C                       - added NAMN(MXCENT)
 C               - NEW common block FRAME
-C                       - added POTNUC, DPNUC(3)
+C                       - added POTNUC, DIPNUC(3)
 C               - common block CBIREA:
 C                       - IPRINT changed to IPREAD
 C                       - added FAMILY
@@ -779,9 +779,9 @@ C*****************************************************************************
 C     Card 2-3: Title cards
 C*****************************************************************************
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(1)
+      TTITLE(1) = MLINE(NMLINE)
       CALL RDLINE(LUINFO)
-      READ (MLINE(NMLINE),'(A72)',IOSTAT=IOS) TTITLE(2)
+      TTITLE(2) = MLINE(NMLINE)
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
          WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
@@ -2121,7 +2121,7 @@ C         ... code -1 to tell MBSI (value of 0 is floating orbitals)
         ELSE
           CHARGE(NCTOT) = Q
           IZATOM(NCTOT) = NQ
-C         ... if point charge this is reset outside to -1234567890
+C         ... if point charge IZATOM is reset outside to -1234567890
 C             to tell this is a point charge /hjaaj Nov 2003
           GNUEXP(NCTOT) = GEXP
         END IF
@@ -2523,7 +2523,7 @@ C
       NCHTOT = 0
       NQMBAS = 0
       QM3CHT = 0.0D0
-      DO 100 I = 1,NONTYP
+      DO I = 1,NONTYP
 C
 C        Convert information to a string that can be understood by the innocent user
 C
@@ -2590,10 +2590,10 @@ C               Output for multiple basis sets (WK/UniKA/04-11-2002).
      &            WRITE (LUCME,'(2X,A2,I11,F10.4,2I6,6X,A)')
      &                 NAMN(ICENT)(1:2),NUCTYP,CHTTYP,
      &                 NPRIM(1),NCONT(1),TSTRING(1)
-               END IF
-            END IF
-         END IF
-  100 CONTINUE
+               END IF ! LMULBS
+            END IF ! DIRAC
+         END IF ! IPREAD .gt. 0
+  100 END DO ! I = 1, NONTYP
       IF (IPREAD .GT. 0) THEN
          IF(DIRAC) THEN
             WRITE (LUPRI,'(2X,70A1)') ('-',I=1,70)
@@ -3754,11 +3754,14 @@ C******************************************************************************
       PARAMETER (D0 = 0.0D0, DP5 = 0.5D0)
       DIMENSION WORK(LWORK)
 C
+C frame.h  : POTNUC, DIPNUC(1:3)
+C orgcom.h : DIPORG(1:3)
 #include "gnrinf.h"
 #include "cbirea.h"
 #include "ccom.h"
 #include "nuclei.h"
 #include "frame.h"
+#include "orgcom.h"
 #include "primit.h"
 #include "shells.h"
 #include "symmet.h"
@@ -3786,9 +3789,7 @@ C     * 30      - loop over second symmetry independent centre
 C     * 40+IF   - loop over dependent centers
 C     ************************************************************
 C
-      DPNUC(1) = D0
-      DPNUC(2) = D0
-      DPNUC(3) = D0
+      DIPNUC(1:3) = D0
       NUCDEP    = 0
       NCDTOT    = 0
       NFLOAT    = 0
@@ -3810,13 +3811,19 @@ C
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
-            DPNUC(1) = DPNUC(1) + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(2) = DPNUC(2) + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
-            DPNUC(3) = DPNUC(3) + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
+
+C           Calculate nuclear dipole moment with origin (0,0,0)
+            IF (ISYMAX(1,1) .EQ. 0) DIPNUC(1) = DIPNUC(1)
+     &         + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(2,1) .EQ. 0) DIPNUC(2) = DIPNUC(2)
+     &         + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
+            IF (ISYMAX(3,1) .EQ. 0) DIPNUC(3) = DIPNUC(3)
+     &         + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
+
          END IF
          II = 0
          DO 200 LA = 0,MAXREP
-            IF (IAND(IVARB,LA) .EQ. 0) THEN
+            IF (IAND(IVARB,LA) .EQ. 0) THEN ! filter out generator products containing generators that stabilise the center
                II = II + 1
                IF (N .LE. NUCIND) NUCDEP = NUCDEP + 1
                NCDTOT = NCDTOT + 1
@@ -4430,13 +4437,11 @@ C
 C
       REWIND(LUCMD)
       DO WHILE (.NOT. FNDEOI)
-         READ(LUCMD,'(A7)') TMPWRD
+         READ(LUCMD,'(A7)',END=100) TMPWRD
+            ! exit with go to 100 if *CHOACT has not been found before end of file
          CALL UPCASE(TMPWRD)
          IF (TMPWRD(1:7) .EQ. '*CHOACT') THEN
             ACTSEL = .TRUE.
-            FNDEOI = .TRUE.
-         ELSE IF ((TMPWRD(1:7) .EQ. '*END OF') .OR.
-     &            (TMPWRD(1:7) .EQ. '**END O')) THEN
             FNDEOI = .TRUE.
          END IF
       END DO
@@ -5818,7 +5823,7 @@ C
      &                       ((CTRAN(I,J), J = 1,8), I = 1,NBASIS),
      &               NBASIS, ( INAMN(I),             I = 1,NBASIS),
      &                       ( IPTYP(I),             I = 1,NBASIS),
-     &               DPNUC,
+     &               DIPNUC,
      &               NUCDEP, ((COOO(I,J),J=1,3),I=1,NUCDEP),
      &               IFXYZ, DUMMY, QPOL, QQ, JFXYZ
 #endif

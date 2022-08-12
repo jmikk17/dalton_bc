@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -43,13 +43,8 @@ Cholesky
       PARAMETER (LOCDBG = .FALSE.)
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(*), DIAA(*)
-      REAL ONE, HALF, TMPKH
-#else
       DOUBLE PRECISION WORK(*), DIAA(*)
       DOUBLE PRECISION ONE, HALF, TMPKH
-#endif
       PARAMETER (ONE = 1.0D0, HALF = 0.5D00, TMPKH= 1.0D08)
 C
       INTEGER KOFF1, KOFF2, KOFF2P, KOFF2M, KOFF12, KFOCKD, KEND1, 
@@ -967,15 +962,9 @@ C-----------------------------------------------------------------------
  
       INTEGER NC1VEC, NC2VEC, LWORK
    
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL XHALF, XMTWO, DELTA
-      REAL TI,X11,X12,X21,X22,XNJ,X1R,XR1,X2R,XR2,XRR,DDOT
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION XHALF, XMTWO, DELTA, DELTAI
       DOUBLE PRECISION TI,X11,X12,X21,X22,XNJ,X1R,XR1,X2R,XR2,XRR,DDOT
-#endif 
       PARAMETER (XHALF = 0.5D00,XMTWO = -2.0D00, 
 C    &           DELTA = 1.0D-05, DELTAI = 1.0D00/DELTA)
      &           DELTA = 1.0D-07, DELTAI = 1.0D00/DELTA)
@@ -3912,11 +3901,7 @@ C
 #include "priunit.h"
 C
       INTEGER IDXIJ,IDXJI,NROWS,I,J
-#if defined (SYS_CRAY)
-      REAL X1,X2,matrix(*)
-#else
       DOUBLE PRECISION X1,X2,matrix(*) 
-#endif
 C
       do i = 1, nrows
         do j = 1, i
@@ -3947,11 +3932,7 @@ C
 #include "ccorb.h"
 C
       INTEGER IDXKLIJ,IDXIJKL,IDXKL,IDXIJ,ISYM,ISYMKL,ISYMIJ
-#if defined (SYS_CRAY)
-      REAL X1,X2,matrix(*)
-#else
       DOUBLE PRECISION X1,X2,matrix(*)
-#endif
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
 C

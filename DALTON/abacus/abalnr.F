@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -431,7 +431,7 @@ C
 #include "priunit.h"
 #include "cbilnr.h"
       LOGICAL   PASS
-      LOGICAL   CICLC, HFCLC, TRIPLE, EXECLC, FOUND, CONV
+      LOGICAL   TRIPLE, EXECLC, FOUND, CONV
       DIMENSION WORK(LWORK),SNDPRP(2)
       DIMENSION POLDD(2,3,3,MXFR), POLDQ(2,3,3,3,MXFR)
       DIMENSION POLDL(2,3,3,MXFR), POLDA(2,3,3,MXFR)
@@ -671,8 +671,6 @@ C
 C
 C     Set variables and logicals
 C
-      CICLC  = .FALSE.
-      HFCLC  = NASHT .LE. 1
       TRIPLE = .FALSE.
       EXECLC = .FALSE.
       NABATY = 1
@@ -835,7 +833,7 @@ C
 C     Calculate linear response vector and write to file
 C     ==================================================
 C
-               CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
+               CALL ABARSP(ABACI,ABAHF,TRIPLE,OOTV,ISYM,EXECLC,
      &              FRVAL,NFRVAL,NABATY,NABAOP,LABEL1,LUGDVE,LUSOVE,
      &              LUREVE,THCLNR,MAXITE,IPRRSP,MXRM,MXPHP,
      &              WORK(KWRK),LWRK)
@@ -1208,8 +1206,6 @@ C
 C
 C        Set variables and logicals
 C
-         CICLC  = .FALSE.
-         HFCLC  = NASHT .LE. 1
          TRIPLE = .FALSE.
          EXECLC = .FALSE.
          NABATY = -1
@@ -1292,7 +1288,7 @@ C                    (i.e. derivatives with respect to the
 C                    nuclear cartesian coordinates) and write to file.
 C                    =================================================
 C
-                     CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
+                     CALL ABARSP(ABACI,ABAHF,TRIPLE,OOTV,ISYM,EXECLC,
      &                           FRVAL,NFRVAL,NABATY,NABAOP,'d/dR    ',
      &                           LUGDVE,LUSOVE,LUREVE,THCLNR,MAXITE,
      &                           IPRRSP,MXRM,MXPHP,WORK(KWRK),LWRK)
@@ -1516,7 +1512,7 @@ C
 C                    Calculate linear response vector and write to file
 C                    ==================================================
 C
-                     CALL ABARSP(CICLC,HFCLC,TRIPLE,OOTV,ISYM,EXECLC,
+                     CALL ABARSP(ABACI,ABAHF,TRIPLE,OOTV,ISYM,EXECLC,
      &                    FRVAL,NFRVAL,NABATY,NABAOP,LABEL1,LUGDVE,
      &                    LUSOVE,LUREVE,THCLNR,MAXITE,IPRRSP,MXRM,MXPHP,
      &                    WORK(KWRK),LWRK)

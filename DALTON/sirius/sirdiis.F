@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -99,7 +99,7 @@ C
 #include "infvar.h"
 #include "infpri.h"
 #include "gnrinf.h"
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 #include "dftcom.h"
 C
 Cholesky
@@ -206,7 +206,7 @@ C     scale by 4 to get correct orbital gradient from DIIS_EVC
       CALL DSCAL(N2BAST,D4,WRK(KSMOAO),1)
       CALL MEMREL('SRDIIS.SMOAO',WRK,KFRSAV,KREL,KFREE,LFREE)
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDMAT = 3
       ELSE IF (NASHT .EQ. 0) THEN
          NDMAT = 1
@@ -1710,7 +1710,7 @@ C
             CALL PRORB(CMO,(IPR_DIIS .LT. 20),LUPRI)
          END IF
 C
-      END IF
+      END IF !IPRENR .gt 0
       IF (USE_PELIB()) THEN
         ALLOCATE(PE_DENMAT(NNBASX))
         IF (NASHT == 0 .OR. HSROHF) THEN
@@ -1842,12 +1842,13 @@ C *** and now we are ready to call WR_SIRIFC to write SIRIFC
          CALL MEMGET2('REAL','DUM',KDUM,0,WRK,KFREE,LFREE)
          CALL WR_SIRIFC(CMO,DV,WRK(KPV),FCAO,DCAO,
      &               WRK(KFQ),WRK(KDUM),WRK(KDUM),WRK(KDUM),
-     &               WRK(KFREE),LFREE,WRK(KGORB),TNLM,.FALSE.,WRK(KDUM))
+     &               WRK(KFREE),LFREE,WRK(KGORB),TNLM,
+     &               .FALSE.,WRK(KDUM),.FALSE.)
 C        CALL WR_SIRIFC(CMO,DV,PV,FC,FV,FQ,CREF,FCAC,H2AC,WRK,LFREE,
-C    &               GORB,ERLM,ORBHES,XINDX)
+C    &               GORB,ERLM,ORBHES,XINDX,ONLY_EKT)
 C
          CALL MEMREL('DIIS_CTL.WR_SIRIFC',WRK,1,KPV,KFREE,LFREE)
-      END IF
+      END IF !  IF ( IWRIFC .EQ. 1 ) THEN
 C
 C        Transform integrals for abacus or response or something else,
 C        if converged and if not followed by higher level,

@@ -161,11 +161,17 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/hertst.F
     DALTON/abacus/her_lslib.F
     DALTON/abacus/huckel.F
-    DALTON/abacus/abalresc.F
-    DALTON/abacus/linearlr.F
-    DALTON/abacus/average.F
-    DALTON/abacus/angpso.F
-    DALTON/abacus/angkin.F
+    DALTON/abacus/LRESC/EFG/expval.F
+    DALTON/abacus/LRESC/EFG/efgdrv.F
+    DALTON/abacus/LRESC/EFG/linearlr.F
+    DALTON/abacus/LRESC/SHIELDING/expval.F
+    DALTON/abacus/LRESC/SHIELDING/angkin.F
+    DALTON/abacus/LRESC/SHIELDING/linearlr.F
+    DALTON/abacus/LRESC/SHIELDING/shieldingdrv.F
+    #DALTON/abacus/LRESC/SHIELDING/angpso.F
+    DALTON/abacus/LRESC/AVG/avgdrv.F
+    DALTON/abacus/LRESC/AVG/checks.F
+    DALTON/abacus/LRESC/AVG/operators.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F
@@ -416,6 +422,8 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/cc/cc_freeze_tripletexci.F
     DALTON/cc/rpa_grad.F
     DALTON/cc/cc_active.F
+    DALTON/cc/mp3_energy.F
+    DALTON/cc/mp3_rhs.F
     DALTON/choles/cc_caa.F
     DALTON/choles/cc_choatr.F
     DALTON/choles/cc_chocc2.F

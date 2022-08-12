@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -97,18 +97,6 @@ c
       INTEGER LUBFA,IBFA,LUBFQA,IBFQA,IADRMO
       INTEGER LUBFZA,IBFZA(*),LUBFZQA,IBFZQA(*)    !not sure, maybe IBFZA(MAXORB)
 
-#if defined (SYS_CRAY)
-      REAL XLAMDP0(*), XLAMDH0(*), XLAMDQP(*), XLAMDQH(*)
-      REAL XLAMDAP(*), XLAMDAH(*), XLAMQAP(*), XLAMQAH(*)
-      REAL THETA1(*), THETA2(*), XAIM(*), YAIM(*)
-      REAL RAIM(*), RQAIM(*), FAIM(*), FQAIM(*)
-      REAL ONEH0(*),ONEHB(*)
-      REAL FOCK0(*),FOCKB(*), FOCKA(*),FOCKBA(*)
-      REAL WORK(LWORK), ZETA1(*)
-      REAL T1AMP0(*), T2AMP0(*), XIJK0(*)
-      REAL HALF, ONE, ZERO, FIFTH, DUM, XNORM, FAC
-      REAL DDOT, DNRM2
-#else
       DOUBLE PRECISION XLAMDP0(*), XLAMDH0(*), XLAMDQP(*), XLAMDQH(*)
       DOUBLE PRECISION XLAMDAP(*), XLAMDAH(*), XLAMQAP(*), XLAMQAH(*)
       DOUBLE PRECISION THETA1(*), THETA2(*), XAIM(*), YAIM(*) 
@@ -119,7 +107,6 @@ c
       DOUBLE PRECISION T1AMP0(*), T2AMP0(*), XIJK0(*)
       DOUBLE PRECISION HALF, ONE, ZERO, TWO, DUM,FIFTH, XNORM, FAC
       DOUBLE PRECISION DDOT, DNRM2
-#endif
       PARAMETER (HALF = 0.5d0, ONE = 1.0d0, TWO = 2.0d0, ZERO = 0.0d0)
       PARAMETER (FIFTH = 0.2d0)
 

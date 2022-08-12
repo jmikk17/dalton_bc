@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -431,8 +431,8 @@ CPFP: 27/03-2006: SOS for spin-spin coupling included
          ELSE
             CALL GPCLOSE(LUGDI,'DELETE')
          END IF
-         IF (VCD) THEN
-            CALL GPCLOSE(LURDI,'KEEP')
+         IF (VCD .OR. SOCVIR) THEN
+           CALL GPCLOSE(LURDI,'KEEP')
          ELSE
             CALL GPCLOSE(LURDI,'DELETE')
          END IF

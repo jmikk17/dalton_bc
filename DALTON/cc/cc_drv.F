@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -120,7 +120,7 @@ C
 #include "ccexcicvs.h"
 #include "ccxscvs.h"
 C
-      PARAMETER(NMODEL = 22)
+      PARAMETER(NMODEL = 23)
       !sonia: prevent projection in L0
       logical lcvsbck,lionbck,lrmcorebck
       !
@@ -311,6 +311,7 @@ C
       LCCSAV(21) = RTCCD
 !     AMT
       LCCSAV(22) = DCPT2
+      LCCSAV(23) = MP3
 
       APROXR12   = '   '
 C
@@ -511,6 +512,7 @@ C
          IF (I.EQ.21) RTCCD  = LCCSAV(21)
 !AMT
          IF (I.EQ.22) DCPT2   = LCCSAV(22)
+         IF (I.EQ.23) MP3     = LCCSAV(23)
 C
          IF (CCS  .AND. LCCSAV(3)) GOTO 100
          IF (MP2  .AND. LCCSAV(3)) GOTO 100
@@ -589,6 +591,9 @@ C        SLV98,OC
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
          NSLV = MAX(1,NCCSLV)
+         if (use_pelib() .and. MP2) then
+             NSLV = 1
+         end if
 C
          DO 9999 ISLV = 1, NSLV
 C
@@ -645,6 +650,8 @@ C
                  WRITE(LUPRI,'(//A/A)')
      &              'WARNING: Please specify R12PRP in your input...',
      &              'WARNING: CCFOP will be ignored...'
+             ELSEIF (LTBAR0 .and. MP2 .and. use_pelib()) then
+                 LTBAR0 = .FALSE.
              ELSEIF (.NOT. (CCSDT .AND. (.NOT. CC3))) THEN
                  !...................................
                  !SONIA: I am not sure but let us try
@@ -684,6 +691,8 @@ C
          IF (CCSLV.OR.USE_PELIB()) THEN
             CCRSTR  = .TRUE.
             IF (LSLECVG.AND.LSLTCVG.AND.LSLLCVG) THEN
+              LSTBTR = .TRUE.
+            ELSE IF (USE_PELIB() .and. MP2) THEN
               LSTBTR = .TRUE.
             ELSE
               GOTO 31
@@ -1189,7 +1198,7 @@ C
       RTCCD  = LCCSAV(21)
 !     AMT
       DCPT2  = LCCSAV(22)
-C
+      MP3    = LCCSAV(23)
 C     Close files.
 C
 C
@@ -1462,6 +1471,7 @@ C
 C
       CIS    = .FALSE.
       CCS    = .FALSE.
+      MP3    = .FALSE.
       MP2    = .FALSE.
       CCP2   = .FALSE.
       CC2    = .FALSE.

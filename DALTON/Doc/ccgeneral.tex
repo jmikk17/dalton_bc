@@ -67,7 +67,6 @@ The molecular orbitals must be canonical orbitals from a HF or HFsrDFT calculati
         \index{Coupled Cluster!Singles and Doubles}
         \index{CCSD}
 %
-%
 \item[\Key{MTRIP}]   
         Run calculation of modified triples corrections for (MCCSD(T) for CCSD(T) and MCC(3) for CC(3))
         meaning that if the ground state lagrangian multipliers are calculated 
@@ -223,6 +222,11 @@ The molecular orbitals must be canonical orbitals from a HF or HFsrDFT calculati
 \item[\Key{MP2}]    
 Run calculation for second-order M{\o}ller-Plesset perturbation theory
 (MP2)\index{M{\o}ller-Plesset!second-order}\index{MP2} method.
+
+\item[\Key{MP3}]    
+Run calculation for third-order M{\o}ller-Plesset perturbation theory
+(MP3)\index{M{\o}ller-Plesset!third-order}\index{MP3} method.
+The model is currently only implemented for energy calculations.
 
 \item[\Key{MXDIIS}] \verb| |\newline
   \verb|READ (LUCMD,*) MXDIIS|

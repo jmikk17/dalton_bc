@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -160,6 +160,7 @@ subroutine pelib_ifc_input_reader(word)
 
     potfile = 'POTENTIAL.INP'
     h5pdefile = 'standard.h5'
+    pelib_skipmul = .true.
 
     do
         read(lucmd, '(a80)') option
@@ -224,19 +225,19 @@ subroutine pelib_ifc_input_reader(word)
                 if ((trim(border_type) /= 'REMOVE') .and.&
                   & (trim(border_type) /= 'REDIST') .and.&
                   & (trim(border_type) /= 'CHGRED')) then
-                    error stop 'unknown handling of border sites'
+                    call quit('unknown handling of border sites')
                 else if (trim(border_type) == 'REMOVE') then
                     read(lucmd, *) border_type, Rmin, auoraa
                 else if (trim(border_type) == 'REDIST') then
                     read(lucmd, *) border_type, redist_order, Rmin, auoraa, nredist
                     if ((nredist > 3) .or. (nredist < 1)) then
-                        error stop 'parameters can only be distributed to&
-                             & minimum one site and maximum three sites'
+                        call quit('parameters can only be distributed to&
+                             & minimum one site and maximum three sites')
                     end if
                 else if (trim(border_type) == 'CHGRED') then
                     read(lucmd, *) border_type, Rmin, auoraa
                 else
-                    error stop 'unrecognized input in .BORDER option'
+                    call quit('unrecognized input in .BORDER option')
                 end if
                 call chcase(auoraa)
                 if (trim(auoraa) == 'AA') Rmin = Rmin * aa2bohr
@@ -345,6 +346,39 @@ subroutine pelib_ifc_input_reader(word)
         ! skip electrostatics from fragment densities
         else if (trim(option(2:7)) == 'NO FD') then
             pelib_fdes = .false.
+        ! activate legacy PE field evaluation code (OLDFIELD)
+        else if (trim(option(2:7)) == 'OLDFIE') then
+            pelib_old_field = .true.
+        ! activate Fast Multipole Method for evaluation of multipolar fields
+        else if (trim(option(2:7)) == 'FMM') then
+            pelib_fmm = .true.
+        else if (trim(option(2:7)) == 'THETA') then
+            read(lucmd, *) fmm_theta
+        else if (trim(option(2:7)) == 'NCRIT') then
+            read(lucmd, *) fmm_ncrit
+        else if (trim(option(2:7)) == 'EXPANS') then
+            read(lucmd, *) fmm_expansion_order
+        ! options for (approximate) qmmm interaction 
+        else if (trim(option(2:7)) == 'INT_TH') then ! INT_THETA
+            read(lucmd, *) qmmm_interaction_theta
+        else if (trim(option(2:7)) == 'INT_SC') then ! INT_SCHEME
+            read(lucmd, *) qmmm_interaction_scheme
+        else if (trim(option(2:7)) == 'INT_RC') then ! INT_RCUT
+            read(lucmd, *) qmmm_interaction_rcut
+        else if (trim(option(2:7)) == 'INT_RF') then ! INT_RFIT
+            read(lucmd, *) qmmm_interaction_rfit
+        else if (trim(option(2:7)) == 'INT_OR') then ! INT_ORDER
+            read(lucmd, *) qmmm_interaction_order
+        else if (trim(option(2:7)) == 'ESPF_S') then ! ESPF_SOLVER
+            read(lucmd, *) ESPF_solver
+        else if (trim(option(2:7)) == 'ESPF_G') then ! ESPF_GRID_TYPE
+            read(lucmd, *) ESPF_grid_type
+        else if (trim(option(2:7)) == 'SVDTOL') then ! SVDTOL
+            read(lucmd, *) svdtol
+        else if (trim(option(2:7)) == 'NF_INC') then ! NF_INCORE
+            incore_nearfield = .true.
+        else if (trim(option(2:7)) == 'NONF_I') then ! NONF_INCORE
+            incore_nearfield = .false.
         ! request calculation of effective dipole integrals
         else if (trim(option(2:7)) == 'EEF') then
             read(lucmd, '(a80)') option
@@ -407,7 +441,7 @@ subroutine pelib_ifc_input_reader(word)
                     else if (option(1:1) == '!' .or. option(1:1) == '#') then
                         cycle
                     else
-                        error stop 'unknown input under .CUBE option'
+                        call quit('unknown input under .CUBE option')
                     end if
                 end do
             end if
@@ -456,13 +490,13 @@ subroutine pelib_ifc_input_reader(word)
                     else if (option(1:1) == '!' .or. option(1:1) == '#') then
                         cycle
                     else
-                        error stop 'unknown option present in .MEP section.'
+                        call quit('unknown option present in .MEP section.')
                     end if
                 end do
             end if
             pelib_mep = .true.
         ! continuum solvation calculation
-        else if (trim(option(2:7)) == 'SOLVAT') then
+        else if (trim(option(2:7)) == 'SOLVAT' .or. trim(option(2:7)) == 'FIXSOL') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
             if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
@@ -479,6 +513,12 @@ subroutine pelib_ifc_input_reader(word)
         ! equilibrium solvation (non-equilibrium is default)
         else if (trim(option(2:7)) == 'EQSOL') then
             pelib_noneq = .false.
+        ! set the static dielectric constant
+        else if (trim(option(2:7)) == 'EPS') then
+            read(lucmd, *) eps
+        ! set the optical dielectric constant
+        else if (trim(option(2:7)) == 'EPSINF') then
+            read(lucmd, *) epsinf
         ! Turn off interaction between induced dipoles and surface charges
         else if (trim(option(2:7)) == 'NOMUQ') then
             pelib_nomuq = .true.
@@ -494,14 +534,14 @@ subroutine pelib_ifc_input_reader(word)
             end if
             pelib_read_surf = .true.
         ! FixSol solvation using FIXPVA2 tesselation (optional: number of tessera per atom)
-        else if (trim(option(2:7)) == 'NTESS ') then
+        else if (trim(option(2:7)) == 'NTESS') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
             if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
                & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
                 read(lucmd, *) ntsatm
                 if ((ntsatm .ne. 60) .and. (ntsatm .ne. 240) .and. (ntsatm .ne. 960)) then
-                   error stop 'number of tessera per atom must be equal to 60, 240 or 960'
+                   call quit('number of tessera per atom must be equal to 60, 240 or 960')
                 end if
             end if
         ! apply external electric field
@@ -534,13 +574,15 @@ subroutine pelib_ifc_input_reader(word)
                & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
                 read(lucmd, *) zeromul_order
                 if (zeromul_order < 0) then
-                    error stop 'ZEROMUL order cannot be negative'
+                    call quit('ZEROMUL order cannot be negative')
                 end if
             end if
             pelib_zeromul = .true.
         ! skip calculation of multipole-multipole interaction energy
         else if (trim(option(2:7)) == 'SKIPMU') then
             pelib_skipmul = .true.
+        else if (trim(option(2:7)) == 'NOSKIP') then
+            pelib_skipmul = .false.
         else if (trim(option(2:7)) == 'GAUGE') then
             read(lucmd, '(a80)') option
             backspace(lucmd)
@@ -560,7 +602,7 @@ subroutine pelib_ifc_input_reader(word)
             cycle
         else
             write(luout, *) 'unknown option:', option
-            error stop 'unknown option in *PELIB section'
+            call quit('unknown option in *PELIB section')
         end if
     end do
 
@@ -570,11 +612,11 @@ subroutine pelib_ifc_input_reader(word)
     end if
 
     if (pelib_sol .and. pelib_iter .and. .not. pelib_fixsol) then
-        error stop '.SOLV without .FIXSOL requires .DIRECT'
+        call quit('.SOLV without .FIXSOL requires .DIRECT')
     end if
 
     if (pelib_mep .and. pelib_cube) then
-        error stop '.MEP and .CUBE are not compatible.'
+        call quit('.MEP and .CUBE are not compatible.')
     end if
 
     call qexit('pelib_ifc_input_reader')
@@ -689,6 +731,7 @@ end subroutine pelib_ifc_molgrad
 
 subroutine pelib_ifc_response(denmats, fckmats, nmats)
     use pelib, only: pelib_master
+    use pelib_options, only: pelib_gspol
 #include "inforb.h"
     integer, intent(in) :: nmats
     real*8, dimension(nmats*nnbasx), intent(in) :: denmats
@@ -696,7 +739,11 @@ subroutine pelib_ifc_response(denmats, fckmats, nmats)
     call qenter('pelib_ifc_response')
     if (.not. use_pelib()) call quit('PElib not active')
 #if defined(VAR_MPI)
-    call pelib_ifc_start_slaves(3)
+    if (.not. pelib_gspol) then
+        ! handle early return of pelib_master in case of pelib_gspol
+        ! so the mpi calls don't get stuck
+        call pelib_ifc_start_slaves(3)
+    end if
 #endif
     call pelib_master(runtype='dynamic_response', &
                    triang=.true., &
@@ -1024,6 +1071,7 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
 #include "infvar.h"
 #include "inforb.h"
 #include "inftap.h"
+#include "dftcom.h"
 
     integer :: nwrk
     real*8 :: energy
@@ -1041,9 +1089,12 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
     real*8, dimension(:), allocatable :: fckmo, fckac
     real*8, dimension(:), allocatable :: pegrd, diape
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
+    logical srdft_spindns_save
 
     call qenter('pelib_ifc_grad')
     if (.not. use_pelib()) call quit('PElib not active')
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(dcao(n2basx), dvao(n2basx))
     call fckden((nisht > 0), (nasht > 0), dcao, dvao, cmo, dv, wrk, nwrk)
@@ -1103,6 +1154,7 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
         write(luit2) star8, star8, star8, eodata
     end if
 
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_ifc_grad')
 
 end subroutine pelib_ifc_grad
@@ -1165,7 +1217,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
 !    INFVAR : NWOPH
 !    INFLIN : NCONST, NVARPT, NWOPPT
 !
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
@@ -1173,6 +1225,7 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
 #include "infvar.h"
 #include "inflin.h"
 #include "infdim.h"
+#include "dftcom.h"
 
     integer :: ncsim, nwrk
     integer, dimension(*) :: cindx
@@ -1182,15 +1235,19 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     real*8, dimension(nwrk) :: wrk
 
     logical :: fndlab
+    logical :: pelib_gspol_save
     integer :: i, j, jscvec, mwoph
     real*8 :: tfxc, tfyc, tfycac, solelm, energy
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fycao
     real*8, dimension(:), allocatable :: dtvao, fdtvaos, fxcaos
     real*8, dimension(:), allocatable :: tfxcacs, fyc, fycac
     real*8, dimension(:,:), allocatable :: fxcs, fxcacs
+    logical srdft_spindns_save
 
     call qenter('pelib_lnc')
     if (.not. use_pelib()) call quit('PElib not active')
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(fxcs(nnorbx,ncsim))
     allocate(fxcacs(nnashx,ncsim))
@@ -1198,6 +1255,9 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     fxcs = 0.0d0
     fxcacs = 0.0d0
     tfxcacs = 0.0d0
+
+    pelib_gspol_save = pelib_gspol
+    pelib_gspol = .false.
 
     if (pelib_polar) then
         ! Fxc = -R<0|Fe|B>Fe in fxcaos
@@ -1260,6 +1320,8 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     deallocate(fxcacs, fycac, tfxcacs)
     deallocate(fyc, fxcs)
 
+    srdft_spindns = srdft_spindns_save
+    pelib_gspol   = pelib_gspol_save
     call qexit('pelib_lnc')
 
 end subroutine pelib_lnc
@@ -1280,13 +1342,14 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
 !    INFVAR : JWOP
 !    INFLIN : NWOPPT, NVARPT, NCONST, NCONRF
 !
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
 #include "inforb.h"
 #include "infvar.h"
 #include "inflin.h"
+#include "dftcom.h"
 
     integer :: nosim, nso, nwrk
     integer, dimension(*) :: cindx
@@ -1297,6 +1360,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
 
     integer :: i, j, jsovec, mwoph, ncolim
     logical :: fulhes, fndlab
+    logical :: pelib_gspol_save
     real*8 :: solelm
     real*8 :: txyo
     real*8 :: energy
@@ -1307,10 +1371,12 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
     real*8, dimension(:,:), allocatable :: ubovecs, fxos
     real*8, dimension(:,:), allocatable :: fxyos, fxyoacs
-
+    logical srdft_spindns_save
 
     call qenter('pelib_lno')
     if (.not. use_pelib()) call quit('PElib not active')
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(ubovecs(n2orbx,nosim))
     if (nosim > 0) then
@@ -1332,7 +1398,10 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
         end do
         deallocate(ubodcao, ubodvao)
         allocate(fxoaos(nosim*nnbasx))
+        pelib_gspol_save = pelib_gspol
+        pelib_gspol = .false.
         call pelib_ifc_response(bodtaos, fxoaos, nosim)
+        pelib_gspol = pelib_gspol_save
         deallocate(bodtaos)
         allocate(fxos(nnorbx,nosim))
         do i = 1, nosim
@@ -1407,6 +1476,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     end do
     nwoph = mwoph
 
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_lno')
 
 end subroutine pelib_lno
@@ -1427,7 +1497,7 @@ subroutine pelib_ifc_lr(ncsim, nosim, bcvecs, bovecs, cref, cmo, cindx, udv,&
     real*8, dimension(*) :: udvtr, dvtr, dtv, dtvtr
     real*8, dimension(*) :: scvecs, sovecs
     real*8, dimension(nwrk) :: wrk
-
+    
     call qenter('pelib_ifc_lr')
     if (.not. use_pelib()) call quit('PElib not active')
 
@@ -1447,7 +1517,7 @@ end subroutine pelib_ifc_lr
 
 subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
                      udvtr, dvtr, dtv, dtvtr, scvecs, wrk, nwrk)
-    use pelib_options, only: pelib_polar
+    use pelib_options, only: pelib_polar, pelib_gspol
     implicit none
 #include "priunit.h"
 #include "dummy.h"
@@ -1457,6 +1527,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
 #include "inforb.h"
 #include "qrinf.h"
 #include "infvar.h"
+#include "dftcom.h"
 
     integer :: i, j
     integer :: ncsim, nwrk
@@ -1480,9 +1551,12 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
     logical :: lexist, lopen, locdeb
     logical :: fndlab
     logical :: tdm, norho2
+    logical srdft_spindns_save
 
     call qenter('pelib_rsplnc')
     if (.not. use_pelib()) call quit('PElib not active')
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     locdeb = .false.
 
@@ -1502,7 +1576,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
     tfxcacs = 0.0d0
 
     ! Fxc = R*(<0(L)|Fe|0> + <0|Fe|0(R)>)Fe
-    if (pelib_polar .or. .not. trplet) then
+    if (.not. pelib_gspol .and. (pelib_polar .or. .not. trplet)) then
         call getref(cref, ncref)
         ! ...Construct <0(L)|...|0> + <0|...|0(R)>
         allocate(udtv(n2ashx,ncsim))
@@ -1625,6 +1699,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
         call quit('ERROR in pelib_rsplnc: ncref /= kzconf')
     end if
 
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_rsplnc')
 
 end subroutine pelib_rsplnc
@@ -1659,6 +1734,8 @@ subroutine pelib_rsplno(nosim, bovecs, cref, cmo, cindx, udv, dv,&
     real*8, dimension(:), allocatable :: txyoacs
     real*8, dimension(:), allocatable :: ovlp
     logical :: lexist, lopen
+    logical :: pelib_gspol_save
+
 
     call qenter('pelib_rsplno')
     if (.not. use_pelib()) call quit('PElib not active')
@@ -1673,7 +1750,7 @@ subroutine pelib_rsplno(nosim, bovecs, cref, cmo, cindx, udv, dv,&
         call qexit('pelib_rsplno')
         return
     ! ground state polarization approximation
-    else if (pelib_gspol) then
+    else if (pelib_gspol .and. tdhf) then
         call qexit('pelib_rsplno')
         return
     ! triplet response for open shell (and MCSCF) not ready yet

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -47,23 +47,14 @@ c /* deck CC_XOPA */
       CHARACTER*(16) MSGDBG
       PARAMETER (MSGDBG = '[debug] CC_XOPA> ')
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER*10 MODEL
       INTEGER LWORK
 
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL TIM0, TIM1, TIMF, TIMXE1, TIMXE2
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION TIM0, TIM1, TIMF, TIMXE1, TIMXE2
-#endif
 
       LOGICAL LADD
       INTEGER NBOPA, MXFTRAN, MXATRAN, MXXTRAN, MXFVEC, MXAVEC, MXXVEC,
@@ -326,15 +317,6 @@ c /* deck ccxopa_setup */
 
       INTEGER NFTRAN, NXE1TRAN, NXE2TRAN, LWORK
 
-#if defined (SYS_CRAY)
-      REAL RESULT(MXOPA)
-      REAL FCONS(MXFVEC,MXFTRAN)
-      REAL EACONS(MXAVEC,MXATRAN)
-      REAL X2CONS(MXXVEC,MXXTRAN)
-      REAL WORK(LWORK)
-      REAL ZERO, SIGN, EIGVI, EIGVF
-      REAL WIAF, WXINIF, WIBF
-#else
       DOUBLE PRECISION RESULT(MXOPA)
       DOUBLE PRECISION FCONS(MXFVEC,MXFTRAN)
       DOUBLE PRECISION EACONS(MXAVEC,MXATRAN)
@@ -342,7 +324,6 @@ c /* deck ccxopa_setup */
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO, SIGN, EIGVI, EIGVF
       DOUBLE PRECISION WIAF, WXINIF, WIBF
-#endif
       PARAMETER (ZERO = 0.0D0)
 
       CHARACTER LABEL*(8)

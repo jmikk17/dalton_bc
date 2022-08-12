@@ -588,3 +588,149 @@ GROUP "/" {
 }
 }
 \end{verbatim}
+
+\subsection{Fast Multipole Method}\label{subsec:FMM}
+The computational scaling of the PE model is quadratic with the number of polarizable sites.
+For large systems, this can become the bottleneck of PE calculations.
+To overcome this, fast summation schemes, such as the fast multipole method (FMM) can be used (see Ref. \citenum{scheurer2021efficient}).
+The FMM implementation in PElib is used to evaluate both the static fields from multipoles as well 
+as the fields from induced dipoles.
+In practice, FMM is beneficial (faster than traditional direct summation) for systems exceeding 
+about 8000 environment sites. 
+FMM can be activated with:
+
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.FMM
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
+
+The accuracy of FMM is controlled by two parameters, the multipole acceptance criterion, $\theta$,
+and the multipole expansion order. The multipole acceptance criterion determines whether two 
+boxes, $A$ and $B$ can be considered far separated, according to
+\begin{equation}
+R\theta > R_A + R_B.
+\end{equation}
+Smaller values of $\theta$ are more accurate since more of the interactions are placed in the 
+short range, but are also more expensive. The limit of $\theta=0$ corresponds formally to a 
+direct summation. Typical values of $\theta$ are around $0.5$.
+The expansion order controls to which order the multipole expansion in FMM is taken. 
+Higher orders are more accurate, but also more expensive.
+The FMM implementation is based on an adaptive octree code, which boxifies the system such that
+boxes contain at most NCRIT particles. Smaller values of NCRIT will result in more boxes.
+The acceptance criterion ($\theta$), expansion order, and critical number of particles can be changed as:
+
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.FMM
+.THETA
+0.40       ! default
+.EXPANSION ORDER
+6          ! default
+.NCRIT
+64         ! default
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
+
+\subsection{Approximate environment coupling}
+
+After applying FMM to treat the interaction between induced dipoles, all classical and quantum-classical interaction parts of a PE calculation scale linearly with respect to the number of environment sites.
+For some systems, the evaluation of electric fields from the electronic density in the quantum part and the corresponding evaluation of Fock matrix elements due to the induced dipoles can become a dominating factor in the cost of a PE calculation.
+Various approximations to the interaction between the quantum region and the environment can be introduced to reduce the cost, with only a very minor impact on the quality of the calculation (see Ref. \citenum{reinholdt2021fast}).
+One option is to use a single-center multipole expansion. Instead of using the full interaction between the quantum region and the environment, electric fields beyond some cutoff radius are calculated via a single-center multipole expansion.
+The expansion is generally only convergent beyond some radius, and relatively high expansion orders should be used for good accuracy.
+Below is an example of a single-center expansion with a cutoff radius of 40 bohr and an interaction multipole expansion order of 8.
+
+\begin{verbatim}
+**DALTON INPUT
+.RUN WAVEFUN
+.DIRECT
+.PEQM
+*PEQM
+.FMM
+.THETA
+0.4
+.EXPANSION_ORDER
+6
+.INT_SCHEME
+SINGLE_CENTER
+.INT_ORDER
+8
+.INT_RCUT
+40.0
+**WAVE FUNCTIONS
+.DFT
+CAMB3LYP
+**END OF
+\end{verbatim}
+
+Another available option is to use a multi-center multipole expansion with ESP-fitted multipoles.
+The multi-center expansion improves the short-range convergence of the expansion.
+Expansion orders should generally be kept low.
+Below is an example of an ESPF expansion with up to quadrupoles and a cutoff radius of 20 bohr.
+Note the difference between `INT\_RCUT` (determines where the approximate coupling can be applied) and `INT\_RFIT` (determines the radius within which solvent sites are used as grid points for the ESP fitting).
+
+\begin{verbatim}
+**DALTON INPUT
+.RUN WAVEFUN
+.DIRECT
+.PEQM
+*PEQM
+.FMM
+.THETA
+0.4
+.EXPANSION_ORDER
+6
+.INT_SCHEME
+ESPF
+.INT_ORDER
+2
+.INT_RCUT
+20.0
+.ESPF_GRID
+SOLVENT
+.INT_RFIT
+20.0
+**WAVE FUNCTIONS
+.DFT
+CAMB3LYP
+**END OF
+\end{verbatim}
+
+Another option is to create local expansions of the electronic electric fields in the environment, similar to FMM.
+Here, the near-field/far-field cutoff is controlled by a multipole acceptance criterion, $\theta$.
+Smaller values of $\theta$ (`INT\_THETA`) place more interactions in the near-field, and are thus more accurate but also more expensive.
+Below is an example of this approach, with $\theta=0.3$ and a local expansion up to 7th order (`INT\_ORDER`).
+
+\begin{verbatim}
+**DALTON INPUT
+.RUN WAVEFUN
+.DIRECT
+.PEQM
+*PEQM
+.FMM
+.THETA
+0.4
+.EXPANSION_ORDER
+6
+.INT_SCHEME
+FMM_FOCK
+.INT_ORDER
+7
+.INT_THETA
+0.3
+**WAVE FUNCTIONS
+.DFT
+CAMB3LYP
+**END OF
+\end{verbatim}

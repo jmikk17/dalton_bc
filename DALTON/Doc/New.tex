@@ -2,7 +2,7 @@
 
 %{ \renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}\rmfamily{{\bf #1}}}
 
-{\it See {\rm CHANGELOG.md} in the root directory of the Dalton distribution (available from {\rm \url{http://gitlab.com}} for 
+{\it See {\rm CHANGELOG.md} in the root directory of the Dalton distribution (available from \\ {\rm \url{https://gitlab.com/dalton/dalton}} for 
 added and correted basis sets, performance improvements, bugs fixed etc. }
 
 \section{New features in Dalton2020}
@@ -27,7 +27,7 @@ added and correted basis sets, performance improvements, bugs fixed etc. }
    Useful for avoiding (near-)triplet-instability problems, for example in DFT or MC-srDFT calculations of triplet excitations or spin-spin coupling constants.
   \item gTDA for singlet linear response propertes and singlet excitation energites for wave functions of any spin multiplicity.
    \end{itemize}
-\item{\bf qFITLIB} is extended to include up to quadrupoles. (C. Steinmann)
+\item{\bf QFITLIB} is extended to include up to quadrupoles. (C. Steinmann)
 \item{\bf CVS for CC} The core-valence separation (CVS) 
 approximation for CC calculations of core-excited states. (S. Coriani et al.)\\
 {}
@@ -48,7 +48,7 @@ using EOM-CCSD}. \\
 [R. Faber, E.F. Kj{\o}nstad, H. Koch and S. Coriani,
 J. Chem. Phys. 151, 144107 (2019)]\\
 \item{\bf New features using the Polarizable Embedding library (PElib)}:
-   \begin{itemize}
+ \begin{itemize}
   \item Effective external field (EEF) can now be used for all dipole properties. Calculated oscillator strengths based on EEF dipole transition moments are now printed. (N. List, J. M. H. Olsen, H. J. Aa. Jensen)
   \item Polarizable density embedding (PDE) model (use -DENABLE\_PDE=ON during setup to enable it [requires HDF5]) \\ {}
     [ J. M. H. Olsen, C. Steinmann, K. Ruud, and J. Kongsted, J. Phys. Chem. A 119, 5344 (2015); \\
@@ -63,9 +63,13 @@ J. Chem. Phys. 151, 144107 (2019)]\\
   \item Added support for AMOEBA potential.
   \item Added pseudopotentials for avoiding electron spill-out \\ {}
     [ A. M. Khah, P. Reinholdt, J. M. H. Olsen, J. Kongsted and C. Hattig, J. Chem. Theory. Comput. 16, 1373-1381 (2020) ].
-   \end{itemize}
-  \item {\bf Ghost atoms} Added easy ghost atom input in the molecule input (P. Reinholdt \& H. J. Aa. Jensen)
-  \item Allow specification of basis set(s) after BASIS in line 1 of .mol file (instead of on second line). (H. J. Aa. Jensen)
+  \item Fast multipole method (FMM) for linear-scaling evaluation of static/induced multipole fields \\ {}
+    [ M. Scheurer, P. Reinholdt, J. M. H. Olsen, A. Dreuw, J. Kongsted, J. Chem. Theory Comput. 17, 3445-3454 (2021) ]
+  \item Fast approximate environment coupling for PE \\ {}
+    [ P. Reinholdt, J. Kongsted, and F. Lipparini, J. Chem. Theory Comput. 18, 344-356 (2022) ]
+ \end{itemize}
+\item {\bf Ghost atoms} Added easy ghost atom input in the molecule input (P. Reinholdt \& H. J. Aa. Jensen)
+\item {\bf Molecule input} Allow specification of basis set(s) after BASIS in the first line of the molecule input file (instead of on the second line). (H. J. Aa. Jensen)
 \end{description}
 
 \section{New features in Dalton2018}

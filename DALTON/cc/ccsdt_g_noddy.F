@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -51,13 +51,8 @@ C
 
       CHARACTER*3 LISTL, LISTB, LISTC
       INTEGER LWORK, IDLSTL, IDLSTB, IDLSTC
-#if defined (SYS_CRAY)
-      REAL WORK(LWORK)
-      REAL OMEGA1(NT1AMX), OMEGA2(NT2AMX)
-#else
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION OMEGA1(NT1AMX), OMEGA2(NT2AMX)
-#endif
 
       CHARACTER*10 MODEL
       INTEGER KXINT, KXIAJB, KYIAJB, KT1AMP0, KLAMP0, KLAMH0, KEND1,

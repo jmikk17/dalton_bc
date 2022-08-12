@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -393,8 +393,8 @@ C           2 : save orbital energies in OREN in molde.h
                WRITE(LUMOLDEN_MOS,'(A)') '[9G]'   ! 9g
             ELSE
                NINFO = NINFO + 1
-               WRITE (LUPRI,'(//A)') ' INFO: Sorry, plot of MOs with '//
-     &         'Molden is only implemented for spherical GTOs'
+               WRITE (LUPRI,'(//A)') '@ INFO: Sorry, plot of MOs with '
+     &       //'Molden is only implemented for spherical GTOs'
                DONEIV = .TRUE.
             END IF
          END IF

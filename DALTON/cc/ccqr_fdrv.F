@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -52,21 +52,12 @@ c /* deck ccqr_fdrv */
 
       INTEGER LWORK, NFTRAN, MXVEC
 
-#if defined (SYS_CRAY)
-      REAL FCON(MXVEC,NFTRAN)
-      REAL WORK(LWORK)
-      REAL ZERO
-      REAL FCON1, FCON2
-      REAL DDOT
-      REAL SECOND, FTIME, TTIME
-#else
       DOUBLE PRECISION FCON(MXVEC,NFTRAN)
       DOUBLE PRECISION WORK(LWORK)
       DOUBLE PRECISION ZERO
       DOUBLE PRECISION FCON1, FCON2
       DOUBLE PRECISION DDOT
       DOUBLE PRECISION SECOND, FTIME, TTIME
-#endif
       PARAMETER (ZERO = 0.0d0)
 
       CHARACTER LISTL*(*), LISTB*(*), LISTC*(*), OPTION*(*)

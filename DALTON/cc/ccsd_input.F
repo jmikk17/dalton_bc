@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -97,7 +97,7 @@ C
 #include "center.h"
 Cholesky  
 C
-      PARAMETER (NTABLE = 128)
+      PARAMETER (NTABLE = 129)
       LOGICAL   SET, NEWDEF, SIRFF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       CHARACTER*(80) LINE
@@ -132,7 +132,7 @@ Cring-CCD for triplet (rTCCD), and SOSEX added
      &            '.KEPAOI','*CHO(T)','*CHOCC2','*CHOMP2','*CHODBG',
      &            '.D01SKI','.CHO(T)','.T2UPDA','.RCCD  ','.RTCCD ',
      &            '.DRCCD ','.SOSEX ','.T2STAR','.HURWIT','.DCPT2 ',
-     &            '*MLCC3 ','*MLCCPT','*PECC'/
+     &            '*MLCC3 ','*MLCCPT','*PECC  ','.MP3'   /
 
       DATA SET/.FALSE./
 C
@@ -207,7 +207,7 @@ C
      *                92,93,94,95,96,97,98,99,100,101,102,103,104,
      *                105,106,107,108,109,110,111,112,113,114,115,
      *                116,117,118,119,120,121,122,123,124,125,126,
-     *                127,128), I
+     *                127,128,129), I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -786,6 +786,11 @@ C             Polarizable Embedding Coupled Cluster with the PElib implementatio
 C             Summer 2016
                   CALL CC_PEINP(WORD)
                GO TO 1000
+ 129           CONTINUE
+               !.MP3 through the CPSD routine
+                  MP3 = .TRUE.
+                  CPORDER = 3
+               GO TO 1000
             ELSE
                WRITE (LUPRI,'(/3A,/)') ' Prompt "',WORD,
      *            '" not recognized in CC2INP.'
@@ -793,6 +798,7 @@ C             Summer 2016
                CALL QUIT('Illegal prompt in CC2INP.')
             END IF
       END IF
+
   300 CONTINUE
 
 #ifdef VAR_MPI      
@@ -2496,11 +2502,7 @@ C=====================================================================*
       INTEGER IXSYM, IXSTATE, IXSYM2, IXSTATE2, IJUMP
       INTEGER INDPRP_CC, MSYM, I, J
 
-#if defined (SYS_CRAY)
-      REAL SMFREQ
-#else
       DOUBLE PRECISION SMFREQ
-#endif
 
 * data:
       DATA SETGSTOPA /.FALSE./
@@ -4455,11 +4457,7 @@ CTOCD
       INTEGER NTABLE
       PARAMETER (NTABLE = 25)
 
-#if defined (SYS_CRAY)
-      REAL ZERO, TOLFRQ
-#else
       DOUBLE PRECISION ZERO, TOLFRQ
-#endif
       PARAMETER (ZERO = 0.0d00)
       PARAMETER (TOLFRQ = 1.0D-09)
 
@@ -5267,11 +5265,7 @@ c /* deck cc_qrinp */
       INTEGER NTABLE
       PARAMETER (NTABLE = 20)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -5861,11 +5855,7 @@ C#include "ccrspprp.h"
       INTEGER NTABLE
       PARAMETER (NTABLE = 20)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -6560,11 +6550,7 @@ c /* deck CC_4RINP */
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -6894,11 +6880,7 @@ c /* deck CC_5RINP */
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -7407,11 +7389,7 @@ c /* deck cc_exlrinp */
       INTEGER NTABLE
       PARAMETER (NTABLE = 12)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
       PARAMETER (ZERO = 0.0d00)
 
 
@@ -7782,11 +7760,7 @@ C#endif
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
 
       PARAMETER (ZERO = 0.0d00)
 
@@ -7801,11 +7775,7 @@ C#endif
       CHARACTER*70 LABHELP
       CHARACTER TABLE(NTABLE)*(7)
 
-#if defined (SYS_CRAY)
-      REAL FREQB, FREQC
-#else
       DOUBLE PRECISION  FREQB, FREQC
-#endif
 
 
       INTEGER IDX, IJUMP
@@ -8125,11 +8095,7 @@ C           _______________________________________________
       INTEGER NTABLE
       PARAMETER (NTABLE = 10)
 
-#if defined (SYS_CRAY)
-      REAL ZERO
-#else
       DOUBLE PRECISION ZERO
-#endif
 
       PARAMETER (ZERO = 0.0d00)
 

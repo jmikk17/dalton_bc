@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -36,10 +36,10 @@ C
 C Written Jan-1985 by Poul Joergensen
 C Revisions: Jul-1988 HJJ (TUH) - new CI interface
 C
-C This subroutine directs the solutions of NGR simultaneous
+C This subroutine directs the solutions of NGD simultaneous
 C set of Newton equations
 C
-C (A-B)*X(J)+F(J)=0
+C (A-B)*X(J)+GD(J)=0
 C
 C KNRSIM: Desired number of simultaneous roots in a
 C         microiteration.  When convergence is
@@ -48,6 +48,8 @@ C         by one.
 C JNRSIM: is KNRSIM where linear dependence is removed
 C         from the new trial vectors
 C MAXNR:  maximum number of microiterations
+C
+C LMAXVE: max number of simultaneous trial vectors
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -119,9 +121,10 @@ C
       IF (IPRNR.GT.30) THEN
          CALL AROUND('Test output of GD vectors from ANRCTL')
          DO 950 J = 1,NGD
-            WRITE(LUPRI,'(/I3,A,I3)') J,'. GD gradient vector of',NGD
+            WRITE(LUPRI,'(/I3,A,I0)') J,'. GD gradient vector of ',NGD
             WRITE(LUPRI,'(10F10.4)') (GD(I,J),I=1,NVARPT)
   950    CONTINUE
+         flush(lupri)
       END IF
 C
 C CONSTRUCT NREDH START VECTORS
@@ -130,14 +133,17 @@ C
          WRITE(LUPRI,'(/A,I8)')' NLOAD:',NLOAD
          WRITE(LUPRI,'(/A,I8,A,I8)')
      *   '    NREDH:',NREDH,'     LMAXVE:',LMAXVE
+         flush(lupri)
       END IF
+
+      NCSIM = 0
+      NOSIM = 0
+
       REWIND LUNR3
       IF (LOFFRD.EQ.1) READ (LUNR3)
       IF (NLOAD.EQ.1) THEN
          IF (NREDH.LE.LMAXVE) THEN
             BINMEM=.TRUE.
-            NCSIM = 0
-            NOSIM = 0
             DO 94 I = 1,NREDH
                IF (IBNDX(LOFFRD+I).EQ.JBCNDX) THEN
                   NCSIM = NCSIM + 1
@@ -146,7 +152,7 @@ C
                ENDIF
    94       CONTINUE
             IF (IPRNR.GT.15) WRITE(LUPRI,'(/A,I5,A,I5)')
-     *         ' NCSIM:',NCSIM,'    NOSIM:',NOSIM
+     &         ' NCSIM:',NCSIM,'    NOSIM:',NOSIM
             IF (IPRNR.GT.20) THEN
                WRITE(LUPRI,'(/A)')' IBNDX(LOFFRD+I),I=1,NREDH'
                WRITE(LUPRI,'(5I5,5X,5I5)')
@@ -169,13 +175,13 @@ C
          IF (IPRNR.GT.30 .AND. BINMEM) THEN
             IOFF = 0
             DO 960 J = 1,NCSIM
-               WRITE(LUPRI,'(/I3,A,I3)') J,'. start CI vector of',NCSIM
+               WRITE(LUPRI,'(/I4,A,I0)') J,'. start CI vector of ',NCSIM
                WRITE(LUPRI,'(10F10.4)') (WRK(IOFF+I),I=1,NCONST)
                IOFF = IOFF + NCONST
   960       CONTINUE
             DO 965 J = 1,NOSIM
-               WRITE(LUPRI,'(/I3,A,I3)') 
-     *             J,'. start orbital vector of',NOSIM
+               WRITE(LUPRI,'(/I4,A,I0)')
+     &             J,'. start orbital vector of ',NOSIM
                WRITE(LUPRI,'(10F10.4)') (WRK(IOFF+I),I=1,NWOPPT)
                IOFF = IOFF + NWOPPT
   965       CONTINUE
@@ -195,6 +201,7 @@ C
  98         CONTINUE
  97      CONTINUE
       ENDIF
+      flush(lupri)
 C
 C
 C
@@ -232,10 +239,10 @@ C        ------------v
       END IF
  100  CONTINUE
       IF ( IPRNR .GT. 5) THEN
-         WRITE(LUPRI,'(A,3I5)')' JNRSIM,ITNR,NLOAD',JNRSIM,ITNR,NLOAD
+         WRITE(LUPRI,'(A,3I5)')' JNRSIM,ITNR, NLOAD ',JNRSIM,ITNR,NLOAD
          WRITE(LUPRI,'(A,3I5)')' LMAXVE,NREDH,LOFFRD'
-     *                         ,LMAXVE,NREDH,LOFFRD
-         WRITE(LUPRI,'(A,L8)')' BINMEM',BINMEM
+     &                          ,LMAXVE,NREDH,LOFFRD
+         WRITE(LUPRI,'(A,L8)') ' BINMEM',BINMEM
       END IF
       IF (IPRNR.GT.20) THEN
          WRITE(LUPRI,'(/A)')' IBNDX(I),I=1,(LOFFRD+NREDH+JNRSIM)'
@@ -264,6 +271,7 @@ C
      *           /'   Number of CI trial vectors      :',I5,
      *           /'   Number of orbital trial vectors :',I5,/)
 C
+         flush(lupri)
 C        WORKSPACE FOR ABALIN AND ANRRED
 C
 C        ANRRED USE MAX(NCONST,NWOPPT) AS WORKING SPACE FOR BVECTORS
@@ -405,7 +413,7 @@ C
       ELSE
          BINMEM=.FALSE.
       ENDIF
-C     
+C
       IF (IPRNR .GE. 2) THEN
          TIMIT = SECOND() - TIMIT
          WRITE (LUPRI,'(/A,F12.2,/)')
@@ -1058,7 +1066,7 @@ C
    15  CONTINUE
 C
 C *********************************************************
-C Section 2: FIND SOLUTIONS TO THE NGR SET OF NEWTON-RAPHSON EQ.
+C Section 2: FIND SOLUTIONS TO THE NGD SET OF NEWTON-RAPHSON EQ.
 C
  1000 CONTINUE
       IF (IAND(ICTL,2).EQ.0) GO TO 2000
@@ -1223,6 +1231,7 @@ C     matrix explicitly by carrying out linear transformations of unit
 C     vectors
 C
 #include "inflin.h"
+#include "abainf.h"
 #include "linaba.h"
 #include "infpri.h"
 C

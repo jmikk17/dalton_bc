@@ -1,6 +1,6 @@
-!
+cc_famat.F !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -77,11 +77,7 @@ c /* deck cc_famat */
 * local parameters:
       CHARACTER MSGDBG*(18)
       PARAMETER (MSGDBG='[debug] CC_FAMAT> ')
-#if defined (SYS_CRAY)
-      REAL ONE, TWO, THREE
-#else
       DOUBLE PRECISION ONE, TWO, THREE
-#endif
       PARAMETER (ONE = 1.0d0, TWO = 2.0d0, THREE = 3.0d0)
       LOGICAL LOCDBG
       PARAMETER (LOCDBG = .FALSE.)
@@ -108,15 +104,9 @@ c /* deck cc_famat */
       INTEGER KGAMMAR12, KCTRR12, KT12AMB, KXINTTRI, KXINTSQ, IDUM
       INTEGER LUNIT, IAN, KLAMDPB, KLAMDHB, LENMOD, IOPTWR12
 
-#if defined (SYS_CRAY)
-      REAL FREQB, FREQA
-      REAL SWAP, DUMMY
-      REAL WORK(LWORK), FACON(MXVEC,NFATRAN)
-#else
       DOUBLE PRECISION FREQB, FREQA
       DOUBLE PRECISION SWAP, DUMMY
       DOUBLE PRECISION WORK(LWORK), FACON(MXVEC,NFATRAN)
-#endif
 
       INTEGER ILSTSYM
       CHARACTER*(3) APROXR12
@@ -803,19 +793,11 @@ C
       INTEGER LWORK, IDLSTL, IDLSTB, IOPTRES, ITRAN, MXVEC, NFATRAN
       INTEGER IDOTS(MXVEC,NFATRAN)
 
-#if defined (SYS_CRAY)
-      REAL DOTPROD(MXVEC,NFATRAN), DDOT
-      REAL WORK(LWORK), FREQL, FREQA, FREQB, FREQF, FREQC
-      REAL OMEGA1(*), OMEGA2(*)
-      REAL OMEGA1EFF(*), OMEGA2EFF(*)
-      REAL SIXTH, ONE, TWO, TCON, DCON, SCON, FF, SIGN
-#else
       DOUBLE PRECISION DOTPROD(MXVEC,NFATRAN), DDOT
       DOUBLE PRECISION WORK(LWORK), FREQL, FREQA, FREQB, FREQE, FREQC
       DOUBLE PRECISION OMEGA1(*), OMEGA2(*)
       DOUBLE PRECISION OMEGA1EFF(*), OMEGA2EFF(*)
       DOUBLE PRECISION SIXTH, ONE, TWO, TCON, DCON, SCON, FF, SIGN
-#endif
       PARAMETER(SIXTH=1.0D0/6.0D0, ONE=1.0D0, TWO=2.0D0)
 
       CHARACTER*10 MODEL
@@ -1527,13 +1509,8 @@ C     -------------------------
      *        IADR_INTER(3,*), IADR_DEN(*), 
      *        IFADOTS(MXVEC,*), IFATRAN(MXDIM_FATRAN,*)
 
-#if defined (SYS_CRAY)
-      REAL FACON(MXVEC,NFATRAN)
-      REAL WORK(*)
-#else
       DOUBLE PRECISION FACON(MXVEC,NFATRAN)
       DOUBLE PRECISION WORK(*)
-#endif
 
 * local:
       CHARACTER MODEL*(10), LISTR*3, LABELR*8, LABELA*8
@@ -1552,22 +1529,13 @@ C     -------------------------
      &        ISYMC, KFOCK, KFOCKIA, IRREP, IERR, IMAT, LWRK1, IDX,
      &        KEND0
 
-#if defined (SYS_CRAY)
-      REAL FREQR, TRIPCON
-      REAL TWO
-#else
       DOUBLE PRECISION FREQR, TRIPCON
       DOUBLE PRECISION TWO
-#endif
       PARAMETER ( TWO = 2.0D0 )
 
 * external functions:
       INTEGER ILSTSYM
-#if defined (SYS_CRAY)
-      REAL DDOT
-#else
       DOUBLE PRECISION DDOT
-#endif
 
 
 *---------------------------------------------------------------------*
@@ -2160,15 +2128,9 @@ c       -------------------------------------------------
       INTEGER IDLSTL, ISYML, IDLSTB, ISYMB, IDLSTC, ISYMC, LUINTER
       INTEGER IDXL_INTER(*), IDXR_INTER(*), IADR_INTER(3,*)
 
-#if defined (SYS_CRAY)
-      REAL DIA1(*), DIA2(*), DIA3(*)
-      REAL WORK(*)
-      REAL ONE, TWO
-#else
       DOUBLE PRECISION DIA1(*), DIA2(*), DIA3(*)
       DOUBLE PRECISION WORK(*)
       DOUBLE PRECISION ONE, TWO
-#endif
       PARAMETER ( ONE=1.0D0, TWO=2.0D0 )
 
 * local:
