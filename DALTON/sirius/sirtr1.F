@@ -2730,10 +2730,8 @@ C
 C ****************************************************************
 C     Loop over DIRAC distributions allowed in NEEDDI(-4:6)
 C
-      IDIST = 0
+      IDIST  = 0
       LUINTD = -1
-      IF (.NOT. NEWTRA) CALL GPOPEN(LUINTD,'MODRCINT','OLD',' ',
-     &                              'UNFORMATTED',IDUMMY,.FALSE.)
   100 CALL NXTH2D(IC,ID,WRK(KH2CD),NEEDDI,LUINTD,
      &            WRK,KFREE,LFREE,IDIST)
       IF (IDIST .LT. 0) GO TO 800
