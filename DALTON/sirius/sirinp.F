@@ -5407,8 +5407,10 @@ C
       END IF
   500 FORMAT(/' Title     :',T14,A60)
   600 FORMAT(T14,A60)
-      WRITE (IWUNIT,700) (TITMOL(J), J=1,2)
-  700 FORMAT(/' Title lines from ".mol" input file:'/T6,A72/T6,A72)
+      LEN1 = LNBLNK(TITMOL(1))
+      LEN2 = LNBLNK(TITMOL(2))
+      WRITE (IWUNIT,700) TITMOL(1)(1:LEN1),TITMOL(2)(1:LEN2)
+  700 FORMAT(/' Title lines from ".mol" input file:'/T6,A/T6,A)
 C
       WRITE(IWUNIT,1700) LUPRI,IPRI6,LUW4,IPRI4
  1700 FORMAT(/' Print level on unit LUPRI =',I4,' is',I4,

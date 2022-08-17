@@ -123,6 +123,7 @@ C     ... in qm3.h, for QM3:
 C
       NEWDEF = (WORD .EQ. '*READIN' .OR. WORD .EQ. '*MOLBAS')
       IPREAD_ini = IPREAD
+      INUC = 0
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
@@ -250,12 +251,6 @@ C Nuclear model
             END IF
       END IF
   300 CONTINUE
-      IF(GAUNUC) THEN
-         WRITE(LUPRI,'(/A)') '@ * Nuclear model: '//
-     &      'Gaussian charge distribution.'
-      ELSE
-         WRITE(LUPRI,'(/A)') '@ * Nuclear model: Point charge.'
-      ENDIF
       IF (ICHANG .GT. 0) THEN
          CALL HEADER('Changes of defaults for '//WORD1,0)
          IF (IPREAD .NE. IPREAD_ini) THEN
@@ -316,8 +311,17 @@ C Nuclear model
                CALL QUIT('Error in input processing for '//WORD1)
             END IF
          END IF
-         WRITE (LUPRI,'()')
+         IF (INUC .NE. 0) THEN
+            WRITE (LUPRI,'(A)')
+     &         ' Nuclear model was defined in input.'
+         END IF
       END IF
+      IF(GAUNUC) THEN
+         WRITE(LUPRI,'(/A)') '@ * Nuclear model: '//
+     &      'Gaussian charge distribution.'
+      ELSE
+         WRITE(LUPRI,'(/A)') '@ * Nuclear model: Point charge.'
+      ENDIF
       RETURN
       END
 C  /* Deck reaini */
@@ -714,7 +718,7 @@ C
       real(8), allocatable :: cprimu(:, :, :, :)
       CHARACTER*80 BASREF(10,KATOM,3)
       CHARACTER*1  KASYM(3,3),ID3,CRT
-      CHARACTER*72 TTITLE(2)
+      CHARACTER*200 TTITLE(2)
       CHARACTER*2 SYMTXT
       CHARACTER*15 SYMGROUP
       DIMENSION IFXYZ(3)
@@ -777,19 +781,29 @@ C     Sep 09/hjaaj: moved to HERINI
 C     IF (LMULBS) CALL SET_CARMOM_2
 C*****************************************************************************
 C     Card 2-3: Title cards
+C     (Do not use RDLINE() because OK that title lines are longer than 80 char)
 C*****************************************************************************
-      CALL RDLINE(LUINFO)
-      TTITLE(1) = MLINE(NMLINE)
-      CALL RDLINE(LUINFO)
-      TTITLE(2) = MLINE(NMLINE)
+      IF (SLAVE) THEN
+         TTITLE(1) = MLINE(NMLINE+1)
+         TTITLE(2) = MLINE(NMLINE+2)
+      ELSE
+         READ(LUINFO,'(A)') TTITLE(1)
+         READ(LUINFO,'(A)') TTITLE(2)
+         MLINE(NMLINE+1) =  TTITLE(1) ! truncate to MLINE length
+         MLINE(NMLINE+2) =  TTITLE(2)
+      END IF
+      NMLINE = NMLINE + 2
+
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
-         WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
-     &   'The two title cards from your ".mol" input:', SEPARATOR(1:72),
-     &   ' 1: ',TTITLE(1),' 2: ',TTITLE(2),SEPARATOR(1:72)
+           LEN1 = LNBLNK(TTITLE(1))
+           LEN2 = LNBLNK(TTITLE(2))
+           WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
+     &     'The two title cards from your ".mol" input:', SEPARATOR,
+     &     ' 1: ',TTITLE(1)(1:LEN1),' 2: ',TTITLE(2)(1:LEN2),SEPARATOR
          END IF
          IF (LUCME.GT.0) WRITE (LUCME,'(2X,A)')
-     &      SEPARATOR(1:72),TTITLE(1),TTITLE(2),SEPARATOR(1:72)
+     &      SEPARATOR,TTITLE(1),TTITLE(2),SEPARATOR
       END IF
 C***********************************************************************
 C     Card 4:
@@ -5730,7 +5744,8 @@ C
 #include "maxorb.h"
 #include "maxaqn.h"
 C
-      CHARACTER*72 TTITLE(2)
+      CHARACTER*(*) TTITLE(2)
+
       CHARACTER*8 CDATE, CTIME
       CHARACTER*8 TABLE1(4), TABLE2(4), TABLE3(4),
      &            TABLE4(4), TABLE5(4), TABLE6(4)

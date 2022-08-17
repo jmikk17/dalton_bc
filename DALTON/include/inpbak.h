@@ -24,10 +24,10 @@
      &                TRGRDB,TRPWFB,TRCIB,TRMCB,TRCGRB,
      &                EFILDB(MXFELT), CMXMOB, TROVLB,
      &                TRSSYB
-      CHARACTER*60 TITLEB(6)
-      CHARACTER*72 TITMLB(2)
-      CHARACTER*4  CENTB,   TYPEB
-      CHARACTER*8  LFILDB
+      CHARACTER*60  TITLEB(6)
+      CHARACTER*200 TITMLB(2)
+      CHARACTER*4   CENTB, TYPEB
+      CHARACTER*8   LFILDB
       COMMON /CHRBAK/ TITLEB, TITMLB,
      &                CENTB(MXCORB), TYPEB(MXCORB), LFILDB(MXFELT)
 ! -- end of inpbak.h --
