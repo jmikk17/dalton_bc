@@ -360,11 +360,19 @@ Chjaaj:     FBYTES is calculed in four lines, to avoid integer overflows.
             FNALL  = (FNALL*(FNALL + 1.0D0))*0.5D0
             PERCNT = N2WRIT
             PERCNT = 100.0D0*PERCNT / FNALL
-            WRITE (LUPRI,'(A,I12,A,F5.1,A,/A,F12.3/)')
+            WRITE (LUPRI,'(A,I12,A,F5.1,A)')
      &         ' HERMIT - Number of two-electron integrals written:',
-     &         N2WRIT,' (',PERCNT,'% )',
+     &         N2WRIT,' (',PERCNT,'% )'
+            IF (FBYTES .GT. 1000.D0) THEN
+               FBYTES = FBYTES / 1024.D0
+            WRITE (LUPRI,'(A,F12.3/)')
+     &         ' HERMIT - Gigabytes written:                       ',
+     &         FBYTES
+            ELSE
+            WRITE (LUPRI,'(A,F12.3/)')
      &         ' HERMIT - Megabytes written:                       ',
      &         FBYTES
+            END IF
          END IF
       END IF
       RETURN
