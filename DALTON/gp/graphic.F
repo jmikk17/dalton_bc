@@ -137,7 +137,7 @@ C
 C
  8000 FORMAT('-------- START OF -MOLPLT- INPUT FILE ----------')
  8010 FORMAT('NATOMS=',I4,'   NKINDS=',I4,'    NBONDS=',I4
-     &        /T6,A/T6,A)
+     &        /T6,A80/T6,A80)
  8020 FORMAT(A4,I2,F5.2)
  8030 FORMAT(A4,3F12.6)
  8040 FORMAT('-------- END OF -MOLPLT- INPUT FILE ----------')
