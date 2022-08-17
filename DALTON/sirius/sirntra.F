@@ -3262,15 +3262,17 @@ C
 C     JTRLVL = MOD(NTRLVL,100)
 C     KTRLVL = NTRLVL/100
 C
-C     KTRLVL = 0 : a designates inactive+active orbitals
+C     Note: a given NTRLVL always include all integrals from lower levels
+C
+C     KTRLVL = 0 : a designates          active orbitals
 C                  g designates general non-frozen orbitals
-C     KTRLVL = 1 : a designates          active orbitals
+C     KTRLVL = 1 : a designates inactive+active orbitals
 C                  g designates general non-frozen orbitals
 C     KTRLVL = 2 : a designates frozen+inactive+active orbitals
 C                  g designates all orbitals
 C
-C     KTRLVL = 1 is used when an AO super-matrix file is available,
-C     otherwise use KTRLVL = 0.
+C     KTRLVL = 0 is used when an AO super-matrix file is available,
+C     otherwise use KTRLVL = 1.
 C
 C     JTRLVL  INDEX 1  INDEX 2  INDEX 3  INDEX 4   comment
 C        0       a        a        a        a      CI calc. (0. ord.)
@@ -3295,8 +3297,8 @@ C
 #include "maxorb.h"
 C
       CHARACTER*35 EXTPRM(3)
-      DATA EXTPRM/'inactive + active orbitals         ',
-     &            'only active orbitals               ',
+      DATA EXTPRM/'only active orbitals               ',
+     &            'inactive + active orbitals         ',
      &            'frozen + inactive + active orbitals'/
 C
       CALL QENTER('N_TRALIM')
@@ -3317,13 +3319,13 @@ C
 C
 C     Calculate ITRTYP.
 C     Redefine MFRO,MISH,MASH according to requested integral
-C     transformation.  If KTRLVL .eq. 1 then this is the same
+C     transformation.  If KTRLVL .eq. 0 then this is the same
 C     as in Sirius.
 C
       ITRTYP(1:MORBT) = 0
       IMOL = 0
       DO 300 ISYM = 1, MSYM
-         IF (KTRLVL .EQ. 0) THEN
+         IF (KTRLVL .EQ. 1) THEN
             MASH(ISYM) = MISH(ISYM) + MASH(ISYM)
             MISH(ISYM) = 0
          ELSE IF (KTRLVL .EQ. 2) THEN
@@ -3401,15 +3403,17 @@ C Copy from TRALIM of definition of NTRLVL.
 C     JTRLVL = MOD(NTRLVL,100)
 C     KTRLVL = NTRLVL/100
 C
-C     KTRLVL = 0 : a designates inactive+active orbitals
+C     Note: a given NTRLVL always include all integrals from lower levels
+C
+C     KTRLVL = 0 : a designates          active orbitals
 C                  g designates general non-frozen orbitals
-C     KTRLVL = 1 : a designates          active orbitals
+C     KTRLVL = 1 : a designates inactive+active orbitals
 C                  g designates general non-frozen orbitals
 C     KTRLVL = 2 : a designates frozen+inactive+active orbitals
 C                  g designates all orbitals
 C
-C     KTRLVL = 1 is used when an AO super-matrix file is available,
-C     otherwise use KTRLVL = 0.
+C     KTRLVL = 0 is used when an AO super-matrix file is available,
+C     otherwise use KTRLVL = 1.
 C
 C     JTRLVL  INDEX 1  INDEX 2  INDEX 3  INDEX 4   comment
 C        0       a        a        a        a      CI calc. (0. ord.)
@@ -3429,26 +3433,26 @@ C
       JTRSIR = ABS(ITRSIR)
       IF (JTRSIR .EQ. 0) THEN ! (ga|aa)
          JTRLVL = 1
-         KTRLVL = 1
+         KTRLVL = 0
       ELSE IF (JTRSIR .EQ. 2) THEN ! (gg|oo) + <gg|oo> (need (aa|ii) and (ai|ai))
          JTRLVL = 2
-         KTRLVL = 0
+         KTRLVL = 1
       ELSE IF (JTRSIR .EQ. 3) THEN ! (gg|aa) + <gg|aa>
          JTRLVL = 2
-         KTRLVL = 1
+         KTRLVL = 0
       ELSE IF (JTRSIR .EQ. 4 .OR. JTRSIR .EQ. 1) THEN ! (gg|oo) + <gg|oo>
          JTRLVL = 2
-         KTRLVL = 0
+         KTRLVL = 1
       ELSE IF (JTRSIR .EQ. 5) THEN ! (gg|go)
          JTRLVL = 3
-         KTRLVL = 0
+         KTRLVL = 1
       ELSE IF (JTRSIR .EQ. 6) THEN ! (gg|ga)
       ! hjaaj aug 2017;  new option for abacus: we only need active-general for abatr1
          JTRLVL = 3
-         KTRLVL = 1
+         KTRLVL = 0
       ELSE IF (JTRSIR .GE. 7) THEN ! (gg|gg)
          JTRLVL = 4
-         KTRLVL = 0  ! KTRLVL is inactive
+         KTRLVL = 1  ! KTRLVL is inactive
       ELSE
          WRITE(LUPRI,*)
      &   'ERROR: Undefined Sirius integral transformation level:',JTRSIR
