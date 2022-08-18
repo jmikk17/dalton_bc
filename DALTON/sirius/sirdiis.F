@@ -397,6 +397,8 @@ C
       KFREE  = KFRSAV
       LFREE  = LFRSAV
       IFTHSV = IFTHRS
+
+      TSIRF  = 0.0D0 ! for timing of total time used in SIRFCK
 C
 C     save current IOPRHF for check below
       IOPRHF_old = IOPRHF
@@ -1869,6 +1871,7 @@ C
 C     restore original values
       IFTHRS = IFTHSV
       HSROHF = HSROHF_save
+      TSIRF  = 0.0D0 ! for timing of total time used in SIRFCK
       CALL QEXIT('DIIS_CTL')
       RETURN
       END
