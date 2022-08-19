@@ -756,8 +756,13 @@ C  Correlation  ----------------------------------------------------------
       d1Ec(:) = 0.0d0
       d2Ec(:) = 0.0d0
 
+!     VWN5 correlation spin-unpolarized functional
+      IF(DOSRC_VWN5 .OR. DOSRC_LDA) THEN
+         call VWN5C_ERF(rho, norder, special_case, chival, 
+     &                  Ec, d1Ec, d2Ec)
+
 !     short-range spin-dependent correlation LDA ! JT 18-08-09
-      IF (DOSRC_LDA_PW92) THEN
+      ELSE IF (DOSRC_LDA_PW92) THEN
          call PW92C_ERF(rho, norder, special_case, chival, 
      &                  Ec, d1Ec, d2Ec)
 
@@ -802,11 +807,6 @@ C  Correlation  ----------------------------------------------------------
 !     VWN5 correlation spin-unpolarized functional, with no range-separation
       ELSE IF (DOC_VWN5_nomu) THEN
          call VWN5C_nomu(rho, norder, special_case, Ec, d1Ec, d2Ec)
-
-!     VWN5 correlation spin-unpolarized functional
-      ELSE IF(DOSRC_VWN5 .OR. DOSRC_LDA) THEN
-         call VWN5C_ERF(rho, norder, special_case, chival, 
-     &                  Ec, d1Ec, d2Ec)
 
 C linear Complement spin-dependent (NON-Scaled) correlation LDA functional
       ELSE IF (DOLANSC_LDAS) THEN
