@@ -394,7 +394,6 @@ c              --- Modified
                   ENDIF
 c               --- Old ERFEXP function 2*chival/sqrt(pi)*exp(-chisq/3*r**2)
                   IF(ERFEXP(1)) THEN
-                     AI = D3/CHISQ    
                      AI = D3/CHISQ
                      EXPFAC  = EXPPI + EXPQI + AI
                      EXPFACI = D1/EXPFAC
