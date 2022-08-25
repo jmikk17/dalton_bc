@@ -36,14 +36,15 @@
 
       end
 
-      subroutine SIR_FCKTRA_CTL(TYPE_TEXT, ITRSIR, THR_MOTWOINT, CMO,
+      subroutine SIR_FCKTRA_DRIVER(TYPE_TEXT, ITRSIR, THR_MOTWOINT, CMO,
      &   WORK, LWORK)
 !
 !  Written by Hans Joergen Aa. Jensen Apr 2017
 !
       implicit none
-      integer ITRSIR, LWORK
-      real*8  THR_MOTWOINT, CMO(*), WORK(LWORK)
+      character*4 TYPE_TEXT
+      integer     ITRSIR, LWORK
+      real*8      THR_MOTWOINT, CMO(NCMOT), WORK(LWORK)
 #include "priunit.h"
 
 ! Used from include files:
@@ -63,7 +64,6 @@
 #include "cbihr2.h"
 #include "ccom.h"
 
-      character*4 TYPE_TEXT
       integer JTRSIR, NTRLVL, IOSVAL, MX_NDMAT
       integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J, K
       integer MISH_TEST(8), MASH_TEST(8), IDAMAX, L_H2CD
@@ -253,7 +253,7 @@ C           and subtract from input CMO matrix
 ! Used from include files:
 !  gnrinf.h : PARCAL
 !  inforb.h : NNORBX, NORBT, ???
-!  inftra.h : IPRTRA, LBUF
+!  inftra.h : FCKTRA_TYPE, IPRTRA, LBUF
 !  inftap.h : LUSUPM
 !  cbihr2.h : IFTHRS
 !  ccom.h   : THRS
