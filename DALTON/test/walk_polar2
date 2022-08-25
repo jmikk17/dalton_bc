@@ -207,8 +207,8 @@ CTRL[10]=3
 ERROR[10]="INITIAL DIPOLE MOMENT NOT CORRECT"
 
 # Step, 1st iteration:
-CRIT1=`$GREP "OP *_1 * (0| )\.00438....[0-9] * (0| )\.01693....[0-9] * (0| )\.0000000000" $log | wc -l`
-CRIT2=`$GREP "OP *_2 * (0| )\.00438....[0-9] * (\-0|\-)\.01693....[0-9] * (0| )\.0000000000" $log | wc -l`
+CRIT1=`$GREP "OP *_1 * (0| )\.00438....[0-9] * (0| )\.0169.....[0-9] * (0| )\.0000000000" $log | wc -l`
+CRIT2=`$GREP "OP *_2 * (0| )\.00438....[0-9] * (\-0|\-)\.0169.....[0-9] * (0| )\.0000000000" $log | wc -l`
 TEST[11]=`expr $CRIT1  \+ $CRIT2`
 CTRL[11]=4
 ERROR[11]="INITIAL STEP NOT CORRECT"
@@ -221,7 +221,7 @@ CTRL[12]=4
 ERROR[12]="SECOND GEOMETRY NOT CORRECT"
 
 # Energy, 2nd iteration:
-CRIT1=`$GREP "Total energy * \-224\.51875646[0-9]* au \(Hartrees\)" $log | wc -l`
+CRIT1=`$GREP "Total energy * \-224\.5187564[0-9]* au \(Hartrees\)" $log | wc -l`
 CRIT2=`$GREP "\-6109\.466144[0-9]* eV" $log | wc -l`
 CRIT3=`$GREP "\-589473\.904[0-9] kJ\/mol" $log | wc -l`
 TEST[13]=`expr $CRIT1 \+ $CRIT2 \+ $CRIT3`
@@ -261,7 +261,7 @@ TEST[16]=`expr $CRIT1 \+ $CRIT2 \+ $CRIT3`
 CTRL[16]=3
 ERROR[16]="GEOMETRY OPTIMIZATION FAILED"
 
-o Dipole moment gradient:
+# Dipole moment gradient:
 CRIT1=`$GREP "OS * x * (0| )\.0389247" $log | wc -l`
 CRIT2=`$GREP "OP * x * (\-0|\-)\.0389247" $log | wc -l`
 CRIT3=`$GREP "OP * y * (0| )\.4111820" $log | wc -l`
@@ -330,7 +330,7 @@ ERROR[23]="IR INTENSITIES NOT CORRECT"
 # Molecular partition function:
 CRIT1=`$GREP "200\.00 * 4\.8150(D\+|E\+)06 * 3752\.7. * 1\.0072 * 1\.8199[0-9]*(D\+|E\+)10" $log | wc -l`
 CRIT2=`$GREP "273\.15 * 1\.0496(D\+|E\+)07 * 5988\.1. * 1\.0325 * 6\.4895[0-9]*(D\+|E\+)10" $log | wc -l`
-CRIT3=`$GREP "298\.15 * 1\.3065(D\+|E\+)07 * 6828\... * 1\.0467 * 9\.3379..D\+|E\+)10" $log | wc -l`
+CRIT3=`$GREP "298\.15 * 1\.3065(D\+|E\+)07 * 6828\... * 1\.0467 * 9\.3379..(D\+|E\+)10" $log | wc -l`
 CRIT4=`$GREP "1000\.00 * 2\.6916(D\+|E\+)08 * 41925\... * 2\.562. * 2\.891...(D\+|E\+)13" $log | wc -l`
 CRIT5=`$GREP "2000\.00 * 1\.5226(D\+|E\+)09 * 11857.\... * 8\.83.. * 1\.5943..(D\+|E\+)15" $log | wc -l`
 TEST[24]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3  \+ $CRIT4  \+ $CRIT5`

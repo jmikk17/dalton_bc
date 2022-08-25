@@ -446,9 +446,9 @@ C           workspace for array SORTED.
 #endif
       end if
 
-      IF (FIRST)  FIRST  = .FALSE.
-      IF (NEWGEO) NEWGEO = .FALSE.
-      IF (NEWBAS) NEWBAS = .FALSE.
+      FIRST  = .FALSE.
+      NEWGEO = .FALSE.
+      NEWBAS = .FALSE.
 C
       CALL QEXIT('HER_PARDRV_1')
       RETURN
@@ -599,7 +599,7 @@ C
 C MXCENT : MXCENT (for DORPS, etc.)
 C MXORB  : MXSHEL (for INFPAR)
 C MAXAQN : *      (for SYMMET)
-C GNRINF : NEWGEO
+C GNRINF : NEWBAS,NEWGEO
 C INFORB : N2BASX
 C MOLINP : NMLINE, MLINE()
 C CBIREA : UNCONT

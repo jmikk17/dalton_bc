@@ -36,14 +36,15 @@
 
       end
 
-      subroutine SIR_FCKTRA_CTL(TYPE_TEXT, ITRSIR, THR_MOTWOINT, CMO,
+      subroutine SIR_FCKTRA_DRIVER(TYPE_TEXT, ITRSIR, THR_MOTWOINT, CMO,
      &   WORK, LWORK)
 !
 !  Written by Hans Joergen Aa. Jensen Apr 2017
 !
       implicit none
-      integer ITRSIR, LWORK
-      real*8  THR_MOTWOINT, CMO(*), WORK(LWORK)
+      character*4 TYPE_TEXT
+      integer     ITRSIR, LWORK
+      real*8      THR_MOTWOINT, CMO(NCMOT), WORK(LWORK)
 #include "priunit.h"
 
 ! Used from include files:
@@ -63,7 +64,6 @@
 #include "cbihr2.h"
 #include "ccom.h"
 
-      character*4 TYPE_TEXT
       integer JTRSIR, NTRLVL, IOSVAL, MX_NDMAT
       integer KFREE, LFREE, KFRSAV, KUCMO, KDMAT, KFMAT, I, J, K
       integer MISH_TEST(8), MASH_TEST(8), IDAMAX, L_H2CD
@@ -75,7 +75,7 @@
 
 C --- start of executable code
 
-      call QENTER('SIR_FCKTRA_CTL')
+      call QENTER('SIR_FCKTRA_DRIVER')
 
       JTRSIR = abs(ITRSIR)
       ! 0    : first order
@@ -137,7 +137,7 @@ C           and subtract from input CMO matrix
             END DO
             IF (ABS(WORK(I)) .LE. THRZER .AND. J .EQ. 0) THEN
                IF (IPRTRA.GE.0) WRITE (LUPRI,'(/A)')
-     &            ' SIR_FCKTRA_CTL: Integral transformation abandoned,'
+     &          ' SIR_FCKTRA_DRIVER: Integral transformation abandoned,'
      &          //' the required MO integrals are already available.'
                GO TO 9999
             END IF
@@ -164,7 +164,7 @@ C           and subtract from input CMO matrix
       IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NTRLVL = NTRLVL + 1
       ! we need third order, because USEDRC not defined for FCKTRA
 #if FCKTRA_DEBUG > 0
-      write(LUPRI,*) 'DEBUG: SIR_FCKTRA_CTL called, debug level',
+      write(LUPRI,*) 'DEBUG: SIR_FCKTRA_DRIVER called, debug level',
      &   FCKTRA_DEBUG
       write(LUPRI,*) 'DEBUG: ITRSIR, NTRLVL, LWORK:',ITRSIR,NTRLVL,LWORK
       flush(LUPRI)
@@ -204,7 +204,7 @@ C           and subtract from input CMO matrix
       CALL GPCLOSE(LUINTM, 'KEEP')
 
       deallocate ( ICDTRA )
- 9999 call QEXIT('SIR_FCKTRA_CTL')
+ 9999 call QEXIT('SIR_FCKTRA_DRIVER')
       return
       end
 
@@ -1319,7 +1319,6 @@ C --- start of executable code
             call outpkb(WORK,NORB,NSYM,-1,LUPRI)
          end if
 #endif
-
 
       end
 ! -- end of DALTON/sirius/sirfcktra.F --

@@ -198,7 +198,7 @@ C
       ELSE
          GDTRO  = GTRONV
          HESTRO = HTRONV
-         NOROT1  = RTRONV
+         NOROT1 = RTRONV
       END IF
 C
       IF (IPRINT .GT. 0) THEN

@@ -177,7 +177,7 @@ ERROR[7]="RESPONSE CALCULATION NOT SET UP CORRECTLY"
 # Polarizabilities
 CRIT1=`$GREP "\@ < e \| AB \| f > * \= * 0*\.7738" $log | wc -l`
 CRIT2=`$GREP "\@ < e \| AB \| f > * \= * 1\.322" $log | wc -l`
-CRIT3=`$GREP "\@ < e \| AB \| f > * \= * \-4\.578" $log | wc -l`
+CRIT3=`$GREP "\@ < e \| AB \| f > * \= * \-4\.57[78]" $log | wc -l`
 CRIT4=`$GREP "\@ < e \| AB \| f > * \= * 28\.84" $log | wc -l`
 CRIT5=`$GREP "\@ < e \| AB \| f > * \= * \-74\.7" $log | wc -l`
 CRIT6=`$GREP "\@ < e \| AB \| f > * \= * \-28\.47" $log | wc -l`

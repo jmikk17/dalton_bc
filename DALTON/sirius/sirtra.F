@@ -30,7 +30,6 @@ C
 !940517-hjaaj: Ide: gem integraler paa LUINTM uden labels (afhaengigt af ITRLVL)
 !   Brug ITRLVL til at bestemme LBINTM (ikke NMORBT men f.eks. NMOCCT + ...)
 !   Beregn ogsaa LBINTD v.hj.af LBMXSQ ??
-!MAERKE 930305: usikkert,indfoer USEDRC el. LVLDRC i parameterliste til TRACTL
 !-------- Revision n05 ends here ---------
 !940517-hjaaj
 !SIR_INTOPEN: deleted write DUMMY for CRAY; attempt open old LUINTM file if FLAG(14)
@@ -69,7 +68,6 @@ C
 ! space for temporary files during the transformation.
 !900305-hjaaj
 ! TRACTL: only call drcctl if ITRLVL.gt.0 (not ci) and usedrc
-! MAERKE: usikkert,indfoer USEDRC el. LVLDRC i parameterliste til TRACTL
 !900302-hjaaj
 ! TRACTL: reset /CBGETD/ to tell any H2AC on disk now obsolete.
 !900226-hjaaj
@@ -1727,7 +1725,7 @@ C
 #include "inftap.h"
 #include "gnrinf.h"
 C
-      LOGICAL VFIRST, FOPEN, DELDA, FEXIST
+      LOGICAL VFIRST, FOPEN, FEXIST
       SAVE VFIRST, IPRTRA_SAVE, LDBUF, LRBUF
       DATA VFIRST /.TRUE./
 C
@@ -1781,8 +1779,14 @@ C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
       END IF
 C
       IF (FCKTRA_TYPE .gt. 0) THEN
-         NEWTRA_USEDRC = .FALSE. ! FCKTRA_DRCCTL not implemented yet
-         CALL SIR_FCKTRA_CTL('COUL',KTRLVL,THRP,CMO,WORK,KWORK,IPRTRA)
+         NEWTRA_USEDRC = .FALSE. ! FCKTRA_DRCCTL not implemented yet !!! TODO  as for NEWTRA HJAaJ
+         CALL SIR_FCKTRA_DRIVER('COUL',KTRLVL,THRP,CMO,
+     &         WORK,KWORK)
+         IF (NEWTRA_USEDRC) THEN
+            CALL SIR_FCKTRA_DRIVER('EXCH',KTRLVL,THRP,CMO,
+     &         WORK,KWORK,IPRTRA)
+         END IF
+         ITRLVL_LAST = ITRLVL
       ELSE IF (NEWTRA) THEN
          IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
             NEWTRA_USEDRC = .FALSE. ! use DRCCTL and not Dirac integrals from N_TRACTL
@@ -1793,15 +1797,9 @@ C
          CALL N_TRACTL(KTRLVL,CMO,WORK,KWORK)
          IF ( NEWTRA_USEDRC ) USEDRC = .TRUE.
          ITRLVL_LAST = ITRLVL
-         IF (NEWTRA_USEDRC) THEN
-            IF (ITRLVL .EQ. 1 .OR. ITRLVL .EQ. 3) THEN ! see sirntra.F(TRALVL)
-               LVLDRC_SAVE = 0 ! act-act Dirac integrals
-            ELSE
-               LVLDRC_SAVE = 1 ! occ-occ Dirac integrals
-            END IF
-         END IF
       ELSE
          NEWTRA_USEDRC = .FALSE.
+         LVLDRC_LAST = -999
          KFRSAV = 1
          KFREE  = 1
          LFREE  = KWORK
@@ -1813,7 +1811,14 @@ C
          CALL TRACTL_1(KTRLVL,CMO,WORK(KITSMO),WORK(KITSAO),
      &        WORK(KITSW),WORK(KITSX),WORK(KIT),WORK(KFREE),LFREE)
          CALL MEMREL('TRACTL_1',WORK,KFRSAV,KFRSAV,KFREE,LFREE)
-         ! ITRLVL_LAST is set inside TRACTL_1, if integral transformation is not abandoned
+      END IF
+
+      IF (NEWTRA_USEDRC) THEN
+         IF (ITRLVL .EQ. 1 .OR. ITRLVL .EQ. 3) THEN ! see sirntra.F(TRALVL)
+            LVLDRC_LAST = 0 ! act-act Dirac integrals
+         ELSE
+            LVLDRC_LAST = 1 ! occ-occ Dirac integrals
+         END IF
       END IF
 
 !     set flag for new integrals (required for parallel MCSCF/CI with lucita)
@@ -1843,6 +1848,7 @@ C           ... all occ-occ distributions
             LVLDRC = 0
 C           ... all active-active distributions
          END IF
+         LVLDRC_LAST = LVLDRC ! save in exeinf.h
          CALL DRCCTL(LVLDRC,CMO,WORK,KWORK)
          IF (IPRTRA .GE. 0) THEN
             CALL GETTIM(TCPU,TWALL)
@@ -1851,7 +1857,6 @@ C           ... all active-active distributions
             WRITE(LUPRI,2200) TCPU, TWALL
          END IF
          CALL FLSHFO(LUPRI)
-         LVLDRC_LAST = LVLDRC
       END IF
  2200 FORMAT(/' Sorting integrals to Dirac format:',
      &        ' Total CPU and WALL times (sec)',2F12.3)
@@ -1918,7 +1923,7 @@ C
 #include "cbgetdis.h"
 C
       LOGICAL FOPEN, DELDA, FEXIST
-      SAVE LDBUF, LRBUF
+      INTEGER, SAVE :: LDBUF, LRBUF
 C
       CALL QENTER('TRACTL_1')
       ITRLVL = ABS(KTRLVL)
@@ -1935,7 +1940,8 @@ C
          CALL PRORB(CMO,.FALSE.,LUPRI)
       END IF
 C
-      IF (ITRLVL .NE. ITRLVL_LAST) THEN
+      IF (ITRLVL .NE. ITRLVL_LAST) THEN ! used to select part of print;
+      ! in particular, only print TRACTL_1 information for first macro iteration in MCSCF
          IF (IPRTRA .GT. 1) THEN
             JTER   = 1
          ELSE
@@ -2327,6 +2333,7 @@ C           and subtract from input CMO matrix
      &            ' TRACTL_1: Integral transformation abandoned,'//
      &            ' the required MO integrals are already available.'
                LBINTM = LBINTM_1
+               ITRLVL_LAST = JTRLVL
                GO TO 9999
             END IF
          END IF ! IOSVAL test
@@ -2867,7 +2874,7 @@ C
       DATA    KNEXT /-1/
 C
       IF (FCKTRA_TYPE .gt. 0 .AND. NEWTRA_USEDRC) THEN
-         CALL FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,IDIST)
+         CALL FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,WRK(KFREE),IDIST)
          RETURN
       ELSE IF (NEWTRA .AND. NEWTRA_USEDRC) THEN
          CALL N_NXTH2D(IC,ID,H2CD,NEEDTP,WRK,KFREE,LFREE,IDIST)
