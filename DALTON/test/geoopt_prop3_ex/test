@@ -79,7 +79,8 @@ f = [
                abs_tolerance=1.0e-5),
     get_filter(from_string='Vibrational Frequencies and IR Intensities',
                num_lines=12,
-               rel_tolerance=2.0e-5),
+               abs_tolerance=1.0e-2),
+               # the frequency in cm-1 can change in last digit, second decimal place
     get_filter(from_string='Vibrational Polarizabilities (au)',
                num_lines=8,
                abs_tolerance=1.0e-5)

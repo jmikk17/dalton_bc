@@ -17,11 +17,11 @@ f.add(from_string = 'Polarizable embedding energy contributions:',
       abs_tolerance = 1.0e-5)
 f.add(from_string = 'Dipole moment components',
       num_lines = 8,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 2.0e-4)
 f.add(from_string = 'Electric transition dipole moments (au)',
       ignore_sign = True,
       num_lines = 9,
-      rel_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-4)
 
 test.run(['pemcsrdft.dal'], ['LiH.mol'], ['2h2o.pot'], f={'out': f},
          accepted_errors = ["not implemented for parallel calculations"])
