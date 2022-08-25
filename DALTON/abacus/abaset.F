@@ -435,7 +435,7 @@ C -- local constants
 C
 C Used from common blocks:
 C   priunit.h : LUERR,...
-C   exeinf.h : FTRCTL, NEWCMO, ITRLVL_LAST, LVLDRC_LAST
+C   exeinf.h : FTRCTL, NEWCMO
 C   INFINP : ISTATE,LSYM,MCTYPE,?
 C   INFORB : NISH(8),...
 C   INFVAR : NCONF,NWOPT,NVAR,JWOPSY,JWOP(2,*)

@@ -1428,12 +1428,11 @@ C ...............
 C
 C     Initialize /EXEINF/
 C
-      FTWOXP = .TRUE.
       FTRCTL = .FALSE.
 C     ... FTRCTL true forces AO sort and integral transformation,
 C         but we may restart with old integrals. FTRCTL is set
 C         true by EXEHER signalling that new AO integrals have
-C         been calculated.
+C         been or needs to be calculated.
       NEWCMO = .TRUE.
       ! force integral transformation in abaset.F / abarspn.F;
       ! NEWCMO is then set to .false. after integral transformation.

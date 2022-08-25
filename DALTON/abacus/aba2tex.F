@@ -176,7 +176,7 @@ C              GO TO 100
      *         ' density matrix neglected in TWOEXP.'
             IF (NODV) WRITE (LUPRI,'(/,2A)') ' Active one-electron',
      *         ' density matrix neglected in TWOEXP.'
-            IF (NOPV) WRITE (LUPRI,'(/,2A)') ' Active two-electron',
+            IF (NOPV) WRITE (LUPRI,'(/2A)') ' Active two-electron',
      *         ' density matrix neglected in TWOEXP.'
             IF (NOCONT) WRITE (LUPRI,'(/,2A)')
      *         ' Derivative integrals will not be contracted.'
@@ -292,27 +292,27 @@ C
       IF (SKIP) RETURN
       CALL QENTER('TWOEXP')
 C
-C     If not executed earlier, variables are saved, else restored.
-C     Necessary for unified code.
-C
-      IF (FTWOXP) THEN
-         NASTXP = NASHT
-         SORTXP = RUNSOR
-         PTRTXP = RUNPTR
-         NPVTXP = NOPV
-         FTWOXP = .FALSE.
-      ELSE
-         NASHT  = NASTXP
-         RUNSOR = SORTXP
-         RUNPTR = PTRTXP
-         NOPV   = NPVTXP
-      END IF
-C
       I2TYP = 0
       IF (IPRALL .GE. 1 .OR. IPRINT .GE. 1) THEN
          CALL TIMER('START ',TIMEIN,TIMOUT)
          WRITE (LUPRI,'(/A/)')
      *     '  ---------- Output from TWOEXP ---------- '
+      END IF
+C
+C     Stop after this routine if debug options specified in input
+C
+      IF (.NOT. CUT) THEN
+         IF (NODV .AND. NACTEL .GT. 1) CUT = .TRUE.
+         IF (NACTEL .GT. 1 .AND. .NOT.HSROHF) THEN
+            IF (NOPV) CUT = .TRUE.
+            IF (.NOT.RUNSOR) CUT = .TRUE.
+            IF (.NOT.RUNPTR) CUT = .TRUE.
+         END IF
+         IF (CUT) THEN
+            WRITE(LUPRI,'(/A/A,4L10)')
+     &      '* Will abort after TWOEXP because debug options specified',
+     &      '  NODV, NOPV, RUNSOR, RUNPTR:',NODV, NOPV, RUNSOR, RUNPTR
+         END IF
       END IF
 C
 C     No active orbitals
@@ -373,7 +373,7 @@ C
          IF (IPRPTR .GE. 2) CALL TIMER('PTRAN ',TIMSTR,TIMEND)
       END IF
 C
-C     Final sorting of 2-el. AO density matrix into integral evaluatin order
+C     Final sorting of 2-el. AO density matrix into integral evaluation order
 C
       IF (RUNSOR) THEN
          IF (IPRPTR .GE. 2) CALL TIMER('START ',TIMSTR,TIMEND)
@@ -652,6 +652,12 @@ C
          WRITE (LUPRI,'(A)') ' No restart file has been written.'
          CALL QUIT(' ***** End of ABACUS (in TWOEXP) *****')
       END IF
+
+      ! reinitialize variables which may have been reset because of SCF
+      NODV = .FALSE.
+      NOPV = .FALSE.
+      RUNSOR = .TRUE.
+      RUNPTR = .TRUE.
       CALL QEXIT('TWOEXP')
       RETURN
       END
