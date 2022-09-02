@@ -55,6 +55,7 @@
 !  cbihr2.h : IFTHRS
 !  ccom.h   : THRS
 #include "iratdef.h"
+#include "dummy.h"
 #include "maxaqn.h"
 #include "thrzer.h"
 #include "gnrinf.h"
@@ -98,21 +99,35 @@ C --- start of executable code
 
       ! call SIR_INTOPEN_FCKTRA()
 
-C     Test if MO integrals already available
+C     Test if MO integrals already available, this requires
+C      (this uses unit numbers LUINTM and LUMINT):
+C      MOTWOINT + MO2INT_FCKTRA if 'COUL'
+C      MOTWOINT + DRC2INT_FCKTRA if 'EXCH'
 
+      OLDDX = .FALSE.
       if (TYPE_TEXT .EQ. 'COUL') then
          INT_LABEL = TABLE(1)
          L_H2CD = NNORBT
+         CALL GPINQ('MO2INT_FCKTRA','EXIST',OLDDX)
       else if (TYPE_TEXT .EQ. 'EXCH') then
          INT_LABEL = TABLE(2)
          L_H2CD = N2ORBT
+         CALL GPINQ('DRC2INT_FCKTRA','EXIST',OLDDX)
       else
          call QUIT('Unknown TYPE_TEXT : '//TYPE_TEXT)
       end if
       LBUF = IRAT*L_H2CD
 
-      REWIND(LUINTM)
-      IF ( FNDLAB(INT_LABEL,LUINTM) ) THEN ! true iff existing MOTWOINT is created by .FCKTRA
+!     Does MOTWOINT exist?
+      CALL GPINQ(FNINTM, 'EXIST', FEXIST)
+
+      IF (.NOT. FEXIST) GO TO 1000 ! must do integral transformation
+
+      IF (LUINTM .LE. 0) CALL GPOPEN(LUINTM,FNINTM,'OLD',' ',
+     &                              'UNFORMATTED',IDUMMY,.FALSE.)
+
+      IF ( OLDDX .AND. FNDLAB(INT_LABEL,LUINTM) ) THEN
+         ! the needed integrals may be available
          REWIND(LUINTM)
          READ  (LUINTM)
          READ  (LUINTM) J,NTRLVL ! originally LBINTM, JTRLVL
@@ -145,6 +160,10 @@ C           and subtract from input CMO matrix
          END IF ! NTRLVL test
       END IF
 
+ 1000 CONTINUE ! old integrals not available,
+               ! do the requested AO to MO transformation
+      ! HJAaJ TODO 2. Sep. 2022: if some available, extend with the missing
+
       IF (THR_MOTWOINT .LT. THRS) THEN
          WRITE(LUPRI,'(/A,1P,D10.2,A,D10.2)')
      &   '.FCKTRA INFO: AO screening threshold raised from',
@@ -160,7 +179,7 @@ C           and subtract from input CMO matrix
       KFRSAV = KFREE
 
 !     translate sirius integral level code to FCKTRA and NEWTRA integral level code
-      call N_TRALVL(JTRSIR, NTRLVL) 
+      call N_TRALVL(JTRSIR, NTRLVL)
       IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NTRLVL = NTRLVL + 1
       ! we need third order, because USEDRC not defined for FCKTRA
 #if FCKTRA_DEBUG > 0
@@ -224,7 +243,7 @@ C           and subtract from input CMO matrix
 
 ! Used from include files:
 !  gnrinf.h : PARCAL
-!  inftra.h : FCKTRA_TYPE
+!  inftra.h : FCKTRA_TYPE, IPRTRA, LBUF
 !  inforb.h : NNORBX, NORBT, ???
 !  inftap.h : LUSUPM
 !  cbihr2.h : IFTHRS
@@ -386,7 +405,7 @@ C --- start of executable code
 #include "infpar.h"
 #include "mtags.h"
 
-      integer ICD, IC, ID, NDMAT, L_H2CD
+      integer ICD, IC, ID, IDMAT, NDMAT, L_H2CD
       integer, allocatable :: ICD_REC(:), IFCTYP(:), ISYMDM(:)
       logical FEXIST, OLDDX, FCKTRA_TIMING
       real*8  TCPU0,TCPU1,TCPU2,TWAL0,TWAL1,TWAL2
@@ -491,7 +510,7 @@ C --- start of executable code
 #endif
             end if
 
-            if (NDMAT .eq. MX_NDMAT .or. 
+            if (NDMAT .eq. MX_NDMAT .or.
      &         (NDMAT .gt. 0 .and. ICD .eq. NNORBX) ) then
                call DZERO(FMAT,NDMAT*N2BASX)
                if (FCKTRA_TIMING) call GETTIM(TCPU1,TWAL1)
@@ -523,17 +542,24 @@ C --- start of executable code
                   TWAL_FCK = TWAL_FCK + TWAL2 - TWAL1
                end if
 
-               ! (**|CD) in AO basis now in FMAT
-               if (ABCD_EQ_BACD) then
+               if (ABCD_EQ_BACD) then ! Coulomb integrals, Mulliken indexing
+                  ! (**|CD) in AO basis now in FMAT
                   call FCKTRA_AB_TO_MO(NDMAT,UCMO,FMAT,DMAT)
                   ! (**|CD) in MO basis now in DMAT
-                  CALL FCKTRA_AB_PACK(NDMAT,DMAT,FMAT,ISYMDM)
+                  CALL FCKTRA_AB_PACK_MUL(NDMAT,DMAT,FMAT,ISYMDM)
                   ! packed (**|CD) in MO basis now in FMAT
                   L_H2CD = NNORBT
-               else
-                  call FCKTRA_AB_TO_MO(NDMAT,UCMO,FMAT,FMAT)
-                  ! (**|CD) in MO basis now in FMAT
-                  call quit('packing abcd .ne. bacd not implemented')
+               else ! ABCD .ne. BACD, i.e. Dirac integrals (EXCH type)
+                  ! <**|CD> in AO basis now in FMAT
+                  IF (NSYM .eq. 1) THEN
+                     call FCKTRA_AB_TO_MO(NDMAT,UCMO,FMAT,FMAT)
+                     ! <**|CD> in MO basis now in FMAT, finished
+                  ELSE
+                     call FCKTRA_AB_TO_MO(NDMAT,UCMO,FMAT,DMAT)
+                     ! <**|CD> in MO basis now in DMAT, next step is to pack back into FMAT
+                     CALL  FCKTRA_AB_PACK_DRC(NDMAT,FMAT,FMAT,ISYMDM)
+!                    CALL  FCKTRA_AB_PACK_DRC(NDMAT,H2CD_MO,H2CD_MO_PK,ICDSYM)
+                  END IF
                   L_H2CD = N2ORBT
                end if
 #if FCKTRA_DEBUG > 2
@@ -666,7 +692,7 @@ C --- start of executable code
 
       end
 ! ===================================================================
-      subroutine FCKTRA_AB_PACK(NDMAT,H2CD_MO,H2CD_MO_PK,ICDSYM)
+      subroutine FCKTRA_AB_PACK_MUL(NDMAT,H2CD_MO,H2CD_MO_PK,ICDSYM)
 !
 !  Written by Hans Joergen Aa. Jensen 2016-2017
 !
@@ -711,6 +737,49 @@ C --- start of executable code
       end do
 
       if (NSYM > 1) deallocate(H2CD_TMP)
+
+      end
+
+! ===================================================================
+      subroutine FCKTRA_AB_PACK_DRC(NDMAT,H2CD_MO,H2CD_MO_PK,ICDSYM)
+!
+!  Written by Hans Joergen Aa. Jensen 2022
+!
+!  Purpose: Symmetry pack Dirac MO integrals before writing them to disk,
+!           (<AB|CD>=0 if sym(AB) .ne. sym(CD),
+!            but <AB|CD> .ne. <BA|CD>, C.ne.D )
+!
+!  H2CD_MO contains NDMAT "CD" records of <AB|CD> on input,
+!  packed into H2CD_MO_PK on output.
+!
+!  We need this subroutine, because reusing FMAT outside
+!  for H2CD_MO_PK(N2ORBT,NDMAT) but FMAT is dimensioned FMAT(N2BASX,NDMAT)
+!
+!
+      implicit none
+      integer NDMAT, ICDSYM(NDMAT)
+      real*8  H2CD_MO(N2ORBX,NDMAT), H2CD_MO_PK(N2ORBT,NDMAT)
+
+#include "priunit.h"
+
+! Used from include files:
+!  inforb.h : N2ORBX,NNORBT, NSYM, ...
+#include "inforb.h"
+
+      integer IDMAT
+
+      do IDMAT = 1, NDMAT
+         call TRLPAK( H2CD_MO(1,IDMAT), H2CD_MO_PK(1,IDMAT),
+     &                NORB,IORB,NORBT,ICDSYM(IDMAT),1)
+#if FCKTRA_DEBUG > 5
+         write (LUPRI,*) 'IDMAT, sym',
+     &      IDMAT,ICDSYM(IDMAT)
+         if (ICDSYM(idmat) == 1) then
+            write (LUPRI,*) 'Packed Dirac H2CD_MO'
+            call OUTPTB(H2CD_MO_PK(1,IDMAT),NORB,NSYM,-1,LUPRI)
+         end if
+#endif
+      end do
 
       end
 
@@ -1050,7 +1119,7 @@ C --- start of executable code
 #include "priunit.h"
 
       integer  :: IC, ID, NEEDTP(-4:6), IDIST
-      real*8   :: H2CD(NORBT,NORBT), WORK(*)
+      real*8   :: H2CD(N2ORBX), WORK(*) ! H2CD(NORBT,NORBT) as a vector
 
 ! Used from include files:
 !  inforb.h : NORBT, NNORBT, NNORBX, ???
@@ -1154,11 +1223,15 @@ C --- start of executable code
 
       end if
 
+      read ( LUMINT, rec=IDIST ) WORK(1:NNORBT)
+      IF (NSYM .EQ. 1) THEN
+         call DSPTGE(NORBT,WORK,H2CD)
+      ELSE
          ICDSYM = MULD2H( ISMO(IC), ISMO(ID) )
-         read ( LUMINT, rec=IDIST ) WORK(1:NNORBT)
          call TRDPAK(WORK(1+NNORBT),WORK,NORB,IORB,NORBT,
      &      ICDSYM,-1)
          call DSPTGE(NORBT,WORK(1+NNORBT),H2CD)
+      END IF
 
 #if FCKTRA_DEBUG > 9
          write (LUPRI,*) 'FCKTRA_NXTH2M, rec,IC,ID',IDIST,IC,ID
@@ -1171,7 +1244,7 @@ C --- start of executable code
 #endif
 
       return
-      end
+      end ! subroutine FCKTRA_NXTH2M
 
       subroutine FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,WORK,IDIST)
 !
@@ -1200,7 +1273,7 @@ C --- start of executable code
       real*8   :: H2CD(NORBT,NORBT), WORK(*)
 
 ! Used from include files:
-!  inforb.h : NORBT, NNORBT, NNORBX, ???
+!  inforb.h : NORBT, N2ORBT, NNORBX, ???
 !  infind.h : ISMO(:)
 !  inftra.h : LBUF
 !  inftap.h : LUINTM, LUMINT
@@ -1215,9 +1288,10 @@ C --- start of executable code
 #include "orbtypdef.h"
 
       integer       :: MMORBX, ICD, ICD_1, ICDSYM
-      integer       :: ITYPC, ITYPD, ITYPCD
+      integer       :: ITYPC, ITYPD, ITYPCD, I, J
       integer, save :: ICD_SAVE
       integer, save, allocatable :: ICDTRA(:)
+      real*8        :: TMP
       logical       :: OLDDX
 
 #if FCKTRA_DEBUG > 3
@@ -1304,11 +1378,26 @@ C --- start of executable code
 
       end if
 
-         ICDSYM = MULD2H( ISMO(IC), ISMO(ID) )
-         read ( LUMINT, rec=IDIST ) WORK(1:NNORBT)
-         call TRDPAK(WORK(1+NNORBT),WORK,NORB,IORB,NORBT,
-     &      ICDSYM,-1)
-         call DSPTGE(NORBT,WORK(1+NNORBT),H2CD)
+         IF (NSYM .EQ. 1) THEN ! then N2ORBT .eq. N2ORBX
+!           read ( LUMINT, rec=IDIST ) H2CD
+            call read_lumint(LUMINT,IDIST,H2CD,N2ORBX)
+         ELSE
+            ICDSYM = MULD2H( ISMO(IC), ISMO(ID) )
+            read ( LUMINT, rec=IDIST ) WORK(1:N2ORBT)
+            call TRLPAK(H2CD,WORK,NORB,IORB,NORBT,ICDSYM,-1)
+!           call TRLPAK(H1SQ,H1PK,NBLK,IBLK,NBLKT,IH1SYM,IWAY)
+         END IF
+
+         IF (ID .GT. IC) THEN
+         ! we need to transpose H2CD as <CD|AB> = <DC|BA>
+            DO J = 2, NORBT
+               DO I = 1, J-1
+                  TMP = H2CD(I, J)
+                  H2CD(I,J) = H2CD(J,I)
+                  H2CD(J,I) = TMP
+               END DO
+            END DO
+         END IF
 
 #if FCKTRA_DEBUG > 9
          write (LUPRI,*) 'FCKTRA_NXTH2D, rec,IC,ID',IDIST,IC,ID
@@ -1321,4 +1410,18 @@ C --- start of executable code
 #endif
 
       end
+      subroutine read_lumint(LUMINT,IDIST,H2CD,L_H2CD)
+
+      ! it is more efficient to
+      !   read(LU) H2CD(1:N2ORBX)
+      ! than
+      !   read(LU) H2CD(1:NORBT,1:NORBT)
+      !
+      implicit none
+      integer :: lumint, idist, L_H2CD
+      real*8  :: H2CD(L_H2CD)
+
+      read ( LUMINT, rec=IDIST ) H2CD
+
+      end ! subroutine FCKTRA_NXTH2D
 ! -- end of DALTON/sirius/sirfcktra.F --

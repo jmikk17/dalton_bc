@@ -1779,10 +1779,18 @@ C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
       END IF
 C
       IF (FCKTRA_TYPE .gt. 0) THEN
-         NEWTRA_USEDRC = .FALSE. ! FCKTRA_DRCCTL not implemented yet !!! TODO  as for NEWTRA HJAaJ
+         IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
+            NEWTRA_USEDRC = .FALSE. ! use DRCCTL and not Dirac integrals from SIR_FCKTRA
+            ! because a lot of MO integrals are calculated twice in N_TRACTL if ITRLVL .ge. 5
+         ELSE
+            USEDRC = .TRUE. !  hjaaj 2.sep.2022 test
+            NEWTRA_USEDRC = USEDRC
+         END IF
+         write(lupri,*) 'calling FCKTRA COUL', KTRLVL
          CALL SIR_FCKTRA_DRIVER('COUL',KTRLVL,THRP,CMO,
      &         WORK,KWORK)
          IF (NEWTRA_USEDRC) THEN
+         write(lupri,*) 'calling FCKTRA EXCH', KTRLVL
             CALL SIR_FCKTRA_DRIVER('EXCH',KTRLVL,THRP,CMO,
      &         WORK,KWORK,IPRTRA)
          END IF
@@ -1849,6 +1857,7 @@ C           ... all occ-occ distributions
 C           ... all active-active distributions
          END IF
          LVLDRC_LAST = LVLDRC ! save in exeinf.h
+         write(lupri,*) 'calling DRCCTL'
          CALL DRCCTL(LVLDRC,CMO,WORK,KWORK)
          IF (IPRTRA .GE. 0) THEN
             CALL GETTIM(TCPU,TWALL)
@@ -2874,12 +2883,15 @@ C
       DATA    KNEXT /-1/
 C
       IF (FCKTRA_TYPE .gt. 0 .AND. NEWTRA_USEDRC) THEN
+         write(lupri,*) 'calling FCKTRA_NXTH2D'
          CALL FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,WRK(KFREE),IDIST)
          RETURN
       ELSE IF (NEWTRA .AND. NEWTRA_USEDRC) THEN
+         write(lupri,*) 'calling N_NXTH2D'
          CALL N_NXTH2D(IC,ID,H2CD,NEEDTP,WRK,KFREE,LFREE,IDIST)
          RETURN
       END IF
+         write(lupri,*) 'calling NXTH2D using DRCCTL integrals'
       CALL QENTER('NXTH2D')
 C
 C     If first read (IDIST .eq. 0) then
