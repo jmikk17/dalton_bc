@@ -84,15 +84,17 @@ C
       CALL QENTER('AVELRSC')
       CALL TIMER('START ',TIMEIN,TIMOUT)
 
-      IF (JIMPRT .GE. 2) THEN
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-         WRITE(LUPRI,*)
-         IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(A)')
-     &      '   Diamagnetic First Order Singlet : FC '
-         IF (KEY.EQ.'DIAK') WRITE(LUPRI,'(A)')
-     &      '   Diamagnetic First Order Singlet : DIAK'
-         IF (KEY.EQ.'ANGP') WRITE(LUPRI,'(A)')
-     &      '   Diamagnetic First Order Singlet : ANGP '
+      IF (JIMPRT .GE. 1) THEN
+C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+         IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic First Order Singlet (FC)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'DIAK') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic First Order Singlet (DIAK)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'ANGP') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic First Order Singlet (ANGP)',
+     &   ' correction is under calculation...'
       END IF
 C
 
