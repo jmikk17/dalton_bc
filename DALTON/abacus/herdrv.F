@@ -333,7 +333,7 @@ C
 #include "maxaqn.h"
 C
 C     NTABLE has been increased 118 (WK/UniKA/07-25-2005).
-      PARAMETER (NDIR = 9, NTABLE = 149)
+      PARAMETER (NDIR = 10, NTABLE = 149)
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D4 = 4.0D0, D10 = 1.0D1)
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      &          WORD1*7
@@ -379,7 +379,7 @@ cLig <> added RANGMO and RPSO
 C Bin Gao, December 17, 2009; adds integrals S2MBRA, S2MKET, and S2MMIX
       DATA TABDIR /'*END OF', '*READIN', '*ONEINT', '*TWOINT',
      &             '*SUPINT', '*ER2INT', '*SORINT', '*DENFIT',
-     &             '*QM3INP'/
+     &             '*QM3INP', '*LR-SHI'/
 C     adds test suite of Gen1Int interface as term 239
 C     Bin Gao, Oct. 3, 2011
 !                    101        102        103        104
@@ -1770,7 +1770,7 @@ C
          CALL UPCASE(WORD)
          DO I = 1, NDIR
             IF (WORD .EQ. TABDIR(I)) THEN
-               GO TO (399,302,303,304,305,306,307,308,309), I
+               GO TO (399,302,303,304,305,306,307,308,309,310), I
             END IF
          END DO
          WRITE (LUPRI,'(/3A/)') ' Input module ',WORD,' nonexistent.'
@@ -1805,6 +1805,8 @@ C 302   CALL REAINP(WORD,RELCAL)
   308   CALL DENSFIT_INP(WORD)
       GO TO 301
   309   CALL QUIT('ERROR, *QM3 has been moved to **DALTON section')
+      GO TO 301
+  310   CALL LRSHIINP(WORD)
       GO TO 301
 C
   399 CONTINUE
@@ -4203,6 +4205,93 @@ C
      &        ' Integrals to be kept in symmetries with "0":',
      &        (ISKEEP(I),I=1,8)
       END IF
+      RETURN
+      END
+C  /* Deck lrshiinp */
+      SUBROUTINE LRSHIINP(WORD)
+#include "implicit.h"
+#include "priunit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "orgcom.h"
+#include "lrescinf.h"
+      PARAMETER (NTABLE = 1)
+C
+      LOGICAL SET, NEWDEF
+      CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
+C
+      SAVE SET
+      DATA TABLE /'.LRATOM'/
+      DATA SET/.FALSE./
+C
+      LRATOM_changed = .TRUE.
+      CALL QENTER('LRSHIINP')
+      IF (SET) THEN
+         IF (WORD .NE. '*END OF' .AND. WORD(1:2) .NE. '**') THEN
+ 969        READ (LUCMD, '(A7)') WORD
+            CALL UPCASE(WORD)
+            PROMPT = WORD(1:1)
+            IF (PROMPT .NE. '*') GO TO 969
+         END IF
+         GOTO 199
+      END IF
+C
+      SET = .TRUE.
+C
+C     Initialize /LRSHIINP/
+C
+C
+      NEWDEF = WORD .EQ. '*LR-SHI'
+      ICHANG = 0
+      IF (NEWDEF) THEN
+         WORD1 = WORD
+  100    CONTINUE
+            READ (LUCMD, '(A7)') WORD
+            CALL UPCASE(WORD)
+            PROMPT = WORD(1:1)
+            IF (PROMPT .EQ. '!' .OR. PROMPT .EQ. '#') THEN
+               GO TO 100
+            ELSE IF (PROMPT .EQ. '.') THEN
+               ICHANG = ICHANG + 1
+               DO 200 I = 1, NTABLE
+                  IF (TABLE(I) .EQ. WORD) THEN
+                     GO TO (1), I
+                  END IF
+  200          CONTINUE
+               WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
+     *            '" not recognized in LR-SHI.'
+               CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+               CALL QUIT('Illegal keyword in LR-SHI.')
+    1          CONTINUE
+                  READ (LUCMD,*) LRATOM
+                  IF (LRATOM.GT.NATOMS)THEN
+                     write(lupri,*) 'Input Error on *LR-SHI'
+                     write(lupri,*) 'Your selection exceeds total ',
+     &                    'number of atoms on input file'
+                     CALL QUIT('LRATOM greater than NATOMS, LRSHIINP')
+                  END IF
+              DO i=1, 3
+                 GAGORG(i) = CORD(i,LRATOM)
+              END DO
+
+               GO TO 100
+            ELSE IF (PROMPT .EQ. '*') THEN
+               GO TO 300
+            ELSE
+               WRITE (LUPRI,'(/,3A,/)') ' Prompt "',WORD,
+     *            '" not recognized in LR-SHI.'
+               CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+               CALL QUIT('Illegal prompt in LR-SHI.')
+            END IF
+      END IF
+  300 CONTINUE
+      IF (ICHANG .EQ. 0) GOTO 199
+      IF (NEWDEF) THEN
+         CALL HEADER('Changes of defaults for LRSHIINP:',1)
+         WRITE (LUPRI,'(1(/A,3F20.12))')
+     &    ' Gauge origin    (bohr):', (GAGORG(I),I=1,3)
+      END IF
+ 199  CALL QEXIT('LRSHIINP')
       RETURN
       END
 C/* Deck herini */
