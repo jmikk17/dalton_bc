@@ -88,28 +88,37 @@ C         'FCZK' 'FCZK'
       CALL QENTER('LRSCLIN')
       CALL TIMER('START ',TIMEIN,TIMOUT)
 
-      IF (JIMPRT .GE. 2) THEN
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-         WRITE(LUPRI,*)
-            IF (KEY.EQ.'DIAM') WRITE(LUPRI,'(A)')
-     &      '   Diamagnetic Second Order Singlet : DIAM '
-            IF (KEY.EQ.'DIAD') WRITE(LUPRI,'(A)')
-     &      '   Diamagnetic Second Order Singlet : DIAD '
-            IF (KEY.EQ.'PSOK') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Singlet : PSOK '
-            IF (KEY.EQ.'PSOKI') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Singlet : PSOKI'
-            IF (KEY.EQ.'LKIN') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Singlet : LKIN '
-            IF (KEY.EQ.'FCZK') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Triplet : FCZK'
-            IF (KEY.EQ.'SDZK') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Triplet : SDZK'
-            IF (KEY.EQ.'FCBS') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Triplet : FCBS'
-            IF (KEY.EQ.'SDBS') WRITE(LUPRI,'(A)')
-     &      '   Paramagnetic Second Order Triplet : SDBS'
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+      IF (JIMPRT .GE. 1) THEN
+C        WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+C        WRITE(LUPRI,*)
+         IF (KEY.EQ.'DIAM') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic Second Order Singlet (DIAM)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'DIAD') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic Second Order Singlet (DIAD)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'PSOK') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Singlet (PSOK)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'PSOKI') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Singlet (PSOKI)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'LKIN') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Singlet (LKIN)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'FCZK') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Triplet (FCZK)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'SDZK') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Triplet (SDZK)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'FCBS') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Triplet (FCBS)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'SDBS') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Triplet (SDBS)',
+     &   ' correction is under calculation...'
+C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
       END IF
 C
        IPRRSP = JIMPRT-1
@@ -545,9 +554,10 @@ C
          NABATY =  -1    ! = 1 for real operators .. -1 for imm. op.
          ELSE IF((KEY.EQ."FCZK").OR.(KEY.EQ."SDZK")) THEN
          NABATY = 1      ! = 1 for real operators .. -1 for imm. op.
-c        TRIPLE = .TRUE. !J. Aucar - this should be revised
+         TRIPLE = .TRUE.
          ELSE IF((KEY.EQ."FCBS").OR.(KEY.EQ."SDBS")) THEN
          NABATY = 1      ! = 1 for real operators .. -1 for imm. op.
+         TRIPLE = .TRUE.
       END IF
          NABAOP = 1      ! number of right hand sides. dejarlo asi . solo 1
 C
