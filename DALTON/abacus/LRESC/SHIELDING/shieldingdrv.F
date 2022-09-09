@@ -101,6 +101,7 @@ c                 write(lupri,*)' ..aca leo print level :', JIMPRT
                   GOTO 100
 C   SET WHICH NUC TO DO LRESC
  3             CONTINUE
+
 cx                write(lupri,*)'@LRINP  antes de leer'
                   READ (LUCMD,*) LRATOM
                   ICHANG = ICHANG + 1
@@ -113,6 +114,7 @@ cx     $          'named : ', NAMN(LRATOM), 'on Molecule.mol file'
      &                    'number of atoms on input file'
                      CALL QUIT('LRATOM greater than NATOMS, LRSCINP')
                   END IF
+
                   GOTO 100
  4             CONTINUE
                   PRTALL1 = .TRUE.
@@ -188,7 +190,10 @@ C
       PARAMETER(D0 = 0.0D+0)
 
       JIMPRT    = 0
-      LRATOM    = 1
+
+      IF (.not.LRATOM_changed) THEN
+         LRATOM    = 1
+      END IF
 
       LRGAUG(1) = D0
       LRGAUG(2) = D0
@@ -279,36 +284,38 @@ C ----------------------------
          SIGMAP1T = .TRUE.
       ENDIF
 
+C     Print information about LRESC metodology
+      CALL HEADER_LRSHIELD
 C
-C Diamagnetic corrections to Shielding:
-C        Zeroth Order, Singlet of course
+C     Diamagnetic corrections to Shielding:
+C     Zeroth Order, Singlet of course
 C
       IF (SIGMAD0S) THEN
          CALL AVELRSC('FCAV',WORK,LWORK)
          CALL AVELRSC('DIAK',WORK,LWORK)
-cx         IF(NORBT.NE.NBAST) Then
-cx            PING = .TRUE.
-cx            write(lupri,*)' WARNING : @ANGPSO (NORBT.NE.NBAST) :',
-cx     &      ' AngPso not computed due to basis set dependencies'
-cx         ELSE
+cx       IF(NORBT.NE.NBAST) Then
+cx          PING = .TRUE.
+cx          write(lupri,*)' WARNING : @ANGPSO (NORBT.NE.NBAST) :',
+cx     &    ' AngPso not computed due to basis set dependencies'
+cx       ELSE
          CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO testing ! should work!
-cx         ENDIF
+cx        ENDIF
       END IF
 C
-C Diamagnetic corrections to Shielding:
-C        First Order Singlet
+C     Diamagnetic corrections to Shielding:
+C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
          CALL LINEARLR('DIAM',WORK,LWORK)
          CALL LINEARLR('DIAD',WORK,LWORK)
       END IF
 C
-C Paramagnetic corrections to Shielding:
-C        First Order Singlet
+C     Paramagnetic corrections to Shielding:
+C     First Order Singlet
 C
       IF (SIGMAP1S)  THEN
          CALL LINEARLR('PSOK',WORK,LWORK)
-C         WRITE(LUPRI,'(A)')'   Calling to SIGMAP1S for : PSKI  '//
+C        WRITE(LUPRI,'(A)')'   Calling to SIGMAP1S for : PSKI  '//
 C     &        'using A.1.B routine'  ! con mis integrales
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
 C         CALL LINEARLR('PSKI',WORK,LWORK)
@@ -316,8 +323,8 @@ C
          CALL LINEARLR('LKIN',WORK,LWORK)
       END IF
 C
-C Paramagnetic corrections to Shielding:
-C        First Order TRIPLET
+C     Paramagnetic corrections to Shielding:
+C     First Order TRIPLET
 C
       IF (SIGMAP1T) THEN
          CALL LINEARLR('FCZK',WORK,LWORK)
@@ -326,127 +333,25 @@ C
          CALL LINEARLR('SDBS',WORK,LWORK)
       END IF
 C
-C Paramagnetic corrections to Shielding:
-C            Third Order SINLGET
+C     Paramagnetic corrections to Shielding:
+C     Third Order SINLGET
 C
       IF (SIGMAP3S) THEN
          WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
-     &         ' Singlet Second Order Shielding corrections'
-cv         CALL CUADRAS('LPSO')
+     &   ' Singlet Second Order Shielding corrections'
+cv       CALL CUADRAS('LPSO')
       END IF
 C
-C Paramagnetic corrections to Shielding:
-C           Third Order TRIPLET
+C     Paramagnetic corrections to Shielding:
+C     Third Order TRIPLET
 C
       IF (SIGMAP3T) THEN
          WRITE (LUPRI,'(A)')'   Calling to SIGMA3T for : '
-cv         CALL CUADRAS('LFCO')
+cv       CALL CUADRAS('LFCO')
       END IF
 
-C *******************************************************************
-C *******************************************************************
-C
-C
-C
-C -================---------------======================
-C                  Print Section
-C -================---------------======================
-C
-C     Information about calculation of LRESC
-C
-C ---- Default
-      CALL
-     & TITLER
-     &('ABACUS - RELATIVISTIC CORRECTIONS LRESC TO SHIELDING','*',124)
 
-      WRITE(lupri,*)
-      WRITE(lupri,*)' First and Second order relativistic '//
-     & 'corrections to nuclear shielding constant.'
-
-      WRITE(LUPRI,*)
-
-      IF (LRESCALL) THEN
-            WRITE(lupri,*)
-     &   '* LRESC corrections to paramagnetic component were activated'
-      ELSE
-            WRITE(lupri,*) '* LRESC corrections were activated'
-      ENDIF
-
-      WRITE(LUPRI,*)
-
-c      WRITE(LUPRI,*)'   -  For definitions on terms named ABC,'//
-c     &              ' refered to relativistic correction '
-c      WRITE(LUPRI,*)'      of sigma, see JCP. 137, 214319(2012). '
-      WRITE(LUPRI,*)'   -  Original LRESC papers at : J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi:10.1063/1.1525808'
-      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
-c     &                       ' DOI: 10.1080/00268970310001617784'
-      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
-     & 'doi:10.1063/1.2244572'
-c      WRITE(LUPRI,*)' Gaugeo placed at : ', GAGORG
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,
-     &         ": ", NAMN(LRATOM)
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
-     &  CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A)')'-  Remember : '
-      WRITE(LUPRI,'(14X,A)')'*  GAUGEO should be placed at selected '//
-     &  'nucleus, on INTEGRALS SECTION, in a.u'
-      IF (.NOT. PRTALL1) THEN
-         WRITE(LUPRI,'(14X,A)')'*  For individual contributions, add '//
-     &   '.PRTALL in your input file under *LROPTS'
-      ENDIF
-      WRITE(LUPRI,'(14X,A)')'*  Third Order Singlet and Triplet '//
-     & 'Corrections must be run in order to get'
-      WRITE(LUPRI,'(17X,A)')'all relativistic corrections. Not '//
-     &                      ' yet implemented, but can be done via'
-      WRITE(LUPRI,'(17X,A)')'RESPONSE calculation (see Manual for'//
-     &                      ' details)'
-
-C ---Not Default
-      IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
-     & CALL HEADER('Changes of defaults for LRESC :',0)
-
-      IF (GAUCHANG) THEN
-         WRITE(lupri,*)'*** WARNING:'
-         WRITE(lupri,*)'GAUGEO must be placed on selected nucleus at'
-         WRITE(lupri,*)'a.u. due to Hermite section (1 body integrals)'
-      END IF
-
-      IF (JIMPRT.NE.0) THEN
-         WRITE (LUPRI,'(A,I5)')
-     &      '--- Print level : ', JIMPRT
-      END IF
-
-      IF (.NOT. LRESCALL) THEN
-         WRITE (LUPRI,'(A)')
-     &      '--- Not all corrections were activated. ' //
-     &      'Only the following will be done : '
-         IF (SIGMAP1S)  WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order singlet corrections to shielding'
-         IF (SIGMAP1T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order triplet corrections to shielding'
-         IF (SIGMAP3S) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order singlet corrections to shielding'
-         IF (SIGMAP3T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order triplet corrections to shielding'
-            WRITE (LUPRI,*) 'LRESC : '
-         IF (SIGMAD0S) WRITE (LUPRI,*)
-     &   '    Diamagnetic zero order singlet corrections to shielding'
-         IF (SIGMAD1S) WRITE (LUPRI,*)
-     &   '   Diamagnetic first order singlet corrections to shielding'
-         IF (NUCSPI .GT. 0)
-     &      WRITE (LUPRI,'(A)')' XXXXXXXX NUCSPI GT 0 ??  '//
-     &           '    '
-      ENDIF
-         WRITE(LUPRI,*)' '
-C
-C Isotropic values
+C     Isotropic values
 C
       SLRESC  = 0.0
       SGD0S   = 0.0  ! sigma 0order singlet DIAM  : Fc, AngPso, DiaKin
@@ -454,10 +359,10 @@ C
       SGP1S   = 0.0  ! sigma 1order singlet PARAM : Lkin, Psokin
       SGP1T   = 0.0  ! sigma 1order triplet PARAM : FcKin, SdKin, SdBso, FcBso
 
-C    Add constants to print all in ppm's
+C     Add constants to print all in ppm's
       DO i=1, 3
-!Diamagnetic corrections
-         !LRESC
+!     Diamagnetic corrections
+      !LRESC
          FCTEMP  = LRFCAV(i,i)
          ANGTEMP = LRANGP(i,i)
          DARTEMP = LRDIAD(i,i)
@@ -467,7 +372,7 @@ C    Add constants to print all in ppm's
          LRANGP(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP(i,i)
          LRDIAD(i,i) = calfa*calfa*1.0D+6* CDIAD* LRDIAD(i,i)
          LRDIAM(i,i) = calfa*calfa*1.0D+6* CDIAM* LRDIAM(i,i)
-!Paramagnetic corrections
+!     Paramagnetic corrections
          LRFCZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK(i,i)
          LRSDZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CSDZK*LRSDZK(i,i)
          LRFCBS(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS(i,i)
@@ -476,34 +381,34 @@ C    Add constants to print all in ppm's
          LRPSOK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK(i,i)
       ENDDO
 C
-C Trace
+C     Trace
 C
       DO i=1, 3
-!Diamagnetic corrections
-         !LRESC
+!     Diamagnetic corrections
+      !LRESC
          SGD0S = SGD0S + LRFCAV(i,i) + LRDIAK(i,i) + LRANGP(i,i)
          SGD1S = SGD1S + LRDIAD(i,i) + LRDIAM(i,i)
-!Paramagnetic corrections
+!     Paramagnetic corrections
          SGP1S = SGP1S + LRLKIN(i,i) + LRPSOK(i,i)
          SGP1T = SGP1T +
      &    LRFCZK(i,i) + LRSDZK(i,i)+LRFCBS(i,i)+LRSDBS(i,i)
       ENDDO
       SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T
 C
-C  Corrections of shielding constant are the trace of each tensor
+C     Corrections of shielding constant are the trace of each tensor
 C
       SLRESC = SLRESC/3.0
-!Diamagnetic corrections
+!     Diamagnetic corrections
       !LRESC
       SGD0S = SGD0S/3.0
       SGD1S = SGD1S/3.0
-!Paramagnetic corrections
+!     Paramagnetic corrections
       SGP1S = SGP1S/3.0
       SGP1T = SGP1T/3.0
 C
 
 C
-C Paramagnetic 1st singlet or triplet
+C     Paramagnetic 1st singlet or triplet
 C
       IF ((SIGMAP1S).OR.(SIGMAP1T)) THEN
          WRITE(LUPRI,*)
@@ -567,7 +472,7 @@ C
          ENDIF
       ENDIF
 C
-C diamagnetic 0th or 1st order singlet
+C     diamagnetic 0th or 1st order singlet
 C
       IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
          WRITE(LUPRI,*)
@@ -581,7 +486,7 @@ c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
             WRITE(LUPRI,*)
             IF(PRTALL1) THEN
                WRITE(LUPRI,*)
-     &         '       Detailed info : [.DIAM1S] Diagonal'//
+     &         '       Detailed info : [.DIAM0S] Diagonal'//
      &                      ' components, for each operator'
                WRITE(LUPRI,*)
      &          '       ---------------                   xx'//
@@ -645,7 +550,7 @@ c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
          ENDIF
       ENDIF
 C
-C All of them in detail
+C     All of them in detail
 C
       IF (LRESCALL) THEN
 c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
