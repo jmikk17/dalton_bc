@@ -166,6 +166,7 @@ subroutine pelib_ifc_input_reader(word)
     integer :: i, j
     real(rp), dimension(2) :: temp
 
+
     call qenter('pelib_ifc_input_reader')
 
     potfile = 'POTENTIAL.INP'
@@ -614,6 +615,55 @@ subroutine pelib_ifc_input_reader(word)
                 enddo
             end if
             pelib_gauge = .true.
+
+        ! PBC via MIC options
+        else if (trim(option(2:4)) == 'PBC') then
+            pelib_mic = .true.
+            read(lucmd, '(a80)') option
+            backspace(lucmd)
+            if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+               & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                read(lucmd, *) cell_type
+            else
+                error stop 'Wrong CELL TYPE'
+            end if
+            read(lucmd, '(a80)') option
+            backspace(lucmd)
+            if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+               & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                read(lucmd, *) (cell_parameters(i), i=1,6)
+                cell_length(1:3)=cell_parameters(1:3)
+                cell_angles(1:3)=cell_parameters(4:6)
+                cell_length = cell_length * aa2bohr
+                if (cell_type == 'CUBIC' .or. cell_type == 'RECTANGULAR') then
+                    do i = 1 , 3
+                        do j = 1 , 3
+                            if (i .eq. j) then
+                                h(i,j) = cell_length(i)
+                            else
+                                h(i,j) = 0.d0
+                            end if 
+                        end do
+                    end do
+                end if
+                if (cell_type == 'TRICLINIC') then
+                    do i = 1, 3
+                        cell_angles(i) = cell_angles(i)*3.1415926/180.0
+                    end do
+                    h(1,1) = cell_length(1)
+                    h(2,1) = 0
+                    h(3,1) = 0
+                    h(1,2) = cell_length(2) * cos(cell_angles(3))
+                    h(2,2) = cell_length(2) * sin(cell_angles(3))
+                    h(3,2) = 0 
+                    h(1,3) = cell_length(3) * cos(cell_angles(2))
+                    h(2,3) = (cell_length(2) * cell_length(3) * cos(cell_angles(1)) - (h(1,2) * h(1,3)))/h(2,2)
+                    h(3,3) = sqrt(cell_length(3)**2 - h(1,3)**2 - h(2,3)**2)
+                end if
+                call inv_mat(3,h,hinv)
+            else  
+                error stop 'Wrong CELL TYPE and/or CELL PARAMETERS'
+            end if 
         else if (option(1:1) == '*') then
             word = option
             exit
@@ -639,6 +689,60 @@ subroutine pelib_ifc_input_reader(word)
     end if
 
     call qexit('pelib_ifc_input_reader')
+
+!--------------------------------------------------------------------------------------------------    
+
+    contains
+
+    subroutine inv_mat(n,A,invA)
+
+        use pelib_options
+    
+        integer(ip), intent(in) :: n
+        integer(ip) :: i , j
+        real(rp), intent(in), dimension(n,n) :: A
+        real(rp), dimension(n,2 * n) :: Aid
+        real(rp), intent(out), dimension(n,n) :: invA
+        
+        ! Creating n,2n matrix Aid, from matrix A and identity matrix
+        do i = 1, n
+            Aid(i,:) = A(i,:)
+        enddo
+        do i = 1, n
+            do j = n + 1, 2 * n
+                Aid(i,j) = 0.d0
+                if (j - n .eq. i) then ! Adding 1 in the diagonal of identity part
+                    Aid(i,j) = 1
+                end if
+            enddo
+        enddo
+        ! Gaus elimination
+        do i = 1, n 
+            do j = 1, i 
+                if (i .eq. j) then
+                    aid(i,:) = aid(i,:) / aid(i,i)
+                else
+                    aid(i,:) = aid(i,:) - aid(i,j) * aid(j,:)
+                endif
+            enddo
+        enddo
+        
+        do i = n - 1, 1, -1 
+            do j = n, i, -1
+                if (i .ne. j) then 
+                    aid(i,:) = aid(i,:) - aid(i,j) * aid(j,:)
+                endif
+            enddo
+        enddo
+        ! Saving the inversed matrix as InvA from from Aid, columns [n+1;2n]
+        do i = 1,n
+            InvA(:,i) = Aid(:,n+i)
+        enddo
+        
+        end subroutine inv_mat
+    
+    !------------------------------------------------------------------------------
+
 end subroutine pelib_ifc_input_reader
 
 subroutine pelib_ifc_init()
