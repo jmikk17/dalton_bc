@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2019.alpha (2019)
+    This is output from DALTON release Dalton2022.0-dev (2022)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -25,9 +25,9 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       P. Dahle, E. K. Dalskov, U. Ekstroem,
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
        L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
        C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
@@ -48,136 +48,147 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2019.alpha (2019), see http://daltonprogram.org
+       Release Dalton2022.0-dev (2022), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
-    Authors in alphabetical order (major contribution(s) in parenthesis):
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC module, MCD in RESPONS)
-  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
-  Rasmus Faber,             University of Copenhagen,     Denmark     (Vib.avg. NMR with SOPPA, parallel AO-SOPPA)
-  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding model)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding model)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
-  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding model)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Darwin) : Tue May 14 10:51:46 2019
-     Host name              : adm-106152.pc.sdu.dk                    
+     Date and time (Linux)  : Fri Oct 21 16:55:06 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /Users/hjj/progs/gitDalton-hjaaj-srdft/build_master_mpi/test/rsp_soppa1excinosymm
-   2) /Users/hjj/progs/gitDalton-hjaaj-srdft/build_master_mpi/basis
+   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/test/rsp_soppa1excinosymm
+   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis
 
 
 Compilation information
 -----------------------
 
  Who compiled             | hjj
- Host                     | adm-106152.local
- System                   | Darwin-15.6.0
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-5.15.0-41-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /opt/local/bin/mpif90
- Fortran compiler version | GNU Fortran (MacPorts gcc7 7.4.0_0) 7.4.0
- C compiler               | /opt/local/bin/mpicc
- C compiler version       | gcc-mp-7 (MacPorts gcc7 7.4.0_0) 7.4.0
- C++ compiler             | /opt/local/bin/mpicxx
+ Fortran compiler         | /home/hjj/my_libs/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+ C compiler               | /home/hjj/my_libs/openmpi/bin/mpicc
+ C compiler version       | gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+ C++ compiler             | /home/hjj/my_libs/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- BLAS                     | /opt/local/lib/libopenblas.dylib
- LAPACK                   | /usr/lib/liblapack.dylib
+ BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
+ LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | f1c5783e03fbd3364f432e0407e614f4d4aec2ca
- Git branch               | master
- Configuration time       | 2019-05-14 10:47:33.872690
+ Last Git revision        | 83ef42a072dfe3c965e0b0c08400cf18ba74e4e6
+ Git branch               | WIP-hjaaj-master
+ Configuration time       | 2022-10-21 16:54:31.353445
 
  * Sequential calculation.
 
@@ -236,10 +247,10 @@ H    -1.45235 0.899623 0.0
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: SOPPA calculation of singlet excitation energies. No symmetry           
- 2:                                                                         
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1: SOPPA calculation of singlet excitation energies. No symmetry
+ 2: 
+    --------------------------------------------------------------------------------
 
   Atomic type no.    1
   --------------------
@@ -247,7 +258,7 @@ H    -1.45235 0.899623 0.0
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/Users/hjj/progs/gitDalton-hjaaj-srdft/build_master_mpi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
 
   Atomic type no.    2
   --------------------
@@ -255,7 +266,7 @@ H    -1.45235 0.899623 0.0
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/Users/hjj/progs/gitDalton-hjaaj-srdft/build_master_mpi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_master/build_master-WIP2_myompi/basis/cc-pVDZ"
 
 
                          SYMGRP: Point group information
@@ -275,6 +286,7 @@ H    -1.45235 0.899623 0.0
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000   -0.099054    0.000000
+ Center-of-mass coordinates (Angs):    0.000000   -0.052417    0.000000
 
 
   Atoms and basis sets
@@ -385,6 +397,8 @@ H    -1.45235 0.899623 0.0
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
+Calculation of 2-electron integrals are postponed until they are needed.
+
 
      ************************************************************************
      ************************** Output from HERINT **************************
@@ -402,13 +416,9 @@ H    -1.45235 0.899623 0.0
       z      0.00000000         0.00000000         0.00000000
 
 
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:       21669 ( 48.0% )
- HERMIT - Megabytes written:                              0.254
-
-  Total CPU  time used in HERMIT:   0.05 seconds
-  Total wall time used in HERMIT:   0.06 seconds
+  Time used in HUCKEL     is       0.13 seconds
+  Total CPU  time used in HERMIT:   0.32 seconds
+  Total wall time used in HERMIT:   0.02 seconds
 
 
                         .----------------------------------.
@@ -441,12 +451,12 @@ H    -1.45235 0.899623 0.0
  **********************************************************************
 
  
-     Date and time (Darwin) : Tue May 14 10:51:46 2019
-     Host name              : adm-106152.pc.sdu.dk                    
+     Date and time (Linux)  : Fri Oct 21 16:55:06 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-     SOPPA calculation of singlet excitation energies. No symmetry           
-                                                                             
+     SOPPA calculation of singlet excitation energies. No symmetry
+     
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
@@ -504,6 +514,19 @@ H    -1.45235 0.899623 0.0
  -----------------------------------------------------------------------------
 
 Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:       21669 ( 48.0% )
+ HERMIT - Megabytes written:                              0.254
+
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
 @  1    -75.8558054129        1.60794D+00   -7.59D+01    1
@@ -542,7 +565,7 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      2.001217
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
-@  9    -76.0256814839        5.80223D-06   -1.55D-10    8
+@  9    -76.0256814839        5.80223D-06   -1.54D-10    8
       Virial theorem: -V/T =      2.001217
 @    MULPOP   O      -0.32; H       0.16; H       0.16; 
  -----------------------------------------------------------------------------
@@ -554,12 +577,35 @@ Calculating AOSUPINT
 
  --- Writing SIRIFC interface file
 
- CPU and wall time for SCF :       0.023       0.043
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles with pole strength 1
+
+   ============  ============  ============  ============  ============
+      20.553020      1.329341      0.691446      0.563871      0.492124
+     559.276121     36.173209     18.815211     15.343708     13.391364
+   ============  ============  ============  ============  ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A  ) :   559.276      36.173      18.815      15.344      13.391
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       0.073       0.026
 
 
  ----- Output from SIRIUS MP2 module -----
 
- Reference: H.J.Aa.Jensen, P.Jorgensen, H.Agren, and J.Olsen,
+ Reference: H.J.Aa.Jensen, P.Jørgensen, H.Ågren, and J.Olsen,
             J. Chem. Phys. 88, 3834 (1988); 89, 5354 (1988)
 
  Checking that the closed shell orbitals are canonical Hartree-Fock orbitals
@@ -585,7 +631,7 @@ Calculating AOSUPINT
   --------------------------
     gap     :     0.67516549
 
- 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.014       0.017
+ 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.010       0.010
 
  MP2 move   0.101828 electrons to unoccupied HF orbitals
 
@@ -593,6 +639,8 @@ Calculating AOSUPINT
 @   Hartree-Fock total energy   :           -76.0256814839
 @   + MP2 contribution          :            -0.2049853483
 @   = MP2 second order energy   :           -76.2306668322
+
+ MP2INFO for SOPPA (RHF orbitals) written to SIRIFC
 
  Natural orbital occupation numbers, symmetry 1 (irrep A  )
  Sum =    10.00000000; RHF =    10.00000000; Difference =     0.00000000
@@ -603,9 +651,9 @@ Calculating AOSUPINT
          0.00089853     0.00061968     0.00053531     0.00047702     0.00045840
          0.00041081     0.00039136     0.00004517     0.00004229
 
- Time used for MP2 natural orbitals :       0.018 CPU seconds,       0.022 wall seconds.
+ Time used for MP2 natural orbitals :       0.011 CPU seconds,       0.011 wall seconds.
 
- CPU and wall time for MP2 :       0.018       0.022
+ CPU and wall time for MP2 :       0.011       0.011
 
 
                        .-----------------------------------.
@@ -624,10 +672,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000460189
 
  
-     Date and time (Darwin) : Tue May 14 10:51:46 2019
-     Host name              : adm-106152.pc.sdu.dk                    
+     Date and time (Linux)  : Fri Oct 21 16:55:06 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
-File label for MO orbitals:  14May19   MP2SAVE 
+File label for MO orbitals:  21Oct22   MP2SAVE 
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -635,53 +683,53 @@ File label for MO orbitals:  14May19   MP2SAVE
  ------------------------------------------------
 
     Orbital         1        2        3        4        5        6        7
-   1 O   :1s    -1.0006  -0.0016  -0.0000   0.0028  -0.0000   0.0000   0.0347
-   2 O   :1s     0.0053  -0.9225  -0.0000   0.0455  -0.0000   0.0000   0.4370
-   3 O   :1s     0.0028   0.0692  -0.0000   0.2096   0.0000  -0.0000   0.1548
-   4 O   :2px    0.0000   0.0000  -0.0000  -0.0000  -0.7206   1.3105   0.0000
-   5 O   :2py   -0.0074   0.0967   0.0000  -0.7971  -0.0000   0.0000   1.3128
-   6 O   :2pz    0.0000   0.0000  -0.9163  -0.0000   0.0000   0.0000   0.0000
-   7 O   :2px   -0.0000  -0.0000   0.0000  -0.0000   0.1154  -0.6437   0.0000
-   8 O   :2py    0.0011   0.0668   0.0000   0.0204   0.0000  -0.0000  -0.9426
-   9 O   :2pz    0.0000   0.0000  -0.0754  -0.0000   0.0000   0.0000   0.0000
-  10 O   :3d2-  -0.0000  -0.0000   0.0000  -0.0000  -0.0255  -0.0365   0.0000
-  11 O   :3d1-   0.0000   0.0000  -0.0182  -0.0000   0.0000   0.0000   0.0000
-  12 O   :3d0    0.0002   0.0001  -0.0000   0.0130  -0.0000   0.0000   0.0416
-  14 O   :3d2+   0.0000  -0.0041  -0.0000   0.0128  -0.0000  -0.0000   0.0071
-  15 H   :1s     0.0002  -0.2163  -0.0000  -0.4246  -0.5537  -0.8617  -0.7671
+   1 O   :1s    -1.0006  -0.0016  -0.0000   0.0028   0.0000  -0.0000   0.0347
+   2 O   :1s     0.0053  -0.9225  -0.0000   0.0455   0.0000  -0.0000   0.4370
+   3 O   :1s     0.0028   0.0692  -0.0000   0.2096  -0.0000   0.0000   0.1548
+   4 O   :2px   -0.0000  -0.0000  -0.0000   0.0000  -0.7206   1.3105   0.0000
+   5 O   :2py   -0.0074   0.0967  -0.0000  -0.7971   0.0000  -0.0000   1.3128
+   6 O   :2pz    0.0000  -0.0000  -0.9163  -0.0000   0.0000  -0.0000  -0.0000
+   7 O   :2px    0.0000   0.0000   0.0000   0.0000   0.1154  -0.6437  -0.0000
+   8 O   :2py    0.0011   0.0668  -0.0000   0.0204  -0.0000   0.0000  -0.9426
+   9 O   :2pz    0.0000  -0.0000  -0.0754  -0.0000   0.0000  -0.0000  -0.0000
+  10 O   :3d2-   0.0000   0.0000   0.0000   0.0000  -0.0255  -0.0365  -0.0000
+  11 O   :3d1-   0.0000  -0.0000  -0.0182  -0.0000   0.0000  -0.0000  -0.0000
+  12 O   :3d0    0.0002   0.0001   0.0000   0.0130   0.0000  -0.0000   0.0416
+  14 O   :3d2+   0.0000  -0.0041  -0.0000   0.0128   0.0000   0.0000   0.0071
+  15 H   :1s     0.0002  -0.2163   0.0000  -0.4246  -0.5537  -0.8617  -0.7671
   16 H   :1s    -0.0008   0.1080  -0.0000   0.1647   0.1771   0.2274   0.2715
-  17 H   :2px   -0.0006   0.0266   0.0000   0.0375   0.0196   0.0215   0.0450
+  17 H   :2px   -0.0006   0.0266  -0.0000   0.0375   0.0196   0.0215   0.0450
   18 H   :2py   -0.0007   0.0217   0.0000  -0.0055   0.0301   0.0083  -0.0234
-  19 H   :2pz   -0.0000  -0.0000  -0.0328   0.0000  -0.0000  -0.0000  -0.0000
+  19 H   :2pz   -0.0000   0.0000  -0.0328   0.0000  -0.0000   0.0000   0.0000
   20 H   :1s     0.0002  -0.2163   0.0000  -0.4246   0.5537   0.8617  -0.7671
   21 H   :1s    -0.0008   0.1080   0.0000   0.1647  -0.1771  -0.2274   0.2715
   22 H   :2px    0.0006  -0.0266   0.0000  -0.0375   0.0196   0.0215  -0.0450
   23 H   :2py   -0.0007   0.0217  -0.0000  -0.0055  -0.0301  -0.0083  -0.0234
-  24 H   :2pz   -0.0000  -0.0000  -0.0328   0.0000  -0.0000  -0.0000  -0.0000
+  24 H   :2pz   -0.0000   0.0000  -0.0328   0.0000  -0.0000   0.0000   0.0000
 
     Orbital         8        9       10       11       12       13       14
-   1 O   :1s    -0.0000   0.4689  -0.0000  -0.3192  -0.0000  -0.1261  -0.0000
-   2 O   :1s    -0.0000   2.4265  -0.0000  -1.4115  -0.0000  -0.5252  -0.0000
-   3 O   :1s    -0.0000  -2.2406   0.0000   1.9304  -0.0000   0.8649  -0.0000
-   4 O   :2px   -0.0000   0.0000  -0.3792   0.0000  -0.0000  -0.0000  -0.0000
-   5 O   :2py    0.0000  -0.4767  -0.0000   0.0098   0.0000  -0.0978   0.0000
+   1 O   :1s    -0.0000   0.4689   0.0000  -0.3192  -0.0000  -0.1261  -0.0000
+   2 O   :1s    -0.0000   2.4265   0.0000  -1.4115   0.0000  -0.5252  -0.0000
+   3 O   :1s    -0.0000  -2.2406  -0.0000   1.9304  -0.0000   0.8649  -0.0000
+   4 O   :2px   -0.0000   0.0000  -0.3792  -0.0000  -0.0000   0.0000  -0.0000
+   5 O   :2py   -0.0000  -0.4767   0.0000   0.0098  -0.0000  -0.0978  -0.0000
    6 O   :2pz   -1.4053  -0.0000  -0.0000   0.0000  -0.0000   0.0000   0.1097
-   7 O   :2px    0.0000  -0.0000   0.9800  -0.0000   0.0000  -0.0000   0.0000
-   8 O   :2py    0.0000   0.8959   0.0000   0.1978  -0.0000   0.5269   0.0000
+   7 O   :2px    0.0000   0.0000   0.9800   0.0000   0.0000   0.0000   0.0000
+   8 O   :2py   -0.0000   0.8959  -0.0000   0.1978   0.0000   0.5269  -0.0000
    9 O   :2pz    1.6014  -0.0000  -0.0000   0.0000   0.0000   0.0000  -0.3354
-  10 O   :3d2-   0.0000  -0.0000  -0.5931  -0.0000  -0.0000  -0.0000   0.0000
+  10 O   :3d2-   0.0000   0.0000  -0.5931   0.0000  -0.0000   0.0000   0.0000
   11 O   :3d1-   0.0463  -0.0000  -0.0000   0.0000   0.0000   0.0000   0.8852
-  12 O   :3d0   -0.0000   0.0975  -0.0000   0.2932  -0.0000   0.7139  -0.0000
-  13 O   :3d1+   0.0000   0.0000  -0.0000   0.0000  -0.7919  -0.0000   0.0000
-  14 O   :3d2+  -0.0000  -0.1104  -0.0000  -0.5312  -0.0000   0.4329  -0.0000
-  15 H   :1s    -0.0000  -0.5514  -0.7930  -0.7210  -0.0000  -0.5061  -0.0000
-  16 H   :1s    -0.0000   0.3269   0.6079   0.4189  -0.0000   0.3027  -0.0000
-  17 H   :2px    0.0000   0.0017   0.1256  -0.0729  -0.0000   0.1775   0.0000
+  12 O   :3d0    0.0000   0.0975   0.0000   0.2932  -0.0000   0.7139   0.0000
+  13 O   :3d1+  -0.0000  -0.0000  -0.0000   0.0000  -0.7919  -0.0000   0.0000
+  14 O   :3d2+  -0.0000  -0.1104   0.0000  -0.5312   0.0000   0.4329  -0.0000
+  15 H   :1s     0.0000  -0.5514  -0.7930  -0.7210  -0.0000  -0.5061   0.0000
+  16 H   :1s    -0.0000   0.3269   0.6079   0.4189   0.0000   0.3027  -0.0000
+  17 H   :2px   -0.0000   0.0017   0.1256  -0.0729   0.0000   0.1775  -0.0000
   18 H   :2py    0.0000   0.1009  -0.0131   0.2205   0.0000  -0.1004   0.0000
   19 H   :2pz    0.0837   0.0000   0.0000  -0.0000  -0.2837  -0.0000   0.2085
-  20 H   :1s     0.0000  -0.5514   0.7930  -0.7210   0.0000  -0.5061   0.0000
+  20 H   :1s     0.0000  -0.5514   0.7930  -0.7210  -0.0000  -0.5061   0.0000
   21 H   :1s     0.0000   0.3269  -0.6079   0.4189   0.0000   0.3027   0.0000
-  22 H   :2px    0.0000  -0.0017   0.1256   0.0729   0.0000  -0.1775   0.0000
+  22 H   :2px    0.0000  -0.0017   0.1256   0.0729  -0.0000  -0.1775   0.0000
   23 H   :2py   -0.0000   0.1009   0.0131   0.2205   0.0000  -0.1004  -0.0000
   24 H   :2pz    0.0837   0.0000   0.0000  -0.0000   0.2837  -0.0000   0.2085
 
@@ -702,12 +750,12 @@ File label for MO orbitals:  14May19   MP2SAVE
   22 H   :2px    0.0423
   23 H   :2py   -0.1403
 
-  Total CPU  time used in SIRIUS :   0.05 seconds
-  Total wall time used in SIRIUS :   0.08 seconds
+  Total CPU  time used in SIRIUS :   0.34 seconds
+  Total wall time used in SIRIUS :   0.06 seconds
 
  
-     Date and time (Darwin) : Tue May 14 10:51:46 2019
-     Host name              : adm-106152.pc.sdu.dk                    
+     Date and time (Linux)  : Fri Oct 21 16:55:06 2022
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                      .---------------------------------------.
@@ -721,9 +769,9 @@ File label for MO orbitals:  14May19   MP2SAVE
                  `------------------------------------------------'
 
 
- ------------------------------------------------------------------------------
-  RESPONSE  -  an MCSCF, MC-srDFT, DFT, and SOPPA response property program
- ------------------------------------------------------------------------------
+ ----------------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, SOPPA and SOPPA-srDFT response property program
+ ----------------------------------------------------------------------------------------
 
 
  -------- OUTPUT FROM RESPONSE INPUT PROCESSING --------
@@ -763,9 +811,9 @@ File label for MO orbitals:  14May19   MP2SAVE
 
  Old direct access AO file found, SORTA skipped.
 
- 2-el. integral transformation level 10: Total CPU and WALL times (sec)       0.025       0.031
+ 2-el. integral transformation level 10: Total CPU and WALL times (sec)       0.017       0.017
 
- Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.002       0.002
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.001       0.001
 
 
    SCF energy         :      -76.025681483943657
@@ -787,10 +835,10 @@ File label for MO orbitals:  14May19   MP2SAVE
  Number of C6/C8 properties of this symmetry       0
 
 
- Perturbation symmetry.     KSYMOP:       1
- p-h variables.             KZWOPT:      95
- 2p-2h variables.           KZCONF:    4560
- Total number of variables. KZVAR :    4655
+ Perturbation symmetry.     KSYMOP:           1
+ p-h variables.             KZWOPT:          95
+ 2p-2h variables.           KZCONF:        4560
+ Total number of variables. KZVAR :        4655
 
 
 
@@ -929,22 +977,22 @@ File label for MO orbitals:  14May19   MP2SAVE
  *** RSPCTL MICROITERATIONS CONVERGED
 
 @ Singlet transition operator label: XDIPLEN 
-@ STATE NO:    1 *TRANSITION MOMENT: -1.60146419E-14 *ENERGY(eV):   7.7544503    
-@ STATE NO:    2 *TRANSITION MOMENT: -1.03111649E-14 *ENERGY(eV):   9.7778449    
-@ STATE NO:    3 *TRANSITION MOMENT:  9.02933150E-15 *ENERGY(eV):   10.395349    
+@ STATE NO:    1 *TRANSITION MOMENT: -1.50419258E-15 *ENERGY(eV):   7.7544503    
+@ STATE NO:    2 *TRANSITION MOMENT:  2.14284005E-15 *ENERGY(eV):   9.7778449    
+@ STATE NO:    3 *TRANSITION MOMENT: -2.64268711E-14 *ENERGY(eV):   10.395349    
 @ STATE NO:    4 *TRANSITION MOMENT: -0.50061705     *ENERGY(eV):   12.465205    
 
 @ Singlet transition operator label: YDIPLEN 
-@ STATE NO:    1 *TRANSITION MOMENT:  9.72438722E-15 *ENERGY(eV):   7.7544503    
-@ STATE NO:    2 *TRANSITION MOMENT:  1.04142720E-14 *ENERGY(eV):   9.7778449    
+@ STATE NO:    1 *TRANSITION MOMENT:  1.50734240E-15 *ENERGY(eV):   7.7544503    
+@ STATE NO:    2 *TRANSITION MOMENT: -9.26986717E-16 *ENERGY(eV):   9.7778449    
 @ STATE NO:    3 *TRANSITION MOMENT:  0.61159304     *ENERGY(eV):   10.395349    
-@ STATE NO:    4 *TRANSITION MOMENT: -6.34961911E-14 *ENERGY(eV):   12.465205    
+@ STATE NO:    4 *TRANSITION MOMENT:  4.81665507E-14 *ENERGY(eV):   12.465205    
 
 @ Singlet transition operator label: ZDIPLEN 
 @ STATE NO:    1 *TRANSITION MOMENT: -0.36245985     *ENERGY(eV):   7.7544503    
-@ STATE NO:    2 *TRANSITION MOMENT:  2.79855641E-14 *ENERGY(eV):   9.7778449    
-@ STATE NO:    3 *TRANSITION MOMENT:  3.71187443E-15 *ENERGY(eV):   10.395349    
-@ STATE NO:    4 *TRANSITION MOMENT:  1.27251026E-16 *ENERGY(eV):   12.465205    
+@ STATE NO:    2 *TRANSITION MOMENT:  2.32627638E-16 *ENERGY(eV):   9.7778449    
+@ STATE NO:    3 *TRANSITION MOMENT: -1.49975065E-16 *ENERGY(eV):   10.395349    
+@ STATE NO:    4 *TRANSITION MOMENT:  1.05438014E-16 *ENERGY(eV):   12.465205    
 
 
  **************************************************************************************
@@ -959,19 +1007,20 @@ File label for MO orbitals:  14May19   MP2SAVE
 @ Excitation energy :  0.28497081     au
 @                       7.7544503     eV;   62543.863     cm-1;   748.19075     kJ / mol
 
-@ Total energy :       -75.740711     au
+@ Total energy :       -75.945696     au
 
 @ SOPPA  p-h  weight in excitation operator:   95.26 %
 @ SOPPA 2p-2h weight in excitation operator:    4.74 %
 
-@ Operator label: XDIPLEN ; Transition moment : -1.60146419E-14 au
-@ Oscillator strength (LENGTH)   :  4.87240730E-29  (X-polarization)
+@ Operator label: XDIPLEN ; Transition moment : -1.50419258E-15 au
+@ Oscillator strength (LENGTH)   :  4.29849086E-31  (X-polarization)
 
-@ Operator label: YDIPLEN ; Transition moment :  9.72438722E-15 au
-@ Oscillator strength (LENGTH)   :  1.79652642E-29  (Y-polarization)
+@ Operator label: YDIPLEN ; Transition moment :  1.50734240E-15 au
+@ Oscillator strength (LENGTH)   :  4.31651201E-31  (Y-polarization)
 
 @ Operator label: ZDIPLEN ; Transition moment : -0.36245985     au
 @ Oscillator strength (LENGTH)   :  2.49591007E-02  (Z-polarization)
+@ Total oscillator strength (LENGTH)   :  2.49591007E-02
 
  Eigenvector for state no.  1
 
@@ -983,7 +1032,7 @@ File label for MO orbitals:  14May19   MP2SAVE
           77         5(1)   6(1)       -0.6921133739       -0.0117223386       -0.9787961200       -0.0165778903
           80         5(1)   9(1)       -0.0708044165       -0.0067561261       -0.1001325662       -0.0095546052
 
-       93 elements with absolute value ≤ 9.79D-02 not printed.
+       93 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
@@ -1009,19 +1058,20 @@ File label for MO orbitals:  14May19   MP2SAVE
 @ Excitation energy :  0.35932920     au
 @                       9.7778449     eV;   78863.643     cm-1;   943.41867     kJ / mol
 
-@ Total energy :       -75.666352     au
+@ Total energy :       -75.871338     au
 
 @ SOPPA  p-h  weight in excitation operator:   95.51 %
 @ SOPPA 2p-2h weight in excitation operator:    4.49 %
 
-@ Operator label: XDIPLEN ; Transition moment : -1.03111649E-14 au
-@ Oscillator strength (LENGTH)   :  2.54692829E-29  (X-polarization)
+@ Operator label: XDIPLEN ; Transition moment :  2.14284005E-15 au
+@ Oscillator strength (LENGTH)   :  1.09996980E-30  (X-polarization)
 
-@ Operator label: YDIPLEN ; Transition moment :  1.04142720E-14 au
-@ Oscillator strength (LENGTH)   :  2.59811927E-29  (Y-polarization)
+@ Operator label: YDIPLEN ; Transition moment : -9.26986717E-16 au
+@ Oscillator strength (LENGTH)   :  2.05848768E-31  (Y-polarization)
 
-@ Operator label: ZDIPLEN ; Transition moment :  2.79855641E-14 au
-@ Oscillator strength (LENGTH)   :  1.87615787E-28  (Z-polarization)
+@ Operator label: ZDIPLEN ; Transition moment :  2.32627638E-16 au
+@ Oscillator strength (LENGTH)   :  1.29635478E-32  (Z-polarization)
+@ Total oscillator strength (LENGTH)   :  1.31878211E-30
 
  Eigenvector for state no.  2
 
@@ -1030,10 +1080,10 @@ File label for MO orbitals:  14May19   MP2SAVE
 
       Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
       ----------    -----  -----      --------------      --------------      --------------      --------------
-          78         5(1)   7(1)       -0.6877711394       -0.0046011724       -0.9726552732       -0.0065070404
-          79         5(1)   8(1)        0.1040980387        0.0032854336        0.1472168582        0.0046463048
+          78         5(1)   7(1)        0.6877711394        0.0046011724        0.9726552732        0.0065070404
+          79         5(1)   8(1)       -0.1040980387       -0.0032854336       -0.1472168582       -0.0046463048
 
-       93 elements with absolute value ≤ 9.73D-02 not printed.
+       93 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
@@ -1059,19 +1109,20 @@ File label for MO orbitals:  14May19   MP2SAVE
 @ Excitation energy :  0.38202207     au
 @                       10.395349     eV;   83844.152     cm-1;   1002.9988     kJ / mol
 
-@ Total energy :       -75.643659     au
+@ Total energy :       -75.848645     au
 
 @ SOPPA  p-h  weight in excitation operator:   95.22 %
 @ SOPPA 2p-2h weight in excitation operator:    4.78 %
 
-@ Operator label: XDIPLEN ; Transition moment :  9.02933150E-15 au
-@ Oscillator strength (LENGTH)   :  2.07638742E-29  (X-polarization)
+@ Operator label: XDIPLEN ; Transition moment : -2.64268711E-14 au
+@ Oscillator strength (LENGTH)   :  1.77864258E-28  (X-polarization)
 
 @ Operator label: YDIPLEN ; Transition moment :  0.61159304     au
 @ Oscillator strength (LENGTH)   :  9.52625630E-02  (Y-polarization)
 
-@ Operator label: ZDIPLEN ; Transition moment :  3.71187443E-15 au
-@ Oscillator strength (LENGTH)   :  3.50900304E-30  (Z-polarization)
+@ Operator label: ZDIPLEN ; Transition moment : -1.49975065E-16 au
+@ Oscillator strength (LENGTH)   :  5.72842608E-33  (Z-polarization)
+@ Total oscillator strength (LENGTH)   :  9.52625630E-02
 
  Eigenvector for state no.  3
 
@@ -1082,7 +1133,7 @@ File label for MO orbitals:  14May19   MP2SAVE
       ----------    -----  -----      --------------      --------------      --------------      --------------
           58         4(1)   6(1)        0.6912406017        0.0125071280        0.9775618339        0.0176877500
 
-       94 elements with absolute value ≤ 9.78D-02 not printed.
+       94 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
@@ -1109,7 +1160,7 @@ File label for MO orbitals:  14May19   MP2SAVE
 @ Excitation energy :  0.45808786     au
 @                       12.465205     eV;   100538.66     cm-1;   1202.7095     kJ / mol
 
-@ Total energy :       -75.567594     au
+@ Total energy :       -75.772579     au
 
 @ SOPPA  p-h  weight in excitation operator:   95.54 %
 @ SOPPA 2p-2h weight in excitation operator:    4.46 %
@@ -1117,11 +1168,12 @@ File label for MO orbitals:  14May19   MP2SAVE
 @ Operator label: XDIPLEN ; Transition moment : -0.50061705     au
 @ Oscillator strength (LENGTH)   :  7.65365353E-02  (X-polarization)
 
-@ Operator label: YDIPLEN ; Transition moment : -6.34961911E-14 au
-@ Oscillator strength (LENGTH)   :  1.23126878E-27  (Y-polarization)
+@ Operator label: YDIPLEN ; Transition moment :  4.81665507E-14 au
+@ Oscillator strength (LENGTH)   :  7.08514289E-28  (Y-polarization)
 
-@ Operator label: ZDIPLEN ; Transition moment :  1.27251026E-16 au
-@ Oscillator strength (LENGTH)   :  4.94515720E-33  (Z-polarization)
+@ Operator label: ZDIPLEN ; Transition moment :  1.05438014E-16 au
+@ Oscillator strength (LENGTH)   :  3.39509520E-33  (Z-polarization)
+@ Total oscillator strength (LENGTH)   :  7.65365353E-02
 
  Eigenvector for state no.  4
 
@@ -1133,7 +1185,7 @@ File label for MO orbitals:  14May19   MP2SAVE
           59         4(1)   7(1)        0.6910133641        0.0084553685        0.9772404713        0.0119576967
           60         4(1)   8(1)       -0.0721277611       -0.0105716342       -0.1020040579       -0.0149505485
 
-       93 elements with absolute value ≤ 9.77D-02 not printed.
+       93 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
@@ -1153,19 +1205,19 @@ File label for MO orbitals:  14May19   MP2SAVE
  The total norm of the excitation out of these elements is 2.8361D-02
 
 
- Time used in polarization propagator calculation is      0.36 CPU seconds for symmetry 1
+ Time used in polarization propagator calculation is      2.46 CPU seconds for symmetry 1
 
-  Total CPU  time used in RESPONSE:   0.39 seconds
-  Total wall time used in RESPONSE:   0.34 seconds
+  Total CPU  time used in RESPONSE:   2.49 seconds
+  Total wall time used in RESPONSE:   0.26 seconds
 
 
                    .-------------------------------------------.
                    | End of Dynamic Property Section (RESPONS) |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   0.50 seconds
-  Total wall time used in DALTON:   0.50 seconds
+  Total CPU  time used in DALTON:   3.20 seconds
+  Total wall time used in DALTON:   0.34 seconds
 
  
-     Date and time (Darwin) : Tue May 14 10:51:47 2019
-     Host name              : adm-106152.pc.sdu.dk                    
+     Date and time (Linux)  : Fri Oct 21 16:55:06 2022
+     Host name              : adm-110765.pc.sdu.dk                    

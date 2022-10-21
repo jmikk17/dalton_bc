@@ -646,7 +646,10 @@ C
 C Error messages:
 C
  5010 CONTINUE
-      CALL QUIT('Wrong keyword. Expecting INTGRL, BASIS or ATOMBA.')
+      WRITE(LUPRI,'(2A/A)')
+     &   ' Wrong keyword in first line of .mol file : ',KEYWRD,
+     &   ' Expecting INTGRL, BASIS, ATOMBA or ATOMDF.'
+      CALL QUIT('Wrong keyword in first line of .mol file.')
  5020 CONTINUE
       CALL STOPIT('READIN','READ_MOL',KLAST,LWORK)
 !5030 CONTINUE

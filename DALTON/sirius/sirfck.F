@@ -309,7 +309,6 @@ C
 
          ENDDO ! I = 1,NDMAT
          DTIME = SECOND() - DTIME
-         TSIRF = TSIRF    + DTIME
          IF (IPRFCK .GT. 0 .AND. ICOUN3 .EQ. NDMAT) THEN
             WRITE(LUPRI,'(/A,I3,A,F10.2,A,/)')
      &     ' --- SIRFCK Cholesky: ',NDMAT,
@@ -1100,6 +1099,8 @@ C
       END IF
 #endif
 C
+      CALL GETTIM(T2,W2)
+      TSIRF = TSIRF + T2 - T0
 C
 #if SIRFCK_DEBUG > 0
       write(lupri,*) 'Leaving SIRFCK'; flush(lupri)
