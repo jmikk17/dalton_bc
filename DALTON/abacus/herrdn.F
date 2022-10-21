@@ -783,8 +783,8 @@ C     Enforce computation of Cartesian second moments (WK/UniKA/04-11-2002).
 C     Sep 09/hjaaj: moved to HERINI
 C     IF (LMULBS) CALL SET_CARMOM_2
 C*****************************************************************************
-C     Card 2-3: Title cards
-C     (Do not use RDLINE() because OK that title lines are longer than 80 char)
+C     Card 2-3: Title cards, reading 200 char
+C     (Do not use RDLINE() because OK that title lines are longer than len_MLINE char)
 C*****************************************************************************
       IF (SLAVE) THEN
          TTITLE(1) = MLINE(NMLINE+1)
@@ -1124,7 +1124,7 @@ C***********************************************************************
      &          SEG(KBLOCK,KSETS), ALPHA(KPRIM,KBLOCK,KSETS),
      &          CPRIM( KPRIM,KPRIM,KBLOCK,KSETS),
      &          CPRIMU(KPRIM,KPRIM,KBLOCK,KSETS), ISGEN(KBLOCK)
-      CHARACTER SPDCAR*1,BSET*5, BKPLIN*80, TSTCHA*2
+      CHARACTER SPDCAR*1,BSET*5, TSTCHA*2
       CHARACTER*80 BASNAM, AUXNAM, BASNAMSAVE
 C...  added by Bin Gao, for effective core potentials, Dec. 6, 2010
       character*80 ECPNAME
@@ -1145,6 +1145,7 @@ C...
 #include "ecpinf.h"
 #include "qm3.h"
 #include "infpar.h"
+      CHARACTER*(len_MLINE) BKPLIN
 C
       LCMMAX_save = LCMMAX
 C     MBSIP = identifier for Previous basis-set identifier MBSI (WK/UniKA/04-11-2002).
@@ -1999,7 +2000,7 @@ C
         IF (MLINE(NMLINE)(5:5) .EQ. ' ') THEN
            IPOS = 5
         ELSE
-           IPOS = INDEX(MLINE(NMLINE)(2:80),' ') + 1
+           IPOS = INDEX(MLINE(NMLINE)(2:),' ') + 1
         END IF
 C       sep05-hjaaj: allow both e.g. 'H ' and ' H' as names
         IF (IPOS .LE. 2 .AND. MLINE(NMLINE)(1:1) .EQ. ' ') THEN
@@ -2030,22 +2031,22 @@ C
 #if !defined (VAR_NOFREE)
 C
         IF (QM3) THEN
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &         ISUBSY(NCTOT),ISUBSI(NCTOT)
         ELSE
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT)
         END IF
         GO TO 104
 C
- 101    READ (MLINE(NMLINE)(IPOS:80),
+ 101    READ (MLINE(NMLINE)(IPOS:),
      &        '(BN,3F20.0,2I6)',ERR=102)
      &        CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &        ISUBSY(NCTOT),ISUBSI(NCTOT)
         GO TO 104
 C
- 102    READ (MLINE(NMLINE)(IPOS:80),
+ 102    READ (MLINE(NMLINE)(IPOS:),
      &       '(BN,3F10.0,2I6,I5)',ERR=103)
      &       CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &       ISUBSY(NCTOT),ISUBSI(NCTOT)
@@ -5671,7 +5672,7 @@ C
 #include "molinp.h"
 #include "infpar.h"
 
-      PARAMETER (len_NEXT_INPUT_LINE = 120)
+      PARAMETER (len_NEXT_INPUT_LINE = 200)
       CHARACTER*(len_NEXT_INPUT_LINE) NEXT_INPUT_LINE
       INTEGER    NMLN_LASTREAD
       DATA       NMLN_LASTREAD /0/
@@ -6911,7 +6912,7 @@ C     Charge of molecule
 C
          IPOS = INDEX(LINE,'CHA')
          IF (IPOS .NE. 0) THEN
-            IPOS2 = INDEX(LINE(IPOS:80),'=')
+            IPOS2 = INDEX(LINE(IPOS:),'=')
             IF ((IPOS2 .EQ. 0) .OR. (IPOS2 .GT. 7)) THEN
                WRITE (LUPRI,*) 'Incorrect input for molecular charge'
                WRITE (LUPRI,*) 'Format is "Charge=?"'
@@ -6960,7 +6961,7 @@ C     For each generator, determine number of axis changing sign
 C
                ISTART = IPOS + IPOS2 + 1
                DO I = 1, NSYMOP
-                  DO ISTP = ISTART, 80
+                  DO ISTP = ISTART, len_MLINE
                      IF (LINE(ISTP:ISTP) .NE. ' ') GO TO 20
                   END DO
  20               CONTINUE
@@ -7141,7 +7142,8 @@ C
 #include "pcmlog.h"
 #include "mxcent.h"
 #include "maxorb.h"
-      CHARACTER TMPLN*80, BASNAM*80, BKPLIN*80, FRMT*5
+      CHARACTER TMPLN*(*), BASNAM*80, BKPLIN*120, FRMT*5
+      ! assuming len_MLINE=120 as molinp.h not included here
       LOGICAL   BASIS, ATOMBA, LMULBS, READ_BLOCKS
       LOGICAL   FOUNDR, FOUNDA
       DIMENSION JCO(KANG)
