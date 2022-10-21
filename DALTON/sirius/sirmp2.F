@@ -834,7 +834,7 @@ C     the interface file SIRIFC (orbitals are RHF orbitals, as needed
 C     for SOPPA, i.e. not MP2 natural orbitals, as used for MCSCF start.)
 C
       IF ( FLAG(25) ) THEN
-         CALL MP2IFC(WRK(KDONE),WRK(KKAPPA))
+         CALL MP2IFC(ECORR,WRK(KDONE),WRK(KKAPPA))
       END IF
 C
 C Manu July 07 : For the MP2-SRDFT calculation, we want to write the
@@ -1867,7 +1867,7 @@ C *** end of subroutine MP2FCK
 C
       END
 C  /* Deck MP2IFC */
-        SUBROUTINE MP2IFC(DONE,COEMP2)
+        SUBROUTINE MP2IFC(ECORR,DONE,COEMP2)
 C
 C This routine prepares the SOPPA interface for RESPONSE by storing
 C the correlation coefficients and the second order one-density
@@ -1909,6 +1909,8 @@ C Write the correlation coefficients
       CALL WRITT (LUSIFC,NPHTOT(1),COEMP2)
 C Write the second'order one-electron density
       CALL WRITT (LUSIFC,N2ORBX,DONE)
+C Write the second order correlation energy E(HF) + EMP2
+      WRITE(LUSIFC) ECORR,ECORR,ECORR,ECORR ! to fill 32 bytes
 C Write "End Of DATA" label
       WRITE (LUSIFC) LAB123,LABEOD
 C Close the FNSIFC file

@@ -4667,6 +4667,9 @@ C        UDV contains the MP2 one-density. Remove the diagonal
 C        contribution from the zeroth order. (Added in MP2FAC)
 C
          CALL SOPUDV(UDV)
+
+         READ(LUSIFC) EMCSCF ! E(HF) + EMP2 or ECCSD
+
       END IF ! (SOPPA)
 C
       IF (HSFOCK .AND. .NOT.HSROHF) THEN
