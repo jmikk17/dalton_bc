@@ -34,7 +34,7 @@
 /* strictly conform to XOPEN ANSI C standard */
 #if !defined(SYS_DEC)
 /* XOPEN compliance is missing on old Tru64 4.0E Alphas */
-#define _XOPEN_SOURCE          500
+#define _XOPEN_SOURCE          600
 #define _XOPEN_SOURCE_EXTENDED 1
 #endif
 
