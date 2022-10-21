@@ -1269,6 +1269,7 @@ C           ... New input style
             CALL LINE5R(MLINE(NMLINE),Q,NONT(I),MBSI,IQM(I,1),
      &                  JCO(1,I,1),KANG,BASIS,ATOMBA,LMULBS,
      &                  BASNAMSAVE,RADIUS_PCM, ALPHA_PCM)
+            ! Any BASNAM read in LINE5R is not used, it will be read below if BAS=
             Q_EXPONENT = D0 ! hjaaj: should be introduced in LINE5R; GNU=
          ELSE
 C           ... Old input style
@@ -1502,11 +1503,11 @@ C...             sets the ECP
 C     Read effective core potential information from file for atom.
 C     The charge of atom type will be set to the effective charge below
 C     after J=2: reading Huckel basis (if DOHUCKEL)
-                   if(ADDSYM) call QUIT('ECP not implemented '//
-     &               'with auto-detected symmetry.')
-C...               tries to find the name of ECP
+                   if(ADDSYM) call QUIT('FATAL ERROR: ECP not '//
+     &               'implemented with auto-detected symmetry.')
+C...               try to find the name of ECP
                    IPOS = IPOS+index(MLINE(NMLINE-NONT(I))(IPOS:), '=')
-C...               removes extra spaces
+C...               remove extra spaces between = and ECP name
                    IPOS2 = 0
                    do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
                      if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ') then
@@ -1514,7 +1515,7 @@ C...               removes extra spaces
                        exit
                      end if
                    end do
-                   if (IPOS2.eq.0) then
+                   if (IPOS2.eq.0) then ! no ECP name found
                      write(LUPRI,'(/A/A//A)')
      &                 ' Incorrect input for ECP name in line:',
      &                 MLINE(NMLINE-NONT(I)),
@@ -1576,7 +1577,26 @@ C...
      &                          'auxiliary basis set name')
                          ENDIF
                        ELSE
-                         BASNAM = MLINE(NMLINE-NONT(I))((IPOS+IPOS2):)
+                         IPOS = IPOS + IPOS2 ! pointing to first char after '='
+                         IPOS2 = 0
+                         do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
+                          if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ')
+     &                      then
+                            IPOS2 = IPOS3 ! pointing to first non-blank after '='
+                            exit
+                          end if
+                         end do
+                         if (IPOS2.eq.0) then ! no basis set name found
+                           write(LUPRI,'(/A/A//A)')
+     &                 ' FATAL ERROR: No basis set name found in line:',
+     &                 MLINE(NMLINE-NONT(I)),
+     &                 ' Format is "Basis=?"'
+                         call QUIT('Incorrect input for basis set name')
+                         end if
+
+C...                     Get the basis set name plus any cgto info for ano and any pol= specification.
+C                        It will be interpreted in BASLIB.
+                         BASNAM = MLINE(NMLINE-NONT(I))(IPOS2:)
                        ENDIF
                     END IF
                  ELSE
