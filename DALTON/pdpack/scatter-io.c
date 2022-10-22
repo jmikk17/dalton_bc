@@ -33,7 +33,7 @@
 */
 
 /* XOPEN_SOURCE needed for fseeko */
-#define _XOPEN_SOURCE 500
+#define _XOPEN_SOURCE 600
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
