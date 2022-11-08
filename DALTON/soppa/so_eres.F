@@ -271,7 +271,14 @@ C
          LAAB    = 0
       ENDIF
 C
-      KTR1E   = KEND1
+C KFSchaltz begin 
+      LBDENSIJ= ILMVIR(1) 
+      LBDENSAB= ILMVIR(8) + NVIR(8) - ILMVIR(1)
+      KBDENSIJ= KEND1
+      KBDENSAB= KBDENSIJ + LBDENSIJ
+      KTR1E   = KBDENSAB + LBDENSAB
+C KFSchaltz end
+C      KTR1E   = KEND1
       KTR1D   = KTR1E   + LTR1E
       KTR2E   = KTR1D   + LTR1D
       KTR2D   = KTR2E   + LTR2E
@@ -326,6 +333,17 @@ C
 C MPI -- ONLY MASTER DOES THE READING
       IF ( MYNUM .EQ. 0 ) THEN
 #endif
+C
+C KFSchaltz begin
+C--------------------------------------------
+C        Backtransformation of one index of a one-particle density matrix.
+C--------------------------------------------
+C
+      CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+     &                 WORK(KBDENSIJ),LBDENSIJ,WORK(KBDENSAB),
+     &                 LBDENSAB, WORK(KCMO), LCMO)
+C
+C KFSchaltz end
 C
 C----------------------------------------------
 C     Open files with trial and result vectors.

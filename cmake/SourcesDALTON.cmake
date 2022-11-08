@@ -696,6 +696,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/soppa/so_propmo.F
     DALTON/soppa/so_anal.F
     DALTON/soppa/so_aodens.F
+    DALTON/soppa/so_bckde.F
     DALTON/soppa/so_bcktr.F
     DALTON/soppa/so_check.F
     DALTON/soppa/so_close.F
