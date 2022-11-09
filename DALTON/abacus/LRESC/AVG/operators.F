@@ -63,8 +63,8 @@ c      write(*,*) 'Opening AOPROPER file to look for :', LABEL     ! For debuggi
   1    READ (LUINP222,END=3,ERR=2) B
        IREC = IREC + 1
        IF (B(1) .NE. STARS) GO TO 1
-!       write(*,*) B(1), B(2), B(3), B(4) !FOR DEBUGGING
-C      WRITE (*, '(5X,I5,3X,4(2X,A8))')  IREC, B       ! For debugging
+       write(*,*) B(1), B(2), B(3), B(4) !FOR DEBUGGING
+c      WRITE (*, '(5X,I5,3X,4(2X,A8))')  IREC, B       ! For debugging
        IF (B(4).EQ.LABEL) then
         IF (B(3).EQ.'SYMMETRI') then
          nelem = naos*(naos+1)/2          ! Independent elements
@@ -127,7 +127,7 @@ C     WRITE (*,'(/I10,A)') IREC,
 C    *   ' records read before EOF on file. AOPROPER'   ! For debugging
       close(LUINP222)
 C      write(*,*) 'Closing File AOPROPER '              ! For debugging
-C      write(*,*) '*****************************************
+C      write(*,*) '*****************************************'
       return
       END
 C
@@ -230,14 +230,14 @@ C ------------------------------------------------
 
       BACKSPACE LUINP222
       
-c      write(*,*) 'Opening AOPROPER file to write ', LABEL,' on it'     ! For debugging
+      write(*,*) 'Opening AOPROPER file to write ', LABEL,' on it'     ! For debugging
       
       IREC = 0
       IERR = 0
 
 
       CALL NEWLB2(LABEL,RTNLBL,LUINP222,LUPRI)
-c      write(*,*) STARS,RTNLBL,LABEL ! for debugging
+      write(*,*) STARS,RTNLBL,LABEL ! for debugging
       
       IF (RTNLBL(2).EQ.'SYMMETRI') then
             nelem = naos*(naos+1)/2      !Independent Elements
@@ -284,7 +284,7 @@ C     We add an extra label to signify EOF
       close(LUINP222)
 
 
-c      write(*,*) 'Closing File AOPROPER '              ! For debugging
+      write(*,*) 'Closing File AOPROPER '              ! For debugging
       DEALLOCATE(integrals)
 
 

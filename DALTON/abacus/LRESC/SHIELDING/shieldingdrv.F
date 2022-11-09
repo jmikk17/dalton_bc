@@ -52,7 +52,6 @@ C                      11
      &            '.DIAM1S'/
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
-
       NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
       IF (NEWDEF) THEN
@@ -263,6 +262,8 @@ C     J. J. Aucar 2021
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
+#include "inftap.h"
+#include "infrsp.h"
 #include "wrkrsp.h"
 #include "lrescinf.h"
 #include "inforb.h"
@@ -271,6 +272,10 @@ C this is for print section
 C
 C
       LOGICAL PING
+      logical :: file_exists, file_open
+      character(100) :: line
+      REAL*8 QUAVAL
+      CHARACTER*8 :: operadores(3)
       PING=.FALSE.
 cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_SHI')
@@ -350,6 +355,28 @@ C
 cv       CALL CUADRAS('LFCO')
       END IF
 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C NUEVA PARTE - AUCAR       
+C No perder el DALON.INP original, por si el usuario lo quiere.
+C Renombrar los files
+
+c      AL TERMINAR, REVISAR CONSTANTES!
+c Al pedir las PSO salen tmb las PSO-KE, por si necesito...
+c       CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
+c       CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
+
+c      SON NULOS!
+c       CALL QUADRATICLR('SZ-PSO-MV',WORK,LWORK)
+c       CALL QUADRATICLR('SZ-PSO-Dw',WORK,LWORK)
+
+c        CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
+        CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
+
+c       Estos están mal... El SZ debiera ser sólo el operador de spin...      
+c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
+       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 C     Isotropic values
 C
@@ -611,3 +638,129 @@ cx      WRITE(LUPRI,*)'                  MASSVELO   !(or DARWIN)'
 c    ---------------------------------------
 c    ---------------------------------------
 
+      subroutine copy_file_BORRAR(oldID,newID,old_file, new_file)
+      character(*) :: old_file ,new_file
+      logical            :: file_exists, file_open
+      character(100) :: line
+      INTEGER :: oldID,newID
+
+#include "priunit.h"
+
+c      OPEN(UNIT=oldID, FILE=old_file, STATUS='OLD'
+c     &     ,ACTION='READ', IOSTAT=IERR, RECL=1)
+c      REWIND(oldID)
+c      OPEN(UNIT=newID, FILE=new_file,STATUS='REPLACE',
+c     &     ACTION='WRITE', IOSTAT=IERR, RECL=1, FORM='FORMATTED')
+
+c      newID=8756323
+c      OPEN(UNIT=newID, FILE=new_file,status='unknown')
+       CALL GPOPEN(newID,new_file,'OLD',' ','FORMATTED',
+     &             IDUMMY,.FALSE.)
+
+      inquire(file = old_file, exist = file_exists,
+     &            opened = file_open)
+      if (file_exists) then
+         if (.not. file_open) then
+            oldID = -1
+            CALL GPOPEN(oldID,old_file,'OLD',' ','FORMATTED',
+     &           IDUMMY,.FALSE.)
+         end if
+         rewind(oldID)
+      else
+         call quit('file not found')
+      end if
+
+
+      do while (.true.)
+         read(oldID,'(a)', end=31) line
+         write(newID,'(a)') line
+      end do
+ 31   continue
+
+      if (.not. file_open) CALL GPCLOSE(oldID,'KEEP')
+      if (.not. file_open) CALL GPCLOSE(newID,'KEEP')
+c      if (file_open) CALL GPCLOSE(oldID,'KEEP')
+c      if (file_open) CALL GPCLOSE(newID,'KEEP')
+
+
+c      CLOSE(newID)
+
+      RETURN
+      END
+
+      subroutine get_QRvalue_BORRAR(QUAVAL,labels_in)
+      logical :: file_exists, file_open
+      INTEGER :: fileID
+      CHARACTER STRING*75
+      CHARACTER*8, intent(in) :: labels_in(3)
+      CHARACTER*8:: labels_read(3)
+c      CHARACTER*8, intent(in) :: PRUEBA
+      REAL*8 FRQB, FRQC
+      REAL*8 QUAVAL
+c
+
+#include "priunit.h"
+
+C Based on some lines of SUBROUTINE BCCHK
+
+      inquire(file = 'RESULTS.RSP', exist = file_exists,
+     &            opened = file_open)
+      if (file_exists) then
+         if (.not. file_open) then
+            fileID = -1
+            CALL GPOPEN(fileID,'RESULTS.RSP','OLD',' ','FORMATTED',
+     &           IDUMMY,.FALSE.)
+         end if
+         rewind(fileID)
+      else
+         call quit('RESULTS.RST file not found')
+      end if
+
+
+ 346  READ (fileID,'(A75)',END=347) STRING
+      IF (STRING(1:8) .EQ. '@ Quadra') THEN
+c De referencia         
+c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(1),KSYMA,KSPINA
+c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(2),KSYMB,KSPINB
+c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(3),KSYMC,KSPINC
+
+c Primer intento (hay que ir borrando el archivo de lectura)
+c         READ (fileID,'(A75)') STRING
+c         READ (fileID,'(A75)') STRING
+c         READ (fileID,'(A75)') STRING
+
+          READ (fileID,'(30X,A8)') labels_read(1)
+          READ (fileID,'(30X,A8)') labels_read(2)
+          READ (fileID,'(30X,A8)') labels_read(3)
+
+          write(2,*) "TEST-AUCAR-read",labels_read
+          write(2,*) "TEST-AUCAR-in",labels_in
+
+      IF (labels_read(1) .EQ. labels_in(1) .AND.
+     &    labels_read(2) .EQ. labels_in(2) .AND.
+     &    labels_read(3) .EQ. labels_in(3) ) then
+         READ (fileID,'(/,30X,3F15.8)') FRQB, FRQC, QUAVAL
+      ELSE
+         GOTO 346
+      END IF
+
+      ELSE
+         GOTO 346
+      END IF
+
+ 347         CONTINUE
+         QUAVAL = -QUAVAL
+
+
+cdo while (.true.)
+c         read(oldID,'(a)', end=31) line
+c         write(newID,'(a)') line
+c      end do
+c 31   continue
+
+      if (.not. file_open) CALL GPCLOSE(fileID,'KEEP') !leer trayendo labels
+c      if (.not. file_open) CALL GPCLOSE(fileID,'REMOVE') !elimino RESULTS.RSP luego de leer
+
+
+      RETURN
+      END

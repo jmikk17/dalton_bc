@@ -941,6 +941,8 @@ C
       LUCMD  = -8005
       LUPRI  = -8006
       LUPOT  = -8009
+      LUESC  = -8010
+      LUESC2 = -8011
       NINFO  = 0
       NWARN  = 0
       IPRSTAT= 0
