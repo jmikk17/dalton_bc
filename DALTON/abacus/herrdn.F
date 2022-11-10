@@ -646,7 +646,10 @@ C
 C Error messages:
 C
  5010 CONTINUE
-      CALL QUIT('Wrong keyword. Expecting INTGRL, BASIS or ATOMBA.')
+      WRITE(LUPRI,'(2A/A)')
+     &   ' Wrong keyword in first line of .mol file : ',KEYWRD,
+     &   ' Expecting INTGRL, BASIS, ATOMBA or ATOMDF.'
+      CALL QUIT('Wrong keyword in first line of .mol file.')
  5020 CONTINUE
       CALL STOPIT('READIN','READ_MOL',KLAST,LWORK)
 !5030 CONTINUE
@@ -780,8 +783,8 @@ C     Enforce computation of Cartesian second moments (WK/UniKA/04-11-2002).
 C     Sep 09/hjaaj: moved to HERINI
 C     IF (LMULBS) CALL SET_CARMOM_2
 C*****************************************************************************
-C     Card 2-3: Title cards
-C     (Do not use RDLINE() because OK that title lines are longer than 80 char)
+C     Card 2-3: Title cards, reading 200 char
+C     (Do not use RDLINE() because OK that title lines are longer than len_MLINE char)
 C*****************************************************************************
       IF (SLAVE) THEN
          TTITLE(1) = MLINE(NMLINE+1)
@@ -1121,7 +1124,7 @@ C***********************************************************************
      &          SEG(KBLOCK,KSETS), ALPHA(KPRIM,KBLOCK,KSETS),
      &          CPRIM( KPRIM,KPRIM,KBLOCK,KSETS),
      &          CPRIMU(KPRIM,KPRIM,KBLOCK,KSETS), ISGEN(KBLOCK)
-      CHARACTER SPDCAR*1,BSET*5, BKPLIN*80, TSTCHA*2
+      CHARACTER SPDCAR*1,BSET*5, TSTCHA*2
       CHARACTER*80 BASNAM, AUXNAM, BASNAMSAVE
 C...  added by Bin Gao, for effective core potentials, Dec. 6, 2010
       character*80 ECPNAME
@@ -1142,6 +1145,7 @@ C...
 #include "ecpinf.h"
 #include "qm3.h"
 #include "infpar.h"
+      CHARACTER*(len_MLINE) BKPLIN
 C
       LCMMAX_save = LCMMAX
 C     MBSIP = identifier for Previous basis-set identifier MBSI (WK/UniKA/04-11-2002).
@@ -1266,6 +1270,7 @@ C           ... New input style
             CALL LINE5R(MLINE(NMLINE),Q,NONT(I),MBSI,IQM(I,1),
      &                  JCO(1,I,1),KANG,BASIS,ATOMBA,LMULBS,
      &                  BASNAMSAVE,RADIUS_PCM, ALPHA_PCM)
+            ! Any BASNAM read in LINE5R is not used, it will be read below if BAS=
             Q_EXPONENT = D0 ! hjaaj: should be introduced in LINE5R; GNU=
          ELSE
 C           ... Old input style
@@ -1499,11 +1504,11 @@ C...             sets the ECP
 C     Read effective core potential information from file for atom.
 C     The charge of atom type will be set to the effective charge below
 C     after J=2: reading Huckel basis (if DOHUCKEL)
-                   if(ADDSYM) call QUIT('ECP not implemented '//
-     &               'with auto-detected symmetry.')
-C...               tries to find the name of ECP
+                   if(ADDSYM) call QUIT('FATAL ERROR: ECP not '//
+     &               'implemented with auto-detected symmetry.')
+C...               try to find the name of ECP
                    IPOS = IPOS+index(MLINE(NMLINE-NONT(I))(IPOS:), '=')
-C...               removes extra spaces
+C...               remove extra spaces between = and ECP name
                    IPOS2 = 0
                    do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
                      if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ') then
@@ -1511,7 +1516,7 @@ C...               removes extra spaces
                        exit
                      end if
                    end do
-                   if (IPOS2.eq.0) then
+                   if (IPOS2.eq.0) then ! no ECP name found
                      write(LUPRI,'(/A/A//A)')
      &                 ' Incorrect input for ECP name in line:',
      &                 MLINE(NMLINE-NONT(I)),
@@ -1573,7 +1578,26 @@ C...
      &                          'auxiliary basis set name')
                          ENDIF
                        ELSE
-                         BASNAM = MLINE(NMLINE-NONT(I))((IPOS+IPOS2):)
+                         IPOS = IPOS + IPOS2 ! pointing to first char after '='
+                         IPOS2 = 0
+                         do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
+                          if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ')
+     &                      then
+                            IPOS2 = IPOS3 ! pointing to first non-blank after '='
+                            exit
+                          end if
+                         end do
+                         if (IPOS2.eq.0) then ! no basis set name found
+                           write(LUPRI,'(/A/A//A)')
+     &                 ' FATAL ERROR: No basis set name found in line:',
+     &                 MLINE(NMLINE-NONT(I)),
+     &                 ' Format is "Basis=?"'
+                         call QUIT('Incorrect input for basis set name')
+                         end if
+
+C...                     Get the basis set name plus any cgto info for ano and any pol= specification.
+C                        It will be interpreted in BASLIB.
+                         BASNAM = MLINE(NMLINE-NONT(I))(IPOS2:)
                        ENDIF
                     END IF
                  ELSE
@@ -1976,7 +2000,7 @@ C
         IF (MLINE(NMLINE)(5:5) .EQ. ' ') THEN
            IPOS = 5
         ELSE
-           IPOS = INDEX(MLINE(NMLINE)(2:80),' ') + 1
+           IPOS = INDEX(MLINE(NMLINE)(2:),' ') + 1
         END IF
 C       sep05-hjaaj: allow both e.g. 'H ' and ' H' as names
         IF (IPOS .LE. 2 .AND. MLINE(NMLINE)(1:1) .EQ. ' ') THEN
@@ -2007,22 +2031,22 @@ C
 #if !defined (VAR_NOFREE)
 C
         IF (QM3) THEN
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &         ISUBSY(NCTOT),ISUBSI(NCTOT)
         ELSE
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT)
         END IF
         GO TO 104
 C
- 101    READ (MLINE(NMLINE)(IPOS:80),
+ 101    READ (MLINE(NMLINE)(IPOS:),
      &        '(BN,3F20.0,2I6)',ERR=102)
      &        CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &        ISUBSY(NCTOT),ISUBSI(NCTOT)
         GO TO 104
 C
- 102    READ (MLINE(NMLINE)(IPOS:80),
+ 102    READ (MLINE(NMLINE)(IPOS:),
      &       '(BN,3F10.0,2I6,I5)',ERR=103)
      &       CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &       ISUBSY(NCTOT),ISUBSI(NCTOT)
@@ -5648,7 +5672,7 @@ C
 #include "molinp.h"
 #include "infpar.h"
 
-      PARAMETER (len_NEXT_INPUT_LINE = 120)
+      PARAMETER (len_NEXT_INPUT_LINE = 200)
       CHARACTER*(len_NEXT_INPUT_LINE) NEXT_INPUT_LINE
       INTEGER    NMLN_LASTREAD
       DATA       NMLN_LASTREAD /0/
@@ -6888,7 +6912,7 @@ C     Charge of molecule
 C
          IPOS = INDEX(LINE,'CHA')
          IF (IPOS .NE. 0) THEN
-            IPOS2 = INDEX(LINE(IPOS:80),'=')
+            IPOS2 = INDEX(LINE(IPOS:),'=')
             IF ((IPOS2 .EQ. 0) .OR. (IPOS2 .GT. 7)) THEN
                WRITE (LUPRI,*) 'Incorrect input for molecular charge'
                WRITE (LUPRI,*) 'Format is "Charge=?"'
@@ -6937,7 +6961,7 @@ C     For each generator, determine number of axis changing sign
 C
                ISTART = IPOS + IPOS2 + 1
                DO I = 1, NSYMOP
-                  DO ISTP = ISTART, 80
+                  DO ISTP = ISTART, len_MLINE
                      IF (LINE(ISTP:ISTP) .NE. ' ') GO TO 20
                   END DO
  20               CONTINUE
@@ -7118,7 +7142,8 @@ C
 #include "pcmlog.h"
 #include "mxcent.h"
 #include "maxorb.h"
-      CHARACTER TMPLN*80, BASNAM*80, BKPLIN*80, FRMT*5
+      CHARACTER TMPLN*(*), BASNAM*80, BKPLIN*120, FRMT*5
+      ! assuming len_MLINE=120 as molinp.h not included here
       LOGICAL   BASIS, ATOMBA, LMULBS, READ_BLOCKS
       LOGICAL   FOUNDR, FOUNDA
       DIMENSION JCO(KANG)

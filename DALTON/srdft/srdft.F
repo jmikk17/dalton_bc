@@ -40,13 +40,14 @@ C     variables for SRCPBERI
 C     general variables
       character, intent(in) :: SRFTMP*80
       logical :: SETXFUN, SETCFUN
-      integer, parameter :: NXTABLE=21, NCTABLE=36, NXCTABLE=6, maxfld=3
+      integer, parameter :: NXTABLE=21, NCTABLE=36, NXCTABLE=7, maxfld=3
       integer :: lenfld(maxfld), I, J, IXWINT, ICWINT, nfld
       character(len=23) :: XTABLE(NXTABLE), CTABLE(NCTABLE),
      &                     XCTABLE(NXCTABLE), SRXCFUN, fields(maxfld)
       DATA XCTABLE/'SRLDA                  ','SRPBEGWS               ', ! 1:2
      &             'SRPBERI                ','SRPBE0GWS              ', ! 3:4
-     &             'LRCLDA                 ','LRCPBEGWS              '/ ! 5:6
+     &             'LRCLDA                 ','LRCPBEGWS              ', ! 5:6
+     &             'SRTPSS                 '/                           ! 7
       DATA XTABLE /'NULL                   ','SRXLDA                 ', ! 1:2
      &             'SRXGGA                 ','SRBCK                  ', ! 3:4
      &             'HFEXCH                 ','SRGGA2                 ', ! 5:6
@@ -140,7 +141,7 @@ C Cut string SRFTMP
       
       DO I = 1, NXCTABLE
         IF (XCTABLE(I) .EQ. SRXCFUN) THEN
-          GO TO (301, 302, 303, 304, 305, 306),I
+          GO TO (301, 302, 303, 304, 305, 306, 307),I
         END IF
       END DO
       GO TO 10
@@ -169,6 +170,10 @@ C Long-range correction LDA functional (erk 30 jun. 20)
 C Long-range correction PBE functional with GWS exchange (erk 30 jun. 20)
 306   SRXFUN = 'SRXPBEGWS              '
       SRCFUN = 'CPBE                   '
+      GO TO 10
+C Short-range TPSS functional
+307   SRXFUN = 'SRXTPSS                '
+      SRCFUN = 'SRCTPSS                '
       GO TO 10
 
   10  CONTINUE

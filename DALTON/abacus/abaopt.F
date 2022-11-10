@@ -1534,7 +1534,7 @@ C  /* Deck runopt */
 #include "cbinum.h"
       LOGICAL EXHER, EXSIR, EXABA, MINEND, STATPO, ACTIVE
       LOGICAL REJGEO, TRU, FAL, TMPLOG, NEWSTP
-      CHARACTER TMPLIN*80, WRDRSP*7
+      CHARACTER WRDRSP*7
       DIMENSION EGRAD(MXCOOR), CSTEP(MXCOOR), SCLVEC(MXCOOR)
       DIMENSION GRDOLD(MXRCRD), GRDMAT(25,MXRCRD)
       DIMENSION STPMAT(25,MXRCRD), HESOLD(MXRCRD,MXRCRD)
@@ -7204,7 +7204,7 @@ C  /* Deck inipre */
 #include "abainf.h"
 #include "gnrinf.h"
 #include "inftap.h"
-      CHARACTER TMPLIN*80
+      CHARACTER*(len_MLINE) TMPLIN
       DIMENSION WORK(LWORK)
 C
       WORK(1) = WRKDLM
@@ -7296,7 +7296,7 @@ C
 #include "nuclei.h"
 #include "symmet.h"
 #include "trkoor.h"
-      CHARACTER TMPLIN*80
+      CHARACTER*(len_MLINE) TMPLIN
       CHARACTER*1 KASYM(3,3), ID3, CRT
       LOGICAL EXHER, EXSIR, EXABA, DOCART, DOOWN, AUTOSY, NOSYM, ADDSYM
 

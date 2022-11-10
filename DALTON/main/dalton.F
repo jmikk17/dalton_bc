@@ -55,6 +55,7 @@ C
 #ifdef VAR_OMP
       INTEGER omp_get_num_procs
 #endif
+      integer   :: LMWORK
       CHARACTER LABEL1*8, STHELP*10
 C defined parallel calculation types  
 #include "iprtyp.h"
@@ -744,6 +745,8 @@ C...  terminates Gen1Int interface
 
 #include "implicit.h"
 #include "priunit.h"
+      integer   :: LMWORK, LMWORK_nodes ! default integer size, *4 or *8
+      integer*8 :: LMWORK_8
       CHARACTER*(*) BASDIR
       CHARACTER*20  WRKMEM, NODE_WRKMEM
 #include "maxorb.h"
@@ -774,9 +777,18 @@ C         slave nodes. /hjaaj June 2005
 
 !       WRKMEM -> LMWORK
 
-        READ(WRKMEM, '(I20)', ERR=10) LMWORK
+        READ(WRKMEM, '(I20)', ERR=10) LMWORK_8
+
+        LMWORK = LMWORK_8 ! this will catch if LMWORK is *4 and WRKMEM is more than 2 giga (2**32)
+        IF (LMWORK .NE. LMWORK_8) THEN
+           WRITE(*,'(/2A)')  ' FATAL ERROR: '//
+     &       'Specified WRKMEM is too big for 32-bit integers: ',WRKMEM
+           CALL QUIT(
+     &       'Error: specified WRKMEM is too big for 32-bit integers')
+        END IF
+
         IF (LMWORK .GE. 0) GO TO 20
-   10     WRITE(LUERR,'(/3A/A,I20)')
+   10     WRITE(*,'(/3A/A,I20)')
      &    ' DALTON: WRKMEM conversion error; WRKMEM = "',WRKMEM,'"',
      &    ' DALTON: read as LMWORK = ',LMWORK
           LMWORK = 0
@@ -801,9 +813,17 @@ C
 !       NODE_WRKMEM -> LMWORK_NODES
 
       IF (NODTOT .GT. 0) THEN ! not relevant if no slaves
-        READ(NODE_WRKMEM, '(I20)', ERR=60) LMWORK_NODES
+        READ(NODE_WRKMEM, '(I20)', ERR=60) LMWORK_8
+        LMWORK_nodes = LMWORK_8
+        IF (LMWORK_nodes .NE. LMWORK_8) THEN
+           WRITE(*,'(/2A)')  ' FATAL ERROR: '//
+     &       'Specified NODE_WRKMEM is too big for 32-bit integers: ',
+     &       NODE_WRKMEM
+           CALL QUIT('Error:'//
+     &       ' Specified NODE_WRKMEM is too big for 32-bit integers')
+        END IF
         IF (LMWORK_NODES .GE. 0) GO TO 70
-   60     WRITE(LUERR,'(/3A/A,I20)')
+   60     WRITE(*,'(/3A/A,I20)')
      &    ' DALTON: NODE_WRKMEM conversion error; NODE_WRKMEM = "',
      &      NODE_WRKMEM,'"',
      &    ' DALTON: read as LMWORK_NODES = ',LMWORK_NODES

@@ -4222,7 +4222,7 @@ C
                END IF
                IF (OSCIL_V .GT. 0.0D0) THEN
                   WRITE(LUPRI,'(A,1P,G16.8,3A)')
-     &            '@ Total oscillator strength (VELOCITY) :',OSCIL_L
+     &            '@ Total oscillator strength (VELOCITY) :',OSCIL_V
                END IF
             END IF
 ! Jan. 2017 hjaaj: always print eigenvector analysis

@@ -11,9 +11,8 @@
 ! NONTYP_QM number of QM types for QM3 model, value found by Master in abacus/herrdn.F,
 !           used by slaves to only keep the QM centers in their setup (see abacus/herpar.F)
 !
-      INTEGER    IMLINE, len_MLINE
-      PARAMETER (KMLINE = 2500, len_MLINE = 80)
-!     note: line length of 80 is hardcoded many places so it is a lot of work to change it!
+      INTEGER    KMLINE, len_MLINE
+      PARAMETER (KMLINE = 2500, len_MLINE = 120)
       CHARACTER*(len_MLINE) MLINE
       COMMON /MOLINC/ MLINE(KMLINE)
       INTEGER         NMLINE,NCLINE        ,NMLINE_1,NMLINE_basis,
