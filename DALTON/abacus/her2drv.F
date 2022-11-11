@@ -165,8 +165,9 @@ C
      &            ITYPE,JSTRSH,NPRIMS,NCONTS,IORBSH,
      &            I2TYP,ICEDIF,IFTHRS,DINTSKP,GABRAO,DMRAO,DMRSO,
      &            RELCAL,GENCNT)
-      CALL GETTIM(TIMEND,DUMTIM)
+      CALL GETTIM(TIMEND,WALEND)
       T2INT = TIMEND - T2INT
+      W2INT = WALEND - W2INT
 C
 C     *******************
 C     ***** Timings *****
@@ -197,6 +198,10 @@ C    &      ' Detailed timings for R000 integrals (JMAX = 1, ',
 C    &        MAXJ,'):', (TR000X(I), I = 1, MAXJ),
 C    &      ' Detailed timings for Hermitian integrals (JMAX = 1, ',
 C    &        MAXJ,'):', (THERIX(I), I = 1, MAXJ)
+      END IF
+      IF (JPRINT .GE. 0) THEN
+         CALL TIMTXT(' Total CPU  time used in TWOINT:',T2INT,LUPRI)
+         CALL TIMTXT(' Total wall time used in TWOINT:',W2INT,LUPRI)
       END IF
 C
 C     *********************************

@@ -1,3 +1,4 @@
+#define SIRTRA_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) The Dalton Authors (see AUTHORS file for details).
@@ -1780,17 +1781,20 @@ C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
 C
       IF (FCKTRA_TYPE .gt. 0) THEN
          IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
-            NEWTRA_USEDRC = .FALSE. ! use DRCCTL and not Dirac integrals from SIR_FCKTRA
-            ! because a lot of MO integrals are calculated twice in N_TRACTL if ITRLVL .ge. 5
+            NEWTRA_USEDRC = .FALSE. ! if USEDRC true, then use DRCCTL and not Dirac integrals from SIR_FCKTRA
+            ! because a lot of MO integrals are calculated twice in FCKTRA if ITRLVL .ge. 5
          ELSE
-            USEDRC = .TRUE. !  hjaaj 2.sep.2022 test
             NEWTRA_USEDRC = USEDRC
          END IF
-         write(lupri,*) 'calling FCKTRA COUL', KTRLVL
+#if SIRTRA_DEBUG > 0
+         write(lupri,*) 'calling FCKTRA COUL, ktrlvl', KTRLVL
+#endif
          CALL SIR_FCKTRA_DRIVER('COUL',KTRLVL,THRP,CMO,
      &         WORK,KWORK)
          IF (NEWTRA_USEDRC) THEN
-         write(lupri,*) 'calling FCKTRA EXCH', KTRLVL
+#if SIRTRA_DEBUG > 0
+         write(lupri,*) 'calling FCKTRA EXCH, ktrlvl', KTRLVL
+#endif
             CALL SIR_FCKTRA_DRIVER('EXCH',KTRLVL,THRP,CMO,
      &         WORK,KWORK,IPRTRA)
          END IF
@@ -1857,7 +1861,9 @@ C           ... all occ-occ distributions
 C           ... all active-active distributions
          END IF
          LVLDRC_LAST = LVLDRC ! save in exeinf.h
+#if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling DRCCTL'
+#endif
          CALL DRCCTL(LVLDRC,CMO,WORK,KWORK)
          IF (IPRTRA .GE. 0) THEN
             CALL GETTIM(TCPU,TWALL)
@@ -2387,9 +2393,7 @@ C        ... LUDA does not exist
 C        hjaaj 11-jan-2007: make sure AOTWOINT exists
          CALL MAKE_AOTWOINT(WORK,KWORK)
 
-C     HJ-840710 was: IF (JTER.EQ.1) THEN
-         CALL GPINQ(FNINTM,'EXIST',FEXIST)
-         if(FEXIST) CALL GPCLOSE(LUINTM,'DELETE')
+         if (LUINTM.GT.0) CALL GPCLOSE(LUINTM,'DELETE')
          CALL GPOPEN(LUINTM,FNINTM,'UNKNOWN',' ','UNFORMATTED',IDUMMY,
      &               .FALSE.)
 C        ... empty old mo integral file to save disk space during
@@ -2883,15 +2887,21 @@ C
       DATA    KNEXT /-1/
 C
       IF (FCKTRA_TYPE .gt. 0 .AND. NEWTRA_USEDRC) THEN
+#if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling FCKTRA_NXTH2D'
+#endif
          CALL FCKTRA_NXTH2D(IC,ID,H2CD,NEEDTP,WRK(KFREE),IDIST)
          RETURN
       ELSE IF (NEWTRA .AND. NEWTRA_USEDRC) THEN
+#if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling N_NXTH2D'
+#endif
          CALL N_NXTH2D(IC,ID,H2CD,NEEDTP,WRK,KFREE,LFREE,IDIST)
          RETURN
       END IF
+#if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling NXTH2D using DRCCTL integrals'
+#endif
       CALL QENTER('NXTH2D')
 C
 C     If first read (IDIST .eq. 0) then

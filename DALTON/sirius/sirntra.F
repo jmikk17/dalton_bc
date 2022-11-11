@@ -3378,7 +3378,7 @@ C
              WRITE(LUPRI,'(5(2X,10I2))') ITRTYP(1:MORBT)
          WRITE (LUPRI,'(/A)')
      &      ' ICDTRA: list of distributions included on LUMINT:'
-         DO 810 I = 1,MORBT
+         DO I = 1,MORBT
             IR = (I*I-I)/2
             IMAX = MAXVAL(ICDTRA(IR+1:IR+I))
             IF (IMAX .GT. 0) THEN
@@ -3386,7 +3386,7 @@ C
             ELSE
              WRITE(LUPRI,'(I5,A)') I,' : all zero'
             END IF
-  810    CONTINUE
+         END DO
       END IF
       CALL QEXIT ('N_TRALIM')
       RETURN
@@ -3426,6 +3426,8 @@ C
       IMPLICIT NONE
 #include "priunit.h"
       INTEGER ITRSIR, NTRLVL
+! Used from inftra.h : IPRTRA
+#include "inftra.h"
       INTEGER JTRSIR, JTRLVL, KTRLVL
 C
       CALL QENTER('N_TRALVL')
@@ -3457,6 +3459,22 @@ C
          WRITE(LUPRI,*)
      &   'ERROR: Undefined Sirius integral transformation level:',JTRSIR
          CALL QUIT('ERROR: Undefined 2el transformation level')
+      END IF
+      IF (IPRTRA .GE. 0) THEN
+         SELECT CASE (KTRLVL)
+         CASE (0)
+            WRITE(LUPRI,'(A,I2,A)')
+     &      ' - Integral transformation order',JTRLVL,
+     &      ' for active orbitals.'
+         CASE (1)
+            WRITE(LUPRI,'(A,I2,A)')
+     &      ' - Integral transformation order',JTRLVL,
+     &      ' for inactive+active orbitals.'
+         CASE (2)
+            WRITE(LUPRI,'(A,I2,A)')
+     &      ' - Integral transformation order',JTRLVL,
+     &      ' for frozen+inactive+active orbitals.'
+         END SELECT
       END IF
       NTRLVL = 100*KTRLVL + JTRLVL
       CALL QEXIT('N_TRALVL')
