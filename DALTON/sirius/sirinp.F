@@ -191,7 +191,7 @@ C   INFVAR : MAXOCC,NWOPT,JWOP(2,*),JWOPSY
 C   INFOPT : EPOT,?
 C   INFTAP : LUCME,?
 C   INFDIM : MAXPHP,?
-C   INFTRA : THRP,USEDRC,IPRTRA
+C   INFTRA : THRP,USEDRC,IPRTRA,FCKTRA_TYPE
 C   SCBRHF : IOPRHF, NFRRHF(8), MXHFMA, MXHFMI, RHFCAN, MAXCK, MXDIIS, THRRHF
 C   INFMP2 : NFRMP2(*), SRMP2_SELFCONSISTENT
 C   INFPOP : IPOPTYP; depends on mxcent.h
@@ -687,8 +687,13 @@ C
       IPRTRA = -1
 C     MWORK is defined in block data SBDDIM
 C
-      USEDRC= .FALSE.
+      IF (FCKTRA_TYPE .gt. 0) THEN
+         USEDRC= .TRUE.
+      ELSE
+         USEDRC= .FALSE.
+      END IF
 C     ... USEDRC may be reset by transformation module
+
       AO2INTFILE_LABEL = 'AOTWOINT'
 C
 C
@@ -4617,7 +4622,7 @@ C -- local variables and constants
 C
       PARAMETER (NTABLE = 8)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7
-      LOGICAL ALLOPT
+      LOGICAL ALLOPT, USEDRC_set
 C
 C Used from common:
 C
@@ -4634,13 +4639,14 @@ C
 #include "inftra.h"
 C
       DATA TABLE /'.RESIDE','.FINAL ','.LEVEL ','.OLD TR','.PRINT ',
-     *            '.P THRE','xxxxxxx','xxxxxxx'/
+     *            '.P THRE','.USEDRC','.NO DRC'/
 C
 C     ***** PROCESS INPUT FOR TRAINP *****
 C
       WORD1 = WORD
       IF (ALLOPT) CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',
      &                       LUPRI)
+      USEDRC_set = .FALSE.
   100    READ (LUCMD, '(A7)') WORD
          CALL UPCASE(WORD)
          PROMPT = WORD(1:1)
@@ -4694,12 +4700,16 @@ C *** Option  106 >P THRE<
   106 READ(LUCMD,*) THRP
       GO TO 100
 C
-C *** Option  107 >      <
+C *** Option  107 >USEDRC<
   107 CONTINUE
+         USEDRC = .TRUE.
+         USEDRC_set = .TRUE.
       GO TO 100
 C
-C *** Option  108 >      <
+C *** Option  108 >NO DRC<
   108 CONTINUE
+         USEDRC = .FALSE.
+         USEDRC_set = .TRUE.
       GO TO 100
 C
  8000 CONTINUE
@@ -4708,6 +4718,15 @@ C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,
      &   ' thresholds multiplied with general factor',THR_REDFAC
          THRP = THRP*THR_REDFAC
+      END IF
+      IF (USEDRC_set) THEN
+         IF (USEDRC) THEN
+            WRITE(LUPRI,'(/A)') '  USEDRC set to true in input:'//
+     &      '  MO integrals in Dirac format will also be used.'
+         ELSE
+            WRITE(LUPRI,'(/A)') '  USEDRC set to false in input:'//
+     &      '  MO integrals in Dirac format will not be used.'
+         END IF
       END IF
       END
 C  /* Deck updinp */

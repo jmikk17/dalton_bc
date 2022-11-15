@@ -246,7 +246,7 @@ C
       REAL*8    WRK(LFRSAV)
 C
       REAL*8    ESRDFTCMD(3)
-      LOGICAL   FCKFRO, MP2FRZ
+      LOGICAL   FCKFRO, MP2FRZ, USEDRC_save
       CHARACTER AO2INTFILE_LABEL_SAVE*8
       CHARACTER SR_FUNCS*80                 ! for RSDHf calculation
       INTEGER   FCKTRA_TYPE_save
@@ -260,7 +260,7 @@ C     SCBRHF: NFRRHF()
 C     INFMP2: NPHSYM, MP2FRO
 C     INFINP: FLAG(25), DIRFCK
 C     INFIND: ISX, ISMO
-C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE
+C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC
 C
 #include "maxorb.h"
 #include "maxash.h"
@@ -418,8 +418,11 @@ C     JTRLVL =  4 : code for 2. order transformation for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL =  5 : code for 3. order transformation for MP2 density matrix.
 C     JTRLVL negative: delete AO integral file after transformation.
 C
+      USEDRC_save = USEDRC
+      USEDRC = .FALSE. ! MP2 cannot use integrals in Dirac format (yet)
       CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KFREE),LFREE)
 C     CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
+      USEDRC = USEDRC_save
 C
 C
       IF (MP2FRO) THEN

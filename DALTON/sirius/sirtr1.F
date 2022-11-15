@@ -1,3 +1,4 @@
+#define SIRTR1_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) The Dalton Authors (see AUTHORS file for details).
@@ -59,7 +60,6 @@ C
 C
 C *** local constants
 C
-      PARAMETER ( DP5 = 0.5D0 )
       LOGICAL MOFCFV
       PARAMETER ( MOFCFV = .FALSE. )
 C
@@ -188,7 +188,7 @@ C     Initialization of output matrices
 C
       IF (ADDTR1) THEN
          IF (NASHT .GT. 1 .AND. MOSIM .GT. 0) THEN
-            CALL DSCAL((MOSIM*NNASHX*NNASHX),DP5,H2XAC,1)
+            CALL DSCAL((MOSIM*NNASHX*NNASHX),0.5D0,H2XAC,1)
 C           ... divide by two because H2XAC and its transposed
 C               are added in TR1H2M
          END IF
@@ -213,13 +213,31 @@ C
 C ***  Calculate contributions from MO two-electron integrals
 C
 C
-      IF (MOFCFV .OR. NASHT .GT. 1 .AND. .NOT.HSROHF) THEN
+      IF ( MOFCFV .OR. (NASHT .GT. 1 .AND. .NOT.HSROHF) ) THEN
          CALL TR1H2M(NCSIM,NOSIM,FTQ,H2XAC,FXQ,
      *               DTV,WRK(KPTV),DV,PV,UBO,
      *               FTV,FXC,FXV,MOFCFV,.NOT.USEDRC,WRK(KWRK1),LWRK1)
+#if SIRTR1_DEBUG > 5
+         if (ncsim .gt. 0) then
+            write(lupri,'(/A)') 'FTQ after TR1H2M'
+            call output(ftq,1,norbt,1,nasht,norbt,nasht,-1,lupri)
+         end if
+         if (nosim .gt. 0) then
+            write(lupri,'(/A)') 'H2XAC after TR1H2M'
+            call output(h2xac,1,nnashx,1,nnashx,nnashx,nnashx,-1,lupri)
+            write(lupri,'(/A)') 'FXQ after TR1H2M'
+            call output(fxq,1,norbt,1,nasht,norbt,nasht,-1,lupri)
+         end if
+#endif
          IF (USEDRC) THEN
             CALL TR1H2D(NCSIM,NOSIM,DTV,DV,PV,UBO,
      &                  FTV,FXC,FXV,FXQ,MOFCFV,WRK(KWRK1),LWRK1)
+#if SIRTR1_DEBUG > 5
+         if (nosim .gt. 0) then
+            write(lupri,'(/A)') 'FXQ after TR1H2D'
+            call output(fxq,1,norbt,1,nasht,norbt,nasht,-1,lupri)
+         end if
+#endif
          END IF
 C
 C        CALL TR1H2M(NCSIM,NOSIM,FTQ,H2XAC,FXQ,DTV,PTV,DV,PV,UBO,
@@ -319,7 +337,6 @@ C     index transformed Hamiltonian.
 C
 #include "implicit.h"
       DIMENSION FXC(NORBT,NORBT,NOSIM), EMYX(NOSIM)
-      PARAMETER ( D0 = 0.0D0, D2 = 2.0D0 )
 C
 C Used from common blocks:
 C   INFORB : NORBT
@@ -338,7 +355,7 @@ C
 #include "infpri.h"
 C
       DO 300 IOSIM = 1,NOSIM
-         EMYX(IOSIM) = D0
+         EMYX(IOSIM) = 0.0D0
 CHJAaJ EMYX is not zero,
 C the correct value is EMYX = sum(K) (HX1(K,K) + FXC(K,K)).
 C However, it doesn't matter because the CREF component is
@@ -381,8 +398,6 @@ C
 #include "implicit.h"
       DIMENSION CMO(*),UBO(NORBT,*),DV(*)
       DIMENSION DXCAO(NBAST,*),DXVAO(NBAST,NBAST,*), WRK(*)
-C
-      PARAMETER (HALF = 0.5D0, D1 = 1.0D0, D2 = 2.0D0)
 C
 C Used from common blocks:
 C  INFORB : NSYM,NASHT,...
@@ -476,10 +491,10 @@ C **  this symmetry block finished
  2000 CONTINUE
 C **  add transposed matrix to get final result
          CALL MTRSP(NBAST,NBAST,DXVAO,NBAST,WRK(KDXAO1),NBAST)
-         CALL DAXPY(N2BASX,D1,WRK(KDXAO1),1,DXVAO,1)
+         CALL DAXPY(N2BASX,1.0D0,WRK(KDXAO1),1,DXVAO,1)
          IF (SRDFT_SPINDNS) THEN
             CALL MTRSP(NBAST,NBAST,DXVAO(1,1,2),NBAST,WRK(KDXAO1),NBAST)
-            CALL DAXPY(N2BASX,D1,WRK(KDXAO1),1,DXVAO(1,1,2),1)
+            CALL DAXPY(N2BASX,1.0D0,WRK(KDXAO1),1,DXVAO(1,1,2),1)
          END IF
       END IF
 C
@@ -519,9 +534,9 @@ C **  this symmetry block finished
 C     
 C **  add transposed matrix to get final result
          CALL MTRSP(NBAST,NBAST,DXCAO,NBAST,WRK(KDXAO1),NBAST)
-         CALL DAXPY(N2BASX,D1,WRK(KDXAO1),1,DXCAO,1)
+         CALL DAXPY(N2BASX,1.0D0,WRK(KDXAO1),1,DXCAO,1)
 C **     multiply with DC(i,i) = 2.0 to get final result
-         CALL DSCAL(N2BASX,D2,DXCAO,1)
+         CALL DSCAL(N2BASX,2.0D0,DXCAO,1)
       END IF
 C
 C
@@ -548,7 +563,6 @@ C
       DIMENSION FXC(N2ORBX,*),FXV(N2ORBX,*)
       DIMENSION FTV(N2ORBX,*),UBO(N2ORBX,*),CMO(*)
       DIMENSION DV(*),DTV(*), WRK(LFRSAV)
-      PARAMETER (D2 = 2.0D0)
 C
 C Used from common blocks:
 C   INFINP : DIRFCK
@@ -789,7 +803,6 @@ C
 
 C
 #include "dummy.h"
-      PARAMETER (D0 = 0.0D0, DP5 = 0.5D0, D1=1.0D0, D2 = 2.0D0)
 C
 C Used from common blocks:
 C   INFORB : N2ORBX,N2BASX,NNASHX
@@ -843,8 +856,8 @@ C
         CALL TR1DEN (CMO,UBO(1,IOSIM),DV,DXCAO(1,IOSIM),DXVAO(1,IOSIM),
      &               WRK(KFREE),LFREE)
         IF (HSROHF) THEN
-           CALL DAXPY(N2BASX,D1,DXVAO(1,NOSIM),1,DXCAO(1,NOSIM),1)
-           CALL DSCAL(N2BASX,-D1,DXVAO(1,NOSIM),1)
+           CALL DAXPY(N2BASX,1.0D0,DXVAO(1,NOSIM),1,DXCAO(1,NOSIM),1)
+           CALL DSCAL(N2BASX,-1.0D0,DXVAO(1,NOSIM),1)
         END IF
         IF (P6FLAG(24) .OR. IPRLIN .GE. 24) THEN
           IF (NISHT.GT.0 .OR. ADDSRI) THEN
@@ -1045,7 +1058,7 @@ C            IFCTYP = 13 : singlet Fock matrix and DUNP symmetric
          END IF
          DFTADD = DFTADX
          IF (HSROHF) THEN
-            CALL DAXPY(NOSIM*N2BASX,-D1,FXVAO,1,FXCAO,1)
+            CALL DAXPY(NOSIM*N2BASX,-1.0D0,FXVAO,1,FXCAO,1)
          END IF
       END IF ! RDSUPM or SIRFCK ?
 
@@ -1308,7 +1321,6 @@ C  on UKAP.
 C
 #include "implicit.h"
       DIMENSION H1(*), H1X(NNORBT,*), UKAP(N2ORBX,*), WRK(*)
-      PARAMETER ( D2 = 2.0D0 )
 C
 C Used from common blocks:
 C   INFORB : NSYM,NISH,NORB,NBAS,IIORB,I2ORB,NNORBT,N2ORBT,...
@@ -1343,7 +1355,7 @@ C           H1XA(i,j) = sum(p) UKAP(i,p) * H1(p,j)
 C           H1XB(ij) = 0.5 * (H1XA(i,j) + H1XA(j,i))
             CALL DGETSP(NORBI,WRK(KH1XA),WRK(KH1XB))
 C           H1X(ij) = H1X(ij) + 2 * H1XB(ij)
-            CALL DAXPY(NNORB(ISYM),D2,WRK(KH1XB),1,H1X(JH1,IOSIM),1)
+            CALL DAXPY(NNORB(ISYM),2.0D0,WRK(KH1XB),1,H1X(JH1,IOSIM),1)
 C
   800    CONTINUE
 C 800    END DO IOSIM
@@ -1528,8 +1540,6 @@ C
       DIMENSION U(*), V(*), NBAS(8), NORB(8)
       DIMENSION PRPAO(NBAST,*),PRPMO(NORBT,*),WRK(*)
 C
-      PARAMETER (D0 = 0.0D0)
-C
       IF (LWRK .LT. NBAST) CALL ERRWRK('AUTPV',NBAST,LWRK)
       IORBI = 0
       IBASI = 0
@@ -1581,8 +1591,6 @@ C
       DIMENSION FCOCO(NORBT,NORBT,*),FVOCO(NORBT,NORBT,*)
       DIMENSION FCOEX(NORBT,NORBT,*),FVOEX(NORBT,NORBT,*)
 C
-      PARAMETER ( D4 = 4.0D0 , DM2 = -2.0D0 , DP5 = 0.5D0 )
-C
 #include "maxorb.h"
 #include "maxash.h"
 #include "priunit.h"
@@ -1591,8 +1599,8 @@ C
 #include "infind.h"
 #include "infvar.h"
 C
-      IF(NISHT.GT.0) CALL DSCAL(NORBT*NORBT*NSIM,D4,FCOCO,1)
-      IF(NASHT.GT.0) CALL DSCAL(NORBT*NORBT*NSIM,DM2,FVOCO,1)
+      IF(NISHT.GT.0) CALL DSCAL(NORBT*NORBT*NSIM, 4.0D0,FCOCO,1)
+      IF(NASHT.GT.0) CALL DSCAL(NORBT*NORBT*NSIM,-2.0D0,FVOCO,1)
       DO 100 IPSYM = 1,NSYM
          IORBP = IORB(IPSYM) + 1
          NOCCP = NOCC(IPSYM)
@@ -1638,7 +1646,7 @@ C
                      FCOEX(IQ,IP,ISIM) = FCOEX(IP,IQ,ISIM)
                      IF (NASHT.GT.0) THEN
                         FVOEX(IP,IQ,ISIM) = ( FVOEX(IP,IQ,ISIM)
-     *                                    + FVOEX(IQ,IP,ISIM) ) * DP5
+     *                                    + FVOEX(IQ,IP,ISIM) ) * 0.5D0
                         FVOEX(IQ,IP,ISIM) = FVOEX(IP,IQ,ISIM)
                      END IF
                   END IF
@@ -1797,8 +1805,8 @@ C
 C CALCULATE CONTRIBUTIONS TO INACTIVE AND ACTIVE FOCK MATRICES
 C WHICH ORIGINATE FROM OCCUPIED-OCCUPIED DIRAC DISTRIBUTIONS
 C
-C F(CV)OEX CONTAIN EXCHANCE CONTRIBUTION
-C F(CV)OMU CONTAIN COULOMN CONTRIBUTIONS
+C F(CV)OEX CONTAIN EXCHANGE CONTRIBUTIONS
+C F(CV)OMU CONTAIN COULOMB  CONTRIBUTIONS
 C
 C  FCOEX(P,Q) = FCOEX(P,Q) + SUM(R) <JP/QR>*UBOVEC(R,J) P OCC Q SEC
 C
@@ -1815,8 +1823,6 @@ C
       DIMENSION FCOEX(NORBT,NORBT,*),FVOEX(NORBT,NORBT,*)
       DIMENSION UBOVEC(NORBT,NORBT,*)
       DIMENSION UDXV(NORBT,NASHT,*),WRK(*)
-C
-      PARAMETER ( D2 = 2.0D0)
 C
 C Used from common blocks:
 C   INFORB :
@@ -2031,7 +2037,6 @@ C
 C
       DIMENSION FVTD(NORBT,NORBT,*),UDVT(NASHT,NASHT,*)
       DIMENSION H2D(NORBT,*)
-      PARAMETER ( DMP5 = -0.5D0 )
 C
 C Used from common blocks:
 C   INFORB :
@@ -2076,14 +2081,14 @@ C
       ICDSYM = MULD2H(ICSYM,IDSYM)
       IF ( ICDSYM.EQ.JWOPSY) THEN
          DO 100 ISIM = 1,NCSIM
-            FAC = DMP5*UDVT(NDIW,NCIW,ISIM)
+            FAC = -0.5D0*UDVT(NDIW,NCIW,ISIM)
             CALL DAXPY(NORBT*NORBT,FAC,H2D,1,FVTD(1,1,ISIM),1)
  100     CONTINUE
          IF (NCIW.NE.NDIW) THEN
             CALL DGETRN(H2D,NORBT,NORBT)
             NDITR = -NDITR
             DO 200 ISIM = 1,NCSIM
-               FAC = DMP5*UDVT(NCIW,NDIW,ISIM)
+               FAC = -0.5D0*UDVT(NCIW,NDIW,ISIM)
                CALL DAXPY(NORBT*NORBT,FAC,H2D,1,FVTD(1,1,ISIM),1)
  200        CONTINUE
          END IF
@@ -2340,7 +2345,6 @@ C   DDOT, DZERO, MOLLAB, QTRACE
 C
 C -- local constants
 C
-      PARAMETER ( D2 = 2.0D0 , D4 = 4.0D0 )
       PARAMETER ( THRH2X=1.D-10 )
 C
 C Used from common blocks
@@ -2516,7 +2520,7 @@ C           to transition Fock Q matrix (FTQ):
 C
             DO 299 ICSIM = 1,NCSIM
                CALL SIRPVD(NCW,NDW,WRK(KPVCD),PTV(1,1,ICSIM),1)
-               IF (NCW .NE. NDW) CALL DSCAL(N2ASHX,D2,WRK(KPVCD),1)
+               IF (NCW .NE. NDW) CALL DSCAL(N2ASHX,2.0D0,WRK(KPVCD),1)
 C              ... C,D and D,C contributions are identical
                CALL ADDFQ(NCW,NDW,FTQ(1,ICSIM),WRK(KH2CD),WRK(KPVCD),1)
 C              CALL ADDFQ(NXW,NYW,FQ,H2XY,PVXY,JH2SYM)
@@ -2527,7 +2531,7 @@ C
 C
             IF (NOSIM .GT. 0) THEN
                CALL SIRPVD(NCW,NDW,WRK(KPVCD),PV,1)
-               IF (NCW .NE. NDW) CALL DSCAL(N2ASHX,D2,WRK(KPVCD),1)
+               IF (NCW .NE. NDW) CALL DSCAL(N2ASHX,2.0D0,WRK(KPVCD),1)
 C              ... C,D and D,C contributions are identical
 C
             DO 399 IOSIM = 1,NOSIM
@@ -2548,7 +2552,7 @@ C
 C              If (calculate h2xac) then
 C              add active-active elements to H2XAC
 C
-               IF (NCSIM .GE. 0) THEN
+               IF (NCSIM .GE. 0) THEN ! ncsim.lt.0 means do not calculate H2XAC
                   IUVSYM = MULD2H(ICDSYM,JWOPSY)
                   CALL ADH2AC(H2XAC(1,NCDW,IOSIM),WRK(KH2XCD),IUVSYM)
                END IF
@@ -2675,7 +2679,7 @@ C
 C
       CALL QENTER('TR1H2D')
 C
-      DOFXQ = (NASHT.GT.1)
+      DOFXQ = (NASHT.GT.1 .AND. NOSIM.GT.0)
 C
       KFRSAV = 1
       KFREE  = KFRSAV
@@ -2694,8 +2698,15 @@ C     .. all OCCUPIED-OCCUPIED distributions needed
 C
 C     Allocate work memory
 C
-      CALL MEMGET('REAL',KFCOCO,N2ORBX*NOSIM,WRK,KFREE,LFREE)
-      CALL MEMGET('REAL',KFVOCO,N2ORBX*NOSIM,WRK,KFREE,LFREE)
+      IF (DOFCFV) THEN
+         CALL MEMGET('REAL',KFCOCO,N2ORBX*NOSIM,WRK,KFREE,LFREE)
+         CALL MEMGET('REAL',KFVOCO,N2ORBX*NOSIM,WRK,KFREE,LFREE)
+         CALL MEMGET('REAL',KUDTV,NCSIM*N2ASHX,WRK,KFREE,LFREE)
+      ELSE
+         CALL MEMGET('REAL',KFCOCO,0,WRK,KFREE,LFREE)
+         CALL MEMGET('REAL',KFVOCO,0,WRK,KFREE,LFREE)
+         CALL MEMGET('REAL',KUDTV,0,WRK,KFREE,LFREE)
+      END IF
       CALL MEMGET('REAL',KUDXV ,NORBT*NASHT*NOSIM,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KPVCD ,N2ASHX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KPVDC ,N2ASHX,WRK,KFREE,LFREE)
@@ -2705,7 +2716,6 @@ C
 C
       IF ( DOFCFV ) THEN
          IF (NCSIM .GT. 0) THEN
-            CALL MEMGET('REAL',KUDTV,NCSIM*N2ASHX,WRK,KFREE,LFREE)
             DO 40 ICSIM = 1,NCSIM
                JUDTV = KUDTV + (ICSIM-1)*N2ASHX
                CALL DSPTSI(NASHT,DTV(1,ICSIM),WRK(JUDTV))
@@ -2722,7 +2732,6 @@ C
       END IF
 C
       IF (P6FLAG(37) .OR. IPRLIN .GE. 40) THEN
-         JDIST = 0
          WRITE (LUPRI,'(///A)')
      &      ' Test output of Dirac distributions from TR1H2D.'
       END IF
@@ -2730,10 +2739,9 @@ C
 C ****************************************************************
 C     Loop over DIRAC distributions allowed in NEEDDI(-4:6)
 C
-      IDIST = 0
+      IDIST  = 0
+      JDIST = 0
       LUINTD = -1
-      IF (.NOT. NEWTRA) CALL GPOPEN(LUINTD,'MODRCINT','OLD',' ',
-     &                              'UNFORMATTED',IDUMMY,.FALSE.)
   100 CALL NXTH2D(IC,ID,WRK(KH2CD),NEEDDI,LUINTD,
      &            WRK,KFREE,LFREE,IDIST)
       IF (IDIST .LT. 0) GO TO 800

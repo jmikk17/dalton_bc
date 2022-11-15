@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/test/energy_fcktra
-   2) /home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis
+   1) /home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_mpi/test/energy_fcktra
+   2) /home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_mpi/basis
 
 
 Compilation information
@@ -186,9 +186,9 @@ Compilation information
  BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
  LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | 95e9f3a80a0dbeaafe70e2445b4e71d3737e21d2
- Git branch               | WIP3
- Configuration time       | 2022-08-04 21:14:32.751356
+ Last Git revision        | 016984a012c2787e265b3f411ce15430056a324e
+ Git branch               | WIP-master-nyfcktra
+ Configuration time       | 2022-11-11 16:28:01.995092
 
  * Sequential calculation.
 
@@ -258,10 +258,10 @@ H_b  -1.45235 0.899623 0.0
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1:    Wave Functions:   RHF, SOS-MP2, and MCSCF (CAS) / cc-pVDZ            
- 2:    Test Purpose:     Check energy calculation with symmetry             
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1:    Wave Functions:   RHF, SOS-MP2, and MCSCF (CAS) / cc-pVDZ
+ 2:    Test Purpose:     Check energy calculation with symmetry
+    --------------------------------------------------------------------------------
 
   Atomic type no.    1
   --------------------
@@ -269,7 +269,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_mpi/basis/cc-pVDZ"
 
   Atomic type no.    2
   --------------------
@@ -277,7 +277,7 @@ H_b  -1.45235 0.899623 0.0
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/hjj/progs/gitDalton_master/build_master-WIP2_mpi/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_mpi/basis/cc-pVDZ"
 
 
                       SYMADD: Requested addition of symmetry
@@ -588,28 +588,17 @@ Calculation of 2-electron integrals are postponed until they are needed.
  Huckel EHT eigenvalues for symmetry :  3
            -0.731017      -0.261127
 
- SETCI, core memory needed for CI:
- LCINDX =        5056
- LACIMX =        4682
- LBCIMX =           0
-
- Number of determinants:          1284
-
- Number of configurations:         492
-
- Time used in SETCI :      0.09s
-
  **********************************************************************
  *SIRIUS* a direct, restricted step, second order MCSCF program       *
  **********************************************************************
 
  
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-        Wave Functions:   RHF, SOS-MP2, and MCSCF (CAS) / cc-pVDZ            
-        Test Purpose:     Check energy calculation with symmetry             
+        Wave Functions:   RHF, SOS-MP2, and MCSCF (CAS) / cc-pVDZ
+        Test Purpose:     Check energy calculation with symmetry
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
@@ -697,8 +686,11 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:       11412 ( 25.3% )
  HERMIT - Megabytes written:                              0.137
 
+  Total CPU  time used in TWOINT:   0.01 seconds
+  Total wall time used in TWOINT:   0.01 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
+
 @  1  -75.8080240525       2.26D+00  -7.58D+01     3   1   1   0
       Virial theorem: -V/T =      1.999834
 @    MULPOP   O      -0.43; H_a _1  0.22; H_a _2  0.22; 
@@ -790,7 +782,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.016       0.016
+ CPU and wall time for SCF :       0.018       0.018
 
 
  ----- Output from SIRIUS MP2 module -----
@@ -831,12 +823,14 @@ Calculating AOSUPINT
   - E(HOMO) :    -0.49212363   (in symmetry 2)
   --------------------------
     gap     :     0.67516556
+ FCKTRA type COUL - Integral transformation order 3 for inactive+active orbitals.
 
 Calculating AO2_JINT
      (Precalculated AO two-electron integrals are resorted to new file.
       Threshold for discarding integrals :  1.00D-12 )
 
- 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.009       0.010
+
+ 2-el. integral transformation level 5: Total CPU and WALL times (sec)       0.006       0.006
 
  MP2 move   0.099313 electrons to unoccupied HF orbitals
 
@@ -872,9 +866,9 @@ Calculating AO2_JINT
 
          0.00417704     0.00068995
 
- Time used for MP2 natural orbitals :       0.010 CPU seconds,       0.011 wall seconds.
+ Time used for MP2 natural orbitals :       0.007 CPU seconds,       0.008 wall seconds.
 
- CPU and wall time for MP2 :       0.010       0.011
+ CPU and wall time for MP2 :       0.007       0.008
 
 
         SIRIUS MCSCF optimization (SIROPT)
@@ -886,8 +880,9 @@ Calculating AO2_JINT
 
 
 
+ FCKTRA type COUL - Integral transformation order 1 for active orbitals.
 
- 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.002       0.002
+ 2-el. integral transformation level 0: Total CPU and WALL times (sec)       0.001       0.002
 
  (CIST1) 8 lowest diagonal elements:
 
@@ -1015,8 +1010,10 @@ First 1 elements used as separate start vectors.
 
  --- MACRO ITERATION  1 ---
  --------------------------
+ FCKTRA type COUL - Integral transformation order 2 for active orbitals.
+ FCKTRA type EXCH - Integral transformation order 2 for active orbitals.
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.010       0.010
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.007       0.007
 
  Total MCSCF energy       :           -76.145526989286495  (MACRO    1)
 
@@ -1271,14 +1268,16 @@ First 1 elements used as separate start vectors.
 
  --- MACRO ITERATION  2 ---
  --------------------------
+ FCKTRA type COUL - Integral transformation order 2 for active orbitals.
+ FCKTRA type EXCH - Integral transformation order 2 for active orbitals.
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.006       0.006
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.007       0.007
 
- Total MCSCF energy       :           -76.147538073687002  (MACRO    2)
+ Total MCSCF energy       :           -76.147538073687031  (MACRO    2)
 
  - Nuclear repulsion      :             9.055004525637894
  - Inactive energy        :           -61.281172525454721
- - Active energy          :           -23.921370073870175
+ - Active energy          :           -23.921370073870207
 
  Norm of total gradient   :             0.027303472067
  -    of CI gradient      :             0.026478878398
@@ -1335,9 +1334,9 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4
        1       1.00000000    -0.00000000     0.00000000    -0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1364,10 +1363,10 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1395,10 +1394,10 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
 
                Column   6
        6       1.00000000
@@ -1438,10 +1437,10 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7
        6       1.00000000     0.00000000
@@ -1484,10 +1483,10 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8
        6       1.00000000     0.00000000     0.00000000
@@ -1533,10 +1532,10 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9
        6       1.00000000     0.00000000     0.00000000    -0.00000000
@@ -1585,17 +1584,17 @@ First 1 elements used as separate start vectors.
 
                Column   1     Column   2     Column   3     Column   4     Column   5
        1       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       2      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       2      -0.00000000     1.00000000     0.00000000    -0.00000000    -0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       4      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-       5       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       4      -0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       5       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
        6       1.00000000     0.00000000     0.00000000    -0.00000000     0.00000000
-       7       0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
-       8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
+       7       0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
+       8       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
        9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
-      10       0.00000000    -0.00000000     0.00000000     0.00000000     1.00000000
+      10       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
  Residual norm when dim(red L) =  10
@@ -1624,14 +1623,16 @@ First 1 elements used as separate start vectors.
 
  --- MACRO ITERATION  3 ---
  --------------------------
+ FCKTRA type COUL - Integral transformation order 2 for active orbitals.
+ FCKTRA type EXCH - Integral transformation order 2 for active orbitals.
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.008       0.007
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.007       0.007
 
- Total MCSCF energy       :           -76.147614077125723  (MACRO    3)
+ Total MCSCF energy       :           -76.147614077125738  (MACRO    3)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.283166029859842
- - Active energy          :           -23.919452572903783
+ - Inactive energy        :           -61.283166029859828
+ - Active energy          :           -23.919452572903811
 
  Norm of total gradient   :             0.000633591023
  -    of CI gradient      :             0.000487448164
@@ -1660,8 +1661,8 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3
-       1       1.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1687,10 +1688,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4
-       1       1.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1716,10 +1717,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
@@ -1747,10 +1748,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6
@@ -1790,10 +1791,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7
@@ -1836,10 +1837,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8
@@ -1885,10 +1886,10 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9
@@ -1937,18 +1938,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+      10      -0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
 
@@ -1992,18 +1993,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+      10      -0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
 
                Column  11
       11       1.00000000
@@ -2065,18 +2066,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+      10      -0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
 
                Column  11     Column  12
       11       1.00000000     0.00000000
@@ -2142,18 +2143,18 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+      10      -0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
 
                Column  11     Column  12     Column  13
       11       1.00000000     0.00000000     0.00000000
@@ -2223,24 +2224,24 @@ First 1 elements used as separate start vectors.
  Reduced overlap (as bT*b) :
 
                Column   1     Column   2     Column   3     Column   4     Column   5
-       1       1.00000000     0.00000000     0.00000000     0.00000000     0.00000000
-       2       0.00000000     1.00000000     0.00000000    -0.00000000     0.00000000
+       1       1.00000000    -0.00000000     0.00000000     0.00000000     0.00000000
+       2      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        3       0.00000000     0.00000000     1.00000000     0.00000000    -0.00000000
-       4       0.00000000    -0.00000000     0.00000000     1.00000000     0.00000000
+       4       0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
        5       0.00000000     0.00000000    -0.00000000     0.00000000     1.00000000
 
                Column   6     Column   7     Column   8     Column   9     Column  10
-       6       1.00000000    -0.00000000     0.00000000    -0.00000000     0.00000000
-       7      -0.00000000     1.00000000     0.00000000     0.00000000    -0.00000000
+       6       1.00000000    -0.00000000     0.00000000    -0.00000000    -0.00000000
+       7      -0.00000000     1.00000000     0.00000000     0.00000000     0.00000000
        8       0.00000000     0.00000000     1.00000000     0.00000000     0.00000000
-       9      -0.00000000     0.00000000     0.00000000     1.00000000    -0.00000000
-      10       0.00000000    -0.00000000     0.00000000    -0.00000000     1.00000000
+       9      -0.00000000     0.00000000     0.00000000     1.00000000     0.00000000
+      10      -0.00000000     0.00000000     0.00000000     0.00000000     1.00000000
 
                Column  11     Column  12     Column  13     Column  14
-      11       1.00000000     0.00000000     0.00000000    -0.00000000
+      11       1.00000000     0.00000000     0.00000000     0.00000000
       12       0.00000000     1.00000000    -0.00000000     0.00000000
       13       0.00000000    -0.00000000     1.00000000     0.00000000
-      14      -0.00000000     0.00000000     0.00000000     1.00000000
+      14       0.00000000     0.00000000     0.00000000     1.00000000
     ==== End of matrix output ====
 
  Residual norm when dim(red L) =  14
@@ -2269,14 +2270,16 @@ First 1 elements used as separate start vectors.
 
  --- MACRO ITERATION  4 ---
  --------------------------
+ FCKTRA type COUL - Integral transformation order 2 for active orbitals.
+ FCKTRA type EXCH - Integral transformation order 2 for active orbitals.
 
  2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.007       0.007
 
- Total MCSCF energy       :           -76.147614159016626  (MACRO    4)
+ Total MCSCF energy       :           -76.147614159016570  (MACRO    4)
 
  - Nuclear repulsion      :             9.055004525637894
- - Inactive energy        :           -61.283287725210748
- - Active energy          :           -23.919330959443773
+ - Inactive energy        :           -61.283287725210698
+ - Active energy          :           -23.919330959443766
 
  Norm of total gradient   :             0.000008421699
  -    of CI gradient      :             0.000007744290
@@ -2287,8 +2290,8 @@ First 1 elements used as separate start vectors.
  *** Optimization control: MCSCF converged ***
      Number of macro iterations used            4
      Number of micro iterations used           26
-     Total number of CPU seconds used         0.14
-     Total WALL time used (seconds)           0.14
+     Total number of CPU seconds used         0.09
+     Total WALL time used (seconds)           0.09
 
 --------------------------------------------------------------------------------
 
@@ -2354,7 +2357,7 @@ First 1 elements used as separate start vectors.
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for MCSCF :       0.138       0.138
+ CPU and wall time for MCSCF :       0.093       0.093
 
 
                      .----------------------------------------.
@@ -2363,7 +2366,7 @@ First 1 elements used as separate start vectors.
 
 
  
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
 
@@ -2372,7 +2375,7 @@ First 1 elements used as separate start vectors.
     1    6    -76.145526989286   0.0432336693  0.000000   0.2406116041
     2    8    -76.147538073687   0.0273034721  0.910215   0.0212281900
     3   12    -76.147614077126   0.0006335910  1.009508   0.0010877889
-    4    0    -76.147614159017   0.0000084217  1.000222   0.0000000000
+    4    0    -76.147614159017   0.0000084217  1.000221   0.0000000000
 
 
   ITER  INDGCM  GCIMAX      GCINRM     INDGOM  GOBMAX      GOBNRM      GRDNRM
@@ -2386,9 +2389,9 @@ First 1 elements used as separate start vectors.
   ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
  ------------------------------------------------------------------------------
 
-    1     6     4     3      0.03      0.01      0.02      0.02      0.00
-    2     8     6     3      0.03      0.01      0.02      0.02      0.00
-    3    12     8     5      0.05      0.01      0.04      0.03      0.00
+    1     6     4     3      0.02      0.01      0.01      0.01      0.00
+    2     8     6     3      0.02      0.01      0.02      0.01      0.00
+    3    12     8     5      0.03      0.01      0.02      0.02      0.00
     4     0     0     0      0.01      0.01      0.00      0.00
 
 
@@ -2403,16 +2406,16 @@ First 1 elements used as separate start vectors.
  ITER         DEPRED              DEACT               RATIO
 
     1      0.000000000000      0.000000000000      0.000000000000
-    2     -0.002209461695     -0.002011084401      0.910214648823
-    3     -0.000075287591     -0.000076003439      1.009508172751
-    4     -0.000000081873     -0.000000081891      1.000221587715
+    2     -0.002209461695     -0.002011084401      0.910214648836
+    3     -0.000075287591     -0.000076003439      1.009508172562
+    4     -0.000000081873     -0.000000081891      1.000220719851
 
 
  ITER    BETA           GAMMA             STPLNG              RTRUST
 
     1      0.20000000  1.00000000      0.240611604105      0.700000000000
     2      0.20000000  1.00000000      0.021228190026      0.700000000000
-    3      0.20000000  1.00000000      0.001087788859      0.700000000000
+    3      0.20000000  1.00000000      0.001087788856      0.700000000000
     4      0.00000000  0.00000000      0.000000000000      0.700000000000
 
 
@@ -2439,12 +2442,12 @@ First 1 elements used as separate start vectors.
 
 @    Final MCSCF energy:          -76.147614159017                 
 @    Nuclear repulsion:             9.055004525638
-@    Electronic energy:           -85.202618684655
+@    Electronic energy:           -85.202618684654
 
 @    Final gradient norm:           0.000008421699
 
  
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  Occupancies of natural orbitals
@@ -2475,7 +2478,7 @@ First 1 elements used as separate start vectors.
   Eq. 2) sum(i) [(2 - n_i) n_i]**2 =  0.0130
  (Reference: M. Head-Gordon, Chemical Physics Letters 372 (2003) 508-511)
 
-File label for MO orbitals:   4Aug22   (CNOORB)
+File label for MO orbitals:  11Nov22   (CNOORB)
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -2592,11 +2595,11 @@ File label for MO orbitals:   4Aug22   (CNOORB)
   10- 7 to 10- 6         1    0.54326431E-12      1.0000000000
   Number of coefficients less than 10^-11 times norm is            0
 
-  Total CPU  time used in SIRIUS :   0.17 seconds
-  Total wall time used in SIRIUS :   0.17 seconds
+  Total CPU  time used in SIRIUS :   0.12 seconds
+  Total wall time used in SIRIUS :   0.12 seconds
 
  
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
@@ -2607,9 +2610,9 @@ File label for MO orbitals:   4Aug22   (CNOORB)
                      | End of Wave Function Section (SIRIUS) |
                      `---------------------------------------'
 
-  Total CPU  time used in DALTON:   0.19 seconds
-  Total wall time used in DALTON:   0.19 seconds
+  Total CPU  time used in DALTON:   0.14 seconds
+  Total wall time used in DALTON:   0.14 seconds
 
  
-     Date and time (Linux)  : Thu Aug  4 21:15:51 2022
+     Date and time (Linux)  : Fri Nov 11 16:28:16 2022
      Host name              : adm-110765.pc.sdu.dk                    
