@@ -20,6 +20,8 @@
   - Implementation of an extra keyword .SOCVIR which initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
 
 ### Other new features added
+- Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
+  Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
 - Print total oscillator strenghts when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
 ### Fixed
