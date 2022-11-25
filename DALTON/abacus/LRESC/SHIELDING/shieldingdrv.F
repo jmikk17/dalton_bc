@@ -307,6 +307,32 @@ cx       ELSE
 cx        ENDIF
       END IF
 C
+C --------------------------------------------------
+C Some files have to be closed and/or deleted
+c when the RESPONSE module is called besides LRESC
+      inquire(file = 'RSPVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+
+
+      inquire(file = 'RSP_BVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP3 ,'DELETE')
+
+
+      inquire(file = 'RSP_DIAG', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP4 ,'DELETE')
+
+
+      inquire(file = 'RSP_SVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP5 ,'DELETE')
+C --------------------------------------------------
 C     Diamagnetic corrections to Shielding:
 C     First Order Singlet
 C
@@ -357,24 +383,23 @@ cv       CALL CUADRAS('LFCO')
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C NUEVA PARTE - AUCAR       
-C No perder el DALON.INP original, por si el usuario lo quiere.
-C Renombrar los files
-
+C No perder el DALTON.INP original, por si el usuario lo quiere.
+C Renombrar los files. PENDIENTE!
 c      AL TERMINAR, REVISAR CONSTANTES!
 c Al pedir las PSO salen tmb las PSO-KE, por si necesito...
-c       CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
-c       CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
+       CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
+       CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
+
+       CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
+       CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
 
 c      SON NULOS!
 c       CALL QUADRATICLR('SZ-PSO-MV',WORK,LWORK)
 c       CALL QUADRATICLR('SZ-PSO-Dw',WORK,LWORK)
 
-c        CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
-        CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
-
-c       Estos están mal... El SZ debiera ser sólo el operador de spin...      
+c       Están dando nulos...
 c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
-       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
+c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
