@@ -273,7 +273,7 @@ C
 C
 C KFSchaltz begin 
       LBDENSIJ= ILMVIR(1) 
-      LBDENSAB= ILMVIR(8) + NVIR(8) - ILMVIR(1)
+      LBDENSAB= ILMVIR(8) + NVIR(8)*NORB(8) - ILMVIR(1)
       KBDENSIJ= KEND1
       KBDENSAB= KBDENSIJ + LBDENSIJ
       KTR1E   = KBDENSAB + LBDENSAB
@@ -1454,6 +1454,14 @@ C           Same for the D-part
             DTIME      = SECOND()   - DTIME
             SOTIME(16) = SOTIME(16) + DTIME
          ENDIF
+C KFSchaltz begin
+               CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(BDENSIJ),
+     &                      LBDENSIJ,WORK(BDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,WORK(KEND6),LWORK6)
+C
+C
+C KFSchaltz end
          END SUBROUTINE
 C
          SUBROUTINE LOOP_BODY_TRIPLET

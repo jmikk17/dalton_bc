@@ -58,22 +58,10 @@ C
                KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
                KOFF2  = ILMRHF(ISYMJ) + 1 
 C
-C               WRITE(LUPRI,'(I5,A)') NRHF(ISYMJ),'NRHF(ISYMJ)'
-C               WRITE(LUPRI,'(I5,A)') NORB(ISYMJ),'NORB(ISYMJ)'
-C               WRITE(LUPRI,'(F14.8,A)') KOFF1,'KOFF1'
-C               DO k = 1,NRHF(ISYMJ)*NRHF(ISYMJ)
-C                  WRITE(LUPRI,'(I5,F14.8,A)')
-C     &                 k,DENSIJ(KOFF1+k-1),'DENSIJ(KOFF1)'
-C               END DO
-C               WRITE(LUPRI,'(F14.8,A)') KOFF2,'KOFF2'
-C               WRITE(LUPRI,'(F14.8,A)') CMO(KOFF2),'CMO(KOFF2)'
-C               
-C
                CALL DGEMM('N','T',NRHF(ISYMJ),NORB(ISYMJ),
      &           NRHF(ISYMJ),ONE,DENSIJ(KOFF1),NRHF(ISYMJ),
      &           CMO(KOFF2),NORB(ISYMJ),ZERO,BDENSIJ(KOFF2),NTOTAL)
-c
-C               WRITE(LUPRI,'(F14.8,A)') BDENSIJ(KOFF2),'BDENSIJ(KOFF2)'
+C
         END DO
 C
 C-----------------------

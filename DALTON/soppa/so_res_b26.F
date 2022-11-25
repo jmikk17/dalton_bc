@@ -1,26 +1,23 @@
-C  /* Deck so_res_tcb */
-      SUBROUTINE SO_RES_TCB(RES1E,LRES1E,RES1D,LRES1D,
-     &                      TR2EM1,LTR2E,TR2DM1,LTR2D,DSRHF,LDSRHF,
-     &                      CMO,LCMO,IDEL,ISDEL,ISYDIS,ISYMTR,DO_DEX,
+C  /* Deck so_res_b26 */
+      SUBROUTINE SO_RES_B26(RES1,LRES1,T2M1,LT2M1,DSRHF,
+     &                      CMO,LCMO,IDEL,ISDEL,ISYDIS,ISYMTR,
      &                      WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
-C     Keld Bak, February 1996
-C     Stephan P. A. Sauer: 10.11.2003: merge with Dalton 2.0
+C     Rasmus Faber, 2016: Adapted from so_res_tcb
 C
-C                        ~
-C     PURPOSE: Calculate C times b contribution to 1p1h resultvectors
-C              as described in eq. (72) and (73).
+C     PURPOSE: Calculate contribution 2 and 6 of the B-matrix, by using
+C              x1 transformed two-electron integrals and the
+C              partially transformed T2 amplitudes
 C
 #include "implicit.h"
 #include "priunit.h"
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
-      DIMENSION RES1E(LRES1E), RES1D(LRES1D), DSRHF(LDSRHF)
-      DIMENSION TR2EM1(LTR2E), TR2DM1(LTR2D), CMO(LCMO)
+      DIMENSION RES1(LRES1), DSRHF(*)
+      DIMENSION T2M1(LT2M1), CMO(LCMO)
       DIMENSION WORK(LWORK)
-      LOGICAL, INTENT(IN) :: DO_DEX
 C
 #include "ccorb.h"
 #include "ccsdinp.h"
@@ -30,12 +27,12 @@ C------------------
 C     Add to trace.
 C------------------
 C
-      CALL QENTER('SO_RES_TCB')
+      CALL QENTER('SO_RES_B26')
 C
       ISYMB = ISDEL
 C
-      KEND1   = 1
-      LWORK1  = LWORK - KEND1
+      LCDB  = NVIR(ISYMB)
+      IF (LCDB.LE.0) GOTO 999
 C
       DO 100 ISYMJ = 1,NSYM
 C
@@ -46,7 +43,7 @@ C
 C
          LSCR1  = N2BST(ISALBE)
 C
-         KSCR1  = KEND1
+         KSCR1  = 1
          KEND2  = KSCR1 + LSCR1
          LWORK2 = LWORK - KEND2
 C
@@ -63,18 +60,24 @@ C           delta.
 C-----------------------------------------------------------------------
 C
             CALL CCSD_SYMSQ(DSRHF(KOFF1),ISALBE,WORK(KSCR1))
+            WRITE(LUPRI, '(A,I5)') 'ISYMJ',ISYMJ
+            WRITE(LUPRI, '(A,I5)') 'J =',J
+            DO n = 1,N2BST(ISALBE)
+                  WRITE(LUPRI,'(D14.8,I5,A)') 
+     &            WORK(KSCR1 + n - 1),n,' Integrals'
+            END DO
 C
             DO 300 ISYMK = 1,NSYM
 C
                ISKBJ  = MULD2H(ISYMK,ISYMBJ)
-               ISYMA  = MULD2H(ISKBJ,ISYMTR)
+               ISYMA  = ISKBJ
                ISYMC  = MULD2H(ISYMA,ISYMCA)
                ISYMI  = MULD2H(ISYMK,ISYMKI)
                ISYMAK = MULD2H(ISYMA,ISYMK)
                ISYMBK = MULD2H(ISYMB,ISYMK)
                ISYMAJ = MULD2H(ISYMA,ISYMJ)
-C
 C-----------------------------------------------------------------
+C                               ~                     ~
 C              Generate ( a c | j delta ) and ( k i | j delta) for
 C              given j and delta in KSCR2 and KSCR3, respectively.
 C-----------------------------------------------------------------
@@ -87,6 +90,8 @@ C
 C
                LSCR2  = NVIR(ISYMC)*NVIR(ISYMA)
                LSCR3  = NRHF(ISYMK)*NRHF(ISYMI)
+C               LSCR4  = MAX(NBAS(ISALFA)*NVIR(ISYMA),
+C     &                      NBAS(ISALF2)*NRHF(ISYMI))
                LSCR4  = MAX(NBAS(ISBETA)*NVIR(ISYMA),
      &                      NBAS(ISBET2)*NRHF(ISYMI))
 C
@@ -96,9 +101,9 @@ C
                KEND3  = KSCR4 + LSCR4
                LWORK3 = LWORK - KEND3
 C
-               CALL SO_MEMMAX ('SO_RES_TCB.3',LWORK3)
+               CALL SO_MEMMAX ('SO_RES_B26.3',LWORK3)
                IF (LWORK3 .LT. 0)
-     &             CALL STOPIT('SO_RES_TCB.3',' ',KEND3,LWORK)
+     &             CALL STOPIT('SO_RES_B26.3',' ',KEND3,LWORK)
 C
                NTOTAL = MAX(NBAS(ISALFA),1)
                NTOTBE = MAX(NBAS(ISBETA),1)
@@ -135,7 +140,7 @@ C              ( alpha, beta | .. ) * C(alpha,i) => ( beta, i | ..)
                CALL DGEMM('T','N',NBAS(ISBET2),NRHF(ISYMI),
      &                    NBAS(ISALF2),ONE,WORK(KOFF5),NTOTAL,
      &                    CMO(KOFF6),NTOTAL,ZERO,WORK(KSCR4),NTOTBE)
-C
+C                                                          ~
 C              C( beta, k) * ( beta, i | ..)  = > ( k, i | j delta)
                CALL DGEMM('T','N',NRHF(ISYMK),NRHF(ISYMI),
      &                    NBAS(ISBET2),ONE,CMO(KOFF7),NTOTBE,
@@ -150,29 +155,16 @@ C
 C
                KOFF3  = IT1AM(ISYMC,ISYMK) + 1
                KOFF4  = IT1AM(ISYMA,ISYMI) + 1
-C
-C               ( a, c | j, delta ) * x( a,k, j, delta ) = > x ( c, k)
+C                        ~
+C               ( a, c | j, delta ) * T2( a,k, j, delta ) = > x ( c, k)
                CALL DGEMM('T','N',NVIR(ISYMC),NRHF(ISYMK),NVIR(ISYMA),
-     &                    ONE,WORK(KSCR2),NTOTA,TR2EM1(KOFFX2M1),NTOTA,
-     &                    ONE,RES1E(KOFF3),NTOTC)
-C              ~
-C             -x(a,k,j,delta)*(k,i | j,delta) => x( a, i)
+     &                    -ONE,WORK(KSCR2),NTOTA,T2M1(KOFFX2M1),NTOTA,
+     &                    ONE,RES1(KOFF3),NTOTC)
+C                                     ~
+C              T2(a,k,j,delta)*(k,i | j,delta) => x( a, i)
                CALL DGEMM('N','N',NVIR(ISYMA),NRHF(ISYMI),NRHF(ISYMK),
-     &                    -ONE,TR2EM1(KOFFX2M1),NTOTA,WORK(KSCR3),
-     &                    NTOTK,ONE,RES1E(KOFF4),NTOTA)
-C
-C              And for D vector
-               IF (DO_DEX) THEN
-                  CALL DGEMM('T','N',NVIR(ISYMC),NRHF(ISYMK),
-     &                       NVIR(ISYMA),ONE,WORK(KSCR2),NTOTA,
-     &                       TR2DM1(KOFFX2M1),NTOTA,
-     &                       ONE,RES1D(KOFF3),NTOTC)
-C               
-                  CALL DGEMM('N','N',NVIR(ISYMA),NRHF(ISYMI),
-     &                       NRHF(ISYMK),-ONE,TR2DM1(KOFFX2M1),
-     &                       NTOTA,WORK(KSCR3),
-     &                       NTOTK,ONE,RES1D(KOFF4),NTOTA)
-               END IF
+     &                    ONE,T2M1(KOFFX2M1),NTOTA,WORK(KSCR3),
+     &                    NTOTK,ONE,RES1(KOFF4),NTOTA)
 C
   300       CONTINUE
 C
@@ -184,7 +176,7 @@ C-----------------------
 C     Remove from trace.
 C-----------------------
 C
-  999 CALL QEXIT('SO_RES_TCB')
+  999 CALL QEXIT('SO_RES_B26')
 C
       RETURN
       END
