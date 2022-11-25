@@ -36,6 +36,7 @@ C
 #include "inforb.h"
 ! gnrinf.h: QM3, THR_REDFAC
 #include "gnrinf.h"
+#include "abainf.h"
 C
       LOGICAL NEWDEF, BCFREQ, COMFREQ, NXTLAB
       PARAMETER ( NTABLE = 30, ZERO = 0.0D0 , THRFRQ = 1.0D-14 )
@@ -127,8 +128,14 @@ C
      &                           'UNFORMATTED',IDUMMY,.FALSE.)
  399                 CONTINUE
                      IF (NXTLAB(LABFND,RTNLBL,LUPROP)) THEN
-                        IF (LABFND(1:3) .EQ. 'PSO')
-     &                       BQROP(INDPRP(LABFND)) = .TRUE.
+                        IF (LABFND(1:3) .EQ. 'PSO') THEN
+                            IF (.NOT. RNLRSCSHI) THEN
+                              BQROP(INDPRP(LABFND)) = .TRUE.
+                           ELSE IF (RNLRSCSHI .AND.
+     &                        LABFND(4:5) .NE. 'KE') THEN
+                              BQROP(INDPRP(LABFND)) = .TRUE.
+                           END IF
+                        END IF
                         GOTO 399
                      END IF
                      CALL GPCLOSE(LUPROP,'KEEP')
@@ -196,8 +203,14 @@ C
      &                           'UNFORMATTED',IDUMMY,.FALSE.)
  398                 CONTINUE
                      IF (NXTLAB(LABFND,RTNLBL,LUPROP)) THEN
-                        IF (LABFND(1:3) .EQ. 'PSO')
-     &                       CQROP(INDPRP(LABFND)) = .TRUE.
+                        IF (LABFND(1:3) .EQ. 'PSO') THEN
+                           IF (.NOT. RNLRSCSHI) THEN
+                              CQROP(INDPRP(LABFND)) = .TRUE.
+                           ELSE IF (RNLRSCSHI .AND.
+     &                        LABFND(4:5) .NE. 'KE') THEN
+                              CQROP(INDPRP(LABFND)) = .TRUE.
+                           END IF
+                        END IF
                         GOTO 398
                      END IF
                      CALL GPCLOSE(LUPROP,'KEEP')
@@ -265,8 +278,14 @@ C
      &                           'UNFORMATTED',IDUMMY,.FALSE.)
  397                 CONTINUE
                      IF (NXTLAB(LABFND,RTNLBL,LUPROP)) THEN
-                        IF (LABFND(1:3) .EQ. 'PSO')
-     &                       AQROP(INDPRP(LABFND)) = .TRUE.
+                        IF (LABFND(1:3) .EQ. 'PSO') THEN
+                           IF (.NOT. RNLRSCSHI) THEN
+                              AQROP(INDPRP(LABFND)) = .TRUE.
+                           ELSE IF (RNLRSCSHI .AND.
+     &                        LABFND(4:5) .NE. 'KE') THEN
+                              BQROP(INDPRP(LABFND)) = .TRUE.
+                           END IF
+                        END IF
                         GOTO 397
                      END IF
                      CALL GPCLOSE(LUPROP,'KEEP')
