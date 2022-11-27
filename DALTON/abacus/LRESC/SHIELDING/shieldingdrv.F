@@ -287,6 +287,7 @@ C ----------------------------
          SIGMAD1S = .TRUE.
          SIGMAP1S = .TRUE.
          SIGMAP1T = .TRUE.
+         SIGMAP3S = .TRUE.
       ENDIF
 
 C     Print information about LRESC metodology
@@ -367,11 +368,11 @@ C
 C     Paramagnetic corrections to Shielding:
 C     Third Order SINLGET
 C
-      IF (SIGMAP3S) THEN
-         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
-     &   ' Singlet Second Order Shielding corrections'
+c      IF (SIGMAP3S) THEN
+c         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
+c     &   ' Singlet Second Order Shielding corrections'
 cv       CALL CUADRAS('LPSO')
-      END IF
+c      END IF
 C
 C     Paramagnetic corrections to Shielding:
 C     Third Order TRIPLET
@@ -387,8 +388,12 @@ C No perder el DALTON.INP original, por si el usuario lo quiere.
 C Renombrar los files. PENDIENTE!
 c      AL TERMINAR, REVISAR CONSTANTES!
 c Al pedir las PSO salen tmb las PSO-KE, por si necesito...
+      IF (SIGMAP3S) THEN
+         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
+     &   ' Singlet Third Order Shielding corrections'
        CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
        CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
+      END IF
 
        CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
        CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
@@ -412,26 +417,19 @@ C
       SGP1T   = 0.0  ! sigma 1order triplet PARAM : FcKin, SdKin, SdBso, FcBso
 
 C     Add constants to print all in ppm's
-      DO i=1, 3
 !     Diamagnetic corrections
-      !LRESC
-         FCTEMP  = LRFCAV(i,i)
-         ANGTEMP = LRANGP(i,i)
-         DARTEMP = LRDIAD(i,i)
-         TEMPMAS = LRDIAM(i,i)
-         LRFCAV(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV(i,i)
-         LRDIAK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK(i,i)
-         LRANGP(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP(i,i)
-         LRDIAD(i,i) = calfa*calfa*1.0D+6* CDIAD* LRDIAD(i,i)
-         LRDIAM(i,i) = calfa*calfa*1.0D+6* CDIAM* LRDIAM(i,i)
+         LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
+         LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
+         LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
+         LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
+         LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
 !     Paramagnetic corrections
-         LRFCZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK(i,i)
-         LRSDZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CSDZK*LRSDZK(i,i)
-         LRFCBS(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS(i,i)
-         LRSDBS(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS(i,i)
-         LRLKIN(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN(i,i)
-         LRPSOK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK(i,i)
-      ENDDO
+         LRFCZK = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK
+         LRSDZK = calfa*calfa*calfa*calfa*1.0D+6* CSDZK*LRSDZK
+         LRFCBS = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS
+         LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
+         LRLKIN = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN
+         LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
 C
 C     Trace
 C
@@ -463,62 +461,37 @@ C
 C     Paramagnetic 1st singlet or triplet
 C
       IF ((SIGMAP1S).OR.(SIGMAP1T)) THEN
-         WRITE(LUPRI,*)
          CALL HEADER('Paramagnetic Corrections',-1)
          IF(SIGMAP1S) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Singlets. Total Value : ', SGP1S,' [ppm]'
-            WRITE(LUPRI,*)
             IF(PRTALL1) THEN
-               aa =(LRLKIN(1,1)+LRLKIN(2,2)+LRLKIN(3,3))/3.0
-               WRITE(LUPRI,*)
-     &'       Detailed info : [.PARA1S] Diagonal'//
-     &                   ' components, for each operator'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
                WRITE(LUPRI,*)'       ---------------            xx  '//
-     &                       '          yy             zz          iso'
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'Lkin :  '
-     &         ,LRLKIN(1,1),LRLKIN(2,2),LRLKIN(3,3),aa,' [ppm]'
-               aa = (LRPSOK(1,1)+LRPSOK(2,2)+LRPSOK(3,3))/3.0
-               WRITE (LUPRI,'(9X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'PsoKin : '
-     &         ,LRPSOK(1,1),LRPSOK(2,2),LRPSOK(3,3),aa,' [ppm]'
+     &         '          yy             zz          iso'
+               call PRINT_LRSHIELD_CORR('Lkin    ',LRLKIN)
+               call PRINT_LRSHIELD_CORR('PsoKin  ',LRPSOK)
             ENDIF
          ENDIF
 
          IF (SIGMAP1T) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Triplets. Total Value : ', SGP1T,'[ppm]'
-            WRITE(LUPRI,*)
             IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &'       Detailed info : [.PARA1T] Diagonal'//
-     &                      ' components, for each operator'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1T]'
                WRITE(LUPRI,*)'       ---------------            xx  '//
      &                       '          yy             zz          iso'
-               aa = (LRFCZK(1,1) + LRFCZK(2,2) + LRFCZK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FcKin : '
-     &         ,LRFCZK(1,1),LRFCZK(2,2),LRFCZK(3,3),aa,' [ppm]'
-               aa = (LRSDZK(1,1) + LRSDZK(2,2) + LRSDZK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'SdKin : '
-     &         ,LRSDZK(1,1),LRSDZK(2,2),LRSDZK(3,3),aa,' [ppm]'
-               aa = (LRFCBS(1,1) + LRFCBS(2,2) + LRFCBS(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FcBso : '
-     &         ,LRFCBS(1,1),LRFCBS(2,2),LRFCBS(3,3),aa,' [ppm]'
-               aa = (LRSDBS(1,1) + LRSDBS(2,2) + LRSDBS(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'SdBso : '
-     &         ,LRSDBS(1,1),LRSDBS(2,2),LRSDBS(3,3),aa,' [ppm]'
+               call PRINT_LRSHIELD_CORR('FcKin   ',LRFCZK)
+               call PRINT_LRSHIELD_CORR('SdKin   ',LRSDZK)
+               call PRINT_LRSHIELD_CORR('FcBso   ',LRFCBS)
+               call PRINT_LRSHIELD_CORR('SdBso   ',LRSDBS)
             ENDIF
          ENDIF
+
+         WRITE(LUPRI,'(/,7X,A)') '---------------             xx  '//
+     &         '          yy             zz          iso'
+         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+     &                      LRLKIN+LRPSOK)
+         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
+     &                      LRFCZK+LRSDZK+LRFCBS+LRSDBS)
          IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
+            WRITE (LUPRI,'(/,5X,A,9X,F17.5,A)')
      &      'Total Paramagnetic Corrections :     ',
      &       (SGP1S+SGP1T),' [ppm]'
          ENDIF
@@ -528,77 +501,39 @@ C     diamagnetic 0th or 1st order singlet
 C
       IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
          WRITE(LUPRI,*)
-c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
          CALL HEADER(' Diamagnetic Corrections :',-1)
          IF(SIGMAD0S) THEN
-            WRITE(LUPRI,*)
-               WRITE(LUPRI,*)'    LRESC'
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &         'First Order Singlets. Total Value :  ', SGD0S,' [ppm]'
-            WRITE(LUPRI,*)
             IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &         '       Detailed info : [.DIAM0S] Diagonal'//
-     &                      ' components, for each operator'
-               WRITE(LUPRI,*)
-     &          '       ---------------                   xx'//
-     &                       '             yy            zz'//
-     &                       '         iso'
-
-               aa = (LRFCAV(1,1) + LRFCAV(2,2) + LRFCAV(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,13X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FC LRESC : '
-     &         ,LRFCAV(1,1),LRFCAV(2,2),LRFCAV(3,3),aa,' [ppm]'
-
-               aa = (LRANGP(1,1) + LRANGP(2,2) + LRANGP(3,3))/3.0
-               IF (PING) THEN
-               WRITE (LUPRI,'(10X,A,11X,A,6X,A,6X,A,6X,A)')
-     &         'AngPso LRESC: '
-     &           ,'not calc','not calc','not calc','see WARNING'
-               ELSE
-               WRITE (LUPRI,'(10X,A,10X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'AngPso LRESC: '
-     &         ,LRANGP(1,1),LRANGP(2,2),LRANGP(3,3),aa,' [ppm]'
-               ENDIF
-
-               aa = (LRDIAK(1,1) + LRDIAK(2,2) + LRDIAK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaKin LRESC : '
-     &         ,LRDIAK(1,1),LRDIAK(2,2),LRDIAK(3,3),aa,' [ppm]'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S]'
+               WRITE(LUPRI,*)'       ---------------            xx  '//
+     &         '          yy             zz          iso'
+               call PRINT_LRSHIELD_CORR('FC LRESC',LRFCAV)
+               call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP)
+               call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK)
 
             ENDIF
          ENDIF
 
          IF(SIGMAD1S) THEN
-            WRITE(LUPRI,*)
-               WRITE(LUPRI,*)'    LRESC '
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Singlets. Total Value : ', SGD1S,' [ppm]'
-            WRITE(LUPRI,*)
             IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &                '       Detailed info : [.DIAM1S] Diagonal'//
-     &                      ' components, for each operator'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM1S]'
                WRITE(LUPRI,*)'       ---------------            xx  '//
      &                       '          yy             zz          iso'
-
-                  WRITE(*,'(10X,A)')'LRESC '
-               aa = (LRDIAM(1,1) + LRDIAM(2,2) + LRDIAM(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaMv  : '
-     &         ,LRDIAM(1,1),LRDIAM(2,2),LRDIAM(3,3),aa,' [ppm]'
-               aa = (LRDIAD(1,1) + LRDIAD(2,2) + LRDIAD(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaDw  : '
-     &         ,LRDIAD(1,1),LRDIAD(2,2),LRDIAD(3,3),aa,' [ppm]'
+               call PRINT_LRSHIELD_CORR('DiaMv   ',LRDIAM)
+               call PRINT_LRSHIELD_CORR('DiaDw   ',LRDIAD)
             ENDIF
          ENDIF
 
+         WRITE(LUPRI,'(/,A)')'       ---------------             xx  '//
+     &         '          yy             zz          iso'
+         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
+     &                                         LRFCAV+LRDIAK+LRANGP)
+         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+     &                                         LRDIAD+LRDIAM)         
          IF((SIGMAD1S.AND.SIGMAD0S).OR.LRESCALL) THEN
-            WRITE(LUPRI,*)
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &         'Total Diamagnetic Corrections from LRESC :      ',
-     &         (SGD0S+SGD1S),' [ppm]'
+            WRITE (LUPRI,'(/,5X,A,9X,F17.5,A)')
+     &      'Total Diamagnetic Corrections from LRESC :      ',
+     &      (SGD0S+SGD1S),' [ppm]'
          ENDIF
       ENDIF
 C
@@ -607,8 +542,8 @@ C
       IF (LRESCALL) THEN
 c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
          CALL HEADER('Total Relativistic Corrections :',-1)
-            WRITE (LUPRI,'(/5X,A,F17.5,A)')
-     &           'Sum of corrections of LRESC : ' ,SLRESC, ' [ppm]'
+         WRITE (LUPRI,'(/5X,A,F17.5,A)')
+     &   'Sum of corrections of LRESC : ' ,SLRESC, ' [ppm]'
       END IF
 
       WRITE(LUPRI,*) 
