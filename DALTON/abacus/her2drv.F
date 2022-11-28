@@ -263,7 +263,8 @@ C  /* Deck twocal */
      &            ITYPE,JSTRSH,NPRIMS,NCONTS,IORBSH,
      &            I2TYP,ICEDIF,IFTHRS,DINTSKP,GABRAO,DMRAO,DMRSO,
      &            RELCAL_in,GENCNT)
-      use pelib_interface, only: pelib_ifc_do_twoints
+      use pelib_interface, only: pelib_ifc_do_twoints,
+     &                           pelib_ifc_do_lao_twoints
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
@@ -358,7 +359,8 @@ C
      &               WORK(KIODHR),IREPDM,IFCTYP,ISHLA,ADISTR,I2TYP,
      &               JSTRSH,NPRIMS,NCONTS,IORBSH,RELCAL_in,GENCNT)
 C
-      ELSE IF (PELIB_IFC_DO_TWOINTS()) THEN
+      ELSE IF (PELIB_IFC_DO_TWOINTS() .or.
+     &         PELIB_IFC_DO_LAO_TWOINTS()) THEN
 !
 !        Only intermolecular integrals for PElib
 !        =============================================

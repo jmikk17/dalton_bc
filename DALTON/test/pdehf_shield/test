@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import h5py
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+
+f.add(from_string = '@2 atom   shielding ',
+      num_lines = 4,
+      abs_tolerance = 1.0e-3)
+
+test.run(['save_density.dal'], ['monomer.mol'], ['monomer.pot'], args='-put "core.h5" -get "core.h5"')
+os.rename('save_density_monomer_monomer.core.h5', 'save_density.h5')
+
+test.run(['twoint.dal'], ['core_monomer.mol'], args='-put "save_density.h5" -get "save_density.h5"')
+os.rename('twoint_core_monomer.save_density.h5', 'twoint.h5')
+# create final h5 based on above input
+twoint = h5py.File('twoint.h5', 'r')
+final = h5py.File('final.h5', 'w')
+final['electric fields'] = twoint['fragment/electric fields'][()]
+final['electrostatic matrix'] = twoint['core_fragment/electrostatic matrix'][()]
+final['london electrostatic matrix'] = twoint['core_fragment/london electrostatic matrix'][()]
+final['exchange-repulsion matrix'] = twoint['core_fragment/exchange-repulsion matrix'][()]
+final['london exchange-repulsion matrix'] = twoint['core_fragment/london exchange-repulsion matrix'][()]
+final['nuclear charges'] = twoint['fragment/charges'][()]
+final['nuclear coordinates'] = twoint['fragment/coordinates'][()]
+final['nuclear-electron energy'] = twoint['core_fragment/nuclear-electron energy'][()]
+final['num_bas'] = twoint['fragment/num_bas'][()]
+final['num_fields'] = len(twoint['fragment/electric fields'][()])//3
+final['num_nuclei'] = len(twoint['fragment/electric fields'][()])//3
+final.close()
+
+test.run(['pde.dal'], ['core.mol'], ['monomer.pot'], f={'out': f}, args='-put "final.h5"')
+
+sys.exit(test.return_code)

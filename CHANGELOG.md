@@ -18,6 +18,8 @@
   - 2) sum(i) (n\_i (2 - n\_i))\*\*2
 - Analysis of SSCCs in terms of localized orbitals
   - Implementation of an extra keyword .SOCVIR which initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
+- PDE-London: Added implementation of London orbitals, or gauge-including atomic orbitals (GIAO), for PDE 
+    - F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. XX, XXX-XXX (2022), https://doi.org/10.1021/acs.jctc.2c00829
 
 ### Other new features added
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
