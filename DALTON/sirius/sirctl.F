@@ -56,7 +56,10 @@ C
       use pcm_config, only: pcm_configuration, pcm_cfg
 #endif
       use pelib_interface, only: pelib_ifc_do_twoints,
-     &                           pelib_ifc_twoints
+     &                           pelib_ifc_do_lao_twoints,
+     &                           pelib_ifc_twoints,
+     &                           pelib_ifc_lao_twoints
+
 #include "implicit.h"
 C
       DIMENSION WORK(LWORK)
@@ -132,8 +135,13 @@ C
 ! ************************************************************************
 ! *** Compute intermolecular part of two-electron Fock matrix and quit ***
 ! ************************************************************************
-      IF (PELIB_IFC_DO_TWOINTS()) THEN
-          CALL PELIB_IFC_TWOINTS(WORK, LWORK)
+      IF (PELIB_IFC_DO_TWOINTS() .or. PELIB_IFC_DO_LAO_TWOINTS()) THEN
+          IF (PELIB_IFC_DO_TWOINTS()) THEN
+              CALL PELIB_IFC_TWOINTS(WORK, LWORK)
+          END IF
+          IF (PELIB_IFC_DO_LAO_TWOINTS()) THEN
+              CALL PELIB_IFC_LAO_TWOINTS(WORK, LWORK)
+          END IF
           ICONV = 1
           GOTO 8000
       END IF

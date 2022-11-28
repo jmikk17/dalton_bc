@@ -8,7 +8,7 @@ before_script:
   - dnf upgrade -y -q
   - dnf install -y -q gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
                       mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
-                      python python3 redhat-rpm-config findutils which procps-ng coreutils
+                      python python3 python3-h5py redhat-rpm-config findutils which procps-ng coreutils
   - . ~/.bash_profile
   - uname -a
   - lscpu
