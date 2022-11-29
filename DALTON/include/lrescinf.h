@@ -7,14 +7,15 @@
 !cx         jim-gesc -1: RNLRSC login included in abainf.h, jimprt for debugging prints
 !cx         jja  : edited on April 2021 to add variables for EFG
       REAL*8 calfa, CFCZK, CSDZK, CFCBS, CSDBS, CPSOK, CLKIN, CDIAM,
-     &       CDIAD, CDIAK, CANGP,CFCAV, CEFGDW,
+     &       CDIAD, CDIAK, CANGP,CFCAV, CPSOOZMV, CPSOOZDW, CEFGDW,
      &       CEFGMV, CEFGpqp, CEFGkin, C4EFGSO, C4EFGMV, C4EFGDW
 
       PARAMETER (calfa=1.0/137.036, CFCZK=1.0/3.0, CSDZK=-0.25D0,
      &            CFCBS=-0.25D0, CSDBS=-0.25D0, CPSOK=0.50D0,
      &            CLKIN=1.0D0, CDIAM=-1.0D0, CDIAD=-1.0D0,
      &            CDIAK=1/6.0, CANGP=-0.5D0,
-     &            CFCAV=-1.0*7.0/16.0, CEFGDW=-1.0D0, 
+     &            CFCAV=-1.0*7.0/16.0, CPSOOZMV=-0.5D0,
+     &            CPSOOZDW=-0.5D0, COZFCSO=-0.25D0, COZSDSO=-0.25D0, CEFGDW=-1.0D0, 
      &            CEFGMV=-1.0D0, CEFGpqp=0.25D0, CEFGkin=-0.5D0,
      &		  CEFGlap=1.0/8.0)
 
@@ -33,16 +34,17 @@
      &                  LRPSOK(3,3), LRPSKI(3,3), LRFCZK(3,3),
      &                  LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
      &			SLRESC(3,3), SGD0S(3,3), SGD1S(3,3),
-     &                  SGP1S(3,3), SGP1T(3,3),
-     &                  QRPSOOZMV(3,3),
+     &                  SGP1S(3,3), SGP1T(3,3), SGP3S(3,3),SGP3T(3,3),
+     &                  QRPSOOZMV(3,3), QRPSOOZDW(3,3),
+     &                  QROZFCSO(3,3), QROZSDSO(3,3),
      &                  LRGAUG(3),EFGC0(100),EFGC2(100,5)
 
       COMMON /LRESCINF/ SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
      &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, JIMPRT, LRATOM,
      &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,
      &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, SLRESC, SGD0S,
-     &    SGD1S, SGP1S, SGP1T, QRPSOOZMV, 
-     &    LRGAUG, PRTALL1,
+     &    SGD1S, SGP1S, SGP1T, SGP3S, SGP3T, QRPSOOZMV, QRPSOOZDW,
+     &    QROZFCSO, QROZSDSO, LRGAUG, PRTALL1,
      &    EFGC0,EFGC2, ORBCON,PQPKINLRESC, PRTALL2, JJAPRT,
      &    LRATOM_changed
 ! -- end of lrescinf.h --

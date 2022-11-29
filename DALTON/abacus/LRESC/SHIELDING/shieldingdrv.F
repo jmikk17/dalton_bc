@@ -280,7 +280,6 @@ C
 cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_SHI')
 
-
 C ----------------------------
       IF (LRESCALL) THEN
          SIGMAD0S = .TRUE.
@@ -288,6 +287,7 @@ C ----------------------------
          SIGMAP1S = .TRUE.
          SIGMAP1T = .TRUE.
          SIGMAP3S = .TRUE.
+         SIGMAP3T = .TRUE.
       ENDIF
 
 C     Print information about LRESC metodology
@@ -377,26 +377,29 @@ C
 C     Paramagnetic corrections to Shielding:
 C     Third Order TRIPLET
 C
-      IF (SIGMAP3T) THEN
-         WRITE (LUPRI,'(A)')'   Calling to SIGMA3T for : '
+c      IF (SIGMAP3T) THEN
+c         WRITE (LUPRI,'(A)')'   Calling to SIGMA3T for : '
 cv       CALL CUADRAS('LFCO')
-      END IF
+c      END IF
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C NUEVA PARTE - AUCAR       
 C No perder el DALTON.INP original, por si el usuario lo quiere.
 C Renombrar los files. PENDIENTE!
 c      AL TERMINAR, REVISAR CONSTANTES!
-c Al pedir las PSO salen tmb las PSO-KE, por si necesito...
       IF (SIGMAP3S) THEN
-         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
-     &   ' Singlet Third Order Shielding corrections'
+        WRITE (LUPRI,'(A)')' Calling to SIGMAP3S for : Paramagnetic'//
+     &                     ' Singlet Third Order Shielding corrections'
        CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
        CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
       END IF
 
+      IF (SIGMAP3T) THEN
+        WRITE (LUPRI,'(A)')' Calling to SIGMAP3T for : Paramagnetic'//
+     &                     ' Triplet Third Order Shielding corrections'
        CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
        CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
+      END IF
 
 c      SON NULOS!
 c       CALL QUADRATICLR('SZ-PSO-MV',WORK,LWORK)
@@ -413,8 +416,10 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       SGD1S   = 0.0  ! sigma 1order singlet DIAM  : DiaMv, DiaDw
       SGP1S   = 0.0  ! sigma 1order singlet PARAM : Lkin, Psokin
       SGP1T   = 0.0  ! sigma 1order triplet PARAM : FcKin, SdKin, SdBso, FcBso
+      SGP3S   = 0.0  ! sigma 3order singlet PARAM : PSOOZMv, PSOOZDw
+      SGP3T   = 0.0  ! sigma 3order triplet PARAM : OZFCSO, OZSDSO
 
-C     Add constants to print all in ppm's
+C     Add constants and print all in ppm's
 !     Diamagnetic corrections
          LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
          LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
@@ -428,6 +433,11 @@ C     Add constants to print all in ppm's
          LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
          LRLKIN = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN
          LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
+c
+         QRPSOOZMV = calfa*calfa*1.0D+6* CPSOOZMV*QRPSOOZMV
+         QRPSOOZDW = calfa*calfa*1.0D+6* CPSOOZDW*QRPSOOZDW
+         QROZFCSO =  calfa*calfa*1.0D+6* COZFCSO*QROZFCSO
+         QROZSDSO =  calfa*calfa*1.0D+6* COZSDSO*QROZSDSO
 C
 
 !     Diamagnetic corrections
@@ -436,8 +446,10 @@ C
 !     Paramagnetic corrections
          SGP1S = SGP1S + LRLKIN + LRPSOK
          SGP1T = SGP1T + LRFCZK + LRSDZK + LRFCBS + LRSDBS
+         SGP3S = SGP3S + QRPSOOZMV + QRPSOOZDW
+         SGP3T = SGP3T + QROZFCSO + QROZSDSO
 !     Total
-      SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T
+      SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T + SGP3S + SGP3T
 C
 C     Print LRESC-SHIELDING results section
       call PRINT_LRSHIELD

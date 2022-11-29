@@ -57,12 +57,36 @@ C
             ENDIF
          ENDIF
 
+         IF (SIGMAP3S) THEN
+            IF(PRTALL1) THEN
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3S]'
+               WRITE(LUPRI,*)'       ---------------            xx  '//
+     &                       '          yy             zz          iso'
+               call PRINT_LRSHIELD_CORR('PSOOZMv ',QRPSOOZMV)
+               call PRINT_LRSHIELD_CORR('PSOOZDw ',QRPSOOZDW)
+            ENDIF
+         ENDIF
+
+         IF (SIGMAP3T) THEN
+            IF(PRTALL1) THEN
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3T]'
+               WRITE(LUPRI,*)'       ---------------            xx  '//
+     &                       '          yy             zz          iso'
+               call PRINT_LRSHIELD_CORR('FCOZSO  ',QROZFCSO)
+               call PRINT_LRSHIELD_CORR('SDOZSO  ',QROZSDSO)
+            ENDIF
+         ENDIF
+
          WRITE(LUPRI,'(/,7X,A)') '---------------             xx  '//
      &         '          yy             zz          iso'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S)
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
      &                      SGP1T)
+         IF (SIGMAP3S) call PRINT_LRSHIELD_SUM('3nd Order Singlets:  ',
+     &                      SGP3S)
+         IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
+     &                      SGP3T)
       ENDIF
 C
 C     diamagnetic 0th or 1st order singlet
@@ -107,7 +131,8 @@ C
          WRITE(LUPRI,'(A)')'                                   xx  '//
      &         '          yy             zz          iso'
          IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL)
-     &      call PRINT_LRSHIELD_TOT('Paramagnetic :',SGP1S+SGP1T)
+     &      call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &      SGP1S+SGP1T+SGP3S+SGP3T)
          IF((SIGMAD1S.AND.SIGMAD0S).OR.LRESCALL)
      &      call PRINT_LRSHIELD_TOT('Diamagnetic  :',SGD0S+SGD1S)
       call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC)
