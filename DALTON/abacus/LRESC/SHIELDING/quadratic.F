@@ -13,8 +13,6 @@
 #include "chrnos.h"
 
       DIMENSION WORK(LWORK)
-      logical :: file_exists, file_open
-      character(100) :: line
       REAL*8 QR,TOTALQR,constante
       REAL*8 QRtensor(3,3)
       CHARACTER*9 :: KEY
@@ -337,16 +335,20 @@ c         spin_trio(2) = spin_rank(j,2)
             CALL GPCLOSE(LURSP5,'DELETE')
             call get_QRvalue(QR,operadores_trio)
             TOTALQR = TOTALQR + QR
-c        Change print level...
-            write(lupri,*) operadores_trio(1),' ',operadores_trio(2),!debug
+            IF (JIMPRT .GT. 2) THEN
+               write(lupri,*) operadores_trio(1),' ',operadores_trio(2),!debug
      &         ' ',operadores_trio(3),' ',spin_trio(1),' ',spin_trio(2),
      &         ' ',spin_trio(3)," QR: ",QR
+            END IF
          end do
          end do
 
          QRtensor(i,j) = TOTALQR
-         write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
-         write(lupri,*) 
+         IF (JIMPRT .GT. 2) THEN
+            write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
+            write(lupri,*)
+         END IF
+
       end do
       end do
 
@@ -359,8 +361,9 @@ c        Change print level...
       deallocate(spin_rank)
 
 
+      IF (JIMPRT .GT. 1) CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)
       CALL QEXIT('LRSCQUAD')
-      CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT) !Debiera agregar un if segun print level
+
       RETURN
 
       END 
@@ -380,9 +383,6 @@ c        Change print level...
       CALL GPOPEN(fileID,namefile,'NEW',' ','FORMATTED',
      &            IDUMMY,.FALSE.)
 
-c      line = 'whatever I want to write'
-c      write(fileID,'(a)') line
-c      write(fileID,'(a)') 'easier way'
       write(fileID,'(a)') '**DALTON INPUT'
       write(fileID,'(a)') '**RESPONSE'
       write(fileID,'(a)') '*LINEAR'
@@ -403,9 +403,6 @@ c      write(fileID,'(a)') 'easier way'
       write(fileID,'(a)') '**END OF DALTON INPUT'
 
       if (.not. file_open) CALL GPCLOSE(fileID,'KEEP')
-
-c      CLOSE(fileID)
-
 
       RETURN
       END

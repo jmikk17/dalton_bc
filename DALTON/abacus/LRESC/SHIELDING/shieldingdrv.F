@@ -95,7 +95,6 @@ c                 NAME =  NAMEX(3*ICENT)(1:4)
 C   SET PRINT LEVEL
  2             CONTINUE
                   READ (LUCMD,*) JIMPRT
-c                 write(lupri,*)' ..aca leo print level :', JIMPRT
                   ICHANG = ICHANG + 1
                   GOTO 100
 C   SET WHICH NUC TO DO LRESC
@@ -267,17 +266,12 @@ C     J. J. Aucar 2021
 #include "wrkrsp.h"
 #include "lrescinf.h"
 #include "inforb.h"
-C this is for print section
 #include "nuclei.h"
 C
 C
       LOGICAL PING
       logical :: file_exists, file_open
-      character(100) :: line
-      REAL*8 QUAVAL
-      CHARACTER*8 :: operadores(3)
       PING=.FALSE.
-cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_SHI')
 
 C ----------------------------
@@ -304,7 +298,7 @@ cx          PING = .TRUE.
 cx          write(lupri,*)' WARNING : @ANGPSO (NORBT.NE.NBAST) :',
 cx     &    ' AngPso not computed due to basis set dependencies'
 cx       ELSE
-         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO testing ! should work!
+         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO
 cx        ENDIF
       END IF
 C
@@ -364,54 +358,43 @@ C
          CALL LINEARLR('FCBS',WORK,LWORK)
          CALL LINEARLR('SDBS',WORK,LWORK)
       END IF
-C
-C     Paramagnetic corrections to Shielding:
-C     Third Order SINLGET
-C
-c      IF (SIGMAP3S) THEN
-c         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
-c     &   ' Singlet Second Order Shielding corrections'
-cv       CALL CUADRAS('LPSO')
-c      END IF
-C
-C     Paramagnetic corrections to Shielding:
-C     Third Order TRIPLET
-C
-c      IF (SIGMAP3T) THEN
-c         WRITE (LUPRI,'(A)')'   Calling to SIGMA3T for : '
-cv       CALL CUADRAS('LFCO')
-c      END IF
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C NUEVA PARTE - AUCAR       
+c     Paramagnetic corrections to Shielding:
+c     Third Order
+
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 
 c      AL TERMINAR, REVISAR CONSTANTES!
+c     Singlets
       IF (SIGMAP3S) THEN
-        WRITE (LUPRI,'(A)')' Calling to SIGMAP3S for : Paramagnetic'//
+         IF (JIMPRT.GT.1) THEN
+         WRITE (LUPRI,'(A)') ' Calling to SIGMAP3S for : Paramagnetic'//
      &                     ' Singlet Third Order Shielding corrections'
-       CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
-       CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
+         END IF
+         CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
+         CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
       END IF
 
+c     Triplets
       IF (SIGMAP3T) THEN
-        WRITE (LUPRI,'(A)')' Calling to SIGMAP3T for : Paramagnetic'//
+         IF (JIMPRT.GT.1) THEN
+         WRITE (LUPRI,'(A)')' Calling to SIGMAP3T for : Paramagnetic'//
      &                     ' Triplet Third Order Shielding corrections'
-       CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
-       CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
+         END IF
+         CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
+         CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
       END IF
 
-c      SON NULOS!
+c      Null (as expected)!
 c       CALL QUADRATICLR('SZ-PSO-MV',WORK,LWORK)
 c       CALL QUADRATICLR('SZ-PSO-Dw',WORK,LWORK)
 
-c       Están dando nulos...
+c      Null (shouldnt be)
 c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
 c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
       call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
       SLRESC  = 0.0
       SGD0S   = 0.0  ! sigma 0order singlet DIAM  : Fc, AngPso, DiaKin
@@ -453,7 +436,7 @@ C
 !     Total
       SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T + SGP3S + SGP3T
 C
-C     Print LRESC-SHIELDING results section
+C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
 
 
