@@ -4215,16 +4215,15 @@ C  /* Deck lrshiinp */
 #include "nuclei.h"
 #include "orgcom.h"
 #include "lrescinf.h"
-      PARAMETER (NTABLE = 1)
+      PARAMETER (NTABLE = 2)
 C
       LOGICAL SET, NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 C
       SAVE SET
-      DATA TABLE /'.LRATOM'/
+      DATA TABLE /'.LRATOM', '.LRGAUGE'/
       DATA SET/.FALSE./
 C
-      LRATOM_changed = .TRUE.
       CALL QENTER('LRSHIINP')
       IF (SET) THEN
          IF (WORD .NE. '*END OF' .AND. WORD(1:2) .NE. '**') THEN
@@ -4255,7 +4254,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GO TO (1), I
+                     GO TO (1,2), I
                   END IF
   200          CONTINUE
                WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
@@ -4264,6 +4263,7 @@ C
                CALL QUIT('Illegal keyword in LR-SHI.')
     1          CONTINUE
                   READ (LUCMD,*) LRATOM
+                  LRATOM_changed = .TRUE.
                   IF (LRATOM.GT.NATOMS)THEN
                      write(lupri,*) 'Input Error on *LR-SHI'
                      write(lupri,*) 'Your selection exceeds total ',
@@ -4275,7 +4275,17 @@ C
               END DO
 
                GO TO 100
-            ELSE IF (PROMPT .EQ. '*') THEN
+
+    2         CONTINUE
+              READ (LUCMD, *, IOSTAT=IOS) (GAGORG(I),I=1,3)
+              IF (IOS.NE.0) THEN
+                 WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
+                 WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
+                 CALL QUIT('Error in reading (GAGORG(I),I=1,3) LR-SHI!')
+              ENDIF
+              GO TO 100
+
+           ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
             ELSE
                WRITE (LUPRI,'(/,3A,/)') ' Prompt "',WORD,
