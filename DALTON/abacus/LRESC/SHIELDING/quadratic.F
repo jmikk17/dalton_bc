@@ -198,22 +198,16 @@ c         constante = 1000000/(2*(137.036**2))
 c         operadores(1,2) = 'X1SPNORB'
 c         operadores(2,2) = 'Y1SPNORB'
 c         operadores(3,2) = 'Z1SPNORB'
-c         spin_rank(1,2) = '1'
-c         spin_rank(2,2) = '1'
-c         spin_rank(3,2) = '1'
          operadores(:,2) = 'IDENTIDA'
          spin_rank(:,2) = '1'
-
          operadores(1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
          operadores(2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
          operadores(3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
          spin_rank(:,1) = '1'
-
          operadores(1,3) = 'X1SPNORB'
          operadores(2,3) = 'Y1SPNORB'
          operadores(3,3) = 'Z1SPNORB'
          spin_rank(:,3) = '1'
-
       END IF
 
       IF (KEY.EQ.'SZ-SD-SO ') THEN
@@ -278,10 +272,7 @@ c        Constante: (137,036^-2/2)*1000000
 c         constante = 1000000/(2*(137.036**2))
          allocate(operadores(9,3))
          allocate(spin_rank(9,3))
-c         operadores(1,1) = 'OVERLAP '
-c         operadores(2,1) = 'OVERLAP '
-c         operadores(3,1) = 'OVERLAP '
-
+         operadores(:,1) = 'OVERLAP '
          operadores(:,1) = 'IDENTIDA'
          spin_rank(:,1) = '1'
 c                              nuc coord
@@ -301,9 +292,6 @@ c                              nuc coord
          operadores(3,3) = 'Z1SPNORB'
          spin_rank(:,3) = '1'
 
-c         call READAOP(aux1, NBAST, 'X1SPNORB') !TEST
-c         call READAOP(aux1, NBAST, 'FC X1001') !TEST
-c         call READAOP(aux1, NBAST, 'OVERLAP ') !TEST
         END IF
 
 
@@ -334,13 +322,8 @@ c         spin_trio(2) = spin_rank(j,2)
             operadores_trio(3)=operadores(m,3)
             spin_trio(3)=spin_rank(m,3)
          do n = 1, l
-c            operadores_trio(2) = operadores(j+n-1,2)
-c            write(lupri,*) "parametro",SUMA_B,"indice: ",SUMA_B*(j-1)+n
             operadores_trio(2) = operadores(SUMA_B*(j-1)+n,2)
             spin_trio(2)=spin_rank(SUMA_B*(j-1)+n,2)
-c            write(lupri,*) 'Juan-1-indices ',i,' ',j,' ',operadores(1,1)
-c            write(lupri,*) 'JUAN ',operadores_trio(1),' ',
-c     &                     operadores_trio(2),' ',operadores_trio(3)
             call create_QRinput(operadores_trio,spin_trio)
             LUPRI = 6232
             OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
@@ -362,7 +345,6 @@ c        Change print level...
          end do
 
          QRtensor(i,j) = TOTALQR
-c         write(lupri,*) KEY,"QR-tensor:",constante*QRtensor(i,j)
          write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
          write(lupri,*) 
       end do
@@ -373,70 +355,8 @@ c         write(lupri,*) KEY,"QR-tensor:",constante*QRtensor(i,j)
       IF (KEY.EQ.'OZ-FC-SO ') QROZFCSO = QRtensor
       IF (KEY.EQ.'OZ-SD-SO ') QROZSDSO = QRtensor
 
-
-c      do i = 1, SIZE(operadores,DIM=1)
-c         call create_QRinput(operadores(i,:),spin_rank(i,:))
-c        Imprimo la parte de respuestas fuera del out (sino se llena mucho)
-c         LUPRI = 6232
-c         OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
-c         call RSPDRV(WORK,LWORK)
-c         CLOSE(LUPRI)
-c         LUPRI  = 2
-         
-c         CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-c         CALL GPCLOSE(LURSP3,'DELETE')
-c         CALL GPCLOSE(LURSP4,'DELETE')
-c         CALL GPCLOSE(LURSP5,'DELETE')
-c      end do
-
-c      do i = 1, SIZE(operadores,DIM=1)
-c         call get_QRvalue(QR,operadores(i,:))
-c         TOTALQR = TOTALQR + QR
-c      end do
-
-c      write(lupri,*) KEY," TOTAL-QR: ",TOTALQR*constante
-
       deallocate(operadores)
       deallocate(spin_rank)
-
-
-
-
-C ACA ARRANCA PARTE BIEN VIEJA
-cc      LUESC = -1
-c      call copy_file(LUESC,LUESC2,'d22_TEST_QR1.dal', 'DALTON.INP')
-c      LUPRI = 6232
-c      OPEN(UNIT=LUPRI, FILE='trash.txt',status='unknown')
-c      call RSPDRV(WORK,LWORK)
-c      CLOSE(LUPRI)
-c      operadores(1) = 'XANGMOM '
-c      operadores(2) = 'FC X1001'
-c      operadores(3) = 'X1SPNORB'
-c      LUPRI  = 2
-c      call get_QRvalue(QUAVAL,operadores)
-
-c      write(lupri,*) "AUCAR-LRESC QR VALUE:",QUAVAL
-
-c      CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-c      CALL GPCLOSE(LURSP3,'DELETE')
-c      CALL GPCLOSE(LURSP4,'DELETE')
-c      CALL GPCLOSE(LURSP5,'DELETE')
-
-c      call copy_file(LUESC,LUESC2,'d22_TEST_QR2.dal', 'DALTON.INP')
-c      LUPRI = 6232
-c      OPEN(UNIT=LUPRI, FILE='trash.txt',status='unknown')
-c      call RSPDRV(WORK,LWORK)
-c      CLOSE(6232)
-c      operadores(1) = 'XANGMOM '
-c      operadores(2) = 'DARWIN  '
-c      operadores(3) = 'MASSVELO'
-c      LUPRI  = 2
-c      call get_QRvalue(QUAVAL,operadores)
-c      write(lupri,*) "AUCAR-LRESC QR VALUE:",QUAVAL
-c      CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-c      CALL GPCLOSE(LURSP3,'DELETE')
-c      CALL GPCLOSE(LURSP4,'DELETE')
-c      CALL GPCLOSE(LURSP5,'DELETE')
 
 
       CALL QEXIT('LRSCQUAD')
@@ -499,22 +419,25 @@ c      CLOSE(fileID)
 
 #include "priunit.h"
 
-c      OPEN(UNIT=oldID, FILE=old_file, STATUS='OLD'
-c     &     ,ACTION='READ', IOSTAT=IERR, RECL=1)
-c      REWIND(oldID)
-c      OPEN(UNIT=newID, FILE=new_file,STATUS='REPLACE',
-c     &     ACTION='WRITE', IOSTAT=IERR, RECL=1, FORM='FORMATTED')
+c     new file management
+      inquire(file = new_file, exist = file_exists,
+     &            opened = file_open)
+      if (file_exists .AND. file_open) then
+         CALL GPCLOSE(newID ,'DELETE')
+      else
+         if (.not. file_open) then
+c            newID = -1
+            CALL GPOPEN(newID,new_file,'NEW',' ','FORMATTED',
+     &           IDUMMY,.FALSE.)
+         end if
+      end if
 
-c      newID=8756323
-c      OPEN(UNIT=newID, FILE=new_file,status='unknown')
-       CALL GPOPEN(newID,new_file,'OLD',' ','FORMATTED',
-     &             IDUMMY,.FALSE.)
-
+c     old file management
       inquire(file = old_file, exist = file_exists,
      &            opened = file_open)
       if (file_exists) then
          if (.not. file_open) then
-            oldID = -1
+c            oldID = -1
             CALL GPOPEN(oldID,old_file,'OLD',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if
@@ -532,22 +455,63 @@ c      OPEN(UNIT=newID, FILE=new_file,status='unknown')
 
       if (.not. file_open) CALL GPCLOSE(oldID,'KEEP')
       if (.not. file_open) CALL GPCLOSE(newID,'KEEP')
-c      if (file_open) CALL GPCLOSE(oldID,'KEEP')
-c      if (file_open) CALL GPCLOSE(newID,'KEEP')
-
-
-c      CLOSE(newID)
 
       RETURN
       END
 
+      subroutine move_file(oldID,newID,old_file, new_file)
+      character(*) :: old_file ,new_file
+      logical      :: file_exists, file_open
+      character(100) :: line
+      INTEGER :: oldID,newID
+
+#include "priunit.h"
+
+c     new file management
+      inquire(file = new_file, exist = file_exists,
+     &            opened = file_open)
+      if (file_exists .AND. file_open) then
+         CALL GPCLOSE(newID ,'DELETE')
+      else
+         if (.not. file_open) then
+c            newID = -1
+            CALL GPOPEN(newID,new_file,'NEW',' ','FORMATTED',
+     &           IDUMMY,.FALSE.)
+         end if
+      end if
+
+c     old file management
+      inquire(file = old_file, exist = file_exists,
+     &            opened = file_open)
+      if (file_exists) then
+         if (.not. file_open) then
+c            oldID = -1
+            CALL GPOPEN(oldID,old_file,'OLD',' ','FORMATTED',
+     &           IDUMMY,.FALSE.)
+         end if
+         rewind(oldID)
+      else
+         call quit('file not found')
+      end if
+
+
+      do while (.true.)
+         read(oldID,'(a)', end=31) line
+         write(newID,'(a)') line
+      end do
+ 31   continue
+
+      if (.not. file_open) CALL GPCLOSE(oldID,'REMOVE')
+      if (.not. file_open) CALL GPCLOSE(newID,'KEEP')
+
+      RETURN
+      END
       subroutine get_QRvalue(QUAVAL,labels_in)
       logical :: file_exists, file_open
       INTEGER :: fileID
       CHARACTER STRING*75
       CHARACTER*8, intent(in) :: labels_in(3)
       CHARACTER*8:: labels_read(3)
-c      CHARACTER*8, intent(in) :: PRUEBA
       REAL*8 FRQB, FRQC
       REAL*8, intent(out) :: QUAVAL
 c
@@ -572,16 +536,6 @@ C Based on some lines of SUBROUTINE BCCHK
 
  346  READ (fileID,'(A75)',END=347) STRING
       IF (STRING(1:8) .EQ. '@ Quadra') THEN
-c De referencia         
-c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(1),KSYMA,KSPINA
-c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(2),KSYMB,KSPINB
-c               READ (LURSPRES,'(30X,A8,2I5)') LABEL(3),KSYMC,KSPINC
-
-c Primer intento (hay que ir borrando el archivo de lectura)
-c         READ (fileID,'(A75)') STRING
-c         READ (fileID,'(A75)') STRING
-c         READ (fileID,'(A75)') STRING
-
           READ (fileID,'(30X,A8)') labels_read(1)
           READ (fileID,'(30X,A8)') labels_read(2)
           READ (fileID,'(30X,A8)') labels_read(3)
@@ -589,8 +543,6 @@ c         READ (fileID,'(A75)') STRING
       IF (labels_read(1) .EQ. labels_in(1) .AND.
      &    labels_read(2) .EQ. labels_in(2) .AND.
      &    labels_read(3) .EQ. labels_in(3) ) then
-c          write(2,*) "TEST-AUCAR-read",labels_read
-c          write(2,*) "TEST-AUCAR-in",labels_in
          READ (fileID,'(/,30X,3F15.8)') FRQB, FRQC, QUAVAL
       ELSE
          GOTO 346
@@ -601,18 +553,8 @@ c          write(2,*) "TEST-AUCAR-in",labels_in
       END IF
 
  347         CONTINUE
-C         QUAVAL = -QUAVAL !ESTO NO VA... Lo había agregado pero está  mal
 
-
-cdo while (.true.)
-c         read(oldID,'(a)', end=31) line
-c         write(newID,'(a)') line
-c      end do
-c 31   continue
-
-      if (.not. file_open) CALL GPCLOSE(fileID,'KEEP') !leer trayendo labels
-c      if (.not. file_open) CALL GPCLOSE(fileID,'REMOVE') !elimino RESULTS.RSP luego de leer
-
+      if (.not. file_open) CALL GPCLOSE(fileID,'KEEP')
 
       RETURN
       END
