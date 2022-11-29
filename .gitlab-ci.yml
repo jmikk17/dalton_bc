@@ -29,7 +29,8 @@ before_script:
 coverage:
   image: fedora:29
   tags:
-    - parallel
+    - saas-linux-large-amd64
+  coverage: '/Percentage Coverage:\s*([^%]+)/'
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -41,18 +42,17 @@ coverage:
     - alternatives --install /usr/bin/python python /usr/bin/python3 1
     - alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
     - pip install -q codecov
-    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblaso -llapack" --type=release --coverage
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release --coverage
                    -DENABLE_PDE=ON
     - cd build
     - make -j 4
-    - export DALTON_LAUNCHER="mpirun -n 4"
+    - export DALTON_LAUNCHER="mpirun -n 3"
     - export OMP_NUM_THREADS=1
     - ctest --output-on-failure -L dalton -LE "serial|long|verylong"
     - export DALTON_LAUNCHER=""
-    - export OMP_NUM_THREADS=4
-    - ctest --output-on-failure -L serial -LE "long|verylong"
+    - export OMP_NUM_THREADS=1
+    - ctest -j 2 --output-on-failure -L serial -LE "long|verylong"
     - ctest -D ExperimentalCoverage
-    - bash <(curl -s https://codecov.io/bash) -t 69d70b17-576f-459e-8f6c-409607c9f06b
   interruptible: true
 
 intel:
@@ -61,7 +61,7 @@ intel:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push"
+    - when: always
     - if: $CI_PIPELINE_SOURCE == 'schedules'
       when: never
   allow_failure: true
@@ -95,6 +95,8 @@ intel-mpi:
   variables:
     DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -122,7 +124,7 @@ intel-mpi:
   script:
     - python setup --fc=mpiifort --cc=mpiicc --cxx=mpiicpc --mkl=sequential --type=release
     - cd build
-    - make
+    - make -j 4
     - ctest --timeout 120 --output-on-failure -L essential
   interruptible: true
 
@@ -274,10 +276,10 @@ gcc-8-int64:
 gcc-8-ompi-2.1:
   image: fedora:29
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -296,10 +298,10 @@ gcc-8-ompi-2.1:
 gcc-8-ompi-2.1-int64:
   image: fedora:29
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -354,10 +356,10 @@ gcc-9-int64:
 gcc-9-ompi-4.0:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -376,10 +378,10 @@ gcc-9-ompi-4.0:
 gcc-9-mpich-3.3:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
+    DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -398,10 +400,10 @@ gcc-9-mpich-3.3:
 gcc-9-ompi-4.0-int64:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -420,10 +422,10 @@ gcc-9-ompi-4.0-int64:
 gcc-9-mpich-3.3-int64:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
+    DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -494,24 +496,6 @@ gcc-11:
     - ctest --timeout 120 --output-on-failure -L essential
   interruptible: true
 
-gcc-11-debug:
-  image: fedora:35
-  variables:
-    DALTON_LAUNCHER: ""
-    OMP_NUM_THREADS: "1"
-  rules:
-    - when: always
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  script:
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=debug
-                   -DENABLE_PDE=ON
-    - cd build
-    - make
-    - ctest --timeout 120 --output-on-failure -L essential
-  interruptible: true
-
 gcc-11-int64:
   image: fedora:35
   variables:
@@ -530,35 +514,13 @@ gcc-11-int64:
     - ctest --timeout 120 --output-on-failure -L essential
   interruptible: true
 
-gcc-11-ompi-4.1:
-  image: fedora:35
-  variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
-    OMP_NUM_THREADS: "1"
-  tags:
-    - parallel
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  script:
-    - module load mpi/openmpi-x86_64
-    - mpirun --version
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
-                   -DENABLE_PDE=ON
-    - cd build
-    - make -j 4
-    - ctest --timeout 120 --output-on-failure -L essential -LE serial
-  interruptible: true
-
 gcc-11-mpich-3.4:
   image: fedora:35
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
+    DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -574,13 +536,134 @@ gcc-11-mpich-3.4:
     - ctest --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
-gcc-11-ompi-4.1-int64:
+gcc-11-mpich-3.4-int64:
   image: fedora:35
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  allow_failure: true
+  script:
+    - dnf install -y -q lapack64
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j 4
+    - ctest --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
+
+gcc-12:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make
+    - ctest --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12-debug:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=debug
+                   -DENABLE_PDE=ON
+    - cd build
+    - make
+    - ctest --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12-int64:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - dnf install -y -q lapack64
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make
+    - ctest --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12-ompi-4.1:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-large-amd64
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 4
+    - ctest --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-12-mpich-4.0:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 3"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-large-amd64
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  script:
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 4
+    - ctest --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-12-ompi-4.1-int64:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 3 --allow-run-as-root --oversubscribe --bind-to none"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -596,13 +679,13 @@ gcc-11-ompi-4.1-int64:
     - ctest --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
-gcc-11-mpich-3.4-int64:
-  image: fedora:35
+gcc-12-mpich-4.0-int64:
+  image: fedora:37
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
+    DALTON_LAUNCHER: "mpirun -n 3"
     OMP_NUM_THREADS: "1"
   tags:
-    - parallel
+    - saas-linux-large-amd64
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
     - if: $CI_PIPELINE_SOURCE == 'schedules'
@@ -642,7 +725,7 @@ nightly-gcc-serial:
 nightly-gcc-mpi:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
@@ -664,7 +747,7 @@ nightly-gcc-mpi:
 nightly-gcc-mpi-int64:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root"
+    DALTON_LAUNCHER: "mpirun -n 4 --allow-run-as-root --oversubscribe --bind-to none"
     OMP_NUM_THREADS: "1"
   tags:
     - parallel
