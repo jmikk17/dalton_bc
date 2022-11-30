@@ -4215,13 +4215,13 @@ C  /* Deck lrshiinp */
 #include "nuclei.h"
 #include "orgcom.h"
 #include "lrescinf.h"
-      PARAMETER (NTABLE = 2)
+      PARAMETER (NTABLE = 3)
 C
       LOGICAL SET, NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 C
       SAVE SET
-      DATA TABLE /'.LRATOM', '.LRGAUGE'/
+      DATA TABLE /'.LRATOM', '.LRGAUGE', '.LRCMG  '/
       DATA SET/.FALSE./
 C
       CALL QENTER('LRSHIINP')
@@ -4254,7 +4254,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GO TO (1,2), I
+                     GO TO (1,2,3), I
                   END IF
   200          CONTINUE
                WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
@@ -4283,6 +4283,10 @@ C
                  WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
                  CALL QUIT('Error in reading (GAGORG(I),I=1,3) LR-SHI!')
               ENDIF
+              GO TO 100
+
+    3         CONTINUE
+              CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
               GO TO 100
 
            ELSE IF (PROMPT .EQ. '*') THEN
