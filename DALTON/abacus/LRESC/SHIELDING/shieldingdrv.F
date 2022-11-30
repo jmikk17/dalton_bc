@@ -37,7 +37,7 @@ C
 #include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 11, D0 = 0.0D0)
+      PARAMETER (NTABLE = 12, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
@@ -48,8 +48,8 @@ C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
      &            '.PARA1S','.PARA1T','.PARA3S','.PARA3T','.DIAM0S',
-C                      11 
-     &            '.DIAM1S'/
+C                      11       12
+     &            '.DIAM1S','.ANISO '/
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
       NEWDEF = (WORD .EQ. '*LROPTS')
@@ -65,7 +65,7 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
             ELSE IF (PROMPT .EQ. '.') THEN
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                  GOTO (1,2,3,4,5,6,7,8,9,10,11), I
+                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12), I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -149,6 +149,9 @@ c                  do algo
                   SIGMAD1S=.TRUE.
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
+                  GOTO 100
+ 12            CONTINUE
+                  LRANISO = .TRUE.
                   GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
