@@ -849,7 +849,7 @@ C                     52         53         54
 C                     55         56         57
      &             '.DISDIP', '.SECMOM', '.THIRDM',
 C                     58         59         60
-     &             '.VIB_G ', '.LOCALI', '.LR-SHI',
+     &             '.VIB_G ', '.LOCALI', '.RELSHI',
 C                     61         62        63
      &             '.TDA SI', '.TDA TR', '.RPA(D)', 
 C                     64         65

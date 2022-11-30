@@ -271,6 +271,7 @@ C
 C
       LOGICAL PING
       logical :: file_exists, file_open
+      INTEGER, allocatable :: LRATOMs(:)
       PING=.FALSE.
       CALL QENTER('LRSCDRV_SHI')
 
@@ -290,6 +291,20 @@ C
 C     Diamagnetic corrections to Shielding:
 C     Zeroth Order, Singlet of course
 C
+c     Prepared for selecting a nuclei sublist
+      IF (LRATOM_changed) THEN
+         allocate(LRATOMS(1))
+         LRATOMS(1) = LRATOM
+      ELSE
+         allocate(LRATOMS(NUCIND))
+         DO I = 1, NUCIND
+            LRATOMS(I)=I
+         END DO
+      END IF
+
+      DO I = 1, size(LRATOMS)
+      LRATOM = LRATOMS(I)
+
       IF (SIGMAD0S) THEN
          CALL AVELRSC('FCAV',WORK,LWORK)
          CALL AVELRSC('DIAK',WORK,LWORK)
@@ -439,7 +454,7 @@ C
 C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
 
-
+      END DO
       CALL QEXIT('LRSCDRV_SHI')
       RETURN
       END

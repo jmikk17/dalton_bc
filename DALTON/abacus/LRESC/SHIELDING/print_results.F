@@ -28,13 +28,19 @@ C     J. J. Aucar 2022
 #include "priunit.h"
 #include "wrkrsp.h"
 #include "lrescinf.h"
+#include "mxcent.h"
+#include "nuclei.h"
+
 
       CALL QENTER('PRINT_LRSHIELD')
 
 C     Paramagnetic 1st singlet or triplet
 C
-      IF ((SIGMAP1S).OR.(SIGMAP1T)) THEN
-         CALL HEADER('Paramagnetic Corrections',-1)
+      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.(SIGMAP3S)) THEN
+         IF (PRTALL1) THEN
+         CALL HEADER('Paramagnetic Corrections for '
+     &                //NAMN(LRATOM)//' :',-1)
+         END IF
          IF(SIGMAP1S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
@@ -77,6 +83,7 @@ C
             ENDIF
          ENDIF
 
+         IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A)') '---------------             xx  '//
      &         '          yy             zz          iso'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
@@ -87,13 +94,17 @@ C
      &                      SGP3S)
          IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
      &                      SGP3T)
+         END IF
       ENDIF
 C
 C     diamagnetic 0th or 1st order singlet
 C
       IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
-         WRITE(LUPRI,*)
-         CALL HEADER(' Diamagnetic Corrections :',-1)
+         IF (PRTALL1) THEN
+            WRITE(LUPRI,*)
+            CALL HEADER(' Diamagnetic Corrections for '
+     &                //NAMN(LRATOM)//' :',-1)
+         END IF
          IF(SIGMAD0S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S]'
@@ -116,18 +127,21 @@ C
             ENDIF
          ENDIF
 
+         IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,A)')'       ---------------             xx  '//
      &         '          yy             zz          iso'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD0S)
          IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                                         SGD1S)
+         END IF
       ENDIF
 C
 C     All of them in detail
 C
       IF (LRESCALL) THEN
-         CALL HEADER('Total Relativistic Corrections :',-1)
+         CALL HEADER('Total Relativistic Corrections for '
+     &                //NAMN(LRATOM)//' :',-1)
          WRITE(LUPRI,'(A)')'                                   xx  '//
      &         '          yy             zz          iso'
          IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL)
