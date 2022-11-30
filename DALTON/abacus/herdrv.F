@@ -1295,34 +1295,7 @@ c jim-dbg : setting all integrals for LRESC module
             DNSKE  = .TRUE. ! 217.DiaKin
             PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
             SPNORB = .TRUE. ! 104 Spin-Orbit
-Cxx  el problema es que el origen de gauge debe estar en el atomo q elegimos, LRATOM. 
-c       1 - Leer INP file y buscar LRATOM 
-c       2 - hacer que GAGORG = CORD(LRATOM)
-c Por ahora GAGORG = (0.0 0.0 0.0)
-c  ACLARADO EN OUT (buscar "Remember to set GAUGEO" en abadrv.F)
-cx            write(lupri,*)' At INTEGRAL SECT to do GAUGEO on LRATOM' 
-cx            write(lupri,*)' Calling lrscinp for SELECT' 
-cx            CALL LRSCINP('.SELECT')
-cx            write(lupri,*)' Despues. LRATOM ', LRATOM 
-cx            GAGORG(1) = 0.000000
-cx            GAGORG(2) = 0.000000
-cx            GAGORG(3) = 0.000000
-c =================================================
-c -------------------------------------------------
-css           x    READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
-css           x    DO ICENT = 1, NUCIND
-c             x     NAME =  NAMEX(3*ICENT)(1:4)
-css           x       WRITE (LUPRI,'(2X,A,3X," : ",3(A1,2X,A,F15.10))')
-css     &     x       NAME, '1' , 'x' , CORD(1,ICENT),
-css     &     x             '2' , 'y' , CORD(2,ICENT),
-css     &     x             '3' , 'z' , CORD(3,ICENT)
-css           x    ENDDO
-cs            READ (LUCMD, *, IOSTAT=IOS) (GAGORG(I),I=1,3)
-cs            IF (IOS.NE.0) THEN
-cs              WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
-cs              WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
-cs              CALL QUIT('Error in reading (GAGORG(I),I=1,3)!')
-cs            ENDIF
+            CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
             GO TO 100
   244    CONTINUE   ! .NORMAOtwo
             RMAOTWO = .FALSE.
