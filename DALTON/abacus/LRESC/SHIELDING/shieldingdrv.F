@@ -350,7 +350,15 @@ C     Diamagnetic corrections to Shielding:
 C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
+      WRITE(LUPRI,*) 'AUCAR-shieldingdrv-0'
          CALL LINEARLR('DIAM',WORK,LWORK)
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c      WRITE(LUPRI,*) 'AUCAR-shieldingdrv'
+      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
+c      WRITE(LUPRI,*) 'AUCAR-shieldingdrv-2'
+         CALL LINEARLR_NEW('DIAM',WORK,LWORK)
+c      call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc      
          CALL LINEARLR('DIAD',WORK,LWORK)
       END IF
 C
@@ -380,7 +388,7 @@ C
 c     Paramagnetic corrections to Shielding:
 c     Third Order
 
-      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
+c      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 
 c      AL TERMINAR, REVISAR CONSTANTES!
 c     Singlets
