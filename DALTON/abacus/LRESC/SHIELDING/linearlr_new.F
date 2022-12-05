@@ -17,9 +17,12 @@
       REAL*8 LR,TOTALLR
       REAL*8 LRtensor(3,3)
       CHARACTER*4 :: KEY
-      CHARACTER*8, allocatable :: operadores_A(:)
-      CHARACTER*8, allocatable :: operadores_B(:)
-      CHARACTER*8 :: operadores_duo(2)
+c      CHARACTER*8, allocatable :: operadores_A(:)
+c      CHARACTER*8, allocatable :: operadores_B(:)
+      CHARACTER*8, allocatable :: operadores_A(:,:)
+      CHARACTER*8, allocatable :: operadores_B(:,:)
+      INTEGER                  :: NopA, NopB
+      CHARACTER*8, dimension(2) :: operadores_duo
       INTEGER :: SUMA_B
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
@@ -28,6 +31,17 @@
       CALL QENTER('LRSLINEAR')
       CALL TIMER('START ',TIMEIN,TIMOUT)
 
+c     NopA: number of A operators for each shield tensor element
+c     NopB: number of B operators for each shield tensor element
+c      LUDV   = N2ASHX
+c      LPVX   = 0
+
+c      LUSOVE = 456
+c      LUGDVE = 457
+c      LUREVE = 458
+c      CALL GPOPEN(LUSOVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
+c      CALL GPOPEN(LUGDVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
+c      CALL GPOPEN(LUREVE,' ','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
 
 C  LINEAR LRESC SINGLET ROUTINE
 C   KEY = 'DIAM'  DIAMAGNETIC <<DIA,MV>>
@@ -85,83 +99,112 @@ C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
      &              CHRNOS(MOD(LRATOM,10))
 
       IF((KEY.EQ."DIAM").OR.(KEY.EQ."DIAD")) THEN
+         NopA = 1
+         NopB = 1
          TRPLET_FLAG = .FALSE.
 C        -----------------------------------
-         allocate(operadores_A(9))
-c                  3*i+j -3                                 ij
-         operadores_A(1) = nuc_coord(1)//'NSCO'//CHRXYZ(1) !11
-         operadores_A(2) = nuc_coord(1)//'NSCO'//CHRXYZ(2) !12
-         operadores_A(3) = nuc_coord(1)//'NSCO'//CHRXYZ(3) !13
-         operadores_A(4) = nuc_coord(2)//'NSCO'//CHRXYZ(1) !21
-         operadores_A(5) = nuc_coord(2)//'NSCO'//CHRXYZ(2) !22
-         operadores_A(6) = nuc_coord(2)//'NSCO'//CHRXYZ(3) !23
-         operadores_A(7) = nuc_coord(3)//'NSCO'//CHRXYZ(1) !31
-         operadores_A(8) = nuc_coord(3)//'NSCO'//CHRXYZ(2) !32
-         operadores_A(9) = nuc_coord(3)//'NSCO'//CHRXYZ(3) !33
+         allocate(operadores_A(9,NopA))
+c                  3*i+j-3                                    ij
+         operadores_A(1,1) = nuc_coord(1)//'NSCO'//CHRXYZ(1) !11
+         operadores_A(2,1) = nuc_coord(1)//'NSCO'//CHRXYZ(2) !12
+         operadores_A(3,1) = nuc_coord(1)//'NSCO'//CHRXYZ(3) !13
+         operadores_A(4,1) = nuc_coord(2)//'NSCO'//CHRXYZ(1) !21
+         operadores_A(5,1) = nuc_coord(2)//'NSCO'//CHRXYZ(2) !22
+         operadores_A(6,1) = nuc_coord(2)//'NSCO'//CHRXYZ(3) !23
+         operadores_A(7,1) = nuc_coord(3)//'NSCO'//CHRXYZ(1) !31
+         operadores_A(8,1) = nuc_coord(3)//'NSCO'//CHRXYZ(2) !32
+         operadores_A(9,1) = nuc_coord(3)//'NSCO'//CHRXYZ(3) !33
 C        -----------------------------------
-         allocate(operadores_B(1))
-         IF (KEY.EQ."DIAD") operadores_B(1) ='DARWIN  '
-         IF (KEY.EQ."DIAM") operadores_B(1) ='MASSVELO'
+         allocate(operadores_B(9,NopB))
+         IF (KEY.EQ."DIAD") operadores_B(:,1) ='DARWIN  '
+         IF (KEY.EQ."DIAM") operadores_B(:,1) ='MASSVELO'
       END IF
 
 
+      IF(KEY.EQ."PSOK") THEN
+         NopA = 1
+         NopB = 1
+         TRPLET_FLAG = .FALSE.
+C        -----------------------------------
+         allocate(operadores_A(9,NopA))
+c                  3*i+j-3                                    ij
+         operadores_A(1,1) = 'PSOKE'//nuc_coord(1)           !11 
+         operadores_A(2,1) = 'PSOKE'//nuc_coord(1)           !12 editar
+         operadores_A(3,1) = 'PSOKE'//nuc_coord(1)           !13 editar
+         operadores_A(4,1) = 'PSOKE'//nuc_coord(1)           !21 editar
+         operadores_A(5,1) = 'PSOKE'//nuc_coord(2)           !22
+         operadores_A(6,1) = 'PSOKE'//nuc_coord(1)           !23 editar
+         operadores_A(7,1) = 'PSOKE'//nuc_coord(1)           !31 editar
+         operadores_A(8,1) = 'PSOKE'//nuc_coord(1)           !32 editar
+         operadores_A(9,1) = 'PSOKE'//nuc_coord(3)           !33
+C        -----------------------------------
+         allocate(operadores_B(9,NopB))
+         operadores_B(1,1) = 'XANGMOM '                      !11 
+         operadores_B(2,1) = 'XANGMOM '                      !12 
+         operadores_B(3,1) = 'XANGMOM '                      !13 
+         operadores_B(4,1) = 'XANGMOM '                      !21 
+         operadores_B(5,1) = 'YANGMOM '                      !22 
+         operadores_B(6,1) = 'XANGMOM '                      !23 
+         operadores_B(7,1) = 'XANGMOM '                      !31 
+         operadores_B(8,1) = 'XANGMOM '                      !32 
+         operadores_B(9,1) = 'ZANGMOM '                      !33 
+      END IF
 
-c      IF (KEY.EQ.'SZ-PSO-Dw') THEN
-c         allocate(operadores(3,3))
-c         allocate(spin_rank(3,3))
-c         operadores(1,1) = 'X1SPNORB'
-c         operadores(2,1) = 'Y1SPNORB'
-c         operadores(3,1) = 'Z1SPNORB'
-c         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
-c         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
-c         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
-c         operadores(:,3) = 'DARWIN  '
-c         spin_rank(:,1) = '1'
-c         spin_rank(:,2) = '0'
-c         spin_rank(:,3) = '0'
-c      END IF
+      IF(KEY.EQ."LKIN") THEN
+         NopA = 1
+         NopB = 1
+         TRPLET_FLAG = .FALSE.
+C        -----------------------------------
+         allocate(operadores_A(9,NopA))
+c                  3*i+j-3                                    ij
+         operadores_A(1,1) = 'PSO '//nuc_coord(1)//' '       !11 
+         operadores_A(2,1) = 'PSO '//nuc_coord(1)//' '       !12
+         operadores_A(3,1) = 'PSO '//nuc_coord(1)//' '       !13
+         operadores_A(4,1) = 'PSO '//nuc_coord(2)//' '       !21
+         operadores_A(5,1) = 'PSO '//nuc_coord(2)//' '       !22
+         operadores_A(6,1) = 'PSO '//nuc_coord(2)//' '       !23
+         operadores_A(7,1) = 'PSO '//nuc_coord(3)//' '       !31
+         operadores_A(8,1) = 'PSO '//nuc_coord(3)//' '       !32
+         operadores_A(9,1) = 'PSO '//nuc_coord(3)//' '       !33
+C        -----------------------------------
+         allocate(operadores_B(9,NopB))
+         operadores_B(1,1) = CHRXYZ(1)//'OZKE   '            !11 
+         operadores_B(2,1) = CHRXYZ(2)//'OZKE   '            !12 
+         operadores_B(3,1) = CHRXYZ(3)//'OZKE   '            !13 
+         operadores_B(4,1) = CHRXYZ(1)//'OZKE   '            !21 
+         operadores_B(5,1) = CHRXYZ(2)//'OZKE   '            !22 
+         operadores_B(6,1) = CHRXYZ(3)//'OZKE   '            !23 
+         operadores_B(7,1) = CHRXYZ(1)//'OZKE   '            !31 
+         operadores_B(8,1) = CHRXYZ(2)//'OZKE   '            !32 
+         operadores_B(9,1) = CHRXYZ(3)//'OZKE   '            !33 
+      END IF
 
-c      IF (KEY.EQ.'OZ-FC-SO ') THEN
-c         allocate(operadores(3,3))
-c         allocate(spin_rank(3,3))
-c         operadores(1,1) = 'XANGMOM '
-c         operadores(2,1) = 'YANGMOM '
-c         operadores(3,1) = 'ZANGMOM '
-c         spin_rank(:,1) = '0'
-c         operadores(1,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-c         operadores(2,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-c         operadores(3,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-c         spin_rank(:,2) = '1'
-c         operadores(1,3) = 'X1SPNORB'
-c         operadores(2,3) = 'Y1SPNORB'
-c         operadores(3,3) = 'Z1SPNORB'
-c         spin_rank(:,3) = '1'
-c      END IF
+      IF(KEY.EQ."FCZK") THEN
+         NopA = 1
+         NopB = 1
+         TRPLET_FLAG = .TRUE.
+C        -----------------------------------
+         allocate(operadores_A(9,NopA))
+c                  3*i+j-3                                          ij
+         operadores_A(:,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !all
+C        -----------------------------------
+         allocate(operadores_B(9,NopB))
+         operadores_B(:,1) = 'KINENERG'                            !all
+      END IF
 
-c      IF (KEY.EQ.'OZ-SD-SO ') THEN
-c         allocate(operadores(9,3))
-c         allocate(spin_rank(9,3))
-c         operadores(1,1) = 'XANGMOM '
-c         operadores(2,1) = 'YANGMOM '
-c         operadores(3,1) = 'ZANGMOM '
-c         spin_rank(:,1) = '0'
-c         operadores(1,2) = 'SD '//nuc_coord(1)//' x'
-c         operadores(2,2) = 'SD '//nuc_coord(1)//' y'
-c         operadores(3,2) = 'SD '//nuc_coord(1)//' z'
-c         operadores(4,2) = 'SD '//nuc_coord(2)//' x'
-c         operadores(5,2) = 'SD '//nuc_coord(2)//' y'
-c         operadores(6,2) = 'SD '//nuc_coord(2)//' z'
-c         operadores(7,2) = 'SD '//nuc_coord(3)//' x'
-c         operadores(8,2) = 'SD '//nuc_coord(3)//' y'
-c         operadores(9,2) = 'SD '//nuc_coord(3)//' z'
-c         spin_rank(:,2) = '1'
-c         operadores(1,3) = 'X1SPNORB'
-c         operadores(2,3) = 'Y1SPNORB'
-c         operadores(3,3) = 'Z1SPNORB'
-c         spin_rank(:,3) = '1'
-c      END IF
-
-
+c     Under construction
+      IF(KEY.EQ."SDZK") THEN
+         NopA = 2
+         NopB = 1
+         TRPLET_FLAG = .TRUE.
+C        -----------------------------------
+         allocate(operadores_A(9,NopA))
+c                  3*i+j-3                                          ij
+         operadores_A(1,1) = 'SD '//nuc_coord(1)//' x'  !11
+C        -----------------------------------
+         allocate(operadores_B(9,NopB))
+         operadores_B(:,1) = 'KINENERG'                            !all
+      END IF
 
 c     Elemento ij del tensor de shielding
 c      SUMA_B = SIZE(operadores,DIM=1)/3
@@ -169,23 +212,25 @@ c      SUMA_B = SIZE(operadores,DIM=1)/3
       do j = 1, 3
          LR = 0.d0
          TOTALLR = 0.d0
-
-!DIA         
-         operadores_duo(1) = operadores_A(3*i+j -3)
-         operadores_duo(2) = operadores_B(1)
+         do k = 1, NopA
+         do l = 1, NopB
+c         operadores_duo(1) = operadores_A(3*i+j -3)
+c         operadores_duo(2) = operadores_B(1)
+         operadores_duo(1) = operadores_A(3*i+j-3,k)
+         operadores_duo(2) = operadores_B(3*i+j-3,l)
 c         IF (operadores(1,3)(3:8).EQ.'SPNORB') THEN
 c            k = 3
 c         else
 c            k = 1
 c         END IF
-      k = 1
+c      k = 1
 
 c        IF (KEY(4:5).EQ.'SD') THEN
 c           l = 3
 c        else
 c           l = 1
 c        END IF
-      l = 1
+c      l = 1
 
 cc         do m = 1, k
 cc            operadores_d(3)=operadores(m,3)
@@ -208,14 +253,15 @@ c            CALL GPCLOSE(LURSP5,'DELETE')
 c           las constantes tienen aca un (-) extra xq saco la respuesta
 c           de lo que imprime como salida
 c            WRITE(LUPRI,*) "AUCAR-LR",operadores_duo,i,j,calfa*calfa*1.0D6*LR
-            WRITE(LUPRI,*) "AUCAR-LR",calfa*calfa*1.0D6*LR
-c            TOTALLR = TOTALLR + LR
+c            WRITE(LUPRI,*) "AUCAR-LR",calfa*calfa*1.0D6*LR
+            TOTALLR = TOTALLR + LR
             IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
      &         ' ',operadores_duo(2)," LR: ",LR
-c         end do
-cc         end do
+         end do
+         end do
 
-c         LRtensor(i,j) = TOTALLR
+         LRtensor(i,j) = TOTALLR
+c            write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
          IF (JIMPRT .GT. 2) THEN
             write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
             write(lupri,*)
@@ -224,14 +270,18 @@ c         LRtensor(i,j) = TOTALLR
       end do
       end do
 
-c      IF (KEY.EQ.'OZ-PSO-MV') QRPSOOZMV = QRtensor
-c      IF (KEY.EQ.'OZ-PSO-Dw') QRPSOOZDW = QRtensor
-c      IF (KEY.EQ.'OZ-FC-SO ') QROZFCSO = QRtensor
-c      IF (KEY.EQ.'OZ-SD-SO ') QROZSDSO = QRtensor
+      IF (KEY.EQ.'DIAM') LRDIAM = LRtensor
+      IF (KEY.EQ.'DIAD') LRDIAD = LRtensor
+      IF (KEY.EQ.'PSOK') LRPSOK = LRtensor
+      IF (KEY.EQ.'LKIN') LRLKIN = LRtensor
+      IF (KEY.EQ.'FCZK') LRFCZK = LRtensor
 
       deallocate(operadores_A)
       deallocate(operadores_B)
 
+c      CALL GPCLOSE(LUSOVE,'DELETE')
+c      CALL GPCLOSE(LUGDVE,'DELETE')
+c      CALL GPCLOSE(LUREVE,'DELETE')
 
       IF (JIMPRT .GT. 1) CALL TIMER ('LRSLINEAR',TIMEIN,TIMOUT)
       CALL QEXIT('LRSLINEAR')
@@ -258,8 +308,8 @@ c      IF (KEY.EQ.'OZ-SD-SO ') QROZSDSO = QRtensor
       write(fileID,'(a)') '**DALTON INPUT'
       write(fileID,'(a)') '**RESPONSE'
       write(fileID,'(a)') '*LINEAR'
-      write(fileID,'(a)') '.PRINT'
-      write(fileID,'(a)') ' 0'
+c      write(fileID,'(a)') '.PRINT'
+c      write(fileID,'(a)') ' 0'
       write(fileID,'(a)') '.PROPRT'
       write(fileID,'(a)') operadores(1)
       write(fileID,'(a)') '.PROPRT'
@@ -276,7 +326,7 @@ c      IF (KEY.EQ.'OZ-SD-SO ') QROZSDSO = QRtensor
       subroutine get_LRvalue(LRVAL,labels_in)
       logical :: file_exists, file_open
       INTEGER :: fileID
-      CHARACTER*164 STRING
+      CHARACTER*164 STRING, TMPSTRING
       CHARACTER*8, intent(in) :: labels_in(2)
       CHARACTER*8:: labels_read(2)
       REAL*8, intent(out) :: LRVAL
@@ -299,23 +349,32 @@ C Based on get_QRvalue
          call quit('LRESC-LR file not found')
       end if
 
- 346  READ (fileID,'(A164)',END=347) STRING
-      IF (STRING(2:25) .EQ. 'Linear response function') THEN
+ 1    READ (fileID,'(A164)',END=3) STRING
+c     Getting LR when its called for the first time
+      IF (STRING(1:30) .EQ. '@ FREQUENCY INDEPENDENT SECOND') THEN
+          READ (fileID,'(A164)') TMPSTRING !Empty line
+          READ (fileID,'(A164)') TMPSTRING !LR of A,A
+          READ (fileID,'(31X,F19.12)') LRVAL
+      ELSE
+         GOTO 2  
+      END IF
+
+c     Getting LR when its not called for the first time
+ 2    IF (STRING(2:25) .EQ. 'Linear response function') THEN
           READ (fileID,'(36X,A8)') labels_read(1)
           READ (fileID,'(36X,A8)') labels_read(2)
       IF (labels_read(1) .EQ. labels_in(1) .AND.
      &    labels_read(2) .EQ. labels_in(2) ) then
-         READ (fileID,'(/,49X,F15.8)') LRVAL
-         WRITE(LUPRI,*) "AUCAR ",labels_read,LRVAL
+         READ (fileID,'(/,48X,F15.12)') LRVAL
       ELSE
-         GOTO 346
+         GOTO 1
       END IF
 
       ELSE
-         GOTO 346
+         GOTO 1
       END IF
 
- 347         CONTINUE
+ 3           CONTINUE
 
       if (.not. file_open) CALL GPCLOSE(fileID,'KEEP')
 

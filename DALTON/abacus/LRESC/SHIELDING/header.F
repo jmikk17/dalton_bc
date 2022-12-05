@@ -113,10 +113,9 @@ C ---Not Default
      &   '   Paramagnetic third order singlet corrections to shielding'
          IF (SIGMAP3T) WRITE (LUPRI,'(A)')'  LRESC : '//
      &   '   Paramagnetic third order triplet corrections to shielding'
-            WRITE (LUPRI,*) 'LRESC : '
-         IF (SIGMAD0S) WRITE (LUPRI,*)
+         IF (SIGMAD0S) WRITE (LUPRI,*) '  LRESC : '//
      &   '    Diamagnetic zero order singlet corrections to shielding'
-         IF (SIGMAD1S) WRITE (LUPRI,*)
+         IF (SIGMAD1S) WRITE (LUPRI,*) '  LRESC : '//
      &   '   Diamagnetic first order singlet corrections to shielding'
          IF (NUCSPI .GT. 0)
      &      WRITE (LUPRI,'(A)')' XXXXXXXX NUCSPI GT 0 ??  '//

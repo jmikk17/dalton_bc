@@ -32,8 +32,6 @@
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
 
-c     operadores contiene en el primer indice la cantidad
-c     de trio de operadores para las respuestas cuadráticas
       
       CALL QENTER('LRSCQUAD')
       CALL TIMER('START ',TIMEIN,TIMOUT)

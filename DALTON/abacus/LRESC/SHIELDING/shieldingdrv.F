@@ -345,46 +345,56 @@ c when the RESPONSE module is called besides LRESC
      &            opened = file_open)
       IF (file_exists .AND. file_open) 
      &      CALL GPCLOSE(LURSP5 ,'DELETE')
+
+
 C --------------------------------------------------
+      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 C     Diamagnetic corrections to Shielding:
 C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
-      WRITE(LUPRI,*) 'AUCAR-shieldingdrv-0'
-         CALL LINEARLR('DIAM',WORK,LWORK)
+c         CALL LINEARLR('DIAM',WORK,LWORK)
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-c      WRITE(LUPRI,*) 'AUCAR-shieldingdrv'
-      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
-c      WRITE(LUPRI,*) 'AUCAR-shieldingdrv-2'
          CALL LINEARLR_NEW('DIAM',WORK,LWORK)
-c      call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
+         CALL LINEARLR_NEW('DIAD',WORK,LWORK)
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc      
-         CALL LINEARLR('DIAD',WORK,LWORK)
+c         CALL LINEARLR('DIAD',WORK,LWORK)
       END IF
 C
 C     Paramagnetic corrections to Shielding:
 C     First Order Singlet
 C
       IF (SIGMAP1S)  THEN
-         CALL LINEARLR('PSOK',WORK,LWORK)
+c         CALL LINEARLR('PSOK',WORK,LWORK)
 C        WRITE(LUPRI,'(A)')'   Calling to SIGMAP1S for : PSKI  '//
 C     &        'using A.1.B routine'  ! con mis integrales
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
 C         CALL LINEARLR('PSKI',WORK,LWORK)
 C
-         CALL LINEARLR('LKIN',WORK,LWORK)
+c         CALL LINEARLR('LKIN',WORK,LWORK)
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+         CALL LINEARLR_NEW('PSOK',WORK,LWORK)
+         CALL LINEARLR_NEW('LKIN',WORK,LWORK)
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       END IF
 C
 C     Paramagnetic corrections to Shielding:
 C     First Order TRIPLET
 C
       IF (SIGMAP1T) THEN
-         CALL LINEARLR('FCZK',WORK,LWORK)
-         CALL LINEARLR('SDZK',WORK,LWORK)
-         CALL LINEARLR('FCBS',WORK,LWORK)
-         CALL LINEARLR('SDBS',WORK,LWORK)
+c         CALL LINEARLR('FCZK',WORK,LWORK)
+c         CALL LINEARLR('SDZK',WORK,LWORK)
+c         CALL LINEARLR('FCBS',WORK,LWORK)
+c         CALL LINEARLR('SDBS',WORK,LWORK)
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+         CALL LINEARLR_NEW('FCZK',WORK,LWORK)
+c         CALL LINEARLR_NEW('SDZK',WORK,LWORK) !Under construction
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       END IF
 
+c     SIRIFC has to remain open after LINEARLR_NEW calls
+      CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
+     &                     .FALSE.)
 c     Paramagnetic corrections to Shielding:
 c     Third Order
 
@@ -429,7 +439,6 @@ c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
       SGP1T   = 0.0  ! sigma 1order triplet PARAM : FcKin, SdKin, SdBso, FcBso
       SGP3S   = 0.0  ! sigma 3order singlet PARAM : PSOOZMv, PSOOZDw
       SGP3T   = 0.0  ! sigma 3order triplet PARAM : OZFCSO, OZSDSO
-
 C     Add constants and print all in ppm's
 !     Diamagnetic corrections
          LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
@@ -464,7 +473,6 @@ C
 C
 C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
-
       END DO
       CALL QEXIT('LRSCDRV_SHI')
       RETURN
