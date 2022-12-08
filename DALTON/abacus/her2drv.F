@@ -199,7 +199,7 @@ C    &        MAXJ,'):', (TR000X(I), I = 1, MAXJ),
 C    &      ' Detailed timings for Hermitian integrals (JMAX = 1, ',
 C    &        MAXJ,'):', (THERIX(I), I = 1, MAXJ)
       END IF
-      IF (JPRINT .GE. 0) THEN
+      IF (JPRINT .GE. 1 .OR. TKTIME) THEN
          CALL TIMTXT(' Total CPU  time used in TWOINT:',T2INT,LUPRI)
          CALL TIMTXT(' Total wall time used in TWOINT:',W2INT,LUPRI)
       END IF
