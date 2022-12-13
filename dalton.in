@@ -181,7 +181,7 @@ backup () {
 #
 while [ -n "`echo $1 | grep '^-'`" ]; do
     case $1 in
-      -b ) BASDIR="$2:$BASDIR"; shift;;
+      -b ) BASDIR="$2${BASDIR:+:${BASDIR}}"; shift;;
       -d ) optd=1;;
       -D ) optD=0;;
       -nobackup ) opt_nobackup=1;;
@@ -225,7 +225,7 @@ export WRKDIR
 
 # always search for basis sets in job work directory
 # (before standard dalton basis library in INSTALL_BASDIR, appended below)
-BASDIR=$WRKDIR
+BASDIR="${BASDIR:+${BASDIR}:}$WRKDIR"
 # append default basis set directory
 len_INSTALL_BASDIR=`echo $INSTALL_BASDIR | wc -c`
 if [ $len_INSTALL_BASDIR -gt 1 ]; then
