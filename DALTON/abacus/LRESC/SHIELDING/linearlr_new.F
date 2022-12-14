@@ -14,11 +14,9 @@
 #include "chrxyz.h"
 
       DIMENSION WORK(LWORK)
-      REAL*8 LR,TOTALLR
+      REAL*8 LR(3,3),TOTALLR(3,3)
       REAL*8 LRtensor(3,3)
       CHARACTER*4 :: KEY
-c      CHARACTER*8, allocatable :: operadores_A(:)
-c      CHARACTER*8, allocatable :: operadores_B(:)
       CHARACTER*8, allocatable :: operadores_A(:,:)
       CHARACTER*8, allocatable :: operadores_B(:,:)
       INTEGER                  :: NopA, NopB
@@ -29,7 +27,8 @@ c      CHARACTER*8, allocatable :: operadores_B(:)
       LOGICAL :: TRPLET_FLAG
 
       CALL QENTER('LRSLINEAR')
-      CALL TIMER('START ',TIMEIN,TIMOUT)
+c      CALL TIMER('START ',TIMSTR,TIMEND)
+      CALL GETTIM(TIMHER,WALHER)
 
 c     NopA: number of A operators for each shield tensor element
 c     NopB: number of B operators for each shield tensor element
@@ -52,8 +51,6 @@ C         'LKIN'  PARAMAGNETIC
 C         'FCBS' 'SDBS'
 C         'FCZK' 'FCZK'
       IF (JIMPRT .GE. 1) THEN
-C        WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-C        WRITE(LUPRI,*)
          IF (KEY.EQ.'DIAM') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic Second Order Singlet (DIAM)',
      &   ' correction is under calculation...'
@@ -207,40 +204,20 @@ C        -----------------------------------
       END IF
 
 c     Elemento ij del tensor de shielding
-c      SUMA_B = SIZE(operadores,DIM=1)/3
       do i = 1, 3 
       do j = 1, 3
-         LR = 0.d0
-         TOTALLR = 0.d0
+c         LR = 0.d0
+c         TOTALLR = 0.d0
          do k = 1, NopA
          do l = 1, NopB
-c         operadores_duo(1) = operadores_A(3*i+j -3)
-c         operadores_duo(2) = operadores_B(1)
-         operadores_duo(1) = operadores_A(3*i+j-3,k)
-         operadores_duo(2) = operadores_B(3*i+j-3,l)
-c         IF (operadores(1,3)(3:8).EQ.'SPNORB') THEN
-c            k = 3
-c         else
-c            k = 1
-c         END IF
-c      k = 1
+            operadores_duo(1) = operadores_A(3*i+j-3,k)
+            operadores_duo(2) = operadores_B(3*i+j-3,l)
 
-c        IF (KEY(4:5).EQ.'SD') THEN
-c           l = 3
-c        else
-c           l = 1
-c        END IF
-c      l = 1
-
-cc         do m = 1, k
-cc            operadores_d(3)=operadores(m,3)
-cc            spin_trio(3)=spin_rank(m,3)
-c         do n = 1, l
-c            operadores_duo(2) = operadores(SUMA_B*(j-1)+n,2)
-c            operadores_duo(2) = operadores(j,2)
             call create_LRinput(operadores_duo,TRPLET_FLAG)
             LUPRI = 6232
             OPEN(UNIT=LUPRI, FILE='LRESC-LR',status='unknown')
+c            OPEN(UNIT=LUPRI, FILE='LRESC-LR '//KEY//
+c     &           ' '//NAMN(LRATOM),status='unknown')
             call RSPDRV(WORK,LWORK)
             CLOSE(LUPRI)
             LUPRI  = 2
@@ -249,19 +226,16 @@ c            CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
 c            CALL GPCLOSE(LURSP3,'DELETE')
 c            CALL GPCLOSE(LURSP4,'DELETE')
 c            CALL GPCLOSE(LURSP5,'DELETE')
-            call get_LRvalue(LR,operadores_duo)
-c           las constantes tienen aca un (-) extra xq saco la respuesta
-c           de lo que imprime como salida
+            call get_LRvalue(LR(i,j),operadores_duo) !LR from here has an extra minus sign
 c            WRITE(LUPRI,*) "AUCAR-LR",operadores_duo,i,j,calfa*calfa*1.0D6*LR
 c            WRITE(LUPRI,*) "AUCAR-LR",calfa*calfa*1.0D6*LR
-            TOTALLR = TOTALLR + LR
+            TOTALLR(i,j) = TOTALLR(i,j) + LR(i,j)
             IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
-     &         ' ',operadores_duo(2)," LR: ",LR
+     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
          end do
          end do
 
-         LRtensor(i,j) = TOTALLR
-c            write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
+         LRtensor(i,j) = TOTALLR(i,j)
          IF (JIMPRT .GT. 2) THEN
             write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
             write(lupri,*)
@@ -283,7 +257,14 @@ c      CALL GPCLOSE(LUSOVE,'DELETE')
 c      CALL GPCLOSE(LUGDVE,'DELETE')
 c      CALL GPCLOSE(LUREVE,'DELETE')
 
-      IF (JIMPRT .GT. 1) CALL TIMER ('LRSLINEAR',TIMEIN,TIMOUT)
+c      CALL TIMER ('LRSLINEAR '//KEY//' '//NAMN(LRATOM),TIMSTR,TIMEND)
+      CALL GETTIM(TEND,WEND)
+      TIMHER = TEND - TIMHER
+      WALHER = WEND - WALHER
+      CALL TIMTXT(' Total CPU  time used in '//KEY//' '//NAMN(LRATOM)//
+     &            ' LR:',TIMHER,LUPRI)
+      CALL TIMTXT(' Total wall time used in '//KEY//' '//NAMN(LRATOM)//
+     &            ' LR:',WALHER,LUPRI)
       CALL QEXIT('LRSLINEAR')
 
       RETURN

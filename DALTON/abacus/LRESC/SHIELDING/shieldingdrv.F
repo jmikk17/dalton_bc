@@ -393,8 +393,10 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
       END IF
 
 c     SIRIFC has to remain open after LINEARLR_NEW calls
-      CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
+      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
+         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
      &                     .FALSE.)
+      END IF
 c     Paramagnetic corrections to Shielding:
 c     Third Order
 

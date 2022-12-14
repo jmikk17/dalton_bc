@@ -34,7 +34,8 @@
 
       
       CALL QENTER('LRSCQUAD')
-      CALL TIMER('START ',TIMEIN,TIMOUT)
+c      CALL TIMER('START ',TIMEIN,TIMOUT)
+      CALL GETTIM(TIMQR,WALQR)
 
       naos = NBAST ! NBAST: Total number of (atomic) basis functions
       nmos= NORBT !NORBT: Total number of molecular orbitals
@@ -359,7 +360,12 @@ c         spin_trio(2) = spin_rank(j,2)
       deallocate(spin_rank)
 
 
-      IF (JIMPRT .GT. 1) CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)
+c      CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)
+      CALL GETTIM(TEND,WEND)
+      TIMQR = TEND - TIMQR
+      WALQR = WEND - WALQR
+      CALL TIMTXT(' Total CPU  time used in LRESC-QR:',TIMQR,LUPRI)
+      CALL TIMTXT(' Total wall time used in LRESC-QR:',WALQR,LUPRI)
       CALL QEXIT('LRSCQUAD')
 
       RETURN
@@ -525,7 +531,7 @@ C Based on some lines of SUBROUTINE BCCHK
          end if
          rewind(fileID)
       else
-         call quit('RESULTS.RST file not found')
+         call quit('RESULTS.RSP file not found')
       end if
 
 
