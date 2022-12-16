@@ -16,11 +16,11 @@
 !
 !
 C
-C  /* Deck lrscinp */
+C  /* Deck lrscinp_shi */      
 C This module read nesserary input for LRESC calculations.
 C jim-gesc : May-2012
 C
-C
+C      
       SUBROUTINE LRSCINP_SHI(WORD)
 C
 C Purpose:
@@ -171,7 +171,7 @@ c jim-dbg ICHANG < 0 no cambios
       END
 C -----------------------------------------------------------------------
 C
-C  /* Deck lrscini */
+C  /* Deck lrscini_shi */
       SUBROUTINE LRSCINI_SHI
 C
 C Purpose:
@@ -250,7 +250,7 @@ C jim 4.0 : anddy aca ver que matrices encesita gesc.
       RETURN
       END
 c    ---------------------------------------
-C  /* Deck lrscdrv */
+C  /* Deck lrscdrv_shi */
       SUBROUTINE LRSCDRV_SHI(WORK,LWORK)
 C
 C Purpose:
@@ -270,11 +270,12 @@ C     J. J. Aucar 2021
 #include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
+#include "chrnos.h"              
 C
 C
       LOGICAL PING
       logical :: file_exists, file_open
-      INTEGER, allocatable :: LRATOMs(:)
+      INTEGER, allocatable :: LRATOMS(:)
       PING=.FALSE.
       CALL QENTER('LRSCDRV_SHI')
 
@@ -304,29 +305,13 @@ c     Prepared for selecting a nuclei sublist
             LRATOMS(I)=I
          END DO
       END IF
-
-      DO I = 1, size(LRATOMS)
-      LRATOM = LRATOMS(I)
-
-      IF (SIGMAD0S) THEN
-         CALL AVELRSC('FCAV',WORK,LWORK)
-         CALL AVELRSC('DIAK',WORK,LWORK)
-cx       IF(NORBT.NE.NBAST) Then
-cx          PING = .TRUE.
-cx          write(lupri,*)' WARNING : @ANGPSO (NORBT.NE.NBAST) :',
-cx     &    ' AngPso not computed due to basis set dependencies'
-cx       ELSE
-         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO
-cx        ENDIF
-      END IF
-C
 C --------------------------------------------------
 C Some files have to be closed and/or deleted
 c when the RESPONSE module is called besides LRESC
       inquire(file = 'RSPVEC', exist = file_exists,
      &            opened = file_open)
       IF (file_exists .AND. file_open) 
-     &      CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+     &      CALL GPCLOSE(LURSP ,'DELETE') !RSPVEC file
 
 
       inquire(file = 'RSP_BVEC', exist = file_exists,
@@ -345,64 +330,86 @@ c when the RESPONSE module is called besides LRESC
      &            opened = file_open)
       IF (file_exists .AND. file_open) 
      &      CALL GPCLOSE(LURSP5 ,'DELETE')
-
-
 C --------------------------------------------------
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
+C --------------------------------------------------
+c     Construct LR singlet inputs and run responses (all at once)
+      IF (SIGMAP1S.OR.SIGMAD1S) THEN
+         call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.FALSE.)
+c        Run Linear Responses
+         LUPRI = 6232
+         OPEN(UNIT=LUPRI, FILE='LRESC-LR-S',status='unknown',
+     &        position='append')
+         call RSPDRV(WORK,LWORK)
+         CLOSE(LUPRI)
+         LUPRI  = 2
+      END IF
+C --------------------------------------------------
+C Some files have to be deleted
+c when calling for TRIPLET responses after singlet responses
+      inquire(file = 'RSPVEC', exist = file_exists)
+      IF (file_exists) THEN
+         CALL GPOPEN(LURSP,'RSPVEC','OLD',' ','FORMATTED',
+     &               IDUMMY,.FALSE.)
+         CALL GPCLOSE(LURSP ,'DELETE')
+      END IF
+
+      LURSP1 = -1
+      inquire(file = 'RSPRST.E2C', exist = file_exists)
+      IF (file_exists) THEN
+         CALL GPOPEN(LURSP1,'RSPRST.E2C','OLD',' ','FORMATTED',
+     &               IDUMMY,.FALSE.)
+         CALL GPCLOSE(LURSP1 ,'DELETE')
+      END IF
+C --------------------------------------------------
+c     Construct LR triplet inputs and run responses (all at once)
+      IF (SIGMAP1T) THEN
+         call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.TRUE.)
+c        Run Linear Responses
+         LUPRI = 6232
+         OPEN(UNIT=LUPRI, FILE='LRESC-LR-T',status='unknown',
+     &        position='append')
+         call RSPDRV(WORK,LWORK)
+         CLOSE(LUPRI)
+         LUPRI  = 2
+      END IF
+C --------------------------------------------------
+      DO I = 1, size(LRATOMS)
+      LRATOM = LRATOMS(I)
+      IF (SIGMAD0S) THEN
+         CALL AVELRSC('FCAV',WORK,LWORK)
+         CALL AVELRSC('DIAK',WORK,LWORK)
+         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO
+      END IF
+C --------------------------------------------------
+C     Paramagnetic corrections to Shielding:
+C     First Order Singlet
+      IF (SIGMAP1S)  THEN
+         CALL GET_LR('PSOK',.FALSE.)
+         CALL GET_LR('LKIN',.FALSE.)
+      END IF
+
 C     Diamagnetic corrections to Shielding:
 C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
-c         CALL LINEARLR('DIAM',WORK,LWORK)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-         CALL LINEARLR_NEW('DIAM',WORK,LWORK)
-         CALL LINEARLR_NEW('DIAD',WORK,LWORK)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc      
-c         CALL LINEARLR('DIAD',WORK,LWORK)
+         CALL GET_LR('DIAM',.FALSE.)
+         CALL GET_LR('DIAD',.FALSE.)
       END IF
 C
-C     Paramagnetic corrections to Shielding:
-C     First Order Singlet
-C
-      IF (SIGMAP1S)  THEN
-c         CALL LINEARLR('PSOK',WORK,LWORK)
-C        WRITE(LUPRI,'(A)')'   Calling to SIGMAP1S for : PSKI  '//
-C     &        'using A.1.B routine'  ! con mis integrales
-C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-C         CALL LINEARLR('PSKI',WORK,LWORK)
-C
-c         CALL LINEARLR('LKIN',WORK,LWORK)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-         CALL LINEARLR_NEW('PSOK',WORK,LWORK)
-         CALL LINEARLR_NEW('LKIN',WORK,LWORK)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-      END IF
 C
 C     Paramagnetic corrections to Shielding:
 C     First Order TRIPLET
-C
       IF (SIGMAP1T) THEN
-c         CALL LINEARLR('FCZK',WORK,LWORK)
-c         CALL LINEARLR('SDZK',WORK,LWORK)
-c         CALL LINEARLR('FCBS',WORK,LWORK)
-c         CALL LINEARLR('SDBS',WORK,LWORK)
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-         CALL LINEARLR_NEW('FCZK',WORK,LWORK)
-c         CALL LINEARLR_NEW('SDZK',WORK,LWORK) !Under construction
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+         CALL GET_LR('FCZK',.TRUE.)
+         CALL GET_LR('FCBS',.TRUE.)
+         CALL GET_LR('SDZK',.TRUE.)
+         CALL GET_LR('SDBS',.TRUE.)
       END IF
 
-c     SIRIFC has to remain open after LINEARLR_NEW calls
-      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
-         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
-     &                     .FALSE.)
-      END IF
 c     Paramagnetic corrections to Shielding:
 c     Third Order
 
-c      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
-
-c      AL TERMINAR, REVISAR CONSTANTES!
 c     Singlets
       IF (SIGMAP3S) THEN
          IF (JIMPRT.GT.1) THEN
@@ -431,7 +438,6 @@ c      Null (shouldnt be)
 c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
 c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
-      call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
 
 
       SLRESC  = 0.0
@@ -476,6 +482,16 @@ C
 C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
       END DO
+
+c     Leaving to uncomment in case it's needed
+c     SIRIFC has to remain open after LINEARLR_NEW calls
+c      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
+c         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
+c     &                     .FALSE.)
+c      END IF
+
+      call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
+      deallocate(LRATOMS)
       CALL QEXIT('LRSCDRV_SHI')
       RETURN
       END
