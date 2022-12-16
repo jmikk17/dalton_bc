@@ -39,7 +39,7 @@ C     J. J. Aucar 2022
 
 C     Paramagnetic 1st singlet or triplet
 C
-      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.(SIGMAP3S)) THEN
+      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.(SIGMAP3T)) THEN
          IF (PRTALL1) THEN
          CALL HEADER('Paramagnetic Corrections for '
      &                //NAMN(LRATOM)//' :',-1)
@@ -200,7 +200,7 @@ C
 C
 C     All of them in detail
 C
-      IF (LRESCALL) THEN
+c      IF (LRESCALL) THEN
          CALL HEADER('Total Relativistic Corrections for '
      &                //NAMN(LRATOM)//' :',-1)
          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
@@ -209,7 +209,7 @@ C
          IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
      &                     SGD0S+SGD1S,'iso')
       call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'iso')
-      END IF
+c      END IF
 
       IF (LRANISO) THEN
          WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
@@ -220,6 +220,8 @@ C
       call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'ani')
 
       END IF
+
+c      END IF
 
       WRITE(LUPRI,*) 
 

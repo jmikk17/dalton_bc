@@ -364,8 +364,10 @@ c      CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)
       CALL GETTIM(TEND,WEND)
       TIMQR = TEND - TIMQR
       WALQR = WEND - WALQR
-      CALL TIMTXT(' Total CPU  time used in LRESC-QR:',TIMQR,LUPRI)
-      CALL TIMTXT(' Total wall time used in LRESC-QR:',WALQR,LUPRI)
+      IF (JIMPRT .GT. 0) THEN
+         CALL TIMTXT(' Total CPU  time used in LRESC-QR:',TIMQR,LUPRI)
+         CALL TIMTXT(' Total wall time used in LRESC-QR:',WALQR,LUPRI)
+      END IF
       CALL QEXIT('LRSCQUAD')
 
       RETURN

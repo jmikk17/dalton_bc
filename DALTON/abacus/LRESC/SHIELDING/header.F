@@ -39,7 +39,7 @@ C     Information about calculation of LRESC
 C
 C ---- Default
       CALL TITLER
-     &('ABACUS - LRESC RELATIVISTIC CORRECTIONS TO SHIELDING','*',124)
+     &('LRESC RELATIVISTIC CORRECTIONS TO SHIELDING','*',124)
 
 c      WRITE(lupri,*)
 c      WRITE(lupri,*)' First and Second order relativistic '//
@@ -47,8 +47,8 @@ c     & 'corrections to nuclear shielding constant.'
 c      WRITE(LUPRI,*)
 
       IF (LRESCALL) THEN
-            WRITE(lupri,*)
-     &   '* All LRESC corrections were activated'
+            WRITE(lupri,'(4X,A)')
+     &   '-  All LRESC corrections were activated'
       ELSE
             WRITE(lupri,*) '* Specific LRESC corrections were activated'
       ENDIF
@@ -57,13 +57,14 @@ c      WRITE(LUPRI,*)
 c      WRITE(LUPRI,*)'   -  For definitions on terms named ABC,'//
 c     &              ' refered to relativistic correction '
 c      WRITE(LUPRI,*)'      of sigma, see JCP. 137, 214319(2012). '
-      WRITE(LUPRI,*)'   -  Original LRESC papers at : J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi:10.1063/1.1525808'
+      WRITE(LUPRI,*)'   -  Original LRESC papers at :'
+      write(lupri,'(7X,A)') 'J. Chem. Phys. 118, 2 (2003),'//
+     &            'doi:10.1063/1.1525808'
 c      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
 c     &                       ' DOI: 10.1080/00268970310001617784'
 c      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
 c     & 'doi:10.1063/1.2244572'
-      WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. 118, '//
+      WRITE(LUPRI,'(7X,A)')'Int. J. Quantum Chem. 118, '//
      &    'e25487 (2017), doi.org/10.1002/qua.25487'
 
       WRITE(LUPRI,*)
@@ -77,11 +78,11 @@ c     For sublist of atoms (not implemented yet) this should be modified
               WRITE(LUPRI,'(4X,A)') '-  All Atoms selected'
       END IF
 
-      WRITE(LUPRI,'(4X,A)')'-  Remember : '
-      WRITE(LUPRI,'(14X,A)')'*  GAUGEO should be placed at desired '//
+      WRITE(LUPRI,'(/,4X,A)')'-  Remember : '
+      WRITE(LUPRI,'(7X,A)')'GAUGEO should be placed at desired '//
      &  'nucleus or at the center of mass'
       IF (.NOT. PRTALL1) THEN
-         WRITE(LUPRI,'(14X,A)')'*  For printing LRESC corrections,'//
+         WRITE(LUPRI,'(7X,A)')'For printing LRESC corrections,'//
      &   ' add .PRTALL in your input file under *LROPTS'
 
       ENDIF
@@ -90,11 +91,11 @@ C ---Not Default
       IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
      & CALL HEADER('Changes of defaults for LRESC :',0)
 
-      IF (GAUCHANG) THEN
-         WRITE(lupri,*)'*** WARNING:'
-         WRITE(lupri,*)'GAUGEO must be placed on selected nucleus at'
-         WRITE(lupri,*)'a.u. due to Hermite section (1 body integrals)'
-      END IF
+c      IF (GAUCHANG) THEN
+c         WRITE(lupri,*)'*** WARNING:'
+c         WRITE(lupri,*)'GAUGEO must be placed on selected nucleus at'
+c         WRITE(lupri,*)'a.u. due to Hermite section (1 body integrals)'
+c      END IF
 
       IF (JIMPRT.NE.0) THEN
          WRITE (LUPRI,'(A,I5)')
@@ -102,24 +103,21 @@ C ---Not Default
       END IF
 
       IF (.NOT. LRESCALL) THEN
-         WRITE (LUPRI,'(A)')
-     &      '--- Not all corrections were activated. ' //
+         WRITE (LUPRI,'(4X,A)')
+     &      '-  Not all corrections were activated. ' //
      &      'Only the following will be done : '
-         IF (SIGMAP1S)  WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order singlet corrections to shielding'
-         IF (SIGMAP1T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order triplet corrections to shielding'
-         IF (SIGMAP3S) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order singlet corrections to shielding'
-         IF (SIGMAP3T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order triplet corrections to shielding'
-         IF (SIGMAD0S) WRITE (LUPRI,*) '  LRESC : '//
-     &   '    Diamagnetic zero order singlet corrections to shielding'
-         IF (SIGMAD1S) WRITE (LUPRI,*) '  LRESC : '//
-     &   '   Diamagnetic first order singlet corrections to shielding'
-         IF (NUCSPI .GT. 0)
-     &      WRITE (LUPRI,'(A)')' XXXXXXXX NUCSPI GT 0 ??  '//
-     &           '    '
+         IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
+     &   'Diamagnetic zero order singlet corrections'
+         IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
+     &   'Diamagnetic first order singlet corrections'
+         IF (SIGMAP1S)  WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic first order singlet corrections'
+         IF (SIGMAP1T) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic first order triplet corrections'
+         IF (SIGMAP3S) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic third order singlet corrections'
+         IF (SIGMAP3T) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic third order triplet corrections'
       ENDIF
       WRITE(LUPRI,*)' '
 
