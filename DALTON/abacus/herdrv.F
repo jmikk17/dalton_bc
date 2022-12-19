@@ -192,14 +192,18 @@ C
       ! 2-el integrals will be calculated with MAKE_AOTWOINT
       ! calls when needed.
       ! Except for all R12-type integrals.
+      ! Except if only integral evaluation (i.e. no sirius, abacus or respons)
+      ! because then we must assume user wants 2-el integrals written to disk now.
 
       IF (RUNTWO) THEN
-      IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
-     &     .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
-         WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'//
-     &   ' are postponed until they are needed.'
-         RUNTWO = .FALSE.
-      END IF
+         IF (RNSIRI .OR. RNABAC .OR. RNRESP) THEN
+            IF (.NOT.(R12CAL .OR. DCCR12 .OR. R12EIN
+     &        .OR. R12INT .OR. U12INT .OR. U21INT)) THEN
+               WRITE(LUPRI,'(/A)') 'Calculation of 2-electron integrals'
+     &         //' are postponed until they are needed.'
+               RUNTWO = .FALSE.
+            END IF
+         END IF
       END IF
 
 
@@ -2139,7 +2143,6 @@ C For now, range separation must also be activated (with very large mu) when usi
 C Example of input:
 C**INTEGRALS
 C*TWOINT
-C.DOSRIN
 C.COMLAM
 C 0.25 (value of lambda)
 C.ERF
