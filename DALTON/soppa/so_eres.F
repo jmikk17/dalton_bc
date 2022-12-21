@@ -342,7 +342,7 @@ C
       CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
      &                 WORK(KBDENSIJ),LBDENSIJ,WORK(KBDENSAB),
      &                 LBDENSAB, WORK(KCMO), LCMO)
-C
+
 C KFSchaltz end
 C
 C----------------------------------------------
@@ -1427,6 +1427,7 @@ C
             ISYDIS2 = MULD2H(ISYDIS,ISYMTR)
             KEND6 = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
             LWORK6 = LWORK - KEND6
+C
 C                                     ~
 C           Calculate ( alpha, beta | j delta)
             CALL CCTRBT(WORK(KXINT),WORK(KDSRHF),WORK(KBTR1D),
@@ -1455,12 +1456,50 @@ C           Same for the D-part
             SOTIME(16) = SOTIME(16) + DTIME
          ENDIF
 C KFSchaltz begin
-               CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(BDENSIJ),
-     &                      LBDENSIJ,WORK(BDENSAB),LBDENSAB,
+C     Calculate all terms belonging to the A'^(3)(1) matrix.            
+               CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
      &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
-     &                      ISYDIS2,WORK(KEND6),LWORK6)
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KEND6),LWORK6)
+
+
+C                  WRITE(LUPRI, '(A,I5)') 'NLAMDT', NLAMDT
+C                  DO n = 1,NLAMDT
+C                        WRITE(LUPRI,'(F14.8,I5,A)') 
+C     &                  WORK(KCMO+n-1), n ,' CMO'
+C                  END DO
 C
+C            IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
+C                  WRITE(LUPRI, '(A,I5)') 'ISYMJ',ISYMJ
+C                  WRITE(LUPRI, '(A,I5)') 'ISALBE',ISALBE
+C                  WRITE(LUPRI, '(A,I5)') 'J =',J
+C                  DO n = 1,N2BST(ISALBE)
+C                        WRITE(LUPRI,'(F14.8,I5,A)') 
+C     &                  WORK(KSCR1 + n - 1),n,' Integrals'
+C                  END DO
+C            END IF
 C
+C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
+C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA), ' Rows A1'
+C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B1'
+C               WRITE(LUPRI, '(I5,A)') NBAS(ISALFA),' Cols A1 Rows B1'
+C               WRITE(LUPRI, '(I5,A)') IAODIS(ISALFA,ISBETA), ' KOFF1'
+C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMK), ' Rows A2'
+C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B2'
+C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA),' Cols A2 Rows B2'
+C               END IF
+C
+C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
+C                  DO n = 1,(NRHF(ISYMK)*NRHF(ISYMK))
+C                        WRITE(LUPRI,'(F14.8,I5,A)') 
+C     &                  WORK(KSCR2 + n - 1),n,' Integ 2bt'
+C                  END DO 
+C               END IF
 C KFSchaltz end
          END SUBROUTINE
 C

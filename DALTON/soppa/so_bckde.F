@@ -40,7 +40,7 @@ C
 C
             NTOTAL = MAX(NVIR(ISYMA),1)          
 C
-            KOFF1  = IABDEN(ISYMA,ISYMA)
+            KOFF1  = IABDEN(ISYMA,ISYMA) + 1
             KOFF2  = ILMVIR(ISYMA) + 1
             KOFF3  = ILMVIR(ISYMA) - ILMVIR(1) + 1
 C

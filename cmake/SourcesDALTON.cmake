@@ -745,7 +745,10 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/soppa/so_redgp.F
     DALTON/soppa/so_redle.F
     DALTON/soppa/so_res_a.F
+    DALTON/soppa/so_res_a3_1.F
+    DALTON/soppa/so_res_a3_2.F
     DALTON/soppa/so_res_b.F
+    DALTON/soppa/so_res_b26.F
     DALTON/soppa/so_res_cb.F
     DALTON/soppa/so_res_cbt.F
     DALTON/soppa/so_res_cd.F

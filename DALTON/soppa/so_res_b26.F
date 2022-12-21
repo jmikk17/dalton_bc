@@ -60,12 +60,6 @@ C           delta.
 C-----------------------------------------------------------------------
 C
             CALL CCSD_SYMSQ(DSRHF(KOFF1),ISALBE,WORK(KSCR1))
-            WRITE(LUPRI, '(A,I5)') 'ISYMJ',ISYMJ
-            WRITE(LUPRI, '(A,I5)') 'J =',J
-            DO n = 1,N2BST(ISALBE)
-                  WRITE(LUPRI,'(D14.8,I5,A)') 
-     &            WORK(KSCR1 + n - 1),n,' Integrals'
-            END DO
 C
             DO 300 ISYMK = 1,NSYM
 C
