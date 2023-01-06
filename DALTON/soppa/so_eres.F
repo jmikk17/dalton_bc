@@ -272,11 +272,15 @@ C
       ENDIF
 C
 C KFSchaltz begin 
-      LBDENSIJ= ILMVIR(1) 
-      LBDENSAB= ILMVIR(8) + NVIR(8)*NORB(8) - ILMVIR(1)
+      LBDENSIJ= ILMVIR(1)
+      LBDENSIJT=ILMVIR(1)
+      LBDENSAB= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)
+      LBDENSABT= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)      
       KBDENSIJ= KEND1
-      KBDENSAB= KBDENSIJ + LBDENSIJ
-      KTR1E   = KBDENSAB + LBDENSAB
+      KBDENSIJT=KBDENSIJ + LBDENSIJ
+      KBDENSAB= KBDENSIJT + LBDENSIJT
+      KBDENSABT=KBDENSAB + LBDENSAB
+      KTR1E   = KBDENSABT + LBDENSABT
 C KFSchaltz end
 C      KTR1E   = KEND1
       KTR1D   = KTR1E   + LTR1E
@@ -340,8 +344,9 @@ C        Backtransformation of one index of a one-particle density matrix.
 C--------------------------------------------
 C
       CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                 WORK(KBDENSIJ),LBDENSIJ,WORK(KBDENSAB),
-     &                 LBDENSAB, WORK(KCMO), LCMO)
+     &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
+     &                 WORK(KCMO), LCMO)
 
 C KFSchaltz end
 C
@@ -1456,17 +1461,19 @@ C           Same for the D-part
             SOTIME(16) = SOTIME(16) + DTIME
          ENDIF
 C KFSchaltz begin
-C     Calculate all terms belonging to the A'^(3)(1) matrix.            
+C     Calculate all terms belonging to the A'^(3)(1) matrix. 
+C     Remember this is only in the D part         
                CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
      &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
-               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
-     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
      &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
-     &                      WORK(KEND6),LWORK6)
-
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
 
 C                  WRITE(LUPRI, '(A,I5)') 'NLAMDT', NLAMDT
 C                  DO n = 1,NLAMDT

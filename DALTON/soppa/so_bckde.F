@@ -1,8 +1,8 @@
 C
 C  /* Deck so_bckde */
       SUBROUTINE SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                   BDENSIJ,LBDENSIJ,BDENSAB,LBDENSAB,
-     &                   CMO, LCMO)
+     &                   BDENSIJ,BDENSIJT,LBDENSIJ,BDENSAB,BDENSABT,
+     &                   LBDENSAB,CMO,LCMO)
 
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -19,7 +19,8 @@ C
       PARAMETER (FOUR = 4.0D0)
 C
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB)
-      DIMENSION BDENSIJ(LBDENSIJ), BDENSAB(LBDENSAB)
+      DIMENSION BDENSIJ(LBDENSIJ), BDENSIJT(LBDENSIJ)
+      DIMENSION BDENSAB(LBDENSAB), BDENSABT(LBDENSAB)
       DIMENSION CMO(LCMO)
 C
 #include "ccorb.h"
@@ -36,33 +37,42 @@ C
 C     Transform virtual index
 C     rho_ab to rho_adelta
 C
-        DO ISYMA = 1,NSYM
+      DO ISYMA = 1,NSYM
 C
-            NTOTAL = MAX(NVIR(ISYMA),1)          
+            NTOTAL = MAX(NBAS(ISYMA),1)
+            NTOTA  = MAX(NVIR(ISYMA),1)       
 C
             KOFF1  = IABDEN(ISYMA,ISYMA) + 1
             KOFF2  = ILMVIR(ISYMA) + 1
             KOFF3  = ILMVIR(ISYMA) - ILMVIR(1) + 1
 C
-            CALL DGEMM('N','T',NVIR(ISYMA),NORB(ISYMA),
-     &         NVIR(ISYMA),ONE,DENSAB(KOFF1),NTOTAL,
-     &         CMO(KOFF2),NORB,ZERO,BDENSAB(KOFF3),NTOTAL)
-        END DO
+            CALL DGEMM('N','T',NVIR(ISYMA),NBAS(ISYMA),
+     &         NVIR(ISYMA),ONE,DENSAB(KOFF1),NTOTA,
+     &         CMO(KOFF2),NTOTAL,ZERO,BDENSAB(KOFF3),NTOTA)
+C     Calculate transpose of BDENSAB aswell  -  rho_delta a
+            CALL DGEMM('N','N',NBAS(ISYMA),NVIR(ISYMA),
+     &         NVIR(ISYMA),ONE,CMO(KOFF2),NTOTAL,
+     &         DENSAB(KOFF1),NTOTA,ZERO,BDENSABT(KOFF3),NTOTAL)
+      END DO
 C      
 C     Transform occupied index
 C     rho_ij to rho_idelta
-        DO ISYMJ = 1,NSYM
+      DO ISYMJ = 1,NSYM
 C
-               NTOTAL  = MAX(NRHF(ISYMJ),1)
+            NTOTAL = MAX(NBAS(ISYMJ),1)
+            NTOTJ  = MAX(NRHF(ISYMJ),1) 
 C
-               KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
-               KOFF2  = ILMRHF(ISYMJ) + 1 
+            KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
+            KOFF2  = ILMRHF(ISYMJ) + 1 
 C
-               CALL DGEMM('N','T',NRHF(ISYMJ),NORB(ISYMJ),
-     &           NRHF(ISYMJ),ONE,DENSIJ(KOFF1),NRHF(ISYMJ),
-     &           CMO(KOFF2),NORB(ISYMJ),ZERO,BDENSIJ(KOFF2),NTOTAL)
-C
-        END DO
+            CALL DGEMM('N','T',NRHF(ISYMJ),NBAS(ISYMJ),
+     &           NRHF(ISYMJ),ONE,DENSIJ(KOFF1),NTOTJ,
+     &           CMO(KOFF2),NTOTAL,ZERO,BDENSIJ(KOFF2),NTOTJ)
+C     Calculate transpose of BDENSIJ aswell  -  rho_delta j
+            CALL DGEMM('N','N',NBAS(ISYMJ),NRHF(ISYMJ),
+     &           NRHF(ISYMJ),ONE,CMO(KOFF2),NTOTAL,
+     &           DENSIJ(KOFF1),NTOTJ,ZERO,BDENSIJ(KOFF2),NTOTAL)
+      END DO
 C
 C-----------------------
 C     Remove from trace.
