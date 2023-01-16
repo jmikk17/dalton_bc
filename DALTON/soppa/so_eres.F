@@ -347,6 +347,12 @@ C
      &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
      &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
      &                 WORK(KCMO), LCMO)
+C      WRITE(LUPRI,'(A)') 'This is so_check'
+C      CALL SO_CHECK(MODEL,WORK(KDENSIJ),LDENSIJ,WORK(KDENSAB),
+C     &         LDENSAB,WORK(KDENSAI),LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
+C     &         FOCKD,LFOCKD,ISYMTR,WORK(KENDT),LWORKT)
+C      CALL SO_MEMMAX ('SO_ERES.test',LWORKT)
+C      IF (LWORKT .LT. 0) CALL STOPIT('SO_ERES.test',' ',KENDT,LWORK)
 
 C KFSchaltz end
 C
@@ -360,7 +366,7 @@ C
       IF (DO_DEX) THEN
          CALL SO_OPEN(LUTR1D,FNTR1D,LTR1D)
       END IF
-C
+C 
 C     Note: open trial-vectors also with length LRES2E
 C          singlet: LRES2E = LTR2E anyway
 C          triplet: We read trial-vectors into result vector memory
@@ -1430,8 +1436,12 @@ C
          IF (SINGLES_SECOND) THEN
             DTIME   = SECOND()
             ISYDIS2 = MULD2H(ISYDIS,ISYMTR)
-            KEND6 = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
-            LWORK6 = LWORK - KEND6
+            KEND6   = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK6  = LWORK - KEND6
+            KEND7   = KEND6 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK7  = LWORK - KEND7
+C            KEND8   = KEND7 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+C            LWORK8  = LWORK - KEND8
 C
 C                                     ~
 C           Calculate ( alpha, beta | j delta)
@@ -1446,6 +1456,11 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
             CALL SO_RES_B26 ( WORK(KRES1E), LRES1E, WORK(KT2M1), LT2M1,
      &                        WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                        ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+
+            CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND7),LWORK7)
             IF (DO_DEX) THEN
 C
 C           Same for the D-part
@@ -1456,25 +1471,32 @@ C           Same for the D-part
      &                           WORK(KDSRHF),WORK(KCMO),LCMO,
      &                           IDEL,ISYMD,
      &                           ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+
+               CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND7),LWORK7)
+C               WRITE(LUPRI, '(A,I5)') 'This is SO_CHECK nr. ',IDEL
+C               WRITE(LUPRI, '(I5,A)') IDEL,' IDEL'
+C               WRITE(LUPRI, '(I5,A)') ISDEL,' ISDEL'
             END IF
             DTIME      = SECOND()   - DTIME
             SOTIME(16) = SOTIME(16) + DTIME
          ENDIF
 C KFSchaltz begin
 C     Calculate all terms belonging to the A'^(3)(1) matrix. 
-C     Remember this is only in the D part         
-               CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
-     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
-     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
-     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
-               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
-     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
-     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
-     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
-     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
-     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
-     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
-
+C     Remember this is only in the D part
+C               CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+C     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+C     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+C    &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+C               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+C     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+C     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+C     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)         
 C                  WRITE(LUPRI, '(A,I5)') 'NLAMDT', NLAMDT
 C                  DO n = 1,NLAMDT
 C                        WRITE(LUPRI,'(F14.8,I5,A)') 
@@ -1491,6 +1513,13 @@ C     &                  WORK(KSCR1 + n - 1),n,' Integrals'
 C                  END DO
 C            END IF
 C
+C KFSchaltz begin
+C         WRITE(LUPRI, '(A)') 'Before so_check'
+C         CALL SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+C     &                    DENSAI,LDENSAI,T2AM,LT2AM,T2SAM,LT2SAM,
+C     &                    FOCKD,LFOCKD,ISYM,WORK(1),LWORK)
+C         WRITE(LUPRI, '(A)') 'After so_check'
+C KFSchaltz end
 C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
 C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA), ' Rows A1'
 C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B1'

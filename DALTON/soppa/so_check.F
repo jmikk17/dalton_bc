@@ -286,6 +286,33 @@ C
       WRITE(LUPRI,'(A,I2,A,I8)')' SYMMETRY :',ISYMTR,'  DIMENSION ',NVAR
       CALL OUTPUT(WORK(KE2MAT),1,NVAR,1,NVAR,NVAR,NVAR,1,LUPRI)
 C
+C KFS 2023-Jan Write the A and B matrices
+C              Both appear twice in the total E[2] matrix
+C
+      CALL AROUND('A[2] Matrix')
+C
+      WRITE(LUPRI,'(A,I2,A,I8)')' SYMMETRY :',ISYMTR,'  DIMENSION ',
+     &      LRESO1E
+      CALL OUTPUT(WORK(KE2MAT),1,LRESO1E,1,LRESO1D,NVAR,NVAR,1,LUPRI)
+
+      WRITE(LUPRI,'(A,I2,A,I8)')' SYMMETRY :',ISYMTR,'  DIMENSION ',
+     &      LRESO1E
+       CALL OUTPUT(WORK(KE2MAT),LRESO1E+1,2*LRESO1E,LRESO1D+1,2*LRESO1D,
+     &             NVAR,NVAR,1,LUPRI)
+
+C 
+      CALL AROUND('B[2] Matrix')
+C
+      WRITE(LUPRI,'(A,I2,A,I8)')' SYMMETRY :',ISYMTR,'  DIMENSION ',
+     &      LRESO1E
+      CALL OUTPUT(WORK(KE2MAT),1,LRESO1E,LRESO1D+1,2*LRESO1D,NVAR,NVAR,
+     &            1,LUPRI)
+
+      WRITE(LUPRI,'(A,I2,A,I8)')' SYMMETRY :',ISYMTR,'  DIMENSION ',
+     &      LRESO1E
+      CALL OUTPUT(WORK(KE2MAT),LRESO1E+1,2*LRESO1E,1,LRESO1D+1,NVAR,
+     &            NVAR,1,LUPRI)
+C KFS end
 CPFP 2009-Aug  Write the C matrices
 C
       CALL AROUND('Ce1[2] Matrix')

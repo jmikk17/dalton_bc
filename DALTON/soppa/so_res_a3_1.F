@@ -83,7 +83,7 @@ C
 C-----------------------------------------------------------------
 C                               ~
 C              Generate ( j i | j delta) for
-C              given j and delta in KSCR2.
+C              given j and delta in KSCR3.
 C-----------------------------------------------------------------
 C
                LSCR2  = NBAS(ISBETA)
@@ -125,7 +125,7 @@ C
                KOFF6  = ILMVIR(ISYMA) - ILMVIR(1)
 C                     ~
 C              (j,i | j,delta) * rho_{a delta} => U(a,i)
-               COUNT = 0
+               COUNT = 0                             
                DO I = 1,NRHF(ISYMI)
                   DO IA = 1,NVIR(ISYMA)
                     RES1(KOFF5+COUNT+IA) = RES1(KOFF5+COUNT+IA) +
@@ -180,7 +180,7 @@ C
 C-----------------------------------------------------------------
 C                               ~
 C              Generate ( a i | j delta) for
-C              given j and delta in KSCR2.
+C              given j and delta in KSCR3.
 C-----------------------------------------------------------------
 C
             DO 082 ISYMA = 1,NSYM
@@ -192,14 +192,14 @@ C
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
 C
-                  KSCR2  = KEND3
+                  KSCR2  = KEND2
                   KSCR3  = KSCR2 + LSCR2
-                  KEND4  = KSCR3 + LSCR3
-                  LWORK3 = LWORK - KEND4
+                  KEND3  = KSCR3 + LSCR3
+                  LWORK3 = LWORK - KEND3
 C
                   CALL SO_MEMMAX ('SO_RES_A3_2.081',LWORK3)
                   IF (LWORK3 .LT. 0)
-     &              CALL STOPIT('SO_RES_A3_2.081',' ',KEND4,LWORK)
+     &              CALL STOPIT('SO_RES_A3_2.081',' ',KEND3,LWORK)
 C
                   NTOTAL = MAX(NBAS(ISALFA),1)
                   NTOTBE = MAX(NBAS(ISBETA),1)
@@ -290,7 +290,7 @@ C
 C-----------------------------------------------------------------
 C                               ~
 C              Generate ( a j | j delta) for
-C              given j and delta in KSCR2.
+C              given j and delta in KSCR3.
 C-----------------------------------------------------------------
 C
                   LSCR2  = NBAS(ISALFA)
@@ -298,12 +298,12 @@ C
 C
                   KSCR2  = KEND3
                   KSCR3  = KSCR2 + LSCR2
-                  KEND4  = KSCR3 + LSCR3
-                  LWORK3 = LWORK - KEND4
+                  KEND3  = KSCR3 + LSCR3
+                  LWORK3 = LWORK - KEND3
 C
                   CALL SO_MEMMAX ('SO_RES_A3_2.111',LWORK3)
                   IF (LWORK3 .LT. 0)
-     &              CALL STOPIT('SO_RES_A3_2.111',' ',KEND4,LWORK)
+     &              CALL STOPIT('SO_RES_A3_2.111',' ',KEND3,LWORK)
 C
                   NTOTAL = MAX(NBAS(ISALFA),1)
                   NTOTBE = MAX(NBAS(ISBETA),1)
@@ -391,7 +391,7 @@ C
 C-----------------------------------------------------------------
 C                               ~
 C              Generate ( l l | i delta ) for
-C              given i and delta in KSCR2.
+C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
             DO 122 ISYML = 1,NSYM
@@ -451,7 +451,7 @@ C
 C
   120 CONTINUE
 C
-C     Term: del_ij sum_kl (a k | l b ) rho_kl  (line 4 first term)
+C     Term: - 1/4 del_ij sum_kl (a k | l b ) rho_kl  (line 4 first term)
 C     Implemented as (a k | b l)
 C     Calculated by setting l = delta and and transforming the integrals
 C     with the trial vector (before this routine is called) 
@@ -491,7 +491,7 @@ C
 C-----------------------------------------------------------------
 C                               ~
 C              Generate ( a k | i delta ) for
-C              given i and delta in KSCR2.
+C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
             DO 222 ISYMK = 1,NSYM
@@ -521,7 +521,7 @@ C
 C
 C              ( beta, alpha |..) * C(alpha, k) => ( beta, k | ..)
                CALL DGEMM('T','N',NBAS(ISBETA),NRHF(ISYMK),
-     &                    NBAS(ISALFA),ONE,
+     &                    NBAS(ISALFA),-QUARTER,
      &                    WORK(KOFF2),NTOTAL,
      &                    CMO(KOFF3),NTOTAL,
      &                    ZERO,WORK(KSCR2),NTOTBE)
