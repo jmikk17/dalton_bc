@@ -202,6 +202,7 @@ C
 C     Close file for derivative fock matrices
 C     ======================================
 C
+c      write(LUPRI,*) "AUCAR-1"
       IF (FCKDDR) CALL GPCLOSE(LUDFCK,'DELETE')
 C
 C     **********************************
@@ -216,6 +217,7 @@ C
       END IF
       CALL GETTIM(TIMDIP,TIMDUM)
       TIMDIP = TIMDIP - TIMSTR
+c      write(LUPRI,*) "AUCAR-2"
       IF (LUDA1 .GT. 0) THEN
          IF (DFTRUN .AND. MOLHES) THEN
             CALL GPCLOSE(LUDA1,'KEEP')
@@ -223,6 +225,7 @@ C
             CALL GPCLOSE(LUDA1,'DELETE')
          END IF
       END IF
+c      write(LUPRI,*) "AUCAR-3"
 C
 C     **************************************
 C     ***** Quadrupole moment gradient *****
@@ -711,7 +714,13 @@ C
       CALL GETTIM(TIMVIB,TIMDUM)
       TIMVIB = TIMVIB - TIMSTR
       CALL FLSHFO(LUPRI)
+c      write(LUPRI,*) "AUCAR-4"
+c      CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !funciona con
+csólo los news
+c     &                     .FALSE.)      
+c      write(LUPRI,*) "AUCAR-4b"
       CALL GPCLOSE(LUSIFC,'KEEP')
+c      write(LUPRI,*) "AUCAR-5"
 C
 C     ******************************
 C     ***** End of calculation *****
