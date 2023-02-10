@@ -2,7 +2,8 @@ C
 C  /* Deck so_bckde */
       SUBROUTINE SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
      &                   BDENSIJ,BDENSIJT,LBDENSIJ,BDENSAB,BDENSABT,
-     &                   LBDENSAB,CMO,LCMO)
+     &                   LBDENSAB,B2DENSIJ,LB2DENSIJ,
+     &                   B2DENSAB,LB2DENSAB,CMO,LCMO)
 
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -21,6 +22,8 @@ C
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB)
       DIMENSION BDENSIJ(LBDENSIJ), BDENSIJT(LBDENSIJ)
       DIMENSION BDENSAB(LBDENSAB), BDENSABT(LBDENSAB)
+      DIMENSION B2DENSIJ(LB2DENSIJ), B2DENSIJT(LB2DENSIJ)
+      DIMENSION B2DENSAB(LB2DENSAB), B2DENSABT(LB2DENSAB)
       DIMENSION CMO(LCMO)
 C
 #include "ccorb.h"
@@ -45,6 +48,7 @@ C
             KOFF1  = IABDEN(ISYMA,ISYMA) + 1
             KOFF2  = ILMVIR(ISYMA) + 1
             KOFF3  = ILMVIR(ISYMA) - ILMVIR(1) + 1
+            KOFF4  = IAODIS(ISYMA,ISYMA) + 1
 C
             CALL DGEMM('N','T',NVIR(ISYMA),NBAS(ISYMA),
      &         NVIR(ISYMA),ONE,DENSAB(KOFF1),NTOTA,
@@ -53,6 +57,13 @@ C     Calculate transpose of BDENSAB aswell  -  rho_delta a
             CALL DGEMM('N','N',NBAS(ISYMA),NVIR(ISYMA),
      &         NVIR(ISYMA),ONE,CMO(KOFF2),NTOTAL,
      &         DENSAB(KOFF1),NTOTA,ZERO,BDENSABT(KOFF3),NTOTAL)
+C     
+C     Transform 2nd virtual index 
+C     rho_a delta to rho_gamma delta
+            CALL DGEMM('N','N',NBAS(ISYMA),NBAS(ISYMA),
+     &         NVIR(ISYMA),ONE,CMO(KOFF2),NTOTAL,
+     &         BDENSAB(KOFF3),NTOTA,ZERO,B2DENSAB(KOFF4),NTOTAL)
+
       END DO
 C      
 C     Transform occupied index
@@ -64,6 +75,7 @@ C
 C
             KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
             KOFF2  = ILMRHF(ISYMJ) + 1 
+            KOFF3  = IAODIS(ISYMJ,ISYMJ) + 1
 C
             CALL DGEMM('N','T',NRHF(ISYMJ),NBAS(ISYMJ),
      &           NRHF(ISYMJ),ONE,DENSIJ(KOFF1),NTOTJ,
@@ -72,6 +84,11 @@ C     Calculate transpose of BDENSIJ aswell  -  rho_delta j
             CALL DGEMM('N','N',NBAS(ISYMJ),NRHF(ISYMJ),
      &           NRHF(ISYMJ),ONE,CMO(KOFF2),NTOTAL,
      &           DENSIJ(KOFF1),NTOTJ,ZERO,BDENSIJ(KOFF2),NTOTAL)
+C     Transform 2nd occupied index 
+C     rho_i delta to rho_gamma delta
+            CALL DGEMM('N','N',NBAS(ISYMA),NBAS(ISYMA),
+     &         NRHF(ISYMJ),ONE,CMO(KOFF2),NTOTAL,
+     &         BDENSIJ(KOFF2),NTOTJ,ZERO,B2DENSIJ(KOFF3),NTOTAL)
       END DO
 C
 C-----------------------

@@ -272,15 +272,19 @@ C
       ENDIF
 C
 C KFSchaltz begin 
-      LBDENSIJ= ILMVIR(1)
-      LBDENSIJT=ILMVIR(1)
-      LBDENSAB= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)
-      LBDENSABT= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)      
-      KBDENSIJ= KEND1
-      KBDENSIJT=KBDENSIJ + LBDENSIJ
-      KBDENSAB= KBDENSIJT + LBDENSIJT
-      KBDENSABT=KBDENSAB + LBDENSAB
-      KTR1E   = KBDENSABT + LBDENSABT
+      LBDENSIJ = ILMVIR(1)
+      LBDENSIJT= ILMVIR(1)
+      LBDENSAB = ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)
+      LBDENSABT= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1) 
+      LB2DENSAB= IAODIS(8,8) + NBAS(8)*NBAS(8)
+      LB2DENSIJ= LB2DENSAB   
+      KBDENSIJ = KEND1
+      KBDENSIJT= KBDENSIJ + LBDENSIJ
+      KBDENSAB = KBDENSIJT + LBDENSIJT
+      KBDENSABT= KBDENSAB + LBDENSAB
+      KB2DENSAB= KBDENSABT + LBDENSABT
+      KB2DENSIJ= KB2DENSAB + LB2DENSAB
+      KTR1E    = KB2DENSIJ + LB2DENSIJ
 C KFSchaltz end
 C      KTR1E   = KEND1
       KTR1D   = KTR1E   + LTR1E
@@ -346,13 +350,8 @@ C
       CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
      &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
      &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
-     &                 WORK(KCMO), LCMO)
-C      WRITE(LUPRI,'(A)') 'This is so_check'
-C      CALL SO_CHECK(MODEL,WORK(KDENSIJ),LDENSIJ,WORK(KDENSAB),
-C     &         LDENSAB,WORK(KDENSAI),LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
-C     &         FOCKD,LFOCKD,ISYMTR,WORK(KENDT),LWORKT)
-C      CALL SO_MEMMAX ('SO_ERES.test',LWORKT)
-C      IF (LWORKT .LT. 0) CALL STOPIT('SO_ERES.test',' ',KENDT,LWORK)
+     &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
+     &                 LB2DENSAB,WORK(KCMO), LCMO)
 
 C KFSchaltz end
 C
@@ -1440,8 +1439,8 @@ C
             LWORK6  = LWORK - KEND6
             KEND7   = KEND6 + NDSRHF(MULD2H(ISYMD,ISYMTR))
             LWORK7  = LWORK - KEND7
-C            KEND8   = KEND7 + NDSRHF(MULD2H(ISYMD,ISYMTR))
-C            LWORK8  = LWORK - KEND8
+            KEND8   = KEND7 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK8  = LWORK - KEND8
 C
 C                                     ~
 C           Calculate ( alpha, beta | j delta)
@@ -1460,7 +1459,15 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
             CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
      &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
-     &                      ISYDIS2,ISYMTR,WORK(KEND7),LWORK7)
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+
             IF (DO_DEX) THEN
 C
 C           Same for the D-part
@@ -1475,10 +1482,15 @@ C           Same for the D-part
                CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
      &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
-     &                      ISYDIS2,ISYMTR,WORK(KEND7),LWORK7)
-C               WRITE(LUPRI, '(A,I5)') 'This is SO_CHECK nr. ',IDEL
-C               WRITE(LUPRI, '(I5,A)') IDEL,' IDEL'
-C               WRITE(LUPRI, '(I5,A)') ISDEL,' ISDEL'
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+               CALL SO_RES_A3_2(WORK(KRES1E),LRES1E,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6) 
+
             END IF
             DTIME      = SECOND()   - DTIME
             SOTIME(16) = SOTIME(16) + DTIME
@@ -1496,7 +1508,14 @@ C     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
 C     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
 C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
 C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
-C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)         
+C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+C               CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
+C     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+C
+C         
 C                  WRITE(LUPRI, '(A,I5)') 'NLAMDT', NLAMDT
 C                  DO n = 1,NLAMDT
 C                        WRITE(LUPRI,'(F14.8,I5,A)') 
