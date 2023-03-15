@@ -1,8 +1,9 @@
 
 /*
-!
+
+
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) 2020 by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +17,7 @@
 !  If a copy of the GNU LGPL v2.1 was not distributed with this
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
-!
+
 */
 /*-*-mode: C; c-indentation-style: "bsd"; c-basic-offset: 4; -*-*/
 /* fun-rpbex.c:

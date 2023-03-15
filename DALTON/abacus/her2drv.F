@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -165,8 +165,9 @@ C
      &            ITYPE,JSTRSH,NPRIMS,NCONTS,IORBSH,
      &            I2TYP,ICEDIF,IFTHRS,DINTSKP,GABRAO,DMRAO,DMRSO,
      &            RELCAL,GENCNT)
-      CALL GETTIM(TIMEND,DUMTIM)
+      CALL GETTIM(TIMEND,WALEND)
       T2INT = TIMEND - T2INT
+      W2INT = WALEND - W2INT
 C
 C     *******************
 C     ***** Timings *****
@@ -197,6 +198,10 @@ C    &      ' Detailed timings for R000 integrals (JMAX = 1, ',
 C    &        MAXJ,'):', (TR000X(I), I = 1, MAXJ),
 C    &      ' Detailed timings for Hermitian integrals (JMAX = 1, ',
 C    &        MAXJ,'):', (THERIX(I), I = 1, MAXJ)
+      END IF
+      IF (JPRINT .GE. 0) THEN
+         CALL TIMTXT(' Total CPU  time used in TWOINT:',T2INT,LUPRI)
+         CALL TIMTXT(' Total wall time used in TWOINT:',W2INT,LUPRI)
       END IF
 C
 C     *********************************
@@ -258,7 +263,8 @@ C  /* Deck twocal */
      &            ITYPE,JSTRSH,NPRIMS,NCONTS,IORBSH,
      &            I2TYP,ICEDIF,IFTHRS,DINTSKP,GABRAO,DMRAO,DMRSO,
      &            RELCAL_in,GENCNT)
-      use pelib_interface, only: pelib_ifc_do_twoints
+      use pelib_interface, only: pelib_ifc_do_twoints,
+     &                           pelib_ifc_do_lao_twoints
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
@@ -353,7 +359,8 @@ C
      &               WORK(KIODHR),IREPDM,IFCTYP,ISHLA,ADISTR,I2TYP,
      &               JSTRSH,NPRIMS,NCONTS,IORBSH,RELCAL_in,GENCNT)
 C
-      ELSE IF (PELIB_IFC_DO_TWOINTS()) THEN
+      ELSE IF (PELIB_IFC_DO_TWOINTS() .or.
+     &         PELIB_IFC_DO_LAO_TWOINTS()) THEN
 !
 !        Only intermolecular integrals for PElib
 !        =============================================

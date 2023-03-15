@@ -1,24 +1,18 @@
 !
-!...   Copyright (c) 2014 by the authors of Dalton (see below).
-!...   All Rights Reserved.
-!...
-!...   The source code in this file is part of
-!...   "Dalton, a molecular electronic structure program,
-!...    Release DALTON2014 (2014), see http://daltonprogram.org"
-!...
-!...   This source code is provided under a written licence and may be
-!...   used, copied, transmitted, or stored only in accord with that
-!...   written licence.
-!...
-!...   In particular, no part of the source code or compiled modules may
-!...   be distributed outside the research group of the licence holder.
-!...   This means also that persons (e.g. post-docs) leaving the research
-!...   group of the licence holder may not take any part of Dalton,
-!...   including modified files, with him/her, unless that person has
-!...   obtained his/her own licence.
-!...
-!...   For further information, including how to get a licence, see:
-!...      http://daltonprogram.org
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
 
@@ -240,7 +234,7 @@ C
       READ(LUQUAD) NPOINT
       IF (NPOINT.GT.0) THEN
          NPNTS = NPNTS + NPOINT
-         CALL REAQUA_OLD(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
 #if defined (VAR_MPI)
          DO 300 IPNT = 1+MYNUM, NPOINT, NODTOT+1 
 #else 
@@ -270,7 +264,7 @@ C
 C           Density
 C           =======
 C
-            CALL GETRHO_OLD(DMAT,GSO,RHO,RHO13,DMAGAO,THRINT,IPRINT)
+            CALL GETRHO_srdft(DMAT,GSO,RHO,RHO13,DMAGAO,THRINT,IPRINT)
 C
             IF (RHO.GT.DFTHR0) THEN 
 C
@@ -571,7 +565,8 @@ C HFSRDFT --------------------------------------------------------
 C        SRDFT ...
          IF (.NOT. DOHFSRDFT) CALL QUIT('DOHFSRDFT false in DFTATR')
          IF (NASHT.GT.0) CALL QUIT('NASHT .gt. 0 for SRDFT in DFTATR')
-C        CALL SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),DOERG,DOGRD,DOATR,WORK,LWORK,IPRINT)
+C        CALL SRDFT(ND_SIM,EXCMAT,DMAT,EDFT(1:3),
+C    &      DOERG,DO_MOLGRAD,DOATR,TRIPLET,WORK,LWORK,IPRINT)
 !         WRITE(LUPRI,*) 'DFTATR: calling SRDFT'  !JT
          CALL SRDFT(1,WORK(KFAO),WORK(KDAO),VDUMMY,
      &              .FALSE.,.FALSE.,.TRUE.,.FALSE.,

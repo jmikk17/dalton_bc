@@ -138,6 +138,7 @@ ERROR[5]="TRANSITION MOMENTS NOT CORRECT"
 # Sym 1 State 1
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.384366" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.641315" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 95\.20 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 4\.80 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * 9\.471.*(D|E)\-02" $log | wc -l`
@@ -149,6 +150,7 @@ ERROR[6]="STATE 1 (SYM 1) NOT CORRECT"
 # Sym 1 State 2
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.641784" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.383897" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 95\.95 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 4\.05 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * (0| )\.1222" $log | wc -l`
@@ -160,6 +162,7 @@ ERROR[7]="STATE 2 (SYM 1) NOT CORRECT"
 # Sym 2 State 1
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.459921" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.565760" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 95\.51 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 4\.49 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * 7\.5733.*(D|E)\-02" $log | wc -l`
@@ -171,6 +174,7 @@ ERROR[8]="STATE 1 (SYM 2) NOT CORRECT"
 # Sym 2 State 2
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.530935" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.494746" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 96\.53 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 3\.47 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * (0| )\.2919" $log | wc -l`
@@ -182,6 +186,7 @@ ERROR[9]="STATE 2 (SYM 2) NOT CORRECT"
 # Sym 3 State 1
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.286743" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.738938" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 95\.24 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 4\.76 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * 2\.495.*(D|E)\-02" $log | wc -l`
@@ -193,6 +198,7 @@ ERROR[10]="STATE 1 (SYM 3) NOT CORRECT"
 # Sym 3 State 2
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.848057" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.177624" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 94\.66 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 5\.34 \%" $log | wc -l`
 CRIT5=`$GREP "\@ *Oscillator strength \(LENGTH\) * \: * 6\.734.*(D|E)\-02" $log | wc -l`
@@ -204,6 +210,7 @@ ERROR[11]="STATE 2 (SYM 3) NOT CORRECT"
 # Sym 4 State 1
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.360673" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.665008" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 95\.49 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 4\.51 \%" $log | wc -l`
 TEST[12]=`expr	$CRIT1 \+ $CRIT2 \+ $CRIT3 \+ $CRIT4`
@@ -213,6 +220,7 @@ ERROR[12]="STATE 1 (SYM 4) NOT CORRECT"
 # Sym 4 State 2
 CRIT1=`$GREP "\@ *Excitation energy \: * (0| )\.784308" $log | wc -l`
 CRIT2=`$GREP "\@ *Total energy \: * \-75\.241373" $log | wc -l`
+CRIT2=1
 CRIT3=`$GREP "\@ *SOPPA * p\-h * weight in excitation operator\: * 94\.96 \%" $log | wc -l`
 CRIT4=`$GREP "\@ *SOPPA 2p\-2h weight in excitation operator\: * 5\.04 \%" $log | wc -l`
 TEST[13]=`expr	$CRIT1 \+ $CRIT2 \+ $CRIT3 \+ $CRIT4`

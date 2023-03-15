@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -63,7 +63,7 @@ C
 C
 C Used from common blocks:
 C ABAINF : DODRCT, TDA_SINGLET, TDA_TRIPLET, ?
-C exeinf.h : FTRCTL, NEWCMO, ITRLVL_LAST, LVLDRC_LAST
+C exeinf.h : FTRCTL, NEWCMO
 C INFLIN : NCONRF
 C INFINP : DIRFCK,HSORHF,FLAG(:),...
 C INFORB : NASHT,...
@@ -100,7 +100,7 @@ C
 
       USEDRC_SAVE = USEDRC
       FLAG27_SAVE = FLAG(27) ! needs to be restored after triplet response
-      ! otherwise susequent call of ABARSPN for singlet response may fail /Feb.2018 - hjaaj
+      ! otherwise susequent call of ABARSP for singlet response may fail /Feb.2018 - hjaaj
       ! (SIRIFC is not read again, so it is not restored this way)
       TDA_save = TDA
 
@@ -168,15 +168,22 @@ C
 C
       IF (CICLC) THEN
          RSPCI = .TRUE.
+         IF (LBSIFC .NE. 'CIRESPON') THEN
+            CALL QUIT('ERROR: SIRIFC file not valid for CI response')
+         END IF
       ELSE
          RSPCI = .FALSE.
+         IF (LBSIFC .NE. 'SIR IPH ') THEN
+            CALL QUIT(
+     &         'ERROR: SIRIFC file does not contain "SIR IPH " label.')
+         END IF
       ENDIF
 C
       IF (CICLC.AND.HFCLC) THEN
          WRITE (LUPRI,'(//,A,/,A,/)')
      *   ' ERROR: THE CALCULATION IS SPECIFIED AS BOTH CI AND HF'
      *   ,' CONSEQUENTLY THE CALCULATION MUST STOP'
-         CALL QUIT('ABARSP: INCORRECT SPECIFICATION OF CICLC AND HFCLC')
+         CALL QUIT('ABARSP ERROR: BOTH CICLC AND HFCLC SPECIFIED')
       ENDIF
 C
       KSYMOP = IOPSYM
@@ -244,8 +251,8 @@ C
             CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KWTRA),LWTRA)
          END IF
          NEWCMO = .FALSE.
-      END IF
-      END IF
+      END IF ! IF ( (NASHT .GT. 1 .AND. .NOT.HSROHF) .OR. .NOT.DIRFCK ) THEN
+      END IF ! IF (NEWCMO .OR. FTRCTL) THEN
 C
 C     ORGANIZE CALCULATION FOR EACH PERTURBATION OPERATOR
 C

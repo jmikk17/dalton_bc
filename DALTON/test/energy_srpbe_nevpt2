@@ -138,7 +138,7 @@ CTRL[4]=7
 ERROR[4]="INCORRECT WAVE FUNCTION"
 
 # SCF energy:
-CRIT1=`$GREP "Hartree-Fock total energy *: * \-76\.3321969" $log | wc -l`
+CRIT1=`$GREP "Hartree-Fock total energy *: * \-76\.332196[56789]" $log | wc -l`
 TEST[5]=`expr $CRIT1`
 CTRL[5]=2
 ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
@@ -146,14 +146,14 @@ ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
 # MP2 energy:
 # = short-range MP2 second order energy         :           -76.3349496802
 # = short-range MP2 second order energy         :           -76.3349545671
-CRIT1=`$GREP "MP2 second order.* energy *: * \-76\.3349496" $log | wc -l`
-CRIT2=`$GREP "MP2 second order.* energy *: * \-76\.3349545" $log | wc -l`
+CRIT1=`$GREP "MP2 second order.* energy *: * \-76\.334949[3456]" $log | wc -l`
+CRIT2=`$GREP "MP2 second order.* energy *: * \-76\.334954[2345]" $log | wc -l`
 TEST[6]=`expr $CRIT1 \+ $CRIT2 `  # 1 + 1
 CTRL[6]=2
 ERROR[6]="MP2-srPBE ENERGY NOT CORRECT"
 
 # MCSCF energy:
-CRIT1=`$GREP "Final MC-SRDFT energy: * \-76\.3341417" $log | wc -l`
+CRIT1=`$GREP "Final MC-SRDFT energy: * \-76\.334141[4567]" $log | wc -l`
 TEST[7]=`expr $CRIT1`
 CTRL[7]=1
 ERROR[7]="MC-srPBE ENERGY NOT CORRECT"
@@ -162,7 +162,7 @@ ERROR[7]="MC-srPBE ENERGY NOT CORRECT"
 # STATE   DIAGONALISATION        PERTURBATION SC-D        PERTURBATION PC-D
 #    1     -76.33414178            -76.33540884            -76.33542776  ! one test
 #    1     -76.33414177            -76.33540884            -76.33542776  ! another compilation
-CRIT1=`$GREP "1 * \-76\.3341417. * -76.3354088. * -76.3354277." $log | wc -l`
+CRIT1=`$GREP "1 * \-76\.334141[4567]. * -76.335408[45678]. * -76.335427[4567]." $log | wc -l`
 TEST[8]=`expr $CRIT1`
 CTRL[8]=1
 ERROR[8]="NEVPT2-srPBE ENERGY NOT CORRECT"

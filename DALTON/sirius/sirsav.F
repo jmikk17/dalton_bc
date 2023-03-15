@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -75,7 +75,7 @@ C   INFINP : ISTATE,FLAG(*),?
 C   INFVAR : NCONF,NWOPT,NVAR
 C   INFIND : ISX()
 C   INFORB : NCMOT,N2BAST,NASHT,?
-C   INFOPT : EMCOLD,DEPRED,BETA,GAMMA,RTRUST,ITMAC,NREDL,?
+C   INFOPT : EMCOLD,DEPRED,BETA,GAMMA,RTRUST,ITMAC,NREDL,STPMAX,?
 C   INFDIM : NORBMA,NBASMA,IVEX4,INTOT, MAXRL
 C   INFTAP : LUIT1,?
 C
@@ -118,6 +118,7 @@ C
       END IF
       DOCNO = FLAG(15)
 !     write(lupri,*) ' sirsav... keywrd ==> ',keywrd
+      ICTL = -100 ! to quench compiler warnings
       IF (KEYWRD .EQ. 'NEOSAVE') THEN
          ICTL = 1
          NRS  = MIN (NROOTS,NREDL,NCONF)
@@ -304,6 +305,7 @@ C
 C     Now get them:
 C
       JOFF = 0
+      JYVEC = KY ! to quench compiler message maybe uninitialized
  1100 CONTINUE
       REWIND LUIT3
       CALL DZERO(WRK(KY),NSIM*NVAR)
@@ -551,6 +553,8 @@ C
       WRITE (LUIT1) LAB123(1), STAKEY, RSTKEY, TABLE(3)
 C
       NREDH  = NREDL - 1
+
+  610 CONTINUE
       STPLEN = DNRM2(NREDH,EVEC,1)
       STPC = D0
       STPO = D0
@@ -561,14 +565,29 @@ C
             STPO = STPO + EVEC(K)*EVEC(K)
          END IF
  6010 CONTINUE
+      IF (STPO .GT. STPMAX) THEN
+      ! may cause MO_ROTATE to fail
+         WRITE (LUW4,'(//3(/A,F15.10))')
+     &      ' *** Step length  :',STPLEN,
+     &      '  -  CI step      :',STPC,
+     &      '  -  Orbital step :',STPO
+         FAC = STPMAX/STPO
+         WRITE(LUPRI,'(2(/A,F10.6))')
+     &   'INFO: Newton-Raphson step scaled with',FAC,
+     &   ' because orbital step was bigger than',STPMAX
+         CALL DSCAL(NREDH,FAC,EVEC,1)
+         GO TO 610
+      ELSE
+         FAC = 0.0D0
+      END IF
       STPC = SQRT(STPC)
       STPO = SQRT(STPO)
 C
-      IF (P4FLAG(10)) THEN
+      IF (P4FLAG(10) .OR. FAC.GT.0.0D0) THEN
          WRITE (LUW4,'(//3(/A,F15.10))')
-     *      ' *** Step length  :',STPLEN,
-     *      '  -  CI step      :',STPC,
-     *      '  -  Orbital step :',STPO
+     &      ' *** Step length  :',STPLEN,
+     &      '  -  CI step      :',STPC,
+     &      '  -  Orbital step :',STPO
       END IF
 C
 C     Prepare for 6b:
@@ -808,7 +827,7 @@ C Print XKAP, if so requested.
 C
       IF (P6FLAG(29) .AND. NWOPT .GT. 0) THEN
          WRITE (LUPRI,'(/A/A)') ' MO_ROTATE: Orbital rotation vector',
-     *                          ' ----------------------------------'
+     &                          ' ----------------------------------'
          IF (IPRI6.GT.100) THEN
             PRFAC = 0.0D0
          ELSE

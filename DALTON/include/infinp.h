@@ -37,14 +37,14 @@
 !
       LOGICAL         FLAG,        DOSCF,DOMP2,DOCINO,DOCI,DOMC,DORSP,  &
      &                FCVORB,LNOROT,LMOORD,DIRFCK,CORHOL,CORRLX,RESPHP, &
-     &                JOLSEN,ABAIPH,INERSI,INERSF,DODFT,DONEVPT,HSROHF, &
+     &                JOLSEN,       INERSI,INERSF,DODFT,DONEVPT,HSROHF, &
      &                BOYORB,PIPORB,DOFCI,DOCISD,DOLUCITA,DOMEP,        &
      &                DO_CUBE, DOAPSG, DO_VIRTRUNC
 !     variables for srDFT /hjaaj
       LOGICAL         DOCISRDFT,DOHFSRDFT,DOMCSRDFT,ADDSRI,SRHYBR
       COMMON /LOGINP/ FLAG(NFLAG), DOSCF,DOMP2,DOCINO,DOCI,DOMC,DORSP,  &
      &                FCVORB,LNOROT,LMOORD,DIRFCK,CORHOL,CORRLX,RESPHP, &
-     &                JOLSEN,ABAIPH,INERSI,INERSF,DODFT,DONEVPT,HSROHF, &
+     &                JOLSEN,       INERSI,INERSF,DODFT,DONEVPT,HSROHF, &
      &                BOYORB,PIPORB,DOFCI,DOCISD,DOLUCITA,DOMEP,        &
      &                DOCISRDFT,DOHFSRDFT,DOMCSRDFT,ADDSRI,SRHYBR,      &
      &                DO_CUBE, DOAPSG, DO_VIRTRUNC
@@ -65,11 +65,11 @@
      &                THRSSY, DEFLVL, WEIGHT_MCAVER(MAXRTS),            &
      &                THR_VIRTRUNC, THRCIDFT
 !
-      character (len=60) :: TITLE(6)
-      character (len=72) :: TITMOL(2)
-      character (len= 9) :: ci_program
-      character (len= 4) :: CENT, TYPE
-      character (len= 8) :: LFIELD
+      character (len=60)  :: TITLE(6)
+      character (len=200) :: TITMOL(2)
+      character (len= 9)  :: ci_program
+      character (len= 4)  :: CENT, TYPE
+      character (len= 8)  :: LFIELD
       COMMON /CHRINP/ TITLE, TITMOL, ci_program,                        &
      &                CENT(MXCORB), TYPE(MXCORB), LFIELD(MXFELT)
 !-- end of infinp.h --

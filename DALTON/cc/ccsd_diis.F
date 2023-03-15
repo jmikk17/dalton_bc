@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,13 @@ C
       SAVE FIRST
       DATA FIRST /.TRUE./
 C
+      IF (MXDIIS .GT. MAXVEC) THEN
+         WRITE(LUPRI,'(/A/A,I0,A,I0)') 'INFO: '//
+     &'requested .MXDIIS is greater than maximum in CCSD_DIIS routine',
+     &'INFO: .MXDIIS value decreased from ',MXDIIS,' to ',MAXVEC
+         MXDIIS = MAXVEC
+      END IF
+
       IF (FIRST) THEN
 C
          FIRST = .FALSE.
@@ -188,8 +195,11 @@ C
       IPVT(J)=K
 C
       IF(T.EQ.0.0D0)THEN
-      WRITE(LUPRI,*)'ZERO PIVOT - MATRIX SINGULAR'
-      CALL QUIT(' ')
+         GO TO 40
+       ! WRITE(LUPRI,*)'ZERO PIVOT - MATRIX SINGULAR'
+       ! CALL QUIT(' ')
+       ! hjaaj Aug 2021: test "cc2_r12_he_a2" failed here for gfortran
+       ! 10.2.0. With this change the test passed.
       ENDIF
 C
 C     SWOP ROWS

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -246,7 +246,7 @@ C
       REAL*8    WRK(LFRSAV)
 C
       REAL*8    ESRDFTCMD(3)
-      LOGICAL   FCKFRO, MP2FRZ
+      LOGICAL   FCKFRO, MP2FRZ, USEDRC_save
       CHARACTER AO2INTFILE_LABEL_SAVE*8
       CHARACTER SR_FUNCS*80                 ! for RSDHf calculation
       INTEGER   FCKTRA_TYPE_save
@@ -260,7 +260,7 @@ C     SCBRHF: NFRRHF()
 C     INFMP2: NPHSYM, MP2FRO
 C     INFINP: FLAG(25), DIRFCK
 C     INFIND: ISX, ISMO
-C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE
+C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC
 C
 #include "maxorb.h"
 #include "maxash.h"
@@ -418,8 +418,11 @@ C     JTRLVL =  4 : code for 2. order transformation for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL =  5 : code for 3. order transformation for MP2 density matrix.
 C     JTRLVL negative: delete AO integral file after transformation.
 C
+      USEDRC_save = USEDRC
+      USEDRC = .FALSE. ! MP2 cannot use integrals in Dirac format (yet)
       CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KFREE),LFREE)
 C     CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
+      USEDRC = USEDRC_save
 C
 C
       IF (MP2FRO) THEN
@@ -616,8 +619,8 @@ C
                   CALL SRDFT(1,WRK(KVSRAO),WRK(KDHFAO),ESRDFTCMD,
      &                       .TRUE.,.FALSE.,.FALSE.,.FALSE.,
      &                       WRK(KFREE),LFREE,IPRMANU)
-C                      SRDFT(ND_SIM,EXCMAT,DMAT,EDFTY,EDFTX,EDFTC,DOERG,
-!                            DOGRD,DOATR,WORK,LWORK,IPRINT)
+C                      SRDFT(ND_SIM,EXCMAT,DMAT,ESRDFT(1:3),DOERG,
+!                            DO_MOLGRAD,DOATR,TRIPLET,WORK,LWORK,IPRINT)
                    write(lupri,*) 'Esrcmd_dft = ', ESRDFTCMD
 !
 ! *** Compute the srHFX term ***
@@ -834,7 +837,7 @@ C     the interface file SIRIFC (orbitals are RHF orbitals, as needed
 C     for SOPPA, i.e. not MP2 natural orbitals, as used for MCSCF start.)
 C
       IF ( FLAG(25) ) THEN
-         CALL MP2IFC(WRK(KDONE),WRK(KKAPPA))
+         CALL MP2IFC(ECORR,WRK(KDONE),WRK(KKAPPA))
       END IF
 C
 C Manu July 07 : For the MP2-SRDFT calculation, we want to write the
@@ -1867,7 +1870,7 @@ C *** end of subroutine MP2FCK
 C
       END
 C  /* Deck MP2IFC */
-        SUBROUTINE MP2IFC(DONE,COEMP2)
+        SUBROUTINE MP2IFC(ECORR,DONE,COEMP2)
 C
 C This routine prepares the SOPPA interface for RESPONSE by storing
 C the correlation coefficients and the second order one-density
@@ -1909,6 +1912,8 @@ C Write the correlation coefficients
       CALL WRITT (LUSIFC,NPHTOT(1),COEMP2)
 C Write the second'order one-electron density
       CALL WRITT (LUSIFC,N2ORBX,DONE)
+C Write the second order correlation energy E(HF) + EMP2
+      WRITE(LUSIFC) ECORR,ECORR,ECORR,ECORR ! to fill 32 bytes
 C Write "End Of DATA" label
       WRITE (LUSIFC) LAB123,LABEOD
 C Close the FNSIFC file

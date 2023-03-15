@@ -32,7 +32,7 @@ f.add(string = 'Final MCSCF energy:',
       rel_tolerance = 1.0e-9)
 
 f.add(from_string = 'Occupancies of natural orbitals',
-      to_string = 'Total effective number',
+      to_string = 'Head-Gordon',
       abs_tolerance = 1.0e-6)
 
 

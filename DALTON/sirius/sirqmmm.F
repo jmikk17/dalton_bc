@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -5187,7 +5187,7 @@ C   INFORB: NNASHX, NNBASX, NNORBX, etc.
 C   INFIND: IROW(*)
 C   INFTAP: LUSOL,  LUIT2
 C   INFPRI: IPRSOL
-C   dftcom.h : DFT_SPINDNS
+C   dftcom.h : SRDFT_SPINDNS
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -5330,8 +5330,8 @@ C *************************************************************
       ! and now we get it from QMMM_FCK_AO
       IF (NASHT .GT. 0) THEN
          CALL GETAC2(WRK(KFPEM),WRK(KFPEAC))
-         IF (DFT_SPINDNS) CALL QUIT('PEGRD: '//
-     &   'DFT_SPINDNS not implemented here yet, sorry!')
+         IF (SRDFT_SPINDNS) CALL QUIT('PEGRD: '//
+     &   'SRDFT_SPINDNS not implemented here yet, sorry!')
       END IF
 
 C
@@ -5671,7 +5671,7 @@ C  Used from common blocks:
 C    INFORB : NNASHX, NNORBX, NNBASX, etc.
 C    INFVAR : NWOPH
 C    INFLIN : NCONST, NVARPT, NWOPPT
-C    dftcom.h : DFT_SPINDNS
+C    dftcom.h : SRDFT_SPINDNS
 C
 #include "infinp.h"
 #include "inforb.h"
@@ -5835,8 +5835,8 @@ C        1. x-coord. 2. y-coord. 3. z-coord.
      &                    WRK(KMATAC + 1*NNASHX))
               CALL GETAC2(WRK(KMATMO + 2*NNORBT),
      &                    WRK(KMATAC + 2*NNASHX))
-         IF (DFT_SPINDNS) CALL QUIT('PELNC: '//
-     &   'DFT_SPINDNS not implemented here yet, sorry!')
+         IF (SRDFT_SPINDNS) CALL QUIT('PELNC: '//
+     &   'SRDFT_SPINDNS not implemented here yet, sorry!')
           ENDIF
 
 C         ---- 2.c ) Make F = 2 < 0 | F^(1) | B > ----
@@ -5944,8 +5944,8 @@ C         --- 3.b) Add B*<0|F^(1)|B> to F^(1) operator ----
              IF (NASHT .GT. 0) THEN
                CALL GETAC2(WRK(KFXC + (ICSIM-1)*NNORBT),
      &                     WRK(KFXCAC + (ICSIM-1)*NNASHX))
-               IF (DFT_SPINDNS) CALL QUIT('PELNC: '//
-     &         'DFT_SPINDNS not implemented here yet, sorry!')
+               IF (SRDFT_SPINDNS) CALL QUIT('PELNC: '//
+     &         'SRDFT_SPINDNS not implemented here yet, sorry!')
              END IF
 
              LCI = LCI + 3*NNZAL
@@ -5965,8 +5965,8 @@ C         --- 3.b) Add B*<0|F^(1)|B> to F^(1) operator ----
 
       IF (NASHT .GT. 0) THEN
          CALL GETAC2(WRK(KFPEMO),WRK(KFPEAC))
-         IF (DFT_SPINDNS) CALL QUIT('PELNC: '//
-     &   'DFT_SPINDNS not implemented here yet, sorry!')
+         IF (SRDFT_SPINDNS) CALL QUIT('PELNC: '//
+     &   'SRDFT_SPINDNS not implemented here yet, sorry!')
       END IF
 
       TFPEMO = SOLELM(DV,WRK(KFPEAC),WRK(KFPEMO),TFPEAC)
@@ -6064,7 +6064,7 @@ C  Used from common blocks:
 C    INFORB : NNASHX, NNORBX, NNBASX, etc.
 C    INFVAR : JWOP
 C    INFLIN : NWOPPT, NVARPT, NCONST, NCONRF
-C   dftcom.h : DFT_SPINDNS
+C   dftcom.h : SRDFT_SPINDNS
 C
       DIMENSION BOVECS(NWOPPT,*), CREF(*), CMO(*)
       DIMENSION INDXCI(*),        DV(*)
@@ -6329,8 +6329,8 @@ c     &               1,NORBT,NORBT,NORBT,1,LUPRI)
              CALL GETAC2(WRK(JMTX),WRK(JMTXAC))
              CALL GETAC2(WRK(JMTX + 1*NNORBX),WRK(JMTXAC + 1*NNASHX))
              CALL GETAC2(WRK(JMTX + 2*NNORBX),WRK(JMTXAC + 2*NNASHX))
-         IF (DFT_SPINDNS) CALL QUIT('PELNO: '//
-     &   'DFT_SPINDNS not implemented here yet, sorry!')
+         IF (SRDFT_SPINDNS) CALL QUIT('PELNO: '//
+     &   'SRDFT_SPINDNS not implemented here yet, sorry!')
            END IF
 
 C          ... Calculate < 0 | f^(1) | 0 >
@@ -6462,8 +6462,8 @@ C     Construct Fyo(PE) (corresponds to Fg(PE) one-index transformed)
 
            IF (NASHT .GT. 0) THEN                                 ! active part of f(PE)g operator (equivalent to Tg = Ryo in RFSCF)
              CALL GETAC2(WRK(JFPX),WRK(JFPXAC))
-         IF (DFT_SPINDNS) CALL QUIT('PELNO: '//
-     &   'DFT_SPINDNS not implemented here yet, sorry!')
+         IF (SRDFT_SPINDNS) CALL QUIT('PELNO: '//
+     &   'SRDFT_SPINDNS not implemented here yet, sorry!')
            END IF
 
         FXYO = SOLELM(DV,WRK(JFPXAC),WRK(JFPX),FXYOA)

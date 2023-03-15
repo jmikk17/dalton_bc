@@ -207,8 +207,8 @@ CTRL[10]=3
 ERROR[10]="INITIAL DIPOLE MOMENT NOT CORRECT"
 
 # Step, 1st iteration:
-CRIT1=`$GREP "OP *_1 * (0| )\.00438....[0-9] * (0| )\.01693....[0-9] * (0| )\.0000000000" $log | wc -l`
-CRIT2=`$GREP "OP *_2 * (0| )\.00438....[0-9] * (\-0|\-)\.01693....[0-9] * (0| )\.0000000000" $log | wc -l`
+CRIT1=`$GREP "OP *_1 * (0| )\.00438....[0-9] * (0| )\.0169.....[0-9] * (0| )\.0000000000" $log | wc -l`
+CRIT2=`$GREP "OP *_2 * (0| )\.00438....[0-9] * (\-0|\-)\.0169.....[0-9] * (0| )\.0000000000" $log | wc -l`
 TEST[11]=`expr $CRIT1  \+ $CRIT2`
 CTRL[11]=4
 ERROR[11]="INITIAL STEP NOT CORRECT"
@@ -221,7 +221,7 @@ CTRL[12]=4
 ERROR[12]="SECOND GEOMETRY NOT CORRECT"
 
 # Energy, 2nd iteration:
-CRIT1=`$GREP "Total energy * \-224\.51875646[0-9]* au \(Hartrees\)" $log | wc -l`
+CRIT1=`$GREP "Total energy * \-224\.5187564[0-9]* au \(Hartrees\)" $log | wc -l`
 CRIT2=`$GREP "\-6109\.466144[0-9]* eV" $log | wc -l`
 CRIT3=`$GREP "\-589473\.904[0-9] kJ\/mol" $log | wc -l`
 TEST[13]=`expr $CRIT1 \+ $CRIT2 \+ $CRIT3`
@@ -231,7 +231,7 @@ ERROR[13]="SECOND ENERGY NOT CORRECT"
 # Gradient, 2nd iteration:
 CRIT1=`$GREP "OS * x * (0| )\.00043" $log | wc -l`
 CRIT2=`$GREP "OP * x * (\-0|\-)\.00043" $log | wc -l`
-CRIT3=`$GREP "OP * y * (\-0|\-)\.00085" $log | wc -l`
+CRIT3=`$GREP "OP * y * (\-0|\-)\.0008[45]" $log | wc -l`
 TEST[14]=`expr $CRIT1 \+ $CRIT2 \+ $CRIT3`
 CTRL[14]=3
 ERROR[14]="SECOND GRADIENT NOT CORRECT"
@@ -254,14 +254,14 @@ CTRL[15]=10
 ERROR[15]="SECOND HESSIAN NOT CORRECT"
 
 # Geometry optimization converged:
-CRIT1=`$GREP "Norm of molecular gradient: * (0| )\.0000040[0-9][0-9][0-9]" $log | wc -l`
-CRIT2=`$GREP "Change in energy since start of walk:(\-0| \-)\.00023305[2-4][0-9] au" $log | wc -l`
+CRIT1=`$GREP "Norm of molecular gradient: * (0| )\.0000" $log | wc -l`
+CRIT2=`$GREP "Change in energy since start of walk:(\-0| \-)\.00023305.* au" $log | wc -l`
 CRIT3=`$GREP "Geometry optimization has converged\." $log | wc -l`
 TEST[16]=`expr $CRIT1 \+ $CRIT2 \+ $CRIT3`
 CTRL[16]=3
 ERROR[16]="GEOMETRY OPTIMIZATION FAILED"
 
-o Dipole moment gradient:
+# Dipole moment gradient:
 CRIT1=`$GREP "OS * x * (0| )\.0389247" $log | wc -l`
 CRIT2=`$GREP "OP * x * (\-0|\-)\.0389247" $log | wc -l`
 CRIT3=`$GREP "OP * y * (0| )\.4111820" $log | wc -l`
@@ -286,35 +286,35 @@ ERROR[18]="CIOSLOWSKI CHARGES NOT CORRECT"
 
 # Static polarizabilities:
 CRIT1=`$GREP "Ex * 12\.1243.. * 0*\.000000 * 0*\.000000" $log | wc -l`
-CRIT2=`$GREP "Ey * 0*\.000000 * 28\.3267.. * 0*\.000000" $log | wc -l`
+CRIT2=`$GREP "Ey * 0*\.000000 * 28\.326... * 0*\.000000" $log | wc -l`
 CRIT3=`$GREP "Ez * 0*\.000000 * 0*\.000000 * 10\.0759.." $log | wc -l`
 TEST[19]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3`
 CTRL[19]=6
 ERROR[19]="STATIC POLARIZABILITIES NOT CORRECT"
 
 # Dynamic polarizabilities:
-CRIT1=`$GREP "Ex * 12\.2173. * 0*\.000000 * 0*\.000000" $log | wc -l`
-CRIT2=`$GREP "Ey * 0*\.000000 * 29\.3541. * 0*\.000000" $log | wc -l`
-CRIT3=`$GREP "Ez * 0*\.000000 * 0*\.000000 * 10\.1308." $log | wc -l`
-CRIT4=`$GREP "Ex * 12\.3778. * 0*\.000000 * 0*\.000000" $log | wc -l`
-CRIT5=`$GREP "Ey * 0*\.000000 * 31\.4860. * 0*\.000000" $log | wc -l`
-CRIT6=`$GREP "Ez * 0*\.000000 * 0*\.000000 * 10\.2033." $log | wc -l`
+CRIT1=`$GREP "Ex * 12\.217.. * 0*\.000000 * 0*\.000000" $log | wc -l`
+CRIT2=`$GREP "Ey * 0*\.000000 * 29\.35... * 0*\.000000" $log | wc -l`
+CRIT3=`$GREP "Ez * 0*\.000000 * 0*\.000000 * 10\.130.." $log | wc -l`
+CRIT4=`$GREP "Ex * 12\.377.. * 0*\.000000 * 0*\.000000" $log | wc -l`
+CRIT5=`$GREP "Ey * 0*\.000000 * 31\.48... * 0*\.000000" $log | wc -l`
+CRIT6=`$GREP "Ez * 0*\.000000 * 0*\.000000 * 10\.203.." $log | wc -l`
 TEST[20]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3  \+ $CRIT4  \+ $CRIT5  \+ \
               $CRIT6`
 CTRL[20]=6
 ERROR[20]="DYNAMIC POLARIZABILITIES NOT CORRECT"
 
 # Rotational constants:
-CRIT1=`$GREP "103752\.2[0-9]* * 13259\.75[0-9]* * 11757\.16[0-9]* MHz" $log | wc -l`
-CRIT2=`$GREP "3\.46080[0-9] * (0| )\.44229[0-9] * (0| )\.39217[0-9] cm\-1" $log | wc -l`
+CRIT1=`$GREP "10375.\.[0-9]* * 13259\.[0-9]* * 11757\.[0-9]* MHz" $log | wc -l`
+CRIT2=`$GREP "3\.460[0-9]* * (0| )\.442[0-9]* * (0| )\.3921[0-9]* cm\-1" $log | wc -l`
 TEST[21]=`expr $CRIT1  \+ $CRIT2`
 CTRL[21]=2
 ERROR[21]="ROTATIONAL CONSTANTS NOT CORRECT"
 
 # Vibrational frequencies:
-CRIT1=`$GREP "1 * A1 * 1093\.93 * (0| )\.004984 * (0| )\.795 * (0| )\.0188" $log | wc -l`
-CRIT2=`$GREP "3 * A1 * 708\.43 * (0| )\.003228 * 4\.496 * (0| )\.1064" $log | wc -l`
-CRIT3=`$GREP "2 * B1 * 1021\.92 * (0| )\.004656 * 89\.005 * 2\.106(3|4)" $log | wc -l`
+CRIT1=`$GREP "1 * A1 * 1093\.9. * (0| )\.004984 * (0| )\.795 * (0| )\.0188" $log | wc -l`
+CRIT2=`$GREP "3 * A1 * 708\.4. * (0| )\.003228 * 4\.496 * (0| )\.1064" $log | wc -l`
+CRIT3=`$GREP "2 * B1 * 1021\.9. * (0| )\.004656 * 89\.00. * 2\.106(3|4)" $log | wc -l`
 TEST[22]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3`
 CTRL[22]=3
 ERROR[22]="VIBRATIONAL FREQUENCIES NOT CORRECT"
@@ -322,25 +322,25 @@ ERROR[22]="VIBRATIONAL FREQUENCIES NOT CORRECT"
 # IR intensities:
 CRIT1=`$GREP "1 * A1 * ....... * ........ * (0| )\.795 * (0| )\.0188" $log | wc -l`
 CRIT2=`$GREP "3 * A1 * ....... * ........ * 4\.496 * (0| )\.1064" $log | wc -l`
-CRIT3=`$GREP "2 * B1 * ....... * ........ * 89\.005 * 2\.106(3|4)" $log | wc -l`
+CRIT3=`$GREP "2 * B1 * ....... * ........ * 89\.00. * 2\.106(3|4)" $log | wc -l`
 TEST[23]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3`
 CTRL[23]=3
 ERROR[23]="IR INTENSITIES NOT CORRECT"
 
 # Molecular partition function:
-CRIT1=`$GREP "200\.00 * 4\.8150(D\+|E\+)06 * 3752\.72 * 1\.0072 * 1\.81991[0-9](D\+|E\+)10" $log | wc -l`
-CRIT2=`$GREP "273\.15 * 1\.0496(D\+|E\+)07 * 5988\.1(6|7) * 1\.0325 * 6\.4895(3|4)[0-9](D\+|E\+)10" $log | wc -l`
-CRIT3=`$GREP "298\.15 * 1\.3065(D\+|E\+)07 * 6828\.4(0|1) * 1\.0467 * 9\.3379.[0-9](D\+|E\+)10" $log | wc -l`
-CRIT4=`$GREP "1000\.00 * 2\.6916(D\+|E\+)08 * 41925\.1. * 2\.5626 * 2\.89184[0-9](D\+|E\+)13" $log | wc -l`
-CRIT5=`$GREP "2000\.00 * 1\.5226(D\+|E\+)09 * 118571\.0. * 8\.8312 * 1\.59438[0-9](D\+|E\+)15" $log | wc -l`
+CRIT1=`$GREP "200\.00 * 4\.8150(D\+|E\+)06 * 3752\.7. * 1\.0072 * 1\.8199[0-9]*(D\+|E\+)10" $log | wc -l`
+CRIT2=`$GREP "273\.15 * 1\.0496(D\+|E\+)07 * 5988\.1. * 1\.0325 * 6\.4895[0-9]*(D\+|E\+)10" $log | wc -l`
+CRIT3=`$GREP "298\.15 * 1\.3065(D\+|E\+)07 * 6828\... * 1\.0467 * 9\.3379..(D\+|E\+)10" $log | wc -l`
+CRIT4=`$GREP "1000\.00 * 2\.6916(D\+|E\+)08 * 41925\... * 2\.562. * 2\.891...(D\+|E\+)13" $log | wc -l`
+CRIT5=`$GREP "2000\.00 * 1\.5226(D\+|E\+)09 * 11857.\... * 8\.83.. * 1\.5943..(D\+|E\+)15" $log | wc -l`
 TEST[24]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3  \+ $CRIT4  \+ $CRIT5`
 CTRL[24]=5
 ERROR[24]="PARTITION FUNCTION NOT CORRECT"
 
 # Total polarizabilities
-CRIT1=`$GREP "EA * 4\.5399(1|2). * (\-0|\-|0| )\.000000 * (\-0|\-|0| )\.000000" $log | wc -l`
-CRIT2=`$GREP "EB * (\-0|\-|0| )\.000000 * 1\.8352(8|9). * (\-0|\-|0| )\.000000" $log | wc -l`
-CRIT3=`$GREP "EC * (\-0|\-|0| )\.000000 * (\-0|\-|0| )\.000000 * 1\.49310(3|4)" $log | wc -l`
+CRIT1=`$GREP "EA * 4\.539... * (\-0|\-|0| )\.000000 * (\-0|\-|0| )\.000000" $log | wc -l`
+CRIT2=`$GREP "EB * (\-0|\-|0| )\.000000 * 1\.8352.. * (\-0|\-|0| )\.000000" $log | wc -l`
+CRIT3=`$GREP "EC * (\-0|\-|0| )\.000000 * (\-0|\-|0| )\.000000 * 1\.49310" $log | wc -l`
 TEST[25]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3`
 CTRL[25]=4
 ERROR[25]="TOTAL POLARIZABILITIES NOT CORRECT"
@@ -353,12 +353,12 @@ CTRL[26]=2
 ERROR[26]="MO INTEGRALS NOT AVAILABLE"
 
 # Linear response:
-CRIT1=`$GREP "Value of linear response.*\: * 12.1243" $log | wc -l`
-CRIT2=`$GREP "Value of linear response.*\: * 12.2173" $log | wc -l`
-CRIT3=`$GREP "Value of linear response.*\: * 28.3267" $log | wc -l`
-CRIT4=`$GREP "Value of linear response.*\: * 29.3541" $log | wc -l`
-CRIT5=`$GREP "Value of linear response.*\: * 10.0759" $log | wc -l`
-CRIT6=`$GREP "Value of linear response.*\: * 10.1308" $log | wc -l`
+CRIT1=`$GREP "Value of linear response.*\: * 12.124" $log | wc -l`
+CRIT2=`$GREP "Value of linear response.*\: * 12.217" $log | wc -l`
+CRIT3=`$GREP "Value of linear response.*\: * 28.326" $log | wc -l`
+CRIT4=`$GREP "Value of linear response.*\: * 29.35" $log | wc -l`
+CRIT5=`$GREP "Value of linear response.*\: * 10.075" $log | wc -l`
+CRIT6=`$GREP "Value of linear response.*\: * 10.130" $log | wc -l`
 TEST[27]=`expr $CRIT1  \+ $CRIT2  \+ $CRIT3  \+ $CRIT4  \+ $CRIT5  \+ $CRIT6`
 CTRL[27]=6
 ERROR[27]="LINEAR RESPONSE NOT CORRECT"

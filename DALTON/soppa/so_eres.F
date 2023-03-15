@@ -1207,8 +1207,8 @@ C
 C Redo the loadbalancing based on the timings and distribute them
             ksorted = kend2
             ktmp    = (soppa_num_active*maxnumjobs)
-            knasjob = ksorted + ktmp/irat + mod(ktmp,irat)
-            kswork  = knasjob + soppa_num_active/irat + mod(ktmp,irat)
+            knasjob = ksorted + ktmp/irat + 1
+            kswork  = knasjob + soppa_num_active/irat + 1
             kendf   = kswork + soppa_num_active
 C
             call dynloadbal_parsoppa( AssignedIndices, maxnumjobs,

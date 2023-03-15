@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,8 @@ module pelib_interface
     public :: pelib_ifc_molgrad, pelib_ifc_lf, pelib_ifc_localfield
     public :: pelib_ifc_mep, pelib_ifc_mep_noqm, pelib_ifc_cube
     public :: pelib_ifc_set_mixed, pelib_ifc_mixed
-    public :: pelib_ifc_do_savden, pelib_ifc_do_twoints
-    public :: pelib_ifc_save_density, pelib_ifc_twoints
+    public :: pelib_ifc_do_savden, pelib_ifc_do_twoints, pelib_ifc_do_lao_twoints
+    public :: pelib_ifc_save_density, pelib_ifc_twoints, pelib_ifc_lao_twoints
     public :: pelib_ifc_get_num_core_nuclei
 #if defined(VAR_MPI)
     public :: pelib_ifc_slave
@@ -125,6 +125,16 @@ logical function pelib_ifc_do_twoints()
         pelib_ifc_do_twoints = .false.
     end if
 end function pelib_ifc_do_twoints
+
+
+logical function pelib_ifc_do_lao_twoints()
+    use pelib_options, only: pelib_lao_twoints
+    if (pelib_lao_twoints) then
+        pelib_ifc_do_lao_twoints = .true.
+    else
+        pelib_ifc_do_lao_twoints = .false.
+    end if
+end function pelib_ifc_do_lao_twoints
 
 subroutine pelib_ifc_activate()
     use pelib, only: pelib_enabled
@@ -322,6 +332,15 @@ subroutine pelib_ifc_input_reader(word)
                 read(lucmd, '(a240)') h5pdefile
             end if
             pelib_twoints = .true.
+        ! activate calculation of london contributions for PDE
+        else if (trim(option(2:7)) == 'TWOLAO') then
+            read(lucmd, '(a80)') option
+            backspace(lucmd)
+            if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+              & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                read(lucmd, '(a240)') h5pdefile
+            end if
+            pelib_lao_twoints = .true.
         ! save density matrix
         else if (trim(option(2:7)) == 'SAVE D') then
             read(lucmd, '(a80)') option
@@ -1005,6 +1024,213 @@ subroutine pelib_ifc_twoints(work, lwork)
     call qexit('pelib_ifc_twoints')
 end subroutine pelib_ifc_twoints
 
+subroutine pelib_ifc_lao_twoints(work, lwork)
+    use pde_utils, only: pde_lao_twoints, pde_get_fragment_density
+#include "inforb.h"
+#include "dummy.h"
+#include "iratdef.h"
+#include "aovec.h"
+#include "maxorb.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "aosotr.h"
+#include "priunit.h"
+#include "inftap.h"
+
+#include "shells.h"
+#include "primit.h"
+    real*8, dimension(:), intent(inout) :: work
+    integer, intent(in) :: lwork
+    real*8, dimension(:), allocatable :: london_electrostatic
+    real*8, dimension(:), allocatable :: packed_frag_denmat
+    real*8, dimension(:,:,:), allocatable :: full_fckmat
+    real*8, dimension(:,:), allocatable :: full_denmat
+    real*8, dimension(:,:), allocatable :: frag_denmat
+    real*8, dimension(:), allocatable :: overlap, xdiplen, ydiplen, zdiplen
+    real*8, dimension(:, :), allocatable :: full_overlap, full_xdiplen, full_ydiplen, full_zdiplen
+    real*8, dimension(:,:,:), allocatable :: QM
+    integer :: i, j, k, M, N
+    integer :: core_nbast, core_nnbast
+    integer :: frag_nbast
+    integer, dimension(1) :: isymdm, ifctyp
+    integer :: ndmat, numdis, itype, maxdif, iatom, i2typ, npao
+    logical :: nodv, nopv, tktime, retur, noblk
+    integer :: iprint, iprnta, iprntb, iprntc, iprntd
+    integer :: lfree, kfree, kwork
+    integer :: kjstrs, knprim, kncont, kiorbs, kjorbs, kkorbs
+    character*8 :: lblinf(2)
+    logical :: lopen
+    integer :: ishela, jsta, ncomp, nhkta, nprim, max_ncont, numcfa, iadr, nuca
+    real*8 :: alpha, coeff
+    real*8, allocatable, dimension(:, :) :: zetas, cont_coeffs
+
+    call flshfo(lupri)
+    lopen = .false.
+
+    kwork = 1
+    kfree = kwork
+    lfree = lwork
+    call qenter('pelib_ifc_lao_twoints')
+    call pde_get_fragment_density(packed_frag_denmat, frag_nbast)
+    allocate(frag_denmat(frag_nbast,frag_nbast))
+    frag_denmat = 0.0d0
+    call dunfld(frag_nbast, packed_frag_denmat, frag_denmat)
+    core_nbast = nbast - frag_nbast
+    allocate(full_denmat(nbast,nbast))
+    full_denmat = 0.0d0
+    full_denmat(core_nbast+1:nbast,core_nbast+1:nbast) = frag_denmat
+    deallocate(frag_denmat)
+    allocate(full_fckmat(nbast,nbast, 3))
+    full_fckmat = 0.0d0
+!      SUBROUTINE TWOINT(WORK,LWORK,HESSEE,FMAT,DMAT,NDMAT,IREPDM,IFCTYP,
+!     &                  GMAT,INDXAB,NUMDIS,MAXDIS,ITYPE,MAXDIF,JATOM,
+!     &                  NODV,NOPV,NOCONT,TTIME,
+!     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRINTD,
+!     &                  RETUR,ISHLA,I2TYP,JSTRSH,NPRIMS,NCONTS,
+!     &                  IORBSH,ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,
+!     &                  DINTSKP,RELCAL,GENCNT)
+    ndmat = 1
+    isymdm(1:ndmat) = 0
+    ifctyp(1:ndmat) = 11
+    numdis = 1 ! ?????
+    itype = -5 ! Direct Fock + London
+    i2typ = 0
+    maxdif = 1
+    iatom = 0
+    iprint = 0
+    iprnta = 0
+    iprntb = 0
+    iprntc = 0
+    iprntd = 0
+    nodv = .true.
+    nopv = .true.
+    tktime = .false.
+    retur = .false.
+    noblk = .false.
+    npao = mxshel*mxaovc
+    call memget('INTE',kjstrs,npao*2,work,kfree,lfree)
+    call memget('INTE',knprim,npao*2,work,kfree,lfree)
+    call memget('INTE',kncont,npao*2,work,kfree,lfree)
+    call memget('INTE',kiorbs,npao  ,work,kfree,lfree)
+    call memget('INTE',kjorbs,npao  ,work,kfree,lfree)
+    call memget('INTE',kkorbs,npao  ,work,kfree,lfree)
+    call paovec(work(kjstrs),work(knprim),work(kncont), &
+                work(kiorbs),work(kjorbs),work(kkorbs),0, &
+                .false.,iprint)
+    call memrel('PELIB.PAOVEC',work,kwork,kjorbs,kfree,lfree)
+    call twoint(work(kfree),lfree,dummy,full_fckmat,full_denmat,ndmat,isymdm,ifctyp,&
+                dummy,idummy,numdis,1,itype,maxdif,iatom,&
+                nodv,nopv,.false.,tktime,&
+                iprint,iprnta,iprntb,iprntc,iprntd,&
+                retur,idummy,i2typ,work(kjstrs),work(knprim),work(kncont), & 
+                work(kiorbs),idummy,idummy,dummy,dummy,dummy, &
+                dummy,.false.,.false.)
+    deallocate(full_denmat)
+    allocate(london_electrostatic(3*core_nbast*(core_nbast+1)/2))
+    london_electrostatic = 0.0d0
+    core_nnbast = core_nbast*(core_nbast+1)/2
+    full_fckmat = -full_fckmat 
+    call dgetsp(core_nbast, full_fckmat(1:core_nbast,1:core_nbast, 1), london_electrostatic(0*core_nnbast+1:1*core_nnbast))
+    call dgetsp(core_nbast, full_fckmat(1:core_nbast,1:core_nbast, 2), london_electrostatic(1*core_nnbast+1:2*core_nnbast))
+    call dgetsp(core_nbast, full_fckmat(1:core_nbast,1:core_nbast, 3), london_electrostatic(2*core_nnbast+1:3*core_nnbast))
+    deallocate(full_fckmat)
+    allocate(overlap(nnbast))
+    allocate(xdiplen(nnbast))
+    allocate(ydiplen(nnbast))
+    allocate(zdiplen(nnbast))
+    allocate(QM(nbast, 3, 3))
+    overlap = 0.0d0
+    xdiplen = 0.0d0
+    ydiplen = 0.0d0
+    zdiplen = 0.0d0
+    call rdonel('OVERLAP', .true., overlap, nnbast)
+    if (luprop <= 0) then
+        call gpopen(luprop, 'AOPROPER', 'OLD', ' ', 'UNFORMATTED', 0, .false.)
+        lopen = .true.
+    end if
+    rewind(luprop)
+    call mollb2('XDIPLEN ',lblinf,luprop,lupri)
+    call readt(luprop, nnbasx, xdiplen)
+    call mollb2('YDIPLEN ',lblinf,luprop,lupri)
+    call readt(luprop, nnbasx, ydiplen)
+    call mollb2('ZDIPLEN ',lblinf,luprop,lupri)
+    call readt(luprop, nnbasx, zdiplen)
+    allocate(full_overlap(nbast,nbast))
+    allocate(full_xdiplen(nbast,nbast))
+    allocate(full_ydiplen(nbast,nbast))
+    allocate(full_zdiplen(nbast,nbast))
+    full_overlap = 0.0d0
+    full_xdiplen = 0.0d0
+    full_ydiplen = 0.0d0
+    full_zdiplen = 0.0d0
+    call dsptge(nbast, overlap, full_overlap)
+    call dsptge(nbast, xdiplen, full_xdiplen)
+    call dsptge(nbast, ydiplen, full_ydiplen)
+    call dsptge(nbast, zdiplen, full_zdiplen)
+    deallocate(overlap)
+    deallocate(xdiplen)
+    deallocate(ydiplen)
+    deallocate(zdiplen)
+    QM(:, :, :) = 0.0 
+    ! only works without symmetry, but that's fine
+    ! QM is used to transform the mu'th element on the pelib side
+    !
+    !      [ 0    -Z_M  Y_M ]
+    ! QM = [ Z_M  0    -X_M ] 
+    !      [-Y_M  X_M  0    ]
+    !
+    do i = 1, nbast
+        M = ipcen(i)
+        QM(i,1,2) = -cord(3,M) ! -Z_M
+        QM(i,1,3) =  cord(2,M) ! +Y_M
+        QM(i,2,3) = -cord(1,M) ! -X_M
+        QM(i,2,1) = -QM(i,1,2)
+        QM(i,3,1) = -QM(i,1,3)
+        QM(i,3,2) = -QM(i,2,3)
+    end do
+    
+    max_ncont = maxval(nuco(1:kmax))
+
+    allocate(zetas(nbast, max_ncont))
+    allocate(cont_coeffs(nbast, max_ncont))
+    zetas = 0.0d0
+    cont_coeffs = 0.0d0
+
+    iadr = 1
+    do ishela = 1, kmax
+        jsta = jstrt(ishela)
+        nhkta = nhkt(ishela)
+        numcfa = numcf(ishela)
+        nuca = nuco(ishela)
+        ncomp = 2*(nhkta-1)+1
+        do j = 1, ncomp
+            do i = 1, nuca
+                alpha = priexp(jsta+i)
+                coeff = priccf(jsta+i, numcfa)
+                zetas(iadr, i) = alpha
+                cont_coeffs(iadr, i) = coeff
+            end do
+            iadr = iadr + 1
+        end do
+    end do
+
+    call pde_lao_twoints(london_electrostatic, full_overlap(1:core_nbast,core_nbast+1:nbast), &
+                                      full_xdiplen(1:core_nbast,core_nbast+1:nbast), &
+                                      full_ydiplen(1:core_nbast,core_nbast+1:nbast), &
+                                      full_zdiplen(1:core_nbast,core_nbast+1:nbast), &
+                                      QM, nbast, zetas, cont_coeffs)
+    deallocate(london_electrostatic)
+    deallocate(full_overlap)
+    deallocate(full_xdiplen)
+    deallocate(full_ydiplen)
+    deallocate(full_zdiplen)
+    deallocate(QM)
+    deallocate(zetas)
+    deallocate(cont_coeffs)
+    call memrel('PELIB.TWOINT',work,kwork,kwork,kfree,lfree)
+    call qexit('pelib_ifc_lao_twoints')
+end subroutine pelib_ifc_lao_twoints
+
 integer function pelib_ifc_get_num_core_nuclei()
     use pde_utils, only: pde_get_num_core_nuclei
     integer :: num_nuclei
@@ -1089,12 +1315,12 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
     real*8, dimension(:), allocatable :: fckmo, fckac
     real*8, dimension(:), allocatable :: pegrd, diape
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
-    logical dft_spindns_save
+    logical srdft_spindns_save
 
     call qenter('pelib_ifc_grad')
     if (.not. use_pelib()) call quit('PElib not active')
-    dft_spindns_save = dft_spindns
-    dft_spindns = .false.
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(dcao(n2basx), dvao(n2basx))
     call fckden((nisht > 0), (nasht > 0), dcao, dvao, cmo, dv, wrk, nwrk)
@@ -1154,7 +1380,7 @@ subroutine pelib_ifc_grad(cref, cmo, cindx, dv, grd, energy, wrk, nwrk)
         write(luit2) star8, star8, star8, eodata
     end if
 
-    dft_spindns = dft_spindns_save
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_ifc_grad')
 
 end subroutine pelib_ifc_grad
@@ -1242,12 +1468,12 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     real*8, dimension(:), allocatable :: dtvao, fdtvaos, fxcaos
     real*8, dimension(:), allocatable :: tfxcacs, fyc, fycac
     real*8, dimension(:,:), allocatable :: fxcs, fxcacs
-    logical dft_spindns_save
+    logical srdft_spindns_save
 
     call qenter('pelib_lnc')
     if (.not. use_pelib()) call quit('PElib not active')
-    dft_spindns_save = dft_spindns
-    dft_spindns = .false.
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(fxcs(nnorbx,ncsim))
     allocate(fxcacs(nnashx,ncsim))
@@ -1320,8 +1546,8 @@ subroutine pelib_lnc(ncsim, bcvecs, cref, cmo, cindx, dv, dtv, scvecs, wrk, nwrk
     deallocate(fxcacs, fycac, tfxcacs)
     deallocate(fyc, fxcs)
 
-    dft_spindns = dft_spindns_save
-    pelib_gspol = pelib_gspol_save
+    srdft_spindns = srdft_spindns_save
+    pelib_gspol   = pelib_gspol_save
     call qexit('pelib_lnc')
 
 end subroutine pelib_lnc
@@ -1371,12 +1597,12 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     real*8, dimension(:), allocatable :: dcao, dvao, fdtao, fckao
     real*8, dimension(:,:), allocatable :: ubovecs, fxos
     real*8, dimension(:,:), allocatable :: fxyos, fxyoacs
-    logical dft_spindns_save
+    logical srdft_spindns_save
 
     call qenter('pelib_lno')
     if (.not. use_pelib()) call quit('PElib not active')
-    dft_spindns_save = dft_spindns
-    dft_spindns = .false.
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     allocate(ubovecs(n2orbx,nosim))
     if (nosim > 0) then
@@ -1476,7 +1702,7 @@ subroutine pelib_lno(nosim, bovecs, cref, cmo, cindx, dv, sovecs, nso,&
     end do
     nwoph = mwoph
 
-    dft_spindns = dft_spindns_save
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_lno')
 
 end subroutine pelib_lno
@@ -1551,12 +1777,12 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
     logical :: lexist, lopen, locdeb
     logical :: fndlab
     logical :: tdm, norho2
-    logical dft_spindns_save
-    
+    logical srdft_spindns_save
+
     call qenter('pelib_rsplnc')
     if (.not. use_pelib()) call quit('PElib not active')
-    dft_spindns_save = dft_spindns
-    dft_spindns = .false.
+    srdft_spindns_save = srdft_spindns
+    srdft_spindns = .false.
 
     locdeb = .false.
 
@@ -1699,7 +1925,7 @@ subroutine pelib_rsplnc(ncsim, bcvecs, cref, cmo, cindx, udv, dv,&
         call quit('ERROR in pelib_rsplnc: ncref /= kzconf')
     end if
 
-    dft_spindns = dft_spindns_save
+    srdft_spindns = srdft_spindns_save
     call qexit('pelib_rsplnc')
 
 end subroutine pelib_rsplnc
@@ -2784,8 +3010,8 @@ module pelib_interface
     public :: pelib_ifc_molgrad, pelib_ifc_lf, pelib_ifc_localfield
     public :: pelib_ifc_mep, pelib_ifc_mep_noqm, pelib_ifc_cube
     public :: pelib_ifc_set_mixed, pelib_ifc_mixed
-    public :: pelib_ifc_do_savden, pelib_ifc_do_twoints
-    public :: pelib_ifc_save_density, pelib_ifc_twoints
+    public :: pelib_ifc_do_savden, pelib_ifc_do_twoints, pelib_ifc_do_lao_twoints
+    public :: pelib_ifc_save_density, pelib_ifc_twoints, pelib_ifc_lao_twoints
     public :: pelib_ifc_get_num_core_nuclei
 #if defined(VAR_MPI)
     public :: pelib_ifc_slave
@@ -2831,6 +3057,10 @@ end function pelib_ifc_do_savden
 logical function pelib_ifc_do_twoints()
     pelib_ifc_do_twoints = .false.
 end function pelib_ifc_do_twoints
+
+logical function pelib_ifc_do_lao_twoints()
+    pelib_ifc_do_lao_twoints = .false.
+end function pelib_ifc_do_lao_twoints
 
 subroutine pelib_ifc_activate()
     call qenter('pelib_ifc_activate')
@@ -2962,6 +3192,14 @@ subroutine pelib_ifc_twoints(work, lwork)
     call quit('using dummy PElib interface routines')
     call qexit('pelib_ifc_twoints')
 end subroutine pelib_ifc_twoints
+
+subroutine pelib_ifc_lao_twoints(work, lwork)
+    real*8, dimension(*), intent(in) :: work
+    integer, intent(in) :: lwork
+    call qenter('pelib_ifc_lao_twoints')
+    call quit('using dummy PElib interface routines')
+    call qexit('pelib_ifc_lao_twoints')
+end subroutine pelib_ifc_lao_twoints
 
 integer function pelib_ifc_get_num_core_nuclei()
     call quit('using dummy PElib interface routines')

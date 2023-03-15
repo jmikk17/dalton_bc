@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -56,7 +56,10 @@ C
       use pcm_config, only: pcm_configuration, pcm_cfg
 #endif
       use pelib_interface, only: pelib_ifc_do_twoints,
-     &                           pelib_ifc_twoints
+     &                           pelib_ifc_do_lao_twoints,
+     &                           pelib_ifc_twoints,
+     &                           pelib_ifc_lao_twoints
+
 #include "implicit.h"
 C
       DIMENSION WORK(LWORK)
@@ -87,7 +90,7 @@ C
 #include "pcmdef.h"
 #include "pcm.h"
 #include "pcmlog.h"
-! dftcom.h: DFT_SPINDNS, DFT_LOCALSPIN, HFXFAC
+! dftcom.h: SRDFT_SPINDNS, SRDFT_LOCALSPIN, HFXFAC
 #include "dftcom.h"
 #include "exeinf.h"
 #include "stex.h"
@@ -97,7 +100,8 @@ C
 
 C
       LOGICAL   FLAGSV(NFLAG), OLDWOP, RHFWOP, PCM_save
-      LOGICAL   DFT_SPINDNS_save, DFT_LOCALSPIN_save, USEDRC_save
+      LOGICAL   SRDFT_SPINDNS_save, SRDFT_LOCALSPIN_save
+      LOGICAL   SRDFT_ONTOP_save, USEDRC_save
       LOGICAL   dftadd_s, addsri_s
       DIMENSION NASHSV(8), NISHSV(8), NFROSV(8)
       real(8), allocatable :: tmp_space(:)
@@ -131,8 +135,13 @@ C
 ! ************************************************************************
 ! *** Compute intermolecular part of two-electron Fock matrix and quit ***
 ! ************************************************************************
-      IF (PELIB_IFC_DO_TWOINTS()) THEN
-          CALL PELIB_IFC_TWOINTS(WORK, LWORK)
+      IF (PELIB_IFC_DO_TWOINTS() .or. PELIB_IFC_DO_LAO_TWOINTS()) THEN
+          IF (PELIB_IFC_DO_TWOINTS()) THEN
+              CALL PELIB_IFC_TWOINTS(WORK, LWORK)
+          END IF
+          IF (PELIB_IFC_DO_LAO_TWOINTS()) THEN
+              CALL PELIB_IFC_LAO_TWOINTS(WORK, LWORK)
+          END IF
           ICONV = 1
           GOTO 8000
       END IF
@@ -180,6 +189,9 @@ Cbm initialized PCM_save
          CALL PCMSOLVNT(WORK,LWORK)
       END IF
 C
+      SRDFT_SPINDNS_save   = SRDFT_SPINDNS
+      SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+      SRDFT_ONTOP_save     = SRDFT_ONTOP
 C
 C ***************************************************
 C        *** set SCF parameters for RHF/DFT and MP2 ***
@@ -190,7 +202,7 @@ C
          IF (DOMP2 ) THEN
             FLAG(25) = .TRUE. ! SIRIFC from RHF needed for MP2 if embedding
          END IF
-         IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
+         IF (DOCI .OR. DOMC .OR. DOLUCITA) THEN
 C        ... no continuum models if RHF followed by MP2 and CI or MC
             FLAG(16) = .FALSE.
             PCM = .FALSE.
@@ -254,6 +266,11 @@ C           ... this is one open shell RHF; reset wave function definition
             NACTEL = NASHT
             NASH(1:8) = NROHF(1:8)
          END IF
+         IF (NASHT .EQ. 0) THEN
+            ! HF-srDFT is closed-shell although MC-srDFT might be open-shell.
+            ! MP2 will then also be closed-shell.
+            SRDFT_SPINDNS = .FALSE.
+         END IF
          IF (LSYMSV .NE. LSYM  ) RHFWOP = .FALSE.
          IF (ISPISV .NE. ISPIN ) RHFWOP = .FALSE.
          IF (NACTSV .NE. NACTEL) RHFWOP = .FALSE.
@@ -303,9 +320,9 @@ C
          CALL GETTIM(TSTART,WSTART)
 C
 C        Modifications for open-shell HF-srDFT ...
-C        (do not switch off DIIS if DFT_SPINDNS but NASHT.eq.0, i.e. closed-shell SCF)
+C        (do not switch off DIIS if SRDFT_SPINDNS but NASHT.eq.0, i.e. closed-shell SCF)
 C
-         IF (DOHFSRDFT .and. DFT_SPINDNS .AND. NASHT.GT.0) THEN
+         IF (DOHFSRDFT .and. SRDFT_SPINDNS .AND. NASHT.GT.0) THEN
          IF (MXDIIS .gt. 0) THEN ! DIIS not implemented for HFSRDFT and open shell SCF
             MXDIIS = 0
             NINFO  = NINFO + 1
@@ -469,18 +486,17 @@ C ***************************************************
 C        *** MP2 ***
 C
       IF (DOMP2) THEN
-         IF (DOCINO .OR. DOCI .OR. DOMC .OR. DOLUCITA) THEN
+         IF (DOCI .OR. DOMC .OR. DOLUCITA) THEN
             FLAG(25) = .FALSE. ! do not write to SIRIFC if MP2 followed by MC or CI
          END IF
-         IF (DFT_SPINDNS .OR. DFT_LOCALSPIN) THEN
+         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN .OR. SRDFT_ONTOP) THEN
             NWARN = NWARN + 1
-            WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//
-     &      'implemented in MP2 module and is ignored.'
+            WRITE(LUPRI,'(//A)') 'WARNING - srDFT spin density is '//
+     &      'not implemented in MP2 module and is ignored.'
          END IF
-         DFT_SPINDNS_save = DFT_SPINDNS
-         DFT_SPINDNS = .FALSE.
-         DFT_LOCALSPIN_save = DFT_LOCALSPIN
-         DFT_LOCALSPIN = .FALSE.
+         SRDFT_SPINDNS   = .FALSE.
+         SRDFT_LOCALSPIN = .FALSE.
+         SRDFT_ONTOP     = .FALSE.
          NUMRUN = NUMRUN + 1
          IF (DOSCF .AND. ICONV .LE. 0) THEN
             WRITE (LUPRI,7020)
@@ -511,8 +527,6 @@ C
          CALL FLSHFO(LUSTAT)
          FLAG(14)   = .FALSE.
          FLAGSV(14) = .FALSE.
-         DFT_SPINDNS = DFT_SPINDNS_save
-         DFT_LOCALSPIN = DFT_LOCALSPIN_save
       END IF
 C
 C ***************************************************
@@ -522,8 +536,12 @@ C
 C     ... otherwise error in some MCSCF routines
 C         where HSROHF specifications erroneously will be used
       MCTYPE = MCTYPE_save
+      ! restore some srdft variables - might have been changed for SCF and/or MP2
+      SRDFT_SPINDNS   = SRDFT_SPINDNS_save
+      SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
+      SRDFT_ONTOP     = SRDFT_ONTOP_save
       IF ( (DOSCF .OR. DOMP2) .AND.
-     &     (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) ) THEN
+     &     (DOMC .OR. DOCI .OR. FCVORB) ) THEN
          DOSCF = .FALSE.
          IF (DODFT) THEN
             DODFT = .FALSE.
@@ -555,7 +573,7 @@ C           ... orbital super symmetries may have been reordered
             OLDWOP = .TRUE.
          END IF
          JWOPSY = 1
-         IF  (DOMC .OR. DOCI .OR. DOCINO .OR. FCVORB) THEN
+         IF  (DOMC .OR. DOCI .OR. FCVORB) THEN
             ! do not call SIRSET if next step is LUCITA:
             ! SETCI will return NCONF=0 and cause error exit.
             CALL SIRSET(WORK,LWORK,OLDWOP)
@@ -609,16 +627,16 @@ C
 C ***************************************************
 C        *** CI ***
 C
-      IF (DOCI .OR. DOCINO) THEN
-         IF (DFT_SPINDNS .OR. DFT_LOCALSPIN) THEN
+      IF (DOCI) THEN
+         IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN) THEN
             NWARN = NWARN + 1
             WRITE(LUPRI,'(//A)') 'WARNING - DFT spin density is not '//
      &      'implemented in CI module and is ignored.'
          END IF
-         DFT_SPINDNS_save = DFT_SPINDNS
-         DFT_SPINDNS = .FALSE.
-         DFT_LOCALSPIN_save = DFT_LOCALSPIN
-         DFT_LOCALSPIN = .FALSE.
+         SRDFT_SPINDNS_save = SRDFT_SPINDNS
+         SRDFT_SPINDNS = .FALSE.
+         SRDFT_LOCALSPIN_save = SRDFT_LOCALSPIN
+         SRDFT_LOCALSPIN = .FALSE.
          NUMRUN = NUMRUN + 1
          DOHFSRDFT = .FALSE.
 C        ... no more HFSRDFT
@@ -670,8 +688,8 @@ C              ... orbital super symmetries may have been reordered
      &         'SIRCTL CINO error: inconsistency in sup.sym. averaging')
             END IF
          END IF
-         DFT_SPINDNS = DFT_SPINDNS_save
-         DFT_LOCALSPIN = DFT_LOCALSPIN_save
+         SRDFT_SPINDNS = SRDFT_SPINDNS_save
+         SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_save
       END IF
 C
 C ***************************************************

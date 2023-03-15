@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -203,18 +203,17 @@ C
 #include "inflin.h"
 #include "gdvec.h"
 #include "chrxyz.h"
-      LOGICAL OLDDX
+      LOGICAL OLDDX, found
 
 C
       IF (IPRINT .GT. 5) CALL TITLER('Output from QPGCT1','*',103)
 C
 C     ***** Read orbitals *****
 C
-      REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
-      READ (LUSIFC)
-      READ (LUSIFC)
-      CALL READI(LUSIFC,IRAT*NCMOT,CMO)
+      CALL RD_SIRIFC('CMO', found, CMO)
+      if (.not. found) then
+         call quit('QPG error, CMO not found on SIRIFC')
+      end if
 C
 C     ***** Read one-electron density *****
 C

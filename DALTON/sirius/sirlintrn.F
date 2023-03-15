@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -103,7 +103,7 @@ C   INFDIM : NCONDI,NWOPDI,LACIMX,LBCIMX,?
 C   INFPRI : P6FLAG(*), ?
 C CBGETDIS : DISTYP,IADINT,IADH2,IADH2X
 C   INFTIM : NCALLS,TIMCPU,TIMWAL  ! IDTIM is index for these
-C   DFTCOM : DFT_SPINDNS, ?
+C   DFTCOM : SRDFT_SPINDNS, ?
 C
 #include "maxorb.h"
 #include "mxcent.h"
@@ -174,7 +174,7 @@ C     check INFLIN parameters
 C
 C *** Allocate work area for SIRTR1,ORBSIG,CISIG
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          N_VS = 2 ! DV and DS, FV and FS, etc.
       ELSE
          N_VS = 1 ! no DS, FS, FXS, FTS
@@ -225,7 +225,7 @@ C-- SIRTR1, ORBSIG, CISIG
       IF (DOMCSRDFT) LFTV = LFTV + MCSIM*N2ORBX
 C     ... Extra allocation for "FTC" in MCSCF-SRDFT
 C         Will be constructed in TR1FCY
-      IF (DFT_SPINDNS) LFTV = LFTV + MCSIM*N2ORBX ! for FTS
+      IF (SRDFT_SPINDNS) LFTV = LFTV + MCSIM*N2ORBX ! for FTS
       KH2XAC = KFTV   + LFTV
       KFXQ   = KH2XAC + MOSIM*NNASHX*NNASHX
       KFTQ   = KFXQ   + NOSIM*NASHT*NORBT
@@ -299,7 +299,7 @@ C
          CALL UPKWOP(NWOPT,JWOP,BOVECS(1,IOSIM),WRK(JUBO))
   200 CONTINUE
       DFTADX = DFTADD
-      DFTADD = .FALSE.
+      DFTADD = .FALSE. ! second order Vxc
       CALL SIRTR1(MCSIM,NOSIM,CMO,
      &            BCVECS,CREF,INDXCI,WRK(KDTV),WRK(KFTV),WRK(KFTQ),
      &            WRK(KUBO),DV,PV,FC,FV,
@@ -376,7 +376,7 @@ C                  because CREF is projected out of SCVEC later
                   CALL SOLGC(CREF,WRK(KSRLTRAC),ESRLTR,
      &                       WRK(KSRCVEC),INDXCI,WRK(KSRW),LSRW)
                   CALL DAXPY(NCONF,D1,WRK(KSRCVEC),1,WRK(JSCVEC),1)
-                  IF (DFT_SPINDNS) THEN
+                  IF (SRDFT_SPINDNS) THEN
                   ! "regular" term, for singlet done in CISIGC, but here we need to do it separately
                      KUFSAC = KSRW
                      KUDS   = KUFSAC + N2ASHX
@@ -412,7 +412,7 @@ C                  because CREF is projected out of SCVEC later
          IF (NCONF .GT. 1 .OR. LSYMPT .NE. 1) THEN
 C
 C
-C *** Extract FXCAC from FXC and, if DFT_SPINDNS, FXSAC from FXS
+C *** Extract FXCAC from FXC and, if SRDFT_SPINDNS, FXSAC from FXS
 C
             DO IOSIM = 1,NOSIM
                JFXC   = KFXC   + (IOSIM-1)*N2ORBX
@@ -435,7 +435,7 @@ C
 C           CALL CISIGO(NOSIM,SOVECS,CREF,EMYX,FXCAC,H2XAC,
 C    *                  INDXCI,WRK,LFREE)
 
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                KFXSAC = KFXCAC ! FXCAC memory can be reused now
                DO IOSIM = 1, NOSIM
                   JFXS   = KFXV   + (NOSIM+IOSIM-1)*N2ORBX ! triplet srFXS matrix
@@ -454,7 +454,7 @@ C    *                  INDXCI,WRK,LFREE)
      &                       WRK(KSROVEC),INDXCI,WRK(KSRW),LSRW)
                   CALL DAXPY(NCONF,D1,WRK(KSROVEC),1,WRK(JSOVEC),1)
                END DO ! IOSIM = 1, NOSIM
-            END IF ! DFT_SPINDNS
+            END IF ! SRDFT_SPINDNS
  6011       FORMAT (/' FXSAC matrix (no.',I3,' of',I3,')')
          ELSE
             ! NCONF .eq. 1 and redundant
@@ -469,9 +469,9 @@ C *** end of electronic contribution to LINTRN
 C
   900 CONTINUE
       CALL GETTIM(T4,W4)
-      DFTADX = DFTADD
-      DFTADD = .TRUE.
       IF (DODFT) THEN
+         DFTADX = DFTADD
+         DFTADD = .TRUE. ! first order Vxc
          IF(NASHT.NE.0) CALL QUIT('QC-SCF not implemented for RO-DFT')
          DO IOSIM = 1,NOSIM
            CALL DZERO(WRK(KFXC),N2ORBX)
@@ -494,8 +494,8 @@ C
            END IF
            CALL DAXPY(NWOPT,D4,WRK(KUBO),1,WRK(KSOVEC+(IOSIM-1)*NVAR),1)
          END DO ! IOSIM
+         DFTADD = DFTADX 
       END IF ! DODFT
-      DFTADD = DFTADX 
 C
 C *** Now the solvent contribution, if any
 C
@@ -576,7 +576,7 @@ C   INFVAR : NVAR, JWOP
 C   INFDIM : NWOPDI
 C   INFLIN : IPRLIN
 C   INFPRI : P6FLAG()
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -601,7 +601,7 @@ C
          KUDV   = KUGORB
       END IF
       KUDS   = KUDV   + N2ASHX
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KW1 = KUDS + N2ASHX
       ELSE
          KW1 = KUDS
@@ -642,12 +642,12 @@ C
          call quit('srdft not included in this version')
 #else
          CALL DSPTSI(NASHT,DV,WRK(KUDV))
-         IF (DFT_SPINDNS) CALL DSPTSI(NASHT,DV(1,2),WRK(KUDS))
+         IF (SRDFT_SPINDNS) CALL DSPTSI(NASHT,DV(1,2),WRK(KUDS))
          DO ICSIM = 1,NCSIM
             JSCVEC = (NCONF + 1) + (ICSIM-1)*NVAR
             JFT_SR   = 1 + (NCSIM+ICSIM-1)*N2ORBX           ! singlet srFT  (inactive contribution: 2.0)
             CALL SRDFTSO(2.0D0,WRK(KUDV),FTV(JFT_SR),SCVECS(JSCVEC))
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                JFTS_SR   = 1 + (2*NCSIM+ICSIM-1)*N2ORBX     ! triplet srFTS (inactive contribution: 0.0)
                CALL SRDFTSO(0.0D0,WRK(KUDS),FTV(JFTS_SR),SCVECS(JSCVEC))
             END IF
@@ -711,7 +711,7 @@ C   orbital sigma vectors in SCVECS(NCONF+1:NVAR) and
 C   SOVECS(NCONF+1:NVAR)
 C
 C Scratch:
-C   UDV; dimension: NASHT*NASHT (if DFT_SPINDNS: NASHT*NASHT*2)
+C   UDV; dimension: NASHT*NASHT (if SRDFT_SPINDNS: NASHT*NASHT*2)
 C
 #include "implicit.h"
 !hj added priunit.h for debug
@@ -733,7 +733,7 @@ C   INFVAR : NCONF,NWOPT,NVAR,JWOP(2,*)
 C   INFORB : NORBT,NNASHX,NNORBT,?
 C   INFIND : IROW(*),ISMO(*)
 C   INFDIM : NASHDI
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -756,7 +756,7 @@ C **  Unpack DTV into UDV and DTS into UDV(:,:,2)
 C
          JDTV = 1 + (ICSIM-1)*NNASHX
          CALL DSPTSI(NASHT,DTV(JDTV),UDV)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             JDTS = 1 + (NCSIM+ICSIM-1)*NNASHX
             CALL DSPTSI(NASHT,DTV(JDTS),UDV(1,1,2))
          END IF
@@ -809,7 +809,7 @@ C **        first index active:
                   IFCXL = IIORBL+IROW(NX)+NL
                 END IF
                 TEMP = TEMP + UDV(NXW,NKW,1)*FC(IFCXL,1)
-                IF (DFT_SPINDNS) THEN ! UDTS * FS
+                IF (SRDFT_SPINDNS) THEN ! UDTS * FS
                   TEMP = TEMP + UDV(NXW,NKW,2)*FC(IFCXL,3)
                 END IF
   100         CONTINUE
@@ -830,7 +830,7 @@ C **        second index active:
                    IFCXK = IIORBK+IROW(NX)+NK
                  END IF
                  TEMP = TEMP + UDV(NXW,NLW,1)*FC(IFCXK,1)
-                 IF (DFT_SPINDNS) THEN ! UDTS * FS
+                 IF (SRDFT_SPINDNS) THEN ! UDTS * FS
                    TEMP = TEMP + UDV(NXW,NLW,2)*FC(IFCXK,3)
                  END IF
   200          CONTINUE
@@ -846,10 +846,10 @@ C ***** Step 2: calculate sigma vectors of orbital trial vectors
 C
  1000 IF (NOSIM.LE.0) GO TO 2000
 C
-C **  Unpack DV into UDV (and if DFT_SPINDNS also DS into UDS)
+C **  Unpack DV into UDV (and if SRDFT_SPINDNS also DS into UDS)
 C
       CALL DSPTSI(NASHT,DV,UDV)
-      IF (DFT_SPINDNS) CALL DSPTSI(NASHT,DV(1,2),UDV(1,1,2))
+      IF (SRDFT_SPINDNS) CALL DSPTSI(NASHT,DV(1,2),UDV(1,1,2))
 C
       IF (NCSIM.GE.0) THEN
          ISO = NCONF
@@ -904,7 +904,7 @@ C **        first index active:
                 NXW = IASHK + NX
                 IX  = IORBK + NISHK + NX
                 TEMP = TEMP + UDV(NXW,NKW,1)*FXC(IX,L,IOSIM) ! DV * FXC
-                IF (DFT_SPINDNS) THEN ! DS * FXS
+                IF (SRDFT_SPINDNS) THEN ! DS * FXS
                    TEMP = TEMP
      &                  + UDV(NXW,NKW,2)*FXV(IX,L,NOSIM+IOSIM)
                 END IF
@@ -921,7 +921,7 @@ C **        second index active:
                  NXW = IASHL + NX
                  IX  = IORBL + NISHL + NX
                  TEMP = TEMP + UDV(NXW,NLW,1)*FXC(IX,K,IOSIM) ! DV * FXC
-                 IF (DFT_SPINDNS) THEN ! DS * FXS
+                 IF (SRDFT_SPINDNS) THEN ! DS * FXS
                     TEMP = TEMP
      &                   + UDV(NXW,NLW,2)*FXV(IX,K,NOSIM+IOSIM)
                  END IF

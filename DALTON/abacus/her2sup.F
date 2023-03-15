@@ -1,7 +1,7 @@
 #define HER2SUP_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -79,19 +79,19 @@ C
 
       IF (IPRINT .GT. 1) THEN
          CALL TITLER('Output from FORMSUP','*',125)
-         WRITE (LUPRI,'(A,2(/A,1P,D10.2)/A,L10)')
+         WRITE (LUPRI,'(A,2(/A,1P,D10.2)/A,L10/)')
      &   '    Precalculated AO two-electron integrals'
      &   //' are transformed to P-supermatrix elements.',
      &   '    Factor on exchange                            :',HFXFAC,
      &   '    Threshold for discarding integrals            :',THRESH,
      &   '    Include integrals for general density matrices:',NOSYM
       ELSE IF (HFXFAC .NE. 0.0D0) THEN
-         WRITE (LUPRI,'(A/A,1P,D10.2,A)')
+         WRITE (LUPRI,'(A/A,1P,D10.2,A/)')
      &   '     (Precalculated AO two-electron integrals'
      &   //' are transformed to P-supermatrix elements.',
      &   '      Threshold for discarding integrals :',THRESH,' )'
-      ELSE
-         WRITE (LUPRI,'(A/A,1P,D10.2,A)')
+      ELSE ! Coulomb integrals
+         WRITE (LUPRI,'(A/A,1P,D10.2,A/)')
      &   '     (Precalculated AO two-electron integrals'
      &   //' are resorted to new file.',
      &   '      Threshold for discarding integrals :',THRESH,' )'

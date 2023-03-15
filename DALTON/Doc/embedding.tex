@@ -589,6 +589,25 @@ GROUP "/" {
 }
 \end{verbatim}
 
+\subsubsection{London orbitals with PDE}
+The PDE model supports the calculation of NMR shieldings using London orbitals.
+Additional magnetic gradient terms need to be evaulated when constructing the embedding potential.
+The keyword \verb|.TWOLAO| should be activated under the \verb|*PELIB| section (see input listing below),
+which will request the generation of the \verb|london electrostatic matrix| and \verb|london exchange-repulsion matrix| in the \verb|hdf5| file.
+
+\begin{verbatim}
+**DALTON
+.RUN WAVEFUN
+.DIRECT
+*PELIB
+.TWOINT
+save_density.h5
+**WAVE FUNCTIONS
+.HF
+**END OF
+\end{verbatim}
+
+
 \subsection{Fast Multipole Method}\label{subsec:FMM}
 The computational scaling of the PE model is quadratic with the number of polarizable sites.
 For large systems, this can become the bottleneck of PE calculations.

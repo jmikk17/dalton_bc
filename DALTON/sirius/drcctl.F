@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -15,26 +15,25 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-C
-C FILE: sirius/drcctl.F
-C
-#ifdef old_log
-===========================================================================
-900108-hjaaj
-  LBINTD = optimal buffer length .le. 1024 (instead of N2ORBT)
-  new LUINTD label DRCINFO, after which LBINTD,LVLDRC may be read
-891227-hjaaj
-  DRCCTL : new parameter LVLDRC,
-           = 0 then active-active distrib.
-           = 1 all occupied-occupied distributions
-           else all distributions
-891127-hjaaj
-  DRCCTL : NCDDIS = MIN(NCDDIS,NNORBX)
-  %s/IS(/ISMO(/
-  Use IPRTRA instead of IPRI6
-  Print number of passes over LUINTM (= NLOAD)
-===========================================================================
-#endif
+!
+! FILE: sirius/drcctl.F
+!
+! Main author: Hans Joergen Aa. Jensen
+!
+! Purpose: Sort selected set of 2-el integrals in Mulliken format on MOTWOINT
+!          to Dirac format on MODRCINT file.
+!          Which integrals from MOTWOINT to include is determined by LVLDRC.
+!
+!===========================================================================
+!900108,940517-hjaaj
+!  LBINTD = optimal buffer length .le. LBMXSQ (instead of N2ORBT)
+!  new LUINTD label DRCINFO, after which LBINTD,LVLDRC may be read
+!891227-hjaaj
+!  DRCCTL : new input parameter LVLDRC,
+!           = 0 then only active-active distributions
+!           = 1 then all occupied-occupied distributions
+!           else all distributions
+!===========================================================================
 C  /* Deck drcctl */
       SUBROUTINE DRCCTL(LVLDRC,CMO,WRK,LWRK)
 C
@@ -106,7 +105,7 @@ C     LNDACD = how much work space needed in DRCACD (for NXTH2M)
          CALL QTRACE(LUERR)
          CALL QUIT('DRCCTL: NOT ENOUGH MEMORY FOR ONE DISTRIBUTION')
       END IF
-      NCDDIS = MIN(NCDDIS,NNORBX)
+      NCDDIS = MIN(NCDDIS,NNORBX) ! NNORBX is max number of CD distributions needed
 C
       KH2ACD = KWRK1
       KWRK1  = KH2ACD + NCDDIS*N2ORBX

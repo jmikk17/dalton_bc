@@ -1,7 +1,7 @@
 #define SIROPT_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -222,7 +222,7 @@ C.. 1.1.1 .. (GETCIX, TRACTL, READMO)
       KWRK10 = KCMO   + NCMOT
       LWRK10 = LFREE  + 1 - KWRK10
 C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2
       ELSE
          NDV = 1
@@ -234,7 +234,7 @@ C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
       KFV    = KFC    + NNORBT
 !HJJ - FRAN KFS added for the SR_DFT Spin Dens. contribution
       KFS    = KFV    + NNORBT
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KSRHYB = KFS + NNORBT
       ELSE
          KSRHYB = KFS
@@ -246,7 +246,7 @@ C.. 1.2 .. (GRAD, SIRORB and SIRNEO)
          KFQ = KSRHYB
       END IF
       KFCAC  = KFQ    + NASHT*NORBT
-      KCREF  = KFCAC  + NDV*NNASHX ! FCAC, FSAC for DFT_SPINDNS
+      KCREF  = KFCAC  + NDV*NNASHX ! FCAC, FSAC for SRDFT_SPINDNS
       KH2AC  = KCREF  + NCONF
       KWRK12 = KH2AC  + NNASHX*NNASHX
 C.. 1.2.1 .. (GRAD,SOLGRD,WR_SIRIFC)
@@ -762,7 +762,9 @@ C                    need higher int. transf. level for NEO/NR
      &                                  WRK(KWRKG), LWRKG)
                   END IF
 #endif
-               ELSE
+               ELSE IF (ISTATE .EQ. 1) THEN
+               ! we cannot go back to NEO if excited state - info about
+               ! the lower lying roots has been lost
                   WRITE (LUPRI,'(/A,F10.5)')
      &            ' Local NR disabled because 0.02 .lt. abs(ratio-1) =',
      &            RATCHK
@@ -978,7 +980,7 @@ C     If (not noupdate or not neo_always or not nr_always) then
          I = ISTATE + 1 - IINFO(13)
          SHFLVL = DINFO(20+I)
          IF (IPRSTAT .GT. 5) WRITE (LUSTAT,'(/A,F20.10)')
-     *      ' Level shift used for UPDATE/SIRNR test:',SHFLVL
+     &      ' Level shift used for UPDATE/SIRNR test:',SHFLVL
          LOCAL = LOCAL .AND. (ABS(SHFLVL) .LT. SHFLCL)
          LOCAL = LOCAL .AND. ITBCK .EQ. 0
          IF ( LOCAL ) THEN
@@ -989,9 +991,13 @@ C     If (not noupdate or not neo_always or not nr_always) then
                ITRLVL = 0
             ELSE IF (.NOT. FLAG(38) .AND. ISTATE .GT. 1) THEN
 C              ... no reason to switch to NR for ground state
-               WRITE (LUPRI,'(/A)') ' Local region, DONR activated'
+               IF (.NOT.DONR)
+     &            WRITE (LUPRI,'(/A)') ' Local region, DONR activated'
                DONR     = .TRUE.
                FLAG(39) = .TRUE.
+               IF (ISTATE .GT. 1) NRALW = .TRUE.
+               ! cannot go back to NEO if excited state,
+               ! because info about lower lying roots have been lost
             END IF
          END IF
       END IF
@@ -1275,7 +1281,7 @@ C
       !> store 1-particle density matrix in AO-basis on file
 !#define AO_DENSITIES_ON_FILE
 #ifdef AO_DENSITIES_ON_FILE
-      call rdcref(wrk(kcref))
+      call rdcref(wrk(kcref),.true.)
       call makdv(wrk(kcref),wrk(kdv),wrk(kcindx),wrk(kwrkg),lwrkg)
       call write_aodens(wrk(kdv),nisht,nasht,nbast,nnashx,
      &                  ncmot,nsym,nbas,ibas,lupri,.false.,"MC")
@@ -1614,7 +1620,7 @@ C
 C *** Local variables:
 C
       LOGICAL     HFCALC,    RSTFLG(4), TRCNO,     LSAV15
-      LOGICAL     DFT_SPINDNS_SAVE, DFT_LOCALSPIN_SAVE
+      LOGICAL     SRDFT_SPINDNS_SAVE, SRDFT_LOCALSPIN_SAVE
       CHARACTER*8 TABLE(8),  LBLINF(2), LBLDAT(2), STAR8
       CHARACTER*6 CNOLBL
 C
@@ -1833,14 +1839,14 @@ C
          IF (DOMCSRDFT) THEN
             ADDSRI    = .FALSE.
             DOCISRDFT = .TRUE.
-            IF (DFT_SPINDNS .OR. DFT_LOCALSPIN)THEN
+            IF (SRDFT_SPINDNS .OR. SRDFT_LOCALSPIN)THEN
                WRITE(LUPRI,'(/A)')
      &           'INFO : spin density ignored in initial CI iterations.'
             END IF
-            DFT_SPINDNS_SAVE = DFT_SPINDNS
-            DFT_SPINDNS = .FALSE.
-            DFT_LOCALSPIN_SAVE = DFT_LOCALSPIN
-            DFT_LOCALSPIN = .FALSE.
+            SRDFT_SPINDNS_SAVE = SRDFT_SPINDNS
+            SRDFT_SPINDNS = .FALSE.
+            SRDFT_LOCALSPIN_SAVE = SRDFT_LOCALSPIN
+            SRDFT_LOCALSPIN = .FALSE.
          END IF
          CALL CICTL(1,LROOTS,MAXCIT,THRCIX,WRK(KCMO),INDXCI,
      *              WRK(KECI),ICONV,WRK(KICROO),WRK(KW22),LW22)
@@ -1849,8 +1855,8 @@ C    *              ECI,ICONV,ICROOT,WRK,LFREE)
          IF (DOMCSRDFT) THEN
             ADDSRI    = .TRUE.
             DOCISRDFT = .FALSE.
-            DFT_SPINDNS   = DFT_SPINDNS_SAVE
-            DFT_LOCALSPIN = DFT_LOCALSPIN_SAVE
+            SRDFT_SPINDNS   = SRDFT_SPINDNS_SAVE
+            SRDFT_LOCALSPIN = SRDFT_LOCALSPIN_SAVE
          END IF
          FLAG(15) = LSAV15
          ISTACI   = ISTASV
@@ -1882,11 +1888,16 @@ C
             IF ( .NOT.FNDLAB(TABLE(2),LUIT1) ) GO TO 490     ! label 'OLDORB  ' for backstep after restart
             IF ( LBLINF(2).EQ.'NRSAVE  ') FLAG(39) = .TRUE.  ! if user has specified .RESTART, then respect shift to NR
          END IF
+         ! the record may have LBLINF(2) = 'CNOSAVE ', so we test also on
+         ! JSTA to see if saved information is for NR and not for NEO
+         READ (LBLINF(1),'(2I4)',ERR=405) LROIT1,JSTA
+         IF (LROIT1 .EQ. 1 .AND. JSTA .LT. 0) FLAG(39) = .TRUE.
          IF (FLAG(39)) GO TO 495
+
 C        ... if (ONLYNR) one vector is all that is needed,
 C            so no reason to do more checking.
 C        We now check if sufficient vectors available using label information.
-         READ (LBLINF(1),'(2I4)',ERR=405) LROIT1,JSTA
+
          IF (LROIT1 .LT. LROOTS) GO TO 493
          GO TO 495
 C        error reading LBLINF(1) -- use the old check
@@ -1968,7 +1979,7 @@ C        this is a new restart file (6-Aug-1986)
      *         WRITE (LUPRI,'(/A/)')
      *          ' *** absorption switched off in a previous iteration.'
          END IF
-         IF (.NOT.FLAG(38) .AND. .NOT. FLAG(39)) THEN
+         IF (.NOT.FLAG(38) .AND. .NOT.FLAG(39)) THEN
 C           if (not always neo and not always nr) then
             FLAG(39) = RSTFLG(4)
             IF (FLAG(39)) WRITE (LUPRI,'(/A/)')
@@ -1979,15 +1990,16 @@ C           if (not always neo and not always nr) then
 C        ... no TRCNO when restart, presumably done in prev. iteration
       ELSE IF (ICSTRT.EQ.6) THEN
 C        "GEOSAVE" restart
-         IF (ISTATE .GT. 1) THEN
-            IF (FLAG(39)) THEN
-               WRITE (LUPRI,6008) ISTATE
-            ELSE
-               WRITE (LUPRI,6010)
-               CALL QTRACE(LUPRI)
-               CALL QUIT('(OPTST) NEO and ISTATE .gt. 1 for GEO WALK')
-            END IF
-         END IF
+!hjaaj may2022: NEO also works for excited states
+!        IF (ISTATE .GT. 1) THEN
+!           IF (FLAG(39)) THEN
+!              WRITE (LUPRI,6008) ISTATE
+!           ELSE
+!              WRITE (LUPRI,6010)
+!              CALL QTRACE(LUPRI)
+!              CALL QUIT('(OPTST) NEO and ISTATE .gt. 1 for GEO WALK')
+!           END IF
+!        END IF
          IF ( FNDLAB(TABLE(7),LUIT1) ) THEN
             READ  (LUIT1)      EMCOLD,DEPRED,REJWMI,REJWMA
             WRITE (LUPRI,6000)EMCOLD,DEPRED,EMCOLD+DEPRED,REJWMI,REJWMA
@@ -2655,7 +2667,7 @@ C
 #include "dummy.h"
 C
 C Used from common blocks:
-C   INFINP : ABAIPH,ISTATE,ISPIN,NACTEL,FLAG(*),INERSI
+C   INFINP : ISTATE,ISPIN,NACTEL,FLAG(*),INERSI
 C   SPINFO : MS2
 C   INFOPT : EMY, EACTIV, EMCSCF, ESOLT
 C   INFVAR : NCONF,NWOPT
@@ -2667,7 +2679,7 @@ C   INFPRI : ?
 C CBGETDIS : IADH2
 C   CBIREA : LMULBS
 C   R12INT : R12CAL
-C dftcom.h : DFT_SPINDNS
+C dftcom.h : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -2725,7 +2737,7 @@ C
 C
 C     Calculate Fock matrix
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2 ! DV in DV(:,1) and DS in DV(:,2)
       ELSE
          NDV = 1 ! only DV
@@ -2806,7 +2818,7 @@ C        active-general
      &                 WRK(JFCI),NORBI,0.D0,
      &                 WRK(IFOCKJ),NORBI)
 
-            IF (DFT_SPINDNS) THEN ! add FS contribution
+            IF (SRDFT_SPINDNS) THEN ! add FS contribution
                JUDV = JUDV + N2ASHX ! address for DS
                CALL DSPTSI(NORBI,FV(1+IIORB(ISYM),2),WRK(KFCI))
                CALL DGEMM('N','N',NASHI,NORBI,NASHI,1.D0,
@@ -2843,28 +2855,6 @@ C
          WRITE (LUPRI,'(/,(1X,5F15.8))') (WRK(KFCDIA-1+I),I=1,NORBT)
       END IF
 
-! save information for EKT
-#ifdef standalone_WRITE_dalton_ekt.dat
-      luekt = 69
-      open (luekt, file='dalton_ekt.dat', form='unformatted',
-     &   status='unknown')
-
-         write (lupri,'(//)')
-         write (lupri,*) 'Test output from writing to dalton_ekt.dat'
-         write (lupri,*) 'nsym  ',nsym
-         write (lupri,*) 'nish  ',nish
-         write (lupri,*) 'nash  ',nash
-         write (lupri,*) 'norb  ',norb
-         write (lupri,*) 'nnashx',nnashx
-         write (lupri,*) 'n2orbt',n2orbt
-         flush (lupri)
-         write (luekt) nsym, nish, nash, norb, nnashx, n2orbt
-         write (luekt) dv(1:nnashx)
-         write (luekt) wrk(kfock:kfock-1+N2ORBT) ! all symmetries packed
-      rewind luekt
-      close (luekt, STATUS='KEEP')
-#endif
-
 !     Perform EKT analysis
 
       kfree = 1
@@ -2893,7 +2883,7 @@ C
       ELSE
          MCTYPE_IFC = MCTYPE
       END IF
-      IF (DFT_SPINDNS) MCTYPE_IFC = MCTYPE_IFC + 1000
+      IF (SRDFT_SPINDNS) MCTYPE_IFC = MCTYPE_IFC + 1000
       WRITE (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,NWOPH,
      &               NCDETS, NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT,
      &               NSYM,MULD2H, NRHF,NFRO,
@@ -2903,7 +2893,7 @@ C
 C
 C 880920-hjaaj: later write label here for orbitals
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2  ! DV, DS; singlet and triplet active density matrices
       ELSE
          NDV = 1
@@ -3406,7 +3396,7 @@ C
 #include "infinp.h"
 #include "pgroup.h"
 
-! debug DFT_SPINDNS
+! debug SRDFT_SPINDNS
 #include "dftcom.h"
 
       REAL*8, DIMENSION(N2ORBT), INTENT(IN)  :: V  ! symmetry packed
@@ -3480,7 +3470,7 @@ C
          write(lupri,'(/A)')
      &      'Metric = Active density matrix DV input sirekt'
          call outpak(S,nasht,-1,lupri)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             WRITE(lupri,"(/A)") 'spin-density DS input sirekt :'
             call outpak(S(NNASHX+1),NASHT,-1,LUPRI)
          END IF
