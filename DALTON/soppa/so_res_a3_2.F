@@ -44,16 +44,16 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_2')
 
-      I_ACT_TERM = 0
+      I_ACT_TERM = 17
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 9)) then
-C     Term: -1/2 sum_c (a i | j c ) rho_bc  (line 3 first term)
+C     Term: - sum_c (a i | j c ) rho_bc  (line 3 first term)
 C     Implemented as (a i | c j)
 C
       ISYMJ = ISDEL
 C
-      LCDB  = NRHF(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NRHF(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 
 C-----------------------------------------------------------------------
 C                                  
@@ -143,7 +143,7 @@ C
 C
 C              ( alpha, beta |..) * C(beta, i)   => ( alpha, i | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
-     &                    NBAS(ISBETA),-HALF,
+     &                    NBAS(ISBETA),-ONE,
      &                    WORK(KOFF2),NTOTAL,
      &                    CMO(KOFF3),NTOTBE,
      &                    ZERO,WORK(KSCR2),NTOTAL)
@@ -166,7 +166,7 @@ C
                         DO IA = 1,NVIR(ISYMA)
                               RES1(KOFF5+COUNT+IA) =RES1(KOFF5+COUNT+IA)
      &                        + WORK(KSCR3 - 1 + COUNT + IA) *
-     &                        VBTRIAL(KOFF6 + B)
+     &                        VBTRIAL(KOFF6 + IB)
                         END DO
                         COUNT = COUNT + NVIR(ISYMA)
                   END DO
@@ -185,8 +185,8 @@ C     Implemented as (j i | a c)
 C     Calculated by setting c = delta 
       ISYMC = ISDEL
 C      
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
 C-----------------------------------------------------------------------
 C                                  
@@ -251,7 +251,7 @@ C
                         ISYMB  = ISALFA
 
                         LSCR2  = NRHF(ISYMI)*NBAS(ISBETA)
-                        LSCR3  = NRHF(ISYMI)
+                        LSCR3  = NVIR(ISYMB)*NRHF(ISYMI)
 C
                         KSCR2  = KEND3
                         KSCR3  = KSCR2 + LSCR2
@@ -310,15 +310,14 @@ C
 
       END IF
 
-
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 11)) then
 C     Term: - sum_c (b j | i c ) rho_ac  (line 3 third term)
 C     Implemented as (b j | i c)
 C     Calculated by setting c = delta 
       ISYMC = ISDEL
 C      
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
 C-----------------------------------------------------------------------
 C                                  
@@ -368,7 +367,7 @@ C
             DO 111 I = 1,NRHF(ISYMI)
 C
                   KOFF1 = IDSRHF(ISALBE,ISYMI) + NNBST(ISALBE) 
-     &                  * (I - 1) + KDSRHF
+     &                  * (I - 1) + 1
 
                   CALL CCSD_SYMSQ(WORK(KOFF1),ISALBE,WORK(KSCR1))
 C
@@ -448,8 +447,8 @@ C     Implemented as (i l | a b)
 C     Calculated by setting b = delta 
       ISYMB = ISDEL
 C      
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
 C-----------------------------------------------------------------------
 C                                  
@@ -579,8 +578,8 @@ C     Implemented as (a l | j b)
 C     Calculated by setting b = delta 
       ISYMB = ISDEL
 C     
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
 C-----------------------------------------------------------------------
 C                                  
@@ -645,36 +644,36 @@ C
                         ISYMA  = MULD2H(ISYMTR,ISYMI)
                         ISALFA = ISYMA
 
-                        LSCR2  = NRHF(ISYMJ)*NBAS(ISBETA)
-                        LSCR3  = NRHF(ISYMI)*NRHF(ISYMJ)
+                        LSCR2  = NRHF(ISYMI)*NBAS(ISBETA)
+                        LSCR3  = NVIR(ISYMA)*NRHF(ISYMI)
 C
                         KSCR2  = KEND3
                         KSCR3  = KSCR2 + LSCR2
                         KEND4  = KSCR3 + LSCR3
-                        LWORK3 = LWORK - KEND4
+                        LWORK4 = LWORK - KEND4
 C
-                        CALL SO_MEMMAX ('SO_RES_A3_2.152',LWORK3)
-                        IF (LWORK3 .LT. 0)
+                        CALL SO_MEMMAX ('SO_RES_A3_2.152',LWORK4)
+                        IF (LWORK4 .LT. 0)
      &                    CALL STOPIT('SO_RES_A3_2.152',' ',KEND4,LWORK)
 C
                         NTOTAL = MAX(NBAS(ISALFA),1)
                         NTOTBE = MAX(NBAS(ISBETA),1)
-                        NTOTA  = MAX(NRHF(ISYMA),1)
+                        NTOTA  = MAX(NVIR(ISYMA),1)
                         NTOTI  = MAX(NRHF(ISYMI),1)
 C
                         KOFF2  = ILMRHF(ISYMI) + 1
                         KOFF3  = KSCR1 + IAODIS(ISALFA,ISBETA)
-                        KOFF4  = ILMRHF(ISYMA) + 1
+                        KOFF4  = ILMVIR(ISYMA) + 1
 C                                                           
 C               ( alpha, beta |..) * rho(beta, i)  => ( alpha, i | ..)
-                        CALL DGEMM('N','T',NBAS(ISALFA),NRHF(ISYMI),
+                        CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
      &                    NBAS(ISBETA),ONE,
      &                    WORK(KOFF3),NTOTAL,
-     &                    BDENSIJ(KOFF2),NTOTI,
+     &                    BDENSIJT(KOFF2),NTOTBE,
      &                    ZERO,WORK(KSCR2),NTOTAL)
 C                                                      
 C               C(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
-                        CALL DGEMM('T','N',NRHF(ISYMA),NRHF(ISYMI),
+                        CALL DGEMM('T','N',NVIR(ISYMA),NRHF(ISYMI),
      &                    NBAS(ISALFA),ONE,
      &                    CMO(KOFF4),NTOTAL,
      &                    WORK(KSCR2),NTOTAL,
@@ -684,10 +683,10 @@ C
 C              (a i | j delta) * b_{delta j} => U(a,i)
 C
                         KOFF5  = IT1AM(ISYMA,ISYMI)
-                        KOFF6  = IT1AO(ISYMA,ISYMI) + 1
+                        KOFF6  = IT1AO(ISDEL,ISYMJ)
 C
-                        DO IA = 1, NVIR(ISYMA)
-                          DO I = 1, NRHF(ISYMI)
+                        DO I = 1, NRHF(ISYMI)
+                          DO IA = 1, NVIR(ISYMA)
                               RES1(KOFF5+(I-1)*NVIR(ISYMA) + IA) = 
      &                        RES1(KOFF5+(I-1)*NVIR(ISYMA) + IA) + 
      &                        WORK(KSCR3 + (I-1)*NVIR(ISYMA) + IA)
@@ -709,8 +708,8 @@ C     Implemented as (j l | a b)
 C     Calculated by setting b = delta
       ISYMB = ISDEL
 C      
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
 C-----------------------------------------------------------------------
 C                                  

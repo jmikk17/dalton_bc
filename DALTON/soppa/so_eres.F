@@ -274,9 +274,9 @@ C
 C KFSchaltz begin 
       LBDENSIJ = ILMVIR(1)
       LBDENSIJT= ILMVIR(1)
-      LBDENSAB = ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1)
-      LBDENSABT= ILMVIR(8) + NVIR(8)*NBAS(8) - ILMVIR(1) 
-      LB2DENSAB= IAODIS(8,8) + NBAS(8)*NBAS(8)
+      LBDENSAB = ILMVIR(NSYM) + NVIR(NSYM)*NBAS(NSYM) - ILMVIR(1)
+      LBDENSABT= ILMVIR(NSYM) + NVIR(NSYM)*NBAS(NSYM) - ILMVIR(1) 
+      LB2DENSAB= IAODIS(NSYM,NSYM) + NBAS(NSYM)*NBAS(NSYM)
       LB2DENSIJ= LB2DENSAB   
       KBDENSIJ = KEND1
       KBDENSIJT= KBDENSIJ + LBDENSIJ
@@ -351,7 +351,7 @@ C
      &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
      &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
      &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
-     &                 LB2DENSAB,WORK(KCMO), LCMO)
+     &                 LB2DENSAB,WORK(KCMO),LCMO)
 
 C KFSchaltz end
 C
@@ -1467,6 +1467,11 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
      &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
      &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
 
             IF (DO_DEX) THEN
 C
@@ -1490,6 +1495,11 @@ C           Same for the D-part
      &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
      &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6) 
+               CALL SO_RES_A3_3(WORK(KRES1E),LRES1E,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
 
             END IF
             DTIME      = SECOND()   - DTIME
@@ -1501,7 +1511,7 @@ C     Remember this is only in the D part
 C               CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
 C     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
 C     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
-C    &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+C     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
 C               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
 C     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
 C     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
@@ -1532,13 +1542,6 @@ C     &                  WORK(KSCR1 + n - 1),n,' Integrals'
 C                  END DO
 C            END IF
 C
-C KFSchaltz begin
-C         WRITE(LUPRI, '(A)') 'Before so_check'
-C         CALL SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-C     &                    DENSAI,LDENSAI,T2AM,LT2AM,T2SAM,LT2SAM,
-C     &                    FOCKD,LFOCKD,ISYM,WORK(1),LWORK)
-C         WRITE(LUPRI, '(A)') 'After so_check'
-C KFSchaltz end
 C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
 C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA), ' Rows A1'
 C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B1'

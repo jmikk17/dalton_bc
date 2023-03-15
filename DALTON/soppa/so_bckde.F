@@ -62,8 +62,8 @@ C     Transform 2nd virtual index
 C     rho_a delta to rho_gamma delta
             CALL DGEMM('N','N',NBAS(ISYMA),NBAS(ISYMA),
      &         NVIR(ISYMA),ONE,CMO(KOFF2),NTOTAL,
-     &         BDENSAB(KOFF3),NTOTA,ZERO,B2DENSAB(KOFF4),NTOTAL)
-
+     &         BDENSAB(KOFF3),NTOTA,ZERO,B2DENSAB(KOFF4),NTOTAL)  
+     
       END DO
 C      
 C     Transform occupied index
@@ -83,12 +83,28 @@ C
 C     Calculate transpose of BDENSIJ aswell  -  rho_delta j
             CALL DGEMM('N','N',NBAS(ISYMJ),NRHF(ISYMJ),
      &           NRHF(ISYMJ),ONE,CMO(KOFF2),NTOTAL,
-     &           DENSIJ(KOFF1),NTOTJ,ZERO,BDENSIJ(KOFF2),NTOTAL)
+     &           DENSIJ(KOFF1),NTOTJ,ZERO,BDENSIJT(KOFF2),NTOTAL)
 C     Transform 2nd occupied index 
 C     rho_i delta to rho_gamma delta
-            CALL DGEMM('N','N',NBAS(ISYMA),NBAS(ISYMA),
+            CALL DGEMM('N','N',NBAS(ISYMJ),NBAS(ISYMJ),
      &         NRHF(ISYMJ),ONE,CMO(KOFF2),NTOTAL,
      &         BDENSIJ(KOFF2),NTOTJ,ZERO,B2DENSIJ(KOFF3),NTOTAL)
+
+C           CALL AROUND('DENSIJ Matrix')
+C           CALL OUTPUT(DENSIJ,1,NRHF(ISYMJ),1,
+C     &            NRHF(ISYMJ),NRHF(ISYMJ),NRHF(ISYMJ),1,LUPRI)
+C           CALL AROUND('CMO Matrix')
+C           CALL OUTPUT(CMO,1,NBAS(ISYMJ),1,
+C     &            NRHF(ISYMJ),NBAS(ISYMJ),NRHF(ISYMJ),1,LUPRI)
+C           CALL AROUND('BDENSIJ Matrix')
+C           CALL OUTPUT(BDENSIJ,1,NRHF(ISYMJ),1,
+C     &            NBAS(ISYMJ),NRHF(ISYMJ),NBAS(ISYMJ),1,LUPRI)
+C           CALL AROUND('BDENSIJT Matrix')
+C           CALL OUTPUT(BDENSIJT,1,NBAS(ISYMJ),1,
+C     &            NRHF(ISYMJ),NBAS(ISYMJ),NRHF(ISYMJ),1,LUPRI)
+C           CALL AROUND('B2DENSIJ Matrix')
+C           CALL OUTPUT(B2DENSIJ,1,NBAS(ISYMJ),1,
+C     &            NBAS(ISYMJ),NBAS(ISYMJ),NBAS(ISYMJ),1,LUPRI)
       END DO
 C
 C-----------------------

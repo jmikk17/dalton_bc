@@ -4049,7 +4049,9 @@ C        For R12-index pairs (C. Neiss):
          ICOU24 = 0
          ICOU25 = 0
          ICOU26 = 0
+C        For IDSVIR and IDSBAS (K.F. Schaltz) 
          ICOU27 = 0
+         ICOU28 = 0
          DO 620 ISYMJ = 1,NSYM
 C
             ISYMI  = MULD2H(ISYMJ,ISYMK)

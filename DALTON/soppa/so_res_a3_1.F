@@ -44,11 +44,11 @@ C
 C     Term: - 1/2 del_ij sum_cd (a c | d b ) rho_cd (line 1 fourth term)
 C     Implemented as (c a | b d)
 C     Calculated by setting d = delta and and transforming the integrals
-C     with the trial vector (before this routine is called) 
+C     with the trial vector (before this routine is called)
       ISYMD = ISDEL
-C      
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
       DO 040 ISYMI = 1,NSYM
 C
@@ -80,7 +80,7 @@ C
 C   
 C-----------------------------------------------------------------
 C                               ~
-C              Generate ( a k | i delta ) for
+C              Generate ( c a | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
@@ -121,15 +121,14 @@ C              ( c, beta | .. ) * C(beta, a) => ( c, a | ..)
      &                    WORK(KSCR2),NTOTBE,
      &                    CMO(KOFF4),NTOTBE,
      &                    ZERO,WORK(KSCR3),NTOTC)
-C
 C                     ~
 C              (c,a | i,delta) * rho_{c delta} => U(a,i)
 C
                KOFF5  = IT1AM(ISYMA,ISYMI) + (I-1)*NVIR(ISYMA)
-               KOFF6  = ILMVIR(ISYMC)
+               KOFF6  = ILMVIR(ISYMC) - ILMVIR(1)
 C
                DO IA = 1, NVIR(ISYMA)
-                  DO IC = 1,NVIR(ISYMC)
+                  DO IC = 1, NVIR(ISYMC)
                     RES1(KOFF5+IA) = RES1(KOFF5+IA) +
      &              WORK(KSCR3 - 1 + (IA-1)*NVIR(ISYMC) + IC) *
      &              BDENSAB(KOFF6 + (IDEL-1)*NVIR(ISYMC) + IC)
@@ -153,8 +152,8 @@ C     Calculated by setting l = delta and and transforming the integrals
 C     with the trial vector (before this routine is called) 
       ISYML = ISDEL
 C      
-      LCDB  = NRHF(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NRHF(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
       DO 080 ISYMI = 1,NSYM
 C
@@ -258,8 +257,8 @@ C     with the trial vector (before this routine is called)
 C
       ISYMC = ISDEL
 C
-      LCDB  = NVIR(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NVIR(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
       DO 120 ISYMJ = 1,NSYM
 C
@@ -300,7 +299,6 @@ C-----------------------------------------------------------------
 C
                LSCR2  = NBAS(ISBETA)
                LSCR3  = NRHF(ISYMI)
-
 C
                KSCR2  = KEND2
                KSCR3  = KSCR2 + LSCR2
@@ -362,8 +360,8 @@ C     with the trial vector (before this routine is called)
 C
       ISYML = ISDEL
 C
-      LCDB  = NRHF(ISDEL)
-      IF (LCDB.LE.0) GOTO 999
+C      LCDB  = NRHF(ISDEL)
+C      IF (LCDB.LE.0) GOTO 999
 C
       DO 130 ISYMJ = 1,NSYM
 C
@@ -402,8 +400,10 @@ C
             DO 132 ISYMA = 1,NSYM
 
                   ISALFA = ISYMA
-                  ISBETA = MULD2H(ISALFA, ISALBE)
-                  ISYMI  = ISBETA
+                  ISYMI  = MULD2H(ISYMA,ISYMTR)
+                  ISBETA = ISYMI
+C                  ISBETA = MULD2H(ISALFA, ISALBE)
+C                  ISYMI  = ISBETA
 
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -443,14 +443,14 @@ C                     ~
 C              (a,i | j,delta) * rho_{j delta} => U(a,i)
 C
                   KOFF5  = IT1AM(ISYMA,ISYMI)
-                  KOFF6  = ILMRHF(ISYMI)
+                  KOFF6  = ILMRHF(ISYMJ)
 C
                   COUNT  = 0
                   DO I = 1, NRHF(ISYMI)
                         DO IA = 1,NVIR(ISYMA)
-                              RES1(KOFF5+COUNT+IA) =RES1(KOFF5+COUNT+IA)
-     &                        + WORK(KSCR3 - 1 + COUNT + IA) *
-     &                        BDENSIJ(KOFF6-1+J+ (IDEL-1)*NRHF(ISYMJ))
+                              RES1(KOFF5+COUNT+IA)=RES1(KOFF5+COUNT+IA)
+     &                        + WORK(KSCR3 -1 + COUNT + IA) *
+     &                        BDENSIJ(KOFF6+(IDEL-1)*NRHF(ISYMJ)+J)
                         END DO
                         COUNT = COUNT + NVIR(ISYMA)
                   END DO
