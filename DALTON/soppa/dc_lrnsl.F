@@ -5,7 +5,7 @@ C  /* Deck dc_lrnsl */
      &                    FREQ,NFREQ,LABELS,
      &                    SOLV_LABELS,NLAB,
      &                    DENSIJ,LDENSIJ,
-     &                    DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                    DENSAB,LDENSAB,DENSAI,LDENSAI,DENS3IJ,DENS3AB,
      &                    FOCKD,LFOCKD,T2AM,LT2AM,
      &                    T2SAM,LT2SAM,
      &                    IMAGINARY,WORK,LWORK)
@@ -39,6 +39,7 @@ C
      &       NFREQ, NLAB
       REAL(sop_dp),INTENT(IN) :: DENSIJ(LDENSIJ), DENSAB(LDENSAB),
      &                     DENSAI(LDENSAI), FREQ(NFREQ),
+     &                     DENS3IJ(LDENSIJ), DENS3AB(LDENSAB),
      &                     FOCKD(LFOCKD), T2AM(LT2AM),
      &                     T2SAM(LT2SAM)
       REAL(sop_dp),INTENT(INOUT) :: WORK(LWORK)
@@ -159,7 +160,7 @@ C--------------------------------------
          END IF
 C
          CALL SO_ERES(MODEL, 0, NLAB, DENSIJ, LDENSIJ,
-     &                DENSAB, LDENSAB,
+     &                DENSAB, LDENSAB, DENS3IJ, DENS3AB,
      &                T2AM, LT2AM, T2SAM, LT2SAM, FOCKD, LFOCKD,
      &                DENSAI, LDENSAI,
      &                IFREQ, ISYM,IDTYPE,

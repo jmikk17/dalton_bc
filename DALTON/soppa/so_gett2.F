@@ -1,14 +1,15 @@
 C
 C  /* Deck so_gett2 */
-      SUBROUTINE SO_GETT2(KEY,FOCKD,LFOCKD,T2AM,LT2AM,DENSAI,LDENSAI,
-     &                    DENSIJ,LDENSIJ,DENSAB,LDENSAB,WORK,LWORK)
+      SUBROUTINE SO_GETT2(KEY,FOCKD,LFOCKD,T2AM,LT2AM,T2SAM,LT2SAM,
+     &                    DENSAI,LDENSAI,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+     &                    DENS3IJ,DENS3AB,WORK,LWORK)
 C     This routine is part of the atomic integral direct SOPPA program.
 C
 C     Keld Bak, December 1997
 C     Stephan P. A. Sauer, November 2003: merge with DALTON 2.0
 C
 C     PURPOSE: Eiter read from disk or calculate the appropriate T2 and possibly T1 amplitudes
-C              for RPA(D), SOPPA and SOPPA(CCSD) and calculate
+C              for RPA(D), SOPPA, SOPPA(CCSD) and TOPPA and calculate
 C              the corresponding densities.
 #ifdef VAR_MPI
       use so_parutils, only: soppa_update_amplitudes
@@ -28,21 +29,20 @@ C
 C     Arguments
       character(len=4), intent(in) :: KEY
       real(sop_dp), intent(in) :: FOCKD(LFOCKD)
-      real(sop_dp), intent(out) :: T2AM(LT2AM), DENSAI(LDENSAI),
-     &                             DENSIJ(LDENSIJ), DENSAB(LDENSAB)
+      real(sop_dp), intent(out) :: T2AM(LT2AM), T2SAM(LT2SAM),
+     &                             DENSAI(LDENSAI),
+     &                             DENSIJ(LDENSIJ), DENSAB(LDENSAB),
+     &                             DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
       real(sop_dp), intent(inout) :: WORK(LWORK)
-      integer, intent(in) :: LFOCKD, LT2AM, LDENSAI, LDENSIJ, LDENSAB,
-     &                       LWORK
+      integer, intent(in) :: LFOCKD, LT2AM, LT2SAM, LDENSAI, LDENSIJ, 
+     &                       LDENSAB, LWORK
 
 C     Local Variables
       LOGICAL DOCCSD, LEXIST
-      CHARACTER(LEN=8) :: FNAME
+      CHARACTER(LEN=8) :: FNAME, FNAME2
       LOGICAL :: FOUND_DENS
       INTEGER :: IOSTATR, IDUMMY, LUTAM
       real(sop_dp) :: dtime
-C     Pointers... Do we need them?
-      integer :: KT1AM, KEND1
-      integer :: LWORK1
 C     Time-function.
       real(sop_dp) :: second
 C
@@ -52,26 +52,15 @@ C------------------
 C
       CALL QENTER('SO_GETT2')
 C
-C-----------------------------------------
-C     Memory allocation
-C-----------------------------------------
-C
-      KT1AM = 1
-      KEND1 = KT1AM + NT1AM(1)
-      LWORK1 = LWORK - KEND1
-C
-      IF (LWORK1 .LT. 0) THEN
-         CALL QUIT('Insufficient space in GETT2')
-      ENDIF
-C
-      IF ( KEY .EQ. 'MP2 ' ) THEN
+      IF ( KEY(1:2) .EQ. 'MP' ) THEN
          FNAME = 'MP2__TAM'
+         IF ( KEY .EQ. 'MP3 ' ) THEN
+            FNAME2 = 'MP3__TAM'
+         ENDIF
       ELSE IF ( KEY .EQ. 'CC2 ' ) THEN
          FNAME = 'CC2__TAM'
       ELSE IF ( KEY .EQ. 'CCSD' ) THEN
          FNAME = 'CCSD_TAM'
-      ELSE IF ( KEY .EQ. 'MP3 ' ) THEN
-         FNAME = 'MP3__TAM'
       ELSE
          CALL QUIT('Invalid KEY in SO_GETT2: '//KEY)
       END IF
@@ -90,7 +79,7 @@ C        Calculate (ia|jb) integrals .
 C----------------------------------------
 C
          DTIME     = SECOND()
-         CALL SO_IAJB(T2AM,WORK(KEND1),LWORK1)
+         CALL SO_IAJB(T2AM,WORK,LWORK)
          DTIME     = SECOND()  - DTIME
          SOTIME(5) = SOTIME(5) + DTIME
 C
@@ -99,7 +88,7 @@ C        Calculate MP2 T2 amplitudes
 C-----------------------------------------
 C
          DTIME     = SECOND()
-         CALL SO_MP2T2(FOCKD,LFOCKD,T2AM,LT2AM,WORK(KEND1),LWORK1)
+         CALL SO_MP2T2(FOCKD,LFOCKD,T2AM,LT2AM,WORK,LWORK)
          DTIME     = SECOND()  - DTIME
          SOTIME(5) = SOTIME(5) + DTIME
          FOUND_DENS = .FALSE.
@@ -136,14 +125,12 @@ C        Write T2-amplitudes to output file.
 C-------------------------------------------
 C
          IF ( IPRSOP .GT. 10 ) THEN
-            IF ( KEY .EQ. 'MP2 ' ) THEN
+            IF ( KEY(1:2) .EQ. 'MP' ) THEN
                CALL HEADER('MP2 Amplitudes',-1)
             ELSE IF ( KEY .EQ. 'CC2 ' ) THEN
                CALL HEADER('CC2 Amplitudes',-1)
             ELSE IF ( KEY .EQ. 'CCSD' ) THEN
                CALL HEADER('CCSD Amplitudes',-1)
-            ELSE IF ( KEY .EQ. 'MP3 ' ) THEN
-               CALL HEADER('MP3 Amplitudes',-1)
             END IF
             WRITE(LUPRI, '(1X,D20.13)') (T2AM(I),I=1, LT2AM)
          END IF
@@ -152,41 +139,35 @@ C------------------------------------------------------------
 C        Attempt to read the D(ij) and D(ab) density matrices
 C------------------------------------------------------------
 C
-CJavier
-C  For now, TOPPA does not require Density matrices
-         IF (KEY.NE.'MP3') THEN
-            READ(LUTAM,IOSTAT=IOSTATR) DENSIJ
-            IF (IOSTATR.GT.0) THEN
-               CALL QUIT('Error reading file '//FNAME)
-            ELSE IF (IOSTATR.LT.0) THEN
-               FOUND_DENS = .FALSE.
-               BACKSPACE (LUTAM)
-            ELSE
-               READ(LUTAM) DENSAB
+         READ(LUTAM,IOSTAT=IOSTATR) DENSIJ
+         IF (IOSTATR.GT.0) THEN
+            CALL QUIT('Error reading file '//FNAME)
+         ELSE IF (IOSTATR.LT.0) THEN
+            FOUND_DENS = .FALSE.
+            BACKSPACE (LUTAM)
+         ELSE
+            READ(LUTAM) DENSAB
 C
 C        And also for MP2 get D(ai) block
-               IF ( (KEY(1:2).NE.'CC').AND.sop_mp2ai_done) THEN
-                  READ(LUTAM,END=901) (DENSAI(I), I = 1,LDENSAI)
-               END IF
-               FOUND_DENS = .TRUE.
+            IF ( (KEY(1:2).NE.'CC').AND.sop_mp2ai_done) THEN
+               READ(LUTAM,END=901) (DENSAI(I), I = 1,LDENSAI)
             END IF
+            FOUND_DENS = .TRUE.
          END IF
 C
       ELSE
          CALL QUIT('SOPPA(CC) requires running the CC module')
       END IF
-C  For now, TOPPA does not require Density matrices
-      IF (.NOT.FOUND_DENS .AND. (KEY.NE.'MP3')) THEN
-C
-101      CONTINUE ! Failed to read D(ij) above
 C
 C----------------------------------------------------
 C     Calculate the density matrices D(ij) and D(ab).
 C----------------------------------------------------
 C
+      IF (.NOT.FOUND_DENS) THEN
+C
          DTIME     = SECOND()
          CALL SO_DENS(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2AM,LT2AM,WORK(KEND1),LWORK1)
+     &                T2AM,LT2AM,WORK,LWORK)
          DTIME     = SECOND()  - DTIME
          SOTIME(4) = SOTIME(4) + DTIME
 C
@@ -194,10 +175,77 @@ C
          WRITE (LUTAM) DENSAB
 C
       END IF
+C
       CALL GPCLOSE(LUTAM,'KEEP')
 C
+C Juliane 24/05/22
+C----------------------------------------------------
+C     The second order T2-amplitudes only if TOPPA
+C----------------------------------------------------
+
+      IF (KEY.EQ.'MP3 ') THEN
+         INQUIRE (FILE=FNAME2,EXIST=LEXIST)
+         IF (LEXIST) THEN
+            WRITE(LUPRI, '(3A)') 'The T2 MP3 ampliltudes are read ',
+     &                        'from the file: ',FNAME2
+C
+C-----------------------------------------------
+C        Read second order T2-amplitudes from disk.
+C-----------------------------------------------
+C
+            LUTAM = -1
+            CALL GPOPEN(LUTAM,FNAME2,'OLD',' ','UNFORMATTED',
+     &               IDUMMY,.FALSE.)
+            REWIND LUTAM
+C
+            READ(LUTAM,END=902) (T2SAM(I), I = 1,LT2SAM)
+C
+C-------------------------------------------
+C        Write second order T2-amplitudes to output file.
+C-------------------------------------------
+C
+            IF ( IPRSOP .GT. 10 ) THEN
+               CALL HEADER('MP3 Amplitudes',-1)
+               WRITE(LUPRI, '(1X,D20.13)') (T2SAM(I),I=1, LT2SAM)
+            END IF
+C
+C------------------------------------------------------------
+C        Attempt to read the D3(ij) and D3(ab) density matrices
+C------------------------------------------------------------
+C
+            READ(LUTAM,IOSTAT=IOSTATR) DENS3IJ
+            IF (IOSTATR.GT.0) THEN
+               CALL QUIT('Error reading file '//FNAME2)
+            ELSE IF (IOSTATR.LT.0) THEN
+               FOUND_DENS = .FALSE.
+               BACKSPACE (LUTAM)
+            ELSE
+               READ(LUTAM) DENS3AB
+               FOUND_DENS = .TRUE.
+            END IF
+C
+            IF (.NOT.FOUND_DENS) THEN
+               DTIME     = SECOND()
+               CALL SO_DENS3(DENS3IJ,LDENSIJ,DENS3AB,LDENSAB,
+     &                       T2AM, LT2AM, T2SAM, LT2SAM,
+     &                       WORK,LWORK)
+               DTIME     = SECOND()  - DTIME
+               SOTIME(42) = SOTIME(42) + DTIME
+C
+               WRITE (LUTAM) DENS3IJ
+               WRITE (LUTAM) DENS3AB
+C
+            ENDIF
+C
+            CALL GPCLOSE(LUTAM,'KEEP')
+C
+         ELSE
+            CALL QUIT('TOPPA requires running the CC module')
+         ENDIF
+      ENDIF
+C
 C------------------------------------------------------
-C     Replace T2-amplitudes in T2AM with MP2-amplitudes
+C     Replace T2-amplitudes in T2AM with
 C     (2 * coulomb - exchange of T2-amplitudes).
 C------------------------------------------------------
 C
@@ -206,11 +254,18 @@ C
       DTIME     = SECOND()  - DTIME
       SOTIME(5) = SOTIME(5) + DTIME
 C
+      IF (KEY.EQ.'MP3 ') THEN
+         DTIME     = SECOND()
+         CALL SO_T2MP(T2SAM,LT2SAM)
+         DTIME     = SECOND()  - DTIME
+         SOTIME(5) = SOTIME(5) + DTIME
+      END IF
+C
 C-----------------------------------------------------
 C     Send the amplitudes to the slaves
 C-----------------------------------------------------
 #ifdef VAR_MPI
-      call soppa_update_amplitudes(t2am, lt2am)
+      call soppa_update_amplitudes(t2am, lt2am, t2sam, lt2sam, key)
 #endif
 C
 C-----------------------
@@ -241,10 +296,14 @@ C
       INTEGER :: LUTAM, I, IDUMMY
 C
 C     Set filename from key
-      FNAME = KEY//'_TAM'
-      if (FNAME(4:4).EQ.' ') THEN
-         FNAME(4:4) = '_'
-      end if
+      IF (KEY .EQ. 'MP3 ') THEN
+         FNAME = 'MP2__TAM'
+      ELSE
+         FNAME = KEY//'_TAM'
+         IF (FNAME(4:4).EQ.' ') THEN
+            FNAME(4:4) = '_'
+         END IF
+      END IF
       LUTAM = -1
 C  GPOPEN SEEMS TO NOT ALLOW US TO SPECIFY OPEN FOR APPENDING,
       CALL GPOPEN(LUTAM,FNAME,'OLD',' ','UNFORMATTED',IDUMMY,
@@ -274,7 +333,7 @@ C
       INTEGER :: LUTAM, I, IDUMMY
 C
 C     Set filename from key
-      IF (FNAME .EQ. 'MP3 ') THEN
+      IF (KEY .EQ. 'MP3 ') THEN
          FNAME = 'MP2__TAM'
       ELSE
          FNAME = KEY//'_TAM'
@@ -299,8 +358,8 @@ C     Read densij and densab
       READ(LUTAM) DENSIJ
       READ(LUTAM) DENSAB
 C
-C     In case of MP2: densai is last
-      IF (KEY(1:3).EQ.'MP2') THEN
+C     In case of MP2 and MP3: densai is last
+      IF (KEY(1:2).EQ.'MP') THEN
          READ(LUTAM) DENSAI
       END IF
       CALL GPCLOSE(LUTAM,'KEEP')

@@ -2,8 +2,9 @@ C
 C  /* Deck so_rspleq */
       SUBROUTINE SO_RSPLEQ(MODEL,LABEL,IMAGPROP,ISYMTR,
      &                     FRVAL,NFRVAL,DENSIJ,
-     &                     LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,
-     &                     LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,WORK,LWORK)
+     &                     LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                     DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                     FOCKD,LFOCKD,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
@@ -28,6 +29,7 @@ C
 C
       DIMENSION FRVAL(NFRVAL)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
       DIMENSION T2MP(LT2MP), T2MP3(LT2MP3),    FOCKD(LFOCKD)
       DIMENSION WORK(LWORK)
 C
@@ -144,9 +146,9 @@ C
       CALL SO_LRSOEQ(MODEL,LABEL,ISYMTR,IMAGPROP,
      &               NEXCI,MAXIT,FRVAL,NFRVAL,
      &               WORK(KRESINM),LRESINM,WORK(KCONV),LCONV,DENSIJ,
-     &               LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,
-     &               T2MP3,LT2MP3,FOCKD,LFOCKD,
-     &               WORK(KREDE),WORK(KREDS),LMXRED,
+     &               LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &               DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &               FOCKD,LFOCKD,WORK(KREDE),WORK(KREDS),LMXRED,
      &               WORK(KEND),LWORK1)
 C
 C-----------------------

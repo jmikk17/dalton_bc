@@ -1,6 +1,7 @@
 C  /* Deck so_check */
       SUBROUTINE SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                    DENSAI,LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                    DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                    T2AM,LT2AM,T2SAM,LT2SAM,
      &                    FOCKD,LFOCKD,ISYMTR,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -29,7 +30,9 @@ C
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0)
 C
       CHARACTER*5 MODEL
-      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), T2MP(LT2MP)
+      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2AM(LT2AM), T2SAM(LT2SAM)
       DIMENSION FOCKD(LFOCKD),   WORK(LWORK)
       LOGICAL DOUBLES
 #include "ccorb.h"
@@ -220,8 +223,8 @@ C Pack INFO_ARRAY variables and send them off
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,0, 1, DENSIJ, LDENSIJ, DENSAB, LDENSAB,
-     &               T2MP, LT2MP, T2MP3, LT2MP3, FOCKD,   LFOCKD,
-     &               DENSAI, LDENSAI, ICOL, ISYMTR,
+     &               DENS3IJ, DENS3AB, T2AM, LT2AM, T2SAM, LT2SAM, 
+     &               FOCKD, LFOCKD, DENSAI, LDENSAI, ICOL, ISYMTR,
      &               0,
 #ifdef VAR_MPI
      &               WORK(kAssignedIndices),lAssignedIndices,

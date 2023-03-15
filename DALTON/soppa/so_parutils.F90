@@ -38,9 +38,10 @@ module so_parutils
 
    integer, parameter :: real8 = sop_dp !kind(1.0D0)
 !  Flags to be send to slaves to tell them, what work to do
-   integer, parameter :: parsoppa_release_slave = 0,  &! Leave
-     &                   parsoppa_do_eres  = 1,       &! Call eres routine
-     &                   parsoppa_update_amplitudes = 2
+   integer, parameter :: parsoppa_release_slave = 0,       &! Leave
+     &                   parsoppa_do_eres  = 1,            &! Call eres routine
+     &                   parsoppa_update_amplitudes = 2,   &
+     &                   parsoppa_update_s_amplitudes = 3
 !
 ! SOPPA communicator (needed if not all nodes participate in soppa)
    integer(mpi_integer_kind) :: soppa_comm_active    ! communicator
@@ -308,11 +309,11 @@ contains
 ! Not that it will change things right away, but perhaps one day
       integer(mpi_integer_kind) :: ierr, numprocs, mycolor, count_mpi, mynum_mpi
 ! Lengths of arrays
-      integer :: lt2am, lfockd, ldensij, ldensab, ldensai, lworkf, &
-                 LAssignedIndices
+      integer :: lt2am, lt2sam, lfockd, ldensij, ldensab, ldensai, &
+                 lworkf, LAssignedIndices
 ! Pointers to arrays
-      integer :: kt2am, kfockd, kdensij, kdensab, kdensai, kend, &
-                 kAssignedIndices
+      integer :: kt2am, kt2sam, kfockd, kdensij, kdensab, kdensai, & 
+                 kdens3ij, kdens3ab, kend, kAssignedIndices
 ! Other integers
       character(len=5) :: model
 ! Some info, that we need in each pass
@@ -405,6 +406,22 @@ contains
          !
          ! Zero densai (To mirror initialization in so_excit1)
          call dzero( work(kdensai), ldensai )
+         !
+         if ( imod .gt. 1 ) then ! following only if toppa
+            lt2sam = lt2am
+
+            kt2sam = kdensai + ldensai
+            kdens3ij = kt2sam + lt2sam
+            kdens3ab = kdens3ij + ldensij
+            kend = kdens3ab + ldensab
+         else
+            ! force chrash if they are used outside of toppa for some reason
+            kt2sam   = huge(lwork)
+            kdens3ij = huge(lwork)
+            kdens3ab = huge(lwork)
+
+            lt2sam = 0
+         endif
       else
          ! For RPA initialize the addresses as too large, to ensure a crash
          ! if they are for some reason accessed anyway
@@ -483,7 +500,9 @@ contains
             call so_eres( model, noldtr, nnewtr,          &! General info
                   work(kdensij), ldensij,                 &! Densij
                   work(kdensab), ldensab,                 &! Densab
+                  work(kdens3ij), work(kdens3ab),         &! Dens3
                   work(kt2am),lt2am,                      &! t2 amplitudes
+                  work(kt2sam), lt2sam,                   &! t2 second ampltidues
                   work(kfockd), lfockd,                   &! Fockd
                   work(kdensai), ldensai,                 &! Densai
                   nit, isymtr,                            &! Info
@@ -500,8 +519,18 @@ contains
                ' Slave have not reserved memory for amplitudes')
 
             count_mpi = lt2am
-            call mpi_bcast( work(kt2am), count_mpi, mpi_real8, sop_master,        &
+            call mpi_bcast(work(kt2am), count_mpi, mpi_real8, sop_master,     &
      &                      mpi_comm_world, ierr )
+            !
+
+         case (parsoppa_update_s_amplitudes) 
+            !
+            ! update second order amplitudes
+            !
+            count_mpi = lt2sam
+            call mpi_bcast(work(kt2sam), count_mpi, mpi_real8, sop_master,    &
+     &                        mpi_comm_world, ierr )
+            !
 
          case default
             !
@@ -517,7 +546,7 @@ contains
 
    end subroutine soppa_nodedriver
 
-   subroutine soppa_initialize_slaves( update_common_blocks, rpa_only )
+   subroutine soppa_initialize_slaves( update_common_blocks, mem_lvl )
 !    -----------------------------------------------------------
 !     This subroutine tells the slaves that hang in
 !     dalton_nodedriver to enter the soppa node-driver and sends
@@ -528,19 +557,13 @@ contains
 #include "distcl.h"
 !
 ! Arguments
-      logical, intent(in)        :: update_common_blocks, rpa_only
+      logical, intent(in)        :: update_common_blocks
+      integer, intent(in)        :: mem_lvl
 !
 ! Locals
       integer(mpi_integer_kind)  :: ierr
       integer                    :: numprocs
-      integer                    :: imodel
 
-      if (rpa_only) then
-         imodel = 0
-      else
-         imodel = 1
-      end if
-!      if (nodtot .eq. 0 ) return
          !
          ! Send the slave to the soppa_nodedriver
       call mpixbcast( PARA_SO_ERES, 1, 'INTEGE', 0)
@@ -549,8 +572,8 @@ contains
          !
          ! Here the slaves enter soppa_nodedriver
          !
-         ! Set the method
-      call mpi_bcast( imodel, one_mpi, my_mpi_integer, sop_master, mpi_comm_world, &
+         ! Set the method for memory allocation
+      call mpi_bcast( mem_lvl, one_mpi, my_mpi_integer, sop_master, mpi_comm_world, &
                       ierr )
          !
          ! Send the various common blocks if needed
@@ -578,14 +601,15 @@ contains
 
    end subroutine soppa_initialize_slaves
 
-   subroutine soppa_update_amplitudes(t2mp, lt2mp)
+   subroutine soppa_update_amplitudes(t2am, lt2am, t2sam, lt2sam, key)
 !
 ! Send the amplitudes to the slaves. The slaves must be
 ! waiting in soppa_nodedriver when this is called.
 !
       implicit none
-      integer, intent(in) :: lt2mp
-      real(sop_dp), intent(in) :: t2mp(lt2mp)
+      integer, intent(in) :: lt2am, lt2sam
+      real(sop_dp), intent(in) :: t2am(lt2am), t2sam(lt2sam)
+      character(len=4), intent(in) :: key
 !
       integer(mpi_integer_kind) :: ierr, count_mpi
 !
@@ -593,8 +617,15 @@ contains
       call mpixbcast(parsoppa_update_amplitudes, 1, 'INTEGE', 0)
 !
 ! Send the actual amplitudes
-      count_mpi = lt2mp
-      call mpi_bcast(t2mp, count_mpi, mpi_real8, sop_master, mpi_comm_world, ierr)
+      count_mpi = lt2am
+      call mpi_bcast(t2am, count_mpi, mpi_real8, sop_master, mpi_comm_world, ierr)
+!
+      if (key .eq. 'MP3 ') then ! only for TOPPA
+         call mpixbcast(parsoppa_update_s_amplitudes, 1, 'INTEGE', 0)
+         count_mpi = lt2sam
+         call mpi_bcast(t2sam, count_mpi, mpi_real8, sop_master, mpi_comm_world, ierr)
+      endif
+!
       return
    end subroutine soppa_update_amplitudes
 
