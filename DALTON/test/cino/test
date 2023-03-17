@@ -15,7 +15,7 @@ f.add(from_string = '@ Final CI energies and residual',
       rel_tolerance = 1.0e-5)
 
 f.add(from_string = 'Occupancies of natural orbitals',
-      to_string = 'Total effective number',
+      to_string = 'Head-Gordon',
       abs_tolerance = 1.0e-5)
 
 f.add(from_string = 'Molecular orbitals for symmetry species 1',

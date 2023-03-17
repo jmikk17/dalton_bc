@@ -1,8 +1,8 @@
 C  /* Deck so_eres */
       SUBROUTINE SO_ERES(MODEL,  NOLDTR, NNEWTR,  DENSIJ,  LDENSIJ,
-     &                   DENSAB, LDENSAB, T2MP, LT2MP, T2MP3,
-     &                   LT2MP3, FOCKD,
-     &                   LFOCKD, DENSAI,  LDENSAI, NIT,     ISYMTR,
+     &                   DENSAB, LDENSAB, DENS3IJ, DENS3AB,
+     &                   T2AM, LT2AM, T2SAM, LT2SAM, FOCKD, LFOCKD,
+     &                   DENSAI,  LDENSAI, NIT, ISYMTR,
      &                   IDTYPE,
 #ifdef VAR_MPI
      &                   AssignedIndices, maxnumjobs,
@@ -62,8 +62,9 @@ C
 C
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
       DIMENSION INDEXA(MXCORB)
-      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), T2MP(LT2MP)
-      DIMENSION T2MP3(LT2MP3), FOCKD(LFOCKD)
+      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), T2AM(LT2AM)
+      DIMENSION T2SAM(LT2SAM), FOCKD(LFOCKD)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
       DIMENSION DENSAI(LDENSAI) !intent(inout)
       DIMENSION WORK(LWORK)
       CHARACTER MODEL*5
@@ -157,14 +158,14 @@ C
       IF ( IPRSOP. GE. 10 ) THEN
 C
          CALL AROUND('singlet T2AM in SO_ERES')
-         CALL OUTPUT(T2MP,1,LT2MP,1,1,LT2MP,1,1,LUPRI)
+         CALL OUTPUT(T2AM,1,LT2AM,1,1,LT2AM,1,1,LUPRI)
          IF (TRIPLET) THEN
             CALL AROUND('triplet T2AM in SO_ERES')
-            CALL OUTPUT(T2MP(LT2MP+1),1,LT2MP,1,1,LT2MP,1,1,LUPRI)
+            CALL OUTPUT(T2AM(LT2AM+1),1,LT2AM,1,1,LT2AM,1,1,LUPRI)
          END IF
          IF (singles_third) THEN
             CALL AROUND('second order singlet T2AM in SO_ERES')
-            CALL OUTPUT(T2MP3,1,LT2MP3,1,1,LT2MP3,1,1,LUPRI)
+            CALL OUTPUT(T2SAM,1,LT2SAM,1,1,LT2SAM,1,1,LUPRI)
          END IF
 C
       END IF
@@ -709,7 +710,7 @@ C
                   DTIME  = SECOND()
                   IF (HERDIR) THEN
 C
-                    CALL HERDI2(WORK(KEND2),LWORK2,INDEXA,ILLL,NUMDIS,
+                     CALL HERDI2(WORK(KEND2),LWORK2,INDEXA,ILLL,NUMDIS,
      &                          IPRINT)
 C
                   ELSE
@@ -819,8 +820,7 @@ C------------------------------------------------------------
 C
                      DTIME      = SECOND()
                      IF (NVIR(ISYMD).GT.0) THEN
-                        CALL SO_T2M1(WORK(KT2M1),LT2M1,T2MP,LT2MP,
-Cend-Pi
+                        CALL SO_T2M1(WORK(KT2M1),LT2M1,T2AM,LT2AM,
      &                               WORK(KCMO),LCMO,IDEL,ISYMD,ISYDIS,
      &                               WORK(KEND4),LWORK4)
                      ELSE
@@ -859,12 +859,12 @@ C---------------------------------------------------------------
 C                    (This takes care of terms (1), and (5) of the B
 C                    matrix)
                         CALL SO_T2X1(WORK(KX2EM1),LX2M1,
-     &                               T2MP,LT2MP,
+     &                               T2AM,LT2AM,
      &                               WORK(KBTJ1D),LBTJ1D,IDEL,ISYMD,
      &                               ISYMTR,WORK(KEND4),LWORK4)
                         IF (DO_DEX) THEN
                            CALL SO_T2X1(WORK(KX2DM1),LX2M1,
-     &                                  T2MP,LT2MP,
+     &                                  T2AM,LT2AM,
      &                                  WORK(KBTJ1E),LBTJ1E,IDEL,ISYMD,
      &                                  ISYMTR,WORK(KEND4),LWORK4)
                         END IF
@@ -935,17 +935,17 @@ C------------------------------------------------------------
 C
                      DTIME      = SECOND()
                      IF (NVIR(ISYMD).GT.0) THEN
-                        CALL SO_T2M1(WORK(KT2SM1),LT2SM1,T2MP3,LT2MP3,
+                        CALL SO_T2M1(WORK(KT2SM1),LT2SM1,T2SAM,LT2SAM,
      &                               WORK(KCMO),LCMO,IDEL,ISYMD,ISYDIS,
      &                               WORK(KEND4),LWORK4)
                      ELSE
                         CALL DZERO(WORK(KT2SM1),LT2SM1)
                      END IF
 
-                   ELSE
+                  ELSE
                      KT2SM1 = HUGE(LWORK) ! Crash if this is accessed
                      LT2SM1 = 0
-                   ENDIF
+                  ENDIF
 CJavier end
 C
 C---------------------------------------------
@@ -1105,7 +1105,6 @@ C        Calculate and add the RPA two-particle parts to the result
 C        vectors.
 C------------------------------------------------------------------
 C
-
          DTIME      = SECOND()
          CALL SO_TWOFOCK(WORK(KRES1E),LRES1E,WORK(KRES1D),LRES1D,
      &                   WORK(KFOCK),LFOCK,ISYRES,DO_DEX)
@@ -1119,7 +1118,6 @@ C           eq. (44).
 C-----------------------------------------------------------------
 C
             DTIME      = SECOND()
-
             CALL SO_RES_SYM(WORK(KRES1E),LRES1E,WORK(KRES1D),LRES1D,
      &                      WORK(KAIJ),LAIJ,WORK(KAAB),LAAB,WORK(KTR1E),
      &                      LTR1E,WORK(KTR1D),LTR1D,ISYRES,DO_DEX)
@@ -1135,12 +1133,28 @@ C
      &                      WORK(KTR1E),LTR1E,WORK(KTR1D),
      &                      LTR1D,FOCKD,LFOCKD,DENSIJ,LDENSIJ,DENSAB,
      &                      LDENSAB,ISYRES,ISYMTR,DO_DEX)
-
             DTIME      = SECOND()   - DTIME
             SOTIME(21) = SOTIME(21) + DTIME
 C
          endif
+C Juliane 24/05/2022
+C---------------------------------------------------------
+C        Calculte and add the third order Fock-term to A  
+C---------------------------------------------------------
 C
+         IF (singles_third) THEN
+
+            DTIME      = SECOND()
+            CALL SO_RES_FCK(WORK(KRES1E),LRES1E,WORK(KRES1D),LRES1D,
+     &                      WORK(KTR1E),LTR1E,WORK(KTR1D),
+     &                      LTR1D,FOCKD,LFOCKD,DENS3IJ,LDENSIJ,
+     &                      DENS3AB,LDENSAB,ISYRES,ISYMTR,DO_DEX)
+            DTIME      = SECOND()   - DTIME
+            SOTIME(21) = SOTIME(21) + DTIME
+
+         ENDIF
+C
+C Juliane:end
 C------------------------------------------------------------------
 C        Calculate and add the RPA one-particle parts to the result
 C        vectors.
@@ -1221,8 +1235,8 @@ C
 C Redo the loadbalancing based on the timings and distribute them
             ksorted = kend2
             ktmp    = (soppa_num_active*maxnumjobs)
-            knasjob = ksorted + ktmp/irat + mod(ktmp,irat)
-            kswork  = knasjob + soppa_num_active/irat + mod(ktmp,irat)
+            knasjob = ksorted + ktmp/irat + 1
+            kswork  = knasjob + soppa_num_active/irat + 1
             kendf   = kswork + soppa_num_active
 C
             call dynloadbal_parsoppa( AssignedIndices, maxnumjobs,

@@ -1,3 +1,3 @@
-      PARAMETER (LBMXSQ = 4094)
-C =4096-2; 4094*12+4 (16 for Cray) will then fit in n*4kb disk buffers
+      PARAMETER (LBMXSQ = 65534)
+C 2**16-2 = 65536-2 (2 integers used for record info)
 C NOTE: LBMXSQ must be even

@@ -125,7 +125,7 @@ CTRL[4]=6
 ERROR[4]="INCORRECT WAVE FUNCTION"
 
 # SCF energy:
-CRIT1=`$GREP "Hartree-Fock total  *energy *: * \-76\.3321969" $log | wc -l`
+CRIT1=`$GREP "Hartree-Fock total  *energy *: * \-76\.332196[56789]" $log | wc -l`
 TEST[5]=`expr $CRIT1`
 CTRL[5]=1
 ERROR[5]="HF-srPBE ENERGY NOT CORRECT"

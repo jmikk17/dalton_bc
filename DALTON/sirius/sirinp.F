@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -191,7 +191,7 @@ C   INFVAR : MAXOCC,NWOPT,JWOP(2,*),JWOPSY
 C   INFOPT : EPOT,?
 C   INFTAP : LUCME,?
 C   INFDIM : MAXPHP,?
-C   INFTRA : THRP,USEDRC,IPRTRA
+C   INFTRA : THRP,USEDRC,IPRTRA,FCKTRA_TYPE
 C   SCBRHF : IOPRHF, NFRRHF(8), MXHFMA, MXHFMI, RHFCAN, MAXCK, MXDIIS, THRRHF
 C   INFMP2 : NFRMP2(*), SRMP2_SELFCONSISTENT
 C   INFPOP : IPOPTYP; depends on mxcent.h
@@ -304,7 +304,8 @@ C     We also want to check the geometry prediction (ICI0=6)
 C     If excited state force ALWAYS Newton-Raphson
 C     because CI vectors for lower roots needed for NEO not available
 C
-         IF (ISTATE.GT.1 .AND. NMCAVER.EQ.1) FLAG(39) = .TRUE.
+! No, NEO does in fact work for excited state optimization /May2022 hjaaj
+!        IF (ISTATE.GT.1 .AND. NMCAVER.EQ.1) FLAG(39) = .TRUE.
          IREST = 0
       ELSE
 C
@@ -396,15 +397,15 @@ C  ---> Initialize SR-DFT stuff here !
       DOHFSRDFT = .FALSE.
       ADDSRI    = .FALSE.
       SRHYBR    = .FALSE.
-      DFT_SPINDNS = .FALSE.
-      DFT_LOCALSPIN = .FALSE.
+      SRDFT_SPINDNS = .FALSE.
+      SRDFT_LOCALSPIN = .FALSE.
 C <---
       DOCINO    = .FALSE.
       DOFCI     = .FALSE. ! Do Full CI
       DOCISD    = .FALSE. ! DO CISD
-      DORSP     = RNRESP
-      ABAIPH    = RNABAC
-C     ... It is followed by an abacus run
+      DORSP     = RNRESP .OR. RNABAC
+C     ... RNRESP: It is followed by a **RESPON run (RESPON module)
+C     ... RNABAC: It is followed by a **PROPERTIES run (ABACUS module)
       CORHOL    = .FALSE.
       CORRLX    = .FALSE.
 C added by Bin Gao for generating cube files
@@ -686,8 +687,13 @@ C
       IPRTRA = -1
 C     MWORK is defined in block data SBDDIM
 C
-      USEDRC= .FALSE.
+      IF (FCKTRA_TYPE .gt. 0) THEN
+         USEDRC= .TRUE.
+      ELSE
+         USEDRC= .FALSE.
+      END IF
 C     ... USEDRC may be reset by transformation module
+
       AO2INTFILE_LABEL = 'AOTWOINT'
 C
 C
@@ -865,18 +871,6 @@ C
       IF (DIRFCK) THEN
          LUSUPM = -1
       END IF
-C
-C     set ITRFIN for ABAIPH
-!     Apr. 2016: not any more, Abacus calls TRACTL
-!     and that is better, then it is known exactly what
-!     transformation level is needed.
-!
-!     IF (ABAIPH .AND. ITRFIN .EQ. -6789) THEN
-!        IF (DOMC .OR. DOCI) THEN
-!           ITRFIN = 4
-!           IF (NEWTRA) ITRFIN = 5 ! to get occ-sec integrals
-!        END IF
-!     END IF
 C
       IF (DOCI .AND. ISTACI .LE. 0) THEN
          IF (DORSP .AND. .NOT.DOMC) THEN
@@ -1088,6 +1082,7 @@ C
 C     If MAXCIT not specified in input:
       IF (MAXCIT .LT. 0) THEN
          IF (.NOT.(DOSCF .OR. DOMP2 .OR. DOCINO) .AND. FLAG(13)) THEN
+                  !DOSCF, DOMP2, DOCINO are changing the MOs
 C           ... only MC and reading orbitals from file:
 C               these may be converged orbitals thus MAXCIT = 20
             MAXCIT = 20
@@ -1489,8 +1484,8 @@ C
       END IF
 
 C     To be able to use spin-dependent functionals for closed-shell Hartree-Fock
-      IF (DFT_SPINDNS .AND. NASHT .EQ. 0) THEN
-         DFT_SPINDNS = .FALSE.
+      IF (SRDFT_SPINDNS .AND. NASHT .EQ. 0) THEN
+         SRDFT_SPINDNS = .FALSE.
       END IF
 
 C
@@ -1678,14 +1673,14 @@ C        CALL SIRSET(WRK,LWRK,OLDWOP)
          CALL AVECHK(INPERR)
       END IF
 C
-C DFT_SPINDNS is by default set .true. in srdft input unless explicitly
+C SRDFT_SPINDNS is by default set .true. in srdft input unless explicitly
 C disabled with NO_SPINDENSITY. We here disable spin density for singlet
 C wave functions without spin density from local spin model.
 C This saves CPU time not calculate contributions from zero spin density
 C matrices ... /Dec2021, hjaaj
 C
-      IF (ISPIN.EQ.1 .AND. DFT_SPINDNS .AND. .NOT.DFT_LOCALSPIN) THEN
-         DFT_SPINDNS = .FALSE.
+      IF(ISPIN.EQ.1 .AND. SRDFT_SPINDNS .AND. .NOT.SRDFT_LOCALSPIN) THEN
+         SRDFT_SPINDNS = .FALSE.
       END IF
 C
 C  Do we use embedding ?
@@ -3752,6 +3747,12 @@ C
         ci_program = 'SIRIUS-CI'
       end if
 
+      if (flag(38) .and. flag(39)) then
+         INPERR = INPERR + 1
+         write(lupri,'(//A)')
+     &   ' Fatal input error, both .NR ALW and .NEO ALW specified'
+      end if
+
       IF (THR_REDFAC .GT. 0.0D0) THEN
 C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,
@@ -3817,6 +3818,7 @@ C
       WORD1 = WORD
       IF (ALLOPT) CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',
      &                       LUPRI)
+      NTYPES_CI = 0
   100    READ (LUCMD, '(A7)') WORD
          CALL UPCASE(WORD)
          PROMPT = WORD(1:1)
@@ -3849,8 +3851,8 @@ C
 C
 C *** Option 1 >CINO  < Calculate CI natural orbitals.
   101 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOCINO   = .TRUE.
-      FLAG(4)  = .TRUE.
       FLAG(67) = .TRUE.
       FLAG(68) = .TRUE.
       GO TO 100
@@ -3896,11 +3898,13 @@ C *** Option 9 >STATE <  Converge root number ISTATE to threshold
       GO TO 100
 C *** Option 10 >FULLCI<
   110 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOFCI  = .TRUE.
       MCTYPE = 1 ! CAS
       GO TO 100
 C *** Option 11 >CISD  <
   111 CONTINUE
+      NTYPES_CI = NTYPES_CI + 1
       DOCISD = .TRUE.
       MCTYPE = 2 ! RAS
       GO TO 100
@@ -3916,18 +3920,23 @@ C     !> >SPDENS< set level (1-/2-particle) spin density calculation
       GO TO 100
 C
  8000 CONTINUE
+      IF (.NOT.DOCI) THEN
+         WRITE(LUPRI,'(/3A)') 'INFO: ',WORD1,
+     &      'CI input ignored because .CI not specified'
+         GO TO 9000
+      END IF
       IF (THR_REDFAC .GT. 0.0D0) THEN
 C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,
      &   ' thresholds multiplied with general factor',THR_REDFAC
          THRCI = THRCI*THR_REDFAC
       END IF
-      IF (DOFCI .AND. DOCISD) THEN
+      IF (NTYPES_CI .GT. 1) THEN
          INPERR = INPERR + 1
-         WRITE (LUPRI,'(/A)')
-     &      'INPUT ERROR, both .CISD and .FULLCI specified'
+         WRITE (LUPRI,'(/2A)') WORD1,
+     &  ' INPUT ERROR, more than one of .CINO, .CISD, .FULLCI specified'
       END IF
-      RETURN
+ 9000 RETURN
       END
 C  /* Deck orbinp */
       SUBROUTINE ORBINP(WORD,INPERR,IRDMO,ALLOPT)
@@ -3953,6 +3962,7 @@ C INFORB : NBAS
 C HUCKEL : DOHUCKEL
 C
 #include "maxorb.h"
+#include "dummy.h"
 #include "infinp.h"
 #include "inforb.h"
 #include "huckel.h"
@@ -4024,7 +4034,7 @@ C
       ELSE
          KDEL  = 1
 C        ... to specify this option and that DELETE is now illegal.
-         CALL CMODEL(CMO,.FALSE.)
+         CALL CMODEL(VDUMMY,.FALSE.)
 C        CALL CMODEL(CMO,GETCMO)
 C        ... call cmodel to get NORB(*); CMO will not be used.
 C            CMODEL will be called later to get CMO, if MOSTART 8.
@@ -4612,7 +4622,7 @@ C -- local variables and constants
 C
       PARAMETER (NTABLE = 8)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7
-      LOGICAL ALLOPT
+      LOGICAL ALLOPT, USEDRC_set
 C
 C Used from common:
 C
@@ -4629,13 +4639,14 @@ C
 #include "inftra.h"
 C
       DATA TABLE /'.RESIDE','.FINAL ','.LEVEL ','.OLD TR','.PRINT ',
-     *            '.P THRE','xxxxxxx','xxxxxxx'/
+     *            '.P THRE','.USEDRC','.NO DRC'/
 C
 C     ***** PROCESS INPUT FOR TRAINP *****
 C
       WORD1 = WORD
       IF (ALLOPT) CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',
      &                       LUPRI)
+      USEDRC_set = .FALSE.
   100    READ (LUCMD, '(A7)') WORD
          CALL UPCASE(WORD)
          PROMPT = WORD(1:1)
@@ -4689,12 +4700,16 @@ C *** Option  106 >P THRE<
   106 READ(LUCMD,*) THRP
       GO TO 100
 C
-C *** Option  107 >      <
+C *** Option  107 >USEDRC<
   107 CONTINUE
+         USEDRC = .TRUE.
+         USEDRC_set = .TRUE.
       GO TO 100
 C
-C *** Option  108 >      <
+C *** Option  108 >NO DRC<
   108 CONTINUE
+         USEDRC = .FALSE.
+         USEDRC_set = .TRUE.
       GO TO 100
 C
  8000 CONTINUE
@@ -4703,6 +4718,15 @@ C         ICHANG = ICHANG + 1
          WRITE (LUPRI,'(3A,1P,D10.2)') '@ INFO ',WORD1,
      &   ' thresholds multiplied with general factor',THR_REDFAC
          THRP = THRP*THR_REDFAC
+      END IF
+      IF (USEDRC_set) THEN
+         IF (USEDRC) THEN
+            WRITE(LUPRI,'(/A)') '  USEDRC set to true in input:'//
+     &      '  MO integrals in Dirac format will also be used.'
+         ELSE
+            WRITE(LUPRI,'(/A)') '  USEDRC set to false in input:'//
+     &      '  MO integrals in Dirac format will not be used.'
+         END IF
       END IF
       END
 C  /* Deck updinp */
@@ -5402,8 +5426,10 @@ C
       END IF
   500 FORMAT(/' Title     :',T14,A60)
   600 FORMAT(T14,A60)
-      WRITE (IWUNIT,700) (TITMOL(J), J=1,2)
-  700 FORMAT(/' Title lines from ".mol" input file:'/T6,A72/T6,A72)
+      LEN1 = LNBLNK(TITMOL(1))
+      LEN2 = LNBLNK(TITMOL(2))
+      WRITE (IWUNIT,700) TITMOL(1)(1:LEN1),TITMOL(2)(1:LEN2)
+  700 FORMAT(/' Title lines from ".mol" input file:'/T6,A/T6,A)
 C
       WRITE(IWUNIT,1700) LUPRI,IPRI6,LUW4,IPRI4
  1700 FORMAT(/' Print level on unit LUPRI =',I4,' is',I4,
@@ -5987,7 +6013,7 @@ C
       NFROT   = ISUM(NSYM,NFRO,1)
       NFRRHFT = ISUM(NSYM,NFRRHF,1)
       NFRMP2T = ISUM(NSYM,NFRMP2,1)
-      IF (DOSCF .AND. NFRHFT .GT. 0) THEN
+      IF (DOSCF .AND. NFRRHFT .GT. 0) THEN
          IF (DODFT) THEN
             WRITE (IWUNIT,6110) NFRRHFT,(NFRRHF(I),I=1,NSYM)
          ELSE IF (DOHFSRDFT) THEN
@@ -6003,7 +6029,7 @@ C
      &    '@INFO: Therefore frozen MP2 orbitals are set'//
      &    ' equal to frozen SCF orbitals (default).'
             NFRMP2(1:8) = NFRRHF(1:8)
-            NFRMP2T     = NVRRHFT
+            NFRMP2T     = NFRRHFT
          END IF
          WRITE (IWUNIT,6120) NFRMP2T,(NFRMP2(I),I=1,NSYM)
          IF (NFRMP2T .LT. NFRRHFT) THEN

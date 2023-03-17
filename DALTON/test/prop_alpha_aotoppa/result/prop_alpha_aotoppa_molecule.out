@@ -157,57 +157,45 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
- * Work memory size             :  1024000000 =  7.629 gigabytes.
+ * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /groups/kemi/javier/TOPPA/DALTON/dalton/DALTON/test/prop_alpha_aotoppa
-   2) /lustre/hpc/kemi/javier/TOPPA/DALTON/dalton/build-64/basis
+   1) /home/juliane/bin/source/dalton/build/test/prop_alpha_aotoppa
+   2) /home/juliane/bin/source/dalton/build/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | javier
- Host                     | fend04.cluster
- System                   | Linux-3.10.0-1160.53.1.el7.x86_64
+ Who compiled             | juliane
+ Host                     | sunray
+ System                   | Linux-3.16.0-4-amd64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
- 64-bit integers          | ON
+ 64-bit integers          | OFF
  MPI                      | OFF
- Fortran compiler         | /software/local/intel/parallel_studio_xe_2020_upd4
-                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
-                          | l64/ifort
- Fortran compiler version | ifort (IFORT) 19.1.3.304 20200925
- C compiler               | /software/local/intel/parallel_studio_xe_2020_upd4
-                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
-                          | l64/icc
- C compiler version       | icc (ICC) 19.1.3.304 20200925
- C++ compiler             | /software/local/intel/parallel_studio_xe_2020_upd4
-                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
-                          | l64/icpc
- C++ compiler version     | icpc (ICC) 19.1.3.304 20200925
- BLAS                     | /software/local/intel/parallel_studio_xe_2020_upd4
-                          | /compilers_and_libraries_2020.4.304/linux/mkl/lib/
-                          | intel64/libmkl_intel_ilp64.so;/software/local/inte
-                          | l/parallel_studio_xe_2020_upd4/compilers_and_libra
-                          | ries_2020.4.304/linux/mkl/lib/intel64/libmkl_seque
-                          | ntial.so;/software/local/intel/parallel_studio_xe_
-                          | 2020_upd4/compilers_and_libraries_2020.4.304/linux
-                          | /mkl/lib/intel64/libmkl_core.so;/usr/lib64/libpthr
-                          | ead.so;/usr/lib64/libm.so
- LAPACK                   | /software/local/intel/parallel_studio_xe_2020_upd4
-                          | /compilers_and_libraries_2020.4.304/linux/mkl/lib/
-                          | intel64/libmkl_lapack95_ilp64.a;/software/local/in
-                          | tel/parallel_studio_xe_2020_upd4/compilers_and_lib
-                          | raries_2020.4.304/linux/mkl/lib/intel64/libmkl_int
-                          | el_ilp64.so
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (Debian 4.9.2-10+deb8u2) 4.9.2
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (Debian 4.9.2-10+deb8u2) 4.9.2
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Debian 4.9.2-10+deb8u2) 4.9.2
+ BLAS                     | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
+                          | libmkl_gf_lp64.so;/opt/intel/composer_xe_2013.1.11
+                          | 7/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/
+                          | composer_xe_2013.1.117/mkl/lib/intel64/libmkl_core
+                          | .so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/l
+                          | ib/x86_64-linux-gnu/libm.so
+ LAPACK                   | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
+                          | libmkl_lapack95_lp64.a;/opt/intel/composer_xe_2013
+                          | .1.117/mkl/lib/intel64/libmkl_gf_lp64.so
  Static linking           | OFF
- Last Git revision        | e03cd4c33d8952dfeb70240c524eab00ab4952cf
- Git branch               | master
- Configuration time       | 2022-05-06 15:35:51.524461
+ Last Git revision        | 17bdd0d16aeed8c81483f51f71f5664e56d04a4e
+ Git branch               | new_soppa_feature
+ Configuration time       | 2023-03-10 16:28:32.320752
 
 
    Content of the .dal input file
@@ -285,7 +273,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/lustre/hpc/kemi/javier/TOPPA/DALTON/dalton/build-64/basis/pc-1"
+     "/home/juliane/bin/source/dalton/build/basis/pc-1"
 
   Atomic type no.    2
   --------------------
@@ -293,7 +281,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/lustre/hpc/kemi/javier/TOPPA/DALTON/dalton/build-64/basis/pc-1"
+     "/home/juliane/bin/source/dalton/build/basis/pc-1"
 
 
                          SYMGRP: Point group information
@@ -587,8 +575,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
  Title lines from ".mol" input file:
      Calculation of excitation energies through ABACUS                       
@@ -710,11 +698,11 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      1.998838
 @    MULPOP   O      -0.46; H   _1  0.23; H   _2  0.23; 
  -----------------------------------------------------------------------------
-@  9  -76.0042268721       4.80D-06  -7.53D-11     3   1   1   0
+@  9  -76.0042268721       4.80D-06  -7.54D-11     3   1   1   0
       Virial theorem: -V/T =      1.998838
 @    MULPOP   O      -0.46; H   _1  0.23; H   _2  0.23; 
  -----------------------------------------------------------------------------
-@ 10  -76.0042268721       9.04D-07  -4.18D-12     3   1   1   0
+@ 10  -76.0042268721       9.04D-07  -4.15D-12     3   1   1   0
 
 @ *** DIIS converged in  10 iterations !
 @     Converged SCF energy, gradient:    -76.004226872071    9.04D-07
@@ -789,7 +777,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.017       0.017
+ CPU and wall time for SCF :       0.016       0.015
 
 
                        .-----------------------------------.
@@ -808,10 +796,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000904143
 
  
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
-File label for MO orbitals:   6May22   FOCKDIIS
+File label for MO orbitals:  12Mar23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -873,11 +861,11 @@ File label for MO orbitals:   6May22   FOCKDIIS
    2 H   :2px    0.5498  -0.5484
 
   Total CPU  time used in SIRIUS :   0.02 seconds
-  Total wall time used in SIRIUS :   0.03 seconds
+  Total wall time used in SIRIUS :   0.02 seconds
 
  
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
 
                      .---------------------------------------.
@@ -927,7 +915,7 @@ File label for MO orbitals:   6May22   FOCKDIIS
           Number of t2 amplitudes                 :      1277
           Total number of amplitudes in ccsd      :      1310
 
- Iter.  1: Coupled cluster MP2   energy :     -76.2090271874768064
+ Iter.  1: Coupled cluster MP2   energy :     -76.2090271874768348
 
 
 
@@ -1052,11 +1040,11 @@ File label for MO orbitals:   6May22   FOCKDIIS
  *******************************************************************************
 
 
- CPU and wall time for CC :       0.010       0.011
+ CPU and wall time for CC :       0.012       0.012
 
  
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
 
                       .-------------------------------------.
@@ -1088,8 +1076,8 @@ File label for MO orbitals:   6May22   FOCKDIIS
       Linear response properties
 
 
- Changes of defaults in SOPPA Module:
- ------------------------------------
+ Changes of defaults in the SOPPA Module:
+ ----------------------------------------
 
  AO integral driven TOPPA :
 
@@ -1115,8 +1103,8 @@ File label for MO orbitals:   6May22   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Fri May  6 15:52:50 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
+     Host name              : sunray                                  
 
 
                             **************************
@@ -1141,44 +1129,44 @@ File label for MO orbitals:   6May22   FOCKDIIS
  Total number of variables :    2620
  -----------------------------------
 The T2 ampliltudes are read from the file: MP2__TAM
-The T2 ampliltudes are read from the file: MP3__TAM
+The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
  -------------------------------------------------------------
                  TOPPA iterations, Property ZDIPLEN 
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.44383405D+01     9.6194D-01       no
-      2    0.000000   0.51648051D+01     2.8570D-01       no
-      3    0.000000   0.52945415D+01     1.0349D-01       no
-      4    0.000000   0.53118906D+01     2.3542D-02       no
-      5    0.000000   0.53126735D+01     5.8055D-03       no
-      6    0.000000   0.53127272D+01     1.4089D-03       no
-      7    0.000000   0.53127293D+01     2.4120D-04       no
-      8    0.000000   0.53127294D+01     5.9077D-05       no
-      9    0.000000   0.53127294D+01     1.0849D-05      yes
+      1    0.000000   0.44439879D+01     9.6174D-01       no
+      2    0.000000   0.51720883D+01     2.8579D-01       no
+      3    0.000000   0.53024119D+01     1.0363D-01       no
+      4    0.000000   0.53198770D+01     2.3624D-02       no
+      5    0.000000   0.53206696D+01     5.8387D-03       no
+      6    0.000000   0.53207242D+01     1.4164D-03       no
+      7    0.000000   0.53207263D+01     2.4248D-04       no
+      8    0.000000   0.53207264D+01     5.9535D-05       no
+      9    0.000000   0.53207264D+01     1.0930D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.53130701D+01     2.7293D-02       no
-      2    0.005000   0.53131555D+01     1.0947D-02       no
-      3    0.005000   0.53131619D+01     1.7501D-03       no
-      4    0.005000   0.53131622D+01     5.9467D-04       no
-      5    0.005000   0.53131622D+01     1.0255D-04       no
-      6    0.005000   0.53131622D+01     2.0557D-05      yes
+      1    0.005000   0.53210689D+01     2.7277D-02       no
+      2    0.005000   0.53211547D+01     1.0947D-02       no
+      3    0.005000   0.53211612D+01     1.7578D-03       no
+      4    0.005000   0.53211615D+01     5.9811D-04       no
+      5    0.005000   0.53211615D+01     1.0308D-04       no
+      6    0.005000   0.53211615D+01     2.0659D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.53563674D+01     1.3268D-02       no
-      2    0.050000   0.53566234D+01     6.6969D-03       no
-      3    0.050000   0.53566520D+01     1.1887D-03       no
-      4    0.050000   0.53566534D+01     4.0599D-04       no
-      5    0.050000   0.53566535D+01     1.2912D-04       no
-      6    0.050000   0.53566535D+01     3.0863D-05      yes
+      1    0.050000   0.53646013D+01     1.3282D-02       no
+      2    0.050000   0.53648594D+01     6.7087D-03       no
+      3    0.050000   0.53648883D+01     1.1943D-03       no
+      4    0.050000   0.53648897D+01     4.0742D-04       no
+      5    0.050000   0.53648898D+01     1.2951D-04       no
+      6    0.050000   0.53648898D+01     3.1022D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.54938249D+01     2.8634D-02       no
-      2    0.100000   0.54964120D+01     1.4661D-02       no
-      3    0.100000   0.54967177D+01     2.6998D-03       no
-      4    0.100000   0.54967343D+01     9.5444D-04       no
-      5    0.100000   0.54967355D+01     3.0150D-04       no
-      6    0.100000   0.54967357D+01     7.4057D-05       no
-      7    0.100000   0.54967357D+01     1.4072D-05      yes
+      1    0.100000   0.55028299D+01     2.8665D-02       no
+      2    0.100000   0.55054397D+01     1.4687D-02       no
+      3    0.100000   0.55057485D+01     2.7128D-03       no
+      4    0.100000   0.55057653D+01     9.5812D-04       no
+      5    0.100000   0.55057666D+01     3.0250D-04       no
+      6    0.100000   0.55057667D+01     7.4449D-05       no
+      7    0.100000   0.55057667D+01     1.4172D-05      yes
  -------------------------------------------------------------
 
  -----------------------------------
@@ -1188,42 +1176,41 @@ The T2 ampliltudes are read from the file: MP3__TAM
  2p-2h + 2h-2p variables   :    2094
  Total number of variables :    2132
  -----------------------------------
-The T2 ampliltudes are read from the file: MP3__TAM
 
  -------------------------------------------------------------
                  TOPPA iterations, Property XDIPLEN 
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.29636578D+01     8.1740D-01       no
-      2    0.000000   0.34800794D+01     2.4258D-01       no
-      3    0.000000   0.35509549D+01     5.4288D-02       no
-      4    0.000000   0.35549177D+01     1.5485D-02       no
-      5    0.000000   0.35552191D+01     4.2694D-03       no
-      6    0.000000   0.35552331D+01     5.7275D-04       no
-      7    0.000000   0.35552333D+01     9.3589D-05       no
-      8    0.000000   0.35552334D+01     1.1589D-05      yes
+      1    0.000000   0.29649336D+01     8.1692D-01       no
+      2    0.000000   0.34811281D+01     2.4266D-01       no
+      3    0.000000   0.35521449D+01     5.4421D-02       no
+      4    0.000000   0.35561359D+01     1.5553D-02       no
+      5    0.000000   0.35564407D+01     4.2920D-03       no
+      6    0.000000   0.35564548D+01     5.7371D-04       no
+      7    0.000000   0.35564551D+01     9.3696D-05       no
+      8    0.000000   0.35564551D+01     1.1609D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.35555238D+01     3.7486D-02       no
-      2    0.005000   0.35556721D+01     1.5484D-02       no
-      3    0.005000   0.35556867D+01     2.9718D-03       no
-      4    0.005000   0.35556877D+01     7.6126D-04       no
-      5    0.005000   0.35556878D+01     8.4834D-05       no
-      6    0.005000   0.35556878D+01     1.6061D-05      yes
+      1    0.005000   0.35567459D+01     3.7478D-02       no
+      2    0.005000   0.35568944D+01     1.5499D-02       no
+      3    0.005000   0.35569091D+01     2.9838D-03       no
+      4    0.005000   0.35569101D+01     7.6444D-04       no
+      5    0.005000   0.35569102D+01     8.4857D-05       no
+      6    0.005000   0.35569102D+01     1.6079D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.36012631D+01     2.0791D-02       no
-      2    0.050000   0.36019071D+01     1.0462D-02       no
-      3    0.050000   0.36019796D+01     1.8708D-03       no
-      4    0.050000   0.36019831D+01     4.8363D-04       no
-      5    0.050000   0.36019833D+01     9.8016D-05       no
-      6    0.050000   0.36019833D+01     1.1136D-05      yes
+      1    0.050000   0.36025506D+01     2.0801D-02       no
+      2    0.050000   0.36031969D+01     1.0476D-02       no
+      3    0.050000   0.36032698D+01     1.8776D-03       no
+      4    0.050000   0.36032733D+01     4.8618D-04       no
+      5    0.050000   0.36032735D+01     9.8392D-05       no
+      6    0.050000   0.36032735D+01     1.1154D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.37523465D+01     4.5163D-02       no
-      2    0.100000   0.37593365D+01     2.2859D-02       no
-      3    0.100000   0.37601808D+01     4.2580D-03       no
-      4    0.100000   0.37602241D+01     1.1438D-03       no
-      5    0.100000   0.37602269D+01     2.3435D-04       no
-      6    0.100000   0.37602269D+01     2.7765D-05      yes
+      1    0.100000   0.37538716D+01     4.5188D-02       no
+      2    0.100000   0.37608887D+01     2.2890D-02       no
+      3    0.100000   0.37617371D+01     4.2738D-03       no
+      4    0.100000   0.37617809D+01     1.1501D-03       no
+      5    0.100000   0.37617837D+01     2.3527D-04       no
+      6    0.100000   0.37617838D+01     2.7809D-05      yes
  -------------------------------------------------------------
 
  -----------------------------------
@@ -1233,42 +1220,41 @@ The T2 ampliltudes are read from the file: MP3__TAM
  2p-2h + 2h-2p variables   :    2418
  Total number of variables :    2474
  -----------------------------------
-The T2 ampliltudes are read from the file: MP3__TAM
 
  -------------------------------------------------------------
                  TOPPA iterations, Property YDIPLEN 
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.59539720D+01     8.2733D-01       no
-      2    0.000000   0.66824345D+01     1.4318D-01       no
-      3    0.000000   0.67185820D+01     3.5790D-02       no
-      4    0.000000   0.67202489D+01     6.4610D-03       no
-      5    0.000000   0.67203538D+01     2.4209D-03       no
-      6    0.000000   0.67203622D+01     5.0098D-04       no
-      7    0.000000   0.67203626D+01     1.3189D-04       no
-      8    0.000000   0.67203626D+01     2.4718D-05      yes
+      1    0.000000   0.59641214D+01     8.2709D-01       no
+      2    0.000000   0.66949402D+01     1.4327D-01       no
+      3    0.000000   0.67312463D+01     3.5767D-02       no
+      4    0.000000   0.67329158D+01     6.4380D-03       no
+      5    0.000000   0.67330199D+01     2.4133D-03       no
+      6    0.000000   0.67330284D+01     5.0200D-04       no
+      7    0.000000   0.67330288D+01     1.3256D-04       no
+      8    0.000000   0.67330288D+01     2.4891D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.67207168D+01     1.8304D-02       no
-      2    0.005000   0.67207539D+01     7.0380D-03       no
-      3    0.005000   0.67207561D+01     9.6823D-04       no
-      4    0.005000   0.67207562D+01     3.9697D-04       no
-      5    0.005000   0.67207562D+01     8.8420D-05       no
-      6    0.005000   0.67207562D+01     2.5668D-05      yes
+      1    0.005000   0.67333852D+01     1.8276D-02       no
+      2    0.005000   0.67334224D+01     7.0224D-03       no
+      3    0.005000   0.67334247D+01     9.6522D-04       no
+      4    0.005000   0.67334248D+01     3.9511D-04       no
+      5    0.005000   0.67334248D+01     8.7830D-05       no
+      6    0.005000   0.67334248D+01     2.5737D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.67599542D+01     9.0747D-03       no
-      2    0.050000   0.67600569D+01     4.0595D-03       no
-      3    0.050000   0.67600661D+01     6.6253D-04       no
-      4    0.050000   0.67600665D+01     2.3657D-04       no
-      5    0.050000   0.67600666D+01     5.6527D-05       no
-      6    0.050000   0.67600666D+01     1.3316D-05      yes
+      1    0.050000   0.67728575D+01     9.0776D-03       no
+      2    0.050000   0.67729608D+01     4.0574D-03       no
+      3    0.050000   0.67729701D+01     6.6030D-04       no
+      4    0.050000   0.67729705D+01     2.3613D-04       no
+      5    0.050000   0.67729706D+01     5.6609D-05       no
+      6    0.050000   0.67729706D+01     1.3377D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.68824027D+01     1.9526D-02       no
-      2    0.100000   0.68834054D+01     8.8477D-03       no
-      3    0.100000   0.68834996D+01     1.4853D-03       no
-      4    0.100000   0.68835045D+01     5.7031D-04       no
-      5    0.100000   0.68835050D+01     1.4326D-04       no
-      6    0.100000   0.68835050D+01     3.5142D-05      yes
+      1    0.100000   0.68960515D+01     1.9532D-02       no
+      2    0.100000   0.68970605D+01     8.8430D-03       no
+      3    0.100000   0.68971551D+01     1.4801D-03       no
+      4    0.100000   0.68971599D+01     5.6924D-04       no
+      5    0.100000   0.68971604D+01     1.4351D-04       no
+      6    0.100000   0.68971604D+01     3.5322D-05      yes
  -------------------------------------------------------------
 
  |=====================================================| 
@@ -1277,10 +1263,8 @@ The T2 ampliltudes are read from the file: MP3__TAM
  |   Routine                  in Words         in MB   |
  |-----------------------------------------------------| 
  |  START                            0           0.0   |
- |  SO_LNRABA.1                   1459           0.0   |
- |  SO_PRPINT                    14960           0.1   |
- |  SO_OPTVEC.1                  15699           0.1   |
- |  SO_OPTVEC.1                  17573           0.1   |
+ |  SO_LNRABA.1                   2860           0.0   |
+ |  SO_PRPINT                    16361           0.1   |
  |=====================================================| 
 
  |=====================================================| 
@@ -1288,46 +1272,30 @@ The T2 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   SO_OPTVEC           0:00:40     98.9 %     98.9 % |
- |   SO_RES_A            0:00:00      0.3 %     99.1 % |
- |   SO_SIGAI            0:00:00      0.2 %     99.3 % |
- |   SO_ERES             0:00:00      0.1 %     99.4 % |
- |   SO_RES_TCB          0:00:00      0.1 %     99.6 % |
- |   SO_RES_CB           0:00:00      0.1 %     99.7 % |
- |   SO_INCRED           0:00:00      0.1 %     99.7 % |
- |   SO_TRIAL2           0:00:00      0.1 %     99.8 % |
- |   SO_ORTH_TRN         0:00:00      0.0 %     99.8 % |
- |   SO_T2M1             0:00:00      0.0 %     99.9 % |
- |   CCRDAO              0:00:00      0.0 %     99.9 % |
- |   CC_AOFOCK           0:00:00      0.0 %     99.9 % |
- |   CCTRBT              0:00:00      0.0 %     99.9 % |
- |   SO_DENSAI           0:00:00      0.0 %     99.9 % |
- |   SO_GETMO            0:00:00      0.0 %     99.9 % |
- |   SO_RES_OVL          0:00:00      0.0 %     99.9 % |
- |   SO_TRIAL1           0:00:00      0.0 %    100.0 % |
- |   SO_REDEV            0:00:00      0.0 %    100.0 % |
- |   SO_AODENS           0:00:00      0.0 %    100.0 % |
- |   CC_FCKMO            0:00:00      0.0 %    100.0 % |
- |   SO_BCKTR            0:00:00      0.0 %    100.0 % |
- |   SO_ROPT             0:00:00      0.0 %    100.0 % |
- |   SO_RES_SYM          0:00:00      0.0 %    100.0 % |
- |   SO_RES_CD           0:00:00      0.0 %    100.0 % |
- |   SO_DIAG             0:00:00      0.0 %    100.0 % |
- |   SO_TWOFOCK          0:00:00      0.0 %    100.0 % |
- |   SO_RES_FCK          0:00:00      0.0 %    100.0 % |
- |   SO_ONEFOCK          0:00:00      0.0 %    100.0 % |
- |   SO_DENS             0:00:00      0.0 %    100.0 % |
- |   SO_T2MP             0:00:00      0.0 %    100.0 % |
- |   SO_MOENERGY         0:00:00      0.0 %    100.0 % |
- |   SO_INIT             0:00:00      0.0 %    100.0 % |
+ |   SO_OPTVEC           0:00:02     83.8 %     83.8 % |
+ |   SO_RES_A            0:00:00      4.4 %     88.2 % |
+ |   SO_RES_CB           0:00:00      2.9 %     91.0 % |
+ |   SO_RES_TCB          0:00:00      2.7 %     93.8 % |
+ |   SO_SIGAI            0:00:00      2.4 %     96.2 % |
+ |   SO_INCRED           0:00:00      0.9 %     97.1 % |
+ |   CC_AOFOCK           0:00:00      0.8 %     97.9 % |
+ |   SO_T2M1             0:00:00      0.5 %     98.3 % |
+ |   CCTRBT              0:00:00      0.3 %     98.6 % |
+ |   SO_ERES             0:00:00      0.3 %     98.9 % |
+ |   CCRDAO              0:00:00      0.3 %     99.2 % |
+ |   SO_REDEV            0:00:00      0.2 %     99.4 % |
+ |   SO_RES_OVL          0:00:00      0.2 %     99.5 % |
+ |   SO_TRIAL2           0:00:00      0.2 %     99.7 % |
+ |   SO_ORTH_TRN         0:00:00      0.2 %     99.8 % |
+ |   SO_DENSAI           0:00:00      0.2 %    100.0 % |
  |-----------------------------------------------------| 
- |  Total CPU time       0:00:40                       |
+ |  Total CPU time       0:00:03                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      0.0 %            |
- |   SO_WRITE            0: 0: 0      0.0 %            |
- |   SO_OPEN             0: 0: 0      0.0 %            |
+ |   SO_READ             0: 0: 0      0.3 %            |
+ |   SO_WRITE            0: 0: 0      0.2 %            |
+ |   SO_OPEN             0: 0: 0      0.6 %            |
  |   SO_CLOSE            0: 0: 0      0.0 %            |
  |-----------------------------------------------------| 
 
@@ -1336,12 +1304,12 @@ The T2 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0:00:00      0.9 %      0.9 % |
- |   SO_SRES             0:00:00      0.0 %      0.9 % |
- |   SO_REDEV            0:00:40     98.9 %     99.9 % |
- |   SO_TRIAL2           0:00:00      0.1 %    100.0 % |
+ |   SO_ERES             0:00:00     17.7 %     17.7 % |
+ |   SO_SRES             0:00:00      0.0 %     17.7 % |
+ |   SO_REDEV            0:00:02     80.7 %     98.4 % |
+ |   SO_TRIAL2           0:00:00      1.2 %     99.6 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0:40                       |
+ |   Total wall time     0: 0: 3                       |
  |=====================================================| 
 
 
@@ -1351,8 +1319,8 @@ The T2 ampliltudes are read from the file: MP3__TAM
 
 
  
-     Date and time (Linux)  : Fri May  6 15:53:30 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:49 2023
+     Host name              : sunray                                  
 
 
                              Molecular geometry (au)
@@ -1395,41 +1363,41 @@ The T2 ampliltudes are read from the file: MP3__TAM
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.555233       0.000000       0.000000    
-                Ey    0.000000       6.720363       0.000000    
-                Ez    0.000000       0.000000       5.312729    
+                Ex    3.556455       0.000000       0.000000    
+                Ey    0.000000       6.733029       0.000000    
+                Ez    0.000000       0.000000       5.320726    
 
-Isotropic polarizability:   5.196108    
+Isotropic polarizability:   5.203403    
 
           Polarizability tensor for frequency     0.005000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.555688       0.000000       0.000000    
-                Ey    0.000000       6.720756       0.000000    
-                Ez    0.000000       0.000000       5.313162    
+                Ex    3.556910       0.000000       0.000000    
+                Ey    0.000000       6.733425       0.000000    
+                Ez    0.000000       0.000000       5.321162    
 
-Isotropic polarizability:   5.196535    
+Isotropic polarizability:   5.203832    
 
           Polarizability tensor for frequency     0.050000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.601983       0.000000       0.000000    
-                Ey    0.000000       6.760067       0.000000    
-                Ez    0.000000       0.000000       5.356654    
+                Ex    3.603273       0.000000       0.000000    
+                Ey    0.000000       6.772971       0.000000    
+                Ez    0.000000       0.000000       5.364890    
 
-Isotropic polarizability:   5.239568    
+Isotropic polarizability:   5.247045    
 
           Polarizability tensor for frequency     0.100000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.760227       0.000000       0.000000    
-                Ey    0.000000       6.883505       0.000000    
-                Ez    0.000000       0.000000       5.496736    
+                Ex    3.761784       0.000000       0.000000    
+                Ey    0.000000       6.897160       0.000000    
+                Ez    0.000000       0.000000       5.505767    
 
-Isotropic polarizability:   5.380156    
+Isotropic polarizability:   5.388237    
 
 
  ======================================================================
@@ -1473,22 +1441,22 @@ Isotropic polarizability:   5.380156
  CPU time statistics for ABACUS
  ------------------------------
 
- LNRABA     00:00:40     100 %
+ LNRABA     00:00:03     100 %
 
- TOTAL      00:00:40     100 %
+ TOTAL      00:00:03     100 %
 
 
-  Total CPU  time used in ABACUS:  40.15 seconds
-  Total wall time used in ABACUS:  40.15 seconds
+  Total CPU  time used in ABACUS:   2.64 seconds
+  Total wall time used in ABACUS:   2.64 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  40.20 seconds
-  Total wall time used in DALTON:  40.21 seconds
+  Total CPU  time used in DALTON:   2.68 seconds
+  Total wall time used in DALTON:   2.68 seconds
 
  
-     Date and time (Linux)  : Fri May  6 15:53:30 2022
-     Host name              : node337.cluster                         
+     Date and time (Linux)  : Sun Mar 12 21:04:49 2023
+     Host name              : sunray                                  

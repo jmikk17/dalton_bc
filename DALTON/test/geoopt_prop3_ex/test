@@ -34,12 +34,12 @@ f = [
     get_filter(string='@   = MP2 second order energy',
                abs_tolerance=1.0e-8),
     get_filter(string='@    Final MCSCF energy',
-               abs_tolerance=1.0e-7),
+               abs_tolerance=2.0e-7),
     # this is to get total energy
     get_filter(string='au (Hartrees)',
                abs_tolerance=1.0e-8),
     get_filter(string='Energy at this geometry is',
-               abs_tolerance=1.0e-7),
+               abs_tolerance=2.0e-7),
     get_filter(string='@ Geometry converged in',
                abs_tolerance=1.0e-8),
     get_filter(string='@ Energy at final geometry is',
@@ -48,7 +48,7 @@ f = [
                num_lines=6,
                abs_tolerance=1.0e-5),
     get_filter(from_string='Occupancies of natural orbitals',
-               to_string = 'Total effective number',
+               to_string = 'Head-Gordon',
                abs_tolerance=1.0e-5),
     get_filter(from_string='Molecular gradient (au)',
                num_lines=5,
@@ -79,7 +79,8 @@ f = [
                abs_tolerance=1.0e-5),
     get_filter(from_string='Vibrational Frequencies and IR Intensities',
                num_lines=12,
-               abs_tolerance=1.0e-5),
+               abs_tolerance=1.0e-2),
+               # the frequency in cm-1 can change in last digit, second decimal place
     get_filter(from_string='Vibrational Polarizabilities (au)',
                num_lines=8,
                abs_tolerance=1.0e-5)

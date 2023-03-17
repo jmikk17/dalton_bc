@@ -57,7 +57,6 @@ C
                ISYMA  = MULD2H(ISYMJ,ISYMAJ)
                ISYMAK = MULD2H(ISYMA,ISYMK)
                ISYMBJ = MULD2H(ISYMB,ISYMJ)
-               ISYMBK = MULD2H(ISYMB,ISYMK)
 C
                DO 400 B = 1,NVIR(ISYMB)
 C
@@ -68,17 +67,13 @@ C                 collect all T2-amplitudes for the given B in
 C                 PT2AM1 and PT2AM2 in different ordering.
 C--------------------------------------------------------------
 C
-                  LPT2MP1 = NVIR(ISYMA)*NRHF(ISYMK)*NRHF(ISYMJ)
-                  LPT2MP2 = NRHF(ISYMJ)*NRHF(ISYMK)*NVIR(ISYMA)
+                  LT2 = NVIR(ISYMA)*NRHF(ISYMK)*NRHF(ISYMJ)
 C
-                  LPT2AM1 = NRHF(ISYMJ)*NVIR(ISYMA)*NRHF(ISYMK)
-                  LPT2AM2 = NVIR(ISYMA)*NRHF(ISYMJ)*NRHF(ISYMK)
-C
-                  KPT2MP1 = 1
-                  KPT2MP2 = KPT2MP1 + LPT2MP1
-                  KPT2AM1 = KPT2MP2 + LPT2MP2
-                  KPT2AM2 = KPT2AM1 + LPT2AM1
-                  KEND1   = KPT2AM2 + LPT2AM2
+                  KT2MP1 = 1
+                  KT2MP2 = KT2MP1 + LT2
+                  KT2AM1 = KT2MP2 + LT2
+                  KT2AM2 = KT2AM1 + LT2
+                  KEND1   = KT2AM2 + LT2
                   LWORK1  = LWORK   - KEND1
 C
                   CALL SO_MEMMAX ('SO_DENS.1',LWORK1)
@@ -117,20 +112,17 @@ C
 C
                            T2MP  = TWO * T2AM(NAJBK) - T2AM(NAKBJ)
 C
-                           WORK(KPT2MP1 + NAKJ - 1) = T2MP
-                           WORK(KPT2MP2 + NAJK - 1) = T2MP
+                           WORK(KT2MP1 + NAKJ - 1) = T2MP
+                           WORK(KT2MP2 + NAJK - 1) = T2MP
 C
-                           WORK(KPT2AM1 + NJAK - 1) = T2AM(NAJBK)
-                           WORK(KPT2AM2 + NJKA - 1) = T2AM(NAJBK)
+                           WORK(KT2AM1 + NJAK - 1) = T2AM(NAJBK)
+                           WORK(KT2AM2 + NJKA - 1) = T2AM(NAJBK)
 C
   700                   CONTINUE
 C
   600                CONTINUE
 C
   500             CONTINUE
-C
-                  ISYMI = ISYMJ
-                  ISYMC = ISYMA
 C
 C---------------------------------------------------------------------
 C                 Calculate Dij by adding in contributions for each B.
@@ -143,8 +135,8 @@ C
                   KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
 C
                   CALL DGEMM('N','N',NRHF(ISYMJ),NRHF(ISYMJ),
-     &                       NVIR(ISYMA)*NRHF(ISYMK),-ONE,WORK(KPT2AM1),
-     &                       NTOTJ,WORK(KPT2MP1),NTOTAK,ONE,
+     &                       NVIR(ISYMA)*NRHF(ISYMK),-ONE,WORK(KT2AM1),
+     &                       NTOTJ,WORK(KT2MP1),NTOTAK,ONE,
      &                       DENSIJ(KOFF1),NTOTJ)
 C
 C---------------------------------------------------------------------
@@ -158,8 +150,8 @@ C
                   KOFF2  = IABDEN(ISYMA,ISYMA) + 1
 C
                   CALL DGEMM('N','N',NVIR(ISYMA),NVIR(ISYMA),
-     &                       NRHF(ISYMJ)*NRHF(ISYMK),ONE,WORK(KPT2MP2),
-     &                       NTOTA,WORK(KPT2AM2),NTOTJK,ONE,
+     &                       NRHF(ISYMJ)*NRHF(ISYMK),ONE,WORK(KT2MP2),
+     &                       NTOTA,WORK(KT2AM2),NTOTJK,ONE,
      &                       DENSAB(KOFF2),NTOTA)
 C
   400          CONTINUE

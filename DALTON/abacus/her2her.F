@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -394,7 +394,6 @@ c              --- Modified
                   ENDIF
 c               --- Old ERFEXP function 2*chival/sqrt(pi)*exp(-chisq/3*r**2)
                   IF(ERFEXP(1)) THEN
-                     AI = D3/CHISQ    
                      AI = D3/CHISQ
                      EXPFAC  = EXPPI + EXPQI + AI
                      EXPFACI = D1/EXPFAC

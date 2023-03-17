@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -525,7 +525,8 @@ C
      *               (IZEROG(I),I = 1, NZEROG)
          END IF
          IF (.NOT. WFPRED) THEN
-            WRITE (LUPRI,'(/A)') ' No prediction of wave function.'
+!           WRITE (LUPRI,'(/A)') ' No prediction of wave function.'
+! .not.WFPRED is now default (and WFPRED is not working in current version)
          END IF
          IF (NOORTH) THEN
             WRITE (LUPRI,'(/A)')
@@ -599,7 +600,8 @@ C
       DO 400 I = 0, 7
          DOREPW(I) = DOSYM(I + 1)
   400 CONTINUE
-      WFPRED = .TRUE.
+!     WFPRED = .TRUE.
+      WFPRED = .FALSE. ! WFPRED is not implemented in current version
       REJECT = WLKREJ
       IF (REJECT) TRUSTD = 0.5D0
       KEEPSY = .FALSE.
@@ -1048,7 +1050,7 @@ C
             END IF
             CALL WLKMOL(COOR)
             ERGSEC = 0.0D0
-            IF (WFPRED) CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
+            CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
          END IF
 C
 C     b) Continue walk
@@ -1146,7 +1148,7 @@ C        *****************************************
 C        ***** Save wave function prediction *****
 C        *****************************************
 C
-         IF (WFPRED) CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
+         CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
       END IF
 C
 C     *************************
@@ -2651,9 +2653,9 @@ C
       WRITE (LUPRI,'(/2A)')       '@ Walk type: ', WLKTYP(IWKTYP_PR)
       WRITE (LUPRI,'(/A,I5)')     '@ Iteration number:', IPOINT
       WRITE (LUPRI,'(/A,F17.10)') '@ Norm of molecular gradient:',GRDNRM
-      WRITE (LUPRI,'(/A,F17.10)') '@ Energy at current point:   ',ERGMOL
+      WRITE (LUPRI,'(/A,F20.10)') '@ Energy at current point:',ERGMOL
       IF (IPOINT .GT. 0) THEN
-         WRITE (LUPRI,'( A,F17.10)')
+         WRITE (LUPRI,'( A,F20.10)')
      &                      '  Energy at initial point:', ESTART
          WRITE (LUPRI,'(/A,F13.10,A,2(/,39X,F13.2,A))')
      &         '  Change in energy since start of walk:',
@@ -6059,7 +6061,7 @@ C
 C
 C Used from common blocks:
 C
-C   CBIWLK : STEP, STEPCO(3,*), SCALCO(3,*), IPRWLK, ENRSEC
+C   CBIWLK : STEP, STEPCO(3,*), SCALCO(3,*), IPRWLK, ENRSEC, WFPRED
 C   INFTAP : LUSIFC
 C   NUCLEI : NUCDEP,CORD(3,*)
 C   INFDIM : LBUFMA
@@ -6101,7 +6103,7 @@ C     B) Calculate predicted reference CI vector for new geometry
 C        Call abavar to make sure perturbation symmetry is one.
 C
       REWIND LUSIFC
-      CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
+      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF
       POTNUC = EPOT
       READ (LUSIFC)

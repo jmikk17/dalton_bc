@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -62,7 +62,7 @@ C   INFINP : ISTATE,ISPIN,NACTEL,POTNUC,LSOLMX,RSOL(3)
 C   INFOPT : EMCSCF,EPOT,EMY,EACTIV,ESOLT
 C   PAST   : PASDIP, PASORT, PASRES
 C   CBISOL : SOLVNT, ...
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C   pcmlog.h : PCM
 C
 #include "gnrinf.h"
@@ -98,16 +98,27 @@ C     (The rest will be defined in NSETUP)
 C
       IF (LUSIFC .LE. 0) CALL GPOPEN(LUSIFC,'SIRIFC',
      &   'OLD',' ','UNFORMATTED',IDUMMY,.FALSE.)
-      IERROR = -1
+
       REWIND LUSIFC
-      CALL MOLLB2(LBSIFC,RTNLBL,LUSIFC,IERROR)
-      IF (IERROR .LT. 0) THEN
-        WRITE (LUPRI,'(/A/3A)')
-     *      ' FATAL ERROR (ABACUS.SETSIR)',
-     *      ' label "', LBSIFC,
-     *      '" not found on SIRIFC, the SIRIUS interface file.'
-        CALL QUIT('"'//LBSIFC//'" label not found on SIRIFC file.')
+      IF (FNDLAB('SIR IPH ',LUSIFC)) THEN
+         LBSIFC = 'SIR IPH '
+         ABACI  = .FALSE. ! in abainf.h
+      ELSE
+         REWIND LUSIFC
+         IF (FNDLAB('CIRESPON',LUSIFC)) THEN
+            LBSIFC = 'CIRESPON'
+            ABACI  = .TRUE.
+            ! CIRESPON is not implemented for MOLHES or B response.
+!           CALL QUIT(
+!    &         'ERROR: CI properties not implemented for MOLHES and B')
+         ELSE
+           WRITE (LUPRI,'(//A)')
+     &      ' FATAL ERROR (ABACUS.SETSIR) The SIRIUS interface file'//
+     &      ' SIRIFC is not a valid SIRIFC file.'
+          CALL QUIT("ERROR: SIRIFC is not a valid SIRIFC file.")
+         END IF
       END IF
+
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,LSYM,MS2
       MULTS = ISPIN
       POTNUC = EPOT
@@ -118,15 +129,16 @@ C
      *            NELMN1, NELMX1, NELMN3, NELMX3, MCTYPE,
      *            NAS1, NAS2, NAS3
       IF (MCTYPE .GT. 900) THEN
-         IF (.NOT. DFT_SPINDNS .AND. ISPIN.NE.1) THEN
-         ! it is OK to have reset DFT_SPINDNS to false in RESPONS or ABACUS
+         IF (.NOT. SRDFT_SPINDNS .AND. ISPIN.NE.1) THEN
+         ! it is OK to have reset SRDFT_SPINDNS to false in RESPONS or ABACUS
          ! for singlet reference states.
             CALL QUIT('ERROR in SETSIR:'//
-     &      'DFT_SPINDNS true on SIRIFC, but not in input')
+     &      'SRDFT_SPINDNS true on SIRIFC, but not in input')
          END IF
          MCTYPE = MCTYPE - 1000
       END IF
       HSROHF = (MCTYPE .EQ. -1)
+      ABAHF  = MCTYPE .LE. 0
 C
       REWIND LUSIFC
       IF (FNDLAB('SIRFLAGS',LUSIFC)) THEN
@@ -142,11 +154,12 @@ C     disable SUPSYM for ABACUS /921216-hjaaj
 
       IF (ABACUS_ACTIVE) FLAG(17) = .FALSE.
 C
-      IF (LBSIFC .EQ. 'CIRESPON') THEN
-         FLAG(4) = .TRUE.
-         NWOPT  = 0
-         NWOPH  = 0
-C        ... set CI flag for NSETUP
+      IF (ABACI) THEN
+         IF (.NOT. FLAG(4)) THEN
+            CALL QUIT('ERROR: Inconsistent SIRIFC file, label is'//
+     &         ' CIRESPON but flag(4) is false.')
+         END IF
+C        ... remainig CI definitions are done in NSETUP
       END IF
       MWOPT = NWOPT
       MWOPH = NWOPH
@@ -172,7 +185,7 @@ C
       DOSCF  = .FALSE.
       DOMP2  = .FALSE.
       DOCINO = .FALSE.
-      DOCI   = .FALSE.
+      DOCI   = ABACI
       DOMC   = .FALSE.
       DORSP  = .FALSE.
       FCVORB = .FALSE.
@@ -187,7 +200,6 @@ C
       CORRLX = .FALSE.
       RESPHP = .FALSE.
       JOLSEN = .FALSE.
-      ABAIPH = .FALSE.
       INERSI = .FALSE.
       INERSF = .FALSE.
 C
@@ -423,7 +435,7 @@ C -- local constants
 C
 C Used from common blocks:
 C   priunit.h : LUERR,...
-C   exeinf.h : FTRCTL, NEWCMO, ITRLVL_LAST, LVLDRC_LAST
+C   exeinf.h : FTRCTL, NEWCMO
 C   INFINP : ISTATE,LSYM,MCTYPE,?
 C   INFORB : NISH(8),...
 C   INFVAR : NCONF,NWOPT,NVAR,JWOPSY,JWOP(2,*)
@@ -502,11 +514,6 @@ C
       NVARH  = NCONF  + NWOPH
       NVARMA = NCONMA + NWOPMA
       NCONDI = MAX(1,NCONF)
-C
-C     Parameters needed for /LINABA/
-C
-      ABAHF  = NASHT .LE. 1
-      ABACI  = FLAG(4)
 C
 C     Parameters needed for /INFLIN/
 C

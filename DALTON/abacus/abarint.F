@@ -1,7 +1,7 @@
 #define OLD_DIAINT
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -4473,7 +4473,8 @@ C
 #include "trkoor.h"
 #include "huckel.h"
       LOGICAL EXHER, EXSIR, EXABA, BRKALS, DOCART, DOOWN, AUTOSY, NOSYM
-      CHARACTER FILENM*10, TMPLN*80, TMPTXT*11, CRT*1, BSNM*80, ID3*1
+      CHARACTER FILENM*10, TMPTXT*11, CRT*1, BSNM*80, ID3*1
+      CHARACTER*(len_MLINE) TMPLN
       CHARACTER*1 KASYM(3,3)
       DIMENSION GEINFO(0:ITRMAX,6), NONT(MXCENT), JCO(MXAQN,MXCENT)
       DIMENSION EVEC(MX2CRD,MX2CRD), BMTINV(MXRCRD,MXCOOR)

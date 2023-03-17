@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -247,7 +247,7 @@ C
 #include "ccom.h"
 #include "shells.h"
 #include "primit.h"
-      CHARACTER SPDCAR*1
+      CHARACTER SPDCAR*1 ! declaration of type for external function SPDCAR()
       DIMENSION NUCORB(NHTYP,2,NUCIND),AA(2,NHTYP,2,NUCIND)
 C
 C     Initialize
@@ -291,7 +291,7 @@ C
       ENDDO
 C
       IF(IPRINT.GE.2) THEN
-         CALL HEADER('NUCORB:Basis set information:',-1)
+         CALL HEADER('NUCBAS: Basis set information:',-1)
         DO I = 1,NUCIND
           WRITE(LUPRI,'(/A,A4,A/)') '*** Center: ',NAMN(I),' ***'
           WRITE(LUPRI,'(2X,A)') '* Large components:'

@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -53,17 +53,17 @@ C
      &                      17,18,19,20,21,22,23,24,25,26,27), I
                   END IF
  200           CONTINUE
-               WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
-     *              '" not recognized in DFTINP.'
+               WRITE (LUPRI,'(/4A/)') ' Keyword "',WORD,
+     *              '" not recognized for ',WORD1
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
-               CALL QUIT('Illegal keyword in DFTINP.')
+               CALL QUIT('Illegal keyword for '//WORD1)
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
             ELSE
-              WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
-     *            '" not recognized in DFTINP.'
+               WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
+     *            '" not recognized for ',WORD1
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
-                 CALL QUIT('Illegal keyword in DFTINP.')
+               CALL QUIT('Illegal keyword for '//WORD1)
             END IF
 c     keyword handling section
 c           >PRINT < keyword
@@ -269,6 +269,7 @@ c     code goes here
 
 
       SUBROUTINE ACINP
+      ! input for Asymtopic Correction
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"

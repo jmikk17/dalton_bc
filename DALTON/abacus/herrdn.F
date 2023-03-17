@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -123,6 +123,7 @@ C     ... in qm3.h, for QM3:
 C
       NEWDEF = (WORD .EQ. '*READIN' .OR. WORD .EQ. '*MOLBAS')
       IPREAD_ini = IPREAD
+      INUC = 0
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
@@ -250,12 +251,6 @@ C Nuclear model
             END IF
       END IF
   300 CONTINUE
-      IF(GAUNUC) THEN
-         WRITE(LUPRI,'(/A)') '@ * Nuclear model: '//
-     &      'Gaussian charge distribution.'
-      ELSE
-         WRITE(LUPRI,'(/A)') '@ * Nuclear model: Point charge.'
-      ENDIF
       IF (ICHANG .GT. 0) THEN
          CALL HEADER('Changes of defaults for '//WORD1,0)
          IF (IPREAD .NE. IPREAD_ini) THEN
@@ -316,8 +311,17 @@ C Nuclear model
                CALL QUIT('Error in input processing for '//WORD1)
             END IF
          END IF
-         WRITE (LUPRI,'()')
+         IF (INUC .NE. 0) THEN
+            WRITE (LUPRI,'(A)')
+     &         ' Nuclear model was defined in input.'
+         END IF
       END IF
+      IF(GAUNUC) THEN
+         WRITE(LUPRI,'(/A)') '@ * Nuclear model: '//
+     &      'Gaussian charge distribution.'
+      ELSE
+         WRITE(LUPRI,'(/A)') '@ * Nuclear model: Point charge.'
+      ENDIF
       RETURN
       END
 C  /* Deck reaini */
@@ -642,7 +646,10 @@ C
 C Error messages:
 C
  5010 CONTINUE
-      CALL QUIT('Wrong keyword. Expecting INTGRL, BASIS or ATOMBA.')
+      WRITE(LUPRI,'(2A/A)')
+     &   ' Wrong keyword in first line of .mol file : ',KEYWRD,
+     &   ' Expecting INTGRL, BASIS, ATOMBA or ATOMDF.'
+      CALL QUIT('Wrong keyword in first line of .mol file.')
  5020 CONTINUE
       CALL STOPIT('READIN','READ_MOL',KLAST,LWORK)
 !5030 CONTINUE
@@ -714,7 +721,7 @@ C
       real(8), allocatable :: cprimu(:, :, :, :)
       CHARACTER*80 BASREF(10,KATOM,3)
       CHARACTER*1  KASYM(3,3),ID3,CRT
-      CHARACTER*72 TTITLE(2)
+      CHARACTER*200 TTITLE(2)
       CHARACTER*2 SYMTXT
       CHARACTER*15 SYMGROUP
       DIMENSION IFXYZ(3)
@@ -776,20 +783,30 @@ C     Enforce computation of Cartesian second moments (WK/UniKA/04-11-2002).
 C     Sep 09/hjaaj: moved to HERINI
 C     IF (LMULBS) CALL SET_CARMOM_2
 C*****************************************************************************
-C     Card 2-3: Title cards
+C     Card 2-3: Title cards, reading 200 char
+C     (Do not use RDLINE() because OK that title lines are longer than len_MLINE char)
 C*****************************************************************************
-      CALL RDLINE(LUINFO)
-      TTITLE(1) = MLINE(NMLINE)
-      CALL RDLINE(LUINFO)
-      TTITLE(2) = MLINE(NMLINE)
+      IF (SLAVE) THEN
+         TTITLE(1) = MLINE(NMLINE+1)
+         TTITLE(2) = MLINE(NMLINE+2)
+      ELSE
+         READ(LUINFO,'(A)') TTITLE(1)
+         READ(LUINFO,'(A)') TTITLE(2)
+         MLINE(NMLINE+1) =  TTITLE(1) ! truncate to MLINE length
+         MLINE(NMLINE+2) =  TTITLE(2)
+      END IF
+      NMLINE = NMLINE + 2
+
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
-         WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
-     &   'The two title cards from your ".mol" input:', SEPARATOR(1:72),
-     &   ' 1: ',TTITLE(1),' 2: ',TTITLE(2),SEPARATOR(1:72)
+           LEN1 = LNBLNK(TTITLE(1))
+           LEN2 = LNBLNK(TTITLE(2))
+           WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
+     &     'The two title cards from your ".mol" input:', SEPARATOR,
+     &     ' 1: ',TTITLE(1)(1:LEN1),' 2: ',TTITLE(2)(1:LEN2),SEPARATOR
          END IF
          IF (LUCME.GT.0) WRITE (LUCME,'(2X,A)')
-     &      SEPARATOR(1:72),TTITLE(1),TTITLE(2),SEPARATOR(1:72)
+     &      SEPARATOR,TTITLE(1),TTITLE(2),SEPARATOR
       END IF
 C***********************************************************************
 C     Card 4:
@@ -1107,7 +1124,7 @@ C***********************************************************************
      &          SEG(KBLOCK,KSETS), ALPHA(KPRIM,KBLOCK,KSETS),
      &          CPRIM( KPRIM,KPRIM,KBLOCK,KSETS),
      &          CPRIMU(KPRIM,KPRIM,KBLOCK,KSETS), ISGEN(KBLOCK)
-      CHARACTER SPDCAR*1,BSET*5, BKPLIN*80, TSTCHA*2
+      CHARACTER SPDCAR*1,BSET*5, TSTCHA*2
       CHARACTER*80 BASNAM, AUXNAM, BASNAMSAVE
 C...  added by Bin Gao, for effective core potentials, Dec. 6, 2010
       character*80 ECPNAME
@@ -1128,6 +1145,7 @@ C...
 #include "ecpinf.h"
 #include "qm3.h"
 #include "infpar.h"
+      CHARACTER*(len_MLINE) BKPLIN
 C
       LCMMAX_save = LCMMAX
 C     MBSIP = identifier for Previous basis-set identifier MBSI (WK/UniKA/04-11-2002).
@@ -1252,6 +1270,7 @@ C           ... New input style
             CALL LINE5R(MLINE(NMLINE),Q,NONT(I),MBSI,IQM(I,1),
      &                  JCO(1,I,1),KANG,BASIS,ATOMBA,LMULBS,
      &                  BASNAMSAVE,RADIUS_PCM, ALPHA_PCM)
+            ! Any BASNAM read in LINE5R is not used, it will be read below if BAS=
             Q_EXPONENT = D0 ! hjaaj: should be introduced in LINE5R; GNU=
          ELSE
 C           ... Old input style
@@ -1485,11 +1504,11 @@ C...             sets the ECP
 C     Read effective core potential information from file for atom.
 C     The charge of atom type will be set to the effective charge below
 C     after J=2: reading Huckel basis (if DOHUCKEL)
-                   if(ADDSYM) call QUIT('ECP not implemented '//
-     &               'with auto-detected symmetry.')
-C...               tries to find the name of ECP
+                   if(ADDSYM) call QUIT('FATAL ERROR: ECP not '//
+     &               'implemented with auto-detected symmetry.')
+C...               try to find the name of ECP
                    IPOS = IPOS+index(MLINE(NMLINE-NONT(I))(IPOS:), '=')
-C...               removes extra spaces
+C...               remove extra spaces between = and ECP name
                    IPOS2 = 0
                    do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
                      if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ') then
@@ -1497,7 +1516,7 @@ C...               removes extra spaces
                        exit
                      end if
                    end do
-                   if (IPOS2.eq.0) then
+                   if (IPOS2.eq.0) then ! no ECP name found
                      write(LUPRI,'(/A/A//A)')
      &                 ' Incorrect input for ECP name in line:',
      &                 MLINE(NMLINE-NONT(I)),
@@ -1559,7 +1578,26 @@ C...
      &                          'auxiliary basis set name')
                          ENDIF
                        ELSE
-                         BASNAM = MLINE(NMLINE-NONT(I))((IPOS+IPOS2):)
+                         IPOS = IPOS + IPOS2 ! pointing to first char after '='
+                         IPOS2 = 0
+                         do IPOS3 = IPOS, len(MLINE(NMLINE-NONT(I)))
+                          if (MLINE(NMLINE-NONT(I))(IPOS3:IPOS3).ne.' ')
+     &                      then
+                            IPOS2 = IPOS3 ! pointing to first non-blank after '='
+                            exit
+                          end if
+                         end do
+                         if (IPOS2.eq.0) then ! no basis set name found
+                           write(LUPRI,'(/A/A//A)')
+     &                 ' FATAL ERROR: No basis set name found in line:',
+     &                 MLINE(NMLINE-NONT(I)),
+     &                 ' Format is "Basis=?"'
+                         call QUIT('Incorrect input for basis set name')
+                         end if
+
+C...                     Get the basis set name plus any cgto info for ano and any pol= specification.
+C                        It will be interpreted in BASLIB.
+                         BASNAM = MLINE(NMLINE-NONT(I))(IPOS2:)
                        ENDIF
                     END IF
                  ELSE
@@ -1962,7 +2000,7 @@ C
         IF (MLINE(NMLINE)(5:5) .EQ. ' ') THEN
            IPOS = 5
         ELSE
-           IPOS = INDEX(MLINE(NMLINE)(2:80),' ') + 1
+           IPOS = INDEX(MLINE(NMLINE)(2:),' ') + 1
         END IF
 C       sep05-hjaaj: allow both e.g. 'H ' and ' H' as names
         IF (IPOS .LE. 2 .AND. MLINE(NMLINE)(1:1) .EQ. ' ') THEN
@@ -1993,22 +2031,22 @@ C
 #if !defined (VAR_NOFREE)
 C
         IF (QM3) THEN
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &         ISUBSY(NCTOT),ISUBSI(NCTOT)
         ELSE
-           READ (MLINE(NMLINE)(IPOS:80),*,ERR=101,END=101)
+           READ (MLINE(NMLINE)(IPOS:),*,ERR=101,END=101)
      &         CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT)
         END IF
         GO TO 104
 C
- 101    READ (MLINE(NMLINE)(IPOS:80),
+ 101    READ (MLINE(NMLINE)(IPOS:),
      &        '(BN,3F20.0,2I6)',ERR=102)
      &        CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &        ISUBSY(NCTOT),ISUBSI(NCTOT)
         GO TO 104
 C
- 102    READ (MLINE(NMLINE)(IPOS:80),
+ 102    READ (MLINE(NMLINE)(IPOS:),
      &       '(BN,3F10.0,2I6,I5)',ERR=103)
      &       CORD(1,NCTOT),CORD(2,NCTOT),CORD(3,NCTOT),
      &       ISUBSY(NCTOT),ISUBSI(NCTOT)
@@ -3812,12 +3850,13 @@ C
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
 
+C           Calculate nuclear dipole moment with origin (0,0,0)
             IF (ISYMAX(1,1) .EQ. 0) DIPNUC(1) = DIPNUC(1)
-     &         + (CORD(1,N) - DIPORG(1))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(1,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(2,1) .EQ. 0) DIPNUC(2) = DIPNUC(2)
-     &         + (CORD(2,N) - DIPORG(2))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(2,N)*CHARGE(N)*FMULT(IVARB)
             IF (ISYMAX(3,1) .EQ. 0) DIPNUC(3) = DIPNUC(3)
-     &         + (CORD(3,N) - DIPORG(3))*CHARGE(N)*FMULT(IVARB)
+     &         + CORD(3,N)*CHARGE(N)*FMULT(IVARB)
 
          END IF
          II = 0
@@ -4436,13 +4475,11 @@ C
 C
       REWIND(LUCMD)
       DO WHILE (.NOT. FNDEOI)
-         READ(LUCMD,'(A7)') TMPWRD
+         READ(LUCMD,'(A7)',END=100) TMPWRD
+            ! exit with go to 100 if *CHOACT has not been found before end of file
          CALL UPCASE(TMPWRD)
          IF (TMPWRD(1:7) .EQ. '*CHOACT') THEN
             ACTSEL = .TRUE.
-            FNDEOI = .TRUE.
-         ELSE IF ((TMPWRD(1:7) .EQ. '*END OF') .OR.
-     &            (TMPWRD(1:7) .EQ. '**END O')) THEN
             FNDEOI = .TRUE.
          END IF
       END DO
@@ -5635,7 +5672,7 @@ C
 #include "molinp.h"
 #include "infpar.h"
 
-      PARAMETER (len_NEXT_INPUT_LINE = 120)
+      PARAMETER (len_NEXT_INPUT_LINE = 200)
       CHARACTER*(len_NEXT_INPUT_LINE) NEXT_INPUT_LINE
       INTEGER    NMLN_LASTREAD
       DATA       NMLN_LASTREAD /0/
@@ -5731,7 +5768,8 @@ C
 #include "maxorb.h"
 #include "maxaqn.h"
 C
-      CHARACTER*72 TTITLE(2)
+      CHARACTER*(*) TTITLE(2)
+
       CHARACTER*8 CDATE, CTIME
       CHARACTER*8 TABLE1(4), TABLE2(4), TABLE3(4),
      &            TABLE4(4), TABLE5(4), TABLE6(4)
@@ -6874,7 +6912,7 @@ C     Charge of molecule
 C
          IPOS = INDEX(LINE,'CHA')
          IF (IPOS .NE. 0) THEN
-            IPOS2 = INDEX(LINE(IPOS:80),'=')
+            IPOS2 = INDEX(LINE(IPOS:),'=')
             IF ((IPOS2 .EQ. 0) .OR. (IPOS2 .GT. 7)) THEN
                WRITE (LUPRI,*) 'Incorrect input for molecular charge'
                WRITE (LUPRI,*) 'Format is "Charge=?"'
@@ -6923,7 +6961,7 @@ C     For each generator, determine number of axis changing sign
 C
                ISTART = IPOS + IPOS2 + 1
                DO I = 1, NSYMOP
-                  DO ISTP = ISTART, 80
+                  DO ISTP = ISTART, len_MLINE
                      IF (LINE(ISTP:ISTP) .NE. ' ') GO TO 20
                   END DO
  20               CONTINUE
@@ -7104,7 +7142,8 @@ C
 #include "pcmlog.h"
 #include "mxcent.h"
 #include "maxorb.h"
-      CHARACTER TMPLN*80, BASNAM*80, BKPLIN*80, FRMT*5
+      CHARACTER TMPLN*(*), BASNAM*80, BKPLIN*120, FRMT*5
+      ! assuming len_MLINE=120 as molinp.h not included here
       LOGICAL   BASIS, ATOMBA, LMULBS, READ_BLOCKS
       LOGICAL   FOUNDR, FOUNDA
       DIMENSION JCO(KANG)

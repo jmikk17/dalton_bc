@@ -1,7 +1,7 @@
 !#define notSIRGRAD_DEBUG
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -124,7 +124,7 @@ C
 #include "infpri.h"
 !infinp.h: DOHFSRDFT
 #include "infinp.h"
-! dftcom.h : DFT_SPINDNS
+! dftcom.h : SRDFT_SPINDNS
 #include "dftcom.h"
 C
 C
@@ -175,7 +175,7 @@ C     DVSAO matrix
 C
 C JT Aug 09 beg
 C do spin density matrix
-      IF (GETDV .AND. DFT_SPINDNS) THEN
+      IF (GETDV .AND. SRDFT_SPINDNS) THEN
          CALL DZERO(DVAO(1,1,2),N2BASX)
       IF (NASHT .GT. 0) THEN
          CALL MEMGET2('REAL','DAO1',KDAO1,NASHT*NBAST,WRK,KFREE,LFREE)
@@ -209,7 +209,7 @@ C do spin density matrix
  2010    CONTINUE
          CALL MEMREL('FCKDEN DSAO',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
       END IF  ! IF (NASHT .GT. 0) THEN
-      END IF  ! IF (GETDV .AND. DFT_SPINDNS) THEN
+      END IF  ! IF (GETDV .AND. SRDFT_SPINDNS) THEN
 C JT Aug 09 end
 C
 C
@@ -250,7 +250,7 @@ C
           WRITE(LUPRI,'(/A)')
      &    ' FCKDEN: DVAO = Density matrix,   active part (AO-basis)'
           CALL OUTPUT(DVAO,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
-        IF (DFT_SPINDNS) THEN
+        IF (SRDFT_SPINDNS) THEN
           WRITE(LUPRI,'(/A)')
      &    ' FCKDEN: DSAO = Spin density matrix, active part (AO-basis)'
           CALL OUTPUT(DVAO(1,1,2),1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
@@ -273,13 +273,13 @@ C     from molecular orbitals given in CMO matrix and the occupation
 C     data as contained in NISH array (the closed shells) and the open
 C     shell occupation data in _quadratic_ UDV matrix.
 C
-C HJAaJ July 2017: extended with DFT_SPINDNS code for open-shell MC-srDFT
+C HJAaJ July 2017: extended with SRDFT_SPINDNS code for open-shell MC-srDFT
 C
 #include "implicit.h"
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D2 = 2.0D0)
 !
 ! inforb.h : ...
-! dftcom.h : DFT_SPINDNS
+! dftcom.h : SRDFT_SPINDNS
 #include "inforb.h"
 #include "dftcom.h"
       DIMENSION UDV(NASHT,NASHT,2)
@@ -296,7 +296,7 @@ C
 C
       CALL DZERO(DCAO,N2BASX)
       IF (NASHT.GT.0) THEN
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL DZERO(DVAO,2*N2BASX)
          ELSE
             CALL DZERO(DVAO,N2BASX)
@@ -340,7 +340,7 @@ C
      &             CMO(ICMOA),NBASI,
      &         D1, DVAO(IBASI,IBASI,1),NBAST
      &      )
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL DGEMM(
      &         'N', 'N', NBASI, NASHI, NASHI,
      &         D1, CMO(ICMOA), NBASI,
@@ -375,7 +375,7 @@ C
 #include "priunit.h"
       DIMENSION DV(*), CMO(*), FC(*), FV(NNORBT,*), WRK(*)
 C     ... FV(*,1) is the real FV,
-C         FV(*,2) is FS for DFT_SPINDNS or
+C         FV(*,2) is FS for SRDFT_SPINDNS or
 C         FV(*,2) is the Kohn-Sham matrix for LSRHYBR
 C         / hjaaj Feb 2010
       LOGICAL   ONLYFC, NOFV, LSRHYBR
@@ -396,7 +396,7 @@ C
       NOFV   = ( (NASHT .EQ. 0) .OR. ONLYFC )
       LSRHYBR = SRHYBR .AND. MCTYPE.GT.0
 C
-      IF (DFT_SPINDNS .AND. LSRHYBR) THEN
+      IF (SRDFT_SPINDNS .AND. LSRHYBR) THEN
          CALL QUIT('SRHYBR and non-singlet not implemented')
       END IF
 C
@@ -409,7 +409,7 @@ C
       KFREE  = KFRSAV
       LFREE  = LFRSAV
       IF (.NOT. NOFV) THEN
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
 C        FCAO, FVAO, and FSAO must be consecutive
 C        DCAO, DVAO, and DSAO must be consecutive
             ND = 3
@@ -473,7 +473,7 @@ C
          CALL DGETSP(NBAST,WRK(KDCAO),WRK(KFVAO))
          IF (NSYM .GT. 1) CALL PKSYM1(WRK(KFVAO),WRK(KFVAO),NBAS,NSYM,2)
          CALL UTHUB(WRK(KFVAO),FV,CMO,WRK(KDCAO),NSYM,NBAS,NORB)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL DCOPY(N2BASX,WRK(KFSAO),1,WRK(KDCAO),1)
             CALL DGETSP(NBAST,WRK(KDCAO),WRK(KFSAO))
             IF (NSYM .GT. 1)
@@ -496,7 +496,7 @@ C
           WRITE(LUPRI,1300)
           CALL OUTPKB(FV,NORB,NSYM,1,LUPRI)
         END IF
-        IF (DFT_SPINDNS) THEN
+        IF (SRDFT_SPINDNS) THEN
           WRITE(LUPRI,1350)
           CALL OUTPKB(FV(1,2),NORB,NSYM,1,LUPRI)
         END IF
@@ -517,7 +517,7 @@ C     thus we can handle this by adding the appropriate matrix function
 C     of FS and DV to FC, creating an effective FC for the local spin
 C     model.  / hjaaj Feb 2010
 C
-      IF (DFT_LOCALSPIN .AND. DFT_SPINDNS) THEN
+      IF (SRDFT_LOCALSPIN .AND. SRDFT_SPINDNS) THEN
 #ifdef MOD_SRDFT
          CALL FCK_MAKE_FCEFF_LOCALSPIN(FC,FV(1,2),DV,WRK(KFREE),LFREE)
 #else
@@ -762,7 +762,7 @@ C        ... Coulomb and Exchange
          IFCTYP(2) = 13
       END IF
 C
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          IFCTYP(3) = -12 ! only exchange; minus sign is code for spin density
          LUSUPM_here = -1
       END IF
@@ -776,7 +776,7 @@ C
          END IF
          IOFFAO = 1
       ELSE IF (NISHT .GT. 0 .OR. ADDSRI) THEN
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             NDMAT = 3
             NFMAT = 3
          ELSE
@@ -1471,7 +1471,7 @@ C   PV, two-electron d.m. for CREF.
 C   H2AC, the two-electron integrals over active orbitals.
 C   FC, the inactive Fock matrix.
 C   FCAC, part of FC with active orbitals indices.
-C         if (DFT_SPINDNS) FCAC(:,2) is FSAC, part of FS with active orbital indices
+C         if (SRDFT_SPINDNS) FCAC(:,2) is FSAC, part of FS with active orbital indices
 C   FV, the active Fock matrix.
 C   FQ, the "Q" Fock matrix
 C
@@ -1531,14 +1531,14 @@ C
 
 C
 C     If spin-dependent srDFT then both charge and spin density 1-el matrices
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          NDV = 2
       ELSE
          NDV = 1
       END IF
 #ifdef SIRGRAD_DEBUG
 CFRAN 18/02/2010
-      WRITE(LUPRI,*) ' DFT_SPINDNS,NDV= ', DFT_SPINDNS,NDV
+      WRITE(LUPRI,*) ' SRDFT_SPINDNS,NDV= ', SRDFT_SPINDNS,NDV
 CFRAN 18/02/2010 END
 #endif
 C
@@ -1591,7 +1591,7 @@ C
          CALL MAKDM(CREF,DV,PV,INDXCI,WRK,LFREE)
 C        CALL MAKDM(CREF,DV,PV,INDXCI,WRK,LFREE)
          IF (NDV.GE.2) THEN
-            IF (DFT_LOCALSPIN) THEN
+            IF (SRDFT_LOCALSPIN) THEN
 #ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(DV(1,1),DV(1,2),WRK(KWRKF),LWRKF)
 #else
@@ -1639,7 +1639,7 @@ C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
          call outpkb(fc,NORB,NSYM,-1,lupri)
          write(lupri,*) 'FV after FCKMAT'
          call outpkb(fv,NORB,NSYM,-1,lupri)
-         if (dft_spindns) then
+         if (srdft_spindns) then
             write(lupri,*) 'FS after FCKMAT'
             call outpkb(fv(nnorbt+1),NORB,NSYM,-1,lupri)
          end if
@@ -1662,14 +1662,14 @@ C
       IF (NWOPT.GT.0) CALL DZERO(WRK(KORDIA),NWOPT)
       IF (NASHT .GE. 1) THEN
          CALL GETAC(FC,FCAC)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL GETAC(FV(NNORBT+1),FCAC(1,2))  ! FSAC
          END IF
          IF (P6FLAG(21)) THEN
             WRITE(LUPRI,'(/A)')
      &      ' FCAC, active block of inactive Fock matrix FC'
             CALL OUTPAK (FCAC,NASHT,-1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE(LUPRI,'(/A)')
      &         ' FSAC, active block of spin-density Fock matrix FS'
                CALL OUTPAK (FCAC(1,2),NASHT,-1,LUPRI)
@@ -1710,8 +1710,8 @@ C
          END IF
          CALL DZERO(FQ,NORBT*NASHT)
          CALL GETAC(FV,FCAC) ! put -K(DV), i.e. minus DV exchange, in FCAC
-         IF (DFT_SPINDNS) CALL QUIT(
-     &      'Sorry, DFT_SPINDNS not implemented yet for HSROHF')
+         IF (SRDFT_SPINDNS) CALL QUIT(
+     &      'Sorry, SRDFT_SPINDNS not implemented yet for HSROHF')
          EMCACT = -ENRACT(DV,FCAC,FQ)/2
       ELSE IF (NASHT .EQ. 1) THEN
          CALL DZERO(FQ,NORBT)
@@ -1866,7 +1866,7 @@ C        CALL CIDIAG(ICSYM,NOH2,FCAC,H2AC,XNDXCI,DIAGC,WRK,LFREE)
      *               G,EMCACX,WRK(KWRK4),LWRK4)
 C        CALL CIGRAD(CREF,FCAC,H2AC,INDXCI,
 C    *               GCI,EMCACT,WRK,LFREE)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KGS_CI = KWRK4
             KWRK5  = KGS_CI + NCONF
             LWRK5  = LFREE- KWRK5
@@ -2011,7 +2011,7 @@ C
 C Used from common blocks:
 C   INFVAR : NWOPT,NWOPH,JWOP(2,*)
 C   INFIND : IROW(*),?
-C   DFTCOM : DFT_SPINDNS
+C   DFTCOM : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -2080,7 +2080,7 @@ C    (only other possibility, inactive, is already eliminated):
                   J_XL = IIORBI+IROW(NX)+NL
                END IF
                TEMP = TEMP + UDV(NXW,NKW,1)*FC(J_XL)
-               IF (DFT_SPINDNS) THEN
+               IF (SRDFT_SPINDNS) THEN
                   TEMPS = TEMPS + UDV(NXW,NKW,2)*FV(J_XL,2)
                END IF
   100       CONTINUE
@@ -2105,7 +2105,7 @@ C ** second index active:
                   J_XK = IIORBI+IROW(NX)+NK
                END IF
                TEMP = TEMP + UDV(NXW,NLW,1)*FC(J_XK)
-               IF (DFT_SPINDNS) THEN
+               IF (SRDFT_SPINDNS) THEN
                   TEMPS = TEMPS + UDV(NXW,NLW,2)*FV(J_XK,2)
                END IF
   200       CONTINUE
@@ -2674,7 +2674,7 @@ C   INFOPT : GNORM(3),?
 C   -- GNORM, norm of the CI, the orbital, and the total gradient.
 C   INFDIM : ?
 C   INFTAP : LUIT2,?
-C  dftcom.h: DFT_SPINDNS
+C  dftcom.h: SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "infinp.h"
@@ -2755,7 +2755,7 @@ C
 C .. 1.1 .. (MAKDM, CIGRAD)
 C .. 1.2 .. (FCKMAT)
       KFCAC  = 1
-      IF (DFT_SPINDNS) THEN
+      IF (SRDFT_SPINDNS) THEN
          KFSAC  = KFCAC + NNASHX   ! FCAC
          KWRKF  = KFSAC + NNASHX   ! FCAC, FSAC
       ELSE
@@ -2814,14 +2814,14 @@ C     ... currently ORBGRD and ORBSIG always references FV
 C
       IF (NASHT .GE. 1) THEN
          CALL GETAC(FC,WRK(KFCAC))
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             CALL GETAC(FV(NNORBT+1),WRK(KFSAC))
          END IF
          IF (P6FLAG(21)) THEN
             WRITE(LUPRI,'(/A)')
      &         ' FCAC, active block of inactive Fock matrix FC'
             CALL OUTPAK (WRK(KFCAC),NASHT,-1,LUPRI)
-            IF (DFT_SPINDNS) THEN
+            IF (SRDFT_SPINDNS) THEN
                WRITE(LUPRI,'(/A)')
      &         ' FSAC, active block of spin-density Fock matrix FS'
                CALL OUTPAK (WRK(KFSAC),NASHT,-1,LUPRI)
@@ -2929,7 +2929,7 @@ C
      *               INDXCI,G,EMCACX,WRK(KWRK4),LWRK4)
 C        CALL CIGRAD(CREF,FCAC,H2AC,INDXCI,
 C    *               GCI,EMCACT,WRK,LFREE)
-         IF (DFT_SPINDNS) THEN
+         IF (SRDFT_SPINDNS) THEN
             KGS_CI = KWRK4
             KWRK5  = KGS_CI + NCONF
             LWRK5  = LFREE- KWRK5
@@ -3002,7 +3002,7 @@ C
 C Used from common blocks:
 C  INFORB : NORBT,NNASHX,NASHT,NISHT
 C  INFIND : IROW(),ISX()
-C  dftcom.h : DFT_SPINDNS
+C  dftcom.h : SRDFT_SPINDNS
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -3235,7 +3235,7 @@ C Used from common blocks:
 C  INFORB : NSYM,MULD2H(8,8),NASHT,NNBASX,N2BASX,...
 C  INFVAR : JWOPSY
 C  INFPRI : P6FLAG()
-C  DFTCOM : DFT_SPINDNS
+C  DFTCOM : SRDFT_SPINDNS
 C
 #include "maxorb.h"
 #include "priunit.h"
@@ -3247,8 +3247,8 @@ C
 C
       CALL QENTER('FCKDEN2')
 C
-      IF (DFT_SPINDNS) THEN
-         CALL QUIT('DFT_SPINDNS not implemented in FCKDEN2 yet')
+      IF (SRDFT_SPINDNS) THEN
+         CALL QUIT('SRDFT_SPINDNS not implemented in FCKDEN2 yet')
       END IF
 C
       KFRSAV = 1

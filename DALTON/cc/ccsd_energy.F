@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1100,7 +1100,8 @@ C
 C
          IERR = -1
          CALL MOLLAB('MP2INFO ',LUSIFC,IERR)
-         IF (IERR.EQ.0) THEN
+         IF (IERR.EQ.0) THEN ! append CCSDINFO to MP2INFO
+            READ(LUSIFC)
             READ(LUSIFC)
             READ(LUSIFC)
          ELSE IF (IERR.EQ.-1) THEN
@@ -1141,6 +1142,9 @@ C
      *                       WORK(KSCR1),IPRINT)
 C
          WRITE(LUSIFC) (WORK(KSCR3+I-1), I = 1,NORBTS*NORBTS)
+
+C        Finally, write MP2/CCSD energy to interface file
+         WRITE(LUSIFC) EN2, EN2, EN2, EN2
 C
          WRITE(LUSIFC) '********',CDATE,CTIME,'EODATA  '
 C

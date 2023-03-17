@@ -1,24 +1,18 @@
 !
-!...   Copyright (c) 2014 by the authors of Dalton (see below).
-!...   All Rights Reserved.
-!...
-!...   The source code in this file is part of
-!...   "Dalton, a molecular electronic structure program,
-!...    Release DALTON2014 (2014), see http://daltonprogram.org"
-!...
-!...   This source code is provided under a written licence and may be
-!...   used, copied, transmitted, or stored only in accord with that
-!...   written licence.
-!...
-!...   In particular, no part of the source code or compiled modules may
-!...   be distributed outside the research group of the licence holder.
-!...   This means also that persons (e.g. post-docs) leaving the research
-!...   group of the licence holder may not take any part of Dalton,
-!...   including modified files, with him/her, unless that person has
-!...   obtained his/her own licence.
-!...
-!...   For further information, including how to get a licence, see:
-!...      http://daltonprogram.org
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
 
@@ -480,7 +474,7 @@ C
 C        Write to file LUQUAD
 C        ====================
 C
-         CALL WRTQUA_OLD(X8,Y8,Z8,WT8,LUQUAD,NTHIS)
+         CALL WRTQUA_srdft(X8,Y8,Z8,WT8,LUQUAD,NTHIS)
          NTOTAL = NTOTAL + NTHIS
          NALL = NALL + NTHAT
          NATOM = NATOM + NDEG
@@ -491,7 +485,7 @@ C
 15    CONTINUE
 
       NLAST = -1
-      CALL WRTQUA_OLD(X8,Y8,Z8,WT8,LUQUAD,NLAST)
+      CALL WRTQUA_srdft(X8,Y8,Z8,WT8,LUQUAD,NLAST)
 
       WRITE (LUPRI,'(/,2X,A,I10,A,F5.1,A/)') 
      &     ' Number of grid points in quadrature:',NTOTAL,
@@ -506,7 +500,7 @@ C
 
 
 C*****************************************************************************
-      SUBROUTINE WRTQUA_OLD(X,Y,Z,WT,LUQUAD,NPOINT)
+      SUBROUTINE WRTQUA_srdft(X,Y,Z,WT,LUQUAD,NPOINT)
 C*****************************************************************************
 C
 C     T. Helgaker
@@ -521,7 +515,7 @@ C*****************************************************************************
 
 
 C*****************************************************************************
-      SUBROUTINE REAQUA_OLD(X,Y,Z,WT,LUQUAD,NPOINT)
+      SUBROUTINE REAQUA_srdft(X,Y,Z,WT,LUQUAD,NPOINT)
 C*****************************************************************************
 C
 C     T. Helgaker

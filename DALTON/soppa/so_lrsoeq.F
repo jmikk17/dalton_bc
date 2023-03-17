@@ -3,8 +3,8 @@ C  /* Deck so_lrsoeq */
       SUBROUTINE SO_LRSOEQ(MODEL,LABEL,ISYMTR,IMAGPROP,
      &                     NEXCI,MAXIT,FRVAL,NFRVAL,
      &                     RESINM,LRESINM,CONV,LCONV,DENSIJ,LDENSIJ,
-     &                     DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,
-     &                     T2MP3,LT2MP3,
+     &                     DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                     DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
      &                     FOCKD,LFOCKD,REDE,REDS,LMXRED,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -61,11 +61,12 @@ C
       CHARACTER MODEL*5,LABEL*8
       CHARACTER*11 FULL_NAME
 C
-      DIMENSION FRVAL(NFRVAL),   RESINM(LRESINM)
-      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
-      DIMENSION T2MP(LT2MP),     T2MP3(LT2MP3)
-      DIMENSION FOCKD(LFOCKD),   WORK(LWORK)
-      DIMENSION REDE(LMXRED),    REDS(LMXRED)
+      DIMENSION FRVAL(NFRVAL),    RESINM(LRESINM)
+      DIMENSION DENSIJ(LDENSIJ),  DENSAB(LDENSAB), DENSAI(LDENSAI)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2MP(LT2MP),      T2MP3(LT2MP3)
+      DIMENSION FOCKD(LFOCKD),    WORK(LWORK)
+      DIMENSION REDE(LMXRED),     REDS(LMXRED)
 C
       REAL(sop_dp), parameter :: TWO = 2.0D0, HALF = 0.5D0, ONE = 1.0D0
 C
@@ -108,7 +109,8 @@ C
       IF (SOPCHK) THEN
 C
          CALL SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                 DENSAI,LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                 DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                 T2MP,LT2MP,T2MP3,LT2MP3,
      &                 FOCKD,LFOCKD,ISYMTR,WORK,LWORK)
 C
       END IF
@@ -258,8 +260,8 @@ C ISYMTR is a non-local parameter, we need to copy it to the info-array
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,NOLDTR,NNEWTR,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,
-     &                DENSAI,LDENSAI,NIT,ISYMTR,IDTYPE,
+     &                DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,IDTYPE,
 #ifdef VAR_MPI
      &                WORK(kAssignedIndices),maxnumjobs,
 #endif

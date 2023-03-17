@@ -51,7 +51,7 @@ module so_info
 
    ! Arrays of arguments the method needs to pass to GET_DENS
    character(len=4), dimension(sop_num_models), parameter :: sop_dens_label = &
-      (/'NONE','MP2 ','MP2 ','MP2 ','MP2 ','MP2 ','CC2 ','CCSD','MP2 '/)
+      (/'NONE','MP2 ','MP2 ','MP2 ','MP2 ','MP2 ','CC2 ','CCSD','MP3 '/)
 
    ! Additional SOPPA filenames (Added here instead of soppinf.h)
    character(len=11), parameter :: FN_RDENS  = 'soppa_densp', &
@@ -112,7 +112,7 @@ contains
       integer :: i
       do i = 1, sop_num_models
          if ( model .eq. sop_models(i) ) then
-            so_needs_densai = (sop_dens_label(i) .eq. 'MP2 ')
+            so_needs_densai = (sop_dens_label(i)(1:2) .eq. 'MP')
             exit
          end if
       end do

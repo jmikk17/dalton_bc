@@ -14,12 +14,23 @@
 - LRESC (Juanjo Aucar)
   - Implementation for the Electric Field Gradient at first order in 1/c2
 - The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
-- ENUE - print effective number of unpaired electrons ENUE = sum(i) (2\*n\_i - n\_i\*\*2) in final wave function output (H. J. Aa. Jensen)
+- Print two effective numbers of unpaired electrons in final wave function output (H. J. Aa. Jensen)
+  - 1) sum(i)  n\_i (2 - n\_i)
+  - 2) sum(i) (n\_i (2 - n\_i))\*\*2
 - Analysis of SSCCs in terms of localized orbitals
   - Implementation of an extra keyword .SOCVIR which initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
+- PDE-London: Added implementation of London orbitals, or gauge-including atomic orbitals (GIAO), for PDE 
+    - F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. XX, XXX-XXX (2022), https://doi.org/10.1021/acs.jctc.2c00829
+
+### Other new features added
+- Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
+  Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
+- Print total oscillator strenghts when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
 ### Fixed
 - Fixed error in PE-MCSCF calculation with GSPOL
+- Fixed parallel calculation of molecular gradient with CAMB3LYP
+- Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
 
 
 ## [2020.1] (2022-01-20)

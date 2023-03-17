@@ -3,7 +3,7 @@
 
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@
 #if !defined(SYS_DEC)
 /* XOPEN compliance is missing on old Tru64 4.0E Alphas and pow() prototype
  * is not specified. */
-#define _XOPEN_SOURCE          500
+#define _XOPEN_SOURCE          600
 #define _XOPEN_SOURCE_EXTENDED 1
 #endif
 

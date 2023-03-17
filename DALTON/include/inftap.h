@@ -9,7 +9,7 @@
      &                LUGDT,  LURDT,  LUDFCK, LUSFDA, LUFDC,  LUWLK,    &
      &                LUPAO,  LUPAS,  LUNR1,  LUNR3,  LUNR5,            &
      &                LUINTR, LUMOLDEN,       LUMOLDEN_MOS,             &
-     &                LUR12,  LUORDA, LUMINT, LUSRINT
+     &                LUR12,  LUORDA, LUMINT, LUINTA_SR,LU2DER_SR
       INTEGER         LUAHSO, LUCRV1, LUCRV2, LUXYVE, LUCRVE,           &
      &                LURSP3, LURSP4, LURSP5, LUMHSO, LURSP,            &
      &                LUE3VEC,LUX2VEC
@@ -26,7 +26,7 @@
      &                LUINTR, LUMOLDEN,       LUMOLDEN_MOS, LUR12(20),  &
      &                LUPMOM, LUMOM,  LUEIND, LUENUC, LUESITE, LUEOBAR, &
      &                LUVDWSE,LUENSA, LUQM3E, LUQM3P, LUOSCR,LUMMOV,    &
-     &                LUOVER, LUNDPF, LUSRINT,LUNMPF, LUC4IF
+     &                LUOVER, LUNDPF, LUINTA_SR,LUNMPF,LUC4IF,LU2DER_SR
       COMMON /RSPTAP/ LUAHSO, LUCRV1, LUCRV2, LUXYVE, LUCRVE,           &
      &                LURSP3, LURSP4, LURSP5, LUMHSO, LURSP
       COMMON /SIRTAP/ LUINTM, LUIT1,  LUIT2,  LUIT3,  LUIT5,  LUINF,    &

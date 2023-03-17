@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -1931,10 +1931,11 @@ C  /* Deck trprs1 */
 #include "mxcent.h"
 #include "maxorb.h"
 #include "maxaqn.h"
-      LOGICAL   INTTRS, CICLC, HFCLC, TRPCLC, ZERNRM, EXCLC, OLDDX
+      LOGICAL   INTTRS, TRPCLC, ZERNRM, EXCLC, OLDDX
       PARAMETER (D10 = 10.0D0, DPM5 = -0.50D0)
       DIMENSION WORK(LWORK), NABATY(*), ZERNRM(*)
 C
+#include "abainf.h"
 #include "cbitrp.h"
 #include "spnout.h"
 #include "nuclei.h"
@@ -1947,11 +1948,9 @@ C
 #include "abares.h"
 #include "chrnos.h"
 C
-      HFCLC  = NASHT .LE. 1
-      IF (HFCLC) NCONF = 1
+      IF (ABAHF) NCONF = 1
       EXCLC  = .FALSE.
       TRPCLC = .TRUE.
-      CICLC  = .FALSE.
       EXVAL  = 0.0D0
       NEXVAL = 1
 C
@@ -1972,7 +1971,7 @@ C
          IF (NREC .GT. 0) THEN
             CALL ABAVAR(ISYM,TRPCLC,IPRTRP,WORK,LWORK)
          IF (NVARPT .EQ. 0) GOTO 50
-            IF (HFCLC) NCONF = 1
+            IF (ABAHF) NCONF = 1
 C
 C     Collect right-hand sides
 C
@@ -2024,7 +2023,7 @@ C
                   NOCONV = .TRUE.
                   FINRES = 0.0D0
                   KZRED_ABA = 0
-                  CALL ABARSP(CICLC,HFCLC,TRPCLC,OOTV,ISYM,EXCLC,EXVAL,
+                  CALL ABARSP(ABACI,ABAHF,TRPCLC,OOTV,ISYM,EXCLC,EXVAL,
      &                        NEXVAL,NABATY,1,TRPLAB(IREC),LUGDVE,
      &                        LUSOVE,LUREVE,THRTRP,MAXTRP,IPRTRP,MXRM,
      &                        MXPHP,WORK,LWORK)
@@ -2075,7 +2074,6 @@ ckr               IDORCT(IREC) = 1
                IF (IPRTRP .GT. 10) THEN
                   CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
                END IF
-               CALL OUTPUT(WORK,1,NVARPT,1,2,NVARPT,2,1,LUPRI)
  10         CONTINUE
          END IF
  50   CONTINUE

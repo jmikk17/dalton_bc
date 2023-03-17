@@ -30,7 +30,7 @@ C
      &             ' SO_DIAG      ',' SO_TRIAL1    ',' SO_REDEV     ',
      &             ' SO_TRIAL2    ',' SO_ERES      ',' SO_ORDEIG    ',
      &             ' SO_OPTVEC    ',' SO_ROPT      ',' SO_ORTH_TRN  ',
-     &             ' SO_SRES      ',' SO_DENSAI    ',' ???????????  ',
+     &             ' SO_SRES      ',' SO_DENSAI    ',' SO_DENS3     ',
      &             ' ?????????    '/
       CHARACTER*14 SUBNMW(LSOWTI)
       DATA SUBNMW /' SO_ERES      ',' SO_SRES      ',' SO_REDEV     ',

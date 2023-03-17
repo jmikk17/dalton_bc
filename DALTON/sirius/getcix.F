@@ -1,6 +1,6 @@
 !
 !  Dalton, a molecular electronic structure program
-!  Copyright (C) by the authors of Dalton.
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !
 !  This program is free software; you can redistribute it and/or
 !  modify it under the terms of the GNU Lesser General Public
@@ -370,7 +370,7 @@ C        as LACIMX + NCSIM*LBCIMX).
 C        LCINSV is length needed for core allocation to string
 C        information.
 C
-!        IF (IPRCIX .GT. 0) THEN
+         IF (IPRCIX .GT. 0) THEN
             WRITE (LUPRI,'(/A,3(/A,I12))')
      *      ' SETCI, core memory needed for CI:',
      *      ' LCINDX =',LCINSV,' LACIMX =',LACISV,' LBCIMX =',LBCISV
@@ -381,7 +381,7 @@ C
             DTIM = SECOND() - DTIM
             WRITE (LUPRI,'(/A,F10.2,A)')
      *         ' Time used in SETCI :',DTIM,'s'
-!        END IF
+         END IF
       END IF
 C
 !     IF (NASHT .GT. 1 .AND. .NOT. HSROHF) THEN

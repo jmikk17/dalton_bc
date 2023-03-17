@@ -1,9 +1,9 @@
 C  /* Deck so_lrsolv */
       SUBROUTINE SO_LRSOLV(MODEL,ISYMTR,NEXCI,MAXIT,EXVAL,LEXVAL,RESINM,
      &                     LRESINM,CONV,LCONV,DENSIJ,LDENSIJ,DENSAB,
-     &                     LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,T2MP3,
-     &                     LT2MP3,FOCKD,
-     &                     LFOCKD,REDE,REDS,LMXRED,WORK,LWORK)
+     &                     LDENSAB,DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                     T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,
+     &                     REDE,REDS,LMXRED,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
@@ -47,6 +47,7 @@ C
 C
       DIMENSION EXVAL(LEXVAL),   RESINM(LRESINM)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
       DIMENSION T2MP(LT2MP), T2MP3(LT2MP3), FOCKD(LFOCKD), WORK(LWORK)
       DIMENSION REDE(LMXRED),    REDS(LMXRED)
 
@@ -85,7 +86,8 @@ C
       IF (SOPCHK) THEN
 C
          CALL SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                 DENSAI,LDENSAI,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                 DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                 T2MP,LT2MP,T2MP3,LT2MP3,
      &                 FOCKD,LFOCKD,ISYMTR,WORK,LWORK)
 C
       END IF
@@ -218,8 +220,8 @@ C ISYMTR is a non-local parameter, we need to copy it to the info-array
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,NOLDTR,NNEWTR,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,DENSAI,
-     &                LDENSAI,NIT,ISYMTR,0,
+     &                DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,0,
 #ifdef VAR_MPI
      &                WORK(kAssignedIndices),maxnumjobs,
 #endif
