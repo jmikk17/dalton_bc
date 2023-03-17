@@ -63,7 +63,12 @@ C     rho_a delta to rho_gamma delta
             CALL DGEMM('N','N',NBAS(ISYMA),NBAS(ISYMA),
      &         NVIR(ISYMA),ONE,CMO(KOFF2),NTOTAL,
      &         BDENSAB(KOFF3),NTOTA,ZERO,B2DENSAB(KOFF4),NTOTAL)  
-     
+C            CALL AROUND('CMO Matrix')
+C            CALL OUTPUT(CMO,1,NBAS(ISYMA),1,
+C     &            NVIR(ISYMA),NBAS(ISYMA),NVIR(ISYMA),1,LUPRI)
+C            CALL AROUND('BDENSAB Matrix')
+C            CALL OUTPUT(BDENSAB,1,NVIR(ISYMA),1,
+C     &            NBAS(ISYMA),NVIR(ISYMA),NBAS(ISYMA),1,LUPRI)     
       END DO
 C      
 C     Transform occupied index

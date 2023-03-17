@@ -37,7 +37,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_1')
 
-      I_ACT_TERM = 0
+      I_ACT_TERM = 17
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 4)) then
 C
@@ -129,7 +129,7 @@ C
 C
                DO IA = 1, NVIR(ISYMA)
                   DO IC = 1, NVIR(ISYMC)
-                    RES1(KOFF5+IA) = RES1(KOFF5+IA) +
+                    RES1(KOFF5+IA) = RES1(KOFF5+IA) + 
      &              WORK(KSCR3 - 1 + (IA-1)*NVIR(ISYMC) + IC) *
      &              BDENSAB(KOFF6 + (IDEL-1)*NVIR(ISYMC) + IC)
                   END DO
@@ -314,35 +314,32 @@ C
                NTOTJ  = MAX(NRHF(ISYMJ),1)
 C
                KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
-               KOFF3  = ILMRHF(ISYMJ) + 1
-               KOFF4  = ILMRHF(ISYMI) + 1
+               KOFF3  = ILMRHF(ISYMJ) + 1 + (J-1)*NBAS(ISYMJ)
+               KOFF4  = ILMRHF(ISYMI) + 1          
 C
 C              C(j,alpha) * ( alpha, beta | .. ) => ( j, beta | ..)
                CALL DGEMM('T','N',1,NBAS(ISBETA),
-     &                    NBAS(ISALFA),HALF,WORK(KOFF2),NTOTAL,
-     &                    CMO(KOFF3),NTOTAL,ZERO,WORK(KSCR2),1)
+     &                    NBAS(ISALFA),HALF,CMO(KOFF3),NTOTAL,
+     &                    WORK(KOFF2),NTOTAL,ZERO,WORK(KSCR2),1)
+
 C                                                          ~
 C              ( j, beta | ..) * C( beta, i)  = > ( j, i | j delta)
                CALL DGEMM('N','N',1,NRHF(ISYMI),
      &                    NBAS(ISBETA),ONE,WORK(KSCR2),1,
      &                    CMO(KOFF4),NTOTBE,ZERO,WORK(KSCR3),1)
-C
-C
-               NTOTA  = MAX(NVIR(ISYMA),1)
-               NTOTK  = MAX(NRHF(ISYMK),1)
+
 C
                KOFF5  = IT1AM(ISYMA,ISYMI)
                KOFF6  = ILMVIR(ISYMA) - ILMVIR(1)
 C                     ~
 C              (j,i | j,delta) * rho_{a delta} => U(a,i)
-               COUNT = 0                             
                DO I = 1,NRHF(ISYMI)
                   DO IA = 1,NVIR(ISYMA)
-                    RES1(KOFF5+COUNT+IA) = RES1(KOFF5+COUNT+IA) +
+                    RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) = 
+     &               RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) +
      &              WORK(KSCR3 - 1 + I) *
      &              BDENSAB(KOFF6 + (IDEL-1)*NVIR(ISYMA) + IA)
                   END DO
-                  COUNT = COUNT + NVIR(ISYMA)
                END DO               
 C
   121    CONTINUE
