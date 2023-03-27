@@ -40,7 +40,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_3')
 
-      I_ACT_TERM = 17
+      I_ACT_TERM = 7
       
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 1)) then
 C     Term: - del_ab sum_cd (i j | c d ) rho_cd  (line 1 first term)
@@ -59,8 +59,6 @@ C
          ISYMGA = ISDEL
 C
          ISALBE = MULD2H(ISYMGA,ISYDIS)
-         ISYMAI = ISALBE
-         
 C
          LSCR1  = N2BST(ISALBE)
 C
@@ -94,10 +92,11 @@ C
             DO 012 ISYMI = 1,NSYM
 
                   ISYMA  = MULD2H(ISYMI,ISYMTR)
+C                  ISYMA  = MULD2H(ISYMI,ISALBE)
                   ISALFA = ISYMA
                   ISBETA = ISYMI
 
-                  LSCR2  = NVIR(ISYMA)*NBAS(ISBETA)
+                  LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
 C
                   KSCR2  = KEND2
@@ -115,23 +114,22 @@ C
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                   KOFF3  = ILMRHF(ISYMI) + 1
-                  KOFF4  = IMATAV(ISYMI,ISYMA) + 1
+                  KOFF4  = IMATAV(ISYMA,ISYMI) + 1
 C
-C              b(a,alpha) * ( alpha, beta | .. ) => ( a, beta | ..)
-                  CALL DGEMM('T','N',NVIR(ISYMA),NBAS(ISBETA),
-     &                    NBAS(ISALFA),-HALF,
-     &                    VBTRIAL(KOFF4),NTOTAL,
+C              ( alpha, beta |..) * C(beta, i)   => ( alpha, i | ..)
+                  CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
+     &                    NBAS(ISBETA),-ONE,
      &                    WORK(KOFF2),NTOTAL,
-     &                    ZERO,WORK(KSCR2),NTOTA)
-C
-C              ( a, beta |..) * C(beta, i)   => ( a, i | ..)
-                  CALL DGEMM('N','N',NVIR(ISYMA),NRHF(ISYMI),
-     &                    NBAS(ISBETA),ONE,
-     &                    WORK(KSCR2),NTOTAL,
      &                    CMO(KOFF3),NTOTBE,
-     &                    ZERO,WORK(KSCR3),NTOTAL)
+     &                    ZERO,WORK(KSCR2),NTOTAL)
+C              b(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
+                  CALL DGEMM('T','N',NVIR(ISYMA),NRHF(ISYMI),
+     &                    NBAS(ISALFA),ONE,
+     &                    VBTRIAL(KOFF4),NTOTAL,
+     &                    WORK(KSCR2),NTOTAL,
+     &                    ZERO,WORK(KSCR3),NTOTA)
 C
-C                     
+C                  
 C              (a i | gamma,delta) * rho_{gamma delta} => U(a,i)
 C
                   KOFF5  = IT1AM(ISYMA,ISYMI)
@@ -141,7 +139,7 @@ C
                         DO IA = 1,NVIR(ISYMA)
                               RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) =
      &                        RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
-     &                        + WORK(KSCR2 - 1 +(I-1)*NVIR(ISYMA)+IA) *
+     &                        + WORK(KSCR3 -1 +(I-1)*NVIR(ISYMA)+IA) *
      &                      B2DENSAB(KOFF6 +(IDEL-1)*NBAS(ISYMGA)+GAMMA)
                         END DO
                   END DO
@@ -150,7 +148,6 @@ C
 C
   011    CONTINUE
 C
-
       END IF
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 2)) then
@@ -194,13 +191,13 @@ C
 C
          LSCR1  = N2BST(ISALBE)
 C
-         KSCR1  = 1
-         KEND2  = KSCR1 + LSCR1
-         LWORK2 = LWORK - KEND2
+         KSCR1  = KEND2
+         KEND3  = KSCR1 + LSCR1
+         LWORK2 = LWORK - KEND3
 C
          CALL SO_MEMMAX ('SO_RES_A3_3.21',LWORK2)
          IF (LWORK2 .LT. 0)
-     &     CALL STOPIT('SO_RES_A3_3.21',' ',KEND2,LWORK)
+     &     CALL STOPIT('SO_RES_A3_3.21',' ',KEND3,LWORK)
 C
 C-----------------------------------------------------------------------
 C                                              
@@ -229,20 +226,20 @@ C
 
                   LSCR2  = NBAS(ISALFA)*NVIR(ISYMA)
 C
-                  KSCR2  = KEND2
-                  KEND3  = KSCR2 + LSCR2
-                  LWORK3 = LWORK - KEND3
+                  KSCR2  = KEND3
+                  KEND4  = KSCR2 + LSCR2
+                  LWORK3 = LWORK - KEND4
 C
                   CALL SO_MEMMAX ('SO_RES_A3_3.022',LWORK3)
                   IF (LWORK3 .LT. 0)
-     &              CALL STOPIT('SO_RES_A3_3.022',' ',KEND3,LWORK)
+     &              CALL STOPIT('SO_RES_A3_3.022',' ',KEND4,LWORK)
 C
                   NTOTAL = MAX(NBAS(ISALFA),1)
                   NTOTBE = MAX(NBAS(ISBETA),1)
                   NTOTA  = MAX(NVIR(ISYMA),1)
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
-                  KOFF3  = IMATAV(ISBETA,ISYMA) + 1
+                  KOFF3  = IMATAV(ISYMA,ISYMI) + 1
 C
 C              ( alpha, beta |..) * b(beta, a)  => ( alpha, a | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NVIR(ISYMA),
@@ -273,7 +270,7 @@ C
       END IF
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 3)) then
-C     Term: - del_ij sum_cd (a b | c d ) rho_cd  (line 1 third term)
+C     Term: del_ij sum_cd (a b | c d ) rho_cd  (line 1 third term)
 C     Implemented as (a b | c d)
 C
       ISYMD = ISDEL
@@ -318,14 +315,15 @@ C
 C-----------------------------------------------------------------
 C                               
 C              Generate ( a i | gamma delta) for
-C              given i and delta in KSCR3.
+C              given gamma and delta in KSCR3.
 C-----------------------------------------------------------------
 C
             DO 032 ISYMI = 1,NSYM
 
                   ISYMA  = MULD2H(ISYMI,ISYMTR)
-                  ISALFA = ISYMI
-                  ISBETA = ISYMA
+C                  ISYMA  = MULD2H(ISYMI,ISALBE)
+                  ISALFA = ISYMA
+                  ISBETA = ISYMI
 
                   LSCR2  = NRHF(ISYMI)*NBAS(ISALFA)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -345,7 +343,7 @@ C
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                   KOFF3  = ILMVIR(ISYMA) + 1
-                  KOFF4  = IT1AO(ISALFA,ISYMI) + 1
+                  KOFF4  = IT1AO(ISYMA,ISYMI) + 1
 C
 C               ( alpha, beta |..) * b(beta,i)  => ( alpha, i | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
@@ -533,9 +531,9 @@ C
 C
          LSCR1  = N2BST(ISALBE)
 C
-         KSCR1  = 1
-         KEND2  = KSCR1 + LSCR1
-         LWORK2 = LWORK - KEND2
+         KSCR1  = KEND2
+         KEND3  = KSCR1 + LSCR1
+         LWORK2 = LWORK - KEND3
 C
          CALL SO_MEMMAX ('SO_RES_A3_3.61',LWORK2)
          IF (LWORK2 .LT. 0)
@@ -568,13 +566,13 @@ C
 
                   LSCR2  = NBAS(ISALFA)*NVIR(ISYMA)
 C
-                  KSCR2  = KEND2
-                  KEND3  = KSCR2 + LSCR2
-                  LWORK3 = LWORK - KEND3
+                  KSCR2  = KEND3
+                  KEND4  = KSCR2 + LSCR2
+                  LWORK3 = LWORK - KEND4
 C
                   CALL SO_MEMMAX ('SO_RES_A3_3.062',LWORK3)
                   IF (LWORK3 .LT. 0)
-     &              CALL STOPIT('SO_RES_A3_3.062',' ',KEND3,LWORK)
+     &              CALL STOPIT('SO_RES_A3_3.062',' ',KEND4,LWORK)
 C
                   NTOTAL = MAX(NBAS(ISALFA),1)
                   NTOTBE = MAX(NBAS(ISBETA),1)
@@ -612,7 +610,7 @@ C
       END IF
 
             IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 7)) then
-C     Term: - del_ij sum_cd (a b | k l ) rho_cd  (line 1 third term)
+C     Term: del_ij sum_kl (a b | k l ) rho_kl  (line 2 third term)
 C     Implemented as (a b | k l)
 C
       ISYML = ISDEL
@@ -663,8 +661,8 @@ C
             DO 072 ISYMI = 1,NSYM
 
                   ISYMA  = MULD2H(ISYMI,ISYMTR)
-                  ISALFA = ISYMI
-                  ISBETA = ISYMA
+                  ISALFA = ISYMA
+                  ISBETA = ISYMI
 
                   LSCR2  = NRHF(ISYMI)*NBAS(ISALFA)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -684,7 +682,7 @@ C
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                   KOFF3  = ILMVIR(ISYMA) + 1
-                  KOFF4  = IT1AO(ISALFA,ISYMI) + 1
+                  KOFF4  = IT1AO(ISBETA,ISYMI) + 1
 C
 C               ( alpha, beta |..) * b(beta,i)  => ( alpha, i | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),

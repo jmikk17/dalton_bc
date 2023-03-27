@@ -52,7 +52,7 @@ C      IF (LCDB.LE.0) GOTO 999
 C
       DO 040 ISYMI = 1,NSYM
 C
-         ISYMA  = MULD2H(ISYMI,ISYMTR)
+C         ISYMA  = MULD2H(ISYMI,ISYMTR)
          ISALBE = MULD2H(ISYMI,ISYDIS)
 C
          LSCR1  = N2BST(ISALBE)
@@ -87,6 +87,7 @@ C
             DO 042 ISYMC = 1,NSYM
             
                ISALFA = ISYMC
+               ISYMA  = MULD2H(ISYMC,ISALBE)
                ISBETA = ISYMA
 C
                LSCR2  = NBAS(ISBETA)*NVIR(ISYMC)
@@ -128,7 +129,7 @@ C
                KOFF6  = ILMVIR(ISYMC) - ILMVIR(1)
 C
                DO IA = 1, NVIR(ISYMA)
-                  DO IC = 1, NVIR(ISYMC)
+                  DO IC = 1, NVIR(ISYMC)  
                     RES1(KOFF5+IA) = RES1(KOFF5+IA) + 
      &              WORK(KSCR3 - 1 + (IA-1)*NVIR(ISYMC) + IC) *
      &              BDENSAB(KOFF6 + (IDEL-1)*NVIR(ISYMC) + IC)

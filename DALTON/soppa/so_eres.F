@@ -1139,7 +1139,7 @@ C
          endif
 C Juliane 24/05/2022
 C---------------------------------------------------------
-C        Calculte and add the third order Fock-term to A  
+C        Calculate and add the third order Fock-term to A  
 C---------------------------------------------------------
 C
          IF (singles_third) THEN
@@ -1470,20 +1470,21 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
      &                        WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                        ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
 
+            IDEL3 = IDEL - IBAS(ISYMD) 
             CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
-     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
             CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
      &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
      &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
      &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
-     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
      &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
             CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
      &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
-     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
      &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
 
@@ -1497,21 +1498,22 @@ C           Same for the D-part
      &                           WORK(KDSRHF),WORK(KCMO),LCMO,
      &                           IDEL,ISYMD,
      &                           ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
-
+     
+               IDEL3 = IDEL - IBAS(ISYMD) 
                CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
-     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
                CALL SO_RES_A3_2(WORK(KRES1E),LRES1E,WORK(KDENSIJ),
      &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
      &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
      &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
-     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
      &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6) 
                CALL SO_RES_A3_3(WORK(KRES1E),LRES1E,WORK(KB2DENSIJ),
      &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
-     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
      &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
 
@@ -1538,40 +1540,7 @@ C     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
 C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
 C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
 C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
-C
-C         
-C                  WRITE(LUPRI, '(A,I5)') 'NLAMDT', NLAMDT
-C                  DO n = 1,NLAMDT
-C                        WRITE(LUPRI,'(F14.8,I5,A)') 
-C     &                  WORK(KCMO+n-1), n ,' CMO'
-C                  END DO
-C
-C            IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
-C                  WRITE(LUPRI, '(A,I5)') 'ISYMJ',ISYMJ
-C                  WRITE(LUPRI, '(A,I5)') 'ISALBE',ISALBE
-C                  WRITE(LUPRI, '(A,I5)') 'J =',J
-C                  DO n = 1,N2BST(ISALBE)
-C                        WRITE(LUPRI,'(F14.8,I5,A)') 
-C     &                  WORK(KSCR1 + n - 1),n,' Integrals'
-C                  END DO
-C            END IF
-C
-C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
-C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA), ' Rows A1'
-C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B1'
-C               WRITE(LUPRI, '(I5,A)') NBAS(ISALFA),' Cols A1 Rows B1'
-C               WRITE(LUPRI, '(I5,A)') IAODIS(ISALFA,ISBETA), ' KOFF1'
-C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMK), ' Rows A2'
-C               WRITE(LUPRI, '(I5,A)') NRHF(ISYMI), ' Cols B2'
-C               WRITE(LUPRI, '(I5,A)') NBAS(ISBETA),' Cols A2 Rows B2'
-C               END IF
-C
-C               IF ((ISYMJ .EQ. 2) .and. (ISALBE .EQ. 1)) then
-C                  DO n = 1,(NRHF(ISYMK)*NRHF(ISYMK))
-C                        WRITE(LUPRI,'(F14.8,I5,A)') 
-C     &                  WORK(KSCR2 + n - 1),n,' Integ 2bt'
-C                  END DO 
-C               END IF
+
 C KFSchaltz end
          END SUBROUTINE
 C
