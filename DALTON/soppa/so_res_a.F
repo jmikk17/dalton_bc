@@ -51,6 +51,7 @@ C     contribution.
 C-----------------------------------------------------------
 C
       IF (LT2M1 .EQ. 0) THEN
+         WRITE(LUPRI,'(/,I3,A)') 'so_res_a not active'
          CALL QEXIT('SO_RES_A')
          RETURN
       END IF

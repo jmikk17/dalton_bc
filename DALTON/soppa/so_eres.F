@@ -272,7 +272,22 @@ C
          LAAB    = 0
       ENDIF
 C
-      KTR1E   = KEND1
+C KFSchaltz begin 
+      LBDENSIJ = ILMVIR(1)
+      LBDENSIJT= ILMVIR(1)
+      LBDENSAB = ILMVIR(NSYM) + NVIR(NSYM)*NBAS(NSYM) - ILMVIR(1)
+      LBDENSABT= ILMVIR(NSYM) + NVIR(NSYM)*NBAS(NSYM) - ILMVIR(1) 
+      LB2DENSAB= IAODIS(NSYM,NSYM) + NBAS(NSYM)*NBAS(NSYM)
+      LB2DENSIJ= LB2DENSAB   
+      KBDENSIJ = KEND1
+      KBDENSIJT= KBDENSIJ + LBDENSIJ
+      KBDENSAB = KBDENSIJT + LBDENSIJT
+      KBDENSABT= KBDENSAB + LBDENSAB
+      KB2DENSAB= KBDENSABT + LBDENSABT
+      KB2DENSIJ= KB2DENSAB + LB2DENSAB
+      KTR1E    = KB2DENSIJ + LB2DENSIJ
+C KFSchaltz end
+C      KTR1E   = KEND1
       KTR1D   = KTR1E   + LTR1E
       KTR2E   = KTR1D   + LTR1D
       KTR2D   = KTR2E   + LTR2E
@@ -328,6 +343,19 @@ C MPI -- ONLY MASTER DOES THE READING
       IF ( MYNUM .EQ. 0 ) THEN
 #endif
 C
+C KFSchaltz begin
+C--------------------------------------------
+C        Backtransformation of one index of a one-particle density matrix.
+C--------------------------------------------
+C
+      CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+     &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
+     &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
+     &                 LB2DENSAB,WORK(KCMO),LCMO)
+
+C KFSchaltz end
+C
 C----------------------------------------------
 C     Open files with trial and result vectors.
 C----------------------------------------------
@@ -338,7 +366,7 @@ C
       IF (DO_DEX) THEN
          CALL SO_OPEN(LUTR1D,FNTR1D,LTR1D)
       END IF
-C
+C 
 C     Note: open trial-vectors also with length LRES2E
 C          singlet: LRES2E = LTR2E anyway
 C          triplet: We read trial-vectors into result vector memory
@@ -1111,7 +1139,7 @@ C
          endif
 C Juliane 24/05/2022
 C---------------------------------------------------------
-C        Calculte and add the third order Fock-term to A  
+C        Calculate and add the third order Fock-term to A  
 C---------------------------------------------------------
 C
          IF (singles_third) THEN
@@ -1421,8 +1449,13 @@ C
          IF (SINGLES_SECOND) THEN
             DTIME   = SECOND()
             ISYDIS2 = MULD2H(ISYDIS,ISYMTR)
-            KEND6 = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
-            LWORK6 = LWORK - KEND6
+            KEND6   = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK6  = LWORK - KEND6
+            KEND7   = KEND6 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK7  = LWORK - KEND7
+            KEND8   = KEND7 + NDSRHF(MULD2H(ISYMD,ISYMTR))
+            LWORK8  = LWORK - KEND8
+C
 C                                     ~
 C           Calculate ( alpha, beta | j delta)
             CALL CCTRBT(WORK(KXINT),WORK(KDSRHF),WORK(KBTR1D),
@@ -1436,6 +1469,25 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
             CALL SO_RES_B26 ( WORK(KRES1E), LRES1E, WORK(KT2M1), LT2M1,
      &                        WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                        ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+
+            IDEL3 = IDEL - IBAS(ISYMD) 
+            CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+
             IF (DO_DEX) THEN
 C
 C           Same for the D-part
@@ -1446,10 +1498,50 @@ C           Same for the D-part
      &                           WORK(KDSRHF),WORK(KCMO),LCMO,
      &                           IDEL,ISYMD,
      &                           ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+     
+               IDEL3 = IDEL - IBAS(ISYMD) 
+               CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+               CALL SO_RES_A3_2(WORK(KRES1E),LRES1E,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6) 
+               CALL SO_RES_A3_3(WORK(KRES1E),LRES1E,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+
             END IF
             DTIME      = SECOND()   - DTIME
             SOTIME(16) = SOTIME(16) + DTIME
          ENDIF
+C KFSchaltz begin
+C     Calculate all terms belonging to the A'^(3)(1) matrix. 
+C     Remember this is only in the D part
+C               CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+C     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+C     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
+C     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+C               CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+C     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+C     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+C     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+C               CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
+C     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+C     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL,ISYMD,
+C     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+C     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+
+C KFSchaltz end
          END SUBROUTINE
 C
          SUBROUTINE LOOP_BODY_TRIPLET
