@@ -10,6 +10,10 @@ test = TestRun(__file__, sys.argv)
 
 f = Filter()
 
+f.add(from_string = 'Polarizable embedding information:',
+      num_lines = 18,
+      abs_tolerance = 1.0e-7)
+
 f.add(from_string = 'Two-photon transition tensor S',
       num_lines = 10,
       ignore_sign = True,
@@ -20,7 +24,24 @@ f.add(from_string = 'Two-photon absorption summary',
       mask = [1,2,3,5,6,7,8],
       rel_tolerance = 1.0e-3)
 
+test.run(['orthorhombic.dal', 'triclinic.dal'], ['acrolein.mol'], ['water.pot'], f={'out': f})
 
-test.run(['pehf_mic.dal'], ['pehf_mic.mol'], ['pehf_mic.pot'], f={'out': f})
+g = Filter()
+
+g.add(from_string = 'Polarizable embedding information:',
+      num_lines = 51,
+      abs_tolerance = 1.0e-7)
+
+g.add(from_string = 'Two-photon transition tensor S',
+      num_lines = 10,
+      ignore_sign = True,
+      rel_tolerance = 1.0e-3)
+
+g.add(from_string = 'Two-photon absorption summary',
+      num_lines = 14,
+      mask = [1,2,3,5,6,7,8],
+      rel_tolerance = 1.0e-3)
+
+test.run(['pbc.dal'], ['h2o.mol'], ['14h2o_orthorhombic.pot', '14h2o_triclinic.pot'], f={'out': g})
 
 sys.exit(test.return_code)

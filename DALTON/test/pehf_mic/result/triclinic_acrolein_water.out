@@ -1,0 +1,3195 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2022.0-dev (2022)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2022.0-dev (2022), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
+
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Tue Mar 28 20:58:05 2023
+     Host name              : foeroyar                                
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/foeroyingur/Projects/dalton_devel/dalton/build_pbc/test/pehf_mic
+   2) /home/foeroyingur/Projects/dalton_devel/dalton/build_pbc/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | foeroyingur
+ Host                     | foeroyar
+ System                   | Linux-6.2.7-200.fc37.x86_64
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | ON
+ Fortran compiler         | /usr/lib64/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (GCC) 12.2.1 20221121 (Red Hat 12.2.1-
+                          | 4)
+ C compiler               | /usr/lib64/openmpi/bin/mpicc
+ C compiler version       | gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4)
+ C++ compiler             | /usr/lib64/openmpi/bin/mpicxx
+ C++ compiler version     | unknown
+ BLAS                     | /lib64/libopenblas.so
+ LAPACK                   | /lib64/liblapack.so
+ Static linking           | OFF
+ Last Git revision        | 7ca3634de853af1d3b331b0f24d7582468346bfa
+ Git branch               | dalton_pbc
+ Configuration time       | 2023-03-28 20:35:29.696126
+
+ * MPI parallel run using 4 processes.
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+**DALTON
+.RUN RESPONSE
+.PELIB
+*PELIB
+.VERBOSE
+.EEF
+.PBC
+TRICLINIC
+7.714537 7.298986 1.005004 90.0 90.0 90
+**WAVE FUNCTIONS
+.HF
+**RESPONSE
+*QUADRATIC
+.SINGLE
+.TWO-PHOTON
+.ROOTS
+4
+**END OF
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS
+STO-3G
+Acrolein
+------------------------
+AtomTypes=3 NoSymmetry Angstrom
+Charge=6.0 Atoms=3
+C             -0.145335   -0.546770    0.000607
+C              1.274009   -0.912471   -0.000167
+C              1.630116   -2.207690   -0.000132
+Charge=8.0 Atoms=1
+O             -0.560104    0.608977    0.000534
+Charge=1.0 Atoms=4
+H             -0.871904   -1.386459    0.001253
+H              2.004448   -0.101417   -0.000710
+H              0.879028   -3.000685    0.000484
+H              2.675323   -2.516779   -0.000673
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+    Dynamic molecular response properties section will be executed (RESPONSE module)
+    Environment effects are included (PElib)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    --------------------------------------------------------------------------------
+ 1: Acrolein
+ 2: ------------------------
+    --------------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   6.00000
+  Number of symmetry independent centers:    3
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   6 :
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pbc/basis/STO-3G"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   8 :
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pbc/basis/STO-3G"
+
+  Atomic type no.    3
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    4
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/foeroyingur/Projects/dalton_devel/dalton/build_pbc/basis/STO-3G"
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           C          12.000000
+                           C          12.000000
+                           C          12.000000
+                           O          15.994915
+                           H           1.007825
+                           H           1.007825
+                           H           1.007825
+                           H           1.007825
+
+                       Total mass:    56.026215 amu
+                       Natural abundance:  96.446 %
+
+ Center-of-mass coordinates (a.u.):    0.973773   -1.393790    0.000425
+ Center-of-mass coordinates (Angs):    0.515299   -0.737562    0.000225
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    3
+  Total number of atoms:    8
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  C           3    6.0000    15     5      [6s3p|2s1p]                                        
+  O           1    8.0000    15     5      [6s3p|2s1p]                                        
+  H           4    1.0000     3     1      [3s|1s]                                            
+  ----------------------------------------------------------------------
+  total:      8   30.0000    72    24
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (a.u.)
+  ----------------------------
+
+  Total number of coordinates:   24
+  C       :     1  x  -0.2746433464    2  y  -1.0332455534    3  z   0.0011470638
+  C       :     4  x   2.4075280908    5  y  -1.7243202870    6  z  -0.0003155843
+  C       :     7  x   3.0804727920    8  y  -4.1719294689    9  z  -0.0002494438
+  O       :    10  x  -1.0584431615   11  y   1.1507997464   12  z   0.0010091138
+  H       :    13  x  -1.6476597673   14  y  -2.6200277935   15  z   0.0023678268
+  H       :    16  x   3.7878577518   17  y  -0.1916503544   18  z  -0.0013417055
+  H       :    19  x   1.6611221762   20  y  -5.6704728374   21  z   0.0009146274
+  H       :    22  x   5.0556277659   23  y  -4.7560230271   24  z  -0.0012717857
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            C           C           C           O           H           H     
+            ------      ------      ------      ------      ------      ------
+ C     :    0.000000
+ C     :    1.465700    0.000000
+ C     :    2.431231    1.343281    0.000000
+ O     :    1.227919    2.383018    3.568007    0.000000
+ H     :    1.110397    2.197637    2.633349    2.019650    0.000000
+ H     :    2.195429    1.091490    2.139278    2.661125    3.150355    0.000000
+ H     :    2.659139    2.125241    1.092234    3.885970    2.381489    3.110036
+ H     :    3.440501    2.130137    1.089951    4.498704    3.722962    2.506800
+
+            H           H     
+            ------      ------
+ H     :    0.000000
+ H     :    1.860334    0.000000
+
+
+  Max    interatomic separation is    4.4987 Angstrom (    8.5013 Bohr)
+  between atoms    8 and    4, "H     " and "O     ".
+
+  Min HX interatomic separation is    1.0900 Angstrom (    2.0597 Bohr)
+
+  Min YX interatomic separation is    1.2279 Angstrom (    2.3204 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  C          C            1.465700
+  bond distance:  C          C            1.343281
+  bond distance:  O          C            1.227919
+  bond distance:  H          C            1.110397
+  bond distance:  H          C            1.091490
+  bond distance:  H          C            1.092234
+  bond distance:  H          C            1.089951
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     C          C          O            124.190
+  bond angle:     C          C          H            116.421
+  bond angle:     O          C          H            119.389
+  bond angle:     C          C          C            119.821
+  bond angle:     C          C          H            117.558
+  bond angle:     C          C          H            122.621
+  bond angle:     C          C          H            121.182
+  bond angle:     C          C          H            121.847
+  bond angle:     H          C          H            116.971
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA      10.696865         -0.668732    0.743503    0.000230
+   IB     108.794831          0.743503    0.668732   -0.000587
+   IC     119.491696          0.000590    0.000221    1.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+          47245.5253           4645.2483           4229.4069 MHz
+            1.575941            0.154949            0.141078 cm-1
+
+
+@  Nuclear repulsion energy :  102.664846860515 Hartree
+
+  Reading potential input file for polarizable embedding calculation
+
+    .------------------------------------------------.
+    | Information from polarizable embedding library |
+    `------------------------------------------------´
+
+      Number of classical sites:     10
+
+      Multipole moments upto 3rd order.
+
+      Dipole-dipole polarizabilities.
+
+      Iterative solver for induced moments will be used
+      with convergence threshold: 1.0E-08
+
+      Using periodic boundary conditions when solving
+      for the induced moments.
+      Box lengths (bohr):       14.5784       13.7931        1.8992
+      Box angles (radians):  1.5708  1.5708  1.5708
+
+      Total charge of classical region:    0.0000
+ 
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+ - Using defaults, no **INTEGRALS input found
+
+ Default print level:        1
+
+ Calculation of one-electron Hamiltonian integrals.
+
+ Center of mass  (bohr):      0.973773359129     -1.393789716280      0.000424788898
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x     31.66954785        80.49595632       268.50560837
+      y    -45.60874790      -115.92586657      -386.68706791
+      z      0.01223409         0.03109595         0.10372491
+
+
+ INFO: EEF CONTRIBUTION ADDED TO DIPOLE MOMENT INTEGRALS
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  6 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+         Effective external field (EEF) information:
+         -------------------------------------------
+
+                     EEF tensor at COM
+          1.01237763     0.02035100    -0.00001705
+          0.01407640     1.03812720    -0.00000935
+          0.00000289    -0.00002498     0.95092501
+
+             Environment polarizability (a.u.)
+         18.46567719    -0.22784131     0.00114007
+         -0.22784131    17.42035315     0.01027122
+          0.00114007     0.01027122    14.41673620
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+PE-QM calculation includes effective external field effects.
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:   24
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+          -20.684561     -11.357400     -11.351264     -11.346036      -1.724840
+           -1.477979      -1.046134      -1.031570      -0.744448      -0.729231
+           -0.672044      -0.551742      -0.540543      -0.516178      -0.438809
+           -0.319925      -0.220785      -0.162868      -0.131432      -0.129120
+           -0.123435      -0.114530      -0.093199      -0.085427
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Tue Mar 28 20:58:05 2023
+     Host name              : foeroyar                                
+
+ Title lines from ".mol" input file:
+     Acrolein
+     ------------------------
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    Restricted, closed shell Hartree-Fock calculation.
+
+@    Time-dependent Hartree-Fock calculation (random phase approximation).
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+@    QM part is embedded in an environment :
+
+@         Model: PE
+
+     Wave function specification
+     ============================
+
+     Wave function environment is modeled using the
+     polarizable embedding model (PE library).
+
+@    Wave function type        --- PE-HF ---
+@    Number of closed shell electrons          30
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1
+@                                          |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals              15 |   15
+@    Secondary orbitals                  9 |    9
+@    Total number of orbitals           24 |   24
+@    Number of basis functions          24 |   24
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations            135
+     ------------------------------------------
+@    Total number of variables              136
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-05
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Iter      Total energy     Embedding energy      Error norm     Delta(E)
+ -----------------------------------------------------------------------------
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    F  1.39D-02  1.40D-02
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.11833867     0.10790408     0.00012769
+
+@  1  -187.947461399     -4.764335099181E-02    2.01451D+00   -1.88D+02
+      Virial theorem: -V/T =      2.003051
+@    MULPOP   C       0.93; C       0.24; C       0.42; O      -1.03; H      -0.16; H      -0.14; H      -0.12; H      -0.13; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+ -----------------------------------------------------------------------------
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    2    F  1.28D-02  1.20D-02
+      Induced dipole moments converged in  6 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09066512     0.06588760     0.00004177
+
+@  2  -188.277793011     -9.311485907194E-03    7.41558D-01   -3.30D-01
+      Virial theorem: -V/T =      2.009167
+@    MULPOP   C      -0.14; C      -0.12; C      -0.12; O       0.05; H       0.05; H       0.11; H       0.09; H       0.09; 
+   2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
+ -----------------------------------------------------------------------------
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.27D-02  1.30D-02
+      Induced dipole moments converged in  6 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09995986     0.08267778     0.00006183
+
+@  3  -188.315418994     -1.877130651786E-02    1.08974D-01   -3.76D-02
+      Virial theorem: -V/T =      2.007959
+@    MULPOP   C       0.16; C      -0.10; C      -0.11; O      -0.26; H       0.05; H       0.10; H       0.08; H       0.08; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    F  1.28D-02  1.30D-02
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09917509     0.08263205     0.00006281
+
+@  4  -188.317187975     -1.912718547028E-02    3.07149D-02   -1.77D-03
+      Virial theorem: -V/T =      2.007881
+@    MULPOP   C       0.14; C      -0.10; C      -0.09; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+   4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
+ -----------------------------------------------------------------------------
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    5    F  1.27D-02  1.20D-02
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09923025     0.08339231     0.00006170
+
+@  5  -188.317365648     -1.906792783774E-02    1.15400D-02   -1.78D-04
+      Virial theorem: -V/T =      2.007849
+@    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+ -----------------------------------------------------------------------------
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -9    6    F  1.27D-02  1.30D-02
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09923919     0.08325286     0.00006099
+
+@  6  -188.317385142     -1.907347250833E-02    2.97513D-03   -1.95D-05
+      Virial theorem: -V/T =      2.007850
+@    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+ -----------------------------------------------------------------------------
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    F  1.47D-02  1.50D-02
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09923337     0.08330903     0.00006037
+
+@  7  -188.317386865     -1.906336126257E-02    1.06276D-03   -1.72D-06
+      Virial theorem: -V/T =      2.007853
+@    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+ -----------------------------------------------------------------------------
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    F  1.28D-02  1.30D-02
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09924308     0.08331371     0.00006010
+
+@  8  -188.317387036     -1.906125865392E-02    3.26610D-04   -1.72D-07
+      Virial theorem: -V/T =      2.007854
+@    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+ -----------------------------------------------------------------------------
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    F  1.27D-02  1.30D-02
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09924546     0.08331758     0.00006002
+
+@  9  -188.317387055     -1.905982864659E-02    5.61386D-05   -1.84D-08
+      Virial theorem: -V/T =      2.007854
+@    MULPOP   C       0.14; C      -0.09; C      -0.10; O      -0.27; H       0.07; H       0.10; H       0.07; H       0.08; 
+ -----------------------------------------------------------------------------
+  10  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10   10    F  1.27D-02  1.30D-02
+      Induced dipole moments converged in  3 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09924577     0.08331812     0.00006002
+
+@ 10  -188.317387055     -1.905962232930E-02    9.27087D-06   -5.19D-10
+
+@ *** DIIS converged in  10 iterations !
+@     Converged SCF energy, gradient:   -188.317387055288    9.27D-06
+    - total time used in SIRFCK :              0.13 seconds
+
+
+ *** SCF orbital energy analysis ***
+   (incl. contribution from polarizable embedding potential)
+
+ Number of electrons        :   30
+ Closed shell orbitals      :   15
+
+ Sym       Hartree-Fock orbital energies
+
+1 A     -20.28512476   -11.13700072   -11.05334391   -11.04431204    -1.33987604
+         -1.02160111    -0.82607713    -0.73397966    -0.61407961    -0.60288778
+         -0.52080358    -0.50171258    -0.47605482    -0.36004509    -0.32356550
+          0.20653872     0.38547219     0.59806554     0.62866911     0.66131759
+          0.74003675     0.84446143     0.92904949     1.04170734
+
+    E(LUMO) :     0.20653872 au (symmetry 1)
+  - E(HOMO) :    -0.32356550 au (symmetry 1)
+  ------------------------------------------
+    gap     :     0.53010421 au
+
+    .--------------------------------------------------.
+    | Final results from polarizable embedding library |
+    `--------------------------------------------------´
+
+        Polarizable embedding energy contributions:
+       ---------------------------------------------
+
+       Electrostatic contributions:
+            Electronic                -0.467116149787
+            Nuclear                    0.448807800596
+            Multipole                  0.000000000000
+            Total                     -0.018308349191
+
+       Polarization contributions:
+            Electronic                -0.005613336977
+            Nuclear                    0.005056141267
+            Multipole                 -0.000194077429
+            Total                     -0.000751273139
+
+       Total PE energy:               -0.019059622329
+            (excl. multipole-multipole interaction energy)
+
+               Polarizable embedding information:
+              ------------------------------------
+
+                       Induced dipole moments
+       site          X              Y              Z
+          1     0.00189257     0.02204150     0.00000934
+          2     0.00318903     0.00668698     0.00000461
+          3    -0.00484843     0.00787422     0.00000213
+          4     0.00094841     0.00589680     0.00000227
+          5    -0.02198511     0.02435212    -0.00001193
+          6    -0.03122847     0.01405173    -0.00001058
+          7    -0.01096286    -0.00554183     0.00000348
+          8    -0.00313136     0.00101183     0.00000370
+          9    -0.02659406    -0.00771812     0.00000651
+         10    -0.00652548     0.01466289     0.00005048
+
+                      Total induced dipole moment
+                     X              Y              Z
+               -0.09924577     0.08331812     0.00006002
+
+
+ --- Writing SIRIFC interface file
+
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 15 principal poles with pole strength 1
+
+   ============  ============  ============  ============  ============
+      20.285125     11.137001     11.053344     11.044312      1.339876
+     551.986323    303.053205    300.776788    300.531018     36.459882
+   ============  ============  ============  ============  ============
+
+   ============  ============  ============  ============  ============
+       1.021601      0.826077      0.733980      0.614080      0.602888
+      27.799180     22.478702     19.972602     16.709956     16.405411
+   ============  ============  ============  ============  ============
+
+   ============  ============  ============  ============  ============
+       0.520804      0.501713      0.476055      0.360045      0.323565
+      14.171786     13.652294     12.954111      9.797325      8.804665
+   ============  ============  ============  ============  ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A  ) :   551.986     303.053     300.777     300.531      36.460
+@                       27.799      22.479      19.973      16.710      16.405
+@                       14.172      13.652      12.954       9.797       8.805
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+      Induced dipole moments converged in  1 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.09924577     0.08331812     0.00006002
+
+
+
+                           +---------------------------+
+                           ! Writing FOCKMAT in siropt !
+                           +---------------------------+
+
+
+ CPU and wall time for SCF :       0.176       0.178
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    0
+
+@    Final HF energy:            -188.317387055288                 
+@    Nuclear repulsion:           102.664846860515
+@    Electronic energy:          -290.963174293474
+@    Embedding energy:             -0.019059622329
+
+@    Final gradient norm:           0.000009270873
+
+ 
+     Date and time (Linux)  : Tue Mar 28 20:58:05 2023
+     Host name              : foeroyar                                
+
+File label for MO orbitals:  28Mar23   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 C   :1s    -0.0005  -0.9926   0.0004   0.0013   0.1234  -0.0654   0.1389
+   2 C   :1s     0.0071  -0.0332  -0.0000  -0.0065  -0.2837   0.1845  -0.4274
+   3 C   :2px   -0.0021  -0.0003  -0.0001  -0.0043   0.0474   0.1135  -0.1066
+   4 C   :2py    0.0059  -0.0005   0.0002   0.0011  -0.1463  -0.0898   0.1304
+   6 C   :1s     0.0000   0.0004   0.0400   0.9914   0.0214  -0.1794   0.0536
+   7 C   :1s    -0.0003   0.0061  -0.0062   0.0366  -0.0517   0.4698  -0.1595
+   8 C   :2px    0.0000  -0.0040  -0.0012  -0.0004   0.0282  -0.0162   0.1811
+   9 C   :2py   -0.0006   0.0013   0.0043  -0.0016  -0.0078  -0.0930  -0.1653
+  11 C   :1s    -0.0000   0.0003   0.9915  -0.0394   0.0045  -0.1573  -0.1474
+  12 C   :1s    -0.0001  -0.0001   0.0353  -0.0092  -0.0108   0.4164   0.4325
+  13 C   :2px   -0.0001  -0.0000  -0.0004   0.0013   0.0023  -0.0397   0.0559
+  14 C   :2py   -0.0000   0.0000   0.0012  -0.0045  -0.0055   0.1050  -0.0574
+  16 O   :1s    -0.9943  -0.0002   0.0000  -0.0000   0.2184   0.0460  -0.0786
+  17 O   :1s    -0.0260   0.0058  -0.0001   0.0003  -0.7669  -0.1797   0.3399
+  18 O   :2px   -0.0019   0.0007  -0.0000   0.0002  -0.0547   0.0213  -0.0694
+  19 O   :2py    0.0052  -0.0016   0.0001  -0.0001   0.1482  -0.0076   0.1114
+  21 H   :1s    -0.0002   0.0065  -0.0001   0.0001  -0.0318   0.0477  -0.1533
+  22 H   :1s     0.0002  -0.0000  -0.0002  -0.0067  -0.0083   0.0990  -0.0515
+  23 H   :1s     0.0000   0.0001  -0.0067   0.0004  -0.0019   0.0985   0.1512
+  24 H   :1s     0.0000   0.0001  -0.0067   0.0004  -0.0011   0.0903   0.1900
+
+    Orbital         8        9       10       11       12       13       14
+   1 C   :1s    -0.0913   0.0066   0.0549   0.0047   0.0289  -0.0000  -0.0047
+   2 C   :1s     0.2967  -0.0190  -0.1862  -0.0110  -0.1106   0.0000   0.0170
+   3 C   :2px   -0.2379  -0.3751   0.0182   0.0866  -0.2011   0.0004   0.1998
+   4 C   :2py   -0.1717  -0.1133  -0.2325  -0.3700   0.0750   0.0002   0.0582
+   5 C   :2pz    0.0002   0.0003   0.0000   0.0001   0.0002   0.5623  -0.0001
+   6 C   :1s     0.1077  -0.0305  -0.0344   0.0045  -0.0184   0.0000  -0.0360
+   7 C   :1s    -0.3319   0.1006   0.0981  -0.0018   0.0802  -0.0000   0.1578
+   8 C   :2px   -0.1341   0.3078  -0.0744  -0.0564   0.2271   0.0001  -0.3131
+   9 C   :2py   -0.1446  -0.0712  -0.2792   0.3240   0.2489   0.0000   0.0577
+  10 C   :2pz    0.0001  -0.0002   0.0001  -0.0000  -0.0001   0.2923   0.0001
+  11 C   :1s    -0.0566   0.0155   0.0141   0.0233   0.0106  -0.0000   0.0069
+  12 C   :1s     0.1770  -0.0639  -0.0629  -0.0652  -0.0295   0.0000  -0.0216
+  13 C   :2px   -0.0495   0.1963  -0.3264   0.1908  -0.3517   0.0001   0.0726
+  14 C   :2py   -0.1714   0.2737   0.2310  -0.2823  -0.2256   0.0001  -0.0642
+  15 C   :2pz    0.0001  -0.0002   0.0001  -0.0000   0.0003   0.1880  -0.0001
+  16 O   :1s     0.0422   0.0018  -0.0746  -0.0569   0.0110  -0.0000  -0.0016
+  17 O   :1s    -0.1934  -0.0109   0.3807   0.3161  -0.0637   0.0000   0.0102
+  18 O   :2px   -0.1233  -0.3438  -0.2234  -0.1878  -0.2248   0.0004  -0.7930
+  19 O   :2py   -0.1720  -0.1290   0.3511   0.4972  -0.1827   0.0002  -0.2831
+  20 O   :2pz    0.0001   0.0003   0.0000  -0.0000   0.0003   0.5772   0.0006
+  21 H   :1s     0.2758   0.2009   0.0393   0.2027   0.0109  -0.0000  -0.3535
+  22 H   :1s    -0.2444   0.1537  -0.1382   0.1750   0.3462  -0.0001  -0.1244
+  23 H   :1s     0.1774  -0.2792   0.0187   0.0446   0.3823  -0.0000  -0.0582
+  24 H   :1s     0.0714   0.0569  -0.3230   0.2065  -0.2835   0.0000   0.1037
+
+    Orbital        15       16       17       18       19       20       21
+   1 C   :1s     0.0000   0.0000   0.0000  -0.0152  -0.1915   0.0183  -0.0009
+   2 C   :1s    -0.0000  -0.0000  -0.0000   0.0941   1.1827  -0.1184   0.0231
+   3 C   :2px    0.0001  -0.0003  -0.0004   0.3377   0.0345  -0.0617  -0.8900
+   4 C   :2py    0.0000  -0.0001  -0.0002   0.2763  -0.4590   0.1689  -0.2510
+   5 C   :2pz    0.1704  -0.5358  -0.6714  -0.0003   0.0001  -0.0000   0.0006
+   6 C   :1s     0.0000  -0.0000   0.0000  -0.0511   0.1067   0.0118  -0.1867
+   7 C   :1s     0.0000   0.0000  -0.0000   0.3154  -0.6303  -0.0450   1.2326
+   8 C   :2px   -0.0003  -0.0002   0.0004   0.5150   0.4189  -0.1296   0.0057
+   9 C   :2py   -0.0001  -0.0001   0.0001   0.3416  -0.2348   0.2860   0.1990
+  10 C   :2pz   -0.5653  -0.4012   0.7299  -0.0003  -0.0002   0.0000  -0.0000
+  11 C   :1s    -0.0000   0.0000  -0.0000   0.0041  -0.0395  -0.2034   0.0529
+  12 C   :1s     0.0000  -0.0000   0.0000  -0.0113   0.2313   1.3018  -0.3335
+  13 C   :2px   -0.0003   0.0004  -0.0003   0.6050   0.3014   0.0470  -0.0078
+  14 C   :2py   -0.0001   0.0001  -0.0001   0.1967  -0.0386  -0.4672  -0.4180
+  15 C   :2pz   -0.5859   0.6329  -0.5293  -0.0004  -0.0002   0.0001   0.0001
+  16 O   :1s    -0.0000  -0.0000  -0.0000   0.0179   0.0223   0.0100   0.0039
+  17 O   :1s     0.0000   0.0000   0.0000  -0.1250  -0.1264  -0.0736  -0.0277
+  18 O   :2px    0.0003   0.0003   0.0003  -0.1657  -0.0365  -0.0317   0.2198
+  19 O   :2py    0.0001   0.0002   0.0001   0.1116   0.1892   0.0777   0.1255
+  20 O   :2pz    0.4127   0.5829   0.4483   0.0001  -0.0000  -0.0000  -0.0002
+  21 H   :1s     0.0000   0.0000  -0.0000   0.3542  -0.9174   0.1907  -0.6387
+  22 H   :1s     0.0000   0.0000   0.0001  -0.8172   0.2577  -0.0689  -0.6980
+  23 H   :1s     0.0000   0.0000  -0.0000   0.5811   0.1048  -0.9322  -0.0677
+  24 H   :1s    -0.0000   0.0000   0.0000  -0.5312  -0.4414  -0.8042   0.0773
+
+    Orbital        22       23       24
+   1 C   :1s    -0.1185   0.0247  -0.0389
+   2 C   :1s     0.7787  -0.1778   0.2565
+   3 C   :2px   -0.1847  -0.6851  -0.1203
+   4 C   :2py    0.6521   0.2358   0.8380
+   6 C   :1s     0.0534   0.0303  -0.0694
+   7 C   :1s    -0.3744  -0.2461   0.5455
+   8 C   :2px    0.2018  -0.9715  -0.1128
+   9 C   :2py    0.4640   0.3109  -1.0285
+  11 C   :1s    -0.0308  -0.0450   0.0839
+  12 C   :1s     0.2259   0.3351  -0.6632
+  13 C   :2px   -0.6966   0.5617   0.3677
+  14 C   :2py    0.3994   0.6977  -0.7151
+  16 O   :1s     0.0881   0.0266   0.0683
+  17 O   :1s    -0.6320  -0.2007  -0.5192
+  18 O   :2px   -0.2577   0.0465  -0.2006
+  19 O   :2py    0.6629   0.2397   0.4953
+  21 H   :1s    -0.0802  -0.1661   0.2454
+  22 H   :1s    -0.2425   0.4018   0.3748
+  23 H   :1s    -0.2222   0.5463   0.0475
+  24 H   :1s     0.5321  -0.3778  -0.1524
+
+  Total CPU  time used in SIRIUS :   0.18 seconds
+  Total wall time used in SIRIUS :   0.18 seconds
+
+ 
+     Date and time (Linux)  : Tue Mar 28 20:58:05 2023
+     Host name              : foeroyar                                
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                 .------------------------------------------------.
+                 | Starting in Dynamic Property Section (RESPONS) |
+                 `------------------------------------------------'
+
+
+ ----------------------------------------------------------------------------------------
+  RESPONSE  -  an MCSCF, MC-srDFT, DFT, SOPPA and SOPPA-srDFT response property program
+ ----------------------------------------------------------------------------------------
+
+
+ -------- OUTPUT FROM RESPONSE INPUT PROCESSING --------
+
+
+
+
+ Quadratic Response single residue calculation
+ ---------------------------------------------
+
+ That is, calculation of second order moments.
+
+ Two-photon transition processes computed (.TWO-PHOTON).
+ Both photon frequencies are half the excitation energy.
+
+ Spin of operator A , ISPINA=    0
+ Spin of operator B , ISPINB=    0
+ Spin of operator C , (Excitation energy) ISPINC=    0
+
+Environment effects are included (.PELIB)
+
+ Print level                                    : IPRSMO =    2
+ Threshold for convergence in RSPPP             : THCPP  = 1.000D-03
+ Maximum number of iterations in RSPPP          : MAXITP =   60
+ Threshold for convergence in RSPLR             : THCLR  = 1.000D-03
+ Maximum number of iterations in RSPLR          : MAXITL =   60
+ Maximum iterations in optimal orbital algorithm: MAXITO =    5
+
+    3 A OPERATORS OF SYMMETRY NO:    1 AND LABELS:
+
+          XDIPLEN 
+          YDIPLEN 
+          ZDIPLEN 
+
+    3 B OPERATORS OF SYMMETRY NO:    1 AND LABELS:
+
+          XDIPLEN 
+          YDIPLEN 
+          ZDIPLEN 
+
+
+   SCF energy         :     -188.317387055288293
+ -- inactive part     :     -290.963174293474140
+ -- nuclear repulsion :      102.664846860515169
+
+
+                     ***************************************
+                     *** RHF response calculation (TDHF) ***
+                     ***************************************
+
+ Environment is modeled using the polarizable embedding scheme (PE library)
+
+
+ Linear response excitations for quadratic response
+ - symmetry of excitation operator    1  ( A  )
+ - is the operator a triplet operator ?     F
+
+
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           F
+ Orbital variables.         KZWOPT:         135
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :         135
+
+
+
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
+
+ Operator symmetry = 1  ( A  ); triplet =   F
+
+
+ ** RSPCTL MICROITERATION NUMBER    1
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00257027    -0.02564153     0.00006173
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00004338     0.00001191    -0.00192965
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03224060     0.06591351     0.00005443
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001692     0.00001827    -0.00526432
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.97332D-01  0.00D+00  1.97D-01  7.08D-01    2.21585D-01
+         2    3.42680D-01  0.00D+00  3.43D-01  7.21D-01    3.56436D-01
+         3    1.39983D-01  0.00D+00  1.40D-01  7.07D-01    4.18712D-01
+         4    4.22105D-01  0.00D+00  4.22D-01  7.16D-01    4.90803D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002831    -0.00000124    -0.01195459
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.02605594     0.01470327    -0.00002562
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00000252     0.00001613    -0.02357051
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03478396    -0.07988253    -0.00006941
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    4.73100D-02  0.00D+00  4.73D-02  7.11D-01    1.58228D-01
+         2    7.32209D-02  0.00D+00  7.32D-02  7.19D-01    3.13822D-01
+         3    4.48621D-02  0.00D+00  4.49D-02  7.08D-01    3.79001D-01
+         4    7.67902D-02  0.00D+00  7.68D-02  7.16D-01    4.32534D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001294    -0.00000796    -0.01163322
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01541995     0.00368052     0.00001528
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002560     0.00002458    -0.02399423
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01090680    -0.00860800    -0.00002163
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.60092D-02  0.00D+00  1.60D-02  7.12D-01    1.55549D-01
+         2    3.09238D-02  0.00D+00  3.09D-02  7.20D-01    3.09367D-01
+         3    6.73064D-02  0.00D+00  6.73D-02  7.08D-01    3.72438D-01
+         4    6.51772D-02  0.00D+00  6.52D-02  7.20D-01    4.16862D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00000629    -0.00000620     0.03393497
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03321277     0.00108450     0.00004139
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003423    -0.00001570     0.03154272
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.04552172    -0.09864064    -0.00002009
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    4.97287D-03  0.00D+00  4.97D-03  7.11D-01    1.55417D-01
+         2    7.18184D-03  0.00D+00  7.18D-03  7.20D-01    3.08833D-01
+         3    1.38834D-01  0.00D+00  1.39D-01  7.12D-01    3.34446D-01
+         4    6.77136D-02  0.00D+00  6.77D-02  7.08D-01    3.83843D-01
+
+ ** RSPCTL MICROITERATION NUMBER    5
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001676    -0.00002693    -0.01924559
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03923475     0.02009473     0.00006524
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00005754    -0.00001427    -0.01222936
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003446     0.00001930     0.02244193
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.72777D-03  0.00D+00  1.73D-03  7.11D-01    1.55408D-01
+         2    1.53958D-03  0.00D+00  1.54D-03  7.20D-01    3.08808D-01
+         3    5.96794D-02  0.00D+00  5.97D-02  7.13D-01    3.23671D-01
+         4    2.94207D-02  0.00D+00  2.94D-02  7.08D-01    3.81572D-01
+
+ ** RSPCTL MICROITERATION NUMBER    6
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003090     0.00000522    -0.02745006
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02501938    -0.00141846    -0.00013316
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00018661    -0.00000732    -0.01223192
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00000216    -0.00002598     0.01704541
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    3.25257D-04  0.00D+00  3.25D-04  7.11D-01    1.55407D-01
+         2    3.02230D-04  0.00D+00  3.02D-04  7.20D-01    3.08807D-01
+         3    1.64322D-02  0.00D+00  1.64D-02  7.14D-01    3.21700D-01
+         4    1.34521D-02  0.00D+00  1.35D-02  7.08D-01    3.80834D-01
+
+ ** RSPCTL MICROITERATION NUMBER    7
+      Induced dipole moments converged in  3 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00001747    -0.00000655    -0.02346428
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00000438    -0.00002110    -0.00999314
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.81642D-04  0.00D+00  1.82D-04  7.11D-01    1.55407D-01
+         2    3.02210D-04  0.00D+00  3.02D-04  7.20D-01    3.08807D-01
+         3    2.93510D-03  0.00D+00  2.94D-03  7.14D-01    3.21641D-01
+         4    2.31214D-03  0.00D+00  2.31D-03  7.08D-01    3.80802D-01
+
+ ** RSPCTL MICROITERATION NUMBER    8
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003241     0.00001059     0.02016864
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002054    -0.00000303    -0.02636615
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.83447D-04  0.00D+00  1.83D-04  7.11D-01    1.55407D-01
+         2    3.02210D-04  0.00D+00  3.02D-04  7.20D-01    3.08807D-01
+         3    8.45399D-04  0.00D+00  8.45D-04  7.14D-01    3.21638D-01
+         4    5.73405D-04  0.00D+00  5.73D-04  7.08D-01    3.80800D-01
+
+ ** RSPCTL MICROITERATION NUMBER    9
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00002103    -0.00000816     0.02893703
+
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.86721D-04  0.00D+00  1.87D-04  7.11D-01    1.55407D-01
+         2    3.02210D-04  0.00D+00  3.02D-04  7.20D-01    3.08807D-01
+         3    1.40888D-04  0.00D+00  1.41D-04  7.14D-01    3.21638D-01
+         4    5.28822D-04  0.00D+00  5.29D-04  7.08D-01    3.80800D-01
+
+ *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   58)
+ RSP solution vector no.    1; norm of residual   2.62D-04
+ RSP solution vector no.    2; norm of residual   4.20D-04
+ RSP solution vector no.    3; norm of residual   1.97D-04
+ RSP solution vector no.    4; norm of residual   7.47D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+@ QRPPVE: SINGLET EXCITATION VECTOR    1    SYMMETRY    1  ( A  )
+@ Singlet excitation energy  1.554071D-01
+
+@ QRPPVE: SINGLET EXCITATION VECTOR    2    SYMMETRY    1  ( A  )
+@ Singlet excitation energy  3.088068D-01
+
+@ QRPPVE: SINGLET EXCITATION VECTOR    3    SYMMETRY    1  ( A  )
+@ Singlet excitation energy  3.216382D-01
+
+@ QRPPVE: SINGLET EXCITATION VECTOR    4    SYMMETRY    1  ( A  )
+@ Singlet excitation energy  3.808004D-01
+
+
+ Linear response calculations for quadratic response
+ - singlet property operator of symmetry    1  ( A  )
+
+
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           F
+ Orbital variables.         KZWOPT:         135
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :         135
+
+
+ QRLRVE -- linear response calculation for symmetry  1  ( A  )
+ QRLRVE -- operator label : XDIPLEN 
+ QRLRVE -- operator spin  :   0
+ QRLRVE -- frequencies :  0.077704  0.154403  0.160819  0.190400
+
+
+
+ ---  SOLVING SETS OF LINEAR EQUATIONS FOR LINEAR RESPONSE PROPERTIES ---
+
+ Operator symmetry = 1  ( A  ); triplet =   F
+
+
+ ** RSPCTL MICROITERATION NUMBER    1
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00962427    -0.00471519    -0.00010753
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00137138     0.02999875     0.00001700
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02164276     0.05548353    -0.00000152
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02916931     0.06258489     0.00005708
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    1.71623D+00  0.00D+00  1.72D+00  3.73D+00    7.77035D-02
+         2    2.01381D+00  0.00D+00  2.01D+00  4.33D+00    1.54403D-01
+         3    2.05460D+00  0.00D+00  2.05D+00  4.41D+00    1.60819D-01
+         4    2.29435D+00  0.00D+00  2.29D+00  4.89D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03583390    -0.02506567    -0.00004116
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00112428     0.04723264     0.00001157
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03458291     0.01864900     0.00005980
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03557163     0.03242896     0.00004425
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    3.35987D-01  0.00D+00  3.36D-01  4.21D+00    7.77035D-02
+         2    4.40544D-01  0.00D+00  4.41D-01  5.20D+00    1.54403D-01
+         3    4.55790D-01  0.00D+00  4.56D-01  5.35D+00    1.60819D-01
+         4    5.50227D-01  0.00D+00  5.50D-01  6.26D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03911094     0.00659813     0.00003492
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00298631     0.03836410     0.00001146
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02096089     0.03177868     0.00011008
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01642534    -0.00204325     0.00005229
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    6.22398D-02  0.00D+00  6.22D-02  4.24D+00    7.77035D-02
+         2    8.93851D-02  0.00D+00  8.94D-02  5.27D+00    1.54403D-01
+         3    9.34743D-02  0.00D+00  9.35D-02  5.42D+00    1.60819D-01
+         4    1.19415D-01  0.00D+00  1.19D-01  6.37D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02893169     0.04555170     0.00014016
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.05507609    -0.02550737    -0.00005159
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00425366     0.02026761     0.00032218
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03562601     0.02297836     0.00051157
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    4.63232D-03  0.00D+00  4.63D-03  4.24D+00    7.77035D-02
+         2    7.37602D-03  0.00D+00  7.38D-03  5.27D+00    1.54403D-01
+         3    7.80431D-03  0.00D+00  7.80D-03  5.42D+00    1.60819D-01
+         4    1.05917D-02  0.00D+00  1.06D-02  6.38D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    5
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03604739    -0.05311471     0.00007868
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00335636     0.02733019    -0.00044010
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.04423647    -0.04124120    -0.00039968
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01325025    -0.03352606     0.00097910
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    6.19716D-04  0.00D+00  6.20D-04  4.24D+00    7.77035D-02
+         2    1.01414D-03  0.00D+00  1.01D-03  5.27D+00    1.54403D-01
+         3    1.07825D-03  0.00D+00  1.08D-03  5.42D+00    1.60819D-01
+         4    1.50839D-03  0.00D+00  1.51D-03  6.38D+00    1.90400D-01
+
+ *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   40)
+ RSP solution vector no.    1; norm of residual   1.46D-04
+ RSP solution vector no.    2; norm of residual   1.93D-04
+ RSP solution vector no.    3; norm of residual   1.99D-04
+ RSP solution vector no.    4; norm of residual   2.37D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.777035D-01
+
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.07770):     21.4614873676    
+
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.07770):    -9.42709318658    
+
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.07770):   -7.182677188180E-03
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.154403D+00
+
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.15440):     23.3660787289    
+
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.15440):    -11.9644132498    
+
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.15440):   -7.602378996644E-03
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.160819D+00
+
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.16082):     23.6318929667    
+
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.16082):    -12.3357992014    
+
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.16082):   -7.659319966833E-03
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   XDIPLEN     FREQUENCY   0.190400D+00
+
+@ QRLRVE:  << XDIPLEN  ; XDIPLEN  >> (   0.19040):     25.2354290076    
+
+@ QRLRVE:  << YDIPLEN  ; XDIPLEN  >> (   0.19040):    -14.6480908625    
+
+@ QRLRVE:  << ZDIPLEN  ; XDIPLEN  >> (   0.19040):   -7.996384574802E-03
+
+
+ QRLRVE -- linear response calculation for symmetry  1  ( A  )
+ QRLRVE -- operator label : YDIPLEN 
+ QRLRVE -- operator spin  :   0
+ QRLRVE -- frequencies :  0.077704  0.154403  0.160819  0.190400
+
+
+
+ ---  SOLVING SETS OF LINEAR EQUATIONS FOR LINEAR RESPONSE PROPERTIES ---
+
+ Operator symmetry = 1  ( A  ); triplet =   F
+
+
+ ** RSPCTL MICROITERATION NUMBER    1
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00329847    -0.03487562     0.00006310
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00415034     0.01331226     0.00001895
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01817841    -0.02658240    -0.00000459
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00719334    -0.01213696    -0.00001354
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    3.35942D+00  0.00D+00  3.36D+00  4.86D+00    7.77035D-02
+         2    3.84778D+00  0.00D+00  3.85D+00  6.15D+00    1.54403D-01
+         3    3.91527D+00  0.00D+00  3.92D+00  6.33D+00    1.60819D-01
+         4    4.31551D+00  0.00D+00  4.32D+00  7.39D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.06744796     0.06379385     0.00004711
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.04753115    -0.08785042    -0.00002040
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01019631    -0.03435741    -0.00003665
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.01497191     0.01873288     0.00001393
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    4.44841D-01  0.00D+00  4.45D-01  5.99D+00    7.77035D-02
+         2    5.61151D-01  0.00D+00  5.61D-01  7.97D+00    1.54403D-01
+         3    5.78328D-01  0.00D+00  5.78D-01  8.26D+00    1.60819D-01
+         4    6.85918D-01  0.00D+00  6.86D-01  1.00D+01    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.04088795     0.06961174     0.00000047
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01973580     0.02346915     0.00007410
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00130685     0.02528891     0.00004301
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03599851     0.01885971     0.00002708
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    4.66641D-02  0.00D+00  4.67D-02  6.01D+00    7.77035D-02
+         2    6.22167D-02  0.00D+00  6.22D-02  8.02D+00    1.54403D-01
+         3    6.45216D-02  0.00D+00  6.45D-02  8.31D+00    1.60819D-01
+         4    7.89959D-02  0.00D+00  7.90D-02  1.01D+01    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.04602176    -0.05724342    -0.00011557
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03353855    -0.00870124    -0.00002637
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02213266    -0.03040269     0.00007381
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.03183483     0.05103241     0.00002235
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    6.05607D-03  0.00D+00  6.06D-03  6.01D+00    7.77035D-02
+         2    9.00308D-03  0.00D+00  9.00D-03  8.02D+00    1.54403D-01
+         3    9.44086D-03  0.00D+00  9.44D-03  8.31D+00    1.60819D-01
+         4    1.22024D-02  0.00D+00  1.22D-02  1.01D+01    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    5
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.01332214    -0.00365076    -0.00019594
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00069722     0.01319103    -0.00015220
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02197805     0.00161393     0.00040517
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00723532     0.02403248     0.00034929
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    5.98914D-04  0.00D+00  5.99D-04  6.01D+00    7.77035D-02
+         2    1.04314D-03  0.00D+00  1.04D-03  8.02D+00    1.54403D-01
+         3    1.11456D-03  0.00D+00  1.11D-03  8.31D+00    1.60819D-01
+         4    1.58991D-03  0.00D+00  1.59D-03  1.01D+01    1.90400D-01
+
+ *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   40)
+ RSP solution vector no.    1; norm of residual   9.96D-05
+ RSP solution vector no.    2; norm of residual   1.30D-04
+ RSP solution vector no.    3; norm of residual   1.34D-04
+ RSP solution vector no.    4; norm of residual   1.57D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.777035D-01
+
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.07770):    -9.42719240869    
+
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.07770):     35.5833215177    
+
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.07770):   -1.307984628931E-03
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.154403D+00
+
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.15440):    -11.9644797517    
+
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.15440):     40.5800954268    
+
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.15440):   -8.921257031078E-04
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.160819D+00
+
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.16082):    -12.3358566645    
+
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.16082):     41.2957138900    
+
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.16082):   -8.287317274348E-04
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   YDIPLEN     FREQUENCY   0.190400D+00
+
+@ QRLRVE:  << XDIPLEN  ; YDIPLEN  >> (   0.19040):    -14.6480719194    
+
+@ QRLRVE:  << YDIPLEN  ; YDIPLEN  >> (   0.19040):     45.6877890150    
+
+@ QRLRVE:  << ZDIPLEN  ; YDIPLEN  >> (   0.19040):   -4.237511576008E-04
+
+
+ QRLRVE -- linear response calculation for symmetry  1  ( A  )
+ QRLRVE -- operator label : ZDIPLEN 
+ QRLRVE -- operator spin  :   0
+ QRLRVE -- frequencies :  0.077704  0.154403  0.160819  0.190400
+
+
+
+ ---  SOLVING SETS OF LINEAR EQUATIONS FOR LINEAR RESPONSE PROPERTIES ---
+
+ Operator symmetry = 1  ( A  ); triplet =   F
+
+
+ ** RSPCTL MICROITERATION NUMBER    1
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003169    -0.00000046     0.09594383
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00003805    -0.00010743    -0.01021537
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001128    -0.00012201     0.01143775
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002221    -0.00027910    -0.02682603
+
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    3.39517D-01  0.00D+00  3.40D-01  1.60D+00    7.77035D-02
+         2    3.87600D-01  0.00D+00  3.88D-01  1.70D+00    1.54403D-01
+         3    3.97378D-01  0.00D+00  3.97D-01  1.71D+00    1.60819D-01
+         4    5.31189D-01  0.00D+00  5.31D-01  1.84D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00029117     0.00020629    -0.01276920
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00053724     0.00066891     0.00300022
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00042589     0.00029449     0.03508566
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00022378     0.00104899    -0.02220475
+
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
+
+ GP * SOLUTION vector at frequency     0.16082 a.u.
+ after    8 linear transformations is      4.31643812D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
+ Determinant of reduced matrix is -1.33 * 10 ** -1.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    16
+
+ GP * SOLUTION vector at frequency     0.19040 a.u.
+ after    8 linear transformations is      4.43976286D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   15    0    1
+ Determinant of reduced matrix is -2.28 * 10 **  0.0
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    8.74550D-02  0.00D+00  8.75D-02  1.64D+00    7.77035D-02
+         2    1.40082D-01  0.00D+00  1.40D-01  1.97D+00    1.54403D-01
+         3    2.95486D-01  0.00D+00  2.95D-01  3.25D+00    1.60819D-01
+         4    1.40333D-01  0.00D+00  1.40D-01  1.86D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00143898     0.00040950    -0.00050855
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00383466    -0.00226234     0.00274535
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00230222     0.00115233     0.00235610
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00447762     0.00576342    -0.00427920
+
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    24
+
+ GP * SOLUTION vector at frequency     0.16082 a.u.
+ after   12 linear transformations is      4.34258309D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   23    0    1
+ Determinant of reduced matrix is -1.28 * 10 **  1.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    24
+
+ GP * SOLUTION vector at frequency     0.19040 a.u.
+ after   12 linear transformations is      4.45222824D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   23    0    1
+ Determinant of reduced matrix is -6.43 * 10 **  1.0
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    1.31061D-02  0.00D+00  1.31D-02  1.65D+00    7.77035D-02
+         2    8.88857D-02  0.00D+00  8.89D-02  3.62D+00    1.54403D-01
+         3    2.81135D-02  0.00D+00  2.81D-02  1.92D+00    1.60819D-01
+         4    2.95121D-02  0.00D+00  2.95D-02  1.89D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00830651    -0.00678267    -0.00190740
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.02078401     0.01946298    -0.00386028
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00522526     0.01845938    -0.00265205
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00319125    -0.00596973     0.00938922
+
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    32
+
+ GP * SOLUTION vector at frequency     0.16082 a.u.
+ after   16 linear transformations is      4.34298319D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   31    0    1
+ Determinant of reduced matrix is -8.35 * 10 **  2.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    32
+
+ GP * SOLUTION vector at frequency     0.19040 a.u.
+ after   16 linear transformations is      4.45278864D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   31    0    1
+ Determinant of reduced matrix is -3.76 * 10 **  3.0
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    2.73067D-03  0.00D+00  2.73D-03  1.65D+00    7.77035D-02
+         2    3.14163D-02  0.00D+00  3.14D-02  3.97D+00    1.54403D-01
+         3    9.73193D-03  0.00D+00  9.73D-03  1.91D+00    1.60819D-01
+         4    9.52400D-03  0.00D+00  9.52D-03  1.89D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    5
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02584376     0.05148126     0.00519254
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.02308849     0.00419668    -0.01101492
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.03204723    -0.06819208     0.01197274
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00154937    -0.00782265     0.00663517
+
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    40
+
+ GP * SOLUTION vector at frequency     0.16082 a.u.
+ after   20 linear transformations is      4.34301672D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   39    0    1
+ Determinant of reduced matrix is -2.72 * 10 **  4.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    40
+
+ GP * SOLUTION vector at frequency     0.19040 a.u.
+ after   20 linear transformations is      4.45282181D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   39    0    1
+ Determinant of reduced matrix is -1.10 * 10 **  5.0
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    7.88938D-04  0.00D+00  7.89D-04  1.65D+00    7.77035D-02
+         2    9.15298D-03  0.00D+00  9.15D-03  4.02D+00    1.54403D-01
+         3    3.34477D-03  0.00D+00  3.34D-03  1.91D+00    1.60819D-01
+         4    3.65264D-03  0.00D+00  3.65D-03  1.89D+00    1.90400D-01
+
+ ** RSPCTL MICROITERATION NUMBER    6
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01982702    -0.00182359     0.00230121
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.01909587    -0.03529639    -0.00763410
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00797836     0.03526664     0.01759450
+
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    46
+
+ GP * SOLUTION vector at frequency     0.16082 a.u.
+ after   23 linear transformations is      4.34301791D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   45    0    1
+ Determinant of reduced matrix is -1.18 * 10 **  7.0
+
+ *** INFO, negative eigenvalues in reduced matrix. Symmetry  1,  triplet       F Dimension of reduced matrix =    46
+
+ GP * SOLUTION vector at frequency     0.19040 a.u.
+ after   23 linear transformations is      4.45282303D+00
+ INERTIA (POS,ZER,NEG) of reduced matrix is   45    0    1
+ Determinant of reduced matrix is -4.50 * 10 **  7.0
+
+       No.  Residual tot.,    conf., and orb.    Bnorm      Frequency 
+      ----------------------------------------------------------------
+         1    9.08522D-05  0.00D+00  9.09D-05  1.65D+00    7.77035D-02
+         2    1.30733D-03  0.00D+00  1.31D-03  4.02D+00    1.54403D-01
+         3    3.24698D-04  0.00D+00  3.25D-04  1.91D+00    1.60819D-01
+         4    4.01853D-04  0.00D+00  4.02D-04  1.89D+00    1.90400D-01
+
+ *** THE REQUESTED    4 SOLUTION VECTORS CONVERGED
+
+ Convergence of RSP solution vectors, threshold = 1.00D-03
+ ---------------------------------------------------------------
+ (dimension of paired reduced space:   46)
+ RSP solution vector no.    1; norm of residual   5.51D-05
+ RSP solution vector no.    2; norm of residual   3.25D-04
+ RSP solution vector no.    3; norm of residual   1.70D-04
+ RSP solution vector no.    4; norm of residual   2.13D-04
+
+ *** RSPCTL MICROITERATIONS CONVERGED
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.777035D-01
+
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.07770):   -7.176991649971E-03
+
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.07770):   -1.307068383802E-03
+
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.07770):     4.16880024573    
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.154403D+00
+
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.15440):   -6.764963673490E-03
+
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.15440):   -1.652252689405E-03
+
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.15440):     4.35400939626    
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.160819D+00
+
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.16082):   -7.876685536822E-03
+
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.16082):   -5.562993182741E-04
+
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.16082):     4.34301791258    
+
+@ QRLRVE: SINGLET SOLUTION FOR SYMMETRY    1  ( A  )    LABEL   ZDIPLEN     FREQUENCY   0.190400D+00
+
+@ QRLRVE:  << XDIPLEN  ; ZDIPLEN  >> (   0.19040):   -8.135632009753E-03
+
+@ QRLRVE:  << YDIPLEN  ; ZDIPLEN  >> (   0.19040):   -1.601402802239E-04
+
+@ QRLRVE:  << ZDIPLEN  ; ZDIPLEN  >> (   0.19040):     4.45282303122    
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  3 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00479052    -0.01471134     0.00027606
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00008419     0.00001490    -0.00292099
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001781     0.00000425     0.00060232
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00008419     0.00001490    -0.00292099
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.001422
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.155>> =   0.001422
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407   -0.000017
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.155>> =  -0.000017
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.543161
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.078, w1 = 0.155>> =   0.543161
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  3 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.05549856     0.20018463    -0.00020340
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003885     0.00001703    -0.00408946
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001781     0.00000425     0.00060232
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00003885     0.00001703    -0.00408946
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407   -0.000017
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.155>> =  -0.000017
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.000484
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.155>> =   0.000484
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.458315
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.078, w1 = 0.155>> =   0.458315
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  3 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00005056     0.00000223    -0.11335546
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.05708944     0.02730863     0.00002972
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001781     0.00000425     0.00060232
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.05708944     0.02730863     0.00002972
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.543161
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.155>> =   0.543161
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407    0.458315
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.155>> =   0.458315
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             1    1    0
+
+ omega B, excitation energy, moment :    0.077704    0.155407   -0.000625
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.078, w1 = 0.155>> =  -0.000625
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00267968    -0.02731568     0.00030347
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00726042     0.00204772    -0.00008891
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00200289     0.00909854    -0.00001818
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00726042     0.00204772    -0.00008891
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807   -7.317378
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.154, w2 = 0.309>> =  -7.317378
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807    5.740814
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.154, w2 = 0.309>> =   5.740814
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807    0.002763
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.154, w2 = 0.309>> =   0.002763
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.06266561     0.22923618    -0.00024741
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00316887    -0.00199912     0.00008049
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00200289     0.00909854    -0.00001818
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00316887    -0.00199912     0.00008049
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807    5.740814
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.154, w2 = 0.309>> =   5.740814
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807   -3.453534
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.154, w2 = 0.309>> =  -3.453534
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807   -0.002375
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.154, w2 = 0.309>> =  -0.002375
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00014715    -0.00001316    -0.12213884
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002690    -0.00002855    -0.00613134
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00200289     0.00909854    -0.00001818
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00002690    -0.00002855    -0.00613134
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807    0.002763
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.154, w2 = 0.309>> =   0.002763
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807   -0.002375
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.154, w2 = 0.309>> =  -0.002375
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             2    1    0
+
+ omega B, excitation energy, moment :    0.154403    0.308807   -0.665855
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.154, w2 = 0.309>> =  -0.665855
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00234825    -0.02919774     0.00030733
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001845    -0.00005727     0.01578781
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00001191     0.00000437    -0.01117775
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00001845    -0.00005727     0.01578781
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638    0.001147
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =   0.001147
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638   -0.000663
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000663
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638   -0.439849
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.439849
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.06367006     0.23337890    -0.00025382
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00006157     0.00002040    -0.03227827
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00001191     0.00000437    -0.01117775
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00006157     0.00002040    -0.03227827
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638   -0.000663
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000663
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638    0.002221
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =   0.002221
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638    1.576790
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.161, w3 = 0.322>> =   1.576790
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00003520     0.00001121    -0.11925398
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.05446417    -0.02111870    -0.00002053
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00001191     0.00000437    -0.01117775
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.05446417    -0.02111870    -0.00002053
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638   -0.439850
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.439850
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638    1.576790
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =   1.576790
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             3    1    0
+
+ omega B, excitation energy, moment :    0.160819    0.321638   -0.000280
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.161, w3 = 0.322>> =  -0.000280
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00018840    -0.04107392     0.00033081
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00000903     0.00001847    -0.00164168
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00000379     0.00000089    -0.00125890
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00000903     0.00001847    -0.00164168
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    0.001344
+
+@    <<XDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =   0.001344
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    0.000047
+
+@    <<YDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =   0.000047
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      XDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    1.004865
+
+@    <<ZDIPLEN; XDIPLEN, wb = 0.190, w4 = 0.381>> =   1.004865
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  4 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.06974160     0.25872516    -0.00029360
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00004167     0.00002638    -0.01043893
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00000379     0.00000089    -0.00125890
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00004167     0.00002638    -0.01043893
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    0.000047
+
+@    <<XDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =   0.000047
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    0.001685
+
+@    <<YDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =   0.001685
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      YDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    1.046828
+
+@    <<ZDIPLEN; YDIPLEN, wb = 0.190, w4 = 0.381>> =   1.046828
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+      Induced dipole moments converged in  4 iterations.
+      Induced dipole moments converged in  5 iterations.
+
+      Info from polarizable embedding library:
+     ------------------------------------------
+
+       Input density no.:   1
+
+                        Total induced dipole moment
+                       X              Y              Z
+                  0.00005238     0.00001240    -0.12388933
+
+       Input density no.:   2
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00706007     0.02645593     0.00001815
+
+       Input density no.:   3
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00000379     0.00000089    -0.00125890
+
+       Input density no.:   4
+
+                        Total induced dipole moment
+                       X              Y              Z
+                 -0.00706007     0.02645593     0.00001815
+
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      XDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    1.004866
+
+@    <<XDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =   1.004866
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      YDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800    1.046827
+
+@    <<YDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =   1.046827
+
+
+ Second order moment in a.u. for
+ A operator label,  symmetry, spin:      ZDIPLEN     1    0
+ B operator label,  symmetry, spin:      ZDIPLEN     1    0
+ Excited state no., symmetry, spin:             4    1    0
+
+ omega B, excitation energy, moment :    0.190400    0.380800   -0.001513
+
+@    <<ZDIPLEN; ZDIPLEN, wb = 0.190, w4 = 0.381>> =  -0.001513
+
+
+       *******************************************************************
+       ************ FINAL RESULTS FROM TWO-PHOTON CALCULATION ************
+       *******************************************************************
+
+ The two-photon absorption strength for an average molecular  
+ orientation is computed according to formulas given by       
+ P.R. Monson and W.M. McClain in J. Chem. Phys. 53:29, 1970   
+ and W.M. McClain in J. Chem. Phys. 55:2789, 1971.            
+ The absorption depends on the light polarization.            
+ A monochromatic light source is assumed.                     
+
+ All results are presented in atomic units, except the        
+ excitation energy which is given in eV and two-photon cross  
+ section which is given in GM. A FWHM of 0.1 eV is assumed.   
+
+   Conversion factors:
+      1 a.u. = 1.896788 10^{-50} cm^4 s/photon
+      1 GM = 10^{-50} cm^4 s/photon
+
+
+                  +--------------------------------+
+                  | Two-photon transition tensor S |
+                  +--------------------------------+
+     ---------------------------------------------------------------------------------
+     Sym  No  Energy        Sxx        Syy        Szz        Sxy        Sxz        Syz
+     ---------------------------------------------------------------------------------
+       1   1    4.23     0.0     0.0    -0.0    -0.0     0.5     0.5
+       1   2    8.40    -7.3    -3.5    -0.7     5.7     0.0    -0.0
+       1   3    8.75     0.0     0.0    -0.0    -0.0    -0.4     1.6
+       1   4   10.36     0.0     0.0    -0.0     0.0     1.0     1.0
+     ------------------------------------------------------------------------
+
+
+                    Transition probabilities (a.u.)         
+                   -----------------------------------------
+                    D  =  2*Df + 4*Dg, Linear   polarization
+                    D  = -2*Df + 6*Dg, Circular polarization
+                    Df = sum(i,j){ S_ii * S_jj }/30         
+                    Dg = sum(i,j){ S_ij * S_ij }/30         
+
+                   Two-photon cross sections                
+         ---------------------------------------------------
+          sigma  =  8*pi^3*alpha^2*hbar/e^4 * E^2*D   (a.u.)
+
+                             Polarization ratio      
+                      -------------------------------
+                          R  = (-Df+3*Dg)/(Df+2*Dg)  
+
+
+                   +-----------------------------------+
+                   |   Two-photon absorption summary   |
+                   +-----------------------------------+
+   ---------------------------------------------------------------------------------
+   Sym  No  Energy  Polarization         Df         Dg          D      sigma       R
+   ---------------------------------------------------------------------------------
+     1   1    4.23   Linear       0.546E-07  0.337E-01  0.135E+00  0.176E-02    1.50
+     1   1    4.23   Circular     0.546E-07  0.337E-01  0.202E+00  0.265E-02    1.50
+     1   2    8.40   Linear       0.436E+01  0.439E+01  0.263E+02  0.136E+01    0.67
+     1   2    8.40   Circular     0.436E+01  0.439E+01  0.176E+02  0.913E+00    0.67
+     1   3    8.75   Linear       0.318E-06  0.179E+00  0.715E+00  0.401E-01    1.50
+     1   3    8.75   Circular     0.318E-06  0.179E+00  0.107E+01  0.602E-01    1.50
+     1   4   10.36   Linear       0.766E-07  0.140E+00  0.561E+00  0.442E-01    1.50
+     1   4   10.36   Circular     0.766E-07  0.140E+00  0.842E+00  0.663E-01    1.50
+   ---------------------------------------------------------------------------------
+
+  Total CPU  time used in RESPONSE:   0.64 seconds
+  Total wall time used in RESPONSE:   0.64 seconds
+
+
+                   .-------------------------------------------.
+                   | End of Dynamic Property Section (RESPONS) |
+                   `-------------------------------------------'
+
+  Total CPU  time used in DALTON:   0.83 seconds
+  Total wall time used in DALTON:   0.83 seconds
+
+ 
+     Date and time (Linux)  : Tue Mar 28 20:58:06 2023
+     Host name              : foeroyar                                
