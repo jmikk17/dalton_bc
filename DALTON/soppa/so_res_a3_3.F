@@ -492,7 +492,7 @@ C
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 6)) then
 C     Term: del_ab 1/2 sum_kl (j k | l i ) rho_kl  (line 2 second term)
-C     Implemented as (j k | i l)
+C     Implemented as (k j | i l)
 C
       ISYML = ISDEL
 C
