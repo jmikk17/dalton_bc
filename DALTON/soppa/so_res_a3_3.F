@@ -40,7 +40,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_3')
 
-      I_ACT_TERM = 7
+      I_ACT_TERM = 0
       
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 1)) then
 C     Term: - del_ab sum_cd (i j | c d ) rho_cd  (line 1 first term)
@@ -492,7 +492,7 @@ C
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 6)) then
 C     Term: del_ab 1/2 sum_kl (j k | l i ) rho_kl  (line 2 second term)
-C     Implemented as (j k | i l)
+C     Implemented as (k j | i l)
 C
       ISYML = ISDEL
 C

@@ -44,7 +44,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_2')
 
-      I_ACT_TERM = 9
+      I_ACT_TERM = 0
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 9)) then
 C     Term: - sum_c (a i | j c ) rho_bc  (line 3 first term)
@@ -257,7 +257,8 @@ C              Generate ( j i | a delta ) for
 C              given a and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-                  DO 102 ISYMB = 1,NSYM
+C                  DO 102 ISYMB = 1,NSYM
+                        ISYMB  = MULD2H(ISYMI,ISALBE)
 
                         ISALFA = ISYMB
                         ISBETA = ISYMI
@@ -312,7 +313,7 @@ C
                           END DO
                         END DO
 C
-  102       CONTINUE
+C  102       CONTINUE
 C
   101    CONTINUE
 C
@@ -332,7 +333,7 @@ C
 C-----------------------------------------------------------------------
 C                                  
 C           Transform (alpha beta | gamma delta) to  
-C           (alpha beta | a delta)
+C           (alpha beta | i delta)
 C-----------------------------------------------------------------------
 C
       LDSRHF = NDSRHF(ISDEL)
@@ -391,7 +392,6 @@ C
 
                         ISBETA = ISYMJ
                         ISALFA = ISYMJ
-                        ISYMB  = ISALFA
 
                         LSCR2  = NRHF(ISYMJ)*NBAS(ISBETA)
                         LSCR3  = NRHF(ISYMJ)*NRHF(ISYMJ)
@@ -453,7 +453,7 @@ C
 
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 14)) then
-C     Term: - 1/2 sum_c (a b | i l ) rho_jl  (line 4 second term)
+C     Term: - 1/2 sum_l (a b | i l ) rho_jl  (line 4 second term)
 C     Implemented as (i l | a b)
 C     Calculated by setting b = delta 
       ISYMB = ISDEL
@@ -518,7 +518,8 @@ C              Generate ( i j | a delta ) for
 C              given a and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-                  DO 142 ISYMJ = 1,NSYM
+C                  DO 142 ISYMJ = 1,NSYM
+                        ISYMJ  = MULD2H(ISYMI,ISALBE)
 
                         ISBETA = ISYMJ
                         ISALFA = ISYMI
@@ -563,7 +564,7 @@ C
 C              (i j | a delta) * b_{delta j} => U(a,i)
 C
                         KOFF5  = IT1AM(ISYMA,ISYMI)
-                        KOFF6  = IT1AO(ISYMA,ISYMI)
+                        KOFF6  = IT1AO(ISDEL,ISYMJ)
 C
                         DO I = 1, NRHF(ISYMI)
                           DO J = 1, NRHF(ISYMJ)
@@ -574,7 +575,7 @@ C
                           END DO
                         END DO
 C
-  142       CONTINUE
+C  142       CONTINUE
 C
   141    CONTINUE
 C
@@ -584,7 +585,7 @@ C
 
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 15)) then
-C     Term: sum_c (b j | a l ) rho_il  (line 4 third term)
+C     Term: sum_l (b j | a l ) rho_il  (line 4 third term)
 C     Implemented as (a l | j b)
 C     Calculated by setting b = delta 
       ISYMB = ISDEL
@@ -652,7 +653,7 @@ C
                   DO 152 ISYMI = 1,NSYM
 
                         ISBETA = ISYMI
-                        ISYMA  = MULD2H(ISYMTR,ISYMI)
+                        ISYMA  = MULD2H(ISYMI,ISYMTR)
                         ISALFA = ISYMA
 
                         LSCR2  = NRHF(ISYMI)*NBAS(ISBETA)
@@ -779,7 +780,8 @@ C              Generate ( j i | a delta ) for
 C              given a and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-                  DO 162 ISYMJ = 1,NSYM
+C                  DO 162 ISYMJ = 1,NSYM
+                        ISYMJ  = MULD2H(ISYMI,ISALBE)
 
                         ISALFA = ISYMJ
                         ISBETA = ISYMI
@@ -835,7 +837,7 @@ C
                           END DO
                         END DO
 C
-  162       CONTINUE
+C  162       CONTINUE
 C
   161    CONTINUE
 C

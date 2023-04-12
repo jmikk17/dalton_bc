@@ -37,7 +37,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_1')
 
-      I_ACT_TERM = 17
+      I_ACT_TERM = 0
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 4)) then
 C
@@ -52,7 +52,7 @@ C      IF (LCDB.LE.0) GOTO 999
 C
       DO 040 ISYMI = 1,NSYM
 C
-C         ISYMA  = MULD2H(ISYMI,ISYMTR)
+         ISYMA  = MULD2H(ISYMI,ISYMTR)
          ISALBE = MULD2H(ISYMI,ISYDIS)
 C
          LSCR1  = N2BST(ISALBE)
@@ -84,10 +84,11 @@ C              Generate ( c a | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 042 ISYMC = 1,NSYM
+C            DO 042 ISYMC = 1,NSYM
+               ISYMC  = MULD2H(ISYMA,ISALBE)
             
                ISALFA = ISYMC
-               ISYMA  = MULD2H(ISYMC,ISALBE)
+C               ISYMA  = MULD2H(ISYMC,ISALBE)
                ISBETA = ISYMA
 C
                LSCR2  = NBAS(ISBETA)*NVIR(ISYMC)
@@ -136,7 +137,7 @@ C
                   END DO
                END DO
 C 
-  042       CONTINUE
+C  042       CONTINUE
 C
   041    CONTINUE
 C
@@ -190,8 +191,9 @@ C              Generate ( a k | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 082 ISYMK = 1,NSYM
-            
+C            DO 082 ISYMK = 1,NSYM
+               ISYMK  = MULD2H(ISYMA,ISALBE)
+
                ISALFA = ISYMK
                ISBETA = ISYMA
 C
@@ -264,7 +266,7 @@ C
       DO 120 ISYMJ = 1,NSYM
 C
          ISALBE = MULD2H(ISYMJ,ISYDIS)
-         ISYMI  = MULD2H(ISALBE,ISYMJ)
+         ISYMI  = MULD2H(ISYMJ,ISALBE)
          ISYMA  = MULD2H(ISYMI,ISYMTR)
          ISALFA = ISYMJ
          ISBETA = ISYMI
@@ -312,7 +314,6 @@ C
 C
                NTOTAL = MAX(NBAS(ISALFA),1)
                NTOTBE = MAX(NBAS(ISBETA),1)
-               NTOTJ  = MAX(NRHF(ISYMJ),1)
 C
                KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                KOFF3  = ILMRHF(ISYMJ) + 1 + (J-1)*NBAS(ISYMJ)
@@ -397,11 +398,11 @@ C-----------------------------------------------------------------
 C
             DO 132 ISYMA = 1,NSYM
 
-                  ISALFA = ISYMA
-                  ISYMI  = MULD2H(ISYMA,ISYMTR)
-                  ISBETA = ISYMI
-C                  ISBETA = MULD2H(ISALFA, ISALBE)
-C                  ISYMI  = ISBETA
+                  ISALFA  = ISYMA
+C                  ISYMI  = MULD2H(ISYMA,ISYMTR)
+C                  ISBETA = ISYMI
+                  ISYMI   = MULD2H(ISYMA, ISALBE)
+                  ISBETA  = ISYMI
 
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -430,7 +431,7 @@ C              ( alpha, beta |..) * C(beta, i)   => ( alpha, i | ..)
      &                    CMO(KOFF3),NTOTBE,
      &                    ZERO,WORK(KSCR2),NTOTAL)
 C
-C              b(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
+C              C(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
                   CALL DGEMM('T','N',NVIR(ISYMA),NRHF(ISYMI),
      &                    NBAS(ISALFA),ONE,
      &                    CMO(KOFF4),NTOTAL,
@@ -443,14 +444,13 @@ C
                   KOFF5  = IT1AM(ISYMA,ISYMI)
                   KOFF6  = ILMRHF(ISYMJ)
 C
-                  COUNT  = 0
                   DO I = 1, NRHF(ISYMI)
                         DO IA = 1,NVIR(ISYMA)
-                              RES1(KOFF5+COUNT+IA)=RES1(KOFF5+COUNT+IA)
-     &                        + WORK(KSCR3 -1 + COUNT + IA) *
+                              RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)=
+     &                         RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
+     &                        + WORK(KSCR3 -1 + (I-1)*NVIR(ISYMA) +IA)*
      &                        BDENSIJ(KOFF6+(IDEL-1)*NRHF(ISYMJ)+J)
                         END DO
-                        COUNT = COUNT + NVIR(ISYMA)
                   END DO
 C             
   132       CONTINUE
