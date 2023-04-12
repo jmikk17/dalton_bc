@@ -19,6 +19,6 @@
 !      in the CC module for address pointers)
 
       INTEGER    MXCORB_CC
-      PARAMETER (MXCORB_CC = 600 )
+      PARAMETER (MXCORB_CC = 700 )
 
 ! -- end of maxorb.h --

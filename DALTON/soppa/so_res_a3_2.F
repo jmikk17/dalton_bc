@@ -44,7 +44,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_2')
 
-      I_ACT_TERM = 9
+      I_ACT_TERM = 0
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 9)) then
 C     Term: - sum_c (a i | j c ) rho_bc  (line 3 first term)

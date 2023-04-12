@@ -1470,6 +1470,7 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
      &                        WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                        ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
 
+C KFSchaltz begin
             IDEL3 = IDEL - IBAS(ISYMD) 
             CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
@@ -1487,7 +1488,7 @@ C    (6)      ( k i | j delta ) * T2M1( ak, j)
      &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
      &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
-
+C KFSchaltz end
             IF (DO_DEX) THEN
 C
 C           Same for the D-part
@@ -1499,6 +1500,7 @@ C           Same for the D-part
      &                           IDEL,ISYMD,
      &                           ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
      
+C KFSchaltz begin
                IDEL3 = IDEL - IBAS(ISYMD) 
                CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
      &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
@@ -1516,6 +1518,7 @@ C           Same for the D-part
      &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
      &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
      &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+C KFSchaltz end
 
             END IF
             DTIME      = SECOND()   - DTIME
@@ -1693,6 +1696,25 @@ C
             CALL SO_RES_B26 ( WORK(KRES1E), LRES1E, WORK(KT2M1), LT2M1,
      &                        WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                        ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+C KFSchaltz begin
+            IDEL3 = IDEL - IBAS(ISYMD) 
+            CALL SO_RES_A3_1(WORK(KRES1D),LRES1D,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_2(WORK(KRES1D),LRES1D,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+            CALL SO_RES_A3_3(WORK(KRES1D),LRES1D,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1D),LBTR1D,
+     &                      WORK(KBTJ1D),LBTJ1D,WORK(KEND6),LWORK6)
+C KFSchaltz end     
 C
             IF (DO_DEX) THEN
 C           Same for the D-part
@@ -1702,6 +1724,27 @@ C           Same for the D-part
      &                          WORK(KT2M1), LT2M1,
      &                          WORK(KDSRHF),WORK(KCMO),LCMO,IDEL,ISYMD,
      &                          ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+
+C KFSchaltz begin
+               IDEL3 = IDEL - IBAS(ISYMD) 
+               CALL SO_RES_A3_1(WORK(KRES1E),LRES1E,WORK(KBDENSIJ),
+     &                      LBDENSIJ,WORK(KBDENSAB),LBDENSAB,
+     &                      WORK(KDSRHF),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KEND6),LWORK6)
+               CALL SO_RES_A3_2(WORK(KRES1E),LRES1E,WORK(KDENSIJ),
+     &                      LDENSIJ,WORK(KDENSAB),LDENSAB,
+     &                      WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                      WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6) 
+               CALL SO_RES_A3_3(WORK(KRES1E),LRES1E,WORK(KB2DENSIJ),
+     &                      LB2DENSIJ,WORK(KB2DENSAB),LB2DENSAB,
+     &                      WORK(KXINT),WORK(KCMO),LCMO,IDEL3,ISYMD,
+     &                      ISYDIS2,ISYMTR,WORK(KBTR1E),LBTR1E,
+     &                      WORK(KBTJ1E),LBTJ1E,WORK(KEND6),LWORK6)
+C KFSchaltz end     
+
             END IF
             DTIME      = SECOND()   - DTIME
             SOTIME(16) = SOTIME(16) + DTIME

@@ -37,7 +37,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_1')
 
-      I_ACT_TERM = 17
+      I_ACT_TERM = 0
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 4)) then
 C

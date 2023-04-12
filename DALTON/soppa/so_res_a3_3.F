@@ -40,7 +40,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_3')
 
-      I_ACT_TERM = 7
+      I_ACT_TERM = 0
       
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 1)) then
 C     Term: - del_ab sum_cd (i j | c d ) rho_cd  (line 1 first term)
