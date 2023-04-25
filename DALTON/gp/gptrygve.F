@@ -454,7 +454,7 @@ C
       CHARACTER*(*) NAME, STATUS
       LOGICAL OLDDX, FEXIST
 #include "priunit.h"
-#if defined (SYS_AIX) || defined (SYS_LINUX) || defined (SYS_DARWIN)
+#if defined (SYS_AIX) || defined (SYS_LINUX) || defined (SYS_DARWIN) || defined (SYS_FREEBSD)
 C
 C     Assume same for IBM-AIX--  1-Oct-1990 hjaaj
 C     Assume same for HP-UX  -- 21-Aug-1991 hjaaj

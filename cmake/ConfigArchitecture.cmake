@@ -12,6 +12,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
     if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i386")
         add_definitions(-DARCH32BIT)
     endif()
+    add_definitions(-DHAVE_NO_LSEEK64)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
