@@ -144,8 +144,10 @@ additional changes to be used in a PE calculation.
 
 \subsection*{The potential input format}
 The \potinp\ file is split into three sections: \verb|@COORDINATES|,
-\verb|@MULTIPOLES| and \verb|@POLARIZABILITIES|. The format is perhaps best
-illustrated using an example:
+\verb|@MULTIPOLES| and \verb|@POLARIZABILITIES|. Additionally, an optional
+\verb|@SIMULATION_BOX| section can be included to define the simulation box.
+It is required for calculations including periodic boundary conditions.
+The format of the \potinp\ file is perhaps best illustrated using an example:
 \begin{verbatim}
 ! two water molecules
 @COORDINATES
@@ -238,7 +240,6 @@ is site number one, the second line is site number two and so on. This
 numbering is important and used in the following sections.\\
 
 \noindent\texttt{@MULTIPOLES}\newline
-
 The multipoles section is subdivided into the orders of the
 multipoles, i.e.\ \verb|ORDER 0| for monopoles/charges, \verb|ORDER 1|
 for dipoles and so on.  For each order there is a number specifying
@@ -252,8 +253,8 @@ that the components are stepped from the right, e.g.\
 \verb|xx xy xz yy yz zz| or \verb|xxx xxy xxz xyy xyz xzz yyy yyz yzz zzz|.
 Note, that the multipoles should in general be traceless, however, for
 multipoles up to and including octopoles (i.e.\ \verb|ORDER 3|) the
-trace is removed if present. Furthermore,
-the current implementation is limited to fifth order multipoles.\\
+trace is removed if present. Furthermore, the current implementation is
+limited to fifth-order multipoles.\\
 
 \noindent\texttt{@POLARIZABILITIES}\newline
 The polarizabilities section is also subdivided into orders,
@@ -270,6 +271,21 @@ attached to each polarizable site that specifies which sites are not allowed
 to polarize it, e.g.\ \verb|1 2 3 4 5| means that site number 1 cannot be
 polarized by sites 2, 3, 4 and 5.\\
 
+\noindent\texttt{@SIMULATION\_BOX}\newline
+The simulation box section is used to define the simulation box type and
+parameters. The box can either be orthorhombic:
+\begin{verbatim}
+@SIMULATION_BOX
+ORTHORHOMBIC
+a b c
+\end{verbatim}
+or triclinic:
+\begin{verbatim}
+@SIMULATION_BOX
+TRICLINIC
+a b c A B C
+\end{verbatim}
+Here a, b, and c are the side lengths in \AA{} and A, B, and C are the angles in degrees.
 
 \subsection*{PE-CC example}\label{subsec:pecc}
 To run a PE-CC calculation requires an additional \Sec{PECC} section under
@@ -308,7 +324,7 @@ Chapters~\ref{ch:ccexamples} and ~\ref{ch:CC}.
 PE calculations may suffer from electron spill-out, especially when using diffuse
 basis functions, due to the lack of non-electrostatic Pauli repulsion from the electrons
 of the environment. This can, in some cases, lead to unphysical charge leaks from
-the core quantum region to the environment. 
+the core quantum region to the environment.
 A cost-effective solution to prevent this is to use the pseudopotentials developed
 in ref. \citenum{pe_pp}.
 To add pseudopotentials on classical atoms in the environment, include them in the \molinp file with
@@ -411,13 +427,14 @@ PBE0
 5
 **END OF
 \end{verbatim}
+
 \subsubsection{For developers}
 Behind the scenes, the setup for a PDE calculations comprises a number of steps,
 which are described in the following. Running these manually is tedious and
-error-prone, so we recommend using the \verb|PyFraME| Python package for the 
+error-prone, so we recommend using the \verb|PyFraME| Python package for the
 setup in general.
 For each fragment in the environment, the density needs to be obtained.
-These calculations should be run with just the monomer (in vacuum), 
+These calculations should be run with just the monomer (in vacuum),
 and are activated with the \verb|.SAVE DENSITY| option.
 \begin{verbatim}
 **DALTON
@@ -431,8 +448,8 @@ save_density.h5
 PBE0
 **END of
 \end{verbatim}
-In addition to the standard input files, a \verb|hdf5| file 
-with information about the core region and environment fragment 
+In addition to the standard input files, a \verb|hdf5| file
+with information about the core region and environment fragment
 must be provided. Also, a potential file with the positions of
 the polarizable sites must be supplied.
 The following fields must be provided in the \verb|hdf5| file:
@@ -470,9 +487,9 @@ GROUP "/" {
 }
 }
 \end{verbatim}
-Note that the dimensions shown here, and in the listings below, depend on the 
-dimensions (number of atoms / number of basis functions) of the environment fragments 
-and core region. The \verb|.SAVE DENSITY| calculation will result in a \verb|hdf5| file 
+Note that the dimensions shown here, and in the listings below, depend on the
+dimensions (number of atoms / number of basis functions) of the environment fragments
+and core region. The \verb|.SAVE DENSITY| calculation will result in a \verb|hdf5| file
 to which the following information has been added:
 \begin{verbatim}
 HDF5 "save_density.h5" {
@@ -509,7 +526,7 @@ GROUP "/" {
 }
 \end{verbatim}
 The dimer calculations (core region + environment fragment) are activated with the \verb|.TWOINT| option.
-The basis functions of the core region should be listed first in the \verb|.mol| file, 
+The basis functions of the core region should be listed first in the \verb|.mol| file,
 followed by the basis functions of the environent fragment.
 The \verb|hdf5| output from the preceding monomer calculation should be provided.
 \begin{verbatim}
@@ -523,7 +540,8 @@ save_density.h5
 .HF
 **END OF
 \end{verbatim}
-This will result add entries for the electrostatic (fragment-density) operator and exchange-repulsion operator to the output \verb|hdf5| file.
+This will result add entries for the electrostatic (fragment-density) operator
+and exchange-repulsion operator to the output \verb|hdf5| file.
 \begin{verbatim}
 HDF5 "twoint.h5" {
 GROUP "/" {
@@ -591,9 +609,11 @@ GROUP "/" {
 
 \subsubsection{London orbitals with PDE}
 The PDE model supports the calculation of NMR shieldings using London orbitals.
-Additional magnetic gradient terms need to be evaulated when constructing the embedding potential.
-The keyword \verb|.TWOLAO| should be activated under the \verb|*PELIB| section (see input listing below),
-which will request the generation of the \verb|london electrostatic matrix| and \verb|london exchange-repulsion matrix| in the \verb|hdf5| file.
+Additional magnetic gradient terms need to be evaulated when constructing the
+embedding potential. The keyword \verb|.TWOLAO| should be activated under the
+\verb|*PELIB| section (see input listing below), which will request the
+generation of the \verb|london electrostatic matrix| and
+\verb|london exchange-repulsion matrix| in the \verb|hdf5| file.
 
 \begin{verbatim}
 **DALTON
@@ -609,14 +629,14 @@ save_density.h5
 
 
 \subsection{Fast Multipole Method}\label{subsec:FMM}
-The computational scaling of the PE model is quadratic with the number of polarizable sites.
-For large systems, this can become the bottleneck of PE calculations.
-To overcome this, fast summation schemes, such as the fast multipole method (FMM) can be used (see Ref. \citenum{scheurer2021efficient}).
-The FMM implementation in PElib is used to evaluate both the static fields from multipoles as well 
-as the fields from induced dipoles.
-In practice, FMM is beneficial (faster than traditional direct summation) for systems exceeding 
-about 8000 environment sites. 
-FMM can be activated with:
+The computational scaling of the PE model is quadratic with the number of
+polarizable sites. For large systems, this can become the bottleneck of PE
+calculations. To overcome this, fast summation schemes, such as the fast
+multipole method (FMM) can be used (see Ref. \citenum{scheurer2021efficient}).
+The FMM implementation in PElib is used to evaluate both the static fields
+from multipoles as well as the fields from induced dipoles. In practice, FMM
+is beneficial (faster than traditional direct summation) for systems exceeding
+about 8000 environment sites. FMM can be activated with:
 
 \begin{verbatim}
 **DALTON
@@ -630,19 +650,19 @@ FMM can be activated with:
 \end{verbatim}
 
 The accuracy of FMM is controlled by two parameters, the multipole acceptance criterion, $\theta$,
-and the multipole expansion order. The multipole acceptance criterion determines whether two 
+and the multipole expansion order. The multipole acceptance criterion determines whether two
 boxes, $A$ and $B$ can be considered far separated, according to
 \begin{equation}
 R\theta > R_A + R_B.
 \end{equation}
-Smaller values of $\theta$ are more accurate since more of the interactions are placed in the 
-short range, but are also more expensive. The limit of $\theta=0$ corresponds formally to a 
-direct summation. Typical values of $\theta$ are around $0.5$.
-The expansion order controls to which order the multipole expansion in FMM is taken. 
-Higher orders are more accurate, but also more expensive.
-The FMM implementation is based on an adaptive octree code, which boxifies the system such that
-boxes contain at most NCRIT particles. Smaller values of NCRIT will result in more boxes.
-The acceptance criterion ($\theta$), expansion order, and critical number of particles can be changed as:
+Smaller values of $\theta$ are more accurate since more of the interactions are placed in the
+short range, but are also more expensive. The limit of $\theta=0$ corresponds formally to a
+direct summation. Typical values of $\theta$ are around $0.5$. The expansion order controls
+to which order the multipole expansion in FMM is taken. Higher orders are more accurate, but
+also more expensive. The FMM implementation is based on an adaptive octree code, which
+boxifies the system such that boxes contain at most NCRIT particles. Smaller values of NCRIT
+will result in more boxes. The acceptance criterion ($\theta$), expansion order, and critical
+number of particles can be changed as:
 
 \begin{verbatim}
 **DALTON
@@ -662,13 +682,22 @@ The acceptance criterion ($\theta$), expansion order, and critical number of par
 \end{verbatim}
 
 \subsection{Approximate environment coupling}
-
-After applying FMM to treat the interaction between induced dipoles, all classical and quantum-classical interaction parts of a PE calculation scale linearly with respect to the number of environment sites.
-For some systems, the evaluation of electric fields from the electronic density in the quantum part and the corresponding evaluation of Fock matrix elements due to the induced dipoles can become a dominating factor in the cost of a PE calculation.
-Various approximations to the interaction between the quantum region and the environment can be introduced to reduce the cost, with only a very minor impact on the quality of the calculation (see Ref. \citenum{reinholdt2021fast}).
-One option is to use a single-center multipole expansion. Instead of using the full interaction between the quantum region and the environment, electric fields beyond some cutoff radius are calculated via a single-center multipole expansion.
-The expansion is generally only convergent beyond some radius, and relatively high expansion orders should be used for good accuracy.
-Below is an example of a single-center expansion with a cutoff radius of 40 bohr and an interaction multipole expansion order of 8.
+After applying FMM to treat the interaction between induced dipoles, all
+classical and quantum-classical interaction parts of a PE calculation scale
+linearly with respect to the number of environment sites. For some systems,
+the evaluation of electric fields from the electronic density in the quantum
+part and the corresponding evaluation of Fock matrix elements due to the
+induced dipoles can become a dominating factor in the cost of a PE calculation.
+Various approximations to the interaction between the quantum region and the
+environment can be introduced to reduce the cost, with only a very minor impact
+on the quality of the calculation (see Ref. \citenum{reinholdt2021fast}). One
+option is to use a single-center multipole expansion. Instead of using the full
+interaction between the quantum region and the environment, electric fields
+beyond some cutoff radius are calculated via a single-center multipole expansion.
+The expansion is generally only convergent beyond some radius, and relatively
+high expansion orders should be used for good accuracy. Below is an example of
+a single-center expansion with a cutoff radius of 40 bohr and an interaction
+multipole expansion order of 8.
 
 \begin{verbatim}
 **DALTON INPUT
@@ -693,11 +722,13 @@ CAMB3LYP
 **END OF
 \end{verbatim}
 
-Another available option is to use a multi-center multipole expansion with ESP-fitted multipoles.
-The multi-center expansion improves the short-range convergence of the expansion.
-Expansion orders should generally be kept low.
-Below is an example of an ESPF expansion with up to quadrupoles and a cutoff radius of 20 bohr.
-Note the difference between `INT\_RCUT` (determines where the approximate coupling can be applied) and `INT\_RFIT` (determines the radius within which solvent sites are used as grid points for the ESP fitting).
+Another available option is to use a multi-center multipole expansion with
+ESP-fitted multipoles. The multi-center expansion improves the short-range
+convergence of the expansion. Expansion orders should generally be kept low.
+Below is an example of an ESPF expansion with up to quadrupoles and a cutoff
+radius of 20 bohr. Note the difference between `INT\_RCUT` (determines where
+the approximate coupling can be applied) and `INT\_RFIT` (determines the
+radius within which solvent sites are used as grid points for the ESP fitting).
 
 \begin{verbatim}
 **DALTON INPUT
@@ -726,10 +757,12 @@ CAMB3LYP
 **END OF
 \end{verbatim}
 
-Another option is to create local expansions of the electronic electric fields in the environment, similar to FMM.
-Here, the near-field/far-field cutoff is controlled by a multipole acceptance criterion, $\theta$.
-Smaller values of $\theta$ (`INT\_THETA`) place more interactions in the near-field, and are thus more accurate but also more expensive.
-Below is an example of this approach, with $\theta=0.3$ and a local expansion up to 7th order (`INT\_ORDER`).
+Another option is to create local expansions of the electronic electric fields
+in the environment, similar to FMM. Here, the near-field/far-field cutoff is
+controlled by a multipole acceptance criterion, $\theta$. Smaller values of
+$\theta$ (`INT\_THETA`) place more interactions in the near-field, and are thus
+more accurate but also more expensive. Below is an example of this approach,
+with $\theta=0.3$ and a local expansion up to 7th order (`INT\_ORDER`).
 
 \begin{verbatim}
 **DALTON INPUT

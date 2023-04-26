@@ -1008,6 +1008,10 @@ include the effective external field effect in dipole property calculations.
 NOTE: Activating this option will affect all dipole properties, including the dipole moment
 of the core quantum region.
 
+\item[\Key{PBC}]\verb| |\newline
+Use periodic boundary conditions (PBCs) in the calculation of induced dipoles. This
+option requires that the simulation box is defined in the input potential file (see Chapter~\ref{ch:embedding} for details).
+
 \item[\Key{RESTART}]\verb| |\newline
 Use any existing files to restart calculation.
 
@@ -1033,31 +1037,6 @@ Cartesian coordinate.
 If the \verb|FIELD| option is given then also three cube files
 containing the Cartesian components of the electric field from the
 embedding potential will be created.
-
-\item[\Key{SKIPMUL}]\verb| |\newline
-Skip calculation of multipole--multipole interaction energy (default)
-
-\item[\Key{NOSKIPMUL}]\verb| |\newline
-Do not skip calculation of multipole--multipole interaction energy.
-
-\item[\Key{ISOPOL}]\verb| |\newline
-Converts all anisotropic polarizabilities into isotropic polarizabilities.
-
-\item[\Key{ZEROPOL}]\verb| |\newline
-Remove all polarizabilities.
-
-\item[\Key{ZEROMUL}]\verb| |\newline
-\verb|READ (LUCMD, *) ZEROMUL_ORDER| (optional) \verb| |\newline
-Remove all multipoles of order \verb|ZEROMUL_ORDER| and up. The default is to remove all dipoles and higher-order multipoles (i.e. \verb|ZEROMUL_ORDER| = 1).
-
-\item[\Key{VERBOSE}]\verb| |\newline
-Verbose output. Currently this will print the final converged induced dipole moments.
-
-\item[\Key{DEBUG}]\verb| |\newline
-Debug output. Prints the total electric field and the induced dipole moments in each iteration. WARNING: for large systems this will produce very large output files.
-
-\item[\Key{OLDFIELD}]\verb| |\newline
-Activates the legacy implementation of direct multipole field evaluation. For debugging purposes.
 
 \item[\Key{FMM}]\verb| |\newline
 Activate FMM for evaluations of static and induced multipole fields.
@@ -1110,11 +1089,36 @@ Relevant only for ESPF with the SVD numerical solver. Tolerance below which sing
 
 \item[\Key{NF\_INCORE}]\verb| |\newline
 \verb|READ (LUCMD, *) NF_INCORE|\verb| |\newline
-Keep near-field interaction integrals in memory (default for approximate couplings). 
+Keep near-field interaction integrals in memory (default for approximate couplings).
 
 \item[\Key{NO\_NF\_INCORE}]\verb| |\newline
 \verb|READ (LUCMD, *) NO_NF_INCORE|\verb| |\newline
-Do not keep near-field interaction integrals in memory. 
+Do not keep near-field interaction integrals in memory.
+
+\item[\Key{SKIPMUL}]\verb| |\newline
+Skip calculation of multipole--multipole interaction energy (default)
+
+\item[\Key{NOSKIPMUL}]\verb| |\newline
+Do not skip calculation of multipole--multipole interaction energy.
+
+\item[\Key{ISOPOL}]\verb| |\newline
+Converts all anisotropic polarizabilities into isotropic polarizabilities.
+
+\item[\Key{ZEROPOL}]\verb| |\newline
+Remove all polarizabilities.
+
+\item[\Key{ZEROMUL}]\verb| |\newline
+\verb|READ (LUCMD, *) ZEROMUL_ORDER| (optional) \verb| |\newline
+Remove all multipoles of order \verb|ZEROMUL_ORDER| and up. The default is to remove all dipoles and higher-order multipoles (i.e. \verb|ZEROMUL_ORDER| = 1).
+
+\item[\Key{VERBOSE}]\verb| |\newline
+Verbose output. Currently this will print the final converged induced dipole moments.
+
+\item[\Key{DEBUG}]\verb| |\newline
+Debug output. Prints the total electric field and the induced dipole moments in each iteration. WARNING: for large systems this will produce very large output files.
+
+\item[\Key{OLDFIELD}]\verb| |\newline
+Activates the legacy implementation of direct multipole field evaluation. For debugging purposes.
 
 \end{description}
 

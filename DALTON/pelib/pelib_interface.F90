@@ -165,6 +165,8 @@ subroutine pelib_ifc_input_reader(word)
     character(len=2) :: auoraa
     integer :: i, j
     real(rp), dimension(2) :: temp
+    real(rp), dimension(6) :: box_parameters
+
 
     call qenter('pelib_ifc_input_reader')
 
@@ -377,7 +379,7 @@ subroutine pelib_ifc_input_reader(word)
             read(lucmd, *) fmm_ncrit
         else if (trim(option(2:7)) == 'EXPANS') then
             read(lucmd, *) fmm_expansion_order
-        ! options for (approximate) qmmm interaction 
+        ! options for (approximate) qmmm interaction
         else if (trim(option(2:7)) == 'INT_TH') then ! INT_THETA
             read(lucmd, *) qmmm_interaction_theta
         else if (trim(option(2:7)) == 'INT_SC') then ! INT_SCHEME
@@ -524,6 +526,7 @@ subroutine pelib_ifc_input_reader(word)
             else
                 solvent = 'H2O'
             end if
+            call chcase(solvent)
             pelib_sol = .true.
             pelib_diis = .true.
             pelib_fixsol = .true.
@@ -608,12 +611,48 @@ subroutine pelib_ifc_input_reader(word)
             if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
                & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
                 allocate(gauge_input(3))
-                gauge_input = 0.0_rp
-                do i = 1,3
-                    read(lucmd, *) gauge_input(i)
-                enddo
+                read(lucmd, *) (gauge_input(i), i = 1, 3)
             end if
             pelib_gauge = .true.
+        ! PBC via MIC
+        else if (trim(option(2:4)) == 'PBC') then
+            pelib_mic = .true.
+            read(lucmd, '(a80)') option
+            backspace(lucmd)
+            ! check if box parameters are given here
+            if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+               & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                read(lucmd, '(a80)') option
+                call chcase(option)
+                box_type = trim(option)
+                box_parameters = 0.0_rp
+                read(lucmd, '(a80)') option
+                backspace(lucmd)
+                if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+                   & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                    if (box_type == 'CUBIC' .or. box_type == 'ORTHORHOMBIC') then
+                        read(lucmd, *) (box_parameters(i), i = 1, 3)
+                        box_parameters(4:6) = 90.0_rp
+                    else if (box_type == 'TRICLINIC') then
+                        read(lucmd, *) (box_parameters(i), i = 1, 6)
+                    else
+                        call quit('unknown box type')
+                    end if
+                else
+                    call quit('box parameters are missing')
+                end if
+                box_lengths(1:3) = box_parameters(1:3) * aa2bohr
+                box_angles(1:3) = box_parameters(4:6) * pi / 180.0
+            end if
+        else if (trim(option(2:7)) == 'CUTOFF') then
+            pelib_cutoff = .true.
+            read(lucmd, '(a80)') option
+            backspace(lucmd)
+            if ((option(1:1) /= '.') .and. (option(1:1) /= '*') .and.&
+               & (option(1:1) /= '!') .and. (option(1:1) /= '#')) then
+                read(lucmd, *) interaction_cutoff
+                interaction_cutoff = interaction_cutoff * aa2bohr
+            end if
         else if (option(1:1) == '*') then
             word = option
             exit
@@ -639,6 +678,7 @@ subroutine pelib_ifc_input_reader(word)
     end if
 
     call qexit('pelib_ifc_input_reader')
+
 end subroutine pelib_ifc_input_reader
 
 subroutine pelib_ifc_init()
