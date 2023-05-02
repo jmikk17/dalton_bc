@@ -11,15 +11,17 @@
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"
+#include "chrxyz.h"
 
       DIMENSION WORK(LWORK)
-      REAL*8 QR,TOTALQR,constante
-      REAL*8 QRtensor(3,3)
+c      REAL*8 QR,TOTALQR,constante
+c      REAL*8 QRtensor(3,3)
       CHARACTER*9 :: KEY
-      CHARACTER*8, allocatable :: operadores(:,:)
+c      CHARACTER*8, allocatable :: operadores(:,:)
       CHARACTER*8 :: operadores_trio(3)
       CHARACTER*1 :: spin_trio(3)
-      CHARACTER*1, allocatable :: spin_rank(:,:)
+c      CHARACTER*1 :: spin_rank(3)
+c      CHARACTER*1, allocatable :: spin_rank(:,:)
       INTEGER :: SUMA_B
 
       double precision, dimension(NBAST,NBAST) :: Identity,OVERLP,aux1
@@ -31,6 +33,23 @@
       LOGICAL FOUND
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
+
+      REAL*8 QR(3,3),TOTALQR(3,3)
+      REAL*8 QRtensor(3,3)
+c      CHARACTER*4 :: KEY
+      Character*8, dimension(:,:,:), allocatable :: operadores_A
+      Character*8, dimension(:,:,:), allocatable :: operadores_B
+      Character*8, dimension(:,:,:), allocatable :: operadores_C
+c      Character*1, dimension(:,:,:), allocatable :: spin_rank
+
+      INTEGER                  :: NopA, NopB, NopC
+c      CHARACTER*8, dimension(2) :: operadores_duo
+c      INTEGER :: SUMA_B
+c      character*3, dimension(3) :: nuc_coord
+c      character*3               :: nuc_number
+c      character*3               :: efg_name
+      LOGICAL :: TRIPLETE,TRPLET_FLAG
+
 
       
       CALL QENTER('LRSCQUAD')
@@ -55,298 +74,311 @@ c      CALL TIMER('START ',TIMEIN,TIMOUT)
       nuc_number=CHRNOS(LRATOM/100)//CHRNOS(MOD(LRATOM,100)/10)//
      &              CHRNOS(MOD(LRATOM,10))
 
-      IF (KEY.EQ.'OZ-PSO-MV') THEN
+      IF ((KEY.EQ.'OZ-PSO-MV').or.(KEY.EQ.'OZ-PSO-Dw')) THEN
 c        constante = -1000000 * calfa**2 / 2
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
-         operadores(1,1) = 'XANGMOM '
-         operadores(2,1) = 'YANGMOM '
-         operadores(3,1) = 'ZANGMOM '
-         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
-         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
-         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
-         operadores(1,3) = 'MASSVELO'
-         operadores(2,3) = 'MASSVELO'
-         operadores(3,3) = 'MASSVELO'
-         spin_rank(:,:) = '0'
-      END IF
-
-      IF (KEY.EQ.'OZ-PSO-Dw') THEN
-c        constante = 1000000/(2*(137.036**2))
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
-         operadores(1,1) = 'XANGMOM '
-         operadores(2,1) = 'YANGMOM '
-         operadores(3,1) = 'ZANGMOM '
-         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
-         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
-         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
-         operadores(:,3) = 'DARWIN  '
-         spin_rank(:,:) = '0'
-      END IF
-
-
-      IF (KEY.EQ.'SZ-PSO-MV') THEN
-c        constante = 1000000/(137.036**2)
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
-         operadores(1,1) = 'X1SPNORB'
-         operadores(2,1) = 'Y1SPNORB'
-         operadores(3,1) = 'Z1SPNORB'
-         spin_rank(:,1) = '1'
-         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
-         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
-         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
-         spin_rank(:,2) = '0'
-         operadores(:,3) = 'MASSVELO'
-         spin_rank(:,3) = '0'
-      END IF
-
-      IF (KEY.EQ.'SZ-PSO-Dw') THEN
-c        constante = 1000000/(137.036**2)
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
-         operadores(1,1) = 'X1SPNORB'
-         operadores(2,1) = 'Y1SPNORB'
-         operadores(3,1) = 'Z1SPNORB'
-         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
-         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
-         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
-         operadores(:,3) = 'DARWIN  '
-         spin_rank(:,1) = '1'
-         spin_rank(:,2) = '0'
-         spin_rank(:,3) = '0'
+         NopA = 1
+         NopB = 1
+         NopC = 1
+         allocate(operadores_A(3,3,NopA))
+         allocate(operadores_B(3,3,NopB))
+         allocate(operadores_C(3,3,NopC))
+         spin_trio(:)='0'
+         operadores_A(:,1,1) = 'XANGMOM '
+         operadores_A(:,2,1) = 'YANGMOM '
+         operadores_A(:,3,1) = 'ZANGMOM '
+         operadores_B(1,:,1) = 'PSO '//nuc_coord(1)//' '
+         operadores_B(2,:,1) = 'PSO '//nuc_coord(2)//' '
+         operadores_B(3,:,1) = 'PSO '//nuc_coord(3)//' '
+         IF (KEY.EQ.'OZ-PSO-MV') operadores_C(:,:,:) = 'MASSVELO'
+         IF (KEY.EQ.'OZ-PSO-Dw') operadores_C(:,:,:) = 'DARWIN  '
       END IF
 
       IF (KEY.EQ.'OZ-FC-SO ') THEN
 c        constante = 1000000/(4*(137.036**2))
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
-         operadores(1,1) = 'XANGMOM '
-         operadores(2,1) = 'YANGMOM '
-         operadores(3,1) = 'ZANGMOM '
-         spin_rank(:,1) = '0'
-         operadores(1,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         operadores(2,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         operadores(3,2) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         spin_rank(:,2) = '1'
-         operadores(1,3) = 'X1SPNORB'
-         operadores(2,3) = 'Y1SPNORB'
-         operadores(3,3) = 'Z1SPNORB'
-         spin_rank(:,3) = '1'
+         NopA = 1
+         NopB = 1
+         NopC = 1
+         allocate(operadores_A(3,3,NopA))
+         allocate(operadores_B(3,3,NopB))
+         allocate(operadores_C(3,3,NopC))
+         spin_trio(1)='0'
+         spin_trio(2)='1'
+         spin_trio(3)='1'
+         operadores_A(:,1,1) = 'XANGMOM '
+         operadores_A(:,2,1) = 'YANGMOM '
+         operadores_A(:,3,1) = 'ZANGMOM '
+         operadores_B(:,:,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+         operadores_C(1,:,1) = 'X1SPNORB'
+         operadores_C(2,:,1) = 'Y1SPNORB'
+         operadores_C(3,:,1) = 'Z1SPNORB'
       END IF
 
       IF (KEY.EQ.'OZ-SD-SO ') THEN
 c        constante = 1000000/(4*(137.036**2))
-         allocate(operadores(9,3))
-         allocate(spin_rank(9,3))
-         operadores(1,1) = 'XANGMOM '
-         operadores(2,1) = 'YANGMOM '
-         operadores(3,1) = 'ZANGMOM '
-         spin_rank(:,1) = '0'
-         operadores(1,2) = 'SD '//nuc_coord(1)//' x'
-         operadores(2,2) = 'SD '//nuc_coord(1)//' y'
-         operadores(3,2) = 'SD '//nuc_coord(1)//' z'
-         operadores(4,2) = 'SD '//nuc_coord(2)//' x'
-         operadores(5,2) = 'SD '//nuc_coord(2)//' y'
-         operadores(6,2) = 'SD '//nuc_coord(2)//' z'
-         operadores(7,2) = 'SD '//nuc_coord(3)//' x'
-         operadores(8,2) = 'SD '//nuc_coord(3)//' y'
-         operadores(9,2) = 'SD '//nuc_coord(3)//' z'
-         spin_rank(:,2) = '1'
-         operadores(1,3) = 'X1SPNORB'
-         operadores(2,3) = 'Y1SPNORB'
-         operadores(3,3) = 'Z1SPNORB'
-         spin_rank(:,3) = '1'
+         NopA = 3
+         NopB = 3
+         NopC = 3
+         allocate(operadores_A(3,3,NopA))
+         allocate(operadores_B(3,3,NopB))
+         allocate(operadores_C(3,3,NopC))
+         spin_trio(1)='0'
+         spin_trio(2)='1'
+         spin_trio(3)='1'
+         operadores_A(:,1,:) = 'XANGMOM '
+         operadores_A(:,2,:) = 'YANGMOM '
+         operadores_A(:,3,:) = 'ZANGMOM '
+
+         DO K=1, 3
+            operadores_B(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
+            operadores_B(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
+            operadores_B(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
+            operadores_B(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
+            operadores_B(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
+            operadores_B(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
+            operadores_B(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
+            operadores_B(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
+            operadores_B(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
+         END DO
+         operadores_C(:,:,1) = 'X1SPNORB'
+         operadores_C(:,:,2) = 'Y1SPNORB'
+         operadores_C(:,:,3) = 'Z1SPNORB'
       END IF
 
+
+c      IF (KEY.EQ.'SZ-PSO-MV') THEN
+c        constante = 1000000/(137.036**2)
+c         allocate(operadores(3,3))
+c         allocate(spin_rank(3,3))
+c         operadores(1,1) = 'X1SPNORB'
+c         operadores(2,1) = 'Y1SPNORB'
+c         operadores(3,1) = 'Z1SPNORB'
+c         spin_rank(:,1) = '1'
+c         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
+c         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
+c         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
+c         spin_rank(:,2) = '0'
+c         operadores(:,3) = 'MASSVELO'
+c         spin_rank(:,3) = '0'
+c      END IF
+
+c      IF (KEY.EQ.'SZ-PSO-Dw') THEN
+c        constante = 1000000/(137.036**2)
+c         allocate(operadores(3,3))
+c         allocate(spin_rank(3,3))
+c         operadores(1,1) = 'X1SPNORB'
+c         operadores(2,1) = 'Y1SPNORB'
+c         operadores(3,1) = 'Z1SPNORB'
+c         operadores(1,2) = 'PSO '//nuc_coord(1)//' '
+c         operadores(2,2) = 'PSO '//nuc_coord(2)//' '
+c         operadores(3,2) = 'PSO '//nuc_coord(3)//' '
+c         operadores(:,3) = 'DARWIN  '
+c         spin_rank(:,1) = '1'
+c         spin_rank(:,2) = '0'
+c         spin_rank(:,3) = '0'
+c      END IF
+
+
+
+
 c     Está entrando dos veces a la condición, no?
-      IF (KEY.EQ.'SZ-SD-SO '.OR. KEY.EQ.'SZ-FC-SO ') THEN
-        CALL RD_SIRIFC('CMO',FOUND,xmos)
-        cmos=0.0
-        k = 1
-        do i=1,nmos                  !i corresponds to a MO
-          do j=1,naos                              !j corresponds to j coef. of the ith MO
-            cmos(i,j) = xmos(k)                ! Transforms vector into matrix
+c      IF (KEY.EQ.'SZ-SD-SO '.OR. KEY.EQ.'SZ-FC-SO ') THEN
+c        CALL RD_SIRIFC('CMO',FOUND,xmos)
+c        cmos=0.0
+c        k = 1
+c        do i=1,nmos                  !i corresponds to a MO
+c          do j=1,naos                              !j corresponds to j coef. of the ith MO
+c            cmos(i,j) = xmos(k)                ! Transforms vector into matrix
 c           write(lupri,*) "JUAN-cmos: ",i,j,cmos(i,j)
 c           write(lupri,*)
-            k = k + 1
-          end do
-        end do
+c            k = k + 1
+c          end do
+c        end do
 c
-        CALL GETDAT(RTNLBL(1),RTNLBL(2))
-        RTNLBL(1)='1 A  21 '
+c        CALL GETDAT(RTNLBL(1),RTNLBL(2))
+c        RTNLBL(1)='1 A  21 '
 C       Replace time information with symmetry information
-        RTNLBL(2)='SQUARE  '
+c        RTNLBL(2)='SQUARE  '
 c        RTNLBL(2)='ANTISYMM'
-        call WRITEAOPJUAN(matmul(transpose(cmos),cmos),NBAST,
-     &        'IDENTIDA',RTNLBL) !Write Matrix in AOPROPER
+c        call WRITEAOPJUAN(matmul(transpose(cmos),cmos),NBAST,
+c     &        'IDENTIDA',RTNLBL) !Write Matrix in AOPROPER
 c        write(LUPRI,*) "MATRIZ IDENTIDAD:"
 c        call OUTPUT(matmul(transpose(cmos),cmos),1,NORBT,1,NORBT,
 c     &         NORBT,NORBT,1,LUPRI) ! print matrix
 
-        END IF
+c        END IF
 c
-      IF (KEY.EQ.'SZ-FC-SO ') THEN
+c      IF (KEY.EQ.'SZ-FC-SO ') THEN
 c        Constante: (137,036^-2/2)*1000000
 c         constante = 1000000/(2*(137.036**2))
-         allocate(operadores(3,3))
-         allocate(spin_rank(3,3))
+c         allocate(operadores(3,3))
+c         allocate(spin_rank(3,3))
 c         operadores(1,2) = 'X1SPNORB'
 c         operadores(2,2) = 'Y1SPNORB'
 c         operadores(3,2) = 'Z1SPNORB'
-         operadores(:,2) = 'IDENTIDA'
-         spin_rank(:,2) = '1'
-         operadores(1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         operadores(2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         operadores(3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-         spin_rank(:,1) = '1'
-         operadores(1,3) = 'X1SPNORB'
-         operadores(2,3) = 'Y1SPNORB'
-         operadores(3,3) = 'Z1SPNORB'
-         spin_rank(:,3) = '1'
-      END IF
+c         operadores(:,2) = 'IDENTIDA'
+c         spin_rank(:,2) = '1'
+c         operadores(1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+c         operadores(2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+c         operadores(3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+c         spin_rank(:,1) = '1'
+c         operadores(1,3) = 'X1SPNORB'
+c         operadores(2,3) = 'Y1SPNORB'
+c         operadores(3,3) = 'Z1SPNORB'
+c         spin_rank(:,3) = '1'
+c      END IF
 
-      IF (KEY.EQ.'SZ-SD-SO ') THEN
-c         CALL GETDAT(RTNLBL(1),RTNLBL(2))
-c         RTNLBL(1)='1 A  21 '
-C        Replace time information with symmetry information
-c         RTNLBL(2)='SYMMETRI'
-c         Identity = 0                          ! Initialize the array.
-c         forall(j = 1:NBAST) Identity(j,j) = 1 ! Set the diagonal.
-c         call WRITEAOPJUAN(Identity,NBAST,'IDENTITY',RTNLBL) !Write Matrix in AOPROPER
+c      IF (KEY.EQ.'SZ-SD-SO ') THEN
+cc         CALL GETDAT(RTNLBL(1),RTNLBL(2))
+cc         RTNLBL(1)='1 A  21 '
+Cc        Replace time information with symmetry information
+cc         RTNLBL(2)='SYMMETRI'
+cc         Identity = 0                          ! Initialize the array.
+cc         forall(j = 1:NBAST) Identity(j,j) = 1 ! Set the diagonal.
+cc         call WRITEAOPJUAN(Identity,NBAST,'IDENTITY',RTNLBL) !Write Matrix in AOPROPER
 
-c         WRITE(lupri,*)' IDENTITY : '
-c         CALL OUTPUT(Identity,1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
-c         do i=1,NBAST
-c         do j=1,NBAST
-c            write(lupri,*) i,j,OVERLP(i,j)
-c         enddo
-c         enddo
-c         WRITE(lupri,*) '   '
+cc         WRITE(lupri,*)' IDENTITY : '
+cc         CALL OUTPUT(Identity,1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
+cc         do i=1,NBAST
+cc         do j=1,NBAST
+cc            write(lupri,*) i,j,OVERLP(i,j)
+cc         enddo
+cc         enddo
+cc         WRITE(lupri,*) '   '
 
-c         WRITE(lupri,*)' OVERLAP : '
-c         call READAOP(OVERLP, NBAST, 'OVERLAP ') !gets OVERLAP matrix
-c         CALL OUTPUT(OVERLP,1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
-c         WRITE(lupri,*)
-c         do i=1,NBAST
-c         do j=1,NBAST
-c            write(lupri,*) i,OVERLP(i,i)
-c         enddo
-c         enddo
+cc         WRITE(lupri,*)' OVERLAP : '
+cc         call READAOP(OVERLP, NBAST, 'OVERLAP ') !gets OVERLAP matrix
+cc         CALL OUTPUT(OVERLP,1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
+cc         WRITE(lupri,*)
+cc         do i=1,NBAST
+cc         do j=1,NBAST
+cc            write(lupri,*) i,OVERLP(i,i)
+cc         enddo
+cc         enddo
 
 
-c         CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+cc         CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
 cc         CALL RD_SIRIFC('CMO',FOUND,xmos)
 cc                cmos=0.0
 cc       k = 1
 cc       do i=1,nmos                  !i corresponds to a MO
 cc          do j=1,naos                              !j corresponds to j coef. of the ith MO
 cc             cmos(i,j) = xmos(k)                ! Transforms vector into matrix
-c             write(lupri,*) "JUAN-cmos: ",i,j,cmos(i,j)
-c             write(lupri,*)
+cc             write(lupri,*) "JUAN-cmos: ",i,j,cmos(i,j)
+cc             write(lupri,*)
 cc            k = k + 1
 cc         end do
 cc       end do
 
-c         do i=1,NBAST
-c         do j=1,NBAST
-c            write(lupri,*) "JUAN-Ident: ",
-c     &                                i,j,matmul(transpose(cmos),cmos)!(i,j)
-c             write(lupri,*)
-c         enddo
-c         enddo
+cc         do i=1,NBAST
+cc         do j=1,NBAST
+cc            write(lupri,*) "JUAN-Ident: ",
+cc     &                                i,j,matmul(transpose(cmos),cmos)!(i,j)
+cc             write(lupri,*)
+cc         enddo
+cc         enddo
 
 
 cc         CALL GETDAT(RTNLBL(1),RTNLBL(2))
 cc         RTNLBL(1)='1 A  21 '
-C        Replace time information with symmetry information
+Cc        Replace time information with symmetry information
 cc         RTNLBL(2)='SQUARE  '
-c        RTNLBL(2)='ANTISYMM'
+cc        RTNLBL(2)='ANTISYMM'
 cc      call WRITEAOPJUAN(matmul(transpose(cmos),cmos),NBAST,
 cc    &        'IDENTIDA',RTNLBL) !Write Matrix in AOPROPER
-c        Constante: (137,036^-2/2)*1000000
-c         constante = 1000000/(2*(137.036**2))
-         allocate(operadores(9,3))
-         allocate(spin_rank(9,3))
-         operadores(:,1) = 'OVERLAP '
-         operadores(:,1) = 'IDENTIDA'
-         spin_rank(:,1) = '1'
+cc        Constante: (137,036^-2/2)*1000000
+cc         constante = 1000000/(2*(137.036**2))
+c         allocate(operadores(9,3))
+c         allocate(spin_rank(9,3))
+c         operadores(:,1) = 'OVERLAP '
+c         operadores(:,1) = 'IDENTIDA'
+c         spin_rank(:,1) = '1'
 c                              nuc coord
-         operadores(1,2) = 'SD '//nuc_coord(1)//' x'
-         operadores(2,2) = 'SD '//nuc_coord(1)//' y'
-         operadores(3,2) = 'SD '//nuc_coord(1)//' z'
-         operadores(4,2) = 'SD '//nuc_coord(2)//' x'
-         operadores(5,2) = 'SD '//nuc_coord(2)//' y'
-         operadores(6,2) = 'SD '//nuc_coord(2)//' z'
-         operadores(7,2) = 'SD '//nuc_coord(3)//' x'
-         operadores(8,2) = 'SD '//nuc_coord(3)//' y'
-         operadores(9,2) = 'SD '//nuc_coord(3)//' z'
-         spin_rank(:,2) = '1'
+c         operadores(1,2) = 'SD '//nuc_coord(1)//' x'
+c         operadores(2,2) = 'SD '//nuc_coord(1)//' y'
+c         operadores(3,2) = 'SD '//nuc_coord(1)//' z'
+c         operadores(4,2) = 'SD '//nuc_coord(2)//' x'
+c         operadores(5,2) = 'SD '//nuc_coord(2)//' y'
+c         operadores(6,2) = 'SD '//nuc_coord(2)//' z'
+c         operadores(7,2) = 'SD '//nuc_coord(3)//' x'
+c         operadores(8,2) = 'SD '//nuc_coord(3)//' y'
+c         operadores(9,2) = 'SD '//nuc_coord(3)//' z'
+c         spin_rank(:,2) = '1'
 
-         operadores(1,3) = 'X1SPNORB'
-         operadores(2,3) = 'Y1SPNORB'
-         operadores(3,3) = 'Z1SPNORB'
-         spin_rank(:,3) = '1'
+c         operadores(1,3) = 'X1SPNORB'
+c         operadores(2,3) = 'Y1SPNORB'
+c         operadores(3,3) = 'Z1SPNORB'
+c         spin_rank(:,3) = '1'
 
-        END IF
+c        END IF
 
 
 c     Elemento ij del tensor de shielding
-      SUMA_B = SIZE(operadores,DIM=1)/3
-      do i = 1, 3 !SIZE(operadores,DIM=1)
-      do j = 1, 3 !SIZE(operadores,DIM=1)
-         QR = 0.d0
-         TOTALQR = 0.d0
-         operadores_trio(1) = operadores(i,1)
+c      SUMA_B = SIZE(operadores,DIM=1)/3
+      do i = 1, 3 !
+      do j = 1, 3 !
+c         operadores_trio(1) = operadores(i,1)
 c         operadores_trio (2) = operadores(j,2)
-         spin_trio(1) = spin_rank(i,1)
+c         spin_trio(1) = spin_rank(i,1)
 c         spin_trio(2) = spin_rank(j,2)
+         IF (NopA+NopB+NopC.LT.6) THEN !Combine all A,B,C operators (one of them has 3 components)
+            do k = 1, NopA
+            do l = 1, NopB
+            do m = 1, NopC
 
-         IF (operadores(1,3)(3:8).EQ.'SPNORB') THEN
-            k = 3
-         else
-            k = 1
+               operadores_trio(1)=operadores_A(i,j,k)
+               operadores_trio(2)=operadores_B(i,j,l)
+               operadores_trio(3)=operadores_C(i,j,m)
+               call create_QRinput(operadores_trio,spin_trio)
+               LUPRI = 6232
+c               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
+               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
+     &              position='append')
+               call RSPDRV(WORK,LWORK)
+               CLOSE(LUPRI)
+               LUPRI  = 2
+            
+               CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+               CALL GPCLOSE(LURSP3,'DELETE')
+               CALL GPCLOSE(LURSP4,'DELETE')
+               CALL GPCLOSE(LURSP5,'DELETE')
+               call get_QRvalue(QR(i,j),operadores_trio)
+               TOTALQR(i,j) = TOTALQR(i,j) + QR(i,j)
+            end do
+            end do
+            end do
+
+         ELSE
+            do k = 1, 3
+               operadores_trio(1)=operadores_A(i,j,k)
+               operadores_trio(2)=operadores_B(i,j,k)
+               operadores_trio(3)=operadores_C(i,j,k)
+               call create_QRinput(operadores_trio,spin_trio)
+               LUPRI = 6232
+               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
+     &              position='append')
+               call RSPDRV(WORK,LWORK)
+               CLOSE(LUPRI)
+               LUPRI  = 2
+               CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+               CALL GPCLOSE(LURSP3,'DELETE')
+               CALL GPCLOSE(LURSP4,'DELETE')
+               CALL GPCLOSE(LURSP5,'DELETE')
+               call get_QRvalue(QR(i,j),operadores_trio)
+               TOTALQR(i,j) = TOTALQR(i,j) + QR(i,j)
+            end do
          END IF
+      QRtensor(i,j) = TOTALQR(i,j)
 
-        IF (KEY(4:5).EQ.'SD') THEN
-           l = 3
-        else
-           l = 1
-        END IF
+c            IF (JIMPRT .GT. 2) THEN
+c               write(lupri,*) operadores_trio(1),' ',operadores_trio(2),!debug
+c     &         ' ',operadores_trio(3),' ',spin_trio(1),' ',spin_trio(2),
+c     &         ' ',spin_trio(3)," QR: ",QR
+c            END IF
 
-         do m = 1, k
-            operadores_trio(3)=operadores(m,3)
-            spin_trio(3)=spin_rank(m,3)
-         do n = 1, l
-            operadores_trio(2) = operadores(SUMA_B*(j-1)+n,2)
-            spin_trio(2)=spin_rank(SUMA_B*(j-1)+n,2)
-            call create_QRinput(operadores_trio,spin_trio)
-            LUPRI = 6232
-            OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
-            call RSPDRV(WORK,LWORK)
-            CLOSE(LUPRI)
-            LUPRI  = 2
-         
-            CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-            CALL GPCLOSE(LURSP3,'DELETE')
-            CALL GPCLOSE(LURSP4,'DELETE')
-            CALL GPCLOSE(LURSP5,'DELETE')
-            call get_QRvalue(QR,operadores_trio)
-            TOTALQR = TOTALQR + QR
-            IF (JIMPRT .GT. 2) THEN
-               write(lupri,*) operadores_trio(1),' ',operadores_trio(2),!debug
-     &         ' ',operadores_trio(3),' ',spin_trio(1),' ',spin_trio(2),
-     &         ' ',spin_trio(3)," QR: ",QR
-            END IF
-         end do
-         end do
-
-         QRtensor(i,j) = TOTALQR
-         IF (JIMPRT .GT. 2) THEN
-            write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
-            write(lupri,*)
-         END IF
+c         IF (JIMPRT .GT. 2) THEN
+c            write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
+c            write(lupri,*)
+c         END IF
 
       end do
       end do
@@ -356,8 +388,9 @@ c         spin_trio(2) = spin_rank(j,2)
       IF (KEY.EQ.'OZ-FC-SO ') QROZFCSO = QRtensor
       IF (KEY.EQ.'OZ-SD-SO ') QROZSDSO = QRtensor
 
-      deallocate(operadores)
-      deallocate(spin_rank)
+      deallocate(operadores_A)
+      deallocate(operadores_B)
+      deallocate(operadores_C)
 
 
 c      CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)

@@ -40,13 +40,13 @@ c#include "suscpt.h"
 #include "infpri.h"
       double precision cmos(NORBT,NBAST)
       double precision OVERLP(NBAST,NBAST)
+      integer indice
       LOGICAL FOUND
       DIMENSION WORK(LWORK)
       CHARACTER*8 LABEL1,LISTA1(100)
       CHARACTER*6 LABEL2
       CHARACTER*4 KEY
       CHARACTER*3 char
-      DIMENSION SIGMAMV(9),SIGMADW(9)
       PARAMETER (D05=0.5D0,D025=0.25)
 C
 #include "cbiexc.h"
@@ -80,10 +80,10 @@ C  LINEAR LRESC SINGLET ROUTINE
 C   KEY = 'FCAV'  <Fc>
 C         'DIAK'  <Dia.Kin>
 C         'ANGP'  <L.Pso>
+C         'SDAV'  <SD>
 C
       CALL QENTER('AVELRSC')
       CALL TIMER('START ',TIMEIN,TIMOUT)
-
       IF (JIMPRT .GE. 1) THEN
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
          IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(5X,A,A)')
@@ -94,6 +94,9 @@ C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
      &   ' correction is under calculation...'
          IF (KEY.EQ.'ANGP') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (ANGP)',
+     &   ' correction is under calculation...'
+         IF (KEY.EQ.'SDAV') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic First Order Singlet (SDAV)',
      &   ' correction is under calculation...'
       END IF
 C
@@ -278,7 +281,7 @@ C ==============================================================================
 cb      write(lupri,*)' selected atom is :', LRATOM
 
 C===============================================================================
-C  SINGLET CALCULATIONS : D1S and P1S
+C  SINGLET CALCULATIONS : D1S
 C ==============================================================================
 C
 C      Look for LABELS : FERMI
@@ -294,30 +297,46 @@ C
 C      Look for LABELS : DIAKIN
 C     ---------------------------
       IF(KEY.EQ."DIAK") THEN
-         NLAB=3
-         LABEL2='NSKE'
-         IJ = 1
-         DO I=npos1,npos1+2
-            LISTA1(IJ)= CHRNOS(I/100)//CHRNOS(I/10)//
-     &                    CHRNOS(MOD(I,10))//'NSKE'//CHRXYZ(IJ)
-            IJ = IJ + 1
-         END DO
+        NLAB=9
+        indice = 1
+        DO I=npos1,npos1+2
+        DO IJ = 1, 3
+           LISTA1(indice)= CHRNOS(I/100)//CHRNOS(I/10)//
+     &               CHRNOS(MOD(I,10))//'NSKE'// CHRXYZ(IJ)
+           indice = indice + 1
+        END DO
+        END DO
       ENDIF
 C
 C
 C ---------------------------------------------------------------------
 C
+C      Look for LABELS : SDAV
+C     ---------------------------
+      IF(KEY.EQ."SDAV") THEN
+        NLAB=9
+        indice = 1
+        DO I=npos1,npos1+2
+        DO IJ = 1, 3
+           LISTA1(indice)= 'SD '//CHRNOS(I/100)//CHRNOS(I/10)//
+     &               CHRNOS(MOD(I,10))//' '//CHRXYZ(-IJ)
+           indice = indice + 1
+        END DO
+        END DO
+      ENDIF
+C ---------------------------------------------------------------------
+C
 C      Look for LABELS : ANGPSO
 C     ---------------------------
       IF(KEY.EQ."ANGP") THEN
-        NLAB=3 
-        LABEL2='PSOZ'
-        IJ = 1
+        NLAB=9
+        indice = 1
         DO I=npos1,npos1+2
-           LISTA1(IJ)= CHRNOS(I/100)//CHRNOS(I/10)//
+        DO IJ = 1, 3
+           LISTA1(indice)= CHRNOS(I/100)//CHRNOS(I/10)//
      &               CHRNOS(MOD(I,10))//'PSOZ'// CHRXYZ(IJ)
-c           WRITE(*,*) LISTA1(IJ)
-          IJ = IJ + 1
+           indice = indice + 1
+        END DO
         END DO
       ENDIF
 
@@ -411,7 +430,7 @@ cx         ELSE
             IF (JIMPRT.GE.2) THEN
                WRITE (LUPRI,'(1A,I2,3A,F20.12)')
      &         '#',KJ,' Expectation Value for Operator : < ',
-     &         LISTA1(IDIP), ' > = ',SNDPRP
+     &         LISTA1(IDIP), ' > = ', SNDPRP
 c            ENDIF
            ENDIF
 cx         ENDIF
@@ -432,16 +451,41 @@ C       -----------
 C         <DiaKin> :
 C       ------------------
          IF (KEY.EQ.'DIAK') THEN
-            IF(KJ.EQ.1) LRDIAK(1,1)=SNDPRP
-            IF(KJ.EQ.2) LRDIAK(2,2)=SNDPRP
-            IF(KJ.EQ.3) LRDIAK(3,3)=SNDPRP
+            IF(KJ.EQ.1) LRDIAK(1,1)=1.0/3.0*SNDPRP
+            IF(KJ.EQ.2) LRDIAK(1,2)=-1.0*SNDPRP
+            IF(KJ.EQ.3) LRDIAK(1,3)=-1.0*SNDPRP
+            IF(KJ.EQ.4) LRDIAK(2,1)=-1.0*SNDPRP
+            IF(KJ.EQ.5) LRDIAK(2,2)=1.0/3.0*SNDPRP
+            IF(KJ.EQ.6) LRDIAK(2,3)=-1.0*SNDPRP
+            IF(KJ.EQ.7) LRDIAK(3,1)=-1.0*SNDPRP
+            IF(KJ.EQ.8) LRDIAK(3,2)=-1.0*SNDPRP
+            IF(KJ.EQ.9) LRDIAK(3,3)=1.0/3.0*SNDPRP
          ENDIF
 C         <Angpso> :
 C       ------------------
          IF (KEY.EQ.'ANGP') THEN
             IF(KJ.EQ.1) LRANGP(1,1)=SNDPRP
-            IF(KJ.EQ.2) LRANGP(2,2)=SNDPRP
-            IF(KJ.EQ.3) LRANGP(3,3)=SNDPRP
+            IF(KJ.EQ.2) LRANGP(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRANGP(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRANGP(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRANGP(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRANGP(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRANGP(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRANGP(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRANGP(3,3)=SNDPRP
+         ENDIF
+C         < SDAV > :
+C       ------------------
+         IF (KEY.EQ.'SDAV') THEN
+            IF(KJ.EQ.1) LRSDAV(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRSDAV(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRSDAV(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRSDAV(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRSDAV(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRSDAV(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRSDAV(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRSDAV(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRSDAV(3,3)=SNDPRP
          ENDIF
   300 CONTINUE
 C
@@ -452,8 +496,76 @@ C
       CALL QEXIT('AVELRSC')
       RETURN
       END
-C...
-Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+c
+c
+
+
+
+C  /* Deck Regenerate_integrals */
+      SUBROUTINE REGENERATE_INTEGRALS(COORDENADAS)
+
+#include "implicit.h"
+c#include "dummy.h"
+c#include "mxcent.h"
+#include "priunit.h"
+c#include "inftap.h"
+c#include "infrsp.h"
+c#include "wrkrsp.h"
+#include "lrescinf.h"
+c#include "inforb.h"
+c#include "nuclei.h"
+#include "chrnos.h"
+#include "chrxyz.h"
+
+      double precision COORDENADAS(3)
+      character*3, dimension(3) :: nuc_coord
+      character*3               :: nuc_number
+      character*10 :: namefile
+      logical :: file_exists, file_open
+      INTEGER :: fileID
+      CALL QENTER('REGENERATE_INTEGRALS')
+c      CALL GETTIM(TIMHER,WALHER)
+
+      do i = 1, 3
+         ICOORD = i !(x,y,z)
+         ISCOOR = LRATOM*3 + (ICOORD - 3)
+         IFIRST=ISCOOR/100
+         ISECND = MOD(ISCOOR,100)/10
+         ITHIRD = MOD(MOD(ISCOOR,100),10)
+         nuc_coord(i)=CHRNOS(IFIRST)//CHRNOS(ISECND)//CHRNOS(ITHIRD)
+      end do
+
+      nuc_number=CHRNOS(LRATOM/100)//CHRNOS(MOD(LRATOM,100)/10)//
+     &              CHRNOS(MOD(LRATOM,10))
+
+      namefile='DALTON.INP'
+      fileID = -1
+      CALL GPOPEN(fileID,namefile,'UNKNOWN',' ','FORMATTED',
+     &            IDUMMY,.FALSE.)
+      write(fileID,'(a)') '**DALTON INPUT'
+
+
+c      write(fileID,'(a)') '*MOLBAS'
+c      write(fileID,'(a)') '.UNCONTRACTED'
+c      write(fileID,'(a)') '.NUCMOD'
+c      write(fileID,'(a)') ' 1'
+
+
+      write(fileID,'(a)') '**INTEGRALS'
+      write(fileID,'(a)') '.GAUGEO'
+      write(fileID,'(3f11.7)') COORDENADAS
+c      write(fileID,'(a)') '.PROPRI'
+c      write(fileID,'(a)') '.LR-SHI'
+c      write(fileID,'(a)') '*LR-SHI'
+c      write(fileID,'(a)') '.LRGAUGEO'
+c      write(fileID,'(3f11.7)') COORDENADAS
+      write(fileID,'(a)') '**END OF DALTON INPUT'
+
+      CALL GPCLOSE(fileID,'KEEP')
+      CALL QEXIT('REGENERATE_INTEGRALS')
+
+      RETURN
+
+      END
+
+

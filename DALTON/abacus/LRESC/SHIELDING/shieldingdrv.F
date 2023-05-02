@@ -235,15 +235,20 @@ C jim 4.0 : anddy aca ver que matrices encesita gesc.
       LRFCAV = D0
       LRDIAK = D0
       LRANGP = D0
+      LRSDAV = D0
 
       LRDIAM = D0
       LRDIAD = D0
 
-      LRLKIN = D0
+      LROZK  = D0
       LRPSOK = D0
       LRPSKI = D0  ! this is just for debugging
       LRFCZK = D0
-      LRSDZK = D0
+      LRFCDE = D0
+      LRSDK = D0
+c      LRSDK2 = D0
+      LRSDD = D0
+c      LRSDD2 = D0
       LRFCBS = D0
       LRSDBS = D0
 
@@ -271,9 +276,11 @@ C     J. J. Aucar 2021
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"              
+#include "gnrinf.h"
 C
 C
-      LOGICAL PING
+      LOGICAL PING, FOUND
+      DIMENSION WORK(LWORK)
       logical :: file_exists, file_open
       INTEGER, allocatable :: LRATOMS(:)
       PING=.FALSE.
@@ -307,7 +314,7 @@ c     Prepared for selecting a nuclei sublist
       END IF
 C --------------------------------------------------
 C Some files have to be closed and/or deleted
-c when the RESPONSE module is called besides LRESC
+c when the RESPONSE module is called before LRESC
       inquire(file = 'RSPVEC', exist = file_exists,
      &            opened = file_open)
       IF (file_exists .AND. file_open) 
@@ -376,35 +383,50 @@ c        Run Linear Responses
 C --------------------------------------------------
       DO I = 1, size(LRATOMS)
       LRATOM = LRATOMS(I)
+
+C     Next lines will be used for setting GO at each nucleus. Should be
+C     done also for LR and QR.
+c      call REGENERATE_INTEGRALS(CORD(:,LRATOM)) !Placing GO at each nucleus
+c      NEWPRP = .TRUE.  !So that AOPROPER is re-written
+c      HRINPC = .FALSE. !So that HERMIT INPUTS IS READ AGAIN FROM DALTON.INP
+c      CALL HERCTL(WORK,LWORK)
+
       IF (SIGMAD0S) THEN
-         CALL AVELRSC('FCAV',WORK,LWORK)
-         CALL AVELRSC('DIAK',WORK,LWORK)
-         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO
+         TRPLET = .FALSE.
+         TRPFLG = .FALSE.
+         CALL AVELRSC('ANGP',WORK,LWORK) ! PSO-OZ
+         CALL AVELRSC('FCAV',WORK,LWORK) ! FC
+         CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
+         CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
       END IF
 C --------------------------------------------------
 C     Paramagnetic corrections to Shielding:
 C     First Order Singlet
       IF (SIGMAP1S)  THEN
-         CALL GET_LR('PSOK',.FALSE.)
-         CALL GET_LR('LKIN',.FALSE.)
+         CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K
+         CALL GET_LR('OZK ',.FALSE.) !   PSO  | OZ-KE
       END IF
 
 C     Diamagnetic corrections to Shielding:
 C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
-         CALL GET_LR('DIAM',.FALSE.)
-         CALL GET_LR('DIAD',.FALSE.)
+         CALL GET_LR('DIAM',.FALSE.) ! NSCO | Mv
+         CALL GET_LR('DIAD',.FALSE.) ! NSCO | Dw
       END IF
 C
 C
 C     Paramagnetic corrections to Shielding:
 C     First Order TRIPLET
       IF (SIGMAP1T) THEN
-         CALL GET_LR('FCZK',.TRUE.)
-         CALL GET_LR('FCBS',.TRUE.)
-         CALL GET_LR('SDZK',.TRUE.)
-         CALL GET_LR('SDBS',.TRUE.)
+         CALL GET_LR('FCZK',.TRUE.) !   FC   | KINENERG
+         CALL GET_LR('FCDE',.TRUE.) !   FC   | dd/didj
+         CALL GET_LR('SDK ',.TRUE.) !  SD_ij | KINENERG
+         CALL GET_LR('SDD ',.TRUE.) !   SD   | dd/d d
+         CALL GET_LR('FCBS',.TRUE.) !   FC   | NSTCGO_ij
+         CALL GET_LR('SDBS',.TRUE.) !   SD   | NSTCGO
+c         CALL GET_LR('SDK2',.TRUE.)
+c         CALL GET_LR('SDD2',.TRUE.)
       END IF
 
 c     Paramagnetic corrections to Shielding:
@@ -451,15 +473,20 @@ C     Add constants and print all in ppm's
 !     Diamagnetic corrections
          LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
          LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
+         LRSDAV = calfa*calfa*calfa*calfa*1.0D+6* CSDAV*LRSDAV
          LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
          LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
          LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
 !     Paramagnetic corrections
          LRFCZK = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK
-         LRSDZK = calfa*calfa*calfa*calfa*1.0D+6* CSDZK*LRSDZK
+         LRFCDE = calfa*calfa*calfa*calfa*1.0D+6* CFCDE*LRFCDE
+         LRSDK = calfa*calfa*calfa*calfa*1.0D+6* CSDK*LRSDK
+c         LRSDK2 = calfa*calfa*calfa*calfa*1.0D+6* CSDK2*LRSDK2
+         LRSDD = calfa*calfa*calfa*calfa*1.0D+6* CSDD*LRSDD
+c         LRSDD2 = calfa*calfa*calfa*calfa*1.0D+6* CSDD2*LRSDD2
          LRFCBS = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS
          LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
-         LRLKIN = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN
+         LROZK  = calfa*calfa*calfa*calfa*1.0D+6* COZK*LROZK
          LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
 c
          QRPSOOZMV = calfa*calfa*1.0D+6* CPSOOZMV*QRPSOOZMV
@@ -469,11 +496,13 @@ c
 C
 
 !     Diamagnetic corrections
-         SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGP
+         SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGP + LRSDAV
          SGD1S = SGD1S + LRDIAD + LRDIAM
 !     Paramagnetic corrections
-         SGP1S = SGP1S + LRLKIN + LRPSOK
-         SGP1T = SGP1T + LRFCZK + LRSDZK + LRFCBS + LRSDBS
+         SGP1S = SGP1S + LROZK + LRPSOK
+         SGP1T = SGP1T + LRFCZK + LRFCDE + LRSDK
+     &         + LRSDD1 + LRSDD2 + LRFCBS 
+     &         + LRSDBS
          SGP3S = SGP3S + QRPSOOZMV + QRPSOOZDW
          SGP3T = SGP3T + QROZFCSO + QROZSDSO
 !     Total

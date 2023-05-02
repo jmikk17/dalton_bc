@@ -49,12 +49,12 @@ C
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('Lkin    ',LRLKIN,'iso')
+               call PRINT_LRSHIELD_CORR('OZK     ',LROZK,'iso')
                call PRINT_LRSHIELD_CORR('PsoKin  ',LRPSOK,'iso')
                IF (LRANISO) THEN
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('Lkin    ',LRLKIN,'ani')
+               call PRINT_LRSHIELD_CORR('OZK     ',LROZK,'ani')
                call PRINT_LRSHIELD_CORR('PsoKin  ',LRPSOK,'ani')
                END IF
             ENDIF
@@ -66,14 +66,22 @@ C
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
      &               slash,'xx','yy','zz','iso'
                call PRINT_LRSHIELD_CORR('FcKin   ',LRFCZK,'iso')
-               call PRINT_LRSHIELD_CORR('SdKin   ',LRSDZK,'iso')
+               call PRINT_LRSHIELD_CORR('FcDer   ',LRFCDE,'iso')
+               call PRINT_LRSHIELD_CORR('SdKin   ',LRSDK,'iso')
+c               call PRINT_LRSHIELD_CORR('SdKin-2 ',LRSDK2,'iso')
+               call PRINT_LRSHIELD_CORR('SdDer   ',LRSDD,'iso')
+c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'iso')
                call PRINT_LRSHIELD_CORR('FcBso   ',LRFCBS,'iso')
                call PRINT_LRSHIELD_CORR('SdBso   ',LRSDBS,'iso')
                IF (LRANISO) THEN
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('FcKin   ',LRFCZK,'ani')
-               call PRINT_LRSHIELD_CORR('SdKin   ',LRSDZK,'ani')
+               call PRINT_LRSHIELD_CORR('FcDer   ',LRFCDE,'ani')
+               call PRINT_LRSHIELD_CORR('SdKin   ',LRSDK,'ani')
+c               call PRINT_LRSHIELD_CORR('SdKin-2 ',LRSDK2,'ani')
+               call PRINT_LRSHIELD_CORR('SdDer   ',LRSDD,'ani')
+c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'ani')
                call PRINT_LRSHIELD_CORR('FcBso   ',LRFCBS,'ani')
                call PRINT_LRSHIELD_CORR('SdBso   ',LRSDBS,'ani')
                END IF
@@ -154,12 +162,14 @@ C
                call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'iso')
                call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'iso')
                call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'iso')
+               call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'iso')
                IF (LRANISO) THEN
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'ani')
                call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'ani')
                call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'ani')
+               call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'ani')
                END IF
             ENDIF
          ENDIF
