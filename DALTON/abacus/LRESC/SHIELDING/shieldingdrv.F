@@ -381,6 +381,22 @@ c        Run Linear Responses
          LUPRI  = 2
       END IF
 C --------------------------------------------------
+C NUEVOOOOO 1/r3
+c      KFREE  = 1
+c      LFREE  = LWORK
+
+c      CALL MEMGET('REAL',KCMO  ,NCMOT ,WORK ,KFREE ,LFREE)
+c      CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+
+c      IF (.NOT.FOUND)
+c     & CALL QUIT('***Error AVELRSC: CMO is not in SIRIFC***')
+
+
+c         WRITE(lupri,*)' CMOS : '
+c         CALL OUTPUT(WORK(KCMO),1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
+c         WRITE(lupri,*) '   '
+c      call construct_r3(WORK(KCMO),PRT)
+C --------------------------------------------------
       DO I = 1, size(LRATOMS)
       LRATOM = LRATOMS(I)
 
@@ -423,8 +439,8 @@ C     First Order TRIPLET
          CALL GET_LR('FCDE',.TRUE.) !   FC   | dd/didj
          CALL GET_LR('SDK ',.TRUE.) !  SD_ij | KINENERG
          CALL GET_LR('SDD ',.TRUE.) !   SD   | dd/d d
-         CALL GET_LR('FCBS',.TRUE.) !   FC   | NSTCGO_ij
-         CALL GET_LR('SDBS',.TRUE.) !   SD   | NSTCGO
+         CALL GET_LR('FCBS',.TRUE.) !   FC   | SOMF_ij
+         CALL GET_LR('SDBS',.TRUE.) !   SD   | SOMF
 c         CALL GET_LR('SDK2',.TRUE.)
 c         CALL GET_LR('SDD2',.TRUE.)
       END IF
@@ -501,8 +517,7 @@ C
 !     Paramagnetic corrections
          SGP1S = SGP1S + LROZK + LRPSOK
          SGP1T = SGP1T + LRFCZK + LRFCDE + LRSDK
-     &         + LRSDD1 + LRSDD2 + LRFCBS 
-     &         + LRSDBS
+     &         + LRSDD  + LRFCBS + LRSDBS
          SGP3S = SGP3S + QRPSOOZMV + QRPSOOZDW
          SGP3T = SGP3T + QROZFCSO + QROZSDSO
 !     Total
@@ -512,12 +527,13 @@ C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
       END DO
 
-c     Leaving to uncomment in case it's needed
-c     SIRIFC has to remain open after LINEARLR_NEW calls
-c      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
-c         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
-c     &                     .FALSE.)
-c      END IF
+c     SIRIFC has to remain open after all
+      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
+      IF ((.NOT.SIGMAP3S).OR.(.NOT. SIGMAP3T)) THEN
+         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
+     &                     .FALSE.)
+      END IF
+      END IF
 
       call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
       deallocate(LRATOMS)
