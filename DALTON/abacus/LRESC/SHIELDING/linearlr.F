@@ -441,15 +441,24 @@ c                  3*i+j-3                               ij
 C        -----------------------------------
          operadores_A(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
 C        -----------------------------------
-         operadores_B(1,1,1) = nuc_coord(1)//'NSCOX'  !11
-         operadores_B(1,2,1) = nuc_coord(1)//'NSCOY'  !12
-         operadores_B(1,3,1) = nuc_coord(1)//'NSCOZ'  !13
-         operadores_B(2,1,1) = nuc_coord(2)//'NSCOX'  !21
-         operadores_B(2,2,1) = nuc_coord(2)//'NSCOY'  !22
-         operadores_B(2,3,1) = nuc_coord(2)//'NSCOZ'  !23
-         operadores_B(3,1,1) = nuc_coord(3)//'NSCOX'  !31
-         operadores_B(3,2,1) = nuc_coord(3)//'NSCOY'  !32
-         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
+c         operadores_B(1,1,1) = nuc_coord(1)//'NSCOX'  !11
+c         operadores_B(1,2,1) = nuc_coord(1)//'NSCOY'  !12
+c         operadores_B(1,3,1) = nuc_coord(1)//'NSCOZ'  !13
+c         operadores_B(2,1,1) = nuc_coord(2)//'NSCOX'  !21
+c         operadores_B(2,2,1) = nuc_coord(2)//'NSCOY'  !22
+c         operadores_B(2,3,1) = nuc_coord(2)//'NSCOZ'  !23
+c         operadores_B(3,1,1) = nuc_coord(3)//'NSCOX'  !31
+c         operadores_B(3,2,1) = nuc_coord(3)//'NSCOY'  !32
+c         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
+         operadores_B(1,1,1) = 'SOMF  XX' !11
+         operadores_B(1,2,1) = 'SOMF  XY' !12
+         operadores_B(1,3,1) = 'SOMF  XZ' !13
+         operadores_B(2,1,1) = 'SOMF  YX' !21
+         operadores_B(2,2,1) = 'SOMF  YY' !22
+         operadores_B(2,3,1) = 'SOMF  YZ' !23
+         operadores_B(3,1,1) = 'SOMF  ZX' !31
+         operadores_B(3,2,1) = 'SOMF  ZY' !32
+         operadores_B(3,3,1) = 'SOMF  ZZ' !33
 C        -----------------------------------
       END IF
 
@@ -487,15 +496,25 @@ c         operadores_B(3,2,1) = nuc_coord(3)//'NSCOY'  !32
 c         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
          DO K=1, 3
 c           L = LRATOM * K
-           operadores_B(1,1,K) = nuc_coord(1)//'NSCO'//CHRXYZ(1)
-           operadores_B(1,2,K) = nuc_coord(1)//'NSCO'//CHRXYZ(2)
-           operadores_B(1,3,K) = nuc_coord(1)//'NSCO'//CHRXYZ(3)
-           operadores_B(2,1,K) = nuc_coord(2)//'NSCO'//CHRXYZ(1)
-           operadores_B(2,2,K) = nuc_coord(2)//'NSCO'//CHRXYZ(2)
-           operadores_B(2,3,K) = nuc_coord(2)//'NSCO'//CHRXYZ(3)
-           operadores_B(3,1,K) = nuc_coord(3)//'NSCO'//CHRXYZ(1)
-           operadores_B(3,2,K) = nuc_coord(3)//'NSCO'//CHRXYZ(2)
-           operadores_B(3,3,K) = nuc_coord(3)//'NSCO'//CHRXYZ(3)
+c           operadores_B(1,1,K) = nuc_coord(1)//'NSCO'//CHRXYZ(1)
+c           operadores_B(1,2,K) = nuc_coord(1)//'NSCO'//CHRXYZ(2)
+c           operadores_B(1,3,K) = nuc_coord(1)//'NSCO'//CHRXYZ(3)
+c           operadores_B(2,1,K) = nuc_coord(2)//'NSCO'//CHRXYZ(1)
+c           operadores_B(2,2,K) = nuc_coord(2)//'NSCO'//CHRXYZ(2)
+c           operadores_B(2,3,K) = nuc_coord(2)//'NSCO'//CHRXYZ(3)
+c           operadores_B(3,1,K) = nuc_coord(3)//'NSCO'//CHRXYZ(1)
+c           operadores_B(3,2,K) = nuc_coord(3)//'NSCO'//CHRXYZ(2)
+c           operadores_B(3,3,K) = nuc_coord(3)//'NSCO'//CHRXYZ(3)
+c            operadores_B(1,1,K) = 'SOMF  XX' !11
+            operadores_B(1,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !11
+            operadores_B(1,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !12
+            operadores_B(1,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !13
+            operadores_B(2,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !21
+            operadores_B(2,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !22
+            operadores_B(2,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !23
+            operadores_B(3,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !31
+            operadores_B(3,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !32
+            operadores_B(3,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !33
          END DO
 C        -----------------------------------
          END IF
@@ -528,8 +547,8 @@ c     &                     calfa*calfa*calfa*calfa*1.0D6*LR(i,j)
             operadores_duo(2) = operadores_B(i,j,l)
 
             call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
-c            WRITE(LUPRI,*) "AUCAR-LR",operadores_duo,i,j,
-c     &                     calfa*calfa*1.0D6*LR(i,j)
+c            WRITE(LUPRI,*) KEY,' ',operadores_duo,i,j,
+c     &                     -calfa*calfa*calfa*calfa*1.0D+6*LR(i,j)
             TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
             IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
      &      ' ',operadores_duo(2)," LR: ",LR(i,j)
@@ -551,8 +570,10 @@ c     &                     calfa*calfa*1.0D6*LR(i,j)
       IF (KEY.EQ.'OZK ') LROZK  = LRtensor
       IF (KEY.EQ.'FCZK') LRFCZK = LRtensor
       IF (KEY.EQ.'FCDE') LRFCDE = LRtensor
-      IF (KEY.EQ.'FCBS') LRFCBS = CHARGE(LRATOM)*LRtensor
-      IF (KEY.EQ.'SDBS') LRSDBS = CHARGE(LRATOM)*LRtensor
+c      IF (KEY.EQ.'FCBS') LRFCBS = CHARGE(LRATOM)*LRtensor
+c      IF (KEY.EQ.'SDBS') LRSDBS = CHARGE(LRATOM)*LRtensor
+      IF (KEY.EQ.'FCBS') LRFCBS = LRtensor
+      IF (KEY.EQ.'SDBS') LRSDBS = LRtensor
       IF (KEY.EQ.'SDK ') LRSDK = LRtensor
 c      IF (KEY.EQ.'SDK2') LRSDK2 = LRtensor
       IF (KEY.EQ.'SDD ') LRSDD = LRtensor
@@ -644,7 +665,7 @@ c     &            IDUMMY,.FALSE.)
          IF (SIGMAD1S) NLRoperators = NLRoperators + 11
          IF (SIGMAP1S) NLRoperators = NLRoperators + 12
       END IF
-      IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 35
+      IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 29
 
       allocate(operadores(NLRoperators))
       el = 1
@@ -720,31 +741,34 @@ C        ---------------------------------------------------
          operadores(el+16) = 'dd/dzdz '
 C        ---------------------------------------------------
          operadores(el+17) = 'SOMF  XX'                          !FCBS & SDBS
-         operadores(el+18) = 'SOMF  YX'
-         operadores(el+19) = 'SOMF  ZX'
-         operadores(el+20) = 'SOMF  YY'
-         operadores(el+21) = 'SOMF  ZY'
-         operadores(el+22) = 'SOMF  ZZ'
+         operadores(el+18) = 'SOMF  XY'
+         operadores(el+19) = 'SOMF  XZ'
+         operadores(el+20) = 'SOMF  YX'
+         operadores(el+21) = 'SOMF  YY'
+         operadores(el+22) = 'SOMF  YZ'
+         operadores(el+23) = 'SOMF  ZX'
+         operadores(el+24) = 'SOMF  ZY'
+         operadores(el+25) = 'SOMF  ZZ'
 C        --------------------------------------------------- !NEW FCBS
-         operadores(el+23) = nuc_coord(1)//'NSCOX' 
-         operadores(el+24) = nuc_coord(1)//'NSCOY'
-         operadores(el+25) = nuc_coord(1)//'NSCOZ'
-         operadores(el+26) = nuc_coord(2)//'NSCOX'
-         operadores(el+27) = nuc_coord(2)//'NSCOY'
-         operadores(el+28) = nuc_coord(2)//'NSCOZ'
-         operadores(el+29) = nuc_coord(3)//'NSCOX'
-         operadores(el+30) = nuc_coord(3)//'NSCOY'
-         operadores(el+31) = nuc_coord(3)//'NSCOZ'
+c         operadores(el+23) = nuc_coord(1)//'NSCOX' 
+c         operadores(el+24) = nuc_coord(1)//'NSCOY'
+c         operadores(el+25) = nuc_coord(1)//'NSCOZ'
+c         operadores(el+26) = nuc_coord(2)//'NSCOX'
+c         operadores(el+27) = nuc_coord(2)//'NSCOY'
+c         operadores(el+28) = nuc_coord(2)//'NSCOZ'
+c         operadores(el+29) = nuc_coord(3)//'NSCOX'
+c         operadores(el+30) = nuc_coord(3)//'NSCOY'
+c         operadores(el+31) = nuc_coord(3)//'NSCOZ'
 C        --------------------------------------------------- !NEW SDZK (K1 and K2) &SDD1
-         operadores(el+32) = 'XYEFG'//CHRNOS(LRATOM/10)//
+         operadores(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
      &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-         operadores(el+33) = 'XZEFG'//CHRNOS(LRATOM/10)//
+         operadores(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
      &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-         operadores(el+34) = 'YZEFG'//CHRNOS(LRATOM/10)//
+         operadores(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
      &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
 C        ---------------------------------------------------
 
-         el = el + 35
+         el = el + 29
       END IF
       END IF
 
