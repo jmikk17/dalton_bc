@@ -451,15 +451,15 @@ C       -----------
 C         <DiaKin> :
 C       ------------------
          IF (KEY.EQ.'DIAK') THEN
-            IF(KJ.EQ.1) LRDIAK(1,1)=1.0/3.0*SNDPRP
-            IF(KJ.EQ.2) LRDIAK(1,2)=-1.0*SNDPRP
-            IF(KJ.EQ.3) LRDIAK(1,3)=-1.0*SNDPRP
-            IF(KJ.EQ.4) LRDIAK(2,1)=-1.0*SNDPRP
-            IF(KJ.EQ.5) LRDIAK(2,2)=1.0/3.0*SNDPRP
-            IF(KJ.EQ.6) LRDIAK(2,3)=-1.0*SNDPRP
-            IF(KJ.EQ.7) LRDIAK(3,1)=-1.0*SNDPRP
-            IF(KJ.EQ.8) LRDIAK(3,2)=-1.0*SNDPRP
-            IF(KJ.EQ.9) LRDIAK(3,3)=1.0/3.0*SNDPRP
+            IF(KJ.EQ.1) LRDIAK(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRDIAK(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRDIAK(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRDIAK(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRDIAK(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRDIAK(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRDIAK(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRDIAK(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRDIAK(3,3)=SNDPRP
          ENDIF
 C         <Angpso> :
 C       ------------------
