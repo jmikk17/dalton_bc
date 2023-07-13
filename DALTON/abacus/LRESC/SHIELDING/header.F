@@ -45,9 +45,14 @@ c      WRITE(lupri,*)
 c      WRITE(lupri,*)' First and Second order relativistic '//
 c     & 'corrections to nuclear shielding constant.'
 c      WRITE(LUPRI,*)
+      IF (LRANISO) THEN
+         WRITE(LUPRI,'(/,4X,A)') '-  Definitions according to : '
+         WRITE(LUPRI,'(7X,A)') 'J. Mason, Solid state Nuc. Magn. '//
+     &                         'Res. 2 (1993), 285 '
+      END IF
 
       IF (LRESCALL) THEN
-            WRITE(lupri,'(4X,A)')
+            WRITE(lupri,'(/,4X,A)')
      &   '-  All LRESC corrections were activated'
       ELSE
             WRITE(lupri,*) '* Specific LRESC corrections were activated'

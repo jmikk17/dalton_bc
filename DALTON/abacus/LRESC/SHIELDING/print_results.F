@@ -36,14 +36,15 @@ C     J. J. Aucar 2022
       slash = '---------------'
 
       CALL QENTER('PRINT_LRSHIELD')
-
 C     Paramagnetic 1st singlet or triplet
 C
-      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.(SIGMAP3T)) THEN
+      IF ((SIGMAPNR).OR.(SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.
+     &   (SIGMAP3T)) THEN
          IF (PRTALL1) THEN
          CALL HEADER('Paramagnetic Corrections for '
      &                //NAMN(LRATOM)//' :',-1)
          END IF
+
          IF(SIGMAP1S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
@@ -123,6 +124,8 @@ c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'ani')
          IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A,13X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
+c         IF (SIGMAPNR) call PRINT_LRSHIELD_SUM('non-rel   singlet :  ',
+c     &                      SGPNR,'iso')
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'iso')
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
@@ -134,6 +137,8 @@ c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'ani')
          IF (LRANISO) THEN
          WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
+c         IF (SIGMAPNR) call PRINT_LRSHIELD_SUM('non-rel   singlet :  ',
+c     &                      SGPNR,'ani')
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'ani')
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
@@ -207,10 +212,40 @@ C
          END IF
          END IF
       ENDIF
+
+C     Non-rel contributions
 C
-C     All of them in detail
+         CALL HEADER('Total Non-relativistic Contributions for '
+     &                //NAMN(LRATOM)//' :',-1)
+         IF (LRANISO) THEN
+            WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)') 
+     &               'xx','yy','zz','iso','span','skew'
+         ELSE
+           WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
+         END IF
+
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                     SGPNR,'iso')
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                     SGDNR,'iso')
+c      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ist')
+         IF (LRANISO) THEN
+      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ist')
+         ELSE
+      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'iso')
+         END IF
+
+
+      IF (LRANISO) THEN
+         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                     SGPNR,'ani')
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                     SGDNR,'ani')
+      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ani')
+
+      END IF
 C
-c      IF (LRESCALL) THEN
          CALL HEADER('Total Relativistic Corrections for '
      &                //NAMN(LRATOM)//' :',-1)
          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
@@ -219,7 +254,6 @@ c      IF (LRESCALL) THEN
          IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
      &                     SGD0S+SGD1S,'iso')
       call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'iso')
-c      END IF
 
       IF (LRANISO) THEN
          WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
@@ -231,7 +265,35 @@ c      END IF
 
       END IF
 
-c      END IF
+C
+         CALL HEADER('Total Relativistic Values for '
+     &                //NAMN(LRATOM)//' :',-1)
+         IF (LRANISO) THEN
+            WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
+     &                  'xx','yy','zz','iso','span','skew'
+         ELSE
+          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
+         END IF
+
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'iso')
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                     SGDNR+SGD0S+SGD1S,'iso')
+         IF (LRANISO) THEN
+      call PRINT_LRSHIELD_TOT('Total LRESC  :',SGPNR+SGDNR+SLRESC,'ist')
+         ELSE
+      call PRINT_LRSHIELD_TOT('Total LRESC  :',SGPNR+SGDNR+SLRESC,'iso')
+         END IF
+
+      IF (LRANISO) THEN
+         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'ani')
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                     SGDNR+SGD0S+SGD1S,'ani')
+      call PRINT_LRSHIELD_TOT('Total LRESC  :',SGPNR+SGDNR+SLRESC,'ani')
+
+      END IF
 
       WRITE(LUPRI,*) 
 
@@ -324,17 +386,39 @@ C     J. J. Aucar 2022
       REAL*8, intent(in)        :: tensor(3,3)
       REAL*8                    :: iso
       CHARACTER*14, intent(in)  :: phrase
+      DOUBLE PRECISION, allocatable :: autovalores(:)
+      DOUBLE PRECISION, allocatable :: autoestados(:,:)
+      DOUBLE PRECISION :: span, skew
 
       CALL QENTER('PRINT_LRSHIELD_TOT')
 
 C     Information about calculation of LRESC
+c     For total (NR and REL) also SPAN and SKEW are printed
+      IF (elements == 'ist') THEN
+      iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
+      allocate(autovalores(3))
+      allocate(autoestados(3,3))
+      autovalores  = 0.d0
+      autoestados  = 0.d0
+      call diagonalizar(tensor,3,autovalores,autoestados)
+
+      span = autovalores(3)-autovalores(1)
+      skew = 3*(iso-autovalores(2))/
+     &         (autovalores(3)-autovalores(1))
+
+      deallocate (autovalores)
+      deallocate (autoestados)
+      WRITE(LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,F13.5,F13.5,A)')
+     & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,span,skew,' [ppm]'
+      END IF
+
       IF (elements == 'iso') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
+      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,26X,A)')
      &      phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       END IF
       IF (elements == 'ani') THEN
-      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,14X,A)')
+      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,40X,A)')
      &      phrase,tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       END IF
 

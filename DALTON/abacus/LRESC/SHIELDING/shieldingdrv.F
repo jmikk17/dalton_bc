@@ -37,7 +37,7 @@ C
 #include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 12, D0 = 0.0D0)
+      PARAMETER (NTABLE = 14, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
@@ -48,8 +48,8 @@ C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
      &            '.PARA1S','.PARA1T','.PARA3S','.PARA3T','.DIAM0S',
-C                      11       12
-     &            '.DIAM1S','.ANISO '/
+C                      11       12        13       14
+     &            '.DIAM1S','.ANISO ','.PARANR','.DIANR '/
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
       NEWDEF = (WORD .EQ. '*LROPTS')
@@ -65,7 +65,7 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
             ELSE IF (PROMPT .EQ. '.') THEN
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12), I
+                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14), I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -153,6 +153,16 @@ c                  do algo
  12            CONTINUE
                   LRANISO = .TRUE.
                   GOTO 100
+ 13            CONTINUE
+                  SIGMAPNR = .TRUE.
+                  LRESCALL = .FALSE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
+ 14            CONTINUE
+                  SIGMADNR = .TRUE.
+                  LRESCALL = .FALSE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
             ELSE
@@ -202,6 +212,8 @@ C
 
       GAUCHANG = .FALSE.
 
+      SIGMAPNR = .FALSE.
+      SIGMADNR = .FALSE.
       SIGMAP1S = .FALSE.
       SIGMAP1T = .FALSE.
       SIGMAD1S = .FALSE.
@@ -232,6 +244,7 @@ C  Init Result Matrices
 C jim 4.0 : anddy aca ver que matrices encesita gesc.
 
 !LRESC corrections to dia and para terms of shielding
+      LRDNR  = D0
       LRFCAV = D0
       LRDIAK = D0
       LRANGP = D0
@@ -240,6 +253,7 @@ C jim 4.0 : anddy aca ver que matrices encesita gesc.
       LRDIAM = D0
       LRDIAD = D0
 
+      LRPNR  = D0
       LROZK  = D0
       LRPSOK = D0
       LRPSKI = D0  ! this is just for debugging
@@ -288,6 +302,8 @@ C
 
 C ----------------------------
       IF (LRESCALL) THEN
+         SIGMADNR = .TRUE.
+         SIGMAPNR = .TRUE.
          SIGMAD0S = .TRUE.
          SIGMAD1S = .TRUE.
          SIGMAP1S = .TRUE.
@@ -341,7 +357,7 @@ C --------------------------------------------------
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 C --------------------------------------------------
 c     Construct LR singlet inputs and run responses (all at once)
-      IF (SIGMAP1S.OR.SIGMAD1S) THEN
+      IF (SIGMAPNR.OR.SIGMAP1S.OR.SIGMAD1S) THEN
          call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.FALSE.)
 c        Run Linear Responses
          LUPRI = 6232
@@ -406,6 +422,11 @@ c      call REGENERATE_INTEGRALS(CORD(:,LRATOM)) !Placing GO at each nucleus
 c      NEWPRP = .TRUE.  !So that AOPROPER is re-written
 c      HRINPC = .FALSE. !So that HERMIT INPUTS IS READ AGAIN FROM DALTON.INP
 c      CALL HERCTL(WORK,LWORK)
+      IF (SIGMADNR) THEN
+         TRPLET = .FALSE.
+         TRPFLG = .FALSE.
+         CALL AVELRSC('DINR',WORK,LWORK) ! NSCO
+      END IF
 
       IF (SIGMAD0S) THEN
          TRPLET = .FALSE.
@@ -417,6 +438,10 @@ c      CALL HERCTL(WORK,LWORK)
       END IF
 C --------------------------------------------------
 C     Paramagnetic corrections to Shielding:
+C     Non-relativistic singlet
+      IF (SIGMAPNR)  THEN
+         CALL GET_LR('NRPA',.FALSE.) ! PSO | ANGMOM
+      END IF
 C     First Order Singlet
       IF (SIGMAP1S)  THEN
          CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K
@@ -479,6 +504,8 @@ c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
 
       SLRESC  = 0.0
+      SGPNR   = 0.0  ! non-relativistic paramagnetic
+      SGDNR   = 0.0  ! non-relativistic diamagnetic
       SGD0S   = 0.0  ! sigma 0order singlet DIAM  : Fc, AngPso, DiaKin
       SGD1S   = 0.0  ! sigma 1order singlet DIAM  : DiaMv, DiaDw
       SGP1S   = 0.0  ! sigma 1order singlet PARAM : Lkin, Psokin
@@ -486,6 +513,8 @@ c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
       SGP3S   = 0.0  ! sigma 3order singlet PARAM : PSOOZMv, PSOOZDw
       SGP3T   = 0.0  ! sigma 3order triplet PARAM : OZFCSO, OZSDSO
 C     Add constants and print all in ppm's
+!     Diamagnetic non-relativistic value
+         LRDNR = calfa*calfa*1.0D+6*CDNR*LRDNR
 !     Diamagnetic corrections
          LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
          LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
@@ -493,6 +522,8 @@ C     Add constants and print all in ppm's
          LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
          LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
          LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
+!     Paramagnetic non-relativistic value
+         LRPNR = calfa*calfa*1.0D+6*CPNR*LRPNR
 !     Paramagnetic corrections
          LRFCZK = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK
          LRFCDE = calfa*calfa*calfa*calfa*1.0D+6* CFCDE*LRFCDE
@@ -515,20 +546,22 @@ C
          SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGP + LRSDAV
          SGD1S = SGD1S + LRDIAD + LRDIAM
 !     Paramagnetic corrections
+         SGPNR = LRPNR
+         SGDNR = LRDNR
          SGP1S = SGP1S + LROZK + LRPSOK
          SGP1T = SGP1T + LRFCZK + LRFCDE + LRSDK
      &         + LRSDD  + LRFCBS + LRSDBS
          SGP3S = SGP3S + QRPSOOZMV + QRPSOOZDW
          SGP3T = SGP3T + QROZFCSO + QROZSDSO
-!     Total
-      SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T + SGP3S + SGP3T
+!     Total (doesnt include non-rel contributions)
+      SLRESC  = SGD0S + SGD1S + SGP1S + SGP1T + SGP3S + SGP3T
 C
 C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
       END DO
 
 c     SIRIFC has to remain open after all
-      IF (SIGMAD1S.OR.SIGMAP1S.OR.SIGMAP1T) THEN
+      IF (SIGMAD1S.OR.SIGMAPNR.OR.SIGMAP1S.OR.SIGMAP1T) THEN
       IF ((.NOT.SIGMAP3S).OR.(.NOT. SIGMAP3T)) THEN
          CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
      &                     .FALSE.)

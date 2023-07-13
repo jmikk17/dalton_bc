@@ -65,6 +65,9 @@ C         'FCDE' 'FCDE'
          IF (KEY.EQ.'DIAD') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic Second Order Singlet (DIAD)',
      &   ' correction is under calculation...'
+         IF (KEY.EQ.'NRPA') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic non-relativistic contribution',
+     &   ' (NRPA) is under calculation...'
          IF (KEY.EQ.'PSOK') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (PSOK)',
      &   ' correction is under calculation...'
@@ -137,6 +140,37 @@ C        -----------------------------------
          allocate(operadores_B(3,3,NopB))
          IF (KEY.EQ."DIAD") operadores_B(:,:,1) ='DARWIN  '
          IF (KEY.EQ."DIAM") operadores_B(:,:,1) ='MASSVELO'
+      END IF
+
+
+      IF(KEY.EQ."NRPA") THEN
+         NopA = 1
+         NopB = 1
+         TRPLET_FLAG = .FALSE.
+C        -----------------------------------
+C        -----------------------------------
+         allocate(operadores_A(3,3,NopA))
+c                  3*i+j-3                                      ij
+         operadores_A(1,1,1) = 'PSO '//nuc_coord(1)//' '       !11 
+         operadores_A(1,2,1) = 'PSO '//nuc_coord(1)//' '       !12
+         operadores_A(1,3,1) = 'PSO '//nuc_coord(1)//' '       !13
+         operadores_A(2,1,1) = 'PSO '//nuc_coord(2)//' '       !21
+         operadores_A(2,2,1) = 'PSO '//nuc_coord(2)//' '       !22
+         operadores_A(2,3,1) = 'PSO '//nuc_coord(2)//' '       !23
+         operadores_A(3,1,1) = 'PSO '//nuc_coord(3)//' '       !31
+         operadores_A(3,2,1) = 'PSO '//nuc_coord(3)//' '       !32
+         operadores_A(3,3,1) = 'PSO '//nuc_coord(3)//' '       !33
+C        -----------------------------------
+         allocate(operadores_B(3,3,NopB))
+         operadores_B(1,1,1) = 'XANGMOM '                      !11 
+         operadores_B(1,2,1) = 'YANGMOM '                      !12 
+         operadores_B(1,3,1) = 'ZANGMOM '                      !13 
+         operadores_B(2,1,1) = 'XANGMOM '                      !21 
+         operadores_B(2,2,1) = 'YANGMOM '                      !22 
+         operadores_B(2,3,1) = 'ZANGMOM '                      !23 
+         operadores_B(3,1,1) = 'XANGMOM '                      !31 
+         operadores_B(3,2,1) = 'YANGMOM '                      !32 
+         operadores_B(3,3,1) = 'ZANGMOM '                      !33 
       END IF
 
 
@@ -470,9 +504,6 @@ c      To construct
          allocate(operadores_A(3,3,NopA))
          allocate(operadores_B(3,3,NopB))
 C        -----------------------------------
-c         operadores_A(1,:,1) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-1)
-c         operadores_A(2,:,1) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-2)
-c         operadores_A(3,:,1) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-3)
          DO K=1, 3
             operadores_A(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
             operadores_A(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
@@ -524,15 +555,12 @@ C        -----------------------------------
 c     Elemento ij del tensor de shielding
       do i = 1, 3 
       do j = 1, 3
-c         LR = 0.d0
-c         TOTALLR = 0.d0
          do k = 1, NopA
-c          IF ((.not.(KEY.EQ.'SDD1')).and.(.not.(KEY.EQ.'SDBS'))) THEN !Combine all A with all B
-c          IF (.not.(KEY.EQ.'SDBS')) THEN !Combine all A with all B
            IF ((NopA.Eq.1).or.(NopB.Eq.1)) THEN !Combine all A with all B
             do l = 1, NopB
                operadores_duo(1) = operadores_A(i,j,k)
                operadores_duo(2) = operadores_B(i,j,l)
+
 
                call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
 c               WRITE(LUPRI,*) "AUCAR-LR ",KEY, operadores_duo,i,j,
@@ -567,6 +595,7 @@ c     &                     -calfa*calfa*calfa*calfa*1.0D+6*LR(i,j)
       IF (KEY.EQ.'DIAM') LRDIAM = LRtensor
       IF (KEY.EQ.'DIAD') LRDIAD = LRtensor
       IF (KEY.EQ.'PSOK') LRPSOK = LRtensor
+      IF (KEY.EQ.'NRPA') LRPNR = LRtensor
       IF (KEY.EQ.'OZK ') LROZK  = LRtensor
       IF (KEY.EQ.'FCZK') LRFCZK = LRtensor
       IF (KEY.EQ.'FCDE') LRFCDE = LRtensor
@@ -662,6 +691,7 @@ c     &            IDUMMY,.FALSE.)
       NLRoperators = 0
 
       IF (.not.(TRIPLETE)) THEN
+         IF (SIGMAPNR) NLRoperators = NLRoperators + 6
          IF (SIGMAD1S) NLRoperators = NLRoperators + 11
          IF (SIGMAP1S) NLRoperators = NLRoperators + 12
       END IF
@@ -670,7 +700,21 @@ c     &            IDUMMY,.FALSE.)
       allocate(operadores(NLRoperators))
       el = 1
 
+
       IF (.not.(TRIPLETE)) THEN
+      IF (SIGMAPNR) THEN ! Non-relativistic paramagnetic contribution
+C        ---------------------------------------------------
+         operadores(el)   = 'XANGMOM '
+         operadores(el+1) = 'YANGMOM '
+         operadores(el+2) = 'ZANGMOM '
+C        ---------------------------------------------------
+         operadores(el+3) = 'PSO '//nuc_coord(1)//' '
+         operadores(el+4) = 'PSO '//nuc_coord(2)//' '
+         operadores(el+5) = 'PSO '//nuc_coord(3)//' '
+C        ---------------------------------------------------
+         el = el + 6
+      END IF
+
       IF (SIGMAD1S) THEN !SIGMAD1S: DIAM and DIAD
 C        ---------------------------------------------------
          operadores(el)   = nuc_coord(1)//'NSCO'//CHRXYZ(1)

@@ -48,6 +48,8 @@ c#include "suscpt.h"
       CHARACTER*4 KEY
       CHARACTER*3 char
       PARAMETER (D05=0.5D0,D025=0.25)
+      character*3, dimension(3) :: nuc_coord
+      character*3               :: nuc_number
 C
 #include "cbiexc.h"
 #include "inflin.h"
@@ -86,6 +88,9 @@ C
       CALL TIMER('START ',TIMEIN,TIMOUT)
       IF (JIMPRT .GE. 1) THEN
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+         IF (KEY.EQ.'DINR') WRITE(LUPRI,'(5X,A,A)')
+     &   'Diamagnetic non-relativistic (DINR)',
+     &   ' contribution is under calculation...'
          IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (FC)',
      &   ' correction is under calculation...'
@@ -279,7 +284,46 @@ C ==============================================================================
       LISTA1='        '
       npos1 = 3*LRATOM-2
 cb      write(lupri,*)' selected atom is :', LRATOM
+      do i = 1, 3
+         ICOORD = i !(x,y,z)
+         ISCOOR = LRATOM*3 + (ICOORD - 3)
+         IFIRST=ISCOOR/100
+         ISECND = MOD(ISCOOR,100)/10
+         ITHIRD = MOD(MOD(ISCOOR,100),10)
+         nuc_coord(i)=CHRNOS(IFIRST)//CHRNOS(ISECND)//CHRNOS(ITHIRD)
+      end do
 
+      nuc_number=CHRNOS(LRATOM/100)//CHRNOS(MOD(LRATOM,100)/10)//
+     &              CHRNOS(MOD(LRATOM,10))
+
+C===============================================================================
+C  SINGLET CALCULATIONS : DNR
+C ==============================================================================
+C ---------------------------------------------------------------------
+C
+C      Look for LABELS : NSCO
+C     ---------------------------
+      IF(KEY.EQ."DINR") THEN
+        NLAB=9
+c        indice = 1
+c        DO I=npos1,npos1+2
+c        DO IJ = 1, 3
+c           LISTA1(indice)= 'SD '//CHRNOS(I/100)//CHRNOS(I/10)//
+c     &               CHRNOS(MOD(I,10))//' '//CHRXYZ(-IJ)
+c           indice = indice + 1
+c        END DO
+c        END DO
+        LISTA1(1) = nuc_coord(1)//'NSCO'//CHRXYZ(1) !11
+        LISTA1(2) = nuc_coord(1)//'NSCO'//CHRXYZ(2) !12
+        LISTA1(3) = nuc_coord(1)//'NSCO'//CHRXYZ(3) !13
+        LISTA1(4) = nuc_coord(2)//'NSCO'//CHRXYZ(1) !21
+        LISTA1(5) = nuc_coord(2)//'NSCO'//CHRXYZ(2) !22
+        LISTA1(6) = nuc_coord(2)//'NSCO'//CHRXYZ(3) !23
+        LISTA1(7) = nuc_coord(3)//'NSCO'//CHRXYZ(1) !31
+        LISTA1(8) = nuc_coord(3)//'NSCO'//CHRXYZ(2) !32
+        LISTA1(9) = nuc_coord(3)//'NSCO'//CHRXYZ(3) !33
+      ENDIF
+C ---------------------------------------------------------------------
 C===============================================================================
 C  SINGLET CALCULATIONS : D1S
 C ==============================================================================
@@ -441,6 +485,19 @@ C
 C              WRITE properties into the various property matrices
 C              ===================================================
 C
+C         <NSCO> : 
+C       -----------
+         IF (KEY.EQ.'DINR') THEN
+            IF(KJ.EQ.1) LRDNR(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRDNR(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRDNR(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRDNR(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRDNR(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRDNR(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRDNR(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRDNR(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRDNR(3,3)=SNDPRP
+         ENDIF
 C         <Fc> : 
 C       -----------
          IF (KEY.EQ.'FCAV') THEN
