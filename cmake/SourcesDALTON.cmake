@@ -703,6 +703,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/soppa/so_densai1.F
     DALTON/soppa/so_densai2.F
     DALTON/soppa/so_dens.F
+    DALTON/soppa/so_dens3.F
     DALTON/soppa/so_diag.F
     DALTON/soppa/so_ediag1.F
     DALTON/soppa/so_ediag2.F

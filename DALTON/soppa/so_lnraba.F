@@ -18,6 +18,7 @@ C
      &                   so_get_active_models,
      &                   so_has_doubles,
      &                   so_singles_second,
+     &                   so_singles_third,
      &                   sop_dens_label, sop_model_rpad,
      &                   sop_model_rpa,
      &                   sop_conv_thresh,
@@ -61,9 +62,9 @@ C
       CHARACTER*8 LABEL1
       CHARACTER*11 FULLNAME
 C
-      integer :: num_active
+      integer :: num_active, mem_lvl
       logical :: active_models(sop_num_models)
-      logical :: doubles, need_t2, rpa_only
+      logical :: doubles, need_t2
       character(len=4) :: old_denslab, denslab
       logical :: new_densai, imagprop
 #ifdef VAR_MPI
@@ -88,9 +89,17 @@ C     Get the active models and their number
 C
 C     No RPA(D) properties
       ACTIVE_MODELS(SOP_MODEL_RPAD) = .FALSE.
-C
-      RPA_ONLY = ACTIVE_MODELS(SOP_MODEL_RPA) .AND. 
-     &           (NUM_ACTIVE.EQ.1) 
+C     Get the necessary memory allocation level
+      IF (ACTIVE_MODELS(SOP_MODEL_RPA) .AND. NUM_ACTIVE.EQ.1) THEN
+         MEM_LVL = 0 ! rpa only
+      ELSE
+         MEM_LVL = 1
+         DO IMODEL = 1, SOP_NUM_MODELS
+            IF ( .NOT. ACTIVE_MODELS(IMODEL) ) CYCLE
+            MODEL = SOP_MODELS(IMODEL)
+            IF (SO_SINGLES_THIRD(MODEL)) MEM_LVL = 2 ! TOPPA
+         END DO
+      ENDIF
 C
 C     Set the correct convergence threshold -- THCLNR from cbilnr.h
       sop_conv_thresh = THCLNR
@@ -141,7 +150,7 @@ C
       LWORK1  = LWORK   - KEND1
 C
 C
-      IF (.NOT.RPA_ONLY) THEN
+      IF (MEM_LVL .GT. 0) THEN
 C
          LT2AM   = NT2AMX
          LDENSIJ = NIJDEN(1)
@@ -154,6 +163,21 @@ C
          KDENSAI = KDENSAB + LDENSAB
          KEND1   = KDENSAI + LDENSAI
          LWORK1  = LWORK   - KEND1
+C
+         IF (MEM_LVL .GT. 1) THEN
+            LT2SAM = LT2AM
+            KT2SAM = KDENSAI + LDENSAI
+            KDENS3IJ = KT2SAM + LT2SAM
+            KDENS3AB = KDENS3IJ + LDENSIJ
+            KEND1 = KDENS3AB + LDENSAB
+            LWORK1 = LWORK - KEND1
+         ELSE
+            LT2SAM = 0
+            KT2SAM = HUGE(LWORK)
+            KDENS3IJ = HUGE(LWORK)
+            KDENS3AB = HUGE(LWORK)
+         END IF
+C
       ELSE
          LT2AM   = 0
          LDENSIJ = 0
@@ -200,7 +224,7 @@ C---------------------------------------------------------
 C              Ready the slaves for parallel calculations.
 C---------------------------------------------------------
 C
-      call soppa_initialize_slaves ( update_common_blocks, rpa_only)
+      call soppa_initialize_slaves (update_common_blocks, mem_lvl)
       update_common_blocks = .false.
 #endif
 C
@@ -288,9 +312,10 @@ C
      &             (DENSLAB.NE.OLD_DENSLAB)) THEN
                   CALL SO_GETT2(DENSLAB,
      &                          WORK(KFOCKD),LFOCKD,WORK(KT2AM),LT2AM,
-     &                          WORK(KDENSAI),
+     &                          WORK(KT2SAM),LT2SAM,WORK(KDENSAI),
      &                          LDENSAI,WORK(KDENSIJ),LDENSIJ,
      &                          WORK(KDENSAB),LDENSAB,
+     &                          WORK(KDENS3IJ),WORK(KDENS3AB),
      &                          WORK(KEND1),LWORK1)
                   OLD_DENSLAB = DENSLAB
                ENDIF
@@ -315,9 +340,10 @@ C
                CALL SO_RSPLEQ(MODEL,LABEL1,IMAGPROP,ISYMTR,FRVAL,NFRVAL,
      &                        WORK(KDENSIJ),LDENSIJ,
      &                        WORK(KDENSAB),LDENSAB,
-     &                        WORK(KDENSAI),LDENSAI,WORK(KT2AM),
-     &                        LT2AM,WORK(KFOCKD),LFOCKD,
-     &                        WORK(KEND1),LWORK1)
+     &                        WORK(KDENSAI),LDENSAI,
+     &                        WORK(KDENS3IJ),WORK(KDENS3AB),
+     &                        WORK(KT2AM),LT2AM,WORK(KT2SAM),LT2SAM,
+     &                        WORK(KFOCKD),LFOCKD, WORK(KEND1),LWORK1)
 C
 C              Save AI density matrix, if it has been recalculated.
                IF (NEW_DENSAI) THEN

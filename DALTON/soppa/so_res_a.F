@@ -1,5 +1,5 @@
 C  /* Deck so_res_a */
-      SUBROUTINE SO_RES_A(RES1E,LRES1E,RES1D,LRES1D,TR1E,LTR1E,TR1D,
+      SUBROUTINE SO_RES_A(KEY,RES1E,LRES1E,RES1D,LRES1D,TR1E,LTR1E,TR1D,
      &                    LTR1D,DSRHF,LDSRHF,CMO,LCMO,T2M1,LT2M1,
      &                    AIJ,LAIJ,AAB,LAAB,INEWTR,ISDEL,ISYDIS,ISYRES,
      &                    ISYMTR,DO_DEX,WORK,LWORK)
@@ -29,6 +29,7 @@ C#include <cbiexc.h> PFP has this and not ccsdinp.h
 Cend-Pi
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
+      CHARACTER KEY*2
       DIMENSION RES1E(LRES1E), RES1D(LRES1D), TR1E(LTR1E), TR1D(LTR1D)
       DIMENSION DSRHF(LDSRHF), CMO(LCMO), T2M1(LT2M1), WORK(LWORK)
       DIMENSION AIJ(LAIJ),     AAB(LAAB)
@@ -130,48 +131,54 @@ C
 C
                IF (INEWTR .EQ. 1) THEN
 C
+                  IF ((KEY .EQ. 'AB') .OR. (KEY .EQ. 'A ')) THEN
+C
 C-----------------------------------------------------
 C              Calculate Aij one time (for INEWTR = 1).
 C-----------------------------------------------------
 C
-               ISYMI  = ISYMJ
-               ISYMAI = MULD2H(ISYMI,ISYMA)
+                     ISYMI  = ISYMJ
+                     ISYMAI = MULD2H(ISYMI,ISYMA)
 C
-               KOFF6  = IT2BCD(ISYMAI,ISYMK) + NT1AM(ISYMAI)*(K-1)
-     &                + IT1AM(ISYMA,ISYMI) + 1
-               KOFF7  = IMATIJ(ISYMI,ISYMJ) + 1
+                     KOFF6  = IT2BCD(ISYMAI,ISYMK) + NT1AM(ISYMAI)*(K-1)
+     &                      + IT1AM(ISYMA,ISYMI) + 1
+                     KOFF7  = IMATIJ(ISYMI,ISYMJ) + 1
 C
-               NTOTI  = MAX(NRHF(ISYMI),1)
+                     NTOTI  = MAX(NRHF(ISYMI),1)
 C
-               CALL DGEMM('T','N',NRHF(ISYMI),NRHF(ISYMJ),
-     &                    NVIR(ISYMA),ONE,T2M1(KOFF6),NTOTA,
-     &                    WORK(KOFF5),NTOTA,ONE,AIJ(KOFF7),NTOTI)
+                     CALL DGEMM('T','N',NRHF(ISYMI),NRHF(ISYMJ),
+     &                          NVIR(ISYMA),ONE,T2M1(KOFF6),NTOTA,
+     &                          WORK(KOFF5),NTOTA,ONE,AIJ(KOFF7),NTOTI)
 C
 C-----------------------------------------------------
 C              Calculate Aab one time (for INEWTR = 1).
 C-----------------------------------------------------
 C
-               ISYME  = ISYMA
-               ISYMEJ = MULD2H(ISYME,ISYMJ)
+                     ISYME  = ISYMA
+                     ISYMEJ = MULD2H(ISYME,ISYMJ)
 C
-               KOFF6  = IT2BCD(ISYMEJ,ISYMK) + NT1AM(ISYMEJ)*(K-1)
-     &                + IT1AM(ISYME,ISYMJ) + 1
-               KOFF7  = IMATAB(ISYME,ISYMA) + 1
+                     KOFF6  = IT2BCD(ISYMEJ,ISYMK) + NT1AM(ISYMEJ)*(K-1)
+     &                      + IT1AM(ISYME,ISYMJ) + 1
+                     KOFF7  = IMATAB(ISYME,ISYMA) + 1
 C
-               NTOTE  = MAX(NVIR(ISYME),1)
+                     NTOTE  = MAX(NVIR(ISYME),1)
 C
-               CALL DGEMM('N','T',NVIR(ISYME),NVIR(ISYMA),
-     &                    NRHF(ISYMJ),ONE,T2M1(KOFF6),NTOTE,
-     &                    WORK(KOFF5),NTOTA,ONE,AAB(KOFF7),NTOTE)
+                     CALL DGEMM('N','T',NVIR(ISYME),NVIR(ISYMA),
+     &                          NRHF(ISYMJ),ONE,T2M1(KOFF6),NTOTE,
+     &                          WORK(KOFF5),NTOTA,ONE,AAB(KOFF7),NTOTE)
 C
+C
+                  END IF
 C
                END IF
 C
   300       CONTINUE
 C
-            DO 400 ISYMA = 1,NSYM
+            IF ((KEY .EQ. 'AB') .OR. (KEY .EQ. 'B ')) THEN
 C
-               ISYMI  = MULD2H(ISYMA,ISYRES)
+               DO 400 ISYMA = 1,NSYM
+C
+                  ISYMI  = MULD2H(ISYMA,ISYRES)
 C
 C=============================================
 C              1. term in Eq. (34):
@@ -353,11 +360,13 @@ C
                KOFF26 = IT2BCD(ISYAL,ISYMK) + NT1AM(ISYAL)*(K-1)
      &                + IT1AM(ISYMA,ISYML) + 1
 C
-               CALL DGEMM('N','N',NVIR(ISYMA),NRHF(ISYMI),
-     &                    NRHF(ISYML),ONE,T2M1(KOFF26),NTOTA,
-     &                    WORK(KSCR4),NTOTL,ONE,RES1D(KOFF11),NTOTA)
+                  CALL DGEMM('N','N',NVIR(ISYMA),NRHF(ISYMI),
+     &                       NRHF(ISYML),ONE,T2M1(KOFF26),NTOTA,
+     &                       WORK(KSCR4),NTOTL,ONE,RES1D(KOFF11),NTOTA)
 C
-  400       CONTINUE
+  400          CONTINUE
+C
+            END IF
 C
   200    CONTINUE
 C

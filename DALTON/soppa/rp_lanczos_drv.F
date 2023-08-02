@@ -10,14 +10,13 @@ C     PURPOSE: Main driver routine for solving the RPA eigenvalue
 C              problem and computing the mean excitation energy in
 C              Lanczos basis.
 C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
       use so_info, only: sop_num_models,
      &                   sop_models, sop_mod_fullname,
      &                   so_num_active_models,
      &                   so_get_active_models,
      &                   so_has_doubles,
      &                   so_singles_second,
+     &                   so_singles_third,
      &                   sop_dens_label, sop_model_rpad,
      &                   sop_model_rpa,
      &                   sop_conv_thresh,
@@ -78,7 +77,7 @@ C
 C
       INTEGER :: LFOCKD, LT2AM, LDENSIJ, LDENSAB, LDENSAI, LWORK1
       INTEGER :: KFOCKD, KT2AM, KDENSIJ, KDENSAB, KDENSAI, KEND1
-      INTEGER :: NVARPT
+      INTEGER :: NVARPT, KT2SAM, LT2SAM, KDENS3IJ, KDENS3AB
 C      
       INTEGER :: LCONV1(3),KSSUM(3),KLSUM(3),KISUM(3)
       INTEGER :: ISYM, ISYMTR, IOPER, IDIP, IMODEL
@@ -90,9 +89,9 @@ C
 C      
       INTEGER :: LPARRA, KPARRA, KEND2, LWORK2
 C      
-      integer :: num_active
+      integer :: num_active, mem_lvl
       logical :: active_models(sop_num_models)
-      logical :: doubles, need_t2, rpa_only
+      logical :: doubles, need_t2
       character(len=4) :: old_denslab, denslab
       logical :: new_densai, imagprop
 #ifdef VAR_MPI
@@ -122,11 +121,11 @@ C
 C
       ACTIVE_MODELS(SOP_MODEL_RPAD) = .FALSE.
 C
-      RPA_ONLY = ACTIVE_MODELS(SOP_MODEL_RPA) .AND. 
-     &           (NUM_ACTIVE.EQ.1) 
-C
-      IF (.NOT. RPA_ONLY) 
-     &   CALL QUIT('LANCZOS solver only implemented for RPA')
+      IF (ACTIVE_MODELS(SOP_MODEL_RPA) .AND. NUM_ACTIVE.EQ.1) THEN
+         MEM_LVL = 0 ! rpa only
+      ELSE
+         CALL QUIT('LANCZOS solver only implemented for RPA')
+      ENDIF
 C
       TRIPLET = .FALSE.
 C
@@ -173,7 +172,7 @@ C
       LWORK1  = LWORK   - KEND1
 C
 C
-      IF (.NOT.RPA_ONLY) THEN
+      IF (MEM_LVL .GT. 0) THEN
 C
          LT2AM   = NT2AMX
          LDENSIJ = NIJDEN(1)
@@ -186,6 +185,21 @@ C
          KDENSAI = KDENSAB + LDENSAB
          KEND1   = KDENSAI + LDENSAI
          LWORK1  = LWORK   - KEND1
+C
+         IF (MEM_LVL .GT. 1) THEN
+            LT2SAM = LT2AM
+            KT2SAM = KDENSAI + LDENSAI
+            KDENS3IJ = KT2SAM + LT2SAM
+            KDENS3AB = KDENS3IJ + LDENSIJ
+            KEND1 = KDENS3AB + LDENSAB
+            LWORK1 = LWORK - KEND1
+         ELSE
+            LT2SAM = 0
+            KT2SAM = HUGE(LWORK)
+            KDENS3IJ = HUGE(LWORK)
+            KDENS3AB = HUGE(LWORK)
+         END IF
+C
       ELSE
          LT2AM   = 0
          LDENSIJ = 0
@@ -241,7 +255,6 @@ C
 C
       LWORK1  = LWORK   - KEND1
 C
-
       CALL SO_MEMMAX ('RP_LANCZOS_DRV.1',LWORK1)
       IF (LWORK1 .LT .0) CALL STOPIT('RP_LANCZOS_DRV.1',' ',KEND1,LWORK)
 C
@@ -267,7 +280,7 @@ C---------------------------------------------------------
 C              Ready the slaves for parallel calculations.
 C---------------------------------------------------------
 C
-      call soppa_initialize_slaves ( update_common_blocks, rpa_only)
+      call soppa_initialize_slaves ( update_common_blocks, mem_lvl )
       update_common_blocks = .false.
 #endif
 C
@@ -334,12 +347,14 @@ C
                   WRITE(LUPRI,*) 'WARNING: NEED_T2 should not be True!'
                   CALL SO_GETT2(DENSLAB,
      &                          WORK(KFOCKD),LFOCKD,WORK(KT2AM),LT2AM,
-     &                          WORK(KDENSAI),
+     &                          WORK(KT2SAM),LT2SAM,WORK(KDENSAI),
      &                          LDENSAI,WORK(KDENSIJ),LDENSIJ,
      &                          WORK(KDENSAB),LDENSAB,
+     &                          WORK(KDENS3IJ),WORK(KDENS3AB),
      &                          WORK(KEND1),LWORK1)
                   OLD_DENSLAB = DENSLAB
                ENDIF
+C
 C
 C-----------------------------------------------
 C              Initialize DENSAI if needed.
@@ -362,8 +377,10 @@ C-----------------------------------------------------------------------
 C
                CALL RP_LANCZOS(MODEL,LABEL1,ISYMTR,
      &             WORK(KDENSIJ), LDENSIJ, WORK(KDENSAB), LDENSAB,
-     &             WORK(KDENSAI), LDENSAI, WORK(KT2AM), LT2AM,
-     &             WORK(KFOCKD), LFOCKD, LCONV1(IDIP),
+     &             WORK(KDENSAI), LDENSAI,
+     &             WORK(KDENS3IJ), WORK(KDENS3AB), WORK(KT2AM), LT2AM,
+     &             WORK(KT2SAM), LT2SAM, WORK(KFOCKD), LFOCKD,
+     &             LCONV1(IDIP),
      &             WORK(KSSUM(IDIP)),          
      &             WORK(KLSUM(IDIP)),          
      &             WORK(KISUM(IDIP)),          

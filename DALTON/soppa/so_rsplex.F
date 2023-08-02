@@ -1,7 +1,8 @@
 C  /* Deck so_rsplex */
       SUBROUTINE SO_RSPLEX(MODEL,ISYMTR,NEXCI,EXVAL,LEXVAL,DENSIJ,
-     &                     LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,
-     &                     LT2MP,FOCKD,LFOCKD,WORK,LWORK)
+     &                     LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                     DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                     FOCKD,LFOCKD,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
@@ -19,7 +20,8 @@ C
 C
       DIMENSION EXVAL(LEXVAL)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
-      DIMENSION T2MP(LT2MP),     FOCKD(LFOCKD)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2MP(LT2MP), T2MP3(LT2MP3), FOCKD(LFOCKD)
       DIMENSION WORK(LWORK)
 C
       PARAMETER ( ONE = 1.0D0, D100 = 100.0D0 )
@@ -60,8 +62,8 @@ C
 C
          CALL DC_CALC(MODEL,ISYMTR,NEXCI,EXVAL,LEXVAL,
      &                DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                DENSAI,LDENSAI,
-     &                T2MP,LT2MP,FOCKD,LFOCKD,
+     &                DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,
      &                WORK(KEND),LWORK1)
 C
 C-----------------------------------------------
@@ -100,7 +102,7 @@ C
          CALL SO_LRSOLV(MODEL,ISYMTR,NEXCI,MAXIT,EXVAL,LEXVAL,
      &                  WORK(KRESINM),LRESINM,WORK(KCONV),LCONV,DENSIJ,
      &                  LDENSIJ,DENSAB,LDENSAB,DENSAI,LDENSAI,
-     &                  T2MP,LT2MP,
+     &                  DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
      &                  FOCKD,LFOCKD,WORK(KREDE),WORK(KREDS),LMXRED,
      &                  WORK(KEND),LWORK1)
 C

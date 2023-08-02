@@ -2,8 +2,8 @@ C
 C  /* Deck dc_calc */
       SUBROUTINE DC_CALC(MODEL,ISYMTR,NEXCI,EXVAL,LEXVAL,
      &                   DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                   DENSAI,LDENSAI,
-     &                   T2MP,LT2MP,FOCKD,LFOCKD,
+     &                   DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                   T2AM,LT2AM,T2SAM,LT2SAM,FOCKD,LFOCKD,
      &                   WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -40,7 +40,9 @@ CPi
 C
       DIMENSION EXVAL(LEXVAL)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
-      DIMENSION T2MP(LT2MP),     FOCKD(LFOCKD),   WORK(LWORK)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2AM(LT2AM), T2SAM(LT2SAM), FOCKD(LFOCKD)
+      DIMENSION WORK(LWORK)
 C
       INTEGER NIT, NOLDTR, NNEWTR, IDTYPE, IMODEL
 #ifdef VAR_MPI
@@ -133,8 +135,8 @@ CPi 18.08.16: Copy from so_lrsolv
       CALL GETTIM (DUMMY,WTIMES)
       DTIME      = SECOND()
       CALL SO_ERES(MODEL,0,NEXCI,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &             T2MP,LT2MP,FOCKD,LFOCKD,DENSAI,LDENSAI,1,ISYMTR,
-     &             0,
+     &             DENS3IJ,DENS3AB,T2AM,LT2AM,T2SAM,LT2SAM,
+     &             FOCKD,LFOCKD,DENSAI,LDENSAI,1,ISYMTR,0,
 #ifdef VAR_MPI
      &             WORK(kAssignedIndices), maxnumjobs,
 #endif
@@ -351,7 +353,7 @@ C
       CALL SO_PERTDENS('DCRPA',SOP_EXCITA,NEXCI,
      &                 EXVAL,NEXCI,PDENS_LABEL,
      &                 ISYMTR,.FALSE.,1.0D0,
-     &                 T2MP,LT2MP,DENSIJ,LDENSIJ,
+     &                 T2AM,LT2AM,DENSIJ,LDENSIJ,
      &                 DENSAB,LDENSAB,DENSAI,LDENSAI,
      &                 WORK(KEND1),LWORK1)
 C

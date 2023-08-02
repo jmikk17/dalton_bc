@@ -511,7 +511,7 @@ c                  CALL SO_READ(WORK(KTR1D), LTR1D, LUTR1D,FNTR1D,
 c    &                          NEXCI+INEWTR)
 C
                   DTIME      = SECOND()
-                  CALL SO_RES_A(RES1E,LRES1E,RES1D,LRES1D,
+                  CALL SO_RES_A('AB',RES1E,LRES1E,RES1D,LRES1D,
      &                          TR1E,LTR1E,TR1D,LTR1D,
      &                          WORK(KDSRHF),LDSRHF,WORK(KCMO),LCMO,
      &                          WORK(KT2M1),LT2M1,WORK(KAIJ),LAIJ,

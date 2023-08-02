@@ -1,15 +1,14 @@
 C
-C  /* Deck so_dens */
-      SUBROUTINE SO_DENS(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                   T2AM,LT2AM,WORK,LWORK)
+C  /* Deck so_dens3 */
+      SUBROUTINE SO_DENS3(DENS3IJ,LDENSIJ,DENS3AB,LDENSAB,
+     &                    T2AM,LT2AM,T2AM3,LT2AM3,WORK,LWORK)
 C
-C     This routine is part of the atomic integral direct SOPPA program.
+C     This routine is part of the atomic integral direct TOPPA program.
 C
-C     Keld Bak, November 1995
-C     Stephan P. A. Sauer, November 2003: merge with DALTON 2.0
-C
-C     PURPOSE: Calculate second-order SOPPA one-electron density
-C              matrices Dij and Dab from T2 amplitudes.
+C     Juliane Fuglsbjerg, May 2022
+C     
+C     PURPOSE: Calculate third-order TOPPA one-electron correction to the density
+C              matrices Dij and Dab from the T2 and MP3 T2 amplitudes.
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -17,8 +16,8 @@ C
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
       PARAMETER (FOUR = 4.0D0)
 C
-      DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB)
-      DIMENSION T2AM(LT2AM)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2AM(LT2AM), T2AM3(LT2AM3)
       DIMENSION WORK(LWORK)
 C
 #include "ccorb.h"
@@ -36,14 +35,14 @@ C------------------
 C     Add to trace.
 C------------------
 C
-      CALL QENTER('SO_DENS')
+      CALL QENTER('SO_DENS3')
 C
 C---------------------------------
 C     Initialize density matrices.
 C---------------------------------
 C
-      CALL DZERO(DENSIJ,LDENSIJ)
-      CALL DZERO(DENSAB,LDENSAB)
+      CALL DZERO(DENS3IJ,LDENSIJ)
+      CALL DZERO(DENS3AB,LDENSAB)
 C
       DO 100 ISYMB = 1,NSYM
 C
@@ -61,24 +60,37 @@ C
                DO 400 B = 1,NVIR(ISYMB)
 C
 C--------------------------------------------------------------
-C                 Collect all MP2-amplitudes for the given B in
-C                 PT2MP1 and PT2MP2 in different ordering and
-C                 collect all T2-amplitudes for the given B in
-C                 PT2AM1 and PT2AM2 in different ordering.
+C                 The necessary space in WORK is allocated for
+C                 the current symmetry with a seperate space for
+C                 the different amplitudes.
+C
+C                 The amplitudes for all K, J, A and the 
+C                 given B are collected in WORK.
+C                 
+C                 First order coloumb-minus-exchange like amplitudes are 
+C                 collected in KT2CE1 and KT2CE2             
+C                 First order amplitudes in KT2AM1 and KT2AM2
+C                 Second order coloumb-minus-exchange like amplitudes in 
+C                 KT2CE31 and KT2CE32
+C                 Second order amplitudes in KT2AM31 and KT2AM32
 C--------------------------------------------------------------
 C
                   LT2 = NVIR(ISYMA)*NRHF(ISYMK)*NRHF(ISYMJ)
 C
-                  KT2MP1 = 1
-                  KT2MP2 = KT2MP1 + LT2
-                  KT2AM1 = KT2MP2 + LT2
+                  KT2CE1 = 1
+                  KT2CE2 = KT2CE1 + LT2
+                  KT2AM1 = KT2CE2 + LT2
                   KT2AM2 = KT2AM1 + LT2
-                  KEND1   = KT2AM2 + LT2
+                  KT2CE31 = KT2AM2 + LT2
+                  KT2CE32 = KT2CE31 + LT2
+                  KT2AM31 = KT2CE32 + LT2
+                  KT2AM32 = KT2AM31 + LT2
+                  KEND1   = KT2AM32 + LT2
                   LWORK1  = LWORK   - KEND1
 C
-                  CALL SO_MEMMAX ('SO_DENS.1',LWORK1)
+                  CALL SO_MEMMAX ('SO_DENS3.1',LWORK1)
                   IF (LWORK1 .LT. 0)
-     &                CALL STOPIT('SO_DENS.1',' ',KEND1,LWORK)
+     &                CALL STOPIT('SO_DENS3.1',' ',KEND1,LWORK)
 C
                   DO 500 K = 1,NRHF(ISYMK)
 C
@@ -112,11 +124,19 @@ C
 C
                            T2MP  = TWO * T2AM(NAJBK) - T2AM(NAKBJ)
 C
-                           WORK(KT2MP1 + NAKJ - 1) = T2MP
-                           WORK(KT2MP2 + NAJK - 1) = T2MP
+                           WORK(KT2CE1 + NAKJ - 1) = T2MP
+                           WORK(KT2CE2 + NAJK - 1) = T2MP
 C
                            WORK(KT2AM1 + NJAK - 1) = T2AM(NAJBK)
                            WORK(KT2AM2 + NJKA - 1) = T2AM(NAJBK)
+C                           
+                           T2MP3 = TWO * T2AM3(NAJBK) - T2AM3(NAKBJ)
+C
+                           WORK(KT2CE31 + NAKJ - 1) = T2MP3
+                           WORK(KT2CE32 + NAJK - 1) = T2MP3
+C
+                           WORK(KT2AM31 + NJAK - 1) = T2AM3(NAJBK)
+                           WORK(KT2AM32 + NJKA - 1) = T2AM3(NAJBK)
 C
   700                   CONTINUE
 C
@@ -126,7 +146,6 @@ C
 C
 C---------------------------------------------------------------------
 C                 Calculate Dij by adding in contributions for each B.
-C                 See eq. A.1 in J. Chem. Phys. 89, 5354 (1988)
 C---------------------------------------------------------------------
 C
                   NTOTJ  = MAX(NRHF(ISYMJ),1)
@@ -135,13 +154,17 @@ C
                   KOFF1  = IIJDEN(ISYMJ,ISYMJ) + 1
 C
                   CALL DGEMM('N','N',NRHF(ISYMJ),NRHF(ISYMJ),
-     &                       NVIR(ISYMA)*NRHF(ISYMK),-ONE,WORK(KT2AM1),
-     &                       NTOTJ,WORK(KT2MP1),NTOTAK,ONE,
-     &                       DENSIJ(KOFF1),NTOTJ)
+     &                       NVIR(ISYMA)*NRHF(ISYMK),-ONE,
+     &                       WORK(KT2AM1),NTOTJ,WORK(KT2CE31),NTOTAK,
+     &                       ONE,DENS3IJ(KOFF1),NTOTJ)
+C
+                  CALL DGEMM('N','N',NRHF(ISYMJ),NRHF(ISYMJ),
+     &                       NVIR(ISYMA)*NRHF(ISYMK),-ONE,
+     &                       WORK(KT2AM31),NTOTJ,WORK(KT2CE1),NTOTAK,
+     &                       ONE,DENS3IJ(KOFF1),NTOTJ)
 C
 C---------------------------------------------------------------------
 C                 Calculate Dab by adding in contributions for each B.
-C                 See eq. A.2 in J. Chem. Phys. 89, 5354 (1988)
 C---------------------------------------------------------------------
 C
                   NTOTA  = MAX(NVIR(ISYMA),1)
@@ -150,9 +173,14 @@ C
                   KOFF2  = IABDEN(ISYMA,ISYMA) + 1
 C
                   CALL DGEMM('N','N',NVIR(ISYMA),NVIR(ISYMA),
-     &                       NRHF(ISYMJ)*NRHF(ISYMK),ONE,WORK(KT2MP2),
-     &                       NTOTA,WORK(KT2AM2),NTOTJK,ONE,
-     &                       DENSAB(KOFF2),NTOTA)
+     &                       NRHF(ISYMJ)*NRHF(ISYMK),ONE,
+     &                       WORK(KT2CE32),NTOTA,WORK(KT2AM2),NTOTJK,
+     &                       ONE,DENS3AB(KOFF2),NTOTA)
+C     
+                  CALL DGEMM('N','N',NVIR(ISYMA),NVIR(ISYMA),
+     &                       NRHF(ISYMJ)*NRHF(ISYMK),ONE,
+     &                       WORK(KT2CE2),NTOTA,WORK(KT2AM32),NTOTJK,
+     &                       ONE,DENS3AB(KOFF2),NTOTA)
 C
   400          CONTINUE
 C
@@ -166,7 +194,7 @@ C-----------------------
 C     Remove from trace.
 C-----------------------
 C
-      CALL QEXIT('SO_DENS')
+      CALL QEXIT('SO_DENS3')
 C
       RETURN
       END

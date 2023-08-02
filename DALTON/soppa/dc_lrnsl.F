@@ -5,8 +5,9 @@ C  /* Deck dc_lrnsl */
      &                    FREQ,NFREQ,LABELS,
      &                    SOLV_LABELS,NLAB,
      &                    DENSIJ,LDENSIJ,
-     &                    DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                    DENSAB,LDENSAB,DENSAI,LDENSAI,DENS3IJ,DENS3AB,
      &                    FOCKD,LFOCKD,T2AM,LT2AM,
+     &                    T2SAM,LT2SAM,
      &                    IMAGINARY,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -34,11 +35,13 @@ C
 
 C
       integer, intent(in) :: isym, ! symmetry of this batch of perturbations
-     &       LDENSIJ, LDENSAB, LDENSAI, LWORK, LFOCKD, LT2AM, ! array lengths
+     &       LDENSIJ, LDENSAB, LDENSAI, LWORK, LFOCKD, LT2AM, LT2SAM, ! array lengths
      &       NFREQ, NLAB
       REAL(sop_dp),INTENT(IN) :: DENSIJ(LDENSIJ), DENSAB(LDENSAB),
      &                     DENSAI(LDENSAI), FREQ(NFREQ),
-     &                     FOCKD(LFOCKD), T2AM(LT2AM)
+     &                     DENS3IJ(LDENSIJ), DENS3AB(LDENSAB),
+     &                     FOCKD(LFOCKD), T2AM(LT2AM),
+     &                     T2SAM(LT2SAM)
       REAL(sop_dp),INTENT(INOUT) :: WORK(LWORK)
       REAL(sop_dp),intent(inout) :: PROPAR(NFREQ,NLAB,NLAB),
      &                              PROPAR1(NFREQ,NLAB,NLAB),
@@ -157,9 +160,10 @@ C--------------------------------------
          END IF
 C
          CALL SO_ERES(MODEL, 0, NLAB, DENSIJ, LDENSIJ,
-     &                DENSAB, LDENSAB,
-     &                T2AM, LT2AM, FOCKD, LFOCKD, DENSAI, LDENSAI,
-     &                 IFREQ, ISYM,IDTYPE,
+     &                DENSAB, LDENSAB, DENS3IJ, DENS3AB,
+     &                T2AM, LT2AM, T2SAM, LT2SAM, FOCKD, LFOCKD,
+     &                DENSAI, LDENSAI,
+     &                IFREQ, ISYM,IDTYPE,
 #ifdef VAR_MPI
      &                WORK(KAssignedIndices), maxnumjobs,
 #endif

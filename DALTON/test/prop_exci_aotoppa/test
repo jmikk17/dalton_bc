@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+#    prop_exci_aotoppa
+#    -----------------
+#    Molecule:         Formaldehyde
+#    Wave Function:    MP3 (AO-TOPPA)
+#    Test Purpose:     Calculation of excitation energies through ABACUS
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+
+# Property calculation
+f.add(from_string = 'Singlet electronic excitation energies',
+      num_lines = 24,
+      abs_tolerance = 1.0e-4)
+
+f.add(from_string = 'Electric transition dipole moments',
+      num_lines = 27,
+      ignore_sign = True,
+      abs_tolerance = 1.0e-3)
+
+f.add(from_string = 'Magnetic transition dipole moments',
+      num_lines = 25,
+      ignore_sign = True,
+      abs_tolerance = 1.0e-3)
+
+f.add(from_string = 'Oscillator and Scalar Rotational Strengths',
+      num_lines = 26,
+      ignore_sign = True,
+      rel_tolerance = 1.0e-3)
+
+test.run(['prop_exci_aotoppa.dal'], ['formaldehyde.mol'], f={'out': f},
+         accepted_errors=['not implemented for parallel calculations.','ERI does not work with Cartesian basis.'])
+
+sys.exit(test.return_code)

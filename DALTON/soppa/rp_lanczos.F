@@ -2,9 +2,9 @@ C
 C  /* Deck rp_lanczos */
       SUBROUTINE RP_LANCZOS(MODEL,LABEL,ISYMTR,
      &                     DENSIJ,LDENSIJ,
-     &                     DENSAB,LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,
-     &                     FOCKD,LFOCKD,
-     &                     LCONV,S_0,L_0,I_0,
+     &                     DENSAB,LDENSAB,DENSAI,LDENSAI,
+     &                     DENS3IJ,DENS3AB,T2AM,LT2AM,T2SAM,LT2SAM,
+     &                     FOCKD,LFOCKD,LCONV,S_0,L_0,I_0,
      &                     WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
@@ -24,8 +24,10 @@ C     DENSAB        Virt.-virt. part of MP2 density
 C     LDENSAB       Lenght of virt.-virt. part of MP2 density                     
 C     DENSAI        Virt.-occ. part of MP2 density
 C     LDENSAI       Lenght of virt.-occ. part of MP2 density 
-C     T2MP          Array of the T2 amplitudes
-C     LT2MP         Length of the T2 amplitudes array           
+C     T2AM          Array of the 1st order T2 amplitudes
+C     LT2AM         Length of the T2 amplitudes array
+C     T2SAM         Array of the 2nd order T2 amplitudes
+C     LT2SAM        Length of the T2SAM array 
 C     FOCKD         Fock diagonal 
 C     LFOCKD        Length of Fock diagonal  
 C     LCONV         # of diagonalizations performed
@@ -34,7 +36,6 @@ C     L_0           L(0) value array (length=1 if no intermediate
 C     I_0           I(0) value array (length=1 if no intermediate
 C     (arrays length is 1 if no intermediate diagonalization)          
 C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC          
 C
 #ifdef VAR_MPI
       use so_parutils, only: parsoppa_do_eres, my_mpi_integer,
@@ -73,16 +74,17 @@ C
       CHARACTER(LEN=5), INTENT(IN) :: MODEL 
       CHARACTER(LEN=8), INTENT(IN) :: LABEL
 C
-      REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSIJ) :: DENSIJ
-      REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSAB) :: DENSAB 
+      REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSIJ) :: DENSIJ,DENS3IJ
+      REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSAB) :: DENSAB,DENS3AB
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LDENSAI) :: DENSAI 
-      REAL(sop_dp), INTENT(INOUT), DIMENSION(LT2MP) :: T2MP 
+      REAL(sop_dp), INTENT(INOUT), DIMENSION(LT2AM) :: T2AM 
+      REAL(sop_dp), INTENT(INOUT), DIMENSION(LT2SAM) :: T2SAM 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LFOCKD) :: FOCKD 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LWORK) :: WORK 
       REAL(sop_dp), INTENT(INOUT), DIMENSION(LCONV) :: S_0, L_0, I_0
 C
       INTEGER, INTENT(IN) :: ISYMTR, LDENSIJ, LDENSAB, LDENSAI
-      INTEGER, INTENT(IN) :: LT2MP, LFOCKD, LWORK 
+      INTEGER, INTENT(IN) :: LT2AM, LT2SAM, LFOCKD, LWORK 
       INTEGER, INTENT(IN) :: LCONV 
 C
 C      
@@ -204,7 +206,7 @@ C
       IF ((MODEL .EQ. 'AORPA') .AND. SOP_LANCZOS ) THEN
          CALL  RP_LANCZOS_TRIALVEC(GPNORM,
      &                    LABEL,ISYMTR,IMAGPROP,MODEL,
-     &                    T2MP,LT2MP,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+     &                    T2AM,LT2AM,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
      &                    DENSAI,LDENSAI,WORK(KEND1),LWORK1)
       END IF
 C
@@ -268,8 +270,8 @@ C ISYMTR is a non-local parameter, we need to copy it to the info-array
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,NOLDTR,NNEWTR,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2MP,LT2MP,FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,
-     &                IDTYPE,
+     &                DENS3IJ,DENS3AB,T2AM,LT2AM,T2SAM,LT2SAM,
+     &                FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,IDTYPE,
 #ifdef VAR_MPI
      &                WORK(kAssignedIndices),maxnumjobs,
 #endif

@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+#    prop_alpha_aotoppa
+#    ---------------
+#    Molecule:         H2O 
+#    Wave Function:    MP3 (AO-TOPPA module)
+#    Test Purpose:     Calculation of polarizbilities through ABACUS
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+
+# Silly as it is, this string appear twice in 
+# paralllel calculations, causing the tests to fail
+#f.add(string = 'AO integral driven SOPPA',
+
+# Property calculation
+f.add(from_string = 'TOPPA results',
+      num_lines = 50,
+      abs_tolerance = 1.0e-5)
+
+test.run(['prop_alpha_aotoppa.dal'], ['molecule.mol'], f={'out': f})
+
+sys.exit(test.return_code)

@@ -27,10 +27,11 @@ C
      &                   so_get_active_models,
      &                   so_has_doubles,
      &                   so_singles_second,
+     &                   so_singles_third,
      &                   so_needs_densai,
      &                   so_double_correction,
      &                   sop_dens_label,
-     &                   sop_model_rpa, sop_model_rpad,
+     &                   sop_model_rpa,
      &                   sop_model_hrpad,
      &                   sop_conv_thresh,
      &                   sop_mp2ai_done
@@ -84,9 +85,9 @@ C
       CHARACTER*11 FULLNAME
 C
 
-      integer :: num_active
+      integer :: num_active, mem_lvl
       logical :: active_models(sop_num_models)
-      logical :: doubles, need_t2, doub_corr, rpa_only
+      logical :: doubles, need_t2, doub_corr
       character(len=4) :: old_denslab, denslab
       logical :: new_densai
 #ifdef VAR_MPI
@@ -107,8 +108,17 @@ C
 C     Get the active models and their number
       CALL SO_GET_ACTIVE_MODELS (ACTIVE_MODELS)
       NUM_ACTIVE = COUNT ( ACTIVE_MODELS )
-      RPA_ONLY = ACTIVE_MODELS(SOP_MODEL_RPA) .AND.
-     &           (NUM_ACTIVE.EQ.1)
+C     Get the necessary memory allocation level
+      IF (ACTIVE_MODELS(SOP_MODEL_RPA) .AND. NUM_ACTIVE.EQ.1) THEN
+         MEM_LVL = 0 ! rpa only
+      ELSE
+         MEM_LVL = 1
+         DO IMODEL = 1, SOP_NUM_MODELS
+            IF ( .NOT. ACTIVE_MODELS(IMODEL) ) CYCLE
+            MODEL = SOP_MODELS(IMODEL)
+            IF (SO_SINGLES_THIRD(MODEL)) MEM_LVL = 2 ! second order amplitudes
+         END DO
+      ENDIF
       old_denslab = 'NONE'
 C
 C
@@ -160,8 +170,7 @@ C
       KEND1   = KFOCKD  + LFOCKD
       LWORK1  = LWORK   - KEND1
 C
-CRF if anything but AORPA
-      IF ( .NOT.RPA_ONLY ) THEN
+      IF (MEM_LVL .GT. 0) THEN
 C
          LT2AM   = NT2AMX
          LDENSIJ = NIJDEN(1)
@@ -174,6 +183,22 @@ C
          KDENSAI = KDENSAB + LDENSAB
          KEND1   = KDENSAI + LDENSAI
          LWORK1  = LWORK   - KEND1
+C
+         IF (MEM_LVL .GT. 1) THEN
+            LT2SAM = LT2AM
+C
+            KT2SAM = KDENSAI + LDENSAI
+            KDENS3IJ = KT2SAM + LT2SAM
+            KDENS3AB = KDENS3IJ + LDENSIJ
+            KEND1 = KDENS3AB + LDENSAB
+            LWORK1 = LWORK - KEND1
+         ELSE
+               LT2SAM = 0
+               KT2SAM = HUGE(LWORK)
+               KDENS3IJ = HUGE(LWORK)
+               KDENS3AB = HUGE(LWORK)
+         END IF
+C
       ELSE
          LT2AM   = 0
          LDENSAI = 0
@@ -238,7 +263,7 @@ C              Ready the slaves for parallel calculations.
 C---------------------------------------------------------
 C
 #ifdef VAR_MPI
-      call soppa_initialize_slaves ( update_common_blocks, RPA_ONLY)
+      call soppa_initialize_slaves (update_common_blocks, mem_lvl)
       update_common_blocks = .false.
 #endif
       IF ( NSAVMX .LT. 2 ) THEN
@@ -338,20 +363,19 @@ C
 C
 C-----------------------------------------------------
 C              Get T2 amplitudes and density matrices 
-C               This should be changed s.t. is runs parallel.
 C-----------------------------------------------------
 C
                IF ((NEED_T2).AND.
      &             (DENSLAB.NE.OLD_DENSLAB)) THEN
                   CALL SO_GETT2(DENSLAB,
      &                          WORK(KFOCKD),LFOCKD,
-     &                          WORK(KT2AM),LT2AM,
-     &                          WORK(KDENSAI),
-     &                          LDENSAI,WORK(KDENSIJ),LDENSIJ,
+     &                          WORK(KT2AM),LT2AM, WORK(KT2SAM), LT2SAM,
+     &                          WORK(KDENSAI),LDENSAI,
+     &                          WORK(KDENSIJ),LDENSIJ,
      &                          WORK(KDENSAB),LDENSAB,
+     &                          WORK(KDENS3IJ), WORK(KDENS3AB),
      &                          WORK(KEND2),LWORK2)
                   old_denslab = DENSLAB
-C
                 ENDIF
 C
 C-----------------------------------------
@@ -386,9 +410,9 @@ C
                   CALL SO_RSPLEX(MODEL,ISYMTR,NEXCI,WORK(KEXVAL),LEXVAL,
      &                           WORK(KDENSIJ),LDENSIJ,WORK(KDENSAB),
      &                           LDENSAB,WORK(KDENSAI),LDENSAI,
-     &                           WORK(KT2AM),
-     &                           LT2AM,WORK(KFOCKD),LFOCKD,
-     &                           WORK(KEND2),LWORK2)
+     &                           WORK(KDENS3IJ),WORK(KDENS3AB),
+     &                           WORK(KT2AM),LT2AM,WORK(KT2SAM),LT2SAM,
+     &                           WORK(KFOCKD),LFOCKD,WORK(KEND2),LWORK2)
 C
 C-----------------------------------------------------
 C              Copy exciation energies to EXENG.
@@ -407,7 +431,7 @@ C              Determine transition moments.
 C-------------------------------------------------
 C
                CALL SO_TRMOM(MODEL,ISYMTR,NLBTOT,NEXCI,
-     &                       WORK(KT2AM),LT2AM,WORK(KDENSIJ),LDENSIJ,
+     &                       WORK(KDENSIJ),LDENSIJ,
      &                       WORK(KDENSAB),LDENSAB,
      &                       WORK(KDENSAI),LDENSAI,
      &                       TRLEN(1,1,1,IOUT),TRVEL(1,1,1,IOUT),

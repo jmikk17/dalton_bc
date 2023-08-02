@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+#    rsp_dipvel_aotoppa
+#    ---------------
+#    Molecule:         Formldehyde
+#    Wave Function:    MP3 (AO-TOPPA module)
+#    Test Purpose:     Calculation spin-spin coupling constants
+#                      using the AO-TOPPA module. 
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+f = Filter()
+#Isotropic coupling constants
+f.add(from_string = 'Isotropic coupling',
+      num_lines = 10,
+      abs_tolerance = 1.01e-4)
+
+test.run(['aotoppa.dal'], ['formaldehyde.mol'], f={'out': f})
+
+sys.exit(test.return_code)

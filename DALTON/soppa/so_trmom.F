@@ -1,7 +1,7 @@
 C
 C  /* Deck so_trmom */
       SUBROUTINE SO_TRMOM(MODEL,ISYMTR,NLBTOT,NEXCI,
-     &                    T2AM,LT2AM,DENSIJ,LDENSIJ,
+     &                    DENSIJ,LDENSIJ,
      &                    DENSAB,LDENSAB,DENSAI,LDENSAI,
 CSPAS:23/5-11: second and third moment sum rules
 C    &                    TRLEN,TRVEL,TRLON,TRMAG,BSRLON,EXENG,
@@ -54,7 +54,7 @@ CKeinSPASmehr
 CClark:11/01/2016
       DIMENSION BETHE(3,LQ),STOPP(3,LVEL,2)
 CClark:end
-      DIMENSION T2AM(LT2AM), WORK(LWORK)
+      DIMENSION WORK(LWORK)
 C
       PARAMETER( ONE=1.0D0 )
 C
@@ -103,7 +103,7 @@ C     For this label, read integrals and process them.
 C--------------------------------------------------------
 C
          CALL SO_TRMOM_1(MODEL,LABEL,KSYMOP,ISYMTR,NEXCI,
-     &                    T2AM,LT2AM,DENSIJ,LDENSIJ,
+     &                    DENSIJ,LDENSIJ,
      &                    DENSAB,LDENSAB,DENSAI,LDENSAI,
      &                    TRLEN,TRVEL,TQLEN,TQVEL,TTLEN,TRLON,TRMAG,
      &                    BSRLON,EXENG,DUMMY,WORK,LWORK,
@@ -266,7 +266,7 @@ C        For this label, read integrals and process them.
 C-----------------------------------------------------------------
 C
                CALL SO_TRMOM_1(MODEL,LABEL,KSYMOP,ISYMTR,NEXCI,
-     &                         T2AM,LT2AM,DENSIJ,LDENSIJ,
+     &                         DENSIJ,LDENSIJ,
      &                         DENSAB,LDENSAB,DENSAI,LDENSAI,
      &                         TRLEN,TRVEL,TQLEN,TQVEL,TTLEN,TRLON,
      &                         TRMAG,BSRLON,EXENG,TRGOS,WORK,LWORK,

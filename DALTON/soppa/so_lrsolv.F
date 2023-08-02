@@ -1,8 +1,9 @@
 C  /* Deck so_lrsolv */
       SUBROUTINE SO_LRSOLV(MODEL,ISYMTR,NEXCI,MAXIT,EXVAL,LEXVAL,RESINM,
      &                     LRESINM,CONV,LCONV,DENSIJ,LDENSIJ,DENSAB,
-     &                     LDENSAB,DENSAI,LDENSAI,T2MP,LT2MP,FOCKD,
-     &                     LFOCKD,REDE,REDS,LMXRED,WORK,LWORK)
+     &                     LDENSAB,DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                     T2MP,LT2MP,T2MP3,LT2MP3,FOCKD,LFOCKD,
+     &                     REDE,REDS,LMXRED,WORK,LWORK)
 C
 C     This routine is part of the atomic integral direct SOPPA program.
 C
@@ -46,7 +47,8 @@ C
 C
       DIMENSION EXVAL(LEXVAL),   RESINM(LRESINM)
       DIMENSION DENSIJ(LDENSIJ), DENSAB(LDENSAB), DENSAI(LDENSAI)
-      DIMENSION T2MP(LT2MP),     FOCKD(LFOCKD),   WORK(LWORK)
+      DIMENSION DENS3IJ(LDENSIJ), DENS3AB(LDENSAB)
+      DIMENSION T2MP(LT2MP), T2MP3(LT2MP3), FOCKD(LFOCKD), WORK(LWORK)
       DIMENSION REDE(LMXRED),    REDS(LMXRED)
 
       INTEGER NIT, NOLDTR, NNEWTR, IDTYPE, IMODEL
@@ -82,12 +84,12 @@ C     by using unit vectors as trial vectors.
 C==============================================================
 C
       IF (SOPCHK) THEN
+C
          CALL SO_CHECK(MODEL,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-CPi 04.04.16
-C     &                 T2MP,LT2MP,
-     &                 DENSAI,LDENSAI,T2MP,LT2MP,
-Cend-Pi
+     &                 DENSAI,LDENSAI,DENS3IJ,DENS3AB,
+     &                 T2MP,LT2MP,T2MP3,LT2MP3,
      &                 FOCKD,LFOCKD,ISYMTR,WORK,LWORK)
+C
       END IF
 C
 C-----------------------------------------------------------------
@@ -171,7 +173,7 @@ C
      &                        '*********************************'
          WRITE(LUPRI,'(11X,A,A,I1)') ADJUSTR(FULL_NAME),
      &        ' iterations, Excitation symmetry ',ISYMTR
-      WRITE(LUPRI,'(2X,A)') '*********************************'//
+      WRITE(LUPRI,'(2X,A)') '***********************************'//
      &                        '*********************************'
 C
 C----------------------------------------------------------------------
@@ -218,8 +220,8 @@ C ISYMTR is a non-local parameter, we need to copy it to the info-array
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,NOLDTR,NNEWTR,DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                T2MP,LT2MP,FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,
-     &                0,
+     &                DENS3IJ,DENS3AB,T2MP,LT2MP,T2MP3,LT2MP3,
+     &                FOCKD,LFOCKD,DENSAI,LDENSAI,NIT,ISYMTR,0,
 #ifdef VAR_MPI
      &                WORK(kAssignedIndices),maxnumjobs,
 #endif
