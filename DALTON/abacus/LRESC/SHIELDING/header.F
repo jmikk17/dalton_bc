@@ -96,12 +96,6 @@ C ---Not Default
       IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
      & CALL HEADER('Changes of defaults for LRESC :',0)
 
-c      IF (GAUCHANG) THEN
-c         WRITE(lupri,*)'*** WARNING:'
-c         WRITE(lupri,*)'GAUGEO must be placed on selected nucleus at'
-c         WRITE(lupri,*)'a.u. due to Hermite section (1 body integrals)'
-c      END IF
-
       IF (JIMPRT.NE.0) THEN
          WRITE (LUPRI,'(A,I5)')
      &      '--- Print level : ', JIMPRT

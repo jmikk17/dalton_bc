@@ -86,14 +86,8 @@ C         'FCDE' 'FCDE'
          IF (KEY.EQ.'SDK ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (SDK)',
      &   ' correction is under calculation...'
-         IF (KEY.EQ.'SDK2') WRITE(LUPRI,'(5X,A,A)')
-     &   'Paramagnetic Second Order Triplet (SDK2)',
-     &   ' correction is under calculation...'
          IF (KEY.EQ.'SDD ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (SDD)',
-     &   ' correction is under calculation...'
-         IF (KEY.EQ.'SDD2') WRITE(LUPRI,'(5X,A,A)')
-     &   'Paramagnetic Second Order Triplet (SDD2)',
      &   ' correction is under calculation...'
          IF (KEY.EQ.'FCBS') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (FCBS)',
@@ -263,9 +257,6 @@ C        -----------------------------------
          allocate(operadores_A(3,3,NopA))
 c                  3*i+j-3                                          ij
          operadores_A(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
-c         operadores_A(1,1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !11
-c         operadores_A(2,2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !22
-c         operadores_A(3,3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !33
 C        -----------------------------------
          allocate(operadores_B(3,3,NopB))
          operadores_B(1,1,1) = 'dd/dxdx '
@@ -302,38 +293,6 @@ C        -----------------------------------
 C        -----------------------------------
       END IF
 
-
-      IF (KEY.EQ."SDK2") THEN
-         NopA = 1
-         NopB = 1
-         TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
-C        -----------------------------------
-         operadores_A(:,:,:) = ' '
-c         operadores_A(1,2,1) = 'XYEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores_A(1,3,1) = 'XZEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores_A(2,1,1) = 'XYEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores_A(2,3,1) = 'YZEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores_A(3,1,1) = 'XZEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores_A(3,2,1) = 'YZEFG'//CHRNOS(LRATOM/10)//
-c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-C        -----------------------------------
-         operadores_A(1,2,1) = 'XYEFG'//efg_name
-         operadores_A(1,3,1) = 'XZEFG'//efg_name
-         operadores_A(2,1,1) = 'XYEFG'//efg_name
-         operadores_A(2,3,1) = 'YZEFG'//efg_name
-         operadores_A(3,1,1) = 'XZEFG'//efg_name
-         operadores_A(3,2,1) = 'YZEFG'//efg_name
-C        -----------------------------------
-         operadores_B(:,:,:) = 'KINENERG'
-C        -----------------------------------
-      END IF
 
       IF (KEY.EQ."SDDE") THEN  !OLD - never called - just in case
          NopA = 3
@@ -441,29 +400,6 @@ C        -----------------------------------
 C        -----------------------------------
       END IF
 
-      IF (KEY.EQ."SDD2") THEN
-         NopA = 1
-         NopB = 1
-         TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
-C        ----------------------------------- 
-         operadores_A(1,1,1) = 'dd/dxdx '
-         operadores_A(1,2,1) = 'dd/dxdy '
-         operadores_A(1,3,1) = 'dd/dxdz '
-         operadores_A(2,1,1) = 'dd/dxdy '
-         operadores_A(2,2,1) = 'dd/dydy '
-         operadores_A(2,3,1) = 'dd/dydz '
-         operadores_A(3,1,1) = 'dd/dxdz '
-         operadores_A(3,2,1) = 'dd/dydz '
-         operadores_A(3,3,1) = 'dd/dzdz '
-C        -----------------------------------
-         operadores_B(1,:,1) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-1)
-         operadores_B(2,:,1) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-2)
-         operadores_B(3,:,1) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-3)
-C        -----------------------------------
-      END IF
-
       IF (KEY.EQ."FCBS") THEN
          NopA = 1
          NopB = 1
@@ -475,15 +411,6 @@ c                  3*i+j-3                               ij
 C        -----------------------------------
          operadores_A(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
 C        -----------------------------------
-c         operadores_B(1,1,1) = nuc_coord(1)//'NSCOX'  !11
-c         operadores_B(1,2,1) = nuc_coord(1)//'NSCOY'  !12
-c         operadores_B(1,3,1) = nuc_coord(1)//'NSCOZ'  !13
-c         operadores_B(2,1,1) = nuc_coord(2)//'NSCOX'  !21
-c         operadores_B(2,2,1) = nuc_coord(2)//'NSCOY'  !22
-c         operadores_B(2,3,1) = nuc_coord(2)//'NSCOZ'  !23
-c         operadores_B(3,1,1) = nuc_coord(3)//'NSCOX'  !31
-c         operadores_B(3,2,1) = nuc_coord(3)//'NSCOY'  !32
-c         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
          operadores_B(1,1,1) = 'SOMF  XX' !11
          operadores_B(1,2,1) = 'SOMF  XY' !12
          operadores_B(1,3,1) = 'SOMF  XZ' !13
@@ -496,7 +423,6 @@ c         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
 C        -----------------------------------
       END IF
 
-c      To construct
          IF(KEY.EQ."SDBS") THEN
          NopA = 3
          NopB = 3
@@ -516,27 +442,7 @@ C        -----------------------------------
             operadores_A(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
          END DO
 C        -----------------------------------
-c         operadores_B(1,1,1) = nuc_coord(1)//'NSCOX'  !11
-c         operadores_B(1,2,1) = nuc_coord(1)//'NSCOY'  !12
-c         operadores_B(1,3,1) = nuc_coord(1)//'NSCOZ'  !13
-c         operadores_B(2,1,1) = nuc_coord(2)//'NSCOX'  !21
-c         operadores_B(2,2,1) = nuc_coord(2)//'NSCOY'  !22
-c         operadores_B(2,3,1) = nuc_coord(2)//'NSCOZ'  !23
-c         operadores_B(3,1,1) = nuc_coord(3)//'NSCOX'  !31
-c         operadores_B(3,2,1) = nuc_coord(3)//'NSCOY'  !32
-c         operadores_B(3,3,1) = nuc_coord(3)//'NSCOZ'  !33
          DO K=1, 3
-c           L = LRATOM * K
-c           operadores_B(1,1,K) = nuc_coord(1)//'NSCO'//CHRXYZ(1)
-c           operadores_B(1,2,K) = nuc_coord(1)//'NSCO'//CHRXYZ(2)
-c           operadores_B(1,3,K) = nuc_coord(1)//'NSCO'//CHRXYZ(3)
-c           operadores_B(2,1,K) = nuc_coord(2)//'NSCO'//CHRXYZ(1)
-c           operadores_B(2,2,K) = nuc_coord(2)//'NSCO'//CHRXYZ(2)
-c           operadores_B(2,3,K) = nuc_coord(2)//'NSCO'//CHRXYZ(3)
-c           operadores_B(3,1,K) = nuc_coord(3)//'NSCO'//CHRXYZ(1)
-c           operadores_B(3,2,K) = nuc_coord(3)//'NSCO'//CHRXYZ(2)
-c           operadores_B(3,3,K) = nuc_coord(3)//'NSCO'//CHRXYZ(3)
-c            operadores_B(1,1,K) = 'SOMF  XX' !11
             operadores_B(1,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !11
             operadores_B(1,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !12
             operadores_B(1,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !13
@@ -563,8 +469,6 @@ c     Elemento ij del tensor de shielding
 
 
                call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
-c               WRITE(LUPRI,*) "AUCAR-LR ",KEY, operadores_duo,i,j,
-c     &                     calfa*calfa*calfa*calfa*1.0D6*LR(i,j)
                TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
                IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
      &         ' ',operadores_duo(2)," LR: ",LR(i,j)
@@ -575,8 +479,6 @@ c     &                     calfa*calfa*calfa*calfa*1.0D6*LR(i,j)
             operadores_duo(2) = operadores_B(i,j,l)
 
             call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
-c            WRITE(LUPRI,*) KEY,' ',operadores_duo,i,j,
-c     &                     -calfa*calfa*calfa*calfa*1.0D+6*LR(i,j)
             TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
             IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
      &      ' ',operadores_duo(2)," LR: ",LR(i,j)
@@ -599,14 +501,10 @@ c     &                     -calfa*calfa*calfa*calfa*1.0D+6*LR(i,j)
       IF (KEY.EQ.'OZK ') LROZK  = LRtensor
       IF (KEY.EQ.'FCZK') LRFCZK = LRtensor
       IF (KEY.EQ.'FCDE') LRFCDE = LRtensor
-c      IF (KEY.EQ.'FCBS') LRFCBS = CHARGE(LRATOM)*LRtensor
-c      IF (KEY.EQ.'SDBS') LRSDBS = CHARGE(LRATOM)*LRtensor
       IF (KEY.EQ.'FCBS') LRFCBS = LRtensor
       IF (KEY.EQ.'SDBS') LRSDBS = LRtensor
       IF (KEY.EQ.'SDK ') LRSDK = LRtensor
-c      IF (KEY.EQ.'SDK2') LRSDK2 = LRtensor
       IF (KEY.EQ.'SDD ') LRSDD = LRtensor
-c      IF (KEY.EQ.'SDD2') LRSDD2 = LRtensor
 
       deallocate(operadores_A)
       deallocate(operadores_B)
@@ -645,7 +543,6 @@ C  /* Deck newlrinput_all */
       LOGICAL :: TRIPLETE
 
       CALL QENTER('NEWLRINPUT_SINGLETS_ALL')
-c      CALL GETTIM(TIMHER,WALHER)
 
 c     NopA: number of A operators for each shield tensor element
 c     NopB: number of B operators for each shield tensor element
@@ -662,8 +559,6 @@ C         'FCDE' 'FCDE'
 
       namefile='DALTON.INP'
       fileID = -1
-c      CALL GPOPEN(fileID,namefile,'NEW',' ','FORMATTED',
-c     &            IDUMMY,.FALSE.)
       CALL GPOPEN(fileID,namefile,'UNKNOWN',' ','FORMATTED',
      &            IDUMMY,.FALSE.)
 
@@ -760,11 +655,11 @@ C        ---------------------------------------------------
       END IF
 
       IF (TRIPLETE) THEN
-      IF (SIGMAP1T) THEN !FCZK, FCDE, FCBS, SDK1, SDD1, SDD2 and SDBS
+      IF (SIGMAP1T) THEN !FCZK, FCDE, FCBS, SDK1, SDD1 and SDBS
 C        ---------------------------------------------------
          operadores(el)   = 'FC '//NAMN(LRATOM)(1:2)//nuc_number !FCZK & FCBS
 C        ---------------------------------------------------
-         operadores(el+1) = 'SD '//nuc_coord(1)//' x'            !SDK1, SDD2 & SDBS
+         operadores(el+1) = 'SD '//nuc_coord(1)//' x'            !SDK1 & SDBS
          operadores(el+2) = 'SD '//nuc_coord(1)//' y'
          operadores(el+3) = 'SD '//nuc_coord(1)//' z'
          operadores(el+4) = 'SD '//nuc_coord(2)//' x'
@@ -777,7 +672,7 @@ C        ---------------------------------------------------
 C        ---------------------------------------------------
          operadores(el+10) = 'KINENERG'                          !FCZK
 C        ---------------------------------------------------
-         operadores(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD1 & SDD2
+         operadores(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD1
          operadores(el+12) = 'dd/dxdy '
          operadores(el+13) = 'dd/dxdz '
          operadores(el+14) = 'dd/dydy '
@@ -793,17 +688,7 @@ C        ---------------------------------------------------
          operadores(el+23) = 'SOMF  ZX'
          operadores(el+24) = 'SOMF  ZY'
          operadores(el+25) = 'SOMF  ZZ'
-C        --------------------------------------------------- !NEW FCBS
-c         operadores(el+23) = nuc_coord(1)//'NSCOX' 
-c         operadores(el+24) = nuc_coord(1)//'NSCOY'
-c         operadores(el+25) = nuc_coord(1)//'NSCOZ'
-c         operadores(el+26) = nuc_coord(2)//'NSCOX'
-c         operadores(el+27) = nuc_coord(2)//'NSCOY'
-c         operadores(el+28) = nuc_coord(2)//'NSCOZ'
-c         operadores(el+29) = nuc_coord(3)//'NSCOX'
-c         operadores(el+30) = nuc_coord(3)//'NSCOY'
-c         operadores(el+31) = nuc_coord(3)//'NSCOZ'
-C        --------------------------------------------------- !NEW SDZK (K1 and K2) &SDD1
+C        --------------------------------------------------- !NEW SDZK &SDD1
          operadores(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
      &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
          operadores(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
@@ -811,7 +696,6 @@ C        --------------------------------------------------- !NEW SDZK (K1 and K
          operadores(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
      &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
 C        ---------------------------------------------------
-
          el = el + 29
       END IF
       END IF

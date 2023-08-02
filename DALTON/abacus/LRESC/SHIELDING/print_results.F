@@ -69,9 +69,7 @@ C
                call PRINT_LRSHIELD_CORR('FcKin   ',LRFCZK,'iso')
                call PRINT_LRSHIELD_CORR('FcDer   ',LRFCDE,'iso')
                call PRINT_LRSHIELD_CORR('SdKin   ',LRSDK,'iso')
-c               call PRINT_LRSHIELD_CORR('SdKin-2 ',LRSDK2,'iso')
                call PRINT_LRSHIELD_CORR('SdDer   ',LRSDD,'iso')
-c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'iso')
                call PRINT_LRSHIELD_CORR('FcBso   ',LRFCBS,'iso')
                call PRINT_LRSHIELD_CORR('SdBso   ',LRSDBS,'iso')
                IF (LRANISO) THEN
@@ -80,9 +78,7 @@ c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'iso')
                call PRINT_LRSHIELD_CORR('FcKin   ',LRFCZK,'ani')
                call PRINT_LRSHIELD_CORR('FcDer   ',LRFCDE,'ani')
                call PRINT_LRSHIELD_CORR('SdKin   ',LRSDK,'ani')
-c               call PRINT_LRSHIELD_CORR('SdKin-2 ',LRSDK2,'ani')
                call PRINT_LRSHIELD_CORR('SdDer   ',LRSDD,'ani')
-c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'ani')
                call PRINT_LRSHIELD_CORR('FcBso   ',LRFCBS,'ani')
                call PRINT_LRSHIELD_CORR('SdBso   ',LRSDBS,'ani')
                END IF
@@ -124,8 +120,6 @@ c               call PRINT_LRSHIELD_CORR('SdDer-2 ',LRSDD2,'ani')
          IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A,13X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
-c         IF (SIGMAPNR) call PRINT_LRSHIELD_SUM('non-rel   singlet :  ',
-c     &                      SGPNR,'iso')
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'iso')
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
@@ -137,8 +131,6 @@ c     &                      SGPNR,'iso')
          IF (LRANISO) THEN
          WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
-c         IF (SIGMAPNR) call PRINT_LRSHIELD_SUM('non-rel   singlet :  ',
-c     &                      SGPNR,'ani')
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'ani')
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',

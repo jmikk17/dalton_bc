@@ -14,15 +14,9 @@
 #include "chrxyz.h"
 
       DIMENSION WORK(LWORK)
-c      REAL*8 QR,TOTALQR,constante
-c      REAL*8 QRtensor(3,3)
       CHARACTER*9 :: KEY
-c      CHARACTER*8, allocatable :: operadores(:,:)
       CHARACTER*8 :: operadores_trio(3)
       CHARACTER*1 :: spin_trio(3)
-c      CHARACTER*1 :: spin_rank(3)
-c      CHARACTER*1, allocatable :: spin_rank(:,:)
-      INTEGER :: SUMA_B
 
       double precision, dimension(NBAST,NBAST) :: Identity,OVERLP,aux1
       CHARACTER*8 RTNLBL(2)
@@ -36,28 +30,20 @@ c      CHARACTER*1, allocatable :: spin_rank(:,:)
 
       REAL*8 QR(3,3),TOTALQR(3,3)
       REAL*8 QRtensor(3,3)
-c      CHARACTER*4 :: KEY
       Character*8, dimension(:,:,:), allocatable :: operadores_A
       Character*8, dimension(:,:,:), allocatable :: operadores_B
       Character*8, dimension(:,:,:), allocatable :: operadores_C
-c      Character*1, dimension(:,:,:), allocatable :: spin_rank
 
       INTEGER                  :: NopA, NopB, NopC
-c      CHARACTER*8, dimension(2) :: operadores_duo
-c      INTEGER :: SUMA_B
-c      character*3, dimension(3) :: nuc_coord
-c      character*3               :: nuc_number
-c      character*3               :: efg_name
       LOGICAL :: TRIPLETE,TRPLET_FLAG
 
 
       
       CALL QENTER('LRSCQUAD')
-c      CALL TIMER('START ',TIMEIN,TIMOUT)
       CALL GETTIM(TIMQR,WALQR)
 
       naos = NBAST ! NBAST: Total number of (atomic) basis functions
-      nmos= NORBT !NORBT: Total number of molecular orbitals
+      nmos= NORBT  ! NORBT: Total number of molecular orbitals
 
       TOTALQR = 0.d0
       QR = 0.d0
@@ -75,7 +61,6 @@ c      CALL TIMER('START ',TIMEIN,TIMOUT)
      &              CHRNOS(MOD(LRATOM,10))
 
       IF ((KEY.EQ.'OZ-PSO-MV').or.(KEY.EQ.'OZ-PSO-Dw')) THEN
-c        constante = -1000000 * calfa**2 / 2
          NopA = 1
          NopB = 1
          NopC = 1
@@ -94,7 +79,6 @@ c        constante = -1000000 * calfa**2 / 2
       END IF
 
       IF (KEY.EQ.'OZ-FC-SO ') THEN
-c        constante = 1000000/(4*(137.036**2))
          NopA = 1
          NopB = 1
          NopC = 1
@@ -114,7 +98,6 @@ c        constante = 1000000/(4*(137.036**2))
       END IF
 
       IF (KEY.EQ.'OZ-SD-SO ') THEN
-c        constante = 1000000/(4*(137.036**2))
          NopA = 3
          NopB = 3
          NopC = 3
@@ -312,25 +295,18 @@ c         spin_rank(:,3) = '1'
 c        END IF
 
 
-c     Elemento ij del tensor de shielding
-c      SUMA_B = SIZE(operadores,DIM=1)/3
+c     ij shielding tensor element
       do i = 1, 3 !
       do j = 1, 3 !
-c         operadores_trio(1) = operadores(i,1)
-c         operadores_trio (2) = operadores(j,2)
-c         spin_trio(1) = spin_rank(i,1)
-c         spin_trio(2) = spin_rank(j,2)
          IF (NopA+NopB+NopC.LT.6) THEN !Combine all A,B,C operators (one of them has 3 components)
             do k = 1, NopA
             do l = 1, NopB
             do m = 1, NopC
-
                operadores_trio(1)=operadores_A(i,j,k)
                operadores_trio(2)=operadores_B(i,j,l)
                operadores_trio(3)=operadores_C(i,j,m)
                call create_QRinput(operadores_trio,spin_trio)
                LUPRI = 6232
-c               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
                OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
      &              position='append')
                call RSPDRV(WORK,LWORK)
@@ -367,18 +343,7 @@ c               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown')
                TOTALQR(i,j) = TOTALQR(i,j) + QR(i,j)
             end do
          END IF
-      QRtensor(i,j) = TOTALQR(i,j)
-
-c            IF (JIMPRT .GT. 2) THEN
-c               write(lupri,*) operadores_trio(1),' ',operadores_trio(2),!debug
-c     &         ' ',operadores_trio(3),' ',spin_trio(1),' ',spin_trio(2),
-c     &         ' ',spin_trio(3)," QR: ",QR
-c            END IF
-
-c         IF (JIMPRT .GT. 2) THEN
-c            write(lupri,*) KEY,"(",i,",",j,"):",QRtensor(i,j)
-c            write(lupri,*)
-c         END IF
+         QRtensor(i,j) = TOTALQR(i,j)
 
       end do
       end do
@@ -393,7 +358,6 @@ c         END IF
       deallocate(operadores_C)
 
 
-c      CALL TIMER ('LRSCQUAD',TIMEIN,TIMOUT)
       CALL GETTIM(TEND,WEND)
       TIMQR = TEND - TIMQR
       WALQR = WEND - WALQR
@@ -462,7 +426,6 @@ c     new file management
          CALL GPCLOSE(newID ,'DELETE')
       else
          if (.not. file_open) then
-c            newID = -1
             CALL GPOPEN(newID,new_file,'NEW',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if
@@ -473,7 +436,6 @@ c     old file management
      &            opened = file_open)
       if (file_exists) then
          if (.not. file_open) then
-c            oldID = -1
             CALL GPOPEN(oldID,old_file,'OLD',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if
@@ -510,7 +472,6 @@ c     new file management
          CALL GPCLOSE(newID ,'DELETE')
       else
          if (.not. file_open) then
-c            newID = -1
             CALL GPOPEN(newID,new_file,'NEW',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if
@@ -521,7 +482,6 @@ c     old file management
      &            opened = file_open)
       if (file_exists) then
          if (.not. file_open) then
-c            oldID = -1
             CALL GPOPEN(oldID,old_file,'OLD',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if

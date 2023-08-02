@@ -31,12 +31,10 @@ C...  the subroutine ABACTOCD  as a model (2012)
 #include "dummy.h"
 #include "mxcent.h"
 #include "trkoor.h"
-c#include "sigma.h"
 #include "maxorb.h"
 #include "iratdef.h"
 #include "priunit.h"
 #include "cbilnr.h"
-c#include "suscpt.h"
 #include "infpri.h"
       double precision cmos(NORBT,NBAST)
       double precision OVERLP(NBAST,NBAST)
@@ -65,7 +63,6 @@ C
 #include "symmet.h"
 #include "abainf.h"
 #include "gnrinf.h"
-c#include "infsop.h"
 
 C
 #include "lrescinf.h"
@@ -562,15 +559,8 @@ C  /* Deck Regenerate_integrals */
       SUBROUTINE REGENERATE_INTEGRALS(COORDENADAS)
 
 #include "implicit.h"
-c#include "dummy.h"
-c#include "mxcent.h"
 #include "priunit.h"
-c#include "inftap.h"
-c#include "infrsp.h"
-c#include "wrkrsp.h"
 #include "lrescinf.h"
-c#include "inforb.h"
-c#include "nuclei.h"
 #include "chrnos.h"
 #include "chrxyz.h"
 

@@ -51,14 +51,12 @@ C                      6         7         8	    9	      10
 C                      11       12        13       14
      &            '.DIAM1S','.ANISO ','.PARANR','.DIANR '/
 C
-c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
       NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
  100     CONTINUE
             READ (LUCMD,'(A7)') WORD
-c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
             PROMPT = WORD(1:1)
             IF (PROMPT .EQ. '!' .OR. PROMPT .EQ. '#') THEN
                GOTO 100
@@ -78,12 +76,10 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
                CALL PRTAB(NTABLE,TABLE,WORD1//
      &         ' input keywords',LUPRI)
                CALL QUIT('Input keywords in LRESC Input, LRSCINP')
-C   READ GAUGEO : DEFINIR ALGUNA VAR PARA GAUGEO
+C              Redefining Gauge Origin
  1             CONTINUE
-cv                write(lupri,*)' ..aca leo gaugeo ', WORD
                   READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
                   DO ICENT = 1, NUCIND
-c                 NAME =  NAMEX(3*ICENT)(1:4)
                      WRITE (LUPRI,'(2X,A,3X," : ",3(A1,2X,A,F15.10))')
      &                  NAMEX(3*ICENT)(1:4), '1' , 'x' , CORD(1,ICENT),
      &                  '2' , 'y' , CORD(2,ICENT),
@@ -92,20 +88,15 @@ c                 NAME =  NAMEX(3*ICENT)(1:4)
                   GAUCHANG =.TRUE.
                   ICHANG = ICHANG + 1
                   GOTO 100
-C   SET PRINT LEVEL
+C              SET PRINT LEVEL for LRESC-SHIELDING
  2             CONTINUE
                   READ (LUCMD,*) JIMPRT
                   ICHANG = ICHANG + 1
                   GOTO 100
-C   SET WHICH NUC TO DO LRESC
+C              TO BE DEVELOPED. It's defined under *LR-SHI
  3             CONTINUE
-
-cx                write(lupri,*)'@LRINP  antes de leer'
                   READ (LUCMD,*) LRATOM
                   ICHANG = ICHANG + 1
-cx                write(lupri,*)'LRINP  despues de leer', LRATOM
-cx                write(lupri,*)'Your selection is atom #:',LRATOM,
-cx     $          'named : ', NAMN(LRATOM), 'on Molecule.mol file'
                   IF (LRATOM.GT.NATOMS)THEN
                      write(lupri,*) 'Input Error on LRSCINP'
                      write(lupri,*) 'Your selection exceeds total ',
@@ -118,7 +109,7 @@ cx     $          'named : ', NAMN(LRATOM), 'on Molecule.mol file'
                   PRTALL1 = .TRUE.
                   GOTO 100
  5             CONTINUE
-c                  do algo 
+c                 Free option
                   GOTO 100
  6             CONTINUE
                   SIGMAP1S = .TRUE.
@@ -173,8 +164,6 @@ c                  do algo
             END IF
          END IF
  300  CONTINUE
-c jim-dbg ICHANG > 0 cambios en default variables
-c jim-dbg ICHANG < 0 no cambios
 
 
       RETURN
@@ -240,10 +229,7 @@ C
       CALL DZERO (QBFREQ,NFMAX)
       CALL DZERO (QCFREQ,NFMAX)
 C
-C  Init Result Matrices
-C jim 4.0 : anddy aca ver que matrices encesita gesc.
-
-!LRESC corrections to dia and para terms of shielding
+!     LRESC corrections
       LRDNR  = D0
       LRFCAV = D0
       LRDIAK = D0
@@ -256,13 +242,10 @@ C jim 4.0 : anddy aca ver que matrices encesita gesc.
       LRPNR  = D0
       LROZK  = D0
       LRPSOK = D0
-      LRPSKI = D0  ! this is just for debugging
       LRFCZK = D0
       LRFCDE = D0
       LRSDK = D0
-c      LRSDK2 = D0
       LRSDD = D0
-c      LRSDD2 = D0
       LRFCBS = D0
       LRSDBS = D0
 
@@ -397,22 +380,6 @@ c        Run Linear Responses
          LUPRI  = 2
       END IF
 C --------------------------------------------------
-C NUEVOOOOO 1/r3
-c      KFREE  = 1
-c      LFREE  = LWORK
-
-c      CALL MEMGET('REAL',KCMO  ,NCMOT ,WORK ,KFREE ,LFREE)
-c      CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
-
-c      IF (.NOT.FOUND)
-c     & CALL QUIT('***Error AVELRSC: CMO is not in SIRIFC***')
-
-
-c         WRITE(lupri,*)' CMOS : '
-c         CALL OUTPUT(WORK(KCMO),1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
-c         WRITE(lupri,*) '   '
-c      call construct_r3(WORK(KCMO),PRT)
-C --------------------------------------------------
       DO I = 1, size(LRATOMS)
       LRATOM = LRATOMS(I)
 
@@ -466,8 +433,6 @@ C     First Order TRIPLET
          CALL GET_LR('SDD ',.TRUE.) !   SD   | dd/d d
          CALL GET_LR('FCBS',.TRUE.) !   FC   | SOMF_ij
          CALL GET_LR('SDBS',.TRUE.) !   SD   | SOMF
-c         CALL GET_LR('SDK2',.TRUE.)
-c         CALL GET_LR('SDD2',.TRUE.)
       END IF
 
 c     Paramagnetic corrections to Shielding:
@@ -528,9 +493,7 @@ C     Add constants and print all in ppm's
          LRFCZK = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK
          LRFCDE = calfa*calfa*calfa*calfa*1.0D+6* CFCDE*LRFCDE
          LRSDK = calfa*calfa*calfa*calfa*1.0D+6* CSDK*LRSDK
-c         LRSDK2 = calfa*calfa*calfa*calfa*1.0D+6* CSDK2*LRSDK2
          LRSDD = calfa*calfa*calfa*calfa*1.0D+6* CSDD*LRSDD
-c         LRSDD2 = calfa*calfa*calfa*calfa*1.0D+6* CSDD2*LRSDD2
          LRFCBS = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS
          LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
          LROZK  = calfa*calfa*calfa*calfa*1.0D+6* COZK*LROZK
