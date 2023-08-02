@@ -83,9 +83,11 @@ c     For sublist of atoms (not implemented yet) this should be modified
               WRITE(LUPRI,'(4X,A)') '-  All Atoms selected'
       END IF
 
-      WRITE(LUPRI,'(/,4X,A)')'-  Remember : '
-      WRITE(LUPRI,'(7X,A)')'GAUGEO must be placed at desired '//
-     &  'nucleus.'
+      IF (.NOT.LRATOM_changed) THEN
+         WRITE(LUPRI,'(/,4X,A)')'-  Remember : '
+         WRITE(LUPRI,'(7X,A)')'GAUGEO must be placed at desired '//
+     &   'nucleus.'
+      END IF
       IF (.NOT. PRTALL1) THEN
          WRITE(LUPRI,'(7X,A)')'For printing LRESC corrections,'//
      &   ' add .PRTALL in your input file under *LROPTS'
