@@ -275,7 +275,7 @@ calculations.
 
 Linear Response Elimination of Small Component scheme (LRESC) provides the calculation
 of first and second order relativistic corrections to nuclear shielding constants. 
-This corrections are invoked through the keyword \Key{LRESC} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions are on this papers. 
+This corrections are invoked through the keyword \Key{RELSHI} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions can be found on
 
 \begin{center}
 \fbox{
@@ -295,72 +295,75 @@ This corrections are invoked through the keyword \Key{LRESC} on the \Sec{*PROPER
 }}
 \end{center}
 
-LRESC module computes all first and second order (singlet and triplet) corrections to nuclear magnetic shielding constant of a specific nucleus in a molecule. 
-Third order corrections are not included in the present version of the code, anyway they can be computed via \Sec{*RESPONSE} module (see \Sec{Quadratic Response}, \ref{subsec:quadrsp}). Namely spin orbit correction to shielding constants and paramagnetic third order scalar terms (Darwin and Massvelo). A complete input file for the calculation within LRESC corrections to shielding constant is thus :
+LRESC module computes all first, second and third order (singlet and triplet) corrections to nuclear magnetic shielding constant of a specific nucleus in a molecule. An input example file for the calculation within LRESC corrections to shielding constant is thus:
+
 
 \begin{verbatim}
 **DALTON INPUT
 .RUN PROPERTIES
 **INTEGRLAS 
-.LR-SHI  ! mandatory, to have all necessary integrals computed to use in LRESC module.
+.LR-SHI
+*LR-SHI
+ ATOM
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
-.LR-SHI
+.RELSHI
 **END OF DALTON INPUT
 \end{verbatim}
-
-The integrals computed under \Key{LRINTS} are described in INTEGRALS chapter Section \ref{sec:herinp}
-
-There are a few keywords to get more control over the output and the amount of corrections to be calculated. A detailed physical description on each correction can be found in Ref.~\cite{melomaldojcp12}. Regarding basis sets convergence, benchmark calculations where presented on Ref.~\cite{melomaldojcp12},~\cite{melomaldotca11},~\cite{melojcp03} . The complete list of control keywords are:
-
+where \textit{ATOM} should be replaced for the atom number under study. In the current implementation the gauge origin is placed in its position, as recommended. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The complete list of control keywords for \Sec{LR-SHI} is:
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
-\item[\Key{PRINT}] Controls the print level, for debugging purpose.
-\item[\Key{SELECT}] Select the atom to which LRESC corrections will be calculated. Default is 1, first atom in input list (.mol file).
-\item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. If not, only the total Paramagnetic and Diamagnetic corrections are printed. Depending on whether you asked for all or just some of LRESC corrections (see next keywords).
-\item[\Key{PARA1S}] Only Paramagnetic Singlet First order corrections are calculated 
-\item[\Key{PARA1T}] Only Paramagnetic Triplet First order corrections are calculated 
-\item[\Key{PARA3S}] (not implemented yet) Only Paramagnetic Singlet Third order corrections are calculated. 
-\item[\Key{PARA3T}] (not implemented yet) Only Paramagnetic Triplet Third order corrections are calculated. 
-\item[\Key{DIAM0S}] Only Diamagnetic Singlet Zeroth order corrections are calculated
-\item[\Key{DIAM1S}] Only Diamagnetic Singlet First order corrections are calculated 
+\item[\Key{LRATOM}] Select the atom under study. If not defined, shielding over all nuclei will be calculated, with the gauge origin fixed at the same position, by default at the mass-center (not recommended for production calculations).
+\item[\Key{LRGAUGEO}] Define the gauge origin coordinates for the LRESC-shielding module (for debugging purposes).
+\item[\Key{LRCMG}] Define the gauge origin for the LRESC-shielding module at the mass-center (for debugging purposes).
+\end{list}
+
+There are a few keywords to get more control over the calculation and the output. Under the \Sec{**PROPERTIES} section there is a list of options available by calling to \Sec{LROPTS}:
+\begin{list}{}{}
+\item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. By default, they are all calculated but not printed in detail.
+\item[\Key{ANISO}] Off-diagonal elements will be printed.
+\item[\Key{PARANR}] Activate paramagnetic non-relativistic calculations. Deactivate full corrections calculation.
+\item[\Key{DIANR}] Activate diamagnetic non-relativistic calculations. Deactivate full corrections calculation.
+\item[\Key{PARA1S}] Activate Paramagnetic Singlet First order corrections. Deactivate full corrections calculation.
+\item[\Key{PARA1T}] Activate Paramagnetic Triplet First order order corrections. Deactivate full corrections calculation.
+\item[\Key{PARA3S}] Activate Paramagnetic Singlet Third order order order corrections. Deactivate full corrections calculation.
+\item[\Key{PARA3T}] Activate Paramagnetic Triplet Third order order order corrections. Deactivate full corrections calculation.
+\item[\Key{DIAM0S}] Activate Diamagnetic Singlet Zeroth order order order corrections. Deactivate full corrections calculation.
+\item[\Key{DIAM1S}] Activate Diamagnetic Singlet First order order order corrections. Deactivate full corrections calculation.
+\item[\Key{PRINT}] Controls the print level, for debugging purposes.
+\item[\Key{SELECT}] Deprecated.
 \end{list}
 
 
-Default Values, and some tips for better running:
 
+A detailed physical description on each correction can be found in Ref.~\cite{melomaldojcp12}. Regarding basis sets convergence, benchmark calculations were presented on Refs.~\cite{melojcp03}, ~\cite{melomaldojcp12},~\cite{melomaldotca11}.
+
+There are some important issues to keep in mind:
 \begin{center}
 \begin{itemize}{}{}
-\item First Atom on input list is selected, unless specified with \Key{SELECT}. 
-\item Center of Mass gauge origin for atomic integrals. As mentioned, \Key{GAUGEO} on 
-\Sec{*INTEGRALS} must be placed in the position of the selected nucleus. Default value is the center of mass.
-\item All LRESC terms will be calculated, unless some (or more) of them are asked for : PARA1S, PARA1T, DIAM0S and/or DIAM1S. See example below.
-\item Uncontracted basis set is recommended. 
-\item No symmetry for molecule specification. 
-\item Hartree-Fock and DFT schemes supported for the ground state Wave Function.
+\item Uncontracted basis set is recommended.
+\item Symmetry is not yet implemented.
+\item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
+\item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA3S, PARA3T, DIAM0S and DIAM1S described above).
 \end{itemize}
 \end{center}
 
+An input example file for the shielding calculation of the first molecule atom printing each LRESC correction and off-diagonal shielding tensor elements is thus:
 
 \begin{verbatim}
-(...)
-*INTEGRALS
+**DALTON INPUT
+.RUN PROPERTIES
+**INTEGRLAS
 .LR-SHI
-.GAUGEO 
-a b c        ! a b c atomic cartesian coordinates of selected nucleus (in a.u.)
-(...)
+*LR-SHI
+ 1
+**WAVE FUNCTIONS
+.HF
 **PROPERTIES
-.LR-SHI
+.RELSHI
 *LROPTS
-.PRTALL      ! detailed output on individual corrections
-.PRINT
-JIMPRT       ! reads one integer , for debugging
-.SELECT
-LRATOM       ! reads one integer corresponding to the order of selected nucleus list on input file 
-.DIAM0S      ! calculation of diamagnetic  zeroth order terms
-.DIAM1S      ! calculation of diamagnetic  first order terms
-.PARA1S      ! calculation of paramagnetic first(singlet) order terms
-.PARA1T      ! calculation of paramagnetic first(triplet) order terms
+.PRTALL
+.ANISO
 **END OF DALTON INPUT
 \end{verbatim}
 

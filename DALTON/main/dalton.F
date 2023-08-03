@@ -270,7 +270,7 @@ C
      *'Celestino Angeli,','University of Ferrara,','Italy',
      &  '(NEVPT2)',
      *'Juan J. Aucar,','Northeast National University,','Argentina',
-     & '(LRESC, Relativistic Effects on EFG)',
+     & '(LRESC, Relativistic Effects on NMR Shieldings and EFG)',
      *'Keld L. Bak,','UNI-C,','Denmark',
      &  '(AOSOPPA, non-adiabatic coupling, magnetic properties)',
      *'Vebjoern Bakken,','University of Oslo,','Norway',

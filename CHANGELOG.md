@@ -15,6 +15,7 @@
   - Laplacian of xx,yy and zz Electric Field Gradient components
 - LRESC (Juanjo Aucar)
   - Implementation for the Electric Field Gradient at first order in 1/c2
+  - New implementation for the LRESC-SHIELDING module. Includes anisotropy parameters and paramagnetic third order corrections.
 - The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
 - Print two effective numbers of unpaired electrons in final wave function output (H. J. Aa. Jensen)
   - 1) sum(i)  n\_i (2 - n\_i)
