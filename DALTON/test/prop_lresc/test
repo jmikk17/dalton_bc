@@ -2,7 +2,7 @@
 #    prop_lresc
 #    -------------
 #    Molecule:         FH
-#    Wave Function:    HF
+#    Wave Function:    Hartree Fock
 #    Test Purpose:     LRESC correction to Fluorine Shielding constant
 
 import os
@@ -13,34 +13,59 @@ from runtest_dalton import Filter, TestRun
 
 test = TestRun(__file__, sys.argv)
 
-f = Filter()
+simple = Filter()
 
-f.add(from_string = 'Atoms and basis sets',
+simple.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
 
-f.add(from_string = 'Cartesian Coordinates',
+simple.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-#f.add(string = 'LRESC Corrections for Shielding',
-#      rel_tolerance = 1.0e-7)
-f.add(string = 'Selected Atom ',
+simple.add(string = 'Selected Atom ',
       rel_tolerance = 1.0e-7)
-f.add(string = 'Atom coordinates :',
+      
+simple.add(string = 'Atom coordinates :',
       rel_tolerance = 1.0e-7)
 
-f.add(from_string = '   Paramagnetic Corrections',
-      num_lines = 22,
-      abs_tolerance = 1.0e-4)
+simple.add(from_string = 'Total Non-relativistic Contributions for F',
+      num_lines = 26,
+      abs_tolerance = 1.0e-3)
 
-f.add(from_string = '   Diamagnetic Corrections',
-      num_lines = 21,
+
+detailed = Filter()
+
+detailed.add(from_string = 'Atoms and basis sets',
+      num_lines = 15,
+      rel_tolerance = 1.0e-2)
+
+detailed.add(from_string = 'Cartesian Coordinates',
+      num_lines = 7,
       rel_tolerance = 1.0e-8)
 
+detailed.add(string = 'Selected Atom ',
+      rel_tolerance = 1.0e-7)
+      
+detailed.add(string = 'Atom coordinates :',
+      rel_tolerance = 1.0e-7)
+
+detailed.add(from_string = 'Paramagnetic Corrections for F',
+      num_lines = 55,
+      abs_tolerance = 1.0e-3)
+      
+detailed.add(from_string = 'Diamagnetic Corrections for F',
+      num_lines = 32,
+      abs_tolerance = 1.0e-3)
+      
+detailed.add(from_string = 'Total Non-relativistic Contributions for F',
+      num_lines = 43,
+      abs_tolerance = 1.0e-3)
 
 
 
-test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': f})
+
+test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': simple})
+test.run(['prop_lresc_detailed.dal'], ['HF_intgrl.mol'], f={'out': detailed})
 
 sys.exit(test.return_code)

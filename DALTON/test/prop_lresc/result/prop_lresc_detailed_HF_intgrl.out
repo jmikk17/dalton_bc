@@ -157,7 +157,7 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Thu Aug  3 16:58:55 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:56 2023
      Host name              : compute-22                              
 
  * Work memory size             :   640000000 =  4.768 gigabytes.
@@ -215,6 +215,9 @@ Compilation information
 .HF
 **PROPERTIES
 .RELSHI
+*LROPTS
+.PRTALL
+.ANISO
 *END OF
 
 
@@ -456,8 +459,8 @@ FINISH
   Time used in PSOKE      is       0.12 seconds
   Time used in DNSKE      is       0.18 seconds
   Time used in PSO-OZ     is       0.25 seconds
-  Total CPU  time used in HERMIT:   1.06 seconds
-  Total wall time used in HERMIT:   1.79 seconds
+  Total CPU  time used in HERMIT:   1.05 seconds
+  Total wall time used in HERMIT:   1.68 seconds
 
 
                         .----------------------------------.
@@ -490,7 +493,7 @@ FINISH
  **********************************************************************
 
  
-     Date and time (Linux)  : Thu Aug  3 16:58:57 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:58 2023
      Host name              : compute-22                              
 
  Title lines from ".mol" input file:
@@ -550,56 +553,56 @@ FINISH
 
  Iter      Total energy        Error norm    Delta(E)  DIIS dim.
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.11D-01  1.22D-01
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.09D-01  1.18D-01
 @  1    -99.9489276715        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  8.20D-02  9.10D-02
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  8.66D-02  9.50D-02
 @  2    -100.058423295        3.71217D-01   -1.09D-01    2
       Virial theorem: -V/T =      2.004189
 @    MULPOP   F      -0.28; H       0.28; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  8.04D-02  8.90D-02
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  8.63D-02  9.50D-02
 @  3    -100.063464762        1.37467D-01   -5.04D-03    3
       Virial theorem: -V/T =      1.998449
 @    MULPOP   F      -0.28; H       0.28; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  8.21D-02  9.30D-02
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  8.69D-02  9.60D-02
 @  4    -100.064194481        4.83612D-02   -7.30D-04    4
       Virial theorem: -V/T =      2.001166
 @    MULPOP   F      -0.27; H       0.27; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  9.30D-02  1.03D-01
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  8.77D-02  9.70D-02
 @  5    -100.064324043        8.48380D-03   -1.30D-04    5
       Virial theorem: -V/T =      2.000456
 @    MULPOP   F      -0.27; H       0.27; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  8.59D-02  9.40D-02
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  8.61D-02  9.50D-02
 @  6    -100.064333405        1.87828D-03   -9.36D-06    6
       Virial theorem: -V/T =      2.000502
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  9.10D-02  1.02D-01
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  8.62D-02  9.50D-02
 @  7    -100.064333863        3.29465D-04   -4.58D-07    7
       Virial theorem: -V/T =      2.000506
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  8.14D-02  9.10D-02
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  8.51D-02  9.50D-02
 @  8    -100.064333875        5.24278D-05   -1.23D-08    8
       Virial theorem: -V/T =      2.000508
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  7.99D-02  8.80D-02
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  8.55D-02  9.50D-02
 @  9    -100.064333876        5.36674D-06   -2.43D-10    8
 
 @ *** DIIS converged in   9 iterations !
 @     Converged SCF energy, gradient:   -100.064333875595    5.37D-06
-    - total time used in SIRFCK :              0.79 seconds
+    - total time used in SIRFCK :              0.80 seconds
 
 
  *** SCF orbital energy analysis ***
@@ -647,7 +650,7 @@ FINISH
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.887       1.273
+ CPU and wall time for SCF :       0.901       1.263
 
 
                        .-----------------------------------.
@@ -666,7 +669,7 @@ FINISH
 @    Final gradient norm:           0.000005366736
 
  
-     Date and time (Linux)  : Thu Aug  3 16:58:59 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:59 2023
      Host name              : compute-22                              
 
 File label for MO orbitals:   3Aug23   FOCKDIIS
@@ -795,11 +798,11 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   0.95 seconds
-  Total wall time used in SIRIUS :   1.44 seconds
+  Total CPU  time used in SIRIUS :   0.96 seconds
+  Total wall time used in SIRIUS :   1.40 seconds
 
  
-     Date and time (Linux)  : Thu Aug  3 16:58:59 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:59 2023
      Host name              : compute-22                              
 
 
@@ -842,7 +845,7 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Thu Aug  3 16:58:59 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:59 2023
      Host name              : compute-22                              
 
 
@@ -852,7 +855,7 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Thu Aug  3 16:58:59 2023
+     Date and time (Linux)  : Thu Aug  3 17:04:59 2023
      Host name              : compute-22                              
 
 
@@ -959,17 +962,110 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
  
     -  Selected Atom    : # 1: F   
     -  Atom coordinates :    0.0000    0.0000    0.0000
-       For printing LRESC corrections, add .PRTALL in your input file under *LROPTS
   
+
+
+                       Paramagnetic Corrections for F    :
+                       -----------------------------------
+
+
+       Detailed info : [.PARA1S]
+        ---------------            xx            yy             zz          iso
+         L-Kin   :               0.30318       0.30318       0.28595      0.29744 [ppm]
+         Pso-Kin :               0.06009       0.06009      -0.00000      0.04006 [ppm]
+        ---------------            xy            xz             yz
+         L-Kin   :              -0.00000       0.00000      -0.00000              [ppm]
+         Pso-Kin :              -0.00000       0.00000      -0.00000              [ppm]
+
+       Detailed info : [.PARA1T]
+        ---------------            xx            yy             zz          iso
+         Fc-Kin  :              13.46359      13.46359      13.46359     13.46359 [ppm]
+         Fc-Der  :              -1.49772      -1.49772      -1.49243     -1.49595 [ppm]
+         Sd-Kin  :               0.00110       0.00110      -0.00221     -0.00000 [ppm]
+         Sd-Der  :               0.18243       0.18243       0.18158      0.18215 [ppm]
+         Fc-Bso  :              -3.19837      -3.19837      -3.22616     -3.20763 [ppm]
+         Sd-Bso  :               0.27447       0.27447       0.27934      0.27609 [ppm]
+        ---------------            xy            xz             yz
+         Fc-Kin  :               0.00000       0.00000       0.00000              [ppm]
+         Fc-Der  :               0.00000      -0.00000       0.00000              [ppm]
+         Sd-Kin  :              -0.00000      -0.00000       0.00000              [ppm]
+         Sd-Der  :              -0.00000       0.00000      -0.00000              [ppm]
+         Fc-Bso  :              -0.00000       0.00000      -0.00000              [ppm]
+         Sd-Bso  :              -0.00000       0.00000      -0.00000              [ppm]
+
+       Detailed info : [.PARA3S]
+        ---------------            xx            yy             zz          iso
+         PSO-L-Mv:              -1.78047      -1.78047       0.00000     -1.18698 [ppm]
+         PSO-L-Dw:               0.87315       0.87315       0.00000      0.58210 [ppm]
+        ---------------            xy            xz             yz
+         PSO-L-Mv:               0.00000       0.00000       0.00000              [ppm]
+         PSO-L-Dw:               0.00000       0.00000       0.00000              [ppm]
+
+       Detailed info : [.PARA3T]
+        ---------------            xx            yy             zz          iso
+         FC-L-So :               0.63026       0.63026       0.00000      0.42017 [ppm]
+         SD-L-So :              -0.17224      -0.17224       0.80604      0.15385 [ppm]
+        ---------------            xy            xz             yz
+         FC-L-So :               0.00000       0.00000       0.00000              [ppm]
+         SD-L-So :               0.00000       0.00000       0.00000              [ppm]
+
+       ---------------             xx            yy             zz          iso
+    2nd Order Singlets:          0.36327       0.36327       0.28595      0.33750 [ppm]
+    2nd Order Triplets:          9.22550       9.22550       9.20371      9.21824 [ppm]
+    3nd Order Singlets:         -0.90733      -0.90733       0.00000     -0.60488 [ppm]
+    3nd Order Triplets:          0.45802       0.45802       0.80604      0.57402 [ppm]
+       ---------------             xy            xz             yz
+    2nd Order Singlets:         -0.00000       0.00000      -0.00000              [ppm]
+    2nd Order Triplets:         -0.00000      -0.00000       0.00000              [ppm]
+    3nd Order Singlets:          0.00000       0.00000       0.00000              [ppm]
+    3nd Order Triplets:          0.00000       0.00000       0.00000              [ppm]
+ 
+
+
+                        Diamagnetic Corrections for F    :
+                       -----------------------------------
+
+
+       Detailed info : [.DIAM0S]
+        ---------------            xx            yy             zz          iso
+         FC      :              -4.64831      -4.64831      -4.64831     -4.64831 [ppm]
+         AngPso  :              -0.03515      -0.03515      -0.03980     -0.03670 [ppm]
+         DiaKin  :              -2.03844      -2.03844      -2.04017     -2.03902 [ppm]
+         SD      :              -0.00086      -0.00086       0.00171     -0.00000 [ppm]
+        ---------------            xy            xz             yz
+         FC      :               0.00000       0.00000       0.00000              [ppm]
+         AngPso  :               0.00000       0.00000      -0.00000              [ppm]
+         DiaKin  :               0.00000       0.00000      -0.00000              [ppm]
+         SD      :              -0.00000      -0.00000       0.00000              [ppm]
+
+       Detailed info : [.DIAM1S]
+        ---------------            xx            yy             zz          iso
+         DiaMv   :               3.46971       3.46971       3.49023      3.47655 [ppm]
+         DiaDw   :              -2.05500      -2.05500      -2.06577     -2.05859 [ppm]
+        ---------------            xy            xz             yz
+         DiaMv   :              -0.00000      -0.00000       0.00000              [ppm]
+         DiaDw   :               0.00000       0.00000      -0.00000              [ppm]
+
+       ---------------             xx            yy             zz          iso
+    1st Order Singlets:         -6.72276      -6.72276      -6.72656     -6.72403 [ppm]
+    2nd Order Singlets:          1.41471       1.41471       1.42446      1.41796 [ppm]
+       ---------------             xy            xz             yz
+    1st Order Singlets:          0.00000       0.00000      -0.00000              [ppm]
+    2nd Order Singlets:         -0.00000      -0.00000       0.00000              [ppm]
 
 
                  Total Non-relativistic Contributions for F    :
                  -----------------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :           -102.03165    -102.03165      -0.00000    -68.02110                           [ppm]
+     Paramagnetic :           -102.03165    -102.03165       0.00000    -68.02110                           [ppm]
      Diamagnetic  :            482.47766     482.47766     481.58902    482.18145                           [ppm]
      Total non-rel             380.44601     380.44601     481.58902    414.16035    101.14303      1.00000 [ppm]
+
+                                   xy            xz             yz
+     Paramagnetic :              0.00002      -0.00000       0.00000                                        [ppm]
+     Diamagnetic  :             -0.00000       0.00000       0.00000                                        [ppm]
+     Total non-rel               0.00002      -0.00000       0.00000                                        [ppm]
 
 
                     Total Relativistic Corrections for F    :
@@ -980,6 +1076,11 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
      Diamagnetic  :             -5.30805      -5.30805      -5.30210     -5.30607                           [ppm]
      Total LRESC  :              3.83142       3.83142       4.99359      4.21881                           [ppm]
 
+                                   xy            xz             yz
+     Paramagnetic :             -0.00000       0.00000      -0.00000                                        [ppm]
+     Diamagnetic  :              0.00000      -0.00000       0.00000                                        [ppm]
+     Total LRESC  :             -0.00000       0.00000      -0.00000                                        [ppm]
+
 
                        Total Relativistic Values for F    :
                        ------------------------------------
@@ -988,6 +1089,11 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
      Paramagnetic :            -92.89218     -92.89218      10.29569    -58.49622                           [ppm]
      Diamagnetic  :            477.16961     477.16961     476.28692    476.87538                           [ppm]
      Total LRESC  :            384.27743     384.27743     486.58261    418.37916    102.30520      1.00000 [ppm]
+
+                                   xy            xz             yz
+     Paramagnetic :              0.00002      -0.00000       0.00000                                        [ppm]
+     Diamagnetic  :             -0.00000       0.00000       0.00000                                        [ppm]
+     Total LRESC  :              0.00002      -0.00000       0.00000                                        [ppm]
  
 
 
@@ -995,20 +1101,20 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:48     100 %
+ TOTAL      00:00:49     100 %
 
 
-  Total CPU  time used in ABACUS:  48.25 seconds
-  Total wall time used in ABACUS:  1 minute   1 second 
+  Total CPU  time used in ABACUS:  48.67 seconds
+  Total wall time used in ABACUS:  1 minute   2 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  50.29 seconds
+  Total CPU  time used in DALTON:  50.72 seconds
   Total wall time used in DALTON:  1 minute   5 seconds
 
  
-     Date and time (Linux)  : Thu Aug  3 17:00:00 2023
+     Date and time (Linux)  : Thu Aug  3 17:06:01 2023
      Host name              : compute-22                              
