@@ -590,7 +590,7 @@ C         'FCDE' 'FCDE'
          IF (SIGMAD1S) NLRoperators = NLRoperators + 11
          IF (SIGMAP1S) NLRoperators = NLRoperators + 12
       END IF
-      IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 29
+      IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 26
 
       allocate(operadores(NLRoperators))
       el = 1
@@ -655,7 +655,7 @@ C        ---------------------------------------------------
       END IF
 
       IF (TRIPLETE) THEN
-      IF (SIGMAP1T) THEN !FCZK, FCDE, FCBS, SDK1, SDD1 and SDBS
+      IF (SIGMAP1T) THEN !FCZK, FCDE, FCBS, SDK1, SDD and SDBS
 C        ---------------------------------------------------
          operadores(el)   = 'FC '//NAMN(LRATOM)(1:2)//nuc_number !FCZK & FCBS
 C        ---------------------------------------------------
@@ -672,7 +672,7 @@ C        ---------------------------------------------------
 C        ---------------------------------------------------
          operadores(el+10) = 'KINENERG'                          !FCZK
 C        ---------------------------------------------------
-         operadores(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD1
+         operadores(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD
          operadores(el+12) = 'dd/dxdy '
          operadores(el+13) = 'dd/dxdz '
          operadores(el+14) = 'dd/dydy '
@@ -689,14 +689,14 @@ C        ---------------------------------------------------
          operadores(el+24) = 'SOMF  ZY'
          operadores(el+25) = 'SOMF  ZZ'
 C        --------------------------------------------------- !NEW SDZK &SDD1
-         operadores(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
-     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-         operadores(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
-     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-         operadores(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
-     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
+c         operadores(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
+c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
+c         operadores(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
+c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
+c         operadores(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
+c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
 C        ---------------------------------------------------
-         el = el + 29
+         el = el + 26
       END IF
       END IF
 
