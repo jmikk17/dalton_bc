@@ -974,7 +974,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
                      First Order Corrections (1st Order) [au]
                      ----------------------------------------
 
-          Atom          ΔMv             ΔDw             ΔLap            Total
+          Atom           Mv              Dw              Lap            Total
           -------------------------------------------------------------------
           F           0.01565        -0.00174        -0.00444         0.00947
           H          -0.00019        -0.00027         0.00006        -0.00040
