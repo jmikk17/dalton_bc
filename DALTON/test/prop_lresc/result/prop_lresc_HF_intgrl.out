@@ -209,7 +209,7 @@ Compilation information
 **INTEGRALS
 .LR-SHI
 *LR-SHI
-.LRATOM
+.ATOM
  1
 **WAVE FUNCTIONS
 .HF
@@ -824,12 +824,7 @@ File label for MO orbitals:   3Aug23   FOCKDIIS
       Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
-      Linear Response Elimination of Small Component (LRESC) applied to shielding. Observations :   
-          1) Uncontracted Basis set should be used 
-          2) LRESC Corrections : 
-               Diamagnetic first and second order 
-               Paramagnetic second singlet and triplet order 
-          3) GAUGEO should be placed at selected nucleus at au
+      Linear Response Elimination of Small Component (LRESC) applied to shielding.
 
  Center of mass dipole origin  :    0.000000    0.000000    0.087285
 

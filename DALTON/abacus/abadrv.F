@@ -1885,19 +1885,19 @@ c            CALL QUIT('Not supported input in ABAINP')
 
          WRITE (LUPRI,'(5X,A)')
      &      ' Linear Response Elimination of Small Component (LRESC)'//
-     &      ' applied to shielding. Observations :   ' ,
-     &      '     1) Uncontracted Basis set should be used ',
-     &      '     2) LRESC Corrections : ',
-     &      '          Diamagnetic first and second order ',
-     &      '          Paramagnetic second singlet and triplet order ',
-     &      '     3) GAUGEO should be placed at selected nucleus at au'
+     &      ' applied to shielding.'! Observations :   ' ,
+!     &      '     1) Uncontracted Basis set should be used ',
+!     &      '     2) LRESC Corrections : ',
+!     &      '          Diamagnetic first and second order ',
+!     &      '          Paramagnetic second singlet and triplet order ',
+!     &      '     3) GAUGEO should be placed at selected nucleus at au'
       ENDIF
       
       IF (RNLRSCEFG) THEN
 
          WRITE (LUPRI,'(5X,A)')
      &      ' Linear Response Elimination of Small Component (LRESC)'//
-     &      ' applied to EFG. Observations :   ' ,
+     &      ' applied to EFG.  Observations :   ' ,
      &      '     1) Uncontracted Basis set should be used ',
      &      '     2) First order LRESC Corrections'
       ENDIF
