@@ -24,7 +24,8 @@ C     Author:
 C           Juan J. Aucar         April 2020              
 C...
 C...  This subroutine was written by Juan Ignacio Melo using
-C...  the subroutine ABACTOCD  as a model (2012)
+C...  the abacus/abactocd.F file  as a model (2012)
+c...  which at the same time was taken from the LNRABA subroutine
 C
 #include "implicit.h"
 #include "dummy.h"
@@ -193,7 +194,7 @@ C ==============================================================================
          npos1 = 3*LRATOM-2
 C
 C===============================================================================
-C  EFG CALCULATIONS : Dw, Mv
+C  EFG CALCULATIONS : Dw, Mv (c^-2 order)
 C ==============================================================================
        IF(KEY.EQ."J-Dw") THEN ! we will use dalton built in integrals
 C        -------------------------------------       
@@ -235,7 +236,121 @@ C        -------------------------
       END IF
 
 
+C===============================================================================
+C  EFG CALCULATIONS : SOSO (c^-4 order) - LL contribution
+C ==============================================================================
+       IF(KEY.EQ."JSO2") THEN ! we will use dalton built in integrals combined among them with AVG
 
+C        Look for LABELS :
+C        -------------------------------------       
+         LABEL1='E1GLRS '
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'E1GLRSS'//CHRNOS(MOD(I,10))
+            LISTA1(IJ+1)= 'E1GLRSx'//CHRNOS(MOD(I,10))
+            LISTA1(IJ+2)= 'E1GLRSy'//CHRNOS(MOD(I,10))
+            LISTA1(IJ+3)= 'E1GLRSz'//CHRNOS(MOD(I,10))
+            IJ = IJ + 4
+         END DO
+         NLAB1 = NUCIND*4
+C        Look for LABELS : Spin-Orbit Hamiltonian
+C        -------------------------       
+         LABEL2='SPNORB'
+         LISTA2(1)='E1G  SO1'
+         LISTA2(2)='X1SPNORB'
+         LISTA2(3)='Y1SPNORB'
+         LISTA2(4)='Z1SPNORB'
+         NLAB2 = 4
+      END IF
+
+C===============================================================================
+C  EFG CALCULATIONS : Mv, Dw, SO-S (c^-4 order) - SS contribution
+C ==============================================================================
+
+       IF(KEY.EQ."Mvc4") THEN ! we will use dalton built in integrals combined among them with AVG
+C        Look for LABELS : (pqp)
+C        -------------------------------------       
+         LABEL1='EFGpqp '
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'EFGpqp '//CHRNOS(MOD(I,10))
+            IJ = IJ + 1
+         END DO
+         NLAB1 = NUCIND
+C        Look for LABELS : (Mass Velocity Hamiltonian)
+C        -------------------------       
+         LABEL2='MASSVE'
+         LISTA2(1)='MASSVELO'
+         NLAB2 = 1
+      END IF
+
+       IF(KEY.EQ."Dwc4") THEN ! we will use dalton built in integrals combined among them with AVG
+C        Look for LABELS : (pqp)
+C        -------------------------------------       
+         LABEL1='EFGpqp '
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'EFGpqp '//CHRNOS(MOD(I,10))
+            IJ = IJ + 1
+         END DO
+         NLAB1 = NUCIND
+C        Look for LABELS : (Mass Velocity Hamiltonian)
+C        -------------------------       
+         LABEL2='DARWIN'
+         LISTA2(1)='DARWIN  '
+         NLAB2 = 1
+      END IF
+
+
+       IF(KEY.EQ."SOSx") THEN ! we will use pyscf imported integrals
+C        Look for LABELS : (SOSx)
+C        -------------------------------------       
+         LABEL1='newopx0'
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'newopx0'//CHRNOS(MOD(I,10))
+            IJ = IJ + 1
+         END DO
+         NLAB1 = NUCIND
+C        Look for LABELS : (X SPIN ORBIT)
+C        -------------------------       
+         LABEL2='X1SPNORB'
+         LISTA2(1)='X1SPNORB'
+         NLAB2 = 1
+      END IF
+
+       IF(KEY.EQ."SOSy") THEN ! we will use pyscf imported integrals
+C        Look for LABELS : (SOSy)
+C        -------------------------------------       
+         LABEL1='newopy0'
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'newopy0'//CHRNOS(MOD(I,10))
+            IJ = IJ + 1
+         END DO
+         NLAB1 = NUCIND
+C        Look for LABELS : (X SPIN ORBIT)
+C        -------------------------       
+         LABEL2='Y1SPNORB'
+         LISTA2(1)='Y1SPNORB'
+         NLAB2 = 1
+      END IF
+       IF(KEY.EQ."SOSz") THEN ! we will use pyscf imported integrals
+C        Look for LABELS : (SOSz)
+C        -------------------------------------       
+         LABEL1='newopz0'
+         IJ = 1
+         DO I=1,NUCIND
+            LISTA1(IJ)= 'newopz0'//CHRNOS(MOD(I,10))
+            IJ = IJ + 1
+         END DO
+         NLAB1 = NUCIND
+C        Look for LABELS : (X SPIN ORBIT)
+C        -------------------------       
+         LABEL2='Z1SPNORB'
+         LISTA2(1)='Z1SPNORB'
+         NLAB2 = 1
+      END IF
 C
 C  Print Section for LABELS on LISTAS
 C  ----------------------------------------------
@@ -264,6 +379,17 @@ C
       EXECLC = .FALSE.      ! false for linear response equations
       IF(KEY.EQ."J-Dw".OR.KEY.EQ."J-Mv") THEN
          NABATY = 1      ! = 1 for real operators .. -1 for imm. op.
+      END IF
+      IF(KEY.EQ."Mvc4".OR.KEY.EQ."Dwc4") THEN
+         NABATY = 1      ! = 1 for real operators .. -1 for imm. op.
+      END IF
+      IF(KEY.EQ."SOSx".OR.KEY.EQ."SOSy".OR.KEY.EQ."SOSz") THEN
+         NABATY = -1      ! = 1 for real operators .. -1 for imm. op.
+         TRIPLE = .TRUE.
+      END IF
+      IF(KEY.EQ."JSO2") THEN
+         NABATY = 1      ! = 1 for real operators .. -1 for imm. op.
+         TRIPLE = .TRUE.
       END IF
 
       NABAOP = 1      ! number of right hand sides. dejarlo asi . solo 1
@@ -319,6 +445,15 @@ C
             ANTSYM = 0                   !juan Aucar ANTSYM = -1 if triplet (chequear) !!
 C           ANTSYM : matrix symmetry of PRPMO matrix
 C          (1: symmetric, -1: antisymmetric, 0: unknown)
+            IF(KEY.EQ."JSO2") THEN
+            TRPLET = .TRUE.
+            ANTSYM = 0
+            END IF
+            IF(KEY.EQ."SOSx".OR.KEY.EQ."SOSy".OR.KEY.EQ."SOSz") THEN
+            TRPLET = .TRUE.
+            ANTSYM = 0
+            END IF
+
 
 !
 ! Gradient Property Vector
@@ -360,6 +495,12 @@ C
 cx             IF (KSYM.EQ.ISYM) THEN
                KSYMOP = ISYM
                TRPLET = .FALSE.
+               IF(KEY.EQ."JSO2") THEN
+               TRPLET = .TRUE.
+               END IF
+               IF(KEY.EQ."SOSx".OR.KEY.EQ."SOSy".OR.KEY.EQ."SOSz") THEN
+               TRPLET = .TRUE.
+               END IF
 C
 C                 Find right hand side for left operator
 C                 ========================================
@@ -397,14 +538,54 @@ C
 C         <<Mv,ZZEFGabc>>
 C       ------------------
       IF(KEY.EQ."J-Mv") THEN
-            EFGC2(KJ,1)=CEFGMV*SNDPRP
+            EFGC2(KJ,1)=-CEFGMV*SNDPRP
       ENDIF
 
 C         <<Dw,ZZEFGabc>>
 C       ------------------
       IF(KEY.EQ."J-Dw") THEN
-            EFGC2(KJ,2)=CEFGDW*SNDPRP
+            EFGC2(KJ,2)=-CEFGDW*SNDPRP
       ENDIF
+      
+C         <<TESTEANDO>>
+C       ------------------
+      IF(KEY.EQ."JSO2") THEN
+         write(LUPRI,*) "RESPUESTA modulo LRESC ",LABEL1," ",LABEL2,
+     &   SNDPRP
+c         write(*,*) "JUAN-NUEVA RESPUESTA con C ",LABEL1," ",LABEL2,
+c     &   SNDPRP*C4EFGSO*calfa*calfa
+      END IF
+
+
+C        cte <<Mv,pqp>>
+C       ------------------
+      IF(KEY.EQ."Mvc4") THEN
+            EFGC4(KJ,2)=-SNDPRP*C4EFGMvpqp*calfa*calfa
+      END IF
+
+C        cte <<Dw,pqp>>
+C       ------------------
+      IF(KEY.EQ."Dwc4") THEN
+            EFGC4(KJ,3)=-SNDPRP*C4EFGDwpqp*calfa*calfa
+      END IF
+      
+C        cte <<SO-S_x,X1SPNORB>>
+C       ------------------
+      IF(KEY.EQ."SOSx") THEN
+            EFGC4(KJ,4)=-C4EFGSO*SNDPRP*calfa*calfa
+      END IF
+
+C        cte <<SO-S_y,Y1SPNORB>>
+C       ------------------
+      IF(KEY.EQ."SOSy") THEN
+            EFGC4(KJ,5)=-C4EFGSO*SNDPRP*calfa*calfa
+      END IF
+C        cte <<SO-S_z,Z1SPNORB>>
+C       ------------------
+      IF(KEY.EQ."SOSz") THEN
+            EFGC4(KJ,6)=-C4EFGSO*SNDPRP*calfa*calfa
+      END IF
+      
   200 CONTINUE
 cm         END IF  NFRVAL
   300 CONTINUE
