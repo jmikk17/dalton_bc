@@ -100,7 +100,7 @@ C  /* Deck reainp */
 #include "priunit.h"
 #include "maxaqn.h"
 #include "mxcent.h"
-      PARAMETER ( NTABLE = 14, D1 = 1.0D0)
+      PARAMETER ( NTABLE = 15, D1 = 1.0D0)
       LOGICAL NEWDEF, RELCAL
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 !
@@ -112,11 +112,13 @@ C  /* Deck reainp */
 #include "numder.h"
 #include "r12int.h"
 #include "qm3.h"
+#include "lrescinf.h"
+#include "cbiher.h"
 C
       DATA TABLE /'.PRINT ', '.CONTIN', '.MAXPRI', '.BIGVEC',
      *            '.ONLYOV', '.SYMTHR', '.CM FUN', '.ZCMVAL',
      *            '.WRTLIN', '.UNCONT', '.ANGSTR', '.R12AUX',
-     &            '.NOMOVE', '.NUCMOD'/
+     &            '.NOMOVE', '.NUCMOD', '.EXPONE'/
 C
 C     ... in qm3.h, for QM3:
       ONLYOV = .FALSE.
@@ -137,7 +139,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14), I
+                     GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -241,6 +243,18 @@ C Nuclear model
      &           '*** ERROR '//WORD1//': Unknown nuclear model')
                ENDIF
                GO TO 100
+   15    CONTINUE
+            LRNUC = .TRUE.
+            READ (LUCMD, *, IOSTAT=IOS) LRNUCEXP
+            WRITE(LUPRI,*) 'Nuclear gaussians will be
+     &         changed to',LRNUCEXP
+            IF (IOS.NE.0) THEN
+              WRITE(LUPRI,*) 'Error in reading LRNUCEXP!'
+              WRITE(LUPRI,*) 'LRNUCEXP:', LRNUCEXP
+              CALL QUIT('Error in reading LRNUCEXP!')
+            ENDIF
+            GO TO 100
+
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
             ELSE
@@ -832,7 +846,7 @@ C     .. NMLINE_4 indentifies input line with Angstrom or Bohr indicator. ("line
       IF (ID3 .NE. ' ' .or. ANGS ) THEN
         ANG = .TRUE.
         IF (IPREAD .GT. 0)
-     &      WRITE (LUPRI,'(/2X,A/10X,A,F11.8,A2)')
+     &      WRITE (LUPRI,'(/2X,A/10X,A,F14.11,A2)')
      &          'Coordinates are entered in Angstrom'//
      &          ' and converted to atomic units.',
      &          '- Conversion factor : 1 bohr =',XTANG,' A'
@@ -1968,6 +1982,9 @@ C     include character ASYMB(0:NSYMB)*2 with atomic symbols
 #include "pcmlog.h"
 #include "pcm.h"
 #include "qm3.h"
+#include "cbiher.h"
+#include "lrescinf.h"
+
 C
       NQ = NINT(Q)
 C
@@ -1977,6 +1994,9 @@ C
          ELSE
             GEXP = Q_EXPONENT
          ENDIF
+         IF (LRNUC) THEN
+            GEXP = LRNUCEXP
+         END IF
          IF (IPREAD.GT.0) WRITE(LUPRI,'(2X,A2,A,1P,D16.5/)') ASYMB(NQ),
      &   '  : Exponent for nuclear gaussian charge distribution : ',GEXP
       ELSE
@@ -3932,9 +3952,9 @@ C
      &           + (CORD(2,N)-CORD(2,M)*PT(IAND(ISYMAX(2,1),KB)))**2
      &           + (CORD(3,N)-CORD(3,M)*PT(IAND(ISYMAX(3,1),KB)))**2
               DIST = SQRT(DS)
-              IF (.NOT. NOATMD) THEN
-               IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
-              END IF
+c              IF (.NOT. NOATMD) THEN
+c               IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
+c              END IF
               IF (IAND(KB,ISTBNU(N)) .EQ. 0) THEN
                 IF (DIST.GT.D0) THEN
                   HKAB  = FMULT(IAND(ISTBNU(M),ISTBNU(N)))
