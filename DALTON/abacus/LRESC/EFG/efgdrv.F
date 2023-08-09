@@ -206,7 +206,7 @@ c            CALL LINEARLR_EFG('Dwc4',WORK,LWORK) ! From SS contribution
 c           Triplet responses must be calculated at the end            
 c            CALL LINEARLR_EFG('JSO2',WORK,LWORK) !wrong results...
 C           Import generated PySCF matrix to AOPROPER
-            call import_matrix(3*NUCIND+3,"shi")
+            call import_matrix(3*NUCIND+3,"efg")
             CALL LINEARLR_EFG('SOSx',WORK,LWORK)
             CALL LINEARLR_EFG('SOSy',WORK,LWORK)
             CALL LINEARLR_EFG('SOSz',WORK,LWORK)

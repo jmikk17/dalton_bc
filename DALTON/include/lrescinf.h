@@ -19,7 +19,7 @@
      &            CDIAD=1.0D0, CDIAK=1/6.0, CANGP=-0.5D0,
      &            CFCAV=-7.0/16.0, CSDAV=-1.0/4.0, CPSOOZMV=-0.5D0,
      &            CPSOOZDW=-0.5D0, COZFCSO=-0.25D0, COZSDSO=-0.25D0, 
-     &            CEFGDW=-1.0D0, CEFGMV=-1.0D0, CEFGpqp=0.25D0, 
+     &            CEFGDW=1.0D0, CEFGMV=1.0D0, CEFGpqp=0.25D0, 
      &            CEFGkin=-0.5D0, CEFGlap=1.0/8.0, C4EFGSO=0.25D0,
      &            C4EFGMvpqp=0.25D0, C4EFGDwpqp=0.25D0)
 

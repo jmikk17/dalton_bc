@@ -48,7 +48,7 @@ nro_operadores=numpy.array([3*mol_h2o.natm])
 print("naos_cart:",orbitales)
 print("naos_sph:",naos_sph)
 print("nro de operadores a grabar: ",nro_operadores)
-with open("shi.bin", "wb") as file:
+with open("efg.bin", "wb") as file:
     numpy.array(nro_operadores[0], dtype=numpy.int32).tofile(file)
     numpy.array(naos_sph, dtype=numpy.int32).tofile(file)
 
@@ -65,10 +65,10 @@ for i in range(mol_h2o.natm):
     nuevo_y=-(_get_GiZZj(mol_h2o,i,2,0, zeta=valorzeta)-_get_GiZZj(mol_h2o,i,0,2, zeta=valorzeta))
     nuevo_z=-(_get_GiZZj(mol_h2o,i,0,1, zeta=valorzeta)-_get_GiZZj(mol_h2o,i,1,0, zeta=valorzeta))
 
-    with open("shi.bin", "ab") as file:
+    with open("efg.bin", "ab") as file:
         file.write(titulos[0].encode('ascii'))
         numpy.array(nuevo_x, dtype=numpy.float64).transpose(1,0).tofile(file)
-        print("grabando en shi.bin el operador ", titulos[0])
+        print("grabando en efg.bin el operador ", titulos[0])
         file.write(titulos[1].encode('ascii'))
         numpy.array(nuevo_y, dtype=numpy.float64).transpose(1,0).tofile(file)
         file.write(titulos[2].encode('ascii'))
