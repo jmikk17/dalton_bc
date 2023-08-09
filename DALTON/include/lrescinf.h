@@ -9,8 +9,7 @@
 !cx         jja  : edited on February 2023 to add and modify variables for shielding
       REAL*8 calfa, CPNR, CDNR, CFCZK, CFCDE, CSDK, CSDD, CSDBS, CPSOK,
      &        CFCBS, COZK, CDIAM, CDIAD, CDIAK, CSDAV, CANGP,CFCAV, CPSOOZMV, 
-     &        CPSOOZDW, CEFGDW, CEFGMV, CEFGpqp, CEFGkin, C4EFGSO, 
-     &        C4EFGMV, C4EFGDW
+     &        CPSOOZDW, CEFGDW, CEFGMV, CEFGpqp, CEFGkin, C4EFGSO
 
       PARAMETER (calfa=1.0/137.036, CFCZK=-3.0/8.0, CFCDE=0.25D0,
      &            CSDK=-0.375D0, CSDD=1/4.D0, CPNR=-0.5D0, CDNR=1.0D0,
