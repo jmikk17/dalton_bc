@@ -87,9 +87,9 @@ c        call OUTPUT(matrix,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)! prints matrix 
       REWIND iu
       read(iu) operadores
       read(iu) naospyscf
-      write(*,*) "los naos(dal,py):",naos,naospyscf
-      write(*,*) "operadores a leer:",operadores
       if (naos.ne.naospyscf) then
+      write(*,*) "naos(dal,pyscf):",naos,naospyscf
+      write(*,*) "Operators to import from PySCF:",operadores
          CALL QUIT('naos not equal to naospyscf')
       end if
       do i=1, operadores
