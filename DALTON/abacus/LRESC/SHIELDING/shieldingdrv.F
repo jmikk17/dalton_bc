@@ -232,6 +232,12 @@ C
 !     LRESC corrections
       LRDNR  = D0
       LRFCAV = D0
+!
+      LRFCAV0 = D0
+      LRFCAV1 = D0
+      LRFCAV2 = D0
+      LRFCAV3 = D0
+!
       LRDIAK = D0
       LRANGP = D0
       LRSDAV = D0
@@ -338,6 +344,11 @@ c when the RESPONSE module is called before LRESC
      &      CALL GPCLOSE(LURSP5 ,'DELETE')
 C --------------------------------------------------
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C   TESTING NEW CORRECTIONS
+      write(lupri,*) "AUCAR - IMPORTANDO NUEVAS INTEGRALES"
+      call import_matrix(19*NUCIND,"shi")
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C --------------------------------------------------
 c     Construct LR singlet inputs and run responses (all at once)
       IF (SIGMAPNR.OR.SIGMAP1S.OR.SIGMAD1S) THEN
@@ -403,6 +414,10 @@ c      CALL HERCTL(WORK,LWORK)
          CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
          CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
       END IF
+         CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
+         CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
+         CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
+         CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
 C --------------------------------------------------
 C     Paramagnetic corrections to Shielding:
 C     Non-relativistic singlet
@@ -487,6 +502,14 @@ C     Add constants and print all in ppm's
          LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
          LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
          LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
+!
+         LRFCAV0 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV0*LRFCAV0
+         LRFCAV1 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV1*LRFCAV1
+         LRFCAV2 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV2*LRFCAV2
+         LRFCAV3 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV3*LRFCAV3
+         write(lupri,*) "JUAN-TEST:"
+         write(lupri,*) LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3
+!
 !     Paramagnetic non-relativistic value
          LRPNR = calfa*calfa*1.0D+6*CPNR*LRPNR
 !     Paramagnetic corrections

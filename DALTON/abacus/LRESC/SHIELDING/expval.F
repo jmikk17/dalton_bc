@@ -100,6 +100,7 @@ C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
          IF (KEY.EQ.'SDAV') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (SDAV)',
      &   ' correction is under calculation...'
+c         IF (KEY.EQ.'FCt1') WRITE(LUPRI,'(5X,A,A)')
       END IF
 C
 
@@ -381,6 +382,58 @@ C     ---------------------------
         END DO
       ENDIF
 
+C ---------------------------------------------------------------------
+C
+C      Look for LABELS : FCt0 (Fermy type integrals)
+C     ---------------------------
+      IF(KEY.EQ."FCt0") THEN
+         NLAB=1
+         WRITE(LISTA1(1),'(A3,A2,I3.3)') 'FC ',
+     &        NAMN(LRATOM)(1:2), LRATOM
+      ENDIF
+
+
+C      Look for LABELS : FCt1
+C     ---------------------------
+      IF(KEY.EQ."FCt1") THEN
+        NLAB=1
+        LISTA1(1)='FC1  '//nuc_number
+c        indice = 1
+c        DO I=npos1,npos1+2
+c        DO IJ = 1, 3
+c           LISTA1(indice)= 'FC1'//chrxyz(-I)//chrxyz(-IJ)//nuc_number
+c           indice = indice + 1
+c        END DO
+c        END DO
+      ENDIF
+C
+C      Look for LABELS : FCt2
+C     ---------------------------
+      IF(KEY.EQ."FCt2") THEN
+        NLAB=9
+        indice = 1
+        DO I= 1, 3 !x, y, z
+        DO IJ = 1, 3 !x, y ,z
+           LISTA1(indice)= 'FC2'//chrxyz(-I)//chrxyz(-IJ)//nuc_number
+           indice = indice + 1
+        END DO
+        END DO
+      ENDIF
+C
+C      Look for LABELS : FCt3
+C     ---------------------------
+      IF(KEY.EQ."FCt3") THEN
+        NLAB=9
+        indice = 1
+        DO I= 1, 3 !x, y, z
+        DO IJ = 1, 3 !x, y, z
+           LISTA1(indice)= 'FC3'//chrxyz(-I)//chrxyz(-IJ)//nuc_number
+           indice = indice + 1
+        END DO
+        END DO
+      ENDIF
+C
+C ---------------------------------------------------------------------
 C
 C
 C
@@ -540,6 +593,55 @@ C       ------------------
             IF(KJ.EQ.7) LRSDAV(3,1)=SNDPRP
             IF(KJ.EQ.8) LRSDAV(3,2)=SNDPRP
             IF(KJ.EQ.9) LRSDAV(3,3)=SNDPRP
+         ENDIF
+C         <Fct0> :
+C       ------------------
+         IF (KEY.EQ.'FCt0') THEN
+c            IF(KJ.EQ.1) write(lupri,*) "news:",KEY,SNDPRP*
+c     &      calfa*calfa*calfa*calfa*1.0D+6
+            LRFCAV0(1,1)=SNDPRP
+            LRFCAV0(2,2)=SNDPRP
+            LRFCAV0(3,3)=SNDPRP
+         ENDIF
+C         <Fct1> :
+C       ------------------
+         IF (KEY.EQ.'FCt1') THEN
+c            IF(KJ.EQ.1) write(lupri,*) "news:",KEY,SNDPRP*
+c     &      calfa*calfa*calfa*calfa*1.0D+6
+c            IF(KJ.EQ.9) LR(3,3)=SNDPRP
+            LRFCAV1(1,1)=SNDPRP
+            LRFCAV1(2,2)=SNDPRP
+            LRFCAV1(3,3)=SNDPRP
+         ENDIF
+C         <Fct2> :
+C       ------------------
+         IF (KEY.EQ.'FCt2') THEN
+c            IF(KJ.EQ.1) write(lupri,*) "news:",KEY,SNDPRP*
+c     &      calfa*calfa*calfa*calfa*1.0D+6
+            IF(KJ.EQ.1) LRFCAV2(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRFCAV2(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRFCAV2(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRFCAV2(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRFCAV2(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRFCAV2(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRFCAV2(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRFCAV2(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRFCAV2(3,3)=SNDPRP
+         ENDIF
+C         <Fct3> :
+C       ------------------
+         IF (KEY.EQ.'FCt3') THEN
+c            IF(KJ.EQ.1) write(lupri,*) "news:",KEY,SNDPRP*
+c     &      calfa*calfa*calfa*calfa*1.0D+6
+            IF(KJ.EQ.1) LRFCAV3(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRFCAV3(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRFCAV3(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRFCAV3(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRFCAV3(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRFCAV3(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRFCAV3(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRFCAV3(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRFCAV3(3,3)=SNDPRP
          ENDIF
   300 CONTINUE
 C
