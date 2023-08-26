@@ -24,11 +24,6 @@ C
 C     Initialize LOCINF
 C
 #include "implicit.h"
-#include "maxorb.h"
-C
-      PARAMETER (NTABLE = 10, D0 = 0.0D0, NLAB = 50)
-C 
-CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 #include "locinf.h"
 C
       CALL QENTER('LOCINI')
@@ -43,10 +38,8 @@ C
       LABOCC = .FALSE.
       LABVIR = .FALSE.
 C
-      DO I = 1, NLAB
-         TABOCL(I) = '-**--**-'
-         TABVIL(I) = '-**--**-'
-      END DO
+      TABOCL(1:NLABOC) = '-**--**-'
+      TABVIL(1:NLABVI) = '-**--**-'
 C
       CALL QEXIT('LOCINI')
 C
@@ -332,11 +325,11 @@ C
      &      ' occupied orbitals'
 C
          IF (MULLOC) WRITE (LUPRI,'(A,A)')
-     &   ' MULLOCM: ulliken population localization of',
+     &   ' MULLOCM: Mulliken population localization of',
      &   ' all occupied orbitals'
 C
          IF (FBOVIR) WRITE (LUPRI,'(/,A,A,I4,A)')
-     &      ' FBOVIR: Localization of all virtual orbital',
+     &      ' FBOVIR: Localization of all virtual orbitals',
      &      ' is calculated', NVSET, ' sets '
 C
          IF (FBSETV) WRITE (LUPRI,'(/,A,I4,A)')
