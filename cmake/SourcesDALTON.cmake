@@ -497,7 +497,6 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/gp/gpsimen.F
     DALTON/gp/gptrygve.F
     DALTON/gp/graphic.F
-    DALTON/gp/intf7790.F
     DALTON/gp/mempkg.F
     DALTON/gp/mpimacro.F
     DALTON/gp/qpack.F
