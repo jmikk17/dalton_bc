@@ -140,7 +140,7 @@ C
       SKIP   = (.NOT. ((MOLGRD .OR. MOLHES .OR. DIPDER .OR. QPGRAD) 
      &         .AND.   DOSYM(1))) .OR. NUCDEP .GE. 10
       CUT    = .FALSE.
-      NOROT1  = .FALSE.
+      NOROT1 = .FALSE.
       HESTRO = .TRUE.
       GDALL  = .FALSE.
       GDTRO  = .FALSE.
