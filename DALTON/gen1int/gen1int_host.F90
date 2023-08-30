@@ -731,6 +731,7 @@
     logical found                                     !if found required data from SIRIFC
     integer start_ao, end_ao                          !start and end addresses of AOs
     integer imo                                       !incremental recorder over MOs
+    integer use_MPI_save
 #if defined(VAR_MPI)
 #include "mpif.h"
 #include "iprtyp.h"
@@ -778,6 +779,8 @@
         call MatView(A=ao_dens(1), io_viewer=io_viewer)
       end if
       ! creates the operator of overlap integrals
+      use_MPI_save = use_MPI
+      use_MPI = .false. ! using MPI for overlap integrals does not work for get_cube
       call gen1int_host_prop_create(NON_LAO, INT_OVERLAP,      &
                                     0, 0,                      &
                                     0, 0, 0,                   &
@@ -791,6 +794,7 @@
                                     0, 0, 0, (/0/),         &
                                     io_viewer, level_print, &
                                     nary_tree_bra, nary_tree_ket, nary_tree_total)
+      use_MPI = use_MPI_save
       ! evaluates the electron density at points of cube file
       allocate(cube_values(cube_num_inc(3),cube_num_inc(2),cube_num_inc(1),1), &
                stat=ierr)
@@ -1441,6 +1445,7 @@
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
+  if (use_MPI) then
     count_mpi = 1
     ! broadcasts input arguments
     call MPI_Bcast(gto_type, count_mpi, MPI_INTEGERK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
@@ -1468,6 +1473,7 @@
     call MPI_Bcast(add_sr,     count_mpi, MPI_LOGICALK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
     call MPI_Bcast(add_so,     count_mpi, MPI_LOGICALK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
     call MPI_Bcast(add_london, count_mpi, MPI_LOGICALK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
+  endif ! if (use_MPI)
 #endif
     ! creates the operator of property integrals
     call Gen1IntAPIPropCreate(gto_type, prop_name, order_mom, &
@@ -1610,6 +1616,7 @@
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
+  if (use_MPI) then
     count_mpi = 1
     ! broadcasts information of N-ary trees
     call MPI_Bcast(max_ncent_bra, count_mpi, MPI_INTEGERK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
@@ -1635,6 +1642,7 @@
       count_mpi = num_geo_atoms
       call MPI_Bcast(idx_geo_atoms, count_mpi, MPI_INTEGERK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
     end if
+  endif ! if (use_MPI)
 #endif
     ! creates N-ary tree for geometric derivatives
     call Gen1IntAPINaryTreeCreate(max_num_cent=max_ncent_bra,  &
