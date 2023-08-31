@@ -1,6 +1,6 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2022.0-dev] (unreleased)
+## [2023.0-dev] (unreleased)
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
@@ -33,6 +33,9 @@
 - Fixed error in PE-MCSCF calculation with GSPOL
 - Fixed parallel calculation of molecular gradient with CAMB3LYP
 - Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
+
+### Changed
+- Select FCKTRA for MO transformation by default if > 255 basis functions and parallel.
 
 
 ## [2020.1] (2022-01-20)
