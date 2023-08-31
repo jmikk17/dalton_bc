@@ -136,9 +136,14 @@ C     Delete AOORDINT after transformation if ITRSIR .lt. 0
 C
       DELORD = (ITRSIR .LT. 0)
       JTRSIR = ABS(ITRSIR)
-      IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NEWTRA_USEDRC = .TRUE.
+      IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) THEN
+         NEWTRA_USEDRC = .TRUE.
+         USEDRC = .TRUE.
 C     ... NEWTRA_USEDRC must be true for second order transformation;
 C         can be true by input for higher order (e.g. for RESPONS)
+      ELSE
+         NEWTRA_USEDRC = USEDRC
+      END IF
 C
 C     Translate from SIRIUS convention for transformation level
 C     to the convention used in this program.
