@@ -514,6 +514,9 @@ C           structure of BASDIR: 'dir1:dir2:dir3'
             WRITE(LUPRI,'(/A,I5,A)')
      &      " * Sequential calculation."
          END IF
+#else
+            WRITE(LUPRI,'(/A,I5,A)')
+     &      " * Sequential calculation."
 #endif
 
 #ifdef VAR_OMP
