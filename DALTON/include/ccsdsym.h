@@ -118,7 +118,7 @@
      &                 IMATKL(8,8),IMATKI(8,8),ITR12AM(8,8),            &
      &                 IR12R12P(8,8),ITR12SQ(8,8),ITR12SQT(8,8),        &
      &                 IR12R12SQ(8,8),NT2R12(8),IT2R12(8,8),            &
-     &                 NTG2SQ(8),ITG2SQ(8,8), IDSVIR(8,8),NDSVIR(8),
+     &                 NTG2SQ(8),ITG2SQ(8,8), IDSVIR(8,8),NDSVIR(8),    &
      &                 IDSBAS(8,8)                           
 !
 

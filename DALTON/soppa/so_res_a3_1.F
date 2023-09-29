@@ -1,5 +1,5 @@
 C  /* Deck so_res_a3_1 */
-      SUBROUTINE SO_RES_A3_1(RES1,LRES1,BDENSIJ,LBDENSIJ,BDENSAB,
+      SUBROUTINE SO_RES_A3_1(ST,RES1,LRES1,BDENSIJ,LBDENSIJ,BDENSAB,
      &                      LBDENSAB,DSRHF,CMO,LCMO,IDEL,ISDEL,
      &                      ISYDIS,ISYMTR,WORK,LWORK)
 C
@@ -19,12 +19,12 @@ C     found in my master thesis (currently unpublished)
 #include "priunit.h"
       PARAMETER (ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
 C
+      CHARACTER ST*2
       DIMENSION RES1(LRES1), DSRHF(*)
       DIMENSION BDENSIJ(LBDENSIJ), BDENSAB(LBDENSAB)
       DIMENSION CMO(LCMO)
       DIMENSION WORK(LWORK)
 
-      INTEGER COUNT
 C
 #include "ccorb.h"
 #include "ccsdinp.h"
@@ -37,7 +37,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_1')
 
-      I_ACT_TERM = 17
+      I_ACT_TERM = 0
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 4)) then
 C
@@ -46,13 +46,10 @@ C     Implemented as (c a | b d)
 C     Calculated by setting d = delta and and transforming the integrals
 C     with the trial vector (before this routine is called)
       ISYMD = ISDEL
-
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
 C
       DO 040 ISYMI = 1,NSYM
 C
-C         ISYMA  = MULD2H(ISYMI,ISYMTR)
+         ISYMA  = MULD2H(ISYMI,ISYMTR)
          ISALBE = MULD2H(ISYMI,ISYDIS)
 C
          LSCR1  = N2BST(ISALBE)
@@ -84,10 +81,9 @@ C              Generate ( c a | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 042 ISYMC = 1,NSYM
+               ISYMC  = MULD2H(ISYMA,ISALBE)
             
                ISALFA = ISYMC
-               ISYMA  = MULD2H(ISYMC,ISALBE)
                ISBETA = ISYMA
 C
                LSCR2  = NBAS(ISBETA)*NVIR(ISYMC)
@@ -125,7 +121,7 @@ C              ( c, beta | .. ) * C(beta, a) => ( c, a | ..)
 C                     ~
 C              (c,a | i,delta) * rho_{c delta} => U(a,i)
 C
-               KOFF5  = IT1AM(ISYMA,ISYMI) + (I-1)*NVIR(ISYMA)
+               KOFF5  = (I-1)*NVIR(ISYMA) + IT1AM(ISYMA,ISYMI)
                KOFF6  = ILMVIR(ISYMC) - ILMVIR(1)
 C
                DO IA = 1, NVIR(ISYMA)
@@ -135,8 +131,6 @@ C
      &              BDENSAB(KOFF6 + (IDEL-1)*NVIR(ISYMC) + IC)
                   END DO
                END DO
-C 
-  042       CONTINUE
 C
   041    CONTINUE
 C
@@ -144,6 +138,7 @@ C
 
       END IF
 
+C      I_ACT_TERM = 8
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 8)) then
 C
@@ -153,9 +148,6 @@ C     Calculated by setting l = delta and and transforming the integrals
 C     with the trial vector (before this routine is called) 
       ISYML = ISDEL
 C      
-C      LCDB  = NRHF(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-C
       DO 080 ISYMI = 1,NSYM
 C
          ISYMA  = MULD2H(ISYMI,ISYMTR)
@@ -190,8 +182,8 @@ C              Generate ( a k | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 082 ISYMK = 1,NSYM
-            
+               ISYMK  = MULD2H(ISYMA,ISALBE)
+
                ISALFA = ISYMK
                ISBETA = ISYMA
 C
@@ -231,7 +223,7 @@ C
 C                     ~
 C              (k,a | i,delta) * rho_{k delta} => U(a,i)
 C
-               KOFF5  = IT1AM(ISYMA,ISYMI) + (I-1)*NVIR(ISYMA)
+               KOFF5  = (I-1)*NVIR(ISYMA) + IT1AM(ISYMA,ISYMI)
                KOFF6  = ILMRHF(ISYMK)
 C
                DO IA = 1, NVIR(ISYMA)
@@ -241,8 +233,6 @@ C
      &              BDENSIJ(KOFF6 + (IDEL-1)*NRHF(ISYMK) + K)
                   END DO
                END DO
-C 
-  082       CONTINUE
 C
   081    CONTINUE
 C
@@ -250,6 +240,7 @@ C
 
       END IF
 
+C      I_ACT_TERM = 12
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 12)) then
 C     Term: 1/2 sum_c (j i| c b) rho_ca   (line 3 fourth term)
 C     Implemented as (j i| b c)
@@ -258,13 +249,10 @@ C     with the trial vector (before this routine is called)
 C
       ISYMC = ISDEL
 C
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-C
       DO 120 ISYMJ = 1,NSYM
 C
          ISALBE = MULD2H(ISYMJ,ISYDIS)
-         ISYMI  = MULD2H(ISALBE,ISYMJ)
+         ISYMI  = MULD2H(ISYMJ,ISALBE)
          ISYMA  = MULD2H(ISYMI,ISYMTR)
          ISALFA = ISYMJ
          ISBETA = ISYMI
@@ -312,7 +300,6 @@ C
 C
                NTOTAL = MAX(NBAS(ISALFA),1)
                NTOTBE = MAX(NBAS(ISBETA),1)
-               NTOTJ  = MAX(NRHF(ISYMJ),1)
 C
                KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                KOFF3  = ILMRHF(ISYMJ) + 1 + (J-1)*NBAS(ISYMJ)
@@ -349,22 +336,22 @@ C
 
       END IF
 
+C      I_ACT_TERM = 13
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 13)) then
+      
+      IF (ST .EQ. 'SI') then
 
 C     Term: sum_l (a i | b l ) rho_jl  (line 4 first term)
 C     Implemented as (a i | b l)
 C     Calculated by setting l = delta and transforming the integrals
 C     with the trial vector (before this routine is called) 
 C
-      ISYML = ISDEL
+         ISYML = ISDEL 
 C
-C      LCDB  = NRHF(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-C
-      DO 130 ISYMJ = 1,NSYM
+         ISYMJ  = ISYML
+         ISYMB  = MULD2H(ISYMTR,ISYMJ)
 C
          ISALBE = MULD2H(ISYMJ,ISYDIS)
-         ISYMAI = ISALBE
 C
          LSCR1  = N2BST(ISALBE)
 C
@@ -382,11 +369,11 @@ C           Get a squared set of ( alfa beta | j delta ) for given j and
 C           delta.
 C-----------------------------------------------------------------------
 C
-         DO 131 J = 1,NRHF(ISYMJ)
+         DO 130 J = 1,NRHF(ISYMJ)
 C
             KOFF1 = IDSRHF(ISALBE,ISYMJ) + NNBST(ISALBE) * (J - 1) + 1
 
-            CALL CCSD_SYMSQ(DSRHF(KOFF1),ISALBE,WORK(KSCR1))
+            CALL CCSD_SYMSQ(DSRHF(KOFF1),ISALBE,WORK(KSCR1))        
 C
 
 C-----------------------------------------------------------------
@@ -395,13 +382,11 @@ C              Generate ( a i | j delta) for
 C              given j and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 132 ISYMA = 1,NSYM
+            DO 131 ISYMI = 1,NSYM
 
-                  ISALFA = ISYMA
-                  ISYMI  = MULD2H(ISYMA,ISYMTR)
-                  ISBETA = ISYMI
-C                  ISBETA = MULD2H(ISALFA, ISALBE)
-C                  ISYMI  = ISBETA
+                  ISBETA  = ISYMI
+                  ISYMA   = MULD2H(ISYMI,ISYMTR)
+                  ISALFA  = ISYMA
 
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -430,7 +415,7 @@ C              ( alpha, beta |..) * C(beta, i)   => ( alpha, i | ..)
      &                    CMO(KOFF3),NTOTBE,
      &                    ZERO,WORK(KSCR2),NTOTAL)
 C
-C              b(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
+C              C(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
                   CALL DGEMM('T','N',NVIR(ISYMA),NRHF(ISYMI),
      &                    NBAS(ISALFA),ONE,
      &                    CMO(KOFF4),NTOTAL,
@@ -440,25 +425,23 @@ C              b(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
 C                     ~
 C              (a,i | j,delta) * rho_{j delta} => U(a,i)
 C
-                  KOFF5  = IT1AM(ISYMA,ISYMI)
+                  KOFF5  = IT1AM(ISYMA,ISYMI) 
                   KOFF6  = ILMRHF(ISYMJ)
 C
-                  COUNT  = 0
                   DO I = 1, NRHF(ISYMI)
                         DO IA = 1,NVIR(ISYMA)
-                              RES1(KOFF5+COUNT+IA)=RES1(KOFF5+COUNT+IA)
-     &                        + WORK(KSCR3 -1 + COUNT + IA) *
+                              RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)=
+     &                         RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
+     &                        + WORK(KSCR3 -1 +(I-1)*NVIR(ISYMA)+IA) *
      &                        BDENSIJ(KOFF6+(IDEL-1)*NRHF(ISYMJ)+J)
                         END DO
-                        COUNT = COUNT + NVIR(ISYMA)
                   END DO
 C             
-  132       CONTINUE
+  131       CONTINUE
 C
-  131    CONTINUE
-C
-  130 CONTINUE
+  130    CONTINUE
 
+      END IF
       END IF
 
 C-----------------------
