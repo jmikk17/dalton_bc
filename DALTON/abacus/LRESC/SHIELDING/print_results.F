@@ -157,14 +157,18 @@ C
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
      &               slash,'xx','yy','zz','iso'
                call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'iso')
+               call PRINT_LRSHIELD_CORR('FC-py   ',LRFCAVpy,'iso')
                call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'iso')
+               call PRINT_LRSHIELD_CORR('AngPso-J',LRANGPavg,'iso')
                call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'iso')
                call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'iso')
                IF (LRANISO) THEN
                WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'ani')
+               call PRINT_LRSHIELD_CORR('FC-py   ',LRFCAVpy,'ani')
                call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'ani')
+               call PRINT_LRSHIELD_CORR('AngPso-J',LRANGPavg,'ani')
                call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'ani')
                call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'ani')
                END IF

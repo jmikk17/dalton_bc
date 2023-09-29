@@ -240,6 +240,7 @@ C
 !
       LRDIAK = D0
       LRANGP = D0
+      LRANGPavg = D0
       LRSDAV = D0
 
       LRDIAM = D0
@@ -413,11 +414,14 @@ c      CALL HERCTL(WORK,LWORK)
          CALL AVELRSC('FCAV',WORK,LWORK) ! FC
          CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
          CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
-      END IF
+!      END IF
          CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
          CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
          CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
          CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
+
+         CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
+      END IF
 C --------------------------------------------------
 C     Paramagnetic corrections to Shielding:
 C     Non-relativistic singlet
@@ -500,6 +504,7 @@ C     Add constants and print all in ppm's
          LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
          LRSDAV = calfa*calfa*calfa*calfa*1.0D+6* CSDAV*LRSDAV
          LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
+         LRANGPavg = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGPavg
          LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
          LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
 !
@@ -507,8 +512,7 @@ C     Add constants and print all in ppm's
          LRFCAV1 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV1*LRFCAV1
          LRFCAV2 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV2*LRFCAV2
          LRFCAV3 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV3*LRFCAV3
-         write(lupri,*) "JUAN-TEST:"
-         write(lupri,*) LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3
+         LRFCAVpy = LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3
 !
 !     Paramagnetic non-relativistic value
          LRPNR = calfa*calfa*1.0D+6*CPNR*LRPNR

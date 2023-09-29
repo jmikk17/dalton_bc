@@ -37,7 +37,6 @@ C...  the subroutine ABACTOCD  as a model (2012)
 #include "cbilnr.h"
 #include "infpri.h"
       double precision cmos(NORBT,NBAST)
-      double precision OVERLP(NBAST,NBAST)
       integer indice
       LOGICAL FOUND
       DIMENSION WORK(LWORK)
@@ -48,6 +47,12 @@ C...  the subroutine ABACTOCD  as a model (2012)
       PARAMETER (D05=0.5D0,D025=0.25)
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
+      INTEGER naoss, nmos
+      double precision, dimension(NBAST,NBAST) :: AOPERATOR,BOPERATOR
+      double precision, dimension(NBAST,NBAST) :: aux0,aux1,aux2,aux3
+      double precision, dimension(NBAST*NORBT) :: xmos
+      CHARACTER*8 RTNLBL(2)
+
 C
 #include "cbiexc.h"
 #include "inflin.h"
@@ -72,6 +77,8 @@ C
 C
       IPRLNR = JIMPRT
       IPRRSP = -1
+       naoss = NBAST ! NBAST: Total number of (atomic) basis functions
+       nmos= NORBT !NORBT: Total number of molecular orbitals
 cxu
 C
 C
@@ -433,6 +440,54 @@ C     ---------------------------
         END DO
       ENDIF
 C
+C
+C      Look for LABELS : NEWJ
+C     ---------------------------
+      IF(KEY.EQ."NEWJ") THEN
+        NLAB=9
+        indice = 1
+
+C      cmos(i,j)   :  Molecular orbitals coeficients matrix elements (from SIRIUS.RST)
+       CALL RD_SIRIFC('CMO',FOUND,xmos)
+       k = 1
+       cmos=0.0
+       do i=1,nmos                !i corresponds to a MO
+          do j=1, naoss           !j corresponds to j coef. of the ith MO
+             cmos(i,j) = xmos(k)  ! Transforms vector into matrix
+             k = k + 1
+          end do
+       end do
+
+      aux0=matmul(transpose(cmos),cmos)
+      CALL GETDAT(RTNLBL(1),RTNLBL(2))
+      RTNLBL(1)='1 A  21 '
+C     Replace time information with symmetry information
+      RTNLBL(2)='SQUARE  '
+
+
+      DO I= 1, 3 !x, y, z
+      DO IJ = 1, 3 !x, y, z
+         LISTA1(indice)=nuc_coord(IJ)//'psoz'//chrxyz(I)
+         call READAOP(AOPERATOR, naoss, chrxyz(I)//'ANGMOM ') !gets ANGMOM matrix
+         call READAOP(BOPERATOR, naoss, 'PSO '//nuc_coord(IJ)//' ') !gets PSO matrix
+c        Construct A.I.B + B.I.A
+         aux1 = matmul(matmul(AOPERATOR,aux0),BOPERATOR)    !X/Y/Z ANGMOMG . I . PSO
+         aux2 = matmul(matmul(BOPERATOR,aux0),AOPERATOR)    !PSO . I . X/Y/Z ANGMOM
+         aux3 = 0.D0 !Initialize/reset matrix
+         aux3 = 0.5*(aux1+aux2)
+
+         call WRITEAOPJUAN(aux3,naoss,
+     &   nuc_coord(IJ)//'psoz'//chrxyz(I),RTNLBL) !Write Matrix in AOPROPER
+
+         indice = indice + 1
+c        For debugging purposes:
+c        write(lupri,*) "IMPRIMIENDO EL OPERADOR: "
+c     &                 //nuc_coord(IJ)//'psoz'//chrxyz(I)
+c        call OUTPUT(aux3,1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)  ! prints aux1
+      END DO
+      END DO
+      ENDIF
+C
 C ---------------------------------------------------------------------
 C
 C
@@ -525,8 +580,8 @@ cx         ELSE
                WRITE (LUPRI,'(1A,I2,3A,F20.12)')
      &         '#',KJ,' Expectation Value for Operator : < ',
      &         LISTA1(IDIP), ' > = ', SNDPRP
-c            ENDIF
-           ENDIF
+            ENDIF
+c           ENDIF
 cx         ENDIF
 C
 C       =========================================================
@@ -642,6 +697,21 @@ c     &      calfa*calfa*calfa*calfa*1.0D+6
             IF(KJ.EQ.7) LRFCAV3(3,1)=SNDPRP
             IF(KJ.EQ.8) LRFCAV3(3,2)=SNDPRP
             IF(KJ.EQ.9) LRFCAV3(3,3)=SNDPRP
+         ENDIF
+C         <NEWJ> :
+C       ------------------
+         IF (KEY.EQ.'NEWJ') THEN
+c             write(lupri,*) 'Corrección ',KJ
+c          write(lupri,*) calfa*calfa*calfa*calfa*1.0D+6*CANGP*SNDPRP
+            IF(KJ.EQ.1) LRANGPavg(1,1)=SNDPRP
+            IF(KJ.EQ.2) LRANGPavg(1,2)=SNDPRP
+            IF(KJ.EQ.3) LRANGPavg(1,3)=SNDPRP
+            IF(KJ.EQ.4) LRANGPavg(2,1)=SNDPRP
+            IF(KJ.EQ.5) LRANGPavg(2,2)=SNDPRP
+            IF(KJ.EQ.6) LRANGPavg(2,3)=SNDPRP
+            IF(KJ.EQ.7) LRANGPavg(3,1)=SNDPRP
+            IF(KJ.EQ.8) LRANGPavg(3,2)=SNDPRP
+            IF(KJ.EQ.9) LRANGPavg(3,3)=SNDPRP
          ENDIF
   300 CONTINUE
 C
