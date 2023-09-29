@@ -66,9 +66,9 @@ C     rho_a delta to rho_gamma delta
 C            CALL AROUND('CMO Matrix')
 C            CALL OUTPUT(CMO,1,NBAS(ISYMA),1,
 C     &            NVIR(ISYMA),NBAS(ISYMA),NVIR(ISYMA),1,LUPRI)
-C            CALL AROUND('BDENSAB Matrix')
-C            CALL OUTPUT(BDENSAB,1,NVIR(ISYMA),1,
-C     &            NBAS(ISYMA),NVIR(ISYMA),NBAS(ISYMA),1,LUPRI)     
+C            CALL AROUND('B2DENSAB Matrix')
+C            CALL OUTPUT(B2DENSAB,1,NBAS(ISYMA),1,
+C     &            NBAS(ISYMA),NBAS(ISYMA),NBAS(ISYMA),1,LUPRI)     
       END DO
 C      
 C     Transform occupied index

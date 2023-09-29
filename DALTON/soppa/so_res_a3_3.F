@@ -25,7 +25,7 @@ C
       DIMENSION WORK(LWORK)
       DIMENSION OBTRIAL(LOBTRIAL), VBTRIAL(LVBTRIAL)
 
-      INTEGER COUNT, ALPHA, GAMMA
+      INTEGER ALPHA, GAMMA
 C OBTRIAL = Trialvector with occupied index not transformed
 C VBTRIAL = Trialvector with virtual index not transformed
 C
@@ -48,12 +48,9 @@ C     Implemented as (i j | c d)
 C
       ISYMD = ISDEL
 C
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
-C                                  
-C           Start loop over gamma
+C                                
+C           Define symmetry of gamma
 C-----------------------------------------------------------------------
 C
          ISYMGA = ISDEL
@@ -84,16 +81,16 @@ C
             CALL CCSD_SYMSQ(XINT(KOFF1),ISALBE,WORK(KSCR1))
             
 C-----------------------------------------------------------------
-C                               
+C                         ~      
 C              Generate ( a i | gamma delta) for
-C              given i and delta in KSCR3.
+C              given gamma and delta in KSCR3.
 C-----------------------------------------------------------------
 C
             DO 012 ISYMI = 1,NSYM
 
                   ISYMA  = MULD2H(ISYMI,ISYMTR)
-C                  ISYMA  = MULD2H(ISYMI,ISALBE)
-                  ISALFA = ISYMA
+                  ISYMJ  = ISYMI
+                  ISALFA = ISYMJ
                   ISBETA = ISYMI
 
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
@@ -114,7 +111,7 @@ C
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                   KOFF3  = ILMRHF(ISYMI) + 1
-                  KOFF4  = IMATAV(ISYMA,ISYMI) + 1
+                  KOFF4  = IMATAV(ISALFA,ISYMA) + 1      
 C
 C              ( alpha, beta |..) * C(beta, i)   => ( alpha, i | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
@@ -128,7 +125,7 @@ C              b(a,alpha) * ( alpha, i | .. ) => ( a, i | ..)
      &                    VBTRIAL(KOFF4),NTOTAL,
      &                    WORK(KSCR2),NTOTAL,
      &                    ZERO,WORK(KSCR3),NTOTA)
-C
+
 C                  
 C              (a i | gamma,delta) * rho_{gamma delta} => U(a,i)
 C
@@ -136,11 +133,11 @@ C
                   KOFF6  = IAODIS(ISYMGA,ISDEL)
 C
                   DO I = 1,NRHF(ISYMI)
-                        DO IA = 1,NVIR(ISYMA)
+                        DO IA = 1,NVIR(ISYMA)                    
                               RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) =
      &                        RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
      &                        + WORK(KSCR3 -1 +(I-1)*NVIR(ISYMA)+IA) *
-     &                      B2DENSAB(KOFF6 +(IDEL-1)*NBAS(ISYMGA)+GAMMA)
+     &                     B2DENSAB(KOFF6 +(IDEL-1)*NBAS(ISYMGA)+GAMMA)
                         END DO
                   END DO
 C             
@@ -156,9 +153,6 @@ C     Implemented as (c j | i d)
 C
       ISYMD = ISDEL
 C
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
 C                                  
 C           Transform (alpha beta | gamma delta) to  
@@ -214,15 +208,16 @@ C
 C
 
 C-----------------------------------------------------------------
-C                               
-C              Generate ( alpha j | i delta) for
+C                               ~
+C              Generate ( alpha a | i delta) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
-C
-                  ISYMC = ISDEL
+C  
+                  ISYMC  = ISDEL
 
                   ISALFA = ISYMC
-                  ISBETA = ISYMA
+                  ISYMJ  = MULD2H(ISALBE,ISYMC)
+                  ISBETA = ISYMJ
 
                   LSCR2  = NBAS(ISALFA)*NVIR(ISYMA)
 C
@@ -239,7 +234,7 @@ C
                   NTOTA  = MAX(NVIR(ISYMA),1)
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
-                  KOFF3  = IMATAV(ISYMA,ISYMI) + 1
+                  KOFF3  = IMATAV(ISBETA,ISYMA) + 1
 C
 C              ( alpha, beta |..) * b(beta, a)  => ( alpha, a | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NVIR(ISYMA),
@@ -257,11 +252,11 @@ C
                   DO IA = 1,NVIR(ISYMA)
                         DO ALPHA = 1,NBAS(ISALFA)
                               RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) =
-     &                        RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
-     &                       + WORK(KSCR2-1+(IA-1)*NBAS(ISALFA)+ALPHA)*
+     &                        RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) +
+     &                        WORK(KSCR2-1+(IA-1)*NBAS(ISALFA)+ALPHA)*
      &                      B2DENSAB(KOFF6 +(IDEL-1)*NBAS(ISALFA)+ALPHA)
                         END DO
-                  END DO             
+                  END DO            
 C
   021    CONTINUE
 C
@@ -275,9 +270,6 @@ C     Implemented as (a b | c d)
 C
       ISYMD = ISDEL
 C
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
 C                                  
 C           Start loop over gamma
@@ -286,8 +278,6 @@ C
          ISYMGA = ISDEL
 C
          ISALBE = MULD2H(ISYMGA,ISYDIS)
-         ISYMAI = ISALBE
-         
 C
          LSCR1  = N2BST(ISALBE)
 C
@@ -313,17 +303,17 @@ C
             CALL CCSD_SYMSQ(XINT(KOFF1),ISALBE,WORK(KSCR1))
 
 C-----------------------------------------------------------------
-C                               
+C                           ~    
 C              Generate ( a i | gamma delta) for
 C              given gamma and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 032 ISYMI = 1,NSYM
+            DO 032 ISYMA = 1,NSYM
 
-                  ISYMA  = MULD2H(ISYMI,ISYMTR)
-C                  ISYMA  = MULD2H(ISYMI,ISALBE)
+                  ISYMI  = MULD2H(ISYMA,ISYMTR)
+                  ISYMB  = ISYMA
                   ISALFA = ISYMA
-                  ISBETA = ISYMI
+                  ISBETA = ISYMB
 
                   LSCR2  = NRHF(ISYMI)*NBAS(ISALFA)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -343,7 +333,7 @@ C
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
                   KOFF3  = ILMVIR(ISYMA) + 1
-                  KOFF4  = IT1AO(ISYMA,ISYMI) + 1
+                  KOFF4  = IT1AO(ISBETA,ISYMI) + 1
 C
 C               ( alpha, beta |..) * b(beta,i)  => ( alpha, i | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NRHF(ISYMI),
@@ -375,11 +365,9 @@ C
 C             
   032       CONTINUE
 C
-  031 CONTINUE
-C
+  031    CONTINUE
 
       END IF
-
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 5)) then
 C     Term: - del_ab sum_kl (i j | k l ) rho_kl  (line 2 first term)
@@ -387,9 +375,6 @@ C     Implemented as (j i | k l)
 C
       ISYML = ISDEL
 C
-C      LCDB  = NRHF(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
 C                                  
 C           Start loop over gamma
@@ -398,8 +383,6 @@ C
          ISYMGA = ISDEL
 C
          ISALBE = MULD2H(ISYMGA,ISYDIS)
-         ISYMAI = ISALBE
-         
 C
          LSCR1  = N2BST(ISALBE)
 C
@@ -424,9 +407,8 @@ C
 
             CALL CCSD_SYMSQ(XINT(KOFF1),ISALBE,WORK(KSCR1))
 
-
 C-----------------------------------------------------------------
-C                               
+C                         ~      
 C              Generate ( a i | gamma delta) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
@@ -434,7 +416,8 @@ C
             DO 052 ISYMI = 1,NSYM
 
                   ISYMA  = MULD2H(ISYMI,ISYMTR)
-                  ISALFA = ISYMA
+                  ISYMJ  = ISYMI 
+                  ISALFA = ISYMJ
                   ISBETA = ISYMI
 
                   LSCR2  = NBAS(ISALFA)*NRHF(ISYMI)
@@ -487,7 +470,7 @@ C
   052       CONTINUE
 C
   051    CONTINUE
-C
+
       END IF
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 6)) then
@@ -496,9 +479,6 @@ C     Implemented as (k j | i l)
 C
       ISYML = ISDEL
 C
-C      LCDB  = NRHF(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
 C                                  
 C           Transform (alpha beta | gamma delta) to  
@@ -559,10 +539,11 @@ C              Generate ( k j | i delta) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-                  ISYMK = ISDEL
-
+                  ISYMK = ISYML
+                  
+                  ISYMJ  = MULD2H(ISYMK,ISALBE)
                   ISALFA = ISYMK
-                  ISBETA = ISYMA
+                  ISBETA = ISYMJ
 
                   LSCR2  = NBAS(ISALFA)*NVIR(ISYMA)
 C
@@ -579,7 +560,7 @@ C
                   NTOTA  = MAX(NVIR(ISYMA),1)
 C
                   KOFF2  = KSCR1 + IAODIS(ISALFA,ISBETA)
-                  KOFF3  = IMATAV(ISYMI,ISYMA) + 1
+                  KOFF3  = IMATAV(ISBETA,ISYMA) + 1
 C
 C              ( alpha, beta |..) * b(beta, a)  => ( alpha, a | ..)
                   CALL DGEMM('N','N',NBAS(ISALFA),NVIR(ISYMA),
@@ -598,7 +579,7 @@ C
                         DO ALPHA = 1,NBAS(ISALFA)
                               RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA) =
      &                         RES1(KOFF5+(I-1)*NVIR(ISYMA)+IA)
-     &                        +WORK(KSCR2-1+(IA-1)*NBAS(ISALFA)+ALPHA)*
+     &                       + WORK(KSCR2-1+(IA-1)*NBAS(ISALFA)+ALPHA)*
      &                      B2DENSIJ(KOFF6 +(IDEL-1)*NBAS(ISALFA)+ALPHA)
                         END DO
                   END DO
@@ -615,9 +596,6 @@ C     Implemented as (a b | k l)
 C
       ISYML = ISDEL
 C
-C      LCDB  = NVIR(ISDEL)
-C      IF (LCDB.LE.0) GOTO 999
-
 C-----------------------------------------------------------------------
 C                                  
 C           Start loop over gamma
@@ -625,9 +603,7 @@ C-----------------------------------------------------------------------
 C
          ISYMGA = ISDEL
 C
-         ISALBE = MULD2H(ISYMGA,ISYDIS)
-         ISYMAI = ISALBE
-         
+         ISALBE = MULD2H(ISYMGA,ISYDIS) 
 C
          LSCR1  = N2BST(ISALBE)
 C
@@ -658,11 +634,13 @@ C              Generate ( a i | gamma delta) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-            DO 072 ISYMI = 1,NSYM
+            DO 072 ISYMA = 1,NSYM
 
-                  ISYMA  = MULD2H(ISYMI,ISYMTR)
+                  ISYMI  = MULD2H(ISYMA,ISYMTR)
+                  ISYMB  = ISYMA
+
                   ISALFA = ISYMA
-                  ISBETA = ISYMI
+                  ISBETA = ISYMB
 
                   LSCR2  = NRHF(ISYMI)*NBAS(ISALFA)
                   LSCR3  = NRHF(ISYMI)*NVIR(ISYMA)
@@ -714,7 +692,7 @@ C
 C             
   072       CONTINUE
 C
-  071 CONTINUE
+  071    CONTINUE
 
       END IF
 C-----------------------
