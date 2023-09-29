@@ -121,7 +121,7 @@ C              ( c, beta | .. ) * C(beta, a) => ( c, a | ..)
 C                     ~
 C              (c,a | i,delta) * rho_{c delta} => U(a,i)
 C
-               KOFF5  = (I-1)*NVIR(ISYMA) + IT1AM(ISYMA,ISYMI)
+               KOFF5  = IT1AM(ISYMA,ISYMI) + (I-1)*NVIR(ISYMA)
                KOFF6  = ILMVIR(ISYMC) - ILMVIR(1)
 C
                DO IA = 1, NVIR(ISYMA)
@@ -138,7 +138,6 @@ C
 
       END IF
 
-C      I_ACT_TERM = 8
 
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 8)) then
 C
@@ -223,7 +222,7 @@ C
 C                     ~
 C              (k,a | i,delta) * rho_{k delta} => U(a,i)
 C
-               KOFF5  = (I-1)*NVIR(ISYMA) + IT1AM(ISYMA,ISYMI)
+               KOFF5  = IT1AM(ISYMA,ISYMI) + (I-1)*NVIR(ISYMA)
                KOFF6  = ILMRHF(ISYMK)
 C
                DO IA = 1, NVIR(ISYMA)
@@ -240,7 +239,6 @@ C
 
       END IF
 
-C      I_ACT_TERM = 12
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 12)) then
 C     Term: 1/2 sum_c (j i| c b) rho_ca   (line 3 fourth term)
 C     Implemented as (j i| b c)
@@ -336,7 +334,6 @@ C
 
       END IF
 
-C      I_ACT_TERM = 13
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 13)) then
       
       IF (ST .EQ. 'SI') then
