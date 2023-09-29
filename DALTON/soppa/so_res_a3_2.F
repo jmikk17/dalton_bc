@@ -320,7 +320,8 @@ C
   100 CONTINUE
 
       END IF
-
+      
+C      I_ACT_TERM = 11
       IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 11)) then
 C     Term: - sum_c (b j | i c ) rho_ac  (line 3 third term)
 C     Implemented as (b j | i c)
