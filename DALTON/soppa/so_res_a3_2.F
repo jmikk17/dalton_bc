@@ -44,9 +44,6 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_2')
 
-      I_ACT_TERM = 0
-
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 9)) then
       IF (ST .EQ. 'SI') then
 C     Term: - sum_c (a i | j c ) rho_bc  (line 3 first term)
 C     Implemented as (a i | j c)
@@ -187,10 +184,7 @@ C
   091    CONTINUE
                   
       END IF
-      END IF
 
-C      I_ACT_TERM = 10
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 10)) then
 C     Term: 1/2 sum_c (j i | c a ) rho_bc  (line 3 second term)
 C     Implemented as (j i | a c)
 C     Calculated by setting c = delta 
@@ -312,10 +306,6 @@ C
 C
   100 CONTINUE
 
-      END IF
-
-C      I_ACT_TERM = 11
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 11)) then
       IF (ST .EQ. 'SI') then
 C     Term: - sum_c (b j | i c ) rho_ac  (line 3 third term)
 C     Implemented as (b j | i c)
@@ -438,11 +428,7 @@ C
   111    CONTINUE
 
       END IF
-      END IF
 
-
-C      I_ACT_TERM = 14
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 14)) then
 C     Term: - 1/2 sum_l (a b | i l ) rho_jl  (line 4 second term)
 C     Implemented as (i l | a b)
 C     Calculated by setting b = delta 
@@ -564,11 +550,6 @@ C
 C
   140 CONTINUE
 
-      END IF
-
-
-C      I_ACT_TERM = 15
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 15)) then
       IF (ST .EQ. 'SI') then
 C     Term: sum_l (b j | a l ) rho_il  (line 4 third term)
 C     Implemented as (a l | j b)
@@ -691,10 +672,7 @@ C
   151    CONTINUE
 
       END IF
-      END IF
 
-C      I_ACT_TERM = 16
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 16)) then
 C     Term: - 1/2 sum_c (a b | j l ) rho_il  (line 4 fourth term)
 C     Implemented as (j l | a b)
 C     Calculated by setting b = delta
@@ -816,9 +794,6 @@ C
   161    CONTINUE
 C
   160 CONTINUE
-
-      END IF
-      
 
 C-----------------------
 C     Remove from trace.

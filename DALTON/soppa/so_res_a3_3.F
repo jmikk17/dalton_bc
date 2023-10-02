@@ -40,9 +40,7 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_3')
 
-      I_ACT_TERM = 0
-      
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 1)) then
+
 C     Term: - del_ab sum_cd (i j | c d ) rho_cd  (line 1 first term)
 C     Implemented as (i j | c d)
 C
@@ -144,10 +142,8 @@ C
   012       CONTINUE
 C
   011    CONTINUE
-C
-      END IF
 
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 2)) then
+
 C     Term: del_ab 1/2 sum_cd (j c | d i ) rho_cd  (line 1 second term)
 C     Implemented as (c j | i d)
 C
@@ -262,9 +258,7 @@ C
 C
   020 CONTINUE
       
-      END IF
 
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 3)) then
 C     Term: del_ij sum_cd (a b | c d ) rho_cd  (line 1 third term)
 C     Implemented as (a b | c d)
 C
@@ -367,9 +361,7 @@ C
 C
   031    CONTINUE
 
-      END IF
 
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 5)) then
 C     Term: - del_ab sum_kl (i j | k l ) rho_kl  (line 2 first term)
 C     Implemented as (j i | k l)
 C
@@ -471,9 +463,7 @@ C
 C
   051    CONTINUE
 
-      END IF
 
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 6)) then
 C     Term: del_ab 1/2 sum_kl (j k | l i ) rho_kl  (line 2 second term)
 C     Implemented as (k j | i l)
 C
@@ -588,9 +578,7 @@ C
 C
   060 CONTINUE
 
-      END IF
 
-            IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 7)) then
 C     Term: del_ij sum_kl (a b | k l ) rho_kl  (line 2 third term)
 C     Implemented as (a b | k l)
 C
@@ -694,7 +682,7 @@ C
 C
   071    CONTINUE
 
-      END IF
+
 C-----------------------
 C     Remove from trace.
 C-----------------------
