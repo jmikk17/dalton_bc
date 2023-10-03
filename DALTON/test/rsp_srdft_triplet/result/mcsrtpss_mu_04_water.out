@@ -157,7 +157,7 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Oct  3 13:35:53 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:29 2023
      Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
@@ -230,7 +230,7 @@ Compilation information
 .SINGLE RESIDUE
 .TRIPLET
 .ROOTS
- 0 1 0 0 0 0 0 0 0
+ 1 0 0 0 0 0 0 0 0
 **END OF DALTON INPUT
 
 
@@ -568,8 +568,8 @@ H      1 :      0.00000000     1.44408335     0.99716351  Isotope  1
       z      0.98904122         2.51389186         8.38544065
 
 
-  Total CPU  time used in HERMIT:   0.00 seconds
-  Total wall time used in HERMIT:   0.00 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -607,7 +607,7 @@ H      1 :      0.00000000     1.44408335     0.99716351  Isotope  1
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Oct  3 13:35:53 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:29 2023
      Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
@@ -733,7 +733,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0663084950
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  1.04D-01  1.04D-01
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -5    1    F  1.08D-01  1.08D-01
 @  1  -75.8203197422       1.77D+00  -7.58D+01     3   1   1   0
       Virial theorem: -V/T =      1.999276
 @    MULPOP   O      -0.50; H   _1  0.25; H   _2  0.25; 
@@ -751,7 +751,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0786275980
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  9.66D-02  9.70D-02
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    F  9.69D-02  9.70D-02
 @  2  -75.8930691116       2.08D-01  -7.27D-02     3   1   1   0
       Virial theorem: -V/T =      2.000529
 @    MULPOP   O      -0.61; H   _1  0.31; H   _2  0.31; 
@@ -769,7 +769,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0760694492
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  9.67D-02  9.60D-02
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    3    F  1.14D-01  1.14D-01
 @  3  -75.8979328664       4.54D-02  -4.86D-03     3   1   1   0
       Virial theorem: -V/T =      2.000130
 @    MULPOP   O      -0.59; H   _1  0.30; H   _2  0.30; 
@@ -787,7 +787,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0790284518
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    4    F  9.71D-02  9.70D-02
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -7    4    F  9.70D-02  9.70D-02
 @  4  -75.8981470928       8.38D-03  -2.14D-04     3   1   1   0
       Virial theorem: -V/T =      1.999471
 @    MULPOP   O      -0.60; H   _1  0.30; H   _2  0.30; 
@@ -804,7 +804,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0781745909
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    5    F  9.72D-02  9.70D-02
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    5    F  9.66D-02  9.60D-02
 @  5  -75.8981549075       2.09D-03  -7.81D-06     3   1   1   0
       Virial theorem: -V/T =      1.999570
 @    MULPOP   O      -0.60; H   _1  0.30; H   _2  0.30; 
@@ -821,7 +821,7 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0783022973
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    6    F  9.69D-02  9.70D-02
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    6    F  9.71D-02  9.70D-02
 @  6  -75.8981555607       5.41D-04  -6.53D-07     3   1   1   0
       Virial theorem: -V/T =      1.999546
 @    MULPOP   O      -0.60; H   _1  0.30; H   _2  0.30; 
@@ -838,12 +838,12 @@ H     2   16618      77     434
  - 0.5 Tr(Vxc-sr Dcore)                   5.0782979443
  -     Tr(Vxc-sr Dval)                    0.0000000000
  - 0.5 Tr( (Jsr+HFXFAC*Ksr) Dval )        0.0000000000
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    7    F  9.70D-02  9.70D-02
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    7    F  9.66D-02  9.60D-02
 @  7  -75.8981556187       4.16D-05  -5.80D-08     3   1   1   0
 
 @ *** DIIS converged in   7 iterations !
 @     Converged SCF energy, gradient:    -75.898155618694    4.16D-05
-    - total time used in SIRFCK :              0.69 seconds
+    - total time used in SIRFCK :              0.71 seconds
 
  --- Writing SIRIFC interface file
 
@@ -890,7 +890,7 @@ H     2   16618      77     434
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.687       0.687
+ CPU and wall time for SCF :       0.708       0.722
 
 
  ----- Output from SIRIUS MP2 module -----
@@ -989,9 +989,9 @@ H     2   16618      77     434
 
          1.99969927     0.00025977
 
- Time used for MP2 natural orbitals :       0.100 CPU seconds,       0.101 wall seconds.
+ Time used for MP2 natural orbitals :       0.100 CPU seconds,       0.100 wall seconds.
 
- CPU and wall time for MP2 :       0.100       0.101
+ CPU and wall time for MP2 :       0.100       0.100
 
 
         SIRIUS MC-srDFT optimization (SIROPT)
@@ -1086,7 +1086,7 @@ CI-DFT energy for state no.    1
  --- MACRO ITERATION  1 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.001
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.002
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
@@ -1212,7 +1212,7 @@ CI-DFT energy for state no.    1
  --- MACRO ITERATION  3 ---
  --------------------------
 
- 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.002
+ 2-el. integral transformation level 3: Total CPU and WALL times (sec)       0.001       0.001
 
  Fock matrix screening setting for this macro iteration: 10^( -9)
 
@@ -1248,8 +1248,8 @@ CI-DFT energy for state no.    1
  *** Optimization control: MC-srDFT converged ***
      Number of macro iterations used            3
      Number of micro iterations used            7
-     Total number of CPU seconds used         1.81
-     Total WALL time used (seconds)           1.81
+     Total number of CPU seconds used         1.78
+     Total WALL time used (seconds)           1.78
 
 --------------------------------------------------------------------------------
 
@@ -1312,7 +1312,7 @@ CI-DFT energy for state no.    1
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for MCSCF :       1.806       1.805
+ CPU and wall time for MCSCF :       1.784       1.784
 
 
                      .----------------------------------------.
@@ -1321,7 +1321,7 @@ CI-DFT energy for state no.    1
 
 
  
-     Date and time (Linux)  : Tue Oct  3 13:35:56 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:32 2023
      Host name              : adm-110765.pc.sdu.dk                    
 
 
@@ -1342,8 +1342,8 @@ CI-DFT energy for state no.    1
   ITER ITMIC NCLIN NOLIN   TIMMAC    TIMITR    TIMMIC    TIMLIN    TIMMIC/ITMIC
  ------------------------------------------------------------------------------
 
-    1     4     2     2      0.84      0.00      0.74      0.64      0.18
-    2     3     1     2      0.68      0.00      0.58      0.48      0.19
+    1     4     2     2      0.82      0.00      0.72      0.63      0.18
+    2     3     1     2      0.67      0.00      0.57      0.47      0.19
     3     0     0     0      0.10      0.00      0.00      0.00
 
 
@@ -1395,7 +1395,7 @@ CI-DFT energy for state no.    1
 @    Final gradient norm:           0.000000497483
 
  
-     Date and time (Linux)  : Tue Oct  3 13:35:56 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:32 2023
      Host name              : adm-110765.pc.sdu.dk                    
 
  Occupancies of natural orbitals
@@ -1481,10 +1481,10 @@ File label for MO orbitals:   3Oct23   (CNOORB)
   Number of coefficients less than 10^-11 times norm is             2
 
   Total CPU  time used in SIRIUS :   2.59 seconds
-  Total wall time used in SIRIUS :   2.60 seconds
+  Total wall time used in SIRIUS :   2.61 seconds
 
  
-     Date and time (Linux)  : Tue Oct  3 13:35:56 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:32 2023
      Host name              : adm-110765.pc.sdu.dk                    
 
  NOTE:    1 warnings have been issued.
@@ -1523,7 +1523,7 @@ File label for MO orbitals:   3Oct23   (CNOORB)
  Threshold for convergence of eigenvalue eqs.   : THCPP  = 1.000D-03
  Maximum iterations in optimal orbital algorithm: MAXITO =   5
 
-      1 Excitation energies are calculated for symmetry no.    2
+      1 Excitation energies are calculated for symmetry no.    1
 
  TRACTL_1: Integral transformation abandoned, the required MO integrals are already available.
 
@@ -1544,7 +1544,7 @@ File label for MO orbitals:   3Oct23   (CNOORB)
 
  ----------------------------------------------------------------
  ----- Linear response calculation
- ----- Symmetry of excitation/property operator(s)    2  ( B1 )
+ ----- Symmetry of excitation/property operator(s)    1  ( A1 )
  ----------------------------------------------------------------
 
  Number of excitations of this symmetry            1
@@ -1552,75 +1552,126 @@ File label for MO orbitals:   3Oct23   (CNOORB)
  Number of C6/C8 properties of this symmetry       0
 
 
- Perturbation symmetry.     KSYMOP:           2
+ Perturbation symmetry.     KSYMOP:           1
  Perturbation spin symmetry.TRPLET:           T
- Orbital variables.         KZWOPT:           1
- Configuration variables.   KZCONF:           0
- Total number of variables. KZVAR :           1
+ Orbital variables.         KZWOPT:           3
+ Configuration variables.   KZCONF:           4
+ Total number of variables. KZVAR :           7
 
 
 
  --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
 
- Operator symmetry = 2  ( B1 ); triplet =   T
+ Operator symmetry = 1  ( A1 ); triplet =   T
 
+
+ INFO Symmetry 1: Number of roots increased from 2 to 3 because of (near)-degenerate diagonal elements.
+ (Otherwise the calculation would probably break symmetry.)
 
  ** RSPCTL MICROITERATION NUMBER    1
 
       Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
       ----------------------------------------------------------------
-         1    9.49893D-17  0.00D+00  9.50D-17  7.08D-01    4.40305D-01
+         1    1.18628D-01  1.94D-16  1.19D-01  1.00D+00    7.20497D-01
+
+ ** RSPCTL MICROITERATION NUMBER    2
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    2.52828D-01  2.56D-16  2.53D-01  7.44D-01    5.54170D-01
+
+ ** RSPCTL MICROITERATION NUMBER    3
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.02249D-02  2.87D-16  1.02D-02  7.20D-01    4.98934D-01
+
+ ** RSPCTL MICROITERATION NUMBER    4
+
+      Root  Residual tot.,    conf., and orb.    Bnorm      Eigenvalue
+      ----------------------------------------------------------------
+         1    1.58357D-05  1.01D-15  1.58D-05  7.20D-01    4.98932D-01
 
  *** THE REQUESTED    1 SOLUTION VECTORS CONVERGED
 
  Convergence of RSP solution vectors, threshold = 1.00D-03
  ---------------------------------------------------------------
- (dimension of paired reduced space:    2)
- RSP solution vector no.    1; norm of residual   1.34D-16
+ (dimension of paired reduced space:   10)
+ RSP solution vector no.    1; norm of residual   2.20D-05
 
  *** RSPCTL MICROITERATIONS CONVERGED
 
 
  **************************************************************************************
- *** @ Excit. operator sym 2 & ref. state sym 1 => excited state symmetry 2  ( B1 ) ***
+ *** @ Excit. operator sym 1 & ref. state sym 1 => excited state symmetry 1  ( A1 ) ***
  **************************************************************************************
 
 
 
- @ Excited state no:    1 in symmetry 2  ( B1 ) - triplet excitation
+ @ Excited state no:    1 in symmetry 1  ( A1 ) - triplet excitation
  -------------------------------------------------------------------
 
-@ Excitation energy :  0.44030463     au
-@                       11.981299     eV;   96635.696     cm-1;   1156.0196     kJ / mol
+@ Excitation energy :  0.49893161     au
+@                       13.576620     eV;   109502.83     cm-1;   1309.9447     kJ / mol
 
-@ Total energy :       -75.457997     au
+@ Total energy :       -75.399370     au
 
  Eigenvector for state no.  1
 
-     Response orbital operator symmetry = 2
+     Response orbital operator symmetry = 1
      (only scaled elements abs greater than   10.00 % of max abs value)
 
       Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
       ----------    -----  -----      --------------      --------------      --------------      --------------
-           1         5(2)   4(1)       -0.7075440465        0.0248712231       -1.0006183865        0.0351732211
+           3         3(1)   4(1)       -0.6980073235        0.0329337069       -0.9871314235        0.0465752949
 
-     Configuration operator symmetry = 2
-     >> NO ELEMENTS <<
+        2 elements with absolute value ≤ 1.00D-01 not printed.
+
+ The numbers in parenthesis give the orbital symmetry.
+
+      Index(conf)                         Z operator          Y operator
+      ----------                      --------------      --------------
+           2                           -0.1108767474        0.0285394788
+           3                            0.1108767474       -0.0285394788
+
+        2 elements with absolute value ≤ 1.00D-01 are not printed.
 
 
- Time used in polarization propagator calculation is      0.17 CPU seconds for symmetry 2
+  Printout of coefficients in interval   0.1000E+00 to  0.1568E+00
+  ==============================================================
 
-  Total CPU  time used in RESPONSE:   0.17 seconds
-  Total wall time used in RESPONSE:   0.17 seconds
+ Coefficient of determinant         2 is     -0.11087675 -1.10876747E-01
+ alpha-string:     2
+  beta-string:  1
+
+ Coefficient of determinant         3 is      0.11087675  1.10876747E-01
+ alpha-string:  1
+  beta-string:     2
+
+ Norm of printed part of CI vector ..      0.02458731
+
+  Magnitude of CI coefficients
+  ============================
+
+  ( Ranges are relative to norm of vector :  1.57E-01 )
+
+  10- 1 to 10- 0         2    0.24587306E-01    0.24587306E-01
+  Number of coefficients less than 10^-11 times norm is             2
+
+
+ Time used in polarization propagator calculation is      0.74 CPU seconds for symmetry 1
+
+  Total CPU  time used in RESPONSE:   0.75 seconds
+  Total wall time used in RESPONSE:   0.75 seconds
 
 
                    .-------------------------------------------.
                    | End of Dynamic Property Section (RESPONS) |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   2.77 seconds
-  Total wall time used in DALTON:   2.77 seconds
+  Total CPU  time used in DALTON:   3.35 seconds
+  Total wall time used in DALTON:   3.37 seconds
 
  
-     Date and time (Linux)  : Tue Oct  3 13:35:56 2023
+     Date and time (Linux)  : Tue Oct  3 14:23:32 2023
      Host name              : adm-110765.pc.sdu.dk                    
