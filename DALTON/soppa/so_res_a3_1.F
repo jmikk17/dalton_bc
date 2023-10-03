@@ -37,10 +37,6 @@ C------------------
 C
       CALL QENTER('SO_RES_A3_1')
 
-      I_ACT_TERM = 0
-
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 4)) then
-C
 C     Term: - 1/2 del_ij sum_cd (a c | d b ) rho_cd (line 1 fourth term)
 C     Implemented as (c a | b d)
 C     Calculated by setting d = delta and and transforming the integrals
@@ -136,11 +132,7 @@ C
 C
   040 CONTINUE
 
-      END IF
 
-
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 8)) then
-C
 C     Term: - 1/2 del_ij sum_kl (a k | l b ) rho_kl (line 2 fourth term)
 C     Implemented as (k a | b l)
 C     Calculated by setting l = delta and and transforming the integrals
@@ -237,9 +229,7 @@ C
 C
   080 CONTINUE
 
-      END IF
 
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 12)) then
 C     Term: 1/2 sum_c (j i| c b) rho_ca   (line 3 fourth term)
 C     Implemented as (j i| b c)
 C     Calculated by setting c = delta and transforming the integrals
@@ -332,10 +322,7 @@ C
 C
   120 CONTINUE
 
-      END IF
-
-      IF ((I_ACT_TERM .EQ. 0) .or. (I_ACT_TERM .EQ. 13)) then
-      
+  
       IF (ST .EQ. 'SI') then
 
 C     Term: sum_l (a i | b l ) rho_jl  (line 4 first term)
@@ -438,7 +425,6 @@ C
 C
   130    CONTINUE
 
-      END IF
       END IF
 
 C-----------------------
