@@ -147,32 +147,32 @@ C
 #ifdef SPECIAL_LINTST
       if (j .ne. icol1 .and. j .ne. icol2) cycle
 #endif
-            IF (I.LE.NCONF) THEN
+            IF (I.LE.NCONF) THEN ! conf-conf
                XL2IJ = WRK(KL2-1+(J-1)*NVAR+I)
                XL2JI = WRK(KL2-1+(I-1)*NVAR+J)
-               CODV = ABS(XL2IJ-XL2JI)
-               IF (CODV.GT.COMX) THEN
+               DEV   = ABS(XL2IJ-XL2JI)
+               IF (DEV.GT.COMX) THEN
                   IC = I
                   JC = J
-                  COMX = CODV
+                  COMX = DEV
                END IF
-            ELSE IF (J.LE.NCONF) THEN
+            ELSE IF (J.LE.NCONF) THEN ! orb-conf
                XL2IJ = WRK(KL2-1+(J-1)*NVAR+I)
                XL2JI = WRK(KL2-1+(I-1)*NVAR+J)
-               ORCODV = ABS(XL2IJ-XL2JI)
-               IF (ORCODV.GT.ORCOMX) THEN
+               DEV   = ABS(XL2IJ-XL2JI)
+               IF (DEV.GT.ORCOMX) THEN
                   IOC = I
                   JOC = J
-                  ORCOMX = ORCODV
+                  ORCOMX = DEV
                END IF
-            ELSE
+            ELSE ! orb-orb
                XL2IJ = WRK(KL2-1+(J-1)*NVAR+I)
                XL2JI = WRK(KL2-1+(I-1)*NVAR+J)
-               ORCODV = ABS(XL2IJ-XL2JI)
-               IF (ORCODV.GT.ORCOMX) THEN
+               DEV   = ABS(XL2IJ-XL2JI)
+               IF (DEV.GT.ORMX) THEN
                   IOC = I
                   JOC = J
-                  ORCOMX = ORCODV
+                  ORMX = DEV
                END IF
             END IF
  160     CONTINUE
