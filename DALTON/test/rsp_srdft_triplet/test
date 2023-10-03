@@ -12,25 +12,25 @@ mc = Filter()
 mc.add(string = 'Final MC-SRDFT energy',
       rel_tolerance = 1.0e-7)
 mc.add(string = '@ Excitation energy :',
-      rel_tolerance = 1.0e-3)
-      
+      rel_tolerance = 1.0e-4)
+
 hf = Filter()
 hf.add(string = 'Final HF-SRDFT energy',
       rel_tolerance = 1.0e-7)
 hf.add(string = '@ Excitation energy :',
-      rel_tolerance = 1.0e-3)
+      rel_tolerance = 1.0e-4)
 
 test.run(['mcsrtpss_mu_04.dal'],
          ['water.mol'],
          f={'out': mc})
 test.run(['mcsrtpss_mu_04_nosym.dal'],
-          ['water_nosym.mol'],
-          f={'out': mc})
+         ['water_nosym.mol'],
+         f={'out': mc})
 test.run(['hfsrtpss_mu_04.dal'],
          ['water.mol'],
          f={'out': hf})
-test.run(['hfsrtpss_mu04_nosym.dal'],
-          ['water_nosym.mol'],
-          f={'out': hf})
+test.run(['hfsrtpss_mu_04_nosym.dal'],
+         ['water_nosym.mol'],
+         f={'out': hf})
 
 sys.exit(test.return_code)

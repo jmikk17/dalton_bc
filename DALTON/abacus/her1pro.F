@@ -2946,6 +2946,11 @@ C
                      CALL DCOPY(NELMNT,WORK(IADR),1,
      &                    SINTMA((ICOMP - 1)*NELMNT + 1),1)
                   ELSE
+                     IF (.NOT. ANTI) THEN
+                        WRITE(LUPRI,'(//A,I3)') 'ERROR in PR1IN1:'//
+     &                     ' ANTI false for INTTYP',INTTYP
+                        CALL QUIT('Programming error, ANTI not true')
+                     END IF
                      CALL DAPTGE(NBAST,WORK(IADR),
      &                    SINTMA(NBAST*NBAST*(ICOMP - 1) + 1))
                   END IF
