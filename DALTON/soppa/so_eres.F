@@ -69,6 +69,7 @@ C
       DIMENSION WORK(LWORK)
       CHARACTER MODEL*5
       CHARACTER MC*2
+      CHARACTER S_OR_T*6
       integer :: inewtr, nnewtr, isymd1, ntosym
       integer :: thisinewtr
 C     idtype = 0 for dynamic (handle D part explicitly),
