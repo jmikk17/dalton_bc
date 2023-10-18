@@ -51,8 +51,13 @@ program merge_basis_sets
 
 
   ! get input filenames:
+#ifdef NO_FORTRAN_2008
   call getarg(1,filename1)
   call getarg(2,filename2)
+#else
+  call get_command_argument(1,filename1)
+  call get_command_argument(2,filename2)
+#endif
 
   ! Open files to be merged
   inp1=21
