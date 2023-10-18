@@ -231,7 +231,11 @@ C
         IF (ILEN .LE. 74) THEN
            WRITE(COMMAND,'(2A)') 'rm -f ', FILE(1:ILEN)
 
+#ifdef NO_FORTRAN_2008
            CALL SYSTEM(COMMAND)
+#else
+           call execute_command_line(command)
+#endif
         ELSE
            NWARN = NWARN + 1
            WRITE(LUPRI,*) 'WARNING! "rm -f ',FILE(1:ILEN),'" failed!'

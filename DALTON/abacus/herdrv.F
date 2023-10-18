@@ -156,7 +156,11 @@ C     Delete old MO integrals integrals
       ELSE
          CALL GPINQ('AOSRTINT.DA','EXIST',FEXIST)
          IF (FEXIST) THEN
+#ifdef NO_FORTRAN_2008
             CALL SYSTEM('rm -f AOSRTINT.DA*')
+#else
+            call execute_command_line('rm -f AOSRTINT.DA*')
+#endif
          END IF
          CALL GPINQ('MOTWOINT','EXIST',FEXIST)
          IF (FEXIST) THEN
