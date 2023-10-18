@@ -48,6 +48,7 @@ C -n does not read and write coordinates, default filename is Test.FChk
 C
       READCO = .TRUE.
       FILENA = 'Test.FChk'
+#ifdef NO_FORTRAN_2008
       IF (IARGC().GT.0)	THEN
           CALL GETARG (1,STRING)
           IF ((STRING(1:1).EQ.'-') .AND. (STRING(2:2).EQ.'n')) THEN
@@ -60,6 +61,20 @@ C              STRING =''
              FILENA = STRING
           END IF
       END IF
+#else
+      IF (command_argument_count().GT.0) THEN
+          CALL get_command_argument(1,STRING)
+          IF ((STRING(1:1).EQ.'-') .AND. (STRING(2:2).EQ.'n')) THEN
+              READCO = .FALSE.
+              CALL get_command_argument(2,STRING)
+C          IF (command_argument_count().EQ.2) THEN
+C              STRING =''
+          END IF
+          IF (STRING.NE.'') THEN
+             FILENA = STRING
+          END IF
+      END IF
+#endif
 C
       OPEN (INPFIL,FILE=FILENA,FORM='FORMATTED',
      &STATUS='OLD',ERR=999)
