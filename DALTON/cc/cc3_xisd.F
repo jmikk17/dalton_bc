@@ -3544,7 +3544,11 @@ C
       WRITE(COMMAND,'(2A)') 'rm -f ', FILENAME(1:ILEN)
 C
       !Execute the command
+#ifdef NO_FORTRAN_2008
       CALL SYSTEM(COMMAND)
+#else
+      call execute_command_line(command)
+#endif
 
       RETURN
       END

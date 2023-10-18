@@ -1637,7 +1637,11 @@ C
 C
       CALL GPINQ('AOTWOINT','EXIST',FEXIST)
       IF (FEXIST) THEN
+#ifdef NO_FORTRAN_2008
          CALL SYSTEM('rm -f AOTWOINT')
+#else
+         call execute_command_line('rm -f AOTWOINT')
+#endif
       END IF
 C
  9999 CONTINUE
