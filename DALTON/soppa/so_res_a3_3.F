@@ -155,7 +155,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | i delta)
 C-----------------------------------------------------------------------
 C
-      LDSRHF = NDSRHF(ISDEL)
+      LDSRHF = MAXVAL(NDSRHF)
 C
       KDSRHF  = 1
       KEND2  = KDSRHF + LDSRHF
@@ -475,7 +475,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | i delta)
 C-----------------------------------------------------------------------
 C
-      LDSRHF = NDSRHF(ISDEL)
+      LDSRHF = MAXVAL(NDSRHF)
 C
       KDSRHF  = 1
       KEND2  = KDSRHF + LDSRHF

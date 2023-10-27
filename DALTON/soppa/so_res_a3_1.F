@@ -77,7 +77,7 @@ C              Generate ( c a | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-               ISYMC  = MULD2H(ISYMA,ISALBE)
+               ISYMC  = ISDEL
             
                ISALFA = ISYMC
                ISBETA = ISYMA
@@ -169,11 +169,11 @@ C
 C   
 C-----------------------------------------------------------------
 C                               ~
-C              Generate ( a k | i delta ) for
+C              Generate ( k a | i delta ) for
 C              given i and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-               ISYMK  = MULD2H(ISYMA,ISALBE)
+               ISYMK  = ISDEL
 
                ISALFA = ISYMK
                ISBETA = ISYMA

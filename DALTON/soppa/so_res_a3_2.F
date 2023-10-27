@@ -56,7 +56,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | b delta) by multiplying with b_gamma_b
 C-----------------------------------------------------------------------
 C
-      LDSVIR = NDSVIR(ISDEL)
+      LDSVIR = MAXVAL(NDSVIR)
 C
       KDSVIR = 1
       KEND2  = KDSVIR + LDSVIR
@@ -70,7 +70,7 @@ C
       ISYMLP = ISYMTR
       DO ISYMG = 1,NSYM
 C
-         ISYMVI  = MULD2H(ISYMLP,ISYMG)
+         ISYMVI = MULD2H(ISYMLP,ISYMG)
          ISYMAB = MULD2H(ISYMG,ISYDIS)
 C
          NNBSAB = MAX(NNBST(ISYMAB),1)
@@ -196,7 +196,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | a delta)
 C-----------------------------------------------------------------------
 C
-      LDSVIR = NDSVIR(ISDEL)
+      LDSVIR = MAXVAL(NDSVIR)
 C
       KDSVIR  = 1
       KEND2  = KDSVIR + LDSVIR
@@ -247,7 +247,6 @@ C              Generate ( b i | a delta ) for
 C              given a and delta in KSCR3.
 C-----------------------------------------------------------------
 C
-C                        ISYMC  = ISDEL
                         ISYMB  = ISYMC
                         ISALFA = ISYMJ
                         ISBETA = ISYMI
@@ -317,7 +316,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | i delta)
 C-----------------------------------------------------------------------
 C
-      LDSRHF = NDSRHF(ISDEL)
+      LDSRHF = MAXVAL(NDSRHF)
 C
       KDSRHF  = 1
       KEND2  = KDSRHF + LDSRHF
@@ -329,11 +328,11 @@ C
 C
       ISYMLP = 1
       CALL CCTRBT(XINT,WORK(KDSRHF),CMO,
-     &            ISYMLP,WORK(KEND2),LWORK2,ISYDIS)
+     &            ISYMLP,WORK,LWORK,ISYDIS)
 
 C-----------------------------------------------------------------------
 C                                  
-C           Start loop over i
+C           Define some symmetries
 C-----------------------------------------------------------------------
             ISYMA  = ISYMC
             ISYMI  = MULD2H(ISYMA,ISYMTR)
@@ -440,7 +439,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | a delta)
 C-----------------------------------------------------------------------
 C
-      LDSVIR = NDSVIR(ISDEL)
+      LDSVIR = MAXVAL(NDSVIR)
 C
       KDSVIR  = 1
       KEND2  = KDSVIR + LDSVIR
@@ -562,7 +561,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | j delta)
 C-----------------------------------------------------------------------
 C
-      LDSRHF = NDSRHF(ISDEL)
+      LDSRHF = MAXVAL(NDSRHF)
 C
       KDSRHF  = 1
       KEND2  = KDSRHF + LDSRHF
@@ -684,7 +683,7 @@ C           Transform (alpha beta | gamma delta) to
 C           (alpha beta | a delta)
 C-----------------------------------------------------------------------
 C
-      LDSVIR = NDSVIR(ISDEL)
+      LDSVIR = MAXVAL(NDSVIR)
 C
       KDSVIR  = 1
       KEND2  = KDSVIR + LDSVIR
