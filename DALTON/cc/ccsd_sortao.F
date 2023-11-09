@@ -29,10 +29,11 @@ C
 #include "maxorb.h"
 C
       LOGICAL FIRST, ENABLED
-      DIMENSION WORK(LWORK)
+      REAL*8  WORK(LWORK)
 C
       CHARACTER*8 NAME(8)
       CHARACTER*8 LBLSAV
+      INTEGER     NAOS(8)
 C
 C     SAVE FIRST
 C
@@ -63,10 +64,12 @@ C     Open integral files.
 C-------------------------
 C
       IF (LUINTA.LE.0) THEN
-        LUINTA = -1
-        CALL MAKE_AOTWOINT(WORK,LWORK)
-        CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ','UNFORMATTED',
-     &              IDUMMY,.FALSE.)
+         LUINTA = -1
+         CALL MAKE_AOTWOINT(WORK,LWORK)
+         CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ','UNFORMATTED',
+     &               IDUMMY,.FALSE.)
+         CALL MOLLAB('BASINFO ',LUINTA,LUPRI)
+         READ (LUINTA) NSYMAO, NAOS,LBUFAO,NIBUFAO,NBITSAO, LENINT4
       END IF
 C
       DO 50 ISYM = 1,NSYM
@@ -111,15 +114,13 @@ C
         NALLBAS = NBAST 
       ENDIF
 C
-      LBUF = 600
-      IF (NALLBAS .LE. 255) THEN
-         NIBUF = 1
-         NBITS = 8
+      LBUF  = LBUFAO
+      NIBUF = NIBUFAO
+      NBITS = NBITSAO
+      IF (NIBUF .EQ. 1) THEN
          IBIT1 = 2**8  - 1
          IBIT2 = 2**16 - 1
       ELSE
-         NIBUF = 2
-         NBITS = 16
          IBIT1 = 2**16 - 1
          IBIT2 = 0   ! not used when NIBUF .eq. 2
       END IF

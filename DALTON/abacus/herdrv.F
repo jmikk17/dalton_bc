@@ -3927,7 +3927,7 @@ C
             CALL GETTIM(DA2CPU,DA2WAL)
             DACPU=DA2CPU-DA1CPU
             DAWAL=DA2WAL-DA1WAL
-            CALL TIMER('TWOINT',TIMSTR,TIMEND)
+            CALL TIMER('TWOINT 2-el orbit-orbit',TIMSTR,TIMEND)
             WRITE(LUPRI,'(2(/A),2(/A,F5.0,A))')
      &      '   Two-electron Darwin integrals',
      &      '   =================================',
