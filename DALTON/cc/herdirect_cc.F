@@ -213,7 +213,8 @@ C
      &            WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL,
      &            .false.)
-      IF (IPRFCK.GT.0) CALL TIMER('TWOINT',TIMSTR,TIMEND)
+      IF (IPRFCK.GT.1)
+     &   CALL TIMER('TWOINT (A*|**) distributions',TIMSTR,TIMEND)
 C
       CALL GPCLOSE(LUAORC(0),'KEEP')
       IF (U21INT) CALL GPCLOSE(LU21INT,'KEEP')
@@ -226,7 +227,7 @@ C  /* Deck nerdi2 */
       SUBROUTINE NERDI2(WORK,LWORK,INDEXA,INDEXB,ISHELA,ISHELB,NAINTS,
      &                  NBINTS,IPRFCK,SETUP,IOPT)
 C
-C     Option input :   IOPT = 1  :  Calculate ordenary integral distributions 
+C     Option input :   IOPT = 1  :  Calculate ordinary integral distributions 
 C                                   with two fixed indices.
 C                           = 2  :  Calculate exchange type integrals entering
 C                                   the diagonal elements.
@@ -347,7 +348,8 @@ C
      &            WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL,
      &            .false.)
-      IF (IPRFCK.GT.0) CALL TIMER('TWOINT',TIMSTR,TIMEND)
+      IF (IPRFCK.GT.1)
+     &   CALL TIMER('TWOINT (AB|**) distributions',TIMSTR,TIMEND)
 C
       CALL GPCLOSE(LUAORC(0),'KEEP')
 C
