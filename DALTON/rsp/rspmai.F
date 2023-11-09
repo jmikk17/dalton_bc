@@ -4030,7 +4030,16 @@ C
                         ! /hjaaj June 2010
          IF (CHANNEL_CALC ) CALL CHANNEL_VAR()
          IF (CHANNEL_VCALC) CALL CHANNEL_VIR()
-      END IF
+
+         if (IPRRSP .GE. 5) then
+            write(lupri,'(/A,I0)')
+     &      ' Orbital rotation list JWOP for symmetry',jwopsy
+            do i = 1, kzwopt
+               write(lupri,'(i5,a,2I5)') i,' : ',jwop(1:2,i)
+            end do
+         end if
+
+      END IF ! if RSPCI ... else ...
 C
 C READ IN CONFIGURATION SPACE VARIABLES
 C

@@ -142,6 +142,42 @@ C
       END DO
       RETURN
       END
+C  /* Deck madd */
+      SUBROUTINE MADD(NROWA,NCOLA,A,NRDIMA,B,NRDIMB)
+C
+C  9-Oct-2023 HJAaJ
+C
+C Add A subblock to B subblock
+C
+      implicit none
+      integer :: nrowa, ncola, nrdima,nrdimb,j,i
+      real*8  :: A(NRDIMA,NCOLA), B(NRDIMB,NCOLA)
+C
+      DO J = 1,NCOLA
+         DO I = 1,NROWA
+            B(I,J) = B(I,J) + A(I,J)
+         END DO
+      END DO
+      RETURN
+      END
+C  /* Deck msub */
+      SUBROUTINE MSUB(NROWA,NCOLA,A,NRDIMA,B,NRDIMB)
+C
+C  9-Oct-2023 HJAaJ
+C
+C Subtract A subblock from B subblock
+C
+      implicit none
+      integer :: nrowa, ncola, nrdima,nrdimb,j,i
+      real*8  :: A(NRDIMA,NCOLA), B(NRDIMB,NCOLA)
+C
+      DO J = 1,NCOLA
+         DO I = 1,NROWA
+            B(I,J) = B(I,J) - A(I,J)
+         END DO
+      END DO
+      RETURN
+      END
 C  /* Deck mtrsp */
       SUBROUTINE MTRSP(NROWA,NCOLA,A,NRDIMA,B,NRDIMB)
 C
