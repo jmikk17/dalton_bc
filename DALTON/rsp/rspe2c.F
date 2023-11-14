@@ -4132,7 +4132,7 @@ C ---------------------------- not non-adiabatic coupling:
      &      '  ( ',REP(KSYMST-1),') - singlet excitation'
             END IF
             CALL HEADER(PRI_LINE,0)
-            IF (KZCONF .GT. 1) THEN
+            IF (KZCONF .GT. 1 .AND. KZWOPT .GT. 0) THEN
                EXCIT_TEST =
      &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZCONF),1) +
      &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZVAR+KZCONF),1)
