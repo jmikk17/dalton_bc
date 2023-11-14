@@ -2934,7 +2934,7 @@ C
          WRITE(LUPRI,'(/A/A)')
      *     ' This is a configuration interaction response calculation.',
      *     '   Note: this is equivalent to a CI sum-over-states'//
-     *     ' calculation of properties.'
+     *     ' calculation of response properties.'
       ELSE
          RSPCI = .FALSE.
       END IF
@@ -4427,16 +4427,22 @@ C
      *   ' -- nuclear repulsion :',POTNUC
       ELSE IF (NASHT.EQ.1 .AND. NACTEL.EQ.1) THEN
          WRITE (LUPRI,'(//,(A,F25.15))')
-     *   ' open shell SCF energy:',EMCSCF,
+     *   ' Open-shell SCF energy:',EMCSCF,
      *   ' -- inactive part     :',EMY,
      *   ' --   active part     :',EACTIV,
      *   ' -- nuclear repulsion :',POTNUC
       ELSE IF (HSROHF) THEN
          WRITE (LUPRI,'(//,(A,F25.15))')
-     *   ' high-spin open-shell SCF energy:',EMCSCF,
+     *   ' High-spin open-shell SCF energy:',EMCSCF,
      *   ' -- inactive part               :',EMY,
      *   ' --   active part               :',EACTIV,
      *   ' -- nuclear repulsion           :',POTNUC
+      ELSE IF (RSPCI) THEN
+         WRITE (LUPRI,'(//,(A,F25.15))')
+     *   ' CI energy            :',EMCSCF,
+     *   ' -- inactive part     :',EMY,
+     *   ' --   active part     :',EACTIV,
+     *   ' -- nuclear repulsion :',POTNUC
       ELSE
          WRITE (LUPRI,'(//,(A,F25.15))')
      *   ' MCSCF energy         :',EMCSCF,
