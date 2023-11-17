@@ -86,6 +86,13 @@ if(DEFINED MKL_FLAG)
             message(FATAL_ERROR "MKL_FLAG and ENABLE_AUTO_${_service} together makes no sense")
         endif()
     endforeach()
+    if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
+        if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 2021.4.0)
+            string(REPLACE "qmkl" "mkl" MKL_FLAG ${MKL_FLAG})
+        endif()
+    else()
+        message(FATAL_ERROR "Using ${MKL_FLAG} only works with Intel compilers")
+    endif()
     set(EXTERNAL_LIBS
         ${EXTERNAL_LIBS}
         ${MKL_FLAG}

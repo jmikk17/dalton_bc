@@ -55,6 +55,12 @@ module gen1int_api
     integer, allocatable :: nnz_comp(:,:)
   end type
 
+#ifdef VAR_MPI
+  logical, save, public :: use_MPI = .true.  ! variable to disable MPI for do_cube /hjaaj 30-aug-2023
+#else
+  logical, save, public :: use_MPI = .false.
+#endif
+
   ! if Gen1Int interface initialized
   logical, save, private :: api_inited = .false.
 
