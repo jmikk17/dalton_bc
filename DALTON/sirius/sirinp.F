@@ -1618,6 +1618,7 @@ C
      &      '.SYMMETRY must be specified for MCSCF/CI calculations.')
       END IF
 
+      IF (MCTYPE .LE. 0) MULTS = -2 ! if only SCF, then ignore any .SPIN MULTIPLICITY in *CONFIGURATION input for MC/CI
       IF (MS2 .EQ. -12345) THEN ! MS2 = 2*MS
          IF (MULTS .LE. 0) MULTS = MOD(NACTEL,2) + 1
          IF (FLAG(27) .OR. DOMCSRDFT) THEN ! determinants or open-shell MC-srDFT
@@ -1876,10 +1877,10 @@ C
          END IF
       END IF
 C
-      IF (MCTYPE .GT. 0 .AND. PARCAL) THEN
+!     IF (MCTYPE .GT. 0 .AND. PARCAL) THEN
          ! IF (RNRESP) CALL PARQUIT('MCSCF in RESPONSE')
          ! IF (RNABAC) CALL PARQUIT('MCSCF in ABACUS')
-      END IF
+!     END IF
 
 C
 C *****  END OF INPUT PROCESSING *****
