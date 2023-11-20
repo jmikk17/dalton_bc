@@ -120,9 +120,10 @@ C *** WF_TYPE
 C
       RHF_CALC = (NASHT .LE. 1 .OR. HSROHF)
       IF ( (MCTYPE.LE.0) .NEQV. RHF_CALC ) THEN
-         WRITE (LUPRI,'(//A,I5/A,I5,L5)')
-     &  'WARNING siropt: RHF_CALC neqv MCTYPE =',MCTYPE,
-     &  'WARNING siropt: NASHT, HSROHF =',NASHT,HSROHF
+         WRITE (LUPRI,'(//A,L5,A,I5/A,I5,L5)')
+     &  'ERROR siropt: RHF_CALC =',RHF_CALC,' for MCTYPE =',MCTYPE,
+     &  'ERROR siropt: NASHT, HSROHF =',NASHT,HSROHF
+        CALL QUIT('Software bug: Error in MCTYPE in SIROPT')
       END IF
       IF (RHF_CALC) THEN
          IF (DOHFSRDFT) THEN
@@ -2731,9 +2732,10 @@ C
      &            'UNKNOWN',' ','UNFORMATTED',IDUMMY,.FALSE.)
       REWIND (LUSIFC)
 
-      IF (IPRI6 .GE. 5 .AND. .NOT.ONLY_EKT) WRITE (LUPRI,'(/A)')
-     *   ' --- Writing Sirius interface file for'//
-     *   ' post-programs in WR_SIRIFC. ---'
+      IF (IPRI6 .GE. 2 .AND. .NOT.ONLY_EKT) WRITE (LUPRI,'(/3A)')
+     &   ' --- Writing Sirius interface file "',FNSIFC,
+     &   '" for other Dalton modules ---'
+      ! as **CC, **PROPERTIES, **RESPONS and more
 C
 C     Calculate Fock matrix
 C
@@ -2768,19 +2770,27 @@ C
 #if SIROPT_DEBUG > 4
          write(lupri,*) 'DV in wr_sirifc'
          call output(wrk(kudv),1,nasht,1,nasht,nasht,nasht,-1,lupri)
+         IF (SRDFT_SPINDNS) THEN
          write(lupri,*) 'DS in wr_sirifc'
          call output(wrk(kudv+n2ashx),1,nasht,1,nasht,
      &      nasht,nasht,-1,lupri)
+         END IF
          write(lupri,*) 'FC in wr_sirifc'
          call outpkb(fc,NORB,NSYM,-1,lupri)
+         IF (NASHT .GT. 0) THEN
          write(lupri,*) 'FV in wr_sirifc'
          call outpkb(fv(1,1),NORB,NSYM,-1,lupri)
+         END IF
+         IF (SRDFT_SPINDNS) THEN
          write(lupri,*) 'FS in wr_sirifc'
          call outpkb(fv(1,2),NORB,NSYM,-1,lupri)
+         END IF
          write(lupri,*) '2*(FC+FV) in wr_sirifc'
          call outpkb(wrk(kfcfv),NORB,NSYM,-1,lupri)
+         IF (NASHT .GT. 0) THEN
          write(lupri,*) 'total FQ in wr_sirifc'
          call output(FQ,1,NORBT,1,NASHT,norbt,nasht,-1,lupri)
+         END IF
 #endif
 C
       CALL DZERO(WRK(KFOCK),N2ORBT)
@@ -2802,7 +2812,7 @@ C
          NASHI  = NASH(ISYM)
          NSSHI  = NSSH(ISYM)
 C        inactive-general + junk in active-general and secondary-general
-         IF (NISHI .GT. 0 .OR. ADDSRI) THEN ! FC contains Vxc(srDFT) if srDFT
+         IF (NISHI .GT. 0) THEN
             JFCFV  = KFCFV + IIORB(ISYM)
             CALL DSPTSI(NORBI,WRK(JFCFV),WRK(JFOCK))
          END IF
@@ -2849,8 +2859,10 @@ C
   500 CONTINUE
 C
       IF (P6FLAG(14)) THEN
+         IF (.NOT.HSROHF) THEN ! Fock matrix is garbage for HSROHF
          WRITE (LUPRI,'(/A)') ' Full Fock matrix from WR_SIRIFC :'
          CALL OUTPTB(WRK(KFOCK),NORB,NSYM,1,LUPRI)
+         END IF
          WRITE (LUPRI,'(/A)') ' FC diagonal elememts from WR_SIRIFC :'
          WRITE (LUPRI,'(/,(1X,5F15.8))') (WRK(KFCDIA-1+I),I=1,NORBT)
       END IF
@@ -3464,12 +3476,22 @@ C
      &  " IPs [a.u. & eV] from Koopmans' theorem",' ',204)
       END IF
 
+      IF (MCTYPE .EQ. -1) THEN ! HSROHF
+         WRITE(LUPRI,'(/A/)') 'Sorry, EKT is not '//
+     &   'implemented for High-spin restricted open-shell SCF yet'
+         ! Programming note: FC, FV, FQ are not correct
+         ! thus the generalized Fock matrix in V is garbage
+         GO TO 9000
+      END IF
+
       IF (iprint .gt. 5) THEN
          write(lupri,'(/A)') 'Generalized Fock matrix V input sirekt'
          call outptb(V,norb,nsym,-1,lupri)
+         IF (NASHT .GT. 0) THEN
          write(lupri,'(/A)')
      &      'Metric = Active density matrix DV input sirekt'
          call outpak(S,nasht,-1,lupri)
+         END IF
          IF (SRDFT_SPINDNS) THEN
             WRITE(lupri,"(/A)") 'spin-density DS input sirekt :'
             call outpak(S(NNASHX+1),NASHT,-1,LUPRI)
@@ -3760,6 +3782,7 @@ C
      &   SEPARATOR
       FLUSH(LUPRI)
 
-      CALL QEXIT('SIREKT')
+ 9000 CALL QEXIT('SIREKT')
+      RETURN
       END ! SUBROUTINE SIREKT
 C --- end of siropt.F ---
