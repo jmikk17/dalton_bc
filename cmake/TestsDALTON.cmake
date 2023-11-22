@@ -464,6 +464,7 @@ if(ENABLE_PELIB)
     add_dalton_runtest(pehf_1pa_pp                   "dalton;pelib;runtest;short")
     add_dalton_runtest(pehf_fmm                      "dalton;pelib;runtest;short;essential")
     add_dalton_runtest(pehf_approximate_coupling     "dalton;pelib;runtest;short;essential")
+    add_dalton_runtest(pehf_mic                      "dalton;pelib;runtest;short")
 
     add_dalton_runtest(pehf_iter_oldfield            "dalton;pelib;runtest;short")
     add_dalton_runtest(pehf_direct_oldfield          "dalton;pelib;runtest;short")

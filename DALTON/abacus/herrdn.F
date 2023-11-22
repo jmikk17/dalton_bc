@@ -6933,17 +6933,24 @@ C
 C
 C     Symmetry generators
 C
-         DO J = 1, 3
-            DO I = 1, 3
-               KASYM(I,J) = ' '
-            END DO
-         END DO
-         IPOS = INDEX(LINE,'GEN')
+         KASYM(1:3,1:3) = ' '
          IPSO = INDEX(LINE,'NOS')
+         IF (IPSO .EQ. 0) THEN
+            IPSO = INDEX(LINE,'NONSY')
+            IF (IPSO .NE. 0) THEN
+               NINFO = NINFO + 1
+               IPOS = INDEX(LINE(IPSO:),' ')
+               WRITE (LUPRI,'(/3A)') 'INFO: "',LINE(IPSO:IPSO-1+IPOS),
+     &         '" requested, assuming user meant "NoSymmetry"'
+               LINE(IPSO:IPSO-1+IPOS) = 'NoSymmetry'
+            END IF
+         END IF
+         IPOS = INDEX(LINE,'GEN')
+
          IF (IPOS .NE. 0 .AND. IPSO .NE. 0) THEN
             WRITE (LUPRI,*) 'Incorrect symmetry input. "Nosymmetry" '//
-     &           'requested, but generators given.'
-            WRITE (LUPRI,*) LINE4_in
+     &           'requested, but symmetry generators were specified:'
+            WRITE (LUPRI,*) trim(LINE4_in)
             CALL QUIT('Inconsistent symmetry input')
          ELSE IF (IPOS .NE. 0) THEN
             IPOS2 = INDEX(LINE(IPOS:),'=')
@@ -6973,18 +6980,18 @@ C
                   END DO
                   ISTART = ISTP + IEND
                END DO
-            ELSE
-               IF (NSYMOP .GT. 3) THEN
-                  WRITE (LUPRI,*) 'Too many (>3) group generators'
-                  WRITE (LUPRI,*) LINE4_in
-                  CALL QUIT('Too many (>3) group generators')
-               END IF
+            ELSE IF (NSYMOP .NE. 0) THEN
+               WRITE (LUPRI,'(/A,I0)') 'Negative or too many '//
+     &            '(>3) symmetry generators in .mol input: ',NSYMOP
+               WRITE (LUPRI,*) LINE4_in
+               CALL QUIT('ERROR: '//
+     &            'Negative or too many (>3) symmetry generators')
             END IF
             ADDSYM = .FALSE.
-         ELSE IF (IPSO .NE. 0) THEN
+         ELSE IF (IPSO .NE. 0) THEN ! User specified NoSymmetry in .mol file
             ADDSYM = .FALSE.
             NSYMOP = 0
-         ELSE
+         ELSE ! Default: DALTON checks for symmetry
             ADDSYM = .TRUE.
             NSYMOP = 0
          END IF

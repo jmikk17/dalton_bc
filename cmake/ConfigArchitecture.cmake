@@ -1,7 +1,7 @@
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_definitions(-DSYS_LINUX)
     add_definitions(-DSYS_UNIX)
-    if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i686")
+    if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i686")
         add_definitions(-DARCH32BIT)
     endif()
 endif()
@@ -9,9 +9,10 @@ endif()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
     add_definitions(-DSYS_FREEBSD)
     add_definitions(-DSYS_UNIX)
-    if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i386")
+    if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i386")
         add_definitions(-DARCH32BIT)
     endif()
+    add_definitions(-DHAVE_NO_LSEEK64)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -25,8 +26,8 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     #      not needed there. For now live with always on.
 
     # work-around for error in Macports cmake on OSX
-    if(${CMAKE_HOST_SYSTEM_PROCESSOR} MATCHES "i386")
-        set(CMAKE_HOST_SYSTEM_PROCESSOR x86_64)
+    if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "i386")
+        set(CMAKE_SYSTEM_PROCESSOR x86_64)
     endif()
 endif()
 

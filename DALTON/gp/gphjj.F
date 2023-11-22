@@ -1079,17 +1079,17 @@ C  /* Deck readt */
       RETURN
  10   CONTINUE
       INQUIRE(UNIT=IT,NAME=FNAME)
-      WRITE (LUPRI,*) 'READT: END reading file ',FNAME
-      WRITE (LUPRI,*) 'UNIT ',IT, ' record length ',N
-      WRITE (  0  ,*) 'READT: END reading file ',FNAME
-      WRITE (  0  ,*) 'UNIT ',IT, ' record length ',N
+      WRITE(LUPRI,*) 'READT: END reading file ',FNAME
+      WRITE(LUPRI,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
+      WRITE(  0  ,*) 'READT: END reading file ',FNAME
+      WRITE(  0  ,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
       CALL QUIT('READT: END reading file')
  20   CONTINUE
       INQUIRE(UNIT=IT,NAME=FNAME)
-      WRITE (LUPRI,*) 'READT: ERROR reading file ',FNAME
-      WRITE (LUPRI,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
-      WRITE (  0  ,*) 'READT: ERROR reading file ',FNAME
-      WRITE (  0  ,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
+      WRITE(LUPRI,*) 'READT: ERROR reading file ',FNAME
+      WRITE(LUPRI,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
+      WRITE(  0  ,*) 'READT: ERROR reading file ',FNAME
+      WRITE(  0  ,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
       CALL QUIT('READT: Error reading file')
  30   CONTINUE
       WRITE (LUPRI,*) 'READT ERRROR: non-positive file unit number ',IT
