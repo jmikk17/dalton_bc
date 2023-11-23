@@ -48,7 +48,7 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
@@ -98,8 +98,8 @@
   Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
   Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
-  Christoph Jacob              TU Braunschweig            Germany     (Frozen density embedding)
-  Brano Jansik                 Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
   Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
   Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
@@ -114,7 +114,7 @@
   Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
   Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
   Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
-  Nanna H. List                Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
   Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
   Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
@@ -136,7 +136,7 @@
   Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
   Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
   Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
-  Claire C. M. Samson          University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
   Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
   Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
   Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
@@ -157,45 +157,57 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:58 2023
+     Host name              : node219.cluster                         
 
- * Work memory size             :    64000000 =  488.28 megabytes.
+ * Work memory size             :   512000000 =  3.815 gigabytes.
 
  * Directories for basis set searches:
-   1) /home/juliane/bin/source/dalton/build/test/prop_alpha_aotoppa
-   2) /home/juliane/bin/source/dalton/build/basis
+   1) /groups/kemi/kasperf/dalton_program/dalton/DALTON/test/prop_alpha_aotoppa
+   2) /lustre/hpc/kemi/kasperf/dalton_program/dalton/build_64/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | juliane
- Host                     | sunray
- System                   | Linux-3.16.0-4-amd64
+ Who compiled             | kasperf
+ Host                     | fend03.cluster
+ System                   | Linux-3.10.0-1160.53.1.el7.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
- 64-bit integers          | OFF
+ 64-bit integers          | ON
  MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (Debian 4.9.2-10+deb8u2) 4.9.2
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (Debian 4.9.2-10+deb8u2) 4.9.2
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (Debian 4.9.2-10+deb8u2) 4.9.2
- BLAS                     | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_gf_lp64.so;/opt/intel/composer_xe_2013.1.11
-                          | 7/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/
-                          | composer_xe_2013.1.117/mkl/lib/intel64/libmkl_core
-                          | .so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/l
-                          | ib/x86_64-linux-gnu/libm.so
- LAPACK                   | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_lapack95_lp64.a;/opt/intel/composer_xe_2013
-                          | .1.117/mkl/lib/intel64/libmkl_gf_lp64.so
+ Fortran compiler         | /software/local/intel/parallel_studio_xe_2020_upd4
+                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
+                          | l64/ifort
+ Fortran compiler version | ifort (IFORT) 19.1.3.304 20200925
+ C compiler               | /software/local/intel/parallel_studio_xe_2020_upd4
+                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
+                          | l64/icc
+ C compiler version       | icc (ICC) 19.1.3.304 20200925
+ C++ compiler             | /software/local/intel/parallel_studio_xe_2020_upd4
+                          | /compilers_and_libraries_2020.4.304/linux/bin/inte
+                          | l64/icpc
+ C++ compiler version     | icpc (ICC) 19.1.3.304 20200925
+ BLAS                     | /software/local/intel/parallel_studio_xe_2020_upd4
+                          | /compilers_and_libraries_2020.4.304/linux/mkl/lib/
+                          | intel64/libmkl_intel_ilp64.so;/software/local/inte
+                          | l/parallel_studio_xe_2020_upd4/compilers_and_libra
+                          | ries_2020.4.304/linux/mkl/lib/intel64/libmkl_seque
+                          | ntial.so;/software/local/intel/parallel_studio_xe_
+                          | 2020_upd4/compilers_and_libraries_2020.4.304/linux
+                          | /mkl/lib/intel64/libmkl_core.so;/usr/lib64/libpthr
+                          | ead.so;/usr/lib64/libm.so
+ LAPACK                   | /software/local/intel/parallel_studio_xe_2020_upd4
+                          | /compilers_and_libraries_2020.4.304/linux/mkl/lib/
+                          | intel64/libmkl_lapack95_ilp64.a;/software/local/in
+                          | tel/parallel_studio_xe_2020_upd4/compilers_and_lib
+                          | raries_2020.4.304/linux/mkl/lib/intel64/libmkl_int
+                          | el_ilp64.so
  Static linking           | OFF
- Last Git revision        | 17bdd0d16aeed8c81483f51f71f5664e56d04a4e
- Git branch               | new_soppa_feature
- Configuration time       | 2023-03-10 16:28:32.320752
+ Last Git revision        | 0e02a892ba258287048f969970cb19b8d78d33d4
+ Git branch               | new_feature_kasper
+ Configuration time       | 2023-10-27 15:22:01.345003
 
 
    Content of the .dal input file
@@ -259,10 +271,10 @@ H   0.00000             1.43153              -0.985265576
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: Calculation of excitation energies through ABACUS                       
- 2:                                                                         
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1: Calculation of excitation energies through ABACUS
+ 2: 
+    --------------------------------------------------------------------------------
 
   INFO from READIN: Threshold for discarding integrals was    1.00D-16
   INFO from READIN: Threshold is reset to minimum value       1.00D-15
@@ -273,7 +285,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/juliane/bin/source/dalton/build/basis/pc-1"
+     "/lustre/hpc/kemi/kasperf/dalton_program/dalton/build_64/basis/pc-1"
 
   Atomic type no.    2
   --------------------
@@ -281,7 +293,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juliane/bin/source/dalton/build/basis/pc-1"
+     "/lustre/hpc/kemi/kasperf/dalton_program/dalton/build_64/basis/pc-1"
 
 
                          SYMGRP: Point group information
@@ -540,8 +552,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z     -0.97737576        -2.48424123        -8.28653678
 
 
-  Total CPU  time used in HERMIT:   0.00 seconds
-  Total wall time used in HERMIT:   0.01 seconds
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.07 seconds
 
 
                         .----------------------------------.
@@ -575,12 +587,12 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:59 2023
+     Host name              : node219.cluster                         
 
  Title lines from ".mol" input file:
-     Calculation of excitation energies through ABACUS                       
-                                                                             
+     Calculation of excitation energies through ABACUS
+     
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
@@ -661,8 +673,11 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:       11412 ( 25.3% )
  HERMIT - Megabytes written:                              0.137
 
+  Total CPU  time used in TWOINT:   0.01 seconds
+  Total wall time used in TWOINT:   0.01 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-15 )
+
 @  1  -75.7792830913       2.31D+00  -7.58D+01     3   1   1   0
       Virial theorem: -V/T =      1.994833
 @    MULPOP   O      -0.49; H   _1  0.25; H   _2  0.25; 
@@ -698,11 +713,11 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      1.998838
 @    MULPOP   O      -0.46; H   _1  0.23; H   _2  0.23; 
  -----------------------------------------------------------------------------
-@  9  -76.0042268721       4.80D-06  -7.54D-11     3   1   1   0
+@  9  -76.0042268721       4.80D-06  -7.53D-11     3   1   1   0
       Virial theorem: -V/T =      1.998838
 @    MULPOP   O      -0.46; H   _1  0.23; H   _2  0.23; 
  -----------------------------------------------------------------------------
-@ 10  -76.0042268721       9.04D-07  -4.15D-12     3   1   1   0
+@ 10  -76.0042268721       9.04D-07  -4.18D-12     3   1   1   0
 
 @ *** DIIS converged in  10 iterations !
 @     Converged SCF energy, gradient:    -76.004226872071    9.04D-07
@@ -777,7 +792,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.016       0.015
+ CPU and wall time for SCF :       0.026       0.064
 
 
                        .-----------------------------------.
@@ -796,10 +811,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000904143
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:59 2023
+     Host name              : node219.cluster                         
 
-File label for MO orbitals:  12Mar23   FOCKDIIS
+File label for MO orbitals:  22Nov23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -860,12 +875,12 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
    1 O   :3d2-   0.4009   1.0125
    2 H   :2px    0.5498  -0.5484
 
-  Total CPU  time used in SIRIUS :   0.02 seconds
-  Total wall time used in SIRIUS :   0.02 seconds
+  Total CPU  time used in SIRIUS :   0.04 seconds
+  Total wall time used in SIRIUS :   0.12 seconds
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:59 2023
+     Host name              : node219.cluster                         
 
 
                      .---------------------------------------.
@@ -915,7 +930,7 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
           Number of t2 amplitudes                 :      1277
           Total number of amplitudes in ccsd      :      1310
 
- Iter.  1: Coupled cluster MP2   energy :     -76.2090271874768348
+ Iter.  1: Coupled cluster MP2   energy :     -76.2090271874768064
 
 
 
@@ -1040,11 +1055,11 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
  *******************************************************************************
 
 
- CPU and wall time for CC :       0.012       0.012
+ CPU and wall time for CC :       0.015       0.060
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:59 2023
+     Host name              : node219.cluster                         
 
 
                       .-------------------------------------.
@@ -1103,8 +1118,8 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:46 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:01:59 2023
+     Host name              : node219.cluster                         
 
 
                             **************************
@@ -1136,37 +1151,37 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.44439879D+01     9.6174D-01       no
-      2    0.000000   0.51720883D+01     2.8579D-01       no
-      3    0.000000   0.53024119D+01     1.0363D-01       no
-      4    0.000000   0.53198770D+01     2.3624D-02       no
-      5    0.000000   0.53206696D+01     5.8387D-03       no
-      6    0.000000   0.53207242D+01     1.4164D-03       no
-      7    0.000000   0.53207263D+01     2.4248D-04       no
-      8    0.000000   0.53207264D+01     5.9535D-05       no
-      9    0.000000   0.53207264D+01     1.0930D-05      yes
+      1    0.000000   0.44406281D+01     9.5730D-01       no
+      2    0.000000   0.51597779D+01     2.8258D-01       no
+      3    0.000000   0.52864343D+01     1.0239D-01       no
+      4    0.000000   0.53032626D+01     2.3123D-02       no
+      5    0.000000   0.53040098D+01     5.6489D-03       no
+      6    0.000000   0.53040604D+01     1.3666D-03       no
+      7    0.000000   0.53040623D+01     2.3178D-04       no
+      8    0.000000   0.53040624D+01     5.6886D-05       no
+      9    0.000000   0.53040624D+01     1.0138D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.53210689D+01     2.7277D-02       no
-      2    0.005000   0.53211547D+01     1.0947D-02       no
-      3    0.005000   0.53211612D+01     1.7578D-03       no
-      4    0.005000   0.53211615D+01     5.9811D-04       no
-      5    0.005000   0.53211615D+01     1.0308D-04       no
-      6    0.005000   0.53211615D+01     2.0659D-05      yes
+      1    0.005000   0.53043997D+01     2.7286D-02       no
+      2    0.005000   0.53044841D+01     1.0935D-02       no
+      3    0.005000   0.53044904D+01     1.7191D-03       no
+      4    0.005000   0.53044907D+01     5.8285D-04       no
+      5    0.005000   0.53044907D+01     1.0156D-04       no
+      6    0.005000   0.53044907D+01     2.0680D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.53646013D+01     1.3282D-02       no
-      2    0.050000   0.53648594D+01     6.7087D-03       no
-      3    0.050000   0.53648883D+01     1.1943D-03       no
-      4    0.050000   0.53648897D+01     4.0742D-04       no
-      5    0.050000   0.53648898D+01     1.2951D-04       no
-      6    0.050000   0.53648898D+01     3.1022D-05      yes
+      1    0.050000   0.53472468D+01     1.3202D-02       no
+      2    0.050000   0.53474974D+01     6.6416D-03       no
+      3    0.050000   0.53475251D+01     1.1622D-03       no
+      4    0.050000   0.53475264D+01     3.7696D-04       no
+      5    0.050000   0.53475265D+01     1.1545D-04       no
+      6    0.050000   0.53475265D+01     2.9351D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.55028299D+01     2.8665D-02       no
-      2    0.100000   0.55054397D+01     1.4687D-02       no
-      3    0.100000   0.55057485D+01     2.7128D-03       no
-      4    0.100000   0.55057653D+01     9.5812D-04       no
-      5    0.100000   0.55057666D+01     3.0250D-04       no
-      6    0.100000   0.55057667D+01     7.4449D-05       no
-      7    0.100000   0.55057667D+01     1.4172D-05      yes
+      1    0.100000   0.54832098D+01     2.8490D-02       no
+      2    0.100000   0.54857397D+01     1.4538D-02       no
+      3    0.100000   0.54860358D+01     2.6393D-03       no
+      4    0.100000   0.54860515D+01     8.8943D-04       no
+      5    0.100000   0.54860526D+01     2.7047D-04       no
+      6    0.100000   0.54860527D+01     7.0404D-05       no
+      7    0.100000   0.54860527D+01     1.3435D-05      yes
  -------------------------------------------------------------
 
  -----------------------------------
@@ -1182,35 +1197,35 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.29649336D+01     8.1692D-01       no
-      2    0.000000   0.34811281D+01     2.4266D-01       no
-      3    0.000000   0.35521449D+01     5.4421D-02       no
-      4    0.000000   0.35561359D+01     1.5553D-02       no
-      5    0.000000   0.35564407D+01     4.2920D-03       no
-      6    0.000000   0.35564548D+01     5.7371D-04       no
-      7    0.000000   0.35564551D+01     9.3696D-05       no
-      8    0.000000   0.35564551D+01     1.1609D-05      yes
+      1    0.000000   0.29604486D+01     8.1505D-01       no
+      2    0.000000   0.34689126D+01     2.4056D-01       no
+      3    0.000000   0.35377063D+01     5.3725D-02       no
+      4    0.000000   0.35415021D+01     1.5132D-02       no
+      5    0.000000   0.35417860D+01     4.1774D-03       no
+      6    0.000000   0.35417993D+01     5.6060D-04       no
+      7    0.000000   0.35417995D+01     9.0503D-05       no
+      8    0.000000   0.35417995D+01     1.1246D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.35567459D+01     3.7478D-02       no
-      2    0.005000   0.35568944D+01     1.5499D-02       no
-      3    0.005000   0.35569091D+01     2.9838D-03       no
-      4    0.005000   0.35569101D+01     7.6444D-04       no
-      5    0.005000   0.35569102D+01     8.4857D-05       no
-      6    0.005000   0.35569102D+01     1.6079D-05      yes
+      1    0.005000   0.35420831D+01     3.7435D-02       no
+      2    0.005000   0.35422272D+01     1.5471D-02       no
+      3    0.005000   0.35422414D+01     2.9270D-03       no
+      4    0.005000   0.35422424D+01     7.4957D-04       no
+      5    0.005000   0.35422424D+01     8.1953D-05       no
+      6    0.005000   0.35422424D+01     1.5507D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.36025506D+01     2.0801D-02       no
-      2    0.050000   0.36031969D+01     1.0476D-02       no
-      3    0.050000   0.36032698D+01     1.8776D-03       no
-      4    0.050000   0.36032733D+01     4.8618D-04       no
-      5    0.050000   0.36032735D+01     9.8392D-05       no
-      6    0.050000   0.36032735D+01     1.1154D-05      yes
+      1    0.050000   0.35866510D+01     2.0601D-02       no
+      2    0.050000   0.35872673D+01     1.0354D-02       no
+      3    0.050000   0.35873362D+01     1.8300D-03       no
+      4    0.050000   0.35873394D+01     4.6945D-04       no
+      5    0.050000   0.35873396D+01     9.5184D-05       no
+      6    0.050000   0.35873396D+01     1.0777D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.37538716D+01     4.5188D-02       no
-      2    0.100000   0.37608887D+01     2.2890D-02       no
-      3    0.100000   0.37617371D+01     4.2738D-03       no
-      4    0.100000   0.37617809D+01     1.1501D-03       no
-      5    0.100000   0.37617837D+01     2.3527D-04       no
-      6    0.100000   0.37617838D+01     2.7809D-05      yes
+      1    0.100000   0.37335900D+01     4.4740D-02       no
+      2    0.100000   0.37402565D+01     2.2622D-02       no
+      3    0.100000   0.37410555D+01     4.1655D-03       no
+      4    0.100000   0.37410954D+01     1.1101D-03       no
+      5    0.100000   0.37410980D+01     2.2747D-04       no
+      6    0.100000   0.37410980D+01     2.6836D-05      yes
  -------------------------------------------------------------
 
  -----------------------------------
@@ -1226,35 +1241,35 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.59641214D+01     8.2709D-01       no
-      2    0.000000   0.66949402D+01     1.4327D-01       no
-      3    0.000000   0.67312463D+01     3.5767D-02       no
-      4    0.000000   0.67329158D+01     6.4380D-03       no
-      5    0.000000   0.67330199D+01     2.4133D-03       no
-      6    0.000000   0.67330284D+01     5.0200D-04       no
-      7    0.000000   0.67330288D+01     1.3256D-04       no
-      8    0.000000   0.67330288D+01     2.4891D-05      yes
+      1    0.000000   0.59517883D+01     8.2497D-01       no
+      2    0.000000   0.66713482D+01     1.4160D-01       no
+      3    0.000000   0.67064484D+01     3.5265D-02       no
+      4    0.000000   0.67080491D+01     6.2891D-03       no
+      5    0.000000   0.67081466D+01     2.3355D-03       no
+      6    0.000000   0.67081544D+01     4.8442D-04       no
+      7    0.000000   0.67081548D+01     1.2661D-04       no
+      8    0.000000   0.67081548D+01     2.3815D-05      yes
  -------------------------------------------------------------
-      1    0.005000   0.67333852D+01     1.8276D-02       no
-      2    0.005000   0.67334224D+01     7.0224D-03       no
-      3    0.005000   0.67334247D+01     9.6522D-04       no
-      4    0.005000   0.67334248D+01     3.9511D-04       no
-      5    0.005000   0.67334248D+01     8.7830D-05       no
-      6    0.005000   0.67334248D+01     2.5737D-05      yes
+      1    0.005000   0.67085052D+01     1.8241D-02       no
+      2    0.005000   0.67085416D+01     7.0047D-03       no
+      3    0.005000   0.67085438D+01     9.5448D-04       no
+      4    0.005000   0.67085439D+01     3.8668D-04       no
+      5    0.005000   0.67085439D+01     8.4060D-05       no
+      6    0.005000   0.67085439D+01     2.4913D-05      yes
  -------------------------------------------------------------
-      1    0.050000   0.67728575D+01     9.0776D-03       no
-      2    0.050000   0.67729608D+01     4.0574D-03       no
-      3    0.050000   0.67729701D+01     6.6030D-04       no
-      4    0.050000   0.67729705D+01     2.3613D-04       no
-      5    0.050000   0.67729706D+01     5.6609D-05       no
-      6    0.050000   0.67729706D+01     1.3377D-05      yes
+      1    0.050000   0.67472871D+01     9.0130D-03       no
+      2    0.050000   0.67473871D+01     4.0169D-03       no
+      3    0.050000   0.67473960D+01     6.4502D-04       no
+      4    0.050000   0.67473964D+01     2.2989D-04       no
+      5    0.050000   0.67473964D+01     5.4573D-05       no
+      6    0.050000   0.67473964D+01     1.2814D-05      yes
  -------------------------------------------------------------
-      1    0.100000   0.68960515D+01     1.9532D-02       no
-      2    0.100000   0.68970605D+01     8.8430D-03       no
-      3    0.100000   0.68971551D+01     1.4801D-03       no
-      4    0.100000   0.68971599D+01     5.6924D-04       no
-      5    0.100000   0.68971604D+01     1.4351D-04       no
-      6    0.100000   0.68971604D+01     3.5322D-05      yes
+      1    0.100000   0.68682737D+01     1.9392D-02       no
+      2    0.100000   0.68692491D+01     8.7542D-03       no
+      3    0.100000   0.68693397D+01     1.4452D-03       no
+      4    0.100000   0.68693443D+01     5.5346D-04       no
+      5    0.100000   0.68693447D+01     1.3806D-04       no
+      6    0.100000   0.68693447D+01     3.3829D-05      yes
  -------------------------------------------------------------
 
  |=====================================================| 
@@ -1272,31 +1287,48 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   SO_OPTVEC           0:00:02     83.8 %     83.8 % |
- |   SO_RES_A            0:00:00      4.4 %     88.2 % |
- |   SO_RES_CB           0:00:00      2.9 %     91.0 % |
- |   SO_RES_TCB          0:00:00      2.7 %     93.8 % |
- |   SO_SIGAI            0:00:00      2.4 %     96.2 % |
- |   SO_INCRED           0:00:00      0.9 %     97.1 % |
- |   CC_AOFOCK           0:00:00      0.8 %     97.9 % |
- |   SO_T2M1             0:00:00      0.5 %     98.3 % |
- |   CCTRBT              0:00:00      0.3 %     98.6 % |
- |   SO_ERES             0:00:00      0.3 %     98.9 % |
- |   CCRDAO              0:00:00      0.3 %     99.2 % |
- |   SO_REDEV            0:00:00      0.2 %     99.4 % |
- |   SO_RES_OVL          0:00:00      0.2 %     99.5 % |
- |   SO_TRIAL2           0:00:00      0.2 %     99.7 % |
- |   SO_ORTH_TRN         0:00:00      0.2 %     99.8 % |
- |   SO_DENSAI           0:00:00      0.2 %    100.0 % |
+ |   SO_OPTVEC           0:00:23     95.4 %     95.4 % |
+ |   SO_SIGAI            0:00:01      2.6 %     97.9 % |
+ |   SO_RES_A            0:00:00      0.5 %     98.5 % |
+ |   SO_ERES             0:00:00      0.3 %     98.8 % |
+ |   SO_RES_TCB          0:00:00      0.3 %     99.0 % |
+ |   SO_RES_CB           0:00:00      0.2 %     99.3 % |
+ |   SO_INCRED           0:00:00      0.2 %     99.4 % |
+ |   SO_TRIAL2           0:00:00      0.1 %     99.6 % |
+ |   SO_ORTH_TRN         0:00:00      0.1 %     99.6 % |
+ |   SO_T2M1             0:00:00      0.1 %     99.7 % |
+ |   CCRDAO              0:00:00      0.1 %     99.8 % |
+ |   CC_AOFOCK           0:00:00      0.0 %     99.8 % |
+ |   CCTRBT              0:00:00      0.0 %     99.8 % |
+ |   SO_DENSAI           0:00:00      0.0 %     99.9 % |
+ |   SO_GETMO            0:00:00      0.0 %     99.9 % |
+ |   SO_RES_OVL          0:00:00      0.0 %     99.9 % |
+ |   SO_TRIAL1           0:00:00      0.0 %     99.9 % |
+ |   SO_REDEV            0:00:00      0.0 %     99.9 % |
+ |   SO_AODENS           0:00:00      0.0 %     99.9 % |
+ |   CC_FCKMO            0:00:00      0.0 %     99.9 % |
+ |   SO_ROPT             0:00:00      0.0 %     99.9 % |
+ |   SO_DIAG             0:00:00      0.0 %     99.9 % |
+ |   SO_RES_SYM          0:00:00      0.0 %     99.9 % |
+ |   SO_RES_CD           0:00:00      0.0 %     99.9 % |
+ |   SO_RES_FCK          0:00:00      0.0 %     99.9 % |
+ |   SO_BCKTR            0:00:00      0.0 %     99.9 % |
+ |   SO_TWOFOCK          0:00:00      0.0 %     99.9 % |
+ |   SO_DENS3            0:00:00      0.0 %     99.9 % |
+ |   SO_ONEFOCK          0:00:00      0.0 %     99.9 % |
+ |   SO_DENS             0:00:00      0.0 %     99.9 % |
+ |   SO_T2MP             0:00:00      0.0 %     99.9 % |
+ |   SO_MOENERGY         0:00:00      0.0 %     99.9 % |
+ |   SO_INIT             0:00:00      0.0 %     99.9 % |
  |-----------------------------------------------------| 
- |  Total CPU time       0:00:03                       |
+ |  Total CPU time       0:00:24                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      0.3 %            |
- |   SO_WRITE            0: 0: 0      0.2 %            |
- |   SO_OPEN             0: 0: 0      0.6 %            |
- |   SO_CLOSE            0: 0: 0      0.0 %            |
+ |   SO_READ             0: 0: 0      0.1 %            |
+ |   SO_WRITE            0: 0: 0      0.1 %            |
+ |   SO_OPEN             0: 0: 0      0.1 %            |
+ |   SO_CLOSE            0: 0: 0      0.1 %            |
  |-----------------------------------------------------| 
 
  |=====================================================| 
@@ -1304,12 +1336,12 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0:00:00     17.7 %     17.7 % |
- |   SO_SRES             0:00:00      0.0 %     17.7 % |
- |   SO_REDEV            0:00:02     80.7 %     98.4 % |
- |   SO_TRIAL2           0:00:00      1.2 %     99.6 % |
+ |   SO_ERES             0:00:01      4.2 %      4.2 % |
+ |   SO_SRES             0:00:00      0.0 %      4.2 % |
+ |   SO_REDEV            0:00:23     95.4 %     99.6 % |
+ |   SO_TRIAL2           0:00:00      0.2 %     99.8 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0: 3                       |
+ |   Total wall time     0: 0:24                       |
  |=====================================================| 
 
 
@@ -1319,8 +1351,8 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:49 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:02:23 2023
+     Host name              : node219.cluster                         
 
 
                              Molecular geometry (au)
@@ -1363,41 +1395,41 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.556455       0.000000       0.000000    
-                Ey    0.000000       6.733029       0.000000    
-                Ez    0.000000       0.000000       5.320726    
+                Ex    3.541800       0.000000       0.000000    
+                Ey    0.000000       6.708155       0.000000    
+                Ez    0.000000       0.000000       5.304062    
 
-Isotropic polarizability:   5.203403    
+Isotropic polarizability:   5.184672    
 
           Polarizability tensor for frequency     0.005000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.556910       0.000000       0.000000    
-                Ey    0.000000       6.733425       0.000000    
-                Ez    0.000000       0.000000       5.321162    
+                Ex    3.542242       0.000000       0.000000    
+                Ey    0.000000       6.708544       0.000000    
+                Ez    0.000000       0.000000       5.304491    
 
-Isotropic polarizability:   5.203832    
+Isotropic polarizability:   5.185092    
 
           Polarizability tensor for frequency     0.050000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.603273       0.000000       0.000000    
-                Ey    0.000000       6.772971       0.000000    
-                Ez    0.000000       0.000000       5.364890    
+                Ex    3.587340       0.000000       0.000000    
+                Ey    0.000000       6.747396       0.000000    
+                Ez    0.000000       0.000000       5.347527    
 
-Isotropic polarizability:   5.247045    
+Isotropic polarizability:   5.227421    
 
           Polarizability tensor for frequency     0.100000 au
           ----------------------------------------------------
                             Ex             Ey             Ez
 
-                Ex    3.761784       0.000000       0.000000    
-                Ey    0.000000       6.897160       0.000000    
-                Ez    0.000000       0.000000       5.505767    
+                Ex    3.741098       0.000000       0.000000    
+                Ey    0.000000       6.869345       0.000000    
+                Ez    0.000000       0.000000       5.486053    
 
-Isotropic polarizability:   5.388237    
+Isotropic polarizability:   5.365498    
 
 
  ======================================================================
@@ -1441,22 +1473,22 @@ Isotropic polarizability:   5.388237
  CPU time statistics for ABACUS
  ------------------------------
 
- LNRABA     00:00:03     100 %
+ LNRABA     00:00:24     100 %
 
- TOTAL      00:00:03     100 %
+ TOTAL      00:00:24     100 %
 
 
-  Total CPU  time used in ABACUS:   2.64 seconds
-  Total wall time used in ABACUS:   2.64 seconds
+  Total CPU  time used in ABACUS:  24.37 seconds
+  Total wall time used in ABACUS:  24.42 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   2.68 seconds
-  Total wall time used in DALTON:   2.68 seconds
+  Total CPU  time used in DALTON:  24.47 seconds
+  Total wall time used in DALTON:  25.05 seconds
 
  
-     Date and time (Linux)  : Sun Mar 12 21:04:49 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Wed Nov 22 15:02:23 2023
+     Host name              : node219.cluster                         
