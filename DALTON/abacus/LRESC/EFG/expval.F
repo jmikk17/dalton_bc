@@ -263,7 +263,7 @@ C
          KJ = KJ+1
 !           Get average value of operator
             CALL PRP1AVE(LISTA1(IDIP),SNDPRP,WORK(KCMO),WORK(KUDV),
-     &      WORK(KWRKG1),LWRKG1,JJAPRT)
+     $      WORK(KWRKG1),LWRKG1,JJAPRT)
             IF (JJAPRT.GE.2) THEN
                WRITE (LUPRI,'(1A,I2,3A,F20.12)')
      &         '#',KJ,' Expectation Value for Operator : < ',
