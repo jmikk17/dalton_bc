@@ -37,7 +37,7 @@ C
 #include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 14, D0 = 0.0D0)
+      PARAMETER (NTABLE = 16, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
@@ -48,8 +48,10 @@ C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
      &            '.PARA1S','.PARA1T','.PARA3S','.PARA3T','.DIAM0S',
-C                      11       12        13       14
-     &            '.DIAM1S','.ANISO ','.PARANR','.DIANR '/
+C                      11       12        13       14         15
+     &            '.DIAM1S','.ANISO ','.PARANR','.DIANR ','.PYINTS',
+C                      16
+     &            '.AVGINT'/
 C
       NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
@@ -63,7 +65,7 @@ C
             ELSE IF (PROMPT .EQ. '.') THEN
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14), I
+                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -154,6 +156,14 @@ c                 Free option
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
+ 15            CONTINUE
+                  PYINTS = .TRUE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
+ 16            CONTINUE
+                  AVGINTS = .TRUE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
             ELSE
@@ -211,6 +221,9 @@ C
       SIGMAP3T = .FALSE.
 
       LRESCALL = .TRUE.
+
+      PYINTS = .FALSE.
+      AVGINTS = .FALSE.
 C
 C     Initialize /CUADRA/
 C
@@ -347,8 +360,10 @@ C --------------------------------------------------
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C   TESTING NEW CORRECTIONS
-      write(lupri,*) "AUCAR - IMPORTANDO NUEVAS INTEGRALES"
-      call import_matrix(19*NUCIND,"shi")
+      if (PYINTS) THEN
+         write(lupri,*) "AUCAR - IMPORTANDO NUEVAS INTEGRALES"
+         call import_matrix(19*NUCIND,"shi")
+      end if
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C --------------------------------------------------
 c     Construct LR singlet inputs and run responses (all at once)
@@ -415,12 +430,16 @@ c      CALL HERCTL(WORK,LWORK)
          CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
          CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
 !      END IF
-         CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
-         CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
-         CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
-         CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
+         IF (PYINTS) THEN
+           write(LUPRI,*) "ENTRO AL IF"
+            CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
+            CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
+            CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
+            CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
+         END IF
 
-         CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
+         IF (AVGINTS) CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
+
       END IF
 C --------------------------------------------------
 C     Paramagnetic corrections to Shielding:
