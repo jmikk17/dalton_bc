@@ -55,7 +55,8 @@ c      END IF
             WRITE(lupri,'(/,4X,A)')
      &   '-  All LRESC corrections were activated'
       ELSE
-            WRITE(lupri,*) '* Specific LRESC corrections were activated'
+            WRITE(lupri,'(/,4X,A)') 
+     &   '-  Specific LRESC corrections were activated'
       ENDIF
       WRITE(LUPRI,*)
 
@@ -96,7 +97,7 @@ c     For sublist of atoms (not implemented yet) this should be modified
 
 C ---Not Default
       IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
-     & CALL HEADER('Changes of defaults for LRESC :',0)
+     & CALL HEADER('Changes of defaults for LRESC :',3)
 
       IF (JIMPRT.NE.0) THEN
          WRITE (LUPRI,'(A,I5)')
@@ -121,6 +122,7 @@ C ---Not Default
      &   'Paramagnetic third order triplet corrections'
       ENDIF
       WRITE(LUPRI,*)' '
+
 
       CALL QEXIT('LRSCDRV_SHI')
       RETURN
