@@ -374,6 +374,10 @@ C --------------------------------------------------
 c     Construct LR singlet inputs and run responses (all at once)
       IF (SIGMAPNR.OR.SIGMAP1S.OR.SIGMAD1S) THEN
          call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.FALSE.)
+         CALL GETTIM(TIMLRS,WALLRS)
+         IF (JIMPRT.GE.1)
+     &   WRITE (LUPRI,'(5X,A)') 'Singlet Linear Responses'//
+     &                       ' are under calculation'
 c        Run Linear Responses
          LUPRI = 6232
          OPEN(UNIT=LUPRI, FILE='LRESC-LR-S',status='unknown',
@@ -382,11 +386,21 @@ c        Run Linear Responses
          CLOSE(LUPRI)
          LUPRI  = 2
 
-C     Check for Warnings
-      open(unit=6232, file=trim('LRESC-LR-S'), status='old')
-      call SearchWord(6232, 'WARNING', warning_found)
-      if (warning_found) WARNLRS = .true.
-      close(6232)
+C        Check for Warnings
+         open(unit=6232, file=trim('LRESC-LR-S'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNLRS = .true.
+         close(6232)
+
+         CALL GETTIM(TEND,WEND)
+         TIMLRS = TEND - TIMLRS
+         WALLRS = WEND - WALLRS
+         IF (JIMPRT .GE. 2) THEN
+            CALL TIMTXT('    Total CPU  time used in LRESC-LR-S:',
+     &                       TIMLRS,LUPRI)
+            CALL TIMTXT('    Total wall time used in LRESC-LR-S:',
+     &                       WALLRS,LUPRI)
+         END IF
 
       END IF
 C --------------------------------------------------
@@ -410,6 +424,10 @@ C --------------------------------------------------
 c     Construct LR triplet inputs and run responses (all at once)
       IF (SIGMAP1T) THEN
          call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.TRUE.)
+         CALL GETTIM(TIMLRT,WALLRT)
+         IF (JIMPRT.GE.1)
+     &   WRITE (LUPRI,'(5X,A)') 'Triplet Linear Responses'//
+     &                       ' are under calculation'
 c        Run Linear Responses
          LUPRI = 6232
          OPEN(UNIT=LUPRI, FILE='LRESC-LR-T',status='unknown',
@@ -418,11 +436,21 @@ c        Run Linear Responses
          CLOSE(LUPRI)
          LUPRI  = 2
 
-C     Check for Warnings
-      open(unit=6232, file=trim('LRESC-LR-T'), status='old')
-      call SearchWord(6232, 'WARNING', warning_found)
-      if (warning_found) WARNLRT = .true.
-      close(6232)
+C        Check for Warnings
+         open(unit=6232, file=trim('LRESC-LR-T'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNLRT = .true.
+         close(6232)
+
+         CALL GETTIM(TEND,WEND)
+         TIMLRT = TEND - TIMLRT
+         WALLRT = WEND - WALLRT
+         IF (JIMPRT .GE. 2) THEN
+            CALL TIMTXT('    Total CPU  time used in LRESC-LR-T:',
+     &                       TIMLRT,LUPRI)
+            CALL TIMTXT('    Total wall time used in LRESC-LR-T:',
+     &                       WALLRT,LUPRI)
+         END IF
 
       END IF
 C --------------------------------------------------
@@ -450,7 +478,6 @@ c      CALL HERCTL(WORK,LWORK)
          CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
 !      END IF
          IF (PYINTS) THEN
-           write(LUPRI,*) "ENTRO AL IF"
             CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
             CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
             CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
@@ -497,9 +524,9 @@ c     Third Order
 
 c     Singlets
       IF (SIGMAP3S) THEN
-         IF (JIMPRT.GT.1) THEN
-         WRITE (LUPRI,'(A)') ' Calling to SIGMAP3S for : Paramagnetic'//
-     &                     ' Singlet Third Order Shielding corrections'
+         IF (JIMPRT.GE.1) THEN
+         WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
+     &                     ' are under calculation'
          END IF
          CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
          CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
@@ -507,9 +534,9 @@ c     Singlets
 
 c     Triplets
       IF (SIGMAP3T) THEN
-         IF (JIMPRT.GT.1) THEN
-         WRITE (LUPRI,'(A)')' Calling to SIGMAP3T for : Paramagnetic'//
-     &                     ' Triplet Third Order Shielding corrections'
+         IF (JIMPRT.GE.1) THEN
+         WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
+     &                     ' are under calculation'
          END IF
          CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
          CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK

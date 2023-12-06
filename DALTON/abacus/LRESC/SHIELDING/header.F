@@ -41,10 +41,16 @@ C ---- Default
       CALL TITLER
      &('LRESC RELATIVISTIC CORRECTIONS TO SHIELDING','*',124)
 
-c      WRITE(lupri,*)
-c      WRITE(lupri,*)' First and Second order relativistic '//
-c     & 'corrections to nuclear shielding constant.'
-c      WRITE(LUPRI,*)
+      WRITE(LUPRI,*)'   -  Original LRESC papers at :'
+      write(lupri,'(7X,A)') 'J. Chem. Phys. 118, 2 (2003),'//
+     &            'doi:10.1063/1.1525808'
+c      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
+c     &                       ' DOI: 10.1080/00268970310001617784'
+c      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
+c     & 'doi:10.1063/1.2244572'
+      WRITE(LUPRI,'(7X,A)')'Int. J. Quantum Chem. 118, '//
+     &    'e25487 (2017), doi.org/10.1002/qua.25487'
+
 c      IF (LRANISO) THEN
       WRITE(LUPRI,'(/,4X,A)') '-  Definitions according to : '
       WRITE(LUPRI,'(7X,A)') 'J. Mason, Solid state Nuc. Magn. '//
@@ -60,20 +66,6 @@ c      END IF
       ENDIF
       WRITE(LUPRI,*)
 
-c      WRITE(LUPRI,*)'   -  For definitions on terms named ABC,'//
-c     &              ' refered to relativistic correction '
-c      WRITE(LUPRI,*)'      of sigma, see JCP. 137, 214319(2012). '
-      WRITE(LUPRI,*)'   -  Original LRESC papers at :'
-      write(lupri,'(7X,A)') 'J. Chem. Phys. 118, 2 (2003),'//
-     &            'doi:10.1063/1.1525808'
-c      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
-c     &                       ' DOI: 10.1080/00268970310001617784'
-c      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
-c     & 'doi:10.1063/1.2244572'
-      WRITE(LUPRI,'(7X,A)')'Int. J. Quantum Chem. 118, '//
-     &    'e25487 (2017), doi.org/10.1002/qua.25487'
-
-      WRITE(LUPRI,*)
 c     For sublist of atoms (not implemented yet) this should be modified
       IF (LRATOM_changed) THEN
          WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,

@@ -61,40 +61,40 @@ C         'FCDE' 'FCDE'
       IF (JIMPRT .GE. 1) THEN
          IF (KEY.EQ.'DIAM') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic Second Order Singlet (DIAM)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'DIAD') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic Second Order Singlet (DIAD)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'NRPA') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic non-relativistic contribution',
-     &   ' (NRPA) is under calculation...'
+     &   ' (NRPA) is under calculation'
          IF (KEY.EQ.'PSOK') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (PSOK)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'PSOKI') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (PSOKI)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'OZK ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (OZK)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'FCZK') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (FCZK)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'FCDE') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (FCDE)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'SDK ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (SDK)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'SDD ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (SDD)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'FCBS') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (FCBS)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'SDBS') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Triplet (SDBS)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
       END IF
       TOTALLR = 0.d0
@@ -470,8 +470,8 @@ c     Elemento ij del tensor de shielding
 
                call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
                TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
-               IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
-     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
+c               IF (JIMPRT .GE. 3) write(lupri,*) operadores_duo(1),
+c     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
             end do
          else
             l = k
@@ -480,15 +480,17 @@ c     Elemento ij del tensor de shielding
 
             call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
             TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
-            IF (JIMPRT .GT. 2) write(lupri,*) operadores_duo(1),
-     &      ' ',operadores_duo(2)," LR: ",LR(i,j)
+c            IF (JIMPRT .GE. 3) write(lupri,*) 'Labels:', operadores_duo(1),
+c     &      ' ',operadores_duo(2)," LR:",LR(i,j)
          end if
          end do
 
          LRtensor(i,j) = TOTALLR(i,j)
-         IF (JIMPRT .GT. 2) THEN
-            write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
-            write(lupri,*)
+         IF (JIMPRT .GE. 3) THEN
+c            write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
+c            write(lupri,*)
+            IF (JIMPRT .GE. 3) write(lupri,*) '    Labels: ', 
+     &       operadores_duo(1),' ',operadores_duo(2),". LR:",LR(i,j)
          END IF
 
       end do
@@ -565,6 +567,8 @@ C         'FCDE' 'FCDE'
       write(fileID,'(a)') '**DALTON INPUT'
       write(fileID,'(a)') '**RESPONSE'
       write(fileID,'(a)') '*LINEAR'
+      write(fileID,'(a)') '.THCLR'
+      write(fileID,'(a)') '1.0D-6'
       IF (TRIPLETE) write(fileID,'(a)') '.TRIPLET'
 
       DO J = 1, size(LRATOMS)

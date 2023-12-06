@@ -361,9 +361,11 @@ c     ij shielding tensor element
       CALL GETTIM(TEND,WEND)
       TIMQR = TEND - TIMQR
       WALQR = WEND - WALQR
-      IF (JIMPRT .GT. 0) THEN
-         CALL TIMTXT(' Total CPU  time used in LRESC-QR:',TIMQR,LUPRI)
-         CALL TIMTXT(' Total wall time used in LRESC-QR:',WALQR,LUPRI)
+      IF (JIMPRT .GE. 2) THEN
+         CALL TIMTXT('    Total CPU  time used in LRESC-QR('
+     &                     //KEY//'):',TIMQR,LUPRI)
+         CALL TIMTXT('    Total wall time used in LRESC-QR('
+     &                     //KEY//'):',WALQR,LUPRI)
       END IF
       CALL QEXIT('LRSCQUAD')
 

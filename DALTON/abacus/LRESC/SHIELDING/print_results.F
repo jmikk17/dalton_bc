@@ -313,12 +313,12 @@ C     J. J. Aucar 2022
 C     Information about calculation of LRESC
       IF (elements == 'iso') THEN
          iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-         WRITE (LUPRI,'(9X,A,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
+         WRITE (LUPRI,'(9X,A,A,9X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
      &   names, ':',tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       END IF
       IF (elements == 'ani') THEN
-         WRITE (LUPRI,'(9X,A,A,9X,F13.5,X,F13.5,X,F13.5,13X,A)')
-     &   names, ':',tensor(1,2),tensor(1,3),tensor(2,3),' [ppm]'
+         WRITE (LUPRI,'(9X,A,A,9X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+     &   names, ':',tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       END IF
 
       CALL QEXIT('PRINT_LRSHIELD_CORR')
@@ -348,12 +348,12 @@ C     J. J. Aucar 2022
 C     Information about calculation of LRESC
       IF (elements == 'iso') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      WRITE (LUPRI,'(4X,A,2X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
+      WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
      &      phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       END IF
       IF (elements == 'ani') THEN
-      WRITE (LUPRI,'(4X,A,2X,F13.5,X,F13.5,X,F13.5,13X,A)')
-     &      phrase,tensor(1,2),tensor(1,3),tensor(2,3),' [ppm]'
+      WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+     &      phrase,tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       END IF
 
       CALL QEXIT('PRINT_LRSHIELD_SUM')
@@ -398,17 +398,20 @@ c     For total (NR and REL) also SPAN and SKEW are printed
 
       deallocate (autovalores)
       deallocate (autoestados)
-      WRITE(LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,F13.5,F13.5,A)')
+      WRITE(LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
+     &              3X,F12.4,F12.4,F12.4,X,F12.4,X,A)')
      & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,span,skew,' [ppm]'
       END IF
 
       IF (elements == 'iso') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,26X,A)')
+      WRITE (LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
+     &               3X,F12.4,F12.4,26X,A)')
      &      phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       END IF
       IF (elements == 'ani') THEN
-      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,40X,A)')
+      WRITE (LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
+     &               3X,F12.4,39X,A)')
      &      phrase,tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       END IF
 

@@ -94,19 +94,19 @@ C
 C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
          IF (KEY.EQ.'DINR') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic non-relativistic (DINR)',
-     &   ' contribution is under calculation...'
+     &   ' contribution is under calculation'
          IF (KEY.EQ.'FCAV') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (FC)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'DIAK') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (DIAK)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'ANGP') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (ANGP)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
          IF (KEY.EQ.'SDAV') WRITE(LUPRI,'(5X,A,A)')
      &   'Diamagnetic First Order Singlet (SDAV)',
-     &   ' correction is under calculation...'
+     &   ' correction is under calculation'
 c         IF (KEY.EQ.'FCt1') WRITE(LUPRI,'(5X,A,A)')
       END IF
 C
@@ -122,7 +122,7 @@ C
       LPVX   = 0
       KFREE  = 1
       LFREE  = LWORK
-      IF (JIMPRT.GT.3) Then
+      IF (JIMPRT.GE.4) Then
          WRITE(lupri,'(A,3F12.8)') ' orgcom.h : GAGORG :', GAGORG
          WRITE(lupri,'(A,3F12.8)') '            ORIGIN :', ORIGIN
          WRITE(lupri,'(A,3F12.8)') '            CMXYZ  :', CMXYZ
@@ -152,7 +152,7 @@ c            dimensiona work(KCMO, KCMO+NCMOT)
 C
       KWORK1 = KFREE
       WORK1  = LFREE
-      IF (JIMPRT.GT.3) Then
+      IF (JIMPRT.GE.4) Then
          WRITE(lupri,*) '   '
          WRITE(lupri,*) ' AFTER MEMGET  '
          WRITE(lupri,*) ' ----------------------------'
@@ -170,11 +170,12 @@ C          RD_SIRIFC( KEY ,FOUND,   AMAT   ,  WRK      ,LWRK)
  
       IF (.NOT.FOUND) 
      & CALL QUIT('***Error AVELRSC: CMO is not in SIRIFC***')
-      IF (JIMPRT.GT.5) THEN
-         WRITE(lupri,*)' CMOS : '
-         CALL OUTPUT(WORK(KCMO),1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
-         WRITE(lupri,*) '   '
-      ENDIF
+c      IF (JIMPRT.GT.4) THEN
+c         WRITE(lupri,*)' CMOS : '
+c         CALL OUTPUT(WORK(KCMO),1,NORBT,1,5,NORBT,NORBT,1,LUPRI)
+c         WRITE(lupri,*) '   '
+c      ENDIF
+
 cx ACA es para alguna capa activa
 cx      IF (NASHT .GT. 0) THEN
 cx         CALL RD_SIRIFC('DV',FOUND,WORK(KWORK1),WORK(KWORK1),LWORK1)
@@ -185,7 +186,7 @@ cx         CALL DSPTSI(NASHT,WORK(KWORK1),WORK(KUDV))
 cx      END IF
 C
       ISYM = 1
-      IF (JIMPRT.GT.3) Then
+      IF (JIMPRT.GE.4) Then
          WRITE(lupri,*) '   '
          WRITE(lupri,*) ' about to call LNRVAR'
          WRITE(lupri,*) ' ----------------------------'
@@ -268,7 +269,7 @@ C
       KIDADR = KIDSYM + 9*MXCENT
       KWORK2 = KIDADR + 9*MXCENT
       LWORK2 = LWORK  - KWORK2
-      IF (JIMPRT.GT.3) Then
+      IF (JIMPRT.GE.4) Then
          WRITE(lupri,*) '        '
          WRITE(lupri,*) ' stills to allocate : '
          WRITE(lupri,*) ' ----------------------------'
@@ -533,12 +534,12 @@ c        ENDDO
 
 C  Print LABELS
 C -----------------------------------
-      IF(JIMPRT.GE.2) THEN
-         WRITE(lupri,*) '@AVELRSC setting  LABEL :'
-         DO i =1, NLAB
-            WRITE(LUPRI,*)'   LABEL :', LISTA1(I)
-         ENDDO
-      ENDIF
+c      IF(JIMPRT.GE.3) THEN
+c         WRITE(lupri,*) '@AVELRSC setting  LABEL :'
+c         DO i =1, NLAB
+c            WRITE(LUPRI,*)'   LABEL :', LISTA1(I)
+c         ENDDO
+c      ENDIF
 C
 C ---------------------------------------------------------------------
 C
@@ -576,9 +577,9 @@ cx         ELSE
 !           Get average value of operator
             CALL PRP1AVE(LISTA1(IDIP),SNDPRP,WORK(KCMO),WORK(KUDV),
      $      WORK(KWRKG1),LWRKG1,JIMPRT)
-            IF (JIMPRT.GE.2) THEN
+            IF (JIMPRT.GE.3) THEN
                WRITE (LUPRI,'(1A,I2,3A,F20.12)')
-     &         '#',KJ,' Expectation Value for Operator : < ',
+     &         '     #',KJ,' Expectation Value for Operator : < ',
      &         LISTA1(IDIP), ' > = ', SNDPRP
             ENDIF
 c           ENDIF
