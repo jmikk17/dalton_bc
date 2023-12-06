@@ -224,6 +224,10 @@ C
 
       PYINTS = .FALSE.
       AVGINTS = .FALSE.
+
+      WARNLRS = .FALSE.
+      WARNLRT = .FALSE.
+      WARNQR  = .FALSE.
 C
 C     Initialize /CUADRA/
 C
@@ -299,6 +303,7 @@ C
       LOGICAL PING, FOUND
       DIMENSION WORK(LWORK)
       logical :: file_exists, file_open
+      logical :: warning_found
       INTEGER, allocatable :: LRATOMS(:)
       PING=.FALSE.
       CALL QENTER('LRSCDRV_SHI')
@@ -359,7 +364,7 @@ c when the RESPONSE module is called before LRESC
 C --------------------------------------------------
       call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-C   TESTING NEW CORRECTIONS
+C     PySCF(libcint) integrals
       if (PYINTS) THEN
          write(lupri,*) "AUCAR - IMPORTANDO NUEVAS INTEGRALES"
          call import_matrix(19*NUCIND,"shi")
@@ -376,6 +381,13 @@ c        Run Linear Responses
          call RSPDRV(WORK,LWORK)
          CLOSE(LUPRI)
          LUPRI  = 2
+
+C     Check for Warnings
+      open(unit=6232, file=trim('LRESC-LR-S'), status='old')
+      call SearchWord(6232, 'WARNING', warning_found)
+      if (warning_found) WARNLRS = .true.
+      close(6232)
+
       END IF
 C --------------------------------------------------
 C Some files have to be deleted
@@ -405,6 +417,13 @@ c        Run Linear Responses
          call RSPDRV(WORK,LWORK)
          CLOSE(LUPRI)
          LUPRI  = 2
+
+C     Check for Warnings
+      open(unit=6232, file=trim('LRESC-LR-T'), status='old')
+      call SearchWord(6232, 'WARNING', warning_found)
+      if (warning_found) WARNLRT = .true.
+      close(6232)
+
       END IF
 C --------------------------------------------------
       DO I = 1, size(LRATOMS)
@@ -503,6 +522,26 @@ c       CALL QUADRATICLR('SZ-PSO-Dw',WORK,LWORK)
 c      Null (shouldnt be)
 c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
 c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
+
+C     Check for Warnings
+      if ( (sigmap3s).or.(sigmap3t) ) then
+         open(unit=6232, file=trim('LRESC-QR'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNQR = .true.
+         close(6232)
+      end if
+
+
+C --Warnings
+      IF ( (WARNLRS).OR.(WARNLRT).OR.(WARNQR) )
+     & CALL HEADER('Warnings :',3)
+      IF (WARNLRS) WRITE (LUPRI,'(4X,A)')
+     &      '-  Check LRESC-LR-S file.'
+      IF (WARNLRT) WRITE (LUPRI,'(4X,A)')
+     &      '-  Check LRESC-LR-T file.'
+      IF (WARNQR) WRITE (LUPRI,'(4X,A)')
+     &      '-  Check LRESC-QR file.'
+
 
 
 

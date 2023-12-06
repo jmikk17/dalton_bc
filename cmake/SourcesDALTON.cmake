@@ -181,6 +181,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EIGEN/dtred2.F
     DALTON/abacus/LRESC/EIGEN/eigsrt.F
     DALTON/abacus/LRESC/EIGEN/main.F
+    DALTON/abacus/LRESC/checks/warnings.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F
