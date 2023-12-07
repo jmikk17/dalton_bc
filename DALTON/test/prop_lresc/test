@@ -51,15 +51,15 @@ detailed.add(string = 'Atom coordinates :',
       rel_tolerance = 1.0e-7)
 
 detailed.add(from_string = 'Paramagnetic Corrections for F',
-      num_lines = 55,
+      num_lines = 75,
       abs_tolerance = 1.0e-3)
       
 detailed.add(from_string = 'Diamagnetic Corrections for F',
-      num_lines = 32,
+      num_lines = 43,
       abs_tolerance = 1.0e-3)
       
 detailed.add(from_string = 'Total Non-relativistic Contributions for F',
-      num_lines = 43,
+      num_lines = 58,
       abs_tolerance = 1.0e-3)
 
 
