@@ -366,7 +366,6 @@ C --------------------------------------------------
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C     PySCF(libcint) integrals
       if (PYINTS) THEN
-         write(lupri,*) "AUCAR - IMPORTANDO NUEVAS INTEGRALES"
          call import_matrix(19*NUCIND,"shi")
       end if
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
