@@ -373,6 +373,7 @@ C
 #include "denfit.h"
 #include "infpar.h"
 #include "symmet.h"
+#include "lrescinf.h"
 
 C     Keywords for R12 have been added (WK/UniKA/04-11-2002).
 cLig <> added RANGMO and RPSO
@@ -1296,7 +1297,24 @@ c jim-dbg : setting all integrals for LRESC module
             PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
             SPNORB = .TRUE. ! 104 Spin-Orbit
             NO2SO  = .TRUE.  ! Do not calculate 2e spin-orbit
+
             CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
+
+!           Takes the list introduced if calling to .SELECT
+            IF (NPATOM.EQ.1) THEN
+               NLRATOMS = 1
+               LRATOM = IPATOM(1)
+               LRATOM_changed = .TRUE.
+            ELSE IF (NPATOM.EQ.0) THEN
+               LRATOM_changed = .FALSE.
+               NLRATOMS = NUCIND
+            ELSE
+               NLRATOMS = NPATOM
+               LRATOM_changed = .TRUE.
+               DO I = 1, NPATOM
+                  LRATOMSS(I) = IPATOM(I)
+               END DO
+            END IF
             GO TO 100
   244    CONTINUE   ! .NORMAOtwo
             RMAOTWO = .FALSE.
@@ -4190,14 +4208,15 @@ C  /* Deck lrshiinp */
 #include "nuclei.h"
 #include "orgcom.h"
 #include "lrescinf.h"
-      PARAMETER (NTABLE = 3)
+      PARAMETER (NTABLE = 4)
 C
       LOGICAL SET, NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 C
       SAVE SET
-      DATA TABLE /'.ATOM  ', '.LRGAUGE', '.LRCMG  '/
+      DATA TABLE /'.ATOM  ', '.LRGAUGE', '.LRCMG  ','.LRGATM'/
       DATA SET/.FALSE./
+      REAL*8 LRATMG
 C
       CALL QENTER('LRSHIINP')
       IF (SET) THEN
@@ -4229,14 +4248,17 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GO TO (1,2,3), I
+                     GO TO (1,2,3,4), I
                   END IF
   200          CONTINUE
                WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
      *            '" not recognized in LR-SHI.'
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
                CALL QUIT('Illegal keyword in LR-SHI.')
-    1          CONTINUE
+    1          CONTINUE !.ATOM
+               CALL QUIT('Deprecated option. Use .SELECT under'//
+     &                   ' **INTEGRALS instead')
+c Leavint this here in case we return to calculate shielding in all atoms by default.
                   READ (LUCMD,*) LRATOM
                   LRATOM_changed = .TRUE.
                   IF (LRATOM.GT.NATOMS)THEN
@@ -4251,7 +4273,7 @@ C
 
                GO TO 100
 
-    2         CONTINUE
+    2         CONTINUE !.LRGAUGE
               READ (LUCMD, *, IOSTAT=IOS) (GAGORG(I),I=1,3)
               IF (IOS.NE.0) THEN
                  WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
@@ -4260,9 +4282,22 @@ C
               ENDIF
               GO TO 100
 
-    3         CONTINUE
+    3         CONTINUE !LRCMG
               CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
               GO TO 100
+
+    4          CONTINUE !.LRGATM
+                  READ (LUCMD,*) LRATMG
+                  IF (LRATMG.GT.NATOMS)THEN
+                     write(lupri,*) 'Input Error on *LR-SHI'
+                     write(lupri,*) 'Your selection exceeds total ',
+     &                    'number of atoms on input file'
+                     CALL QUIT('LRATMG greater than NATOMS, LRSHIINP')
+                  END IF
+              DO i=1, 3
+                 GAGORG(i) = CORD(i,LRATMG)
+              END DO
+               GO TO 100
 
            ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300

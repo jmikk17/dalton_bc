@@ -157,7 +157,7 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Thu Dec  7 20:21:57 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:06 2023
      Host name              : dirac                                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
@@ -196,7 +196,7 @@ Compilation information
  Static linking           | OFF
  Last Git revision        | acede3cc06cc08bf044513fd59d26933fa1300fb
  Git branch               | lresc_withPySCF
- Configuration time       | 2023-12-07 20:11:09.632683
+ Configuration time       | 2023-12-11 20:34:06.523719
 
  * Sequential calculation.
 
@@ -207,10 +207,10 @@ Compilation information
 **DALTON
 .RUN PROPERTIES
 **INTEGRALS
-.LR-SHI
-*LR-SHI
-.ATOM
+.SELECT
  1
+ 1
+.LR-SHI
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
@@ -427,14 +427,9 @@ FINISH
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.087285228497
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
- Integrals for all indirect spin-spin coupling and/or shielding tensors are calculated.
+ Indirect spin-spin integrals involving the following nuclei are calculated:
 
-
-  Changes of defaults for LRSHIINP:
-  ---------------------------------
-
-
- Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+            1
 
 Calculation of 2-electron integrals are postponed until they are needed.
 
@@ -455,10 +450,9 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Time used in DNSKE      is       0.11 seconds
-  Time used in PSO-OZ     is       0.16 seconds
-  Total CPU  time used in HERMIT:   0.79 seconds
-  Total wall time used in HERMIT:   1.27 seconds
+  Time used in PSO-OZ     is       0.12 seconds
+  Total CPU  time used in HERMIT:   0.64 seconds
+  Total wall time used in HERMIT:   0.92 seconds
 
 
                         .----------------------------------.
@@ -491,7 +485,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Thu Dec  7 20:21:58 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:07 2023
      Host name              : dirac                                   
 
  Title lines from ".mol" input file:
@@ -565,16 +559,16 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:     3426987 ( 15.4% )
  HERMIT - Megabytes written:                             39.243
 
-  Total CPU  time used in TWOINT:   0.32 seconds
-  Total wall time used in TWOINT:   0.42 seconds
-  Time used in TWOINT     is       0.32 seconds
-  CPU  time used in MAKE_AOTWOINT is   0.32 seconds
-  WALL time used in MAKE_AOTWOINT is   0.42 seconds
+  Total CPU  time used in TWOINT:   0.31 seconds
+  Total wall time used in TWOINT:   0.41 seconds
+  Time used in TWOINT     is       0.31 seconds
+  CPU  time used in MAKE_AOTWOINT is   0.31 seconds
+  WALL time used in MAKE_AOTWOINT is   0.41 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
 
-  CPU  time used in FORMSUP    is   0.60 seconds
-  WALL time used in FORMSUP    is   0.97 seconds
+  CPU  time used in FORMSUP    is   0.46 seconds
+  WALL time used in FORMSUP    is   0.83 seconds
 @  1    -99.9489276717        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
@@ -663,7 +657,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       1.416       2.479
+ CPU and wall time for SCF :       1.342       2.424
 
 
                        .-----------------------------------.
@@ -682,10 +676,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000005366905
 
  
-     Date and time (Linux)  : Thu Dec  7 20:22:01 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:10 2023
      Host name              : dirac                                   
 
-File label for MO orbitals:   7Dec23   FOCKDIIS
+File label for MO orbitals:  11Dec23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -811,11 +805,11 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   1.48 seconds
-  Total wall time used in SIRIUS :   2.62 seconds
+  Total CPU  time used in SIRIUS :   1.40 seconds
+  Total wall time used in SIRIUS :   2.56 seconds
 
  
-     Date and time (Linux)  : Thu Dec  7 20:22:01 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:10 2023
      Host name              : dirac                                   
 
 
@@ -851,7 +845,7 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Thu Dec  7 20:22:01 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:10 2023
      Host name              : dirac                                   
 
 
@@ -861,7 +855,7 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Thu Dec  7 20:22:01 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:10 2023
      Host name              : dirac                                   
 
 
@@ -976,8 +970,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
        Detailed info : [.PARA1S]
         ---------------            xx            yy             zz          iso
-         L-Kin   :               0.3032        0.3032         0.2859      0.2974 [ppm]
-         Pso-Kin :               0.0601        0.0601         0.0000      0.0401 [ppm]
+         L-Kin   :               0.2959        0.2959         0.2859      0.2926 [ppm]
+         Pso-Kin :               0.0585        0.0585         0.0000      0.0390 [ppm]
         ---------------            xy            xz             yz
          L-Kin   :              -0.0000       -0.0000         0.0000             [ppm]
          Pso-Kin :              -0.0000        0.0000        -0.0000             [ppm]
@@ -991,8 +985,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
          Fc-Der  :              -1.4977       -1.4977        -1.4924     -1.4960 [ppm]
          Sd-Kin  :               0.0011        0.0011        -0.0022      0.0000 [ppm]
          Sd-Der  :               0.1824        0.1824         0.1816      0.1821 [ppm]
-         Fc-Bso  :              -3.1984       -3.1984        -3.2262     -3.2076 [ppm]
-         Sd-Bso  :               0.2745        0.2745         0.2793      0.2761 [ppm]
+         Fc-Bso  :              -3.2030       -3.2030        -3.2262     -3.2107 [ppm]
+         Sd-Bso  :               0.2726        0.2726         0.2793      0.2749 [ppm]
         ---------------            xy            xz             yz
          Fc-Kin  :               0.0000        0.0000         0.0000             [ppm]
          Fc-Der  :              -0.0000       -0.0000         0.0000             [ppm]
@@ -1010,8 +1004,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
        Detailed info : [.PARA3S]
         ---------------            xx            yy             zz          iso
-         PSO-L-Mv:              -1.7805       -1.7805         0.0000     -1.1870 [ppm]
-         PSO-L-Dw:               0.8731        0.8731         0.0000      0.5821 [ppm]
+         PSO-L-Mv:              -1.7746       -1.7746         0.0000     -1.1830 [ppm]
+         PSO-L-Dw:               0.8768        0.8768         0.0000      0.5846 [ppm]
         ---------------            xy            xz             yz
          PSO-L-Mv:               0.0000        0.0000         0.0000             [ppm]
          PSO-L-Dw:               0.0000        0.0000         0.0000             [ppm]
@@ -1021,8 +1015,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
        Detailed info : [.PARA3T]
         ---------------            xx            yy             zz          iso
-         FC-L-So :               0.6302        0.6302         0.0000      0.4202 [ppm]
-         SD-L-So :              -0.1723       -0.1723         0.8060      0.1538 [ppm]
+         FC-L-So :               0.6324        0.6324         0.0000      0.4216 [ppm]
+         SD-L-So :              -0.1709       -0.1709         0.8060      0.1547 [ppm]
         ---------------            xy            xz             yz
          FC-L-So :               0.0000        0.0000         0.0000             [ppm]
          SD-L-So :               0.0000        0.0000         0.0000             [ppm]
@@ -1030,10 +1024,10 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
          SD-L-So :               0.0000        0.0000         0.0000             [ppm]
 
        ---------------             xx            yy             zz          iso
-    2nd Order Singlets:          0.3633        0.3633         0.2859      0.3375 [ppm]
-    2nd Order Triplets:          9.2255        9.2255         9.2037      9.2182 [ppm]
-    3nd Order Singlets:         -0.9073       -0.9073         0.0000     -0.6049 [ppm]
-    3nd Order Triplets:          0.4580        0.4580         0.8060      0.5740 [ppm]
+    2nd Order Singlets:          0.3544        0.3544         0.2859      0.3316 [ppm]
+    2nd Order Triplets:          9.2191        9.2191         9.2037      9.2140 [ppm]
+    3nd Order Singlets:         -0.8977       -0.8977         0.0000     -0.5985 [ppm]
+    3nd Order Triplets:          0.4615        0.4615         0.8060      0.5763 [ppm]
        ---------------             xy            xz             yz
     2nd Order Singlets:         -0.0000       -0.0000        -0.0000             [ppm]
     2nd Order Triplets:         -0.0000        0.0000        -0.0000             [ppm]
@@ -1054,8 +1048,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
        Detailed info : [.DIAM0S]
         ---------------            xx            yy             zz          iso
          FC      :              -4.6483       -4.6483        -4.6483     -4.6483 [ppm]
-         AngPso  :              -0.0352       -0.0352        -0.0398     -0.0367 [ppm]
-         DiaKin  :              -2.0384       -2.0384        -2.0402     -2.0390 [ppm]
+         AngPso  :              -0.0318       -0.0318        -0.0398     -0.0345 [ppm]
+         DiaKin  :              -2.0344       -2.0344        -2.0402     -2.0363 [ppm]
          SD      :              -0.0013       -0.0013         0.0026     -0.0000 [ppm]
         ---------------            xy            xz             yz
          FC      :               0.0000        0.0000         0.0000             [ppm]
@@ -1064,14 +1058,14 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
          SD      :               0.0000       -0.0000         0.0000             [ppm]
         ---------------            yx            zx             zy
          FC      :               0.0000        0.0000         0.0000             [ppm]
-         AngPso  :              -0.0000        0.0000        -0.0000             [ppm]
+         AngPso  :               0.0000        0.0000        -0.0000             [ppm]
          DiaKin  :              -0.0000        0.0000        -0.0000             [ppm]
          SD      :               0.0000       -0.0000         0.0000             [ppm]
 
        Detailed info : [.DIAM1S]
         ---------------            xx            yy             zz          iso
-         DiaMv   :               3.4697        3.4697         3.4902      3.4765 [ppm]
-         DiaDw   :              -2.0550       -2.0550        -2.0658     -2.0586 [ppm]
+         DiaMv   :               3.4703        3.4703         3.4902      3.4770 [ppm]
+         DiaDw   :              -2.0584       -2.0584        -2.0658     -2.0608 [ppm]
         ---------------            xy            xz             yz
          DiaMv   :               0.0000       -0.0000         0.0000             [ppm]
          DiaDw   :              -0.0000        0.0000        -0.0000             [ppm]
@@ -1080,23 +1074,23 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
          DiaDw   :              -0.0000        0.0000        -0.0000             [ppm]
 
        ---------------             xx            yy             zz          iso
-    1st Order Singlets:         -6.7232       -6.7232        -6.7257     -6.7240 [ppm]
-    2nd Order Singlets:          1.4147        1.4147         1.4245      1.4180 [ppm]
+    1st Order Singlets:         -6.7158       -6.7158        -6.7257     -6.7191 [ppm]
+    2nd Order Singlets:          1.4120        1.4120         1.4245      1.4161 [ppm]
        ---------------             xy            xz             yz
     1st Order Singlets:         -0.0000        0.0000        -0.0000             [ppm]
     2nd Order Singlets:          0.0000        0.0000        -0.0000             [ppm]
        ---------------             yx            zx             zy
-    1st Order Singlets:         -0.0000        0.0000        -0.0000             [ppm]
-    2nd Order Singlets:          0.0000        0.0000        -0.0000             [ppm]
+    1st Order Singlets:          0.0000        0.0000        -0.0000             [ppm]
+    2nd Order Singlets:          0.0000       -0.0000        -0.0000             [ppm]
 
 
                  Total Non-relativistic Contributions for F    :
                  -----------------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :           -102.0317     -102.0317        -0.0000    -68.0211                           [ppm]
-     Diamagnetic  :            482.4777      482.4777       481.5890    482.1814                           [ppm]
-     Total non-rel             380.4460      380.4460       481.5890    414.1603    101.1430       1.0000  [ppm]
+     Paramagnetic :           -101.2812     -101.2812        -0.0000    -67.5208                           [ppm]
+     Diamagnetic  :            481.7014      481.7014       481.5890    481.6639                           [ppm]
+     Total non-rel             380.4201      380.4201       481.5890    414.1431    101.1689       1.0000  [ppm]
 
                                    xy            xz             yz
      Paramagnetic :              0.0000       -0.0000         0.0000                                       [ppm]
@@ -1105,7 +1099,7 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
                                    yx            zx             zy
      Paramagnetic :             -0.0000        0.0000        -0.0000                                       [ppm]
-     Diamagnetic  :              0.0000        0.0000         0.0000                                       [ppm]
+     Diamagnetic  :              0.0000       -0.0000         0.0000                                       [ppm]
      Total non-rel              -0.0000        0.0000        -0.0000                                       [ppm]
 
 
@@ -1113,37 +1107,37 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
                     -----------------------------------------
 
                                    xx            yy             zz          iso
-     Paramagnetic :              9.1394        9.1394        10.2957      9.5249                           [ppm]
-     Diamagnetic  :             -5.3085       -5.3085        -5.3012     -5.3061                           [ppm]
-     Total LRESC  :              3.8310        3.8310         4.9944      4.2188                           [ppm]
+     Paramagnetic :              9.1372        9.1372        10.2957      9.5233                           [ppm]
+     Diamagnetic  :             -5.3039       -5.3039        -5.3012     -5.3030                           [ppm]
+     Total LRESC  :              3.8333        3.8333         4.9944      4.2203                           [ppm]
 
                                    xy            xz             yz
      Paramagnetic :             -0.0000        0.0000        -0.0000                                       [ppm]
-     Diamagnetic  :              0.0000        0.0000        -0.0000                                       [ppm]
+     Diamagnetic  :             -0.0000        0.0000        -0.0000                                       [ppm]
      Total LRESC  :             -0.0000        0.0000        -0.0000                                       [ppm]
 
                                    yx            zx             zy
      Paramagnetic :              0.0000        0.0000         0.0000                                       [ppm]
      Diamagnetic  :              0.0000        0.0000        -0.0000                                       [ppm]
-     Total LRESC  :              0.0000        0.0000        -0.0000                                       [ppm]
+     Total LRESC  :              0.0000        0.0000         0.0000                                       [ppm]
 
 
                        Total Relativistic Values for F    :
                        ------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :            -92.8922      -92.8922        10.2957    -58.4962                           [ppm]
-     Diamagnetic  :            477.1692      477.1692       476.2878    476.8754                           [ppm]
-     Total LRESC  :            384.2770      384.2770       486.5835    418.3791    102.3065       1.0000  [ppm]
+     Paramagnetic :            -92.1441      -92.1441        10.2957    -57.9975                           [ppm]
+     Diamagnetic  :            476.3975      476.3975       476.2878    476.3609                           [ppm]
+     Total LRESC  :            384.2534      384.2534       486.5835    418.3634    102.3301       1.0000  [ppm]
 
                                    xy            xz             yz
      Paramagnetic :              0.0000       -0.0000         0.0000                                       [ppm]
-     Diamagnetic  :              0.0000        0.0000         0.0000                                       [ppm]
+     Diamagnetic  :             -0.0000        0.0000         0.0000                                       [ppm]
      Total LRESC  :              0.0000       -0.0000         0.0000                                       [ppm]
 
                                    yx            zx             zy
      Paramagnetic :             -0.0000        0.0000        -0.0000                                       [ppm]
-     Diamagnetic  :              0.0000        0.0000         0.0000                                       [ppm]
+     Diamagnetic  :              0.0000       -0.0000         0.0000                                       [ppm]
      Total LRESC  :             -0.0000        0.0000        -0.0000                                       [ppm]
  
 
@@ -1156,7 +1150,7 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
 
 
   Total CPU  time used in ABACUS:  1 minute   1 second 
-  Total wall time used in ABACUS:  2 minutes  8 seconds
+  Total wall time used in ABACUS:  2 minutes  9 seconds
 
 
                    .-------------------------------------------.
@@ -1164,8 +1158,8 @@ File label for MO orbitals:   7Dec23   FOCKDIIS
                    `-------------------------------------------'
 
   Total CPU  time used in DALTON:  1 minute   3 seconds
-  Total wall time used in DALTON:  2 minutes 13 seconds
+  Total wall time used in DALTON:  2 minutes 12 seconds
 
  
-     Date and time (Linux)  : Thu Dec  7 20:24:09 2023
+     Date and time (Linux)  : Mon Dec 11 21:30:18 2023
      Host name              : dirac                                   

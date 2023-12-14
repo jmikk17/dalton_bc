@@ -41,7 +41,6 @@ C  /* Deck get_lr */
       INTEGER :: SUMA_B
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
-      character*3               :: efg_name
       LOGICAL :: TRIPLETE,TRPLET_FLAG
 
       CALL QENTER('LRSLINEAR')
@@ -99,7 +98,6 @@ C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
       END IF
       TOTALLR = 0.d0
       LR = 0.d0
-      efg_name=CHRNOS(LRATOM/10)//CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
 
 
       do i = 1, 3
@@ -467,8 +465,7 @@ c     Elemento ij del tensor de shielding
                operadores_duo(1) = operadores_A(i,j,k)
                operadores_duo(2) = operadores_B(i,j,l)
 
-
-               call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
+                  call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
                TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
 c               IF (JIMPRT .GE. 3) write(lupri,*) operadores_duo(1),
 c     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
@@ -519,7 +516,7 @@ c            write(lupri,*)
 
 
 C  /* Deck newlrinput_all */
-      SUBROUTINE LRINPUT_ALL(LRATOMS,NLRATOMS,TRIPLETE)
+      SUBROUTINE LRINPUT_ALL(LRATOMS,NNLRATOMS,TRIPLETE)
 
 #include "implicit.h"
 #include "dummy.h"
@@ -536,8 +533,8 @@ C  /* Deck newlrinput_all */
 
       CHARACTER*8, allocatable :: operadores(:)
       INTEGER                  :: NopA, NopB, NLRoperators
-      INTEGER :: SUMA_B, NLRATOMS
-      INTEGER, intent(in)  :: LRATOMS(NLRATOMS)
+      INTEGER :: SUMA_B, NNLRATOMS
+      INTEGER, intent(in)  :: LRATOMS(NNLRATOMS)
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
       character*10 :: namefile

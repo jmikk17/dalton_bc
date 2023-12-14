@@ -201,9 +201,6 @@ C
 
       JIMPRT    = 0
 
-      IF (.not.LRATOM_changed) THEN
-         LRATOM    = 1
-      END IF
 
       LRGAUG(1) = D0
       LRGAUG(2) = D0
@@ -298,6 +295,7 @@ C     J. J. Aucar 2021
 #include "nuclei.h"
 #include "chrnos.h"              
 #include "gnrinf.h"
+#include "cbiher.h"
 C
 C
       LOGICAL PING, FOUND
@@ -326,16 +324,26 @@ C
 C     Diamagnetic corrections to Shielding:
 C     Zeroth Order, Singlet of course
 C
-c     Prepared for selecting a nuclei sublist
-      IF (LRATOM_changed) THEN
+c     Nuclei list
+      IF ( (LRATOM_changed).and.(NLRATOMS.EQ.1) ) THEN
          allocate(LRATOMS(1))
          LRATOMS(1) = LRATOM
-      ELSE
+      ELSEIF (.not.LRATOM_changed ) THEN
          allocate(LRATOMS(NUCIND))
          DO I = 1, NUCIND
             LRATOMS(I)=I
          END DO
+      ELSE
+         allocate(LRATOMS(NLRATOMS))
+         DO I = 1, NLRATOMS
+            LRATOMS(I)=LRATOMSS(I)
+         END DO
       END IF
+
+
+
+
+
 C --------------------------------------------------
 C Some files have to be closed and/or deleted
 c when the RESPONSE module is called before LRESC
@@ -462,6 +470,8 @@ c      call REGENERATE_INTEGRALS(CORD(:,LRATOM)) !Placing GO at each nucleus
 c      NEWPRP = .TRUE.  !So that AOPROPER is re-written
 c      HRINPC = .FALSE. !So that HERMIT INPUTS IS READ AGAIN FROM DALTON.INP
 c      CALL HERCTL(WORK,LWORK)
+c      HRINPC = .TRUE.
+
       IF (SIGMADNR) THEN
          TRPLET = .FALSE.
          TRPFLG = .FALSE.

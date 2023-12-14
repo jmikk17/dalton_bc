@@ -67,12 +67,14 @@ c      END IF
       WRITE(LUPRI,*)
 
 c     For sublist of atoms (not implemented yet) this should be modified
-      IF (LRATOM_changed) THEN
-         WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,
-     &         ": ", NAMN(LRATOM)
-         WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
-     &   CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
-      ELSE
+c      IF (LRATOM_changed) THEN
+c         WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,
+c     &         ": ", NAMN(LRATOM)
+c         WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
+c     &   CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
+c      ELSE
+c      IF (.not.LRATOM_changed) THEN
+      IF (NLRATOMS.EQ.NUCIND) THEN
               WRITE(LUPRI,'(4X,A)') '-  All Atoms selected'
       END IF
 

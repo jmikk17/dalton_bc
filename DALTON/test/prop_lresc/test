@@ -23,12 +23,6 @@ simple.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-simple.add(string = 'Selected Atom ',
-      rel_tolerance = 1.0e-7)
-      
-simple.add(string = 'Atom coordinates :',
-      rel_tolerance = 1.0e-7)
-
 simple.add(from_string = 'Total Non-relativistic Contributions for F',
       num_lines = 26,
       abs_tolerance = 1.0e-3)
@@ -43,12 +37,6 @@ detailed.add(from_string = 'Atoms and basis sets',
 detailed.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
-
-detailed.add(string = 'Selected Atom ',
-      rel_tolerance = 1.0e-7)
-      
-detailed.add(string = 'Atom coordinates :',
-      rel_tolerance = 1.0e-7)
 
 detailed.add(from_string = 'Paramagnetic Corrections for F',
       num_lines = 75,

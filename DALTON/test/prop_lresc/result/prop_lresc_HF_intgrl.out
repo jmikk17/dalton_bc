@@ -157,7 +157,7 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Dec  5 17:41:36 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:53 2023
      Host name              : dirac                                   
 
  * Work memory size             :    64000000 =  488.28 megabytes.
@@ -172,7 +172,7 @@ Compilation information
 
  Who compiled             | jaucar
  Host                     | dirac
- System                   | Linux-3.10.0-1160.95.1.el7.x86_64
+ System                   | Linux-3.10.0-1160.102.1.el7.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
@@ -194,9 +194,9 @@ Compilation information
                           | /libmkl_lapack95_lp64.a;/home/jaucar/intel/oneapi/
                           | mkl/2022.0.1/lib/intel64/libmkl_intel_lp64.so
  Static linking           | OFF
- Last Git revision        | 346dbd77f0e3195ce16c577c6f03af27e5367731
+ Last Git revision        | acede3cc06cc08bf044513fd59d26933fa1300fb
  Git branch               | lresc_withPySCF
- Configuration time       | 2023-12-05 16:51:46.499201
+ Configuration time       | 2023-12-11 20:34:06.523719
 
  * Sequential calculation.
 
@@ -207,10 +207,10 @@ Compilation information
 **DALTON
 .RUN PROPERTIES
 **INTEGRALS
-.LR-SHI
-*LR-SHI
-.ATOM
+.SELECT
  1
+ 1
+.LR-SHI
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
@@ -424,14 +424,9 @@ FINISH
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.087285228497
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
- Integrals for all indirect spin-spin coupling and/or shielding tensors are calculated.
+ Indirect spin-spin integrals involving the following nuclei are calculated:
 
-
-  Changes of defaults for LRSHIINP:
-  ---------------------------------
-
-
- Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+            1
 
 Calculation of 2-electron integrals are postponed until they are needed.
 
@@ -452,29 +447,9 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Time used in HUCKEL     is      29.64 seconds
-  Time used in OVERLAP    is      11.41 seconds
-  Time used in POPOVLP    is       0.17 seconds
-  Time used in DIPLEN     is      11.04 seconds
-  Time used in QUADRUP    is      28.86 seconds
-  Time used in KINENE     is      24.76 seconds
-  Time used in DIPVEL     is      25.08 seconds
-  Time used in MASSVL     is      48.21 seconds
-  Time used in DARWIN     is       0.45 seconds
-  Time used in SPNORB     is      11.88 seconds
-  Time used in FERMI      is       0.20 seconds
-  Time used in PSO        is       4.41 seconds
-  Time used in SPIN-D     is      30.95 seconds
-  Time used in ANGMOM     is      35.66 seconds
-  Time used in NSTCGO     is       9.45 seconds
-  Time used in OZKE       is      31.12 seconds
-  Time used in PSOKE      is      56.02 seconds
-  Time used in DNSKE      is      1 minute   3 seconds
-  Time used in PSO-OZ     is      1 minute  12 seconds
-  Time used in SOFIELD    is       6.18 seconds
-  Time used in DPTOVL     is       9.46 seconds
-  Total CPU  time used in HERMIT:  8 minutes 30 seconds
-  Total wall time used in HERMIT:  4 minutes 45 seconds
+  Time used in PSO-OZ     is       0.11 seconds
+  Total CPU  time used in HERMIT:   0.58 seconds
+  Total wall time used in HERMIT:   0.87 seconds
 
 
                         .----------------------------------.
@@ -507,7 +482,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Dec  5 17:46:23 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:55 2023
      Host name              : dirac                                   
 
  Title lines from ".mol" input file:
@@ -581,16 +556,16 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:     3426987 ( 15.4% )
  HERMIT - Megabytes written:                             39.243
 
-  Total CPU  time used in TWOINT:  56.49 seconds
-  Total wall time used in TWOINT:  19.25 seconds
-  Time used in TWOINT     is      56.50 seconds
-  CPU  time used in MAKE_AOTWOINT is  56.50 seconds
-  WALL time used in MAKE_AOTWOINT is  19.25 seconds
+  Total CPU  time used in TWOINT:   0.31 seconds
+  Total wall time used in TWOINT:   0.42 seconds
+  Time used in TWOINT     is       0.31 seconds
+  CPU  time used in MAKE_AOTWOINT is   0.31 seconds
+  WALL time used in MAKE_AOTWOINT is   0.43 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
 
-  CPU  time used in FORMSUP    is   0.95 seconds
-  WALL time used in FORMSUP    is   1.13 seconds
+  CPU  time used in FORMSUP    is   0.45 seconds
+  WALL time used in FORMSUP    is   0.88 seconds
 @  1    -99.9489276717        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
@@ -679,7 +654,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :      58.005      24.701
+ CPU and wall time for SCF :       1.312       2.603
 
 
                        .-----------------------------------.
@@ -698,10 +673,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000005366905
 
  
-     Date and time (Linux)  : Tue Dec  5 17:46:48 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
      Host name              : dirac                                   
 
-File label for MO orbitals:   5Dec23   FOCKDIIS
+File label for MO orbitals:  11Dec23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -827,11 +802,11 @@ File label for MO orbitals:   5Dec23   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :  58.83 seconds
-  Total wall time used in SIRIUS :  25.06 seconds
+  Total CPU  time used in SIRIUS :   1.36 seconds
+  Total wall time used in SIRIUS :   2.73 seconds
 
  
-     Date and time (Linux)  : Tue Dec  5 17:46:48 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
      Host name              : dirac                                   
 
 
@@ -867,7 +842,7 @@ File label for MO orbitals:   5Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Tue Dec  5 17:46:48 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
      Host name              : dirac                                   
 
 
@@ -877,7 +852,7 @@ File label for MO orbitals:   5Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Tue Dec  5 17:47:01 2023
+     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
      Host name              : dirac                                   
 
 
@@ -972,15 +947,14 @@ File label for MO orbitals:   5Dec23   FOCKDIIS
  ************************ LRESC RELATIVISTIC CORRECTIONS TO SHIELDING ************************
  *********************************************************************************************
 
+    -  Original LRESC papers at :
+       J. Chem. Phys. 118, 2 (2003),doi:10.1063/1.1525808
+       Int. J. Quantum Chem. 118, e25487 (2017), doi.org/10.1002/qua.25487
 
     -  Definitions according to : 
        J. Mason, Solid state Nuc. Magn. Res. 2 (1993), 285 
 
     -  All LRESC corrections were activated
- 
-    -  Original LRESC papers at :
-       J. Chem. Phys. 118, 2 (2003),doi:10.1063/1.1525808
-       Int. J. Quantum Chem. 118, e25487 (2017), doi.org/10.1002/qua.25487
  
     -  Selected Atom    : # 1: F   
     -  Atom coordinates :    0.0000    0.0000    0.0000
@@ -992,49 +966,48 @@ File label for MO orbitals:   5Dec23   FOCKDIIS
                  -----------------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :           -102.03165    -102.03165      -0.00000    -68.02110                           [ppm]
-     Diamagnetic  :            482.47766     482.47766     481.58902    482.18145                           [ppm]
-     Total non-rel             380.44601     380.44601     481.58902    414.16035    101.14303      1.00000 [ppm]
+     Paramagnetic :           -101.2812     -101.2812        -0.0000    -67.5208                           [ppm]
+     Diamagnetic  :            481.7014      481.7014       481.5890    481.6639                           [ppm]
+     Total non-rel             380.4201      380.4201       481.5890    414.1431    101.1689       1.0000  [ppm]
 
 
                     Total Relativistic Corrections for F    :
                     -----------------------------------------
 
                                    xx            yy             zz          iso
-     Paramagnetic :              9.13947       9.13947      10.29569      9.52488                           [ppm]
-     Diamagnetic  :             -5.30848      -5.30848      -5.30125     -5.30607                           [ppm]
-     Total LRESC  :              3.83099       3.83099       4.99445      4.21881                           [ppm]
+     Paramagnetic :              9.1372        9.1372        10.2957      9.5233                           [ppm]
+     Diamagnetic  :             -5.3039       -5.3039        -5.3012     -5.3030                           [ppm]
+     Total LRESC  :              3.8333        3.8333         4.9944      4.2203                           [ppm]
 
 
                        Total Relativistic Values for F    :
                        ------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :            -92.89218     -92.89218      10.29569    -58.49622                           [ppm]
-     Diamagnetic  :            477.16918     477.16918     476.28778    476.87538                           [ppm]
-     Total LRESC  :            384.27700     384.27700     486.58347    418.37916    102.30649      1.00000 [ppm]
+     Paramagnetic :            -92.1441      -92.1441        10.2957    -57.9975                           [ppm]
+     Diamagnetic  :            476.3975      476.3975       476.2878    476.3609                           [ppm]
+     Total LRESC  :            384.2534      384.2534       486.5835    418.3634    102.3301       1.0000  [ppm]
  
 
 
  CPU time statistics for ABACUS
  ------------------------------
 
- MAGINT     00:00:33       7 %
 
- TOTAL      00:07:56     100 %
+ TOTAL      00:00:59     100 %
 
 
-  Total CPU  time used in ABACUS:  7 minutes 56 seconds
-  Total wall time used in ABACUS:  3 minutes 54 seconds
+  Total CPU  time used in ABACUS:  58.77 seconds
+  Total wall time used in ABACUS:  2 minutes  8 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON: 17 minutes 28 seconds
-  Total wall time used in DALTON:  9 minutes  5 seconds
+  Total CPU  time used in DALTON:  1 minute   1 second 
+  Total wall time used in DALTON:  2 minutes 11 seconds
 
  
-     Date and time (Linux)  : Tue Dec  5 17:50:42 2023
+     Date and time (Linux)  : Mon Dec 11 21:28:05 2023
      Host name              : dirac                                   
