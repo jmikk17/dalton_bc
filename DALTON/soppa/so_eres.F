@@ -349,22 +349,6 @@ C MPI -- ONLY MASTER DOES THE READING
       IF ( MYNUM .EQ. 0 ) THEN
 #endif
 C
-C KFSchaltz begin
-      IF (singles_third) THEN
-C--------------------------------------------
-C      Backtransformation of one index and two indices of the 
-C      virtual-virtual and occupied-occupied blocks of the second order
-C      correction to the one-particle density matrix.
-C--------------------------------------------
-C
-      CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
-     &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
-     &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
-     &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
-     &                 LB2DENSAB,WORK(KCMO),LCMO)
-      END IF
-
-C KFSchaltz end
 C
 C----------------------------------------------
 C     Open files with trial and result vectors.
@@ -612,6 +596,23 @@ C
      &                 WORK(KCMO),LCMO,ISYMTR)
          DTIME     = SECOND()  - DTIME
          SOTIME(7) = SOTIME(7) + DTIME
+
+C KFSchaltz begin
+         IF (singles_third) THEN
+C   --------------------------------------------
+C         Backtransformation of one index and two indices of the 
+C         virtual-virtual and occupied-occupied blocks of the second order
+C         correction to the one-particle density matrix.
+C   --------------------------------------------
+C   
+            CALL SO_BCKDE(DENSIJ,LDENSIJ,DENSAB,LDENSAB,
+     &                 WORK(KBDENSIJ),WORK(KBDENSIJT),LBDENSIJ,
+     &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
+     &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
+     &                 LB2DENSAB,WORK(KCMO),LCMO)
+         END IF
+            
+C KFSchaltz end
 C
 C=======================================================
 C        Start the loop over distributions of integrals.
@@ -1461,10 +1462,6 @@ C
             ISYDIS2 = MULD2H(ISYDIS,ISYMTR)
             KEND6   = KEND4 + NDSRHF(MULD2H(ISYMD,ISYMTR))
             LWORK6  = LWORK - KEND6
-            KEND7   = KEND6 + NDSRHF(MULD2H(ISYMD,ISYMTR))
-            LWORK7  = LWORK - KEND7
-            KEND8   = KEND7 + NDSRHF(MULD2H(ISYMD,ISYMTR))
-            LWORK8  = LWORK - KEND8
 C
 C                                     ~
 C           Calculate ( alpha, beta | j delta)
