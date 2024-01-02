@@ -157,46 +157,45 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Nov 27 12:48:14 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
  * Work memory size             :   512000000 =  3.815 gigabytes.
 
  * Directories for basis set searches:
-   1) /home/kasperf/dalton_program/dalton/DALTON/test/prop_exci_aotoppa
-   2) /home/kasperf/dalton_program/dalton/build_64/basis
+   1) /home/juliane/bin/source/dalton/build/test/prop_exci_aotoppa
+   2) /home/juliane/bin/source/dalton/build/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | kasperf
+ Who compiled             | juliane
  Host                     | sunray
  System                   | Linux-3.16.0-4-amd64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | ON
  MPI                      | OFF
- Fortran compiler         | /opt/intel/composer_xe_2013.1.117/bin/intel64/ifor
-                          | t
- Fortran compiler version | ifort (IFORT) 13.0.1 20121010
- C compiler               | /opt/intel/composer_xe_2013.1.117/bin/intel64/icc
- C compiler version       | icc (ICC) 13.0.1 20121010
- C++ compiler             | /opt/intel/composer_xe_2013.1.117/bin/intel64/icpc
- C++ compiler version     | icpc (ICC) 13.0.1 20121010
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (Debian 4.9.2-10+deb8u2) 4.9.2
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (Debian 4.9.2-10+deb8u2) 4.9.2
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Debian 4.9.2-10+deb8u2) 4.9.2
  BLAS                     | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_intel_ilp64.so;/opt/intel/composer_xe_2013.
-                          | 1.117/mkl/lib/intel64/libmkl_sequential.so;/opt/in
-                          | tel/composer_xe_2013.1.117/mkl/lib/intel64/libmkl_
-                          | core.so;/usr/lib/x86_64-linux-gnu/libpthread.so;/u
-                          | sr/lib/x86_64-linux-gnu/libm.so
+                          | libmkl_gf_lp64.so;/opt/intel/composer_xe_2013.1.11
+                          | 7/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/
+                          | composer_xe_2013.1.117/mkl/lib/intel64/libmkl_core
+                          | .so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/l
+                          | ib/x86_64-linux-gnu/libm.so
  LAPACK                   | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_lapack95_ilp64.a;/opt/intel/composer_xe_201
-                          | 3.1.117/mkl/lib/intel64/libmkl_intel_ilp64.so
+                          | libmkl_lapack95_lp64.a;/opt/intel/composer_xe_2013
+                          | .1.117/mkl/lib/intel64/libmkl_gf_lp64.so
  Static linking           | OFF
- Last Git revision        | 4981584407d61e6ad21a7e511842694235426073
- Git branch               | new_feature_kasper
- Configuration time       | 2023-11-21 09:34:47.178472
+ Last Git revision        | 17bdd0d16aeed8c81483f51f71f5664e56d04a4e
+ Git branch               | new_soppa_feature
+ Configuration time       | 2023-03-10 16:28:32.320752
 
 
    Content of the .dal input file
@@ -292,7 +291,7 @@ H   0.934473 0.000000 -0.588078
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/kasperf/dalton_program/dalton/build_64/basis/pc-1"
+     "/home/juliane/bin/source/dalton/build/basis/pc-1"
 
   Atomic type no.    3
   --------------------
@@ -300,7 +299,7 @@ H   0.934473 0.000000 -0.588078
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/kasperf/dalton_program/dalton/build_64/basis/pc-1"
+     "/home/juliane/bin/source/dalton/build/basis/pc-1"
 
 
                          SYMGRP: Point group information
@@ -593,8 +592,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z     16.23780432        41.27237918       137.66983817
 
 
-  Total CPU  time used in HERMIT:   0.03 seconds
-  Total wall time used in HERMIT:   0.03 seconds
+  Total CPU  time used in HERMIT:   0.02 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -629,8 +628,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:14 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
  Title lines from ".mol" input file:
               Formaldehyde Vertical Excitation Energies
@@ -717,8 +716,6 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:       70449 ( 25.6% )
  HERMIT - Megabytes written:                              0.811
 
-  Total CPU  time used in TWOINT:   0.08 seconds
-  Total wall time used in TWOINT:   0.08 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-15 )
 
@@ -766,7 +763,7 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 11  -113.838219714       6.84D-07  -3.50D-12     5   2   1   0
+@ 11  -113.838219714       6.84D-07  -3.44D-12     5   2   1   0
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
@@ -774,23 +771,23 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 13  -113.838219714       4.24D-08  -5.68D-14     5   2   1   0
+@ 13  -113.838219714       4.24D-08   0.00D+00     5   2   1   0
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 14  -113.838219714       3.98D-09   5.68D-14     5   2   1   0
+@ 14  -113.838219714       3.98D-09   2.84D-14     5   2   1   0
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 15  -113.838219714       6.64D-10  -8.53D-14     5   2   1   0
+@ 15  -113.838219714       6.64D-10  -2.84D-14     5   2   1   0
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 16  -113.838219714       2.70D-10   2.84D-14     5   2   1   0
+@ 16  -113.838219714       2.70D-10  -2.84D-14     5   2   1   0
       Virial theorem: -V/T =      1.999821
 @    MULPOP   C       0.26; O      -0.45; H   _1  0.10; H   _2  0.10; 
  -----------------------------------------------------------------------------
-@ 17  -113.838219714       5.84D-11   0.00D+00     5   2   1   0
+@ 17  -113.838219714       5.82D-11  -5.68D-14     5   2   1   0
 
 @ *** DIIS converged in  17 iterations !
 @     Converged SCF energy, gradient:   -113.838219714336    5.84D-11
@@ -869,7 +866,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.112       0.113
+ CPU and wall time for SCF :       0.068       0.069
 
 
                        .-----------------------------------.
@@ -888,10 +885,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000000058
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
-File label for MO orbitals:  27Nov23   FOCKDIIS
+File label for MO orbitals:  12Mar23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -1000,12 +997,12 @@ File label for MO orbitals:  27Nov23   FOCKDIIS
    2 O   :3d2-   0.1027  -0.7605   0.6487
    3 H   :2py    0.3850   0.4338   0.4865
 
-  Total CPU  time used in SIRIUS :   0.12 seconds
-  Total wall time used in SIRIUS :   0.12 seconds
+  Total CPU  time used in SIRIUS :   0.07 seconds
+  Total wall time used in SIRIUS :   0.07 seconds
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
 
                      .---------------------------------------.
@@ -1061,7 +1058,7 @@ File label for MO orbitals:  27Nov23   FOCKDIIS
           Number of t2 amplitudes                 :      4460
           Total number of amplitudes in ccsd      :      4521
 
- Iter.  1: Coupled cluster MP2   energy :    -114.1573221445106441
+ Iter.  1: Coupled cluster MP2   energy :    -114.1573221445108004
 
 
 
@@ -1186,11 +1183,11 @@ File label for MO orbitals:  27Nov23   FOCKDIIS
  *******************************************************************************
 
 
- CPU and wall time for CC :       0.096       0.354
+ CPU and wall time for CC :       0.040       0.040
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
 
                       .-------------------------------------.
@@ -1251,8 +1248,8 @@ File label for MO orbitals:  27Nov23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:03 2023
+     Host name              : sunray                                  
 
 
                   **********************************************
@@ -1343,31 +1340,32 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   SO_OPTVEC           0:00:19     70.6 %     70.6 % |
- |   SO_SIGAI            0:00:06     23.0 %     93.6 % |
- |   SO_RES_A            0:00:01      1.8 %     95.5 % |
- |   SO_RES_TCB          0:00:00      1.6 %     97.1 % |
- |   SO_RES_CB           0:00:00      1.1 %     98.2 % |
- |   SO_T2M1             0:00:00      0.6 %     98.8 % |
- |   SO_ORTH_TRN         0:00:00      0.2 %     99.0 % |
- |   SO_ERES             0:00:00      0.2 %     99.2 % |
- |   CC_AOFOCK           0:00:00      0.1 %     99.3 % |
- |   CCRDAO              0:00:00      0.1 %     99.5 % |
- |   SO_TRIAL2           0:00:00      0.1 %     99.6 % |
- |   CCTRBT              0:00:00      0.1 %     99.7 % |
- |   SO_REDEV            0:00:00      0.0 %     99.7 % |
- |   SO_INCRED           0:00:00      0.0 %     99.8 % |
- |   SO_RES_FCK          0:00:00      0.0 %     99.8 % |
- |   SO_DENSAI           0:00:00      0.0 %     99.8 % |
- |   CC_FCKMO            0:00:00      0.0 %     99.9 % |
+ |   SO_OPTVEC           0:00:01     38.7 %     38.7 % |
+ |   SO_SIGAI            0:00:00     15.9 %     54.7 % |
+ |   SO_RES_A            0:00:00     11.8 %     66.5 % |
+ |   SO_RES_CB           0:00:00      9.1 %     75.6 % |
+ |   SO_RES_TCB          0:00:00      8.8 %     84.4 % |
+ |   SO_T2M1             0:00:00      4.8 %     89.2 % |
+ |   SO_ORTH_TRN         0:00:00      2.9 %     92.1 % |
+ |   CC_AOFOCK           0:00:00      2.0 %     94.2 % |
+ |   SO_ERES             0:00:00      2.0 %     96.2 % |
+ |   CCRDAO              0:00:00      0.9 %     97.1 % |
+ |   SO_REDEV            0:00:00      0.6 %     97.7 % |
+ |   CCTRBT              0:00:00      0.4 %     98.1 % |
+ |   SO_RES_OVL          0:00:00      0.3 %     98.4 % |
+ |   SO_INCRED           0:00:00      0.3 %     98.7 % |
+ |   SO_TRIAL2           0:00:00      0.3 %     99.0 % |
+ |   SO_DENSAI           0:00:00      0.1 %     99.1 % |
+ |   SO_GETMO            0:00:00      0.1 %     99.3 % |
+ |   SO_RES_SYM          0:00:00      0.1 %     99.4 % |
  |-----------------------------------------------------| 
- |  Total CPU time       0:00:27                       |
+ |  Total CPU time       0:00:03                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      0.1 %            |
- |   SO_WRITE            0: 0: 0      0.2 %            |
- |   SO_OPEN             0: 0: 0      0.0 %            |
+ |   SO_READ             0: 0: 0      0.6 %            |
+ |   SO_WRITE            0: 0: 0      0.4 %            |
+ |   SO_OPEN             0: 0: 0      0.4 %            |
  |   SO_CLOSE            0: 0: 0      0.0 %            |
  |-----------------------------------------------------| 
 
@@ -1376,14 +1374,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0:00:08     28.5 %     28.5 % |
- |   SO_SRES             0:00:00      0.0 %     28.5 % |
- |   SO_REDEV            0:00:19     69.9 %     98.4 % |
- |   SO_TRIAL2           0:00:00      0.4 %     98.9 % |
+ |   SO_ERES             0:00:02     56.1 %     56.1 % |
+ |   SO_SRES             0:00:00      0.0 %     56.1 % |
+ |   SO_REDEV            0:00:01     38.4 %     94.5 % |
+ |   SO_TRIAL2           0:00:00      4.9 %     99.4 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0:28                       |
+ |   Total wall time     0: 0: 3                       |
  |=====================================================| 
-  Time used in EXCITA     is      27.32 seconds
+  Time used in EXCITA     is       2.74 seconds
 
 
    ***************************************************************************
@@ -1392,8 +1390,8 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:43 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:06 2023
+     Host name              : sunray                                  
 
 
                              Molecular geometry (au)
@@ -1460,19 +1458,19 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 @         No.      (au)          x       y       z         x       y       z
 @==============================================================================
 @  Symmetry of excited state: 1  ( A1 )
-@           1     0.336143     0.0000  0.0000 -0.3107    0.0000  0.0000 -0.2243
-@           2     0.365686     0.0000  0.0000 -1.4983    0.0000  0.0000 -1.3420
-@           3     0.476701     0.0000  0.0000 -0.4809    0.0000  0.0000 -0.4573
+@           1     0.330683     0.0000  0.0000 -0.2125    0.0000  0.0000 -0.1255
+@           2     0.361423     0.0000  0.0000  1.4855    0.0000  0.0000  1.3421
+@           3     0.474214     0.0000  0.0000  0.4845    0.0000  0.0000  0.4617
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 2  ( B1 )
-@           1     0.276690    -0.5569  0.0000  0.0000   -0.6400  0.0000  0.0000
-@           2     0.396556    -0.5428  0.0000  0.0000   -0.3828  0.0000  0.0000
-@           3     0.531157    -0.8758  0.0000  0.0000   -0.8867  0.0000  0.0000
+@           1     0.273805     0.5591  0.0000  0.0000    0.6375  0.0000  0.0000
+@           2     0.392743     0.5520  0.0000  0.0000    0.3841  0.0000  0.0000
+@           3     0.528525     0.7904  0.0000  0.0000    0.7995  0.0000  0.0000
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 3  ( B2 )
-@           1     0.336053     0.0000 -0.2029  0.0000    0.0000 -0.1102  0.0000
-@           2     0.427200     0.0000 -0.2612  0.0000    0.0000 -0.2710  0.0000
-@           3     0.547593     0.0000 -0.4057  0.0000    0.0000 -0.4528  0.0000
+@           1     0.323950     0.0000 -0.2097  0.0000    0.0000 -0.1123  0.0000
+@           2     0.422893     0.0000 -0.2661  0.0000    0.0000 -0.2717  0.0000
+@           3     0.541331     0.0000 -0.4102  0.0000    0.0000 -0.4520  0.0000
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 4  ( A2 )
 @           1     0.141409     0.0000  0.0000  0.0000    0.0000  0.0000  0.0000
@@ -1493,17 +1491,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
    1      2     9.9508    0.00000  0.00000  0.00000   0.00000  0.00000  0.00000
    1      3    12.9717    0.00000  0.00000  0.00000   0.00000  0.00000  0.00000
  ------------------------------------------------------------------------------
-   2      1     7.5291    0.00000  0.36116  0.00000   0.00000  0.00000  0.00000
-   2      2    10.7908    0.00000 -0.52621  0.00000   0.00000  0.00000  0.00000
-   2      3    14.4535    0.00000 -0.00337  0.00000   0.00000  0.00000  0.00000
+   2      1     7.4506   -0.00000 -0.36063 -0.00000  -0.00000 -0.00000 -0.00000
+   2      2    10.6871   -0.00000  0.52431 -0.00000  -0.00000 -0.00000 -0.00000
+   2      3    14.3819   -0.00000  0.05471 -0.00000  -0.00000 -0.00000 -0.00000
  ------------------------------------------------------------------------------
-   3      1     9.1445    0.77414  0.00000  0.00000   0.00000  0.00000  0.00000
-   3      2    11.6247   -0.00808  0.00000  0.00000   0.00000  0.00000  0.00000
-   3      3    14.9008   -0.02070  0.00000  0.00000   0.00000  0.00000  0.00000
+   3      1     8.8151    0.77309 -0.00000 -0.00000  -0.00000 -0.00000 -0.00000
+   3      2    11.5075   -0.01068 -0.00000 -0.00000  -0.00000 -0.00000 -0.00000
+   3      3    14.7304   -0.02027 -0.00000 -0.00000  -0.00000 -0.00000 -0.00000
  ------------------------------------------------------------------------------
-   4      1     3.8479    0.00000  0.00000  0.58605   0.00000  0.00000  0.00000
-   4      2    10.8545    0.00000  0.00000  0.36321   0.00000  0.00000  0.00000
-   4      3    13.2615    0.00000  0.00000 -0.02483   0.00000  0.00000  0.00000
+   4      1     3.5265   -0.00000 -0.00000 -0.58329  -0.00000 -0.00000 -0.00000
+   4      2    10.6708   -0.00000 -0.00000  0.36917  -0.00000 -0.00000 -0.00000
+   4      3    13.1222   -0.00000 -0.00000  0.02543  -0.00000 -0.00000 -0.00000
  ------------------------------------------------------------------------------
 
 
@@ -1578,22 +1576,22 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  CPU time statistics for ABACUS
  ------------------------------
 
- EXCITA     00:00:27     100 %
+ EXCITA     00:00:03     100 %
 
- TOTAL      00:00:27     100 %
+ TOTAL      00:00:03     100 %
 
 
-  Total CPU  time used in ABACUS:  27.32 seconds
-  Total wall time used in ABACUS:  27.66 seconds
+  Total CPU  time used in ABACUS:   2.74 seconds
+  Total wall time used in ABACUS:   2.74 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  27.58 seconds
-  Total wall time used in DALTON:  28.19 seconds
+  Total CPU  time used in DALTON:   2.87 seconds
+  Total wall time used in DALTON:   2.88 seconds
 
  
-     Date and time (Linux)  : Mon Nov 27 12:48:43 2023
-     Host name              : node708                                 
+     Date and time (Linux)  : Sun Mar 12 21:04:06 2023
+     Host name              : sunray                                  
