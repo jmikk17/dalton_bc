@@ -997,23 +997,6 @@ C
      &   /' Total CPU  time used in SIRIUS :',F10.2,' seconds',
      &   /' Total wall time used in SIRIUS :',F10.2,' seconds')
 C
-      IF (NINFO .GT. 0) THEN
-         WRITE (LUPRI,7210) NINFO
-         IF (LUW4.NE.LUPRI) WRITE (LUW4,7210) NINFO
-         WRITE (LUSTAT,7210) NINFO
-         WRITE (LUERR,7210) NINFO
-      END IF
-      IF (NWARN .GT. 0) THEN
-         WRITE (LUPRI,7200) NWARN
-         IF (LUW4.NE.LUPRI) WRITE (LUW4,7200) NWARN
-         WRITE (LUSTAT,7200) NWARN
-         WRITE (LUERR,7200) NWARN
-      END IF
- 7200 FORMAT(/' NOTE:',I5,' warnings have been issued.',
-     &       /' Check output, result, and error files for "WARNING".')
- 7210 FORMAT(/' NOTE:',I5,' informational messages have been issued.',
-     &       /' Check output, result, and error files for "INFO".')
-C
       IF (LUPROP .GT. 0) CALL GPCLOSE(LUPROP,'KEEP') ! AOPROPER   - property integrals
       IF (LUSOL  .GT. 0) CALL GPCLOSE(LUSOL ,'KEEP') ! AOSOLINT   - multipole integrals for spherical cavity
       IF (LUPCMD .GT. 0) CALL GPCLOSE(LUPCMD,'KEEP') ! PCMDATA    - PCM data
