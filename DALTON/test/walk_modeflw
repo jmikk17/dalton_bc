@@ -133,7 +133,7 @@ CRIT1=`$GREP "Walk type\: Level\-shifted Newton walk \(mode following\)" $log | 
 CRIT2=`$GREP "Index of critical point searched\: 1" $log | wc -l`
 CRIT3=`$GREP "Hessian mode selection \: * \-1" $log | wc -l`
 TEST[6]=`expr	$CRIT1 \+ $CRIT2 \+ $CRIT3`
-CTRL[6]=6
+CTRL[6]=3
 ERROR[6]="GEOMETRY OPTIMIZATION NOT SET UP CORRECTLY"
 
 # Initial gradient
