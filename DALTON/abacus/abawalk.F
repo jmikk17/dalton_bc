@@ -430,10 +430,10 @@ C
          IF (IWKTYP .LT. 3) THEN
             WRITE (LUPRI,'(/A,I2/)')
      *           ' Index of critical point searched:',IWKIND
-            WRITE (LUPRI,'(A/A,F15.8/)')
+            WRITE (LUPRI,'(A/A,1P,D10.2)')
      *        ' Tolerance for stationary point :',
      *        ' Molecular gradient norm less than',TOLST
-            IF (IMODE .NE. 0) WRITE (LUPRI,'(A,I10)')
+            IF (IMODE .NE. 0) WRITE (LUPRI,'(/A,I10)')
      *           ' Hessian mode selection :',IMODE
             IF (KEEPSY) WRITE (LUPRI,'(/A)')
      *           ' Symmetry will not be broken.'
@@ -813,8 +813,8 @@ C  /* Deck wlkdr1 */
 #include "maxorb.h"
       PARAMETER (D0 = 0.0D00, D100 = 100.0D0, SMALL = 1.0D-8)
 C
-      LOGICAL INDXOK, OLD, STOP, STATPO, WLKEND, OLDREA, DOHESS, DODIP,
-     &        PRJTRO, DONWTN, NOTALL
+      LOGICAL INDXOK, OLD, STOP_WALK, STATPO, WLKEND, OLDREA,
+     &        DOHESS, DODIP, PRJTRO, DONWTN, NOTALL
 C
       DIMENSION POLDD(*), POLDQ(*), POLDL(*), POLDA(*)
       DIMENSION GRDCAR(NCRTOT), HESCAR(N2CRT), EVAL(NCRTOT),
@@ -1032,13 +1032,13 @@ C     *********************************
 C     ***** Check for convergence *****
 C     *********************************
 C
-      STOP = WLKEND(GRDCAR,GRDNRM,NCRREP(0,1),INDHES,INDEX,INDXOK,
+      STOP_WALK = WLKEND(GRDCAR,GRDNRM,NCRREP(0,1),INDHES,INDEX,INDXOK,
      *              STATPO,ISTIND,IPOINT,NUMMOD)
 C
 C     a) Stop walk
 C     ============
 C
-      IF (STOP) THEN
+      IF (STOP_WALK) THEN
          IPOINT = IPOINT + 1
          IF (IWKTYP .EQ. 6) THEN
             IF (VIBAVE .OR. NMODIF) THEN
@@ -1149,7 +1149,7 @@ C        ***** Save wave function prediction *****
 C        *****************************************
 C
          CALL WLKSAV(ERGSEC,COOR,WORK,LWORK)
-      END IF
+      END IF ! IF (STOP_WALK) THEN ... ELSE ...
 C
 C     *************************
 C     ***** Print results *****
@@ -1163,8 +1163,8 @@ C
      &               GRDCAR,PMCAR,PMCARX,PMDIA,PMDIAX,CMDIF,ANHARM,
      &               TRSDIA,EKIN0,STPNRM,IMODE,IWKIND,DOREPW,NCRTOT,
      &               N2CRT,NCRIND,NCART,INDHES,IPOINT,ISTTYP,ISTIND,
-     &               IWKTYP,STOP,STATPO,OLDREA,DOHESS,PRJTRO,IMAGE,
-     &               AACCUM,DONWTN,IPRWLK,REJECT,ERGDIA,
+     &               IWKTYP,STOP_WALK,STATPO,OLDREA,DOHESS,PRJTRO,IMAGE,
+     &               AACCUM,DONWTN,IPRWLK,REJECT,TOLST,ERGDIA,
      &               WORK,LWORK)
 C
 C     *************************************
@@ -1200,7 +1200,7 @@ C
      &                  NCART,IPOINT,DISPLC,IPRWLK)
             END IF
          END IF
-         IF (STOP) THEN
+         IF (STOP_WALK) THEN
             WRITE (LUPRI,'(/A)')' Numerical differentiation complete.'
          END IF
       END IF
@@ -2602,9 +2602,9 @@ C  /* Deck wlkres */
      &                  EKINPA,VREL,GRDCAR,PMCAR,PMCARX,PMDIA,PMDIAX,
      &                  CMDIF,ANHARM,TRSDIA,EKIN0,STPNRM,IMODE,IWKIND,
      &                  DOREPW,NCRTOT,N2CRT,NCRIND,NCART,INDHES,IPOINT,
-     &                  ISTTYP,ISTIND,IWKTYP,STOP,STATPO,OLDREA,DOHESS,
-     &                  PRJTRO,IMAGE,AACCUM,DONWTN,
-     &                  IPRINT,REJECT,ERGDIA,WORK,LWORK)
+     &                  ISTTYP,ISTIND,IWKTYP,STOP_WALK,STATPO,OLDREA,
+     &                  DOHESS,PRJTRO,IMAGE,AACCUM,DONWTN,
+     &                  IPRINT,REJECT,TOLST,ERGDIA,WORK,LWORK)
 C
 C     Print of results
 C
@@ -2619,8 +2619,8 @@ C
       PARAMETER (D1 = 1.0D0, D0 = 0.0D0, D100 =100.D0, D15 = 1.0D15,
      &           DM13 = 1.0D-13)
 C
-      LOGICAL STATPO, STOP, DOREPW(0:7), OLDREA, DOHESS, NOTALL, PRJTRO,
-     &        IMAGE, DONWTN, REJECT
+      LOGICAL STATPO, STOP_WALK, DOREPW(0:7), OLDREA, DOHESS, NOTALL,
+     &        PRJTRO, IMAGE, DONWTN, REJECT
       DIMENSION STPDIA(NCRTOT), EVAL(NCRTOT), EVEC(N2CRT), COOR(NCRIND),
      &          STPCAR(NCRIND), CNDHES(0:7), INDHES(0:7),
      &          GRDDIA(NCRTOT), SCAL(NCRTOT), STPSYM(NCART),
@@ -2651,18 +2651,22 @@ C
       IF (IWKTYP .EQ. 1 .AND. IWKIND .EQ. 0) IWKTYP_PR = 0
       IF (IMAGE) IWKTYP_PR = 8
       WRITE (LUPRI,'(/2A)')       '@ Walk type: ', WLKTYP(IWKTYP_PR)
-      WRITE (LUPRI,'(/A,I5)')     '@ Iteration number:', IPOINT
-      WRITE (LUPRI,'(/A,F17.10)') '@ Norm of molecular gradient:',GRDNRM
-      WRITE (LUPRI,'(/A,F20.10)') '@ Energy at current point:',ERGMOL
+      WRITE (LUPRI,'( A,I5)')     '@ Iteration number:', IPOINT
+      WRITE (LUPRI,'( A,F17.10)') '@ Norm of molecular gradient:',GRDNRM
+      IF (IWKTYP .LT. 3) THEN
+         WRITE (LUPRI,'( A,1P,D10.2)') '@ Convergence threshold'//
+     &      ' for norm of molecular gradient:', TOLST
+      END IF
+      WRITE (LUPRI,'( A,F20.10)') '@ Energy at current point:',ERGMOL
       IF (IPOINT .GT. 0) THEN
          WRITE (LUPRI,'( A,F20.10)')
      &                      '  Energy at initial point:', ESTART
          WRITE (LUPRI,'(/A,F13.10,A,2(/,39X,F13.2,A))')
-     &         '  Change in energy since start of walk:',
+     &         '@ Change in energy since start of walk:',
      &                   ERGMOL - ESTART,  ' au',
      &                   XKJMOL*(ERGMOL - ESTART), ' kJ/mol',
      &                   XKCMOL*(ERGMOL - ESTART), ' kcal/mol'
-         IF (.NOT.REJECT) WRITE (LUPRI,'(/A,F6.2)')
+         IF (.NOT.REJECT) WRITE (LUPRI,'( A,F6.2)')
      &      '@ Ratio between actual and predicted energies:',
      &       (ERGMOL - ERGMLX)/ERGSCX
       END IF
@@ -2720,7 +2724,7 @@ C
          WRITE (LUPRI,'(/A,F10.4,A)')
      &      '@ Accumulated arc length (mass weighted) before step: ',
      &        AACCUM - STPNRM, ' au  '
-         IF (STOP) THEN
+         IF (STOP_WALK) THEN
             WRITE (LUPRI,'(/A)')'@ Geometry optimization has converged.'
          END IF
       END IF
@@ -2747,7 +2751,7 @@ C
          ELSE
             WRITE (LUPRI,'(/A,I2)') '@ Hessian index:', INDEX
          END IF
-         IF (IMAGE .AND. .NOT.STOP) THEN
+         IF (IMAGE .AND. .NOT.STOP_WALK) THEN
             IMGIND = INDHES(0)
             IF (EVAL(IMODE).GT.D0) THEN
                IMGIND = IMGIND + 1
@@ -2758,7 +2762,7 @@ C
          END IF
       END IF
       IF (IWKTYP .LT. 3) THEN
-         IF (STOP) THEN
+         IF (STOP_WALK) THEN
             WRITE (LUPRI,'(/A)')'@ Geometry optimization has converged.'
          ELSE
             IF (IWKTYP .EQ. 1 .AND. (IWKIND .GT. 0 .OR. IMAGE)) THEN
@@ -2775,7 +2779,7 @@ C
          END IF
          IF (IMODE .GT. 0) THEN
             IF (IMAGE) THEN
-               IF (.NOT.STOP) WRITE (LUPRI,'(/A,I2,/)')
+               IF (.NOT.STOP_WALK) WRITE (LUPRI,'(/A,I2,/)')
      &                  '@ Image mode:',IMODE
             ELSE
                WRITE (LUPRI,'(/A,I2,/)') '@ Eigenmode followed:',IMODE
@@ -2784,7 +2788,7 @@ C
       ELSE IF (IWKTYP .EQ. 5) THEN
          WRITE (LUPRI,'(/A,I2)') '@ Eigenvector selected:',IMODE
       END IF
-      IF (.NOT.STOP) THEN
+      IF (.NOT.STOP_WALK) THEN
          IF (IWKTYP.EQ.2) THEN
             STPPAR = ABS(STPDIA(IMODE))
             STPPER = SQRT(STPNRM*STPNRM - STPPAR*STPPAR)
@@ -2855,7 +2859,7 @@ C
 C
       IF (DOHESS .AND. IWKTYP .NE. 3) THEN
          WRITE (LUPRI,'()')
-         IF (STOP) THEN
+         IF (STOP_WALK) THEN
             CALL AROUND
      *         ('Gradient and Hessian in diagonal representation')
             WRITE (LUPRI,'(2(/10X,A))')
@@ -2885,7 +2889,7 @@ C
                END IF
                DO 210 I = 1, NVEC
                   II = IOFF + I
-                  IF (STOP) THEN
+                  IF (STOP_WALK) THEN
                      WRITE (LUPRI,'(12X,A,I2,I12,4X,2F17.10)')
      &                  '@',IREP + 1, I, GRDDIA(II), EVAL(II)
                   ELSE
@@ -2912,12 +2916,12 @@ C
          IF ((ISTTYP .EQ. 4) .OR. (IWKTYP .EQ. 7 .AND. DONWTN)) THEN
             WRITE (LUPRI,'(/A)') '  This is Newton step.'
          END IF
-         IF (IWKTYP .EQ. 7 .AND. .NOT.STOP .AND. IPOINT.GT.0) THEN
+         IF (IWKTYP .EQ. 7 .AND. .NOT.STOP_WALK .AND. IPOINT.GT.0) THEN
             ANGLE = WINKEL(GRDDIA,STPDIA,NCART)
             WRITE (LUPRI,'(/A,F6.2,A)')
      &         '  Angle between gradient and step: ',ANGLE,' degrees'
          END IF
-         IF (.NOT.STOP .AND. IWKTYP.EQ.2) THEN
+         IF (.NOT.STOP_WALK .AND. IWKTYP.EQ.2) THEN
             WRITE (LUPRI,'(3(/,A,F13.6))')
      *         '  Step size:                   ', STPNRM,
      *         '     - parallel component:     ', STPPAR,
@@ -2970,7 +2974,7 @@ C
      &      '  Accumulated arc length (mass-weighted) after step:',
      &         AACCUM, ' au '
       END IF
-      IF (.NOT.STOP .AND. (IWKTYP .EQ. 3 .OR. IWKTYP .EQ. 7)
+      IF (.NOT.STOP_WALK .AND. (IWKTYP .EQ. 3 .OR. IWKTYP .EQ. 7)
      &              .AND. (IPOINT .GT. 0)) THEN
          CALL HEADER(' mode   anharmonic estimate   harmonic region',1)
          DO 240 I = 1, NCRREP(0,1)
@@ -3023,7 +3027,7 @@ C     *****************************
 C     ***** Geometry analysis *****
 C     *****************************
 C
-      IF (STOP) THEN
+      IF (STOP_WALK) THEN
          CALL AROUND('Final geometry')
          CALL HEADER('Cartesian coordinates (au)',-1)
          CALL PRIGEO(CORD)
@@ -6102,6 +6106,10 @@ C
 C     B) Calculate predicted reference CI vector for new geometry
 C        Call abavar to make sure perturbation symmetry is one.
 C
+!     IF (WFPRED) THEN
+!        ... somthing with reading step saved by WRLKMC; 
+!            note: WFPRED was disabled before 2000
+!     END IF
       REWIND LUSIFC
       CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF
@@ -6114,9 +6122,11 @@ C        No first-order correction has been obtained in this version,
 C        therefore set it to zero. Delete this line when WLKMC has been
 C        reimplemented.
 C
-         CALL DZERO(WORK(KCSTEP),NCONF)
          CALL READT (LUSIFC,NCONF,WORK(KCREF))
 C
+!        IF (.NOT. WFPRED) THEN
+            CALL DZERO(WORK(KCSTEP),NCONF)
+!        END IF
          CALL DAXPY(NCONF,D1,WORK(KCREF),1,WORK(KCSTEP),1)
          CNRM = DDOT(NCONF,WORK(KCSTEP),1,WORK(KCSTEP),1)
          CNRM = D1/SQRT(CNRM)
@@ -6322,6 +6332,8 @@ C    *         ' because predicted orbital step is larger than',XMXO
          REDFAC = D1
          MCOK   = .TRUE.
       END IF
+      ! WFPRED and CALL WLKMC have been disabled since before 2000.
+      ! For reactivating, here is missing saving STPMC on file to be read in WLKSAV
       RETURN
       END
 C  /* Deck wlkmc1 */

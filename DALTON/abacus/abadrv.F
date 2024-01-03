@@ -1630,7 +1630,7 @@ C
       IF (TSTINP) WRITE (LUPRI,'(/A/)')  ' *** Input test run only ***'
       IF (MOLGRD) WRITE (LUPRI,'(5X,A)') ' The molecular gradient'
       IF (MOLHES) WRITE (LUPRI,'(5X,A)') ' The molecular Hessian'
-      IF (DOWALK) WRITE (LUPRI,'(5X,A)') ' Geometry optimization'
+      IF (DOWALK) WRITE (LUPRI,'(5X,A)') ' Geometry walk'
       IF (VIB)    WRITE (LUPRI,'(5X,A)') ' Vibrational analysis'
       IF (SECNDM) WRITE (LUPRI,'(5X,A)') ' Second order moments'
       IF (QUADRU) WRITE (LUPRI,'(5X,A)') ' Quadrupole moments'
