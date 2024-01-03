@@ -687,7 +687,7 @@ C
       IPRTRA = -1
 C     MWORK is defined in block data SBDDIM
 C
-      IF (FCKTRA_TYPE .gt. 0) THEN
+      IF (FCKTRA_TYPE .ge. 0) THEN ! FCKTRA or NEWTRA
          USEDRC= .TRUE.
       ELSE
          USEDRC= .FALSE.

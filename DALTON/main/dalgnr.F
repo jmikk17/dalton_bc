@@ -938,22 +938,6 @@ c               END IF
 c#endif
             ELSE
                WRINDX = .TRUE.
-               IF (NEWWLK) THEN
-                  CALL WLKINI
-                  IF (WALKIN) THEN
-C
-C     We made some changes to walk default. Need to process these
-C
-                     CALL GPOPEN(LUCMD,'DALTON.INP','OLD',' ',
-     &                           'FORMATTED',IDUMMY,.FALSE.)
-                     REWIND (LUCMD,IOSTAT=IOS)
- 901                 READ (LUCMD,'(A7)') WORD
-                     CALL UPCASE(WORD)
-                     IF (WORD .NE. '*WALK  ') GOTO 901
-                     CALL WLKINP(WORD)
-                     CALL GPCLOSE(LUCMD,'KEEP')
-                  END IF
-               END IF
                IF (ITERNR .EQ. 0) THEN
                   CALL ABAINP('**START',WORK(1),LMWORK)
                ELSE
@@ -1229,7 +1213,7 @@ C
       CALL GETTIM(CEND,WEND)
       CTOT = CEND - CSTR
       WTOT = WEND - WSTR
-C
+
 ! Finalize pcm_scf if an EXTPCM calculation (PCM using PCMSolver
 ! library) was requested.
 #ifdef HAS_PCMSOLVER
@@ -1241,6 +1225,23 @@ C
 
       CALL TIMTXT(' Total CPU  time used in DALTON:',CTOT,LUPRI)
       CALL TIMTXT(' Total wall time used in DALTON:',WTOT,LUPRI)
+
+      IF (NINFO .GT. 0) THEN
+         WRITE (LUPRI,7210) NINFO
+         IF (LUW4.NE.LUPRI) WRITE (LUW4,7210) NINFO
+         WRITE (LUSTAT,7210) NINFO
+         WRITE (LUERR,7210) NINFO
+      END IF
+      IF (NWARN .GT. 0) THEN
+         WRITE (LUPRI,7200) NWARN
+         IF (LUW4.NE.LUPRI) WRITE (LUW4,7200) NWARN
+         WRITE (LUSTAT,7200) NWARN
+         WRITE (LUERR,7200) NWARN
+      END IF
+ 7200 FORMAT(/' NOTE:',I5,' warnings have been issued.',
+     &       /' Check output, result, and error files for "WARNING".')
+ 7210 FORMAT(/' NOTE:',I5,' informational messages have been issued.',
+     &       /' Check output, result, and error files for "INFO".')
 C
 C     Stamp date and time and hostname to output
 C

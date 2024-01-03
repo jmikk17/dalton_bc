@@ -121,6 +121,7 @@ C
 #include "lbmxsq.h"
 C
 C Used from common blocks:
+C gnrinf.h : PARCAL
 C   INFINP : FLAG(*),ITRLVL,ITRFIN,ICI0
 C   INFORB : NNORBT
 C   INFDIM : LBUFMA
@@ -130,6 +131,7 @@ C   INFTAP : LU*
 C
 #include "maxorb.h"
 #include "priunit.h"
+#include "gnrinf.h"
 #include "infinp.h"
 #include "inforb.h"
 #include "infdim.h"
@@ -160,9 +162,20 @@ C
       END IF
       IF (NBAST .GT. 255 .AND. .NOT. NEWTRA) THEN
          NEWTRA = .TRUE.
-         WRITE(LUPRI,'(/4X,A/4X,A)') 'INFORMATION: Switched to "new" '/
+         USEDRC = .TRUE.
+         IF (PARCAL) THEN
+            FCKTRA_TYPE = 1
+            WRITE(LUPRI,'(/4X,A/4X,A)')
+     &      'INFORMATION: Switched to ".FCKTRA" '/
+     &     /'integral transformation, because MPI parallel ',
+     &      'and more than 255 basis functions.'
+         ELSE
+            FCKTRA_TYPE = 0
+            WRITE(LUPRI,'(/4X,A/4X,A)')
+     &      'INFORMATION: Switched to ".NEWTRA" '/
      &     /'integral transformation (from 1988 ;-) )',
      &      'because more than 255 basis functions.'
+         END IF
       END IF
       IF (FCKTRA_TYPE .gt. 0) THEN
          CALL SIR_INTOPEN_FCKTRA
@@ -1807,7 +1820,6 @@ C
             NEWTRA_USEDRC = USEDRC
          END IF
          CALL N_TRACTL(KTRLVL,CMO,WORK,KWORK)
-         IF ( NEWTRA_USEDRC ) USEDRC = .TRUE.
          ITRLVL_LAST = ITRLVL
       ELSE
          NEWTRA_USEDRC = .FALSE.
