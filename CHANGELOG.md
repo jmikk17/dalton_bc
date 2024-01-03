@@ -1,6 +1,6 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2023.0-dev] (unreleased)
+## [2024.0-dev] (unreleased)
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
