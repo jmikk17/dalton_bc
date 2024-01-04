@@ -457,8 +457,6 @@ C     J. J. Aucar 2022
       REAL*8, intent(in)        :: tensor(3,3)
       REAL*8                    :: iso
       CHARACTER*14, intent(in)  :: phrase
-      DOUBLE PRECISION, allocatable :: autovalores(:)
-      DOUBLE PRECISION, allocatable :: autoestados(:,:)
       DOUBLE PRECISION :: parameters(4)
 
       CALL QENTER('PRINT_LRSHIELD_TOT')
@@ -467,7 +465,8 @@ C     Information about calculation of LRESC
 c     For total (NR and REL) also SPAN and SKEW are printed
       IF (elements == 'ist ') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      parameters = 0.d0
+C     Initialize parameters
+      DATA parameters / 0.d0, 0.d0, 0.d0, 0.d0 /
       call shielddiag(tensor,3,parameters)
       WRITE(LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
      &              3X,F12.4,F12.4,F12.4,X,F12.4,X,A)')
