@@ -84,4 +84,80 @@ c       A is now the matrix whose columns are the eigenstates
 
 
 
+      subroutine shielddiag(matrix,n,parameters)
+C     Constructed according to DIRAC23: prp/pamprp.F
+C     Parameters calculated in accordance with J.Mason, Solid State
+C     Nuc.Magn.Resonance, 2 (1993), 285
+C     Tensor treatment according to F. A. Anet et. alter, Concepts in
+C     Magnetic Resonance, 1991, vol. 3, no 4.
+#include "implicit.h"
+#include "dummy.h"
+#include "wrkrsp.h"
+      DOUBLE PRECISION, intent(in) :: matrix(n,n)
+      DOUBLE PRECISION, intent(out) :: parameters(4)
+      DOUBLE PRECISION :: ISO
+      INTEGER, intent(in) :: n
 
+      PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D2 = 2.0D0, D3 = 3.0D0)
+      DIMENSION PVAL(6), WRK(3), IWRK(3), AXES(3,3)
+      DIMENSION SYM(3,3), ANTI(3,3)
+      PARAMETER (thresh = 1D-06)
+
+!     Calculate ANTI and SYM matrices
+      DO I = 1, 3
+      DO J = 1, 3
+         ANTI(I, J) = (matrix(I, J) - matrix(J, I)) / D2
+         SYM(I, J) = (matrix(I, J) + matrix(J, I)) / D2
+      ENDDO
+      ENDDO
+
+      CALL DUNIT(AXES, 3)
+
+!     Fill PVAL vector with elements from the symmetric matrix SYM
+      IJ = 1
+      DO I = 1, 3
+      DO J = 1, I
+         PVAL(IJ) = SYM(I, J)
+         IJ = IJ + 1
+      ENDDO
+      ENDDO
+
+!     Diagonalize SYM matrix
+      CALL JACO(PVAL, AXES, 3, 3, 3, WRK, IWRK)
+
+!     Rearrange PVAL elements
+      PVAL(1) = PVAL(1)
+      PVAL(2) = PVAL(3)
+      PVAL(3) = PVAL(6)
+
+!     Find maximum, medium and minimum indices in PVAL
+      IZ = IDMAX(3, PVAL, 1)
+      IX = IDMIN(3, PVAL, 1)
+      DO I = 1, 3
+         IF (I /= IZ .AND. I /= IX) IY = I
+      ENDDO
+
+!     Calculate parameters
+      ISO  = ( PVAL(IX) + PVAL(IY) + PVAL(IZ) ) / 3
+      SPAN = PVAL(IZ) - PVAL(IX)
+      SKEW = D3 * (ISO - PVAL(IY)) / SPAN
+      ANIS = PVAL(IZ) - (PVAL(IX) + PVAL(IY)) / D2
+      ASYM = (PVAL(IY) - PVAL(IX)) / (PVAL(IZ) - ISO)
+
+!     Adjust values to avoid numerical instabilities
+      IF (ABS(SPAN) < thresh) THEN
+         SPAN = D0
+         SKEW = D0
+         ANIS = D0
+         ASYM = D1
+      ELSE
+         IF (ABS(PVAL(IY) - PVAL(IX)) .LT. thresh) SKEW = D1
+         IF (ABS(PVAL(IZ) - PVAL(IY)) .LT. thresh) SKEW = -D1
+      ENDIF
+      IF (ABS((PVAL(IZ) - iso)) .LT. thresh) ASYM = D1
+
+c     eigenvalues are ordered from smallest to largest (in case needed)
+c     autovalores=[PVAL(IX), PVAL(IY), PVAL(IZ)]
+      parameters = [SPAN, SKEW, ANIS, ASYM]
+
+      end 

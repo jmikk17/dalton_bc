@@ -55,6 +55,9 @@ c      IF (LRANISO) THEN
       WRITE(LUPRI,'(/,4X,A)') '-  Definitions according to : '
       WRITE(LUPRI,'(7X,A)') 'J. Mason, Solid state Nuc. Magn. '//
      &                         'Res. 2 (1993), 285 '
+      WRITE(LUPRI,'(/,4X,A)') '-  Tensor treatment according to : '
+      WRITE(LUPRI,'(7X,A)') 'F. A. Anet et. alter, Concepts Magn. '//
+     &                         'Reson. (1991), 3 '
 c      END IF
 
       IF (LRESCALL) THEN

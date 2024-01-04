@@ -459,7 +459,7 @@ C     J. J. Aucar 2022
       CHARACTER*14, intent(in)  :: phrase
       DOUBLE PRECISION, allocatable :: autovalores(:)
       DOUBLE PRECISION, allocatable :: autoestados(:,:)
-      DOUBLE PRECISION :: span, skew
+      DOUBLE PRECISION :: parameters(4)
 
       CALL QENTER('PRINT_LRSHIELD_TOT')
 
@@ -467,21 +467,12 @@ C     Information about calculation of LRESC
 c     For total (NR and REL) also SPAN and SKEW are printed
       IF (elements == 'ist ') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      allocate(autovalores(3))
-      allocate(autoestados(3,3))
-      autovalores  = 0.d0
-      autoestados  = 0.d0
-      call diagonalizar(tensor,3,autovalores,autoestados)
-
-      span = autovalores(3)-autovalores(1)
-      skew = 3*(iso-autovalores(2))/
-     &         (autovalores(3)-autovalores(1))
-
-      deallocate (autovalores)
-      deallocate (autoestados)
+      parameters = 0.d0
+      call shielddiag(tensor,3,parameters)
       WRITE(LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
      &              3X,F12.4,F12.4,F12.4,X,F12.4,X,A)')
-     & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,span,skew,' [ppm]'
+     & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,parameters(1),
+     & parameters(2),' [ppm]'
       END IF
 
       IF (elements == 'iso ') THEN
