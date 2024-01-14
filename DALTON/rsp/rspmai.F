@@ -359,17 +359,14 @@ C
          CALL TITLER('High-spin ROHF response calculation','*',103)
       ELSE IF (CCPPA) THEN
          CALL TITLER('SOPPA(CCSD) response calculation','*',103)
-         IF (PARCAL) CALL PARQUIT('SOPPA(CCSD) RESPONSE')
       ELSE IF (SOPPA) THEN
          CALL TITLER('SOPPA response calculation','*',103)
-         IF (PARCAL) CALL PARQUIT('SOPPA RESPONSE')
       ELSE IF (RSPCI) THEN
          CALL TITLER('CI response calculation','*',103)
       ELSE IF (TDHF) THEN
          CALL TITLER('RHF response calculation (TDHF)','*',103)
       ELSE
          CALL TITLER('MCSCF response calculation','*',103)
-         ! IF (PARCAL) CALL PARQUIT('MCSCF RESPONSE')
       END IF
 C
       IF (USE_PELIB()) THEN
@@ -977,9 +974,6 @@ C
                   AVDIA  = .FALSE.
                GO TO 100
     3          CONTINUE ! .SOPPA
-C                  IF (PARCAL) THEN
-C                    CALL PARQUIT("SOPPA combined with linear response")
-C                  END IF
                   IF (EMBEDDING) THEN
 cjje: change this if full solvent soppa is ever implemented
                     GO TO 24 ! go to .SOPRPA option
