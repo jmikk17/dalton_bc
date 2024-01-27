@@ -198,6 +198,8 @@ C        *** set SCF parameters for RHF/DFT and MP2 ***
 C
       IF (DOSCF .OR. DOMP2) THEN
          MCTYPE   = 0
+C        Enforce high-spin Fock matrices for all open-shell calcs with DFT
+         HSROHF = HSROHF .OR. (DODFT .AND. NASHT .GE. 1)
          IF (HSROHF) MCTYPE = -1
          IF (DOMP2 ) THEN
             FLAG(25) = .TRUE. ! SIRIFC from RHF needed for MP2 if embedding
@@ -313,9 +315,6 @@ C        Integral transformations not needed:
 C        Use always NEO for RHF (920221-hjaaj)
 C        unless .NR ALWAYS (FLAG(39)) is set, e.g. for core relax calc.
          IF (.NOT.FLAG(39)) FLAG(38) = .TRUE.
-C
-C        Also high-spin Fock matrices for all open-shell calcs with dft
-         HSROHF = HSROHF .OR. (DODFT .AND. NASHT .GE. 1)
 C
          CALL GETTIM(TSTART,WSTART)
 C

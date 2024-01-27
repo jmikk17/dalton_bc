@@ -3474,6 +3474,7 @@ C
      &      ' for frozen+inactive+active orbitals.'
          END SELECT
       END IF
+      FLUSH(LUPRI)
       NTRLVL = 100*KTRLVL + JTRLVL
       CALL QEXIT('N_TRALVL')
       RETURN
