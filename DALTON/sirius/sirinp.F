@@ -1465,6 +1465,7 @@ C
             NASH(LSYM) = 1
             NASHT  = 1
             NACTEL = 1
+            NROHF(1:8) = NASH(1:8) ! so it will work if HSROHF switched on because open-shell DFT
          ELSE IF (HSROHF) THEN
             LSYM = 1
             DO ISYM = 2, NSYM
@@ -1648,11 +1649,6 @@ C
       IF (INPERR .GT. 0 .AND. SUPSYM) THEN
          WRITE(LUPRI,'(/A)') ' NOTE: super symmetry analysis'//
      &   ' not possible because of input errors.'
-         SUPSYM = .FALSE.
-      END IF
-      IF (NFIELD .GT. 0) THEN
-         WRITE(LUPRI,'(/A)') ' NOTE: super symmetry analysis'//
-     &   ' not possible because of finite field.'
          SUPSYM = .FALSE.
       END IF
 
