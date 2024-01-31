@@ -527,6 +527,8 @@ C Use average (approximate) orbital Hessian diagonal
       RESPHP = .FALSE.
       JOLSEN = .FALSE.
       MAXPHP = 0
+
+      MIN_MOL_CHARGE = -3 ! a lower molecular charge is usually an input error
 !
 !     default CI program used as MCSCF backbone 
       ci_program = 'SIRIUS-CI'
@@ -2249,7 +2251,7 @@ C
 C 1-Oct 1987 Hans Agren
 C
 #include "implicit.h"
-      PARAMETER (NTABLE = 41)
+      PARAMETER (NTABLE = 42)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7,
      &          REWORD*20, TITLIN*80, SR_FUNCS*80
       LOGICAL ALLOPT
@@ -2288,7 +2290,7 @@ C
      *            '.CISRDF','.HFSRDF','.MCSRDF','.SRLDA ','.SRFUN ',  ! 26:30
      *            '.SRHYBR','.COPFAC','.STEX  ','.APSG  ','.VIRTRU',  ! 31:35
      *            '.MULOFA','.DSFAC ','.PVALUE','.HFXFAC','.ERF   ',  ! 36:40
-     *            '.MP2SRD'/                                          ! 41
+     *            '.MP2SRD','.MINCHA'/                                ! 41:42
 C
       functional_line_read = .false.
 C
@@ -2310,7 +2312,7 @@ C
      &                   111,112,113,114,115,106,117,118,119,120,
      &                   121,122,123,124,125,126,127,128,129,130,
      &                   131,132,133,134,135,136,137,138,139,140,
-     &                   141), II
+     &                   141,142), II
                END IF
  1102       CONTINUE
             IF (WORD .EQ. '.OPTION' .OR. WORD .EQ. '.ALLOPT') THEN
@@ -2684,12 +2686,18 @@ C     Multiplication factor for DS in the localspin model
   140 CONTINUE ! .ERF
       READ (LUCMD,*) CHIVAL
       GO TO 100
-C *** Option  10 >MP2SRD<  srDFT Moeller-Plesset PT2 calculation
+C *** Option  41 >MP2SRD<  srDFT Moeller-Plesset PT2 calculation
   141 CONTINUE
         DOMP2    = .TRUE.
         ADDSRI   = .TRUE.
         NUMRUN   = NUMRUN + 1
         FLAG(3)  = .FALSE.
+      GO TO 100
+  142 CONTINUE ! .MINCHArge
+      READ (LUCMD,*) MIN_MOL_CHARGE
+      WRITE(LUPRI,'(/A,I0,A)')
+     &   'User input .MINCHA: molecular charge down to ',MIN_MOL_CHARGE,
+     &   ' allowed.'
       GO TO 100
 C
  8000 CONTINUE
@@ -5940,6 +5948,13 @@ C
      *        /'@    Total number of variables  ',I15)
 C
 C
+      IF (ICHARG .LT. MIN_MOL_CHARGE) THEN
+         WRITE(LUPRI,'(//A,I0/A,I0/A,I0,A)')
+     &'@ Fatal error: Molecule charge is too negative: ',ICHARG,
+     &'@ Fatal error: Minimum charge allowed         : ',MIN_MOL_CHARGE,
+     &'@ Specify .MINCHARGE to ',ICHARG,' to allow this calculation.'
+         CALL QUIT('Fatal error: too negative charge of molecule')
+      END IF
 C
       IF (DOMC) THEN
          WRITE(IWUNIT,1600) MAXMAC,MAXMIC,THRMC,

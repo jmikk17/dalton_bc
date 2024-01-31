@@ -283,11 +283,16 @@ Specification of which wave function calculation is to be performed.
   Note that this keyword must not be specified together with the Kohn--Shan DFT keyword \quotekw{.DFT}.
 
 \item[\Key{HFXFAC}] \ \\
-  \kw{READ (LUINP,'(A80)') LINE} \\
+  \kw{READ (LUINP,*) HFXFAC} \\
   Specification of the full-range Hartree-Fock like exchange for \quotekw{.HFSRDFT} and \quotekw{.MCSRDFT} calculations.
 
 \item[\Key{STEX}]
   Static exchange calculation based on an SCF wave function.\index{Static exchange}
+
+\item[\Key{MINCHARGE}] \ \\
+  \kw{READ (LUINP,*) MIN\_MOL\_CHARGE} \\
+  Allow the molecular charge to be down to specified value. By default \dalton will stop if molecular charge is -4 or lower,
+  because that is usually caused by an input error.
 
 \end{description}
 
