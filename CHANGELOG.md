@@ -29,13 +29,20 @@
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
 - Print total oscillator strenghts when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
+### Basis set changes
+- Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba
+- Added aug-cc-pVTZ-DK3 for In-Xe, Cs, Ba
+- Added aug-cc-pwCVTZ-DK3 for In-Xe, Cs, Ba
+- Added aug-cc-pVQZ-DK3 for In-Xe, Cs, Ba
+- Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
+
 ### Fixed
 - Fixed error in PE-MCSCF calculation with GSPOL
 - Fixed parallel calculation of molecular gradient with CAMB3LYP
-- Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
 
 ### Changed
 - Select FCKTRA for MO transformation by default if > 255 basis functions and parallel.
+- Abort if molecular charge is -4 or lower (it is probably an input error). Can be overridden with new .MINCHA keyword.
 
 
 ## [2020.1] (2022-01-20)

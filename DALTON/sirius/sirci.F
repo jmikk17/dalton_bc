@@ -40,6 +40,7 @@ C   dftcom: DFTADD
 C
 #include "maxorb.h"
 #include "gnrinf.h"
+#include "infpri.h"
 #include "infinp.h"
 #include "inforb.h"
 #include "infdim.h"
@@ -48,7 +49,6 @@ C
       LOGICAL ADDSRI_SAVE
 #if SIRCI_DEBUG > 0
 ! hjaaj debug for p6flag, p4flag, ipri4
-#include "infpri.h"
       p4flag( 6) = .true. ! hjaaj debug
       ipri4 = 11
       p6flag(10) = .true. ! hjaaj debug
@@ -62,6 +62,11 @@ C
       NCROOT = NROOCI
       THRCIX = THRCI
 C
+C     Print energy and residual in each CI iteration by default
+C     (Default is that IPRI4 = IPRUSR + 5 = 5)
+      IF (IPRI4 .EQ. 5) THEN
+         P4FLAG(6) = .TRUE.
+      END IF
 C
       KFREE  = 1
       LFREE  = LWORK
@@ -2528,14 +2533,19 @@ C           ... 170: repeat until (MCSIM .GE. NCSIM .OR. NRS .GE. LAST)
          IF (MCSIM .LT. NCSIM .AND. LAST .LT. NRS) GOTO 170
 C           ... end repeat
       ELSE
-         WRITE(LUPRI,'(A,I0,A)')
-     &      'First ',LAST,' elements used as separate start vectors.'
-         DO 185 I = IFRST,LAST
+         IF (NLAST .eq. 1) THEN
+            WRITE(LUPRI,'(/A)')
+     &         'Lowest element is used as start CI vector.'
+         ELSE
+            WRITE(LUPRI,'(/A,I0,A)') 'Lowest ',
+     &         LAST,' elements are used as separate start CI vectors.'
+         END IF
+         DO I = IFRST,LAST
             MCSIM = MCSIM + 1
             WRK(NRS + NLIST(I)) = 1.0D0
             CALL WRITT(LUIT1,NC4,WRK(NRS+1))
             WRK(NRS + NLIST(I)) = 0.0D0
-  185    CONTINUE
+         END DO
       END IF
       IF (NCSIM .GT. MCSIM .AND. LAST .LT. NCONF) THEN
 C        ... NRS too small compared to NCSIM.
