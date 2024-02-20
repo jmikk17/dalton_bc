@@ -1088,7 +1088,7 @@ C------------------------------------------------------
 C     Write out densities and associated fock matrices.
 C------------------------------------------------------
 C
-      IF (IPRFCK.GT.2) THEN
+      IF (IPRFCK.GT.3) THEN
          CALL HEADER('Density and Fock matrices in SIRFCK',-1)
          DO I = 1, NDMAT
             WRITE (LUPRI,'(//A,I3)') ' Density matrix No.',I
@@ -1218,7 +1218,7 @@ C
       REWIND(LU2INT)
       CALL MOLLAB('BASINFO ',LU2INT,LUPRI)
       READ (LU2INT) MSYM, MBAS, LBUF, NIBUF, NBITS, LENINT4
-      IF (IPRFCK .GE. 5) THEN
+      IF (IPRFCK .GE. 2) THEN
          WRITE(LUPRI,'(/3A,3I5)')
      &   'SIRFCK2: File "',FN2INT,'" opened. LBUF,NIBUF,NBITS:',
      &   LBUF,NIBUF,NBITS
@@ -1310,9 +1310,9 @@ C
 C
     2 CONTINUE
       CALL GPCLOSE(LU2INT,'KEEP')
-      IF (IPRFCK .GE. 5) THEN
-         WRITE(LUPRI,'(/A,I6,A/I16,A)')
-     &   'SIRFCK2: ', NREC,' records with integrals read.',
+      IF (IPRFCK .GE. 1) THEN
+         WRITE(LUPRI,'(/A,I0,A,I0,A)')
+     &   'SIRFCK2: ', NREC,' records with integrals read,  ',
      &   NINTS_TOT,' integrals processed.'
       END IF
       CALL MEMREL('2INT buffer',WORK,1,1,KFREE,LFREE)
