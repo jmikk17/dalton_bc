@@ -558,11 +558,14 @@ C-------------------------------------------------------------------
               SIGNF = ONE
             ELSE IF (ISIDE.EQ.-1) THEN
               SIGNF = -ONE
+            ELSE
+              CALL QUIT('Illegal ISIDE parameter in CC_SOLRSP')
             END IF
 
-            SIGNE = ONE
             IF (LIST(1:2).EQ.'M1' .OR. LIST(1:2).EQ.'N2') THEN
                SIGNE = -ONE
+            ELSE
+               SIGNE = ONE
             END IF
 
             DO IFR = 1, NSIMR

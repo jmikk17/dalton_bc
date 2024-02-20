@@ -232,7 +232,7 @@ C
      &               IODPP1,IODPP2,RODPP1,RODPP2,
      &               DUMMY,DUMMY,IDUMMY,IDUMMY,DUMMY,IDUMMY,CCFBT,
      &               INDXBT,WORK,LWORK,IPRINT)
-         IF ( IPRINT .GT. 2) CALL TIMER('HERMIT',TIMSTR,TIMEND)
+         IF ( IPRINT .GT. 2) CALL TIMER('ERIDI2',TIMSTR,TIMEND)
          CALL FLSHFO(LUPRI)
 C
 C        Error message in case of insufficient memory
@@ -335,7 +335,7 @@ C
      &               IODPP1,IODPP2,RODPP1,RODPP2,
      &               DUMMY,DUMMY,IDUMMY,IDUMMY,D2MAT,ID2MAT,CCFBT,
      &               INDXBT,WORK,LWORK,IPRINT)
-         IF ( IPRINT .GT. 2) CALL TIMER('HERMIT',TIMSTR,TIMEND)
+         IF ( IPRINT .GT. 2) CALL TIMER('ERIDI2',TIMSTR,TIMEND)
          CALL FLSHFO(LUPRI)
 C
 C        Error message in case of insufficient memory
