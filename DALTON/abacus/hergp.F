@@ -423,13 +423,12 @@ C
 C  /* Deck molchr */
       SUBROUTINE MOLCHR(ICHRG)
 C
-C     Calculates total charge of molecule
+C     Calculates total charge of molecule, excluding point charges
 C
 #include "implicit.h"
 #include "maxaqn.h"
 #include "mxcent.h"
 #include "maxorb.h"
-      PARAMETER (D0 = 0.0D00)
 C
 #include "abainf.h"
 #include "nuclei.h"
@@ -439,10 +438,11 @@ C
 C
 C     Nuclear charge
 C
-      CHRGNU = D0
-      DO 100 IATOM = 1, NUCIND
-         CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
-  100 CONTINUE
+      CHRGNU = 0.0D0
+      DO IATOM = 1, NUCIND
+         IF (IZATOM(IATOM) .NE. -1234567890) ! do not include point charges
+     &      CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+      END DO
 C
 C     Subtract number of electrons
 C

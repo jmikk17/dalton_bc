@@ -117,6 +117,7 @@ extract the number of atom types.
 \item[Charge] \verb|(Integer)|. The charge of the molecule\index{charge
   of molecule}. Will be used  by the program to determine the Hartree--Fock
 occupation\index{HF occupation}\index{Hartree--Fock occupation}.
+Point charges are not included in the calculation of the molecular charge.
 \item[Generators] \verb|(Integer|+\verb|Character)|. Number of symmetry
   generators\index{symmetry!generator}. If this keyword is not
   specified (and \verb|Nosymmetry| not invoked)
@@ -322,7 +323,7 @@ basis functions of the quantum number into different blocks. However,
 this will decrease the performance of the
 integral\index{performance of integral program} calculation.
 \item[Charge] \verb|(Real)|. {\em This keyword is required\/}.
-  Charge of this atom\index{charge of atom} or point charge. 
+  Charge of this atom type\index{charge of atom} or point charge. 
 \item[ECP] \verb|(Character)|.
   Different effective core potentials (ECP) could also be used when \verb|ATOMBASIS|
   is specified. For instance, Stuttgart ECPs with corresponding
