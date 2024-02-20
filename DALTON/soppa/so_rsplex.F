@@ -83,7 +83,7 @@ C         LMXRED  = (2 * NEXCI * NSAVMX)**2
 CPi Adjust max size of reduced space if necessary
          IF (NEXCI*NSAVMX .GE. (NT1AM(ISYMTR)+N2P2HOP(ISYMTR))) THEN
             LMXRED = ( 2 * (NT1AM(ISYMTR)+N2P2HOP(ISYMTR)) )**2
-            WRITE(LUPRI,*) 'SO_RSPLEX: Adjusting LMXRED'
+!           WRITE(LUPRI,*) 'SO_RSPLEX: Adjusting LMXRED'
          ELSE
             LMXRED  = (2 * NEXCI * NSAVMX)**2
          END IF

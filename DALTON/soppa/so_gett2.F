@@ -156,7 +156,11 @@ C        And also for MP2 get D(ai) block
          END IF
 C
       ELSE
-         CALL QUIT('SOPPA(CC) requires running the CC module')
+         write(lupri,*) 'ERROR: File '//fname//' does not exist'
+         write(lupri,*) 'ERROR: SOPPA('//KEY//') requires .'//KEY//
+     &      ' in "*CC INPUT" input module'
+         CALL QUIT('SOPPA('//KEY//') requires .'//KEY//
+     &      ' in "*CC INPUT" input module')
       END IF
 C
 C----------------------------------------------------
