@@ -1073,8 +1073,9 @@ C
 C        ADD CONTRIBUTION FROM THE A(0)S(2) TERM IF HRPA
 C
          IF (SOPPA) THEN
-           CALL A0S2(FCX,FC,UDV,ZYMAT,WRK(KTZYMT),WRK(KH2X),WRK(KH2XP),
-     *             WRK(KCOEUN),NOSIM, WRK,LWRK)
+           CALL MEMGET2('REAL','STWO',KSTWO,N2ORBX,WRK,KFREE,LFREE)
+           CALL A0S2(FCX,FC,UDV,ZYMAT,WRK(KTZYMT),WRK(KSTWO),WRK(KH2XP),
+     &             WRK(KCOEUN),NOSIM, WRK,LWRK)
 C
 C  Cancel out the nonsymmetric parts of A(2) matrix. Use the explicitly
 C  constructed A(2) matrix in XINDX.

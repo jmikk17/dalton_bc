@@ -338,7 +338,11 @@ Ctmp
         WRITE (LUPRI,*)
      &        'Skipped calculation of O1 right hand side vectors.'
         O1SKIP = .FALSE.
+#ifdef NO_FORTRAN_2008
         CALL SYSTEM('rm SKIP_O1')
+#else
+        call execute_command_line('rm SKIP_O1')
+#endif
       END IF
 C
 C------------------------------------------------------------------

@@ -198,6 +198,8 @@ C        *** set SCF parameters for RHF/DFT and MP2 ***
 C
       IF (DOSCF .OR. DOMP2) THEN
          MCTYPE   = 0
+C        Enforce high-spin Fock matrices for all open-shell calcs with DFT
+         HSROHF = HSROHF .OR. (DODFT .AND. NASHT .GE. 1)
          IF (HSROHF) MCTYPE = -1
          IF (DOMP2 ) THEN
             FLAG(25) = .TRUE. ! SIRIFC from RHF needed for MP2 if embedding
@@ -313,9 +315,6 @@ C        Integral transformations not needed:
 C        Use always NEO for RHF (920221-hjaaj)
 C        unless .NR ALWAYS (FLAG(39)) is set, e.g. for core relax calc.
          IF (.NOT.FLAG(39)) FLAG(38) = .TRUE.
-C
-C        Also high-spin Fock matrices for all open-shell calcs with dft
-         HSROHF = HSROHF .OR. (DODFT .AND. NASHT .GE. 1)
 C
          CALL GETTIM(TSTART,WSTART)
 C
@@ -996,23 +995,6 @@ C
  7100 FORMAT(//
      &   /' Total CPU  time used in SIRIUS :',F10.2,' seconds',
      &   /' Total wall time used in SIRIUS :',F10.2,' seconds')
-C
-      IF (NINFO .GT. 0) THEN
-         WRITE (LUPRI,7210) NINFO
-         IF (LUW4.NE.LUPRI) WRITE (LUW4,7210) NINFO
-         WRITE (LUSTAT,7210) NINFO
-         WRITE (LUERR,7210) NINFO
-      END IF
-      IF (NWARN .GT. 0) THEN
-         WRITE (LUPRI,7200) NWARN
-         IF (LUW4.NE.LUPRI) WRITE (LUW4,7200) NWARN
-         WRITE (LUSTAT,7200) NWARN
-         WRITE (LUERR,7200) NWARN
-      END IF
- 7200 FORMAT(/' NOTE:',I5,' warnings have been issued.',
-     &       /' Check output, result, and error files for "WARNING".')
- 7210 FORMAT(/' NOTE:',I5,' informational messages have been issued.',
-     &       /' Check output, result, and error files for "INFO".')
 C
       IF (LUPROP .GT. 0) CALL GPCLOSE(LUPROP,'KEEP') ! AOPROPER   - property integrals
       IF (LUSOL  .GT. 0) CALL GPCLOSE(LUSOL ,'KEEP') ! AOSOLINT   - multipole integrals for spherical cavity

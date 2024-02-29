@@ -136,9 +136,14 @@ C     Delete AOORDINT after transformation if ITRSIR .lt. 0
 C
       DELORD = (ITRSIR .LT. 0)
       JTRSIR = ABS(ITRSIR)
-      IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NEWTRA_USEDRC = .TRUE.
+      IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) THEN
+         NEWTRA_USEDRC = .TRUE.
+         USEDRC = .TRUE.
 C     ... NEWTRA_USEDRC must be true for second order transformation;
 C         can be true by input for higher order (e.g. for RESPONS)
+      ELSE
+         NEWTRA_USEDRC = USEDRC
+      END IF
 C
 C     Translate from SIRIUS convention for transformation level
 C     to the convention used in this program.
@@ -302,6 +307,7 @@ C
             CALL MOLLAB('BASINFO ',LUINTA,LUPRI)
 !           consistency checks before reading of AOTWOINT in RDAO2
             READ (LUINTA) NSYM_x, NBAS_x, LBUF, NIBUF, NBITS, LENINT4
+            ! LBUF, NIBUF, NBITS saved in inftra.h
             ierr = 0
             IF (NSYM_x .ne. NSYM) THEN
                ierr = ierr + 1
@@ -316,11 +322,6 @@ C
      &            'SIR_INTOPEN_NEWTRA: NBAS_AOTWOINT .ne. NBAS:'
                write(lupri,'(8I6)') (NBAS_x(i), i=1,NSYM_x)
                write(lupri,'(8I6)') (NBAS  (i), i=1,NSYM  )
-            END IF
-            IF (LBUF .ne. 600) THEN
-               write(lupri,*) 'LBUF .ne. 600 not implemented yet',LBUF
-               ! hjaaj sep 2010: must allocate enough for larger buffer
-               ! in RDAO2 outside RDAO2!
             END IF
             IF (ierr .gt. 0) THEN
                write(lupri,'(/A)') ' SIR_INTOPEN_NEWTRA INFO: '//
@@ -2945,7 +2946,7 @@ C     Transfer unit numbers to TRUNIT
 C     CALL N_TRASE[02] to obtain KEEP and IDATA in TRUNIT
 C
       IRDAO  = JRDAO
-      IF (IRDAO .EQ. 0) THEN
+      IF (IRDAO .EQ. 0) THEN ! AO integrals from AOORDINT
          ITUSYM =  1
          LX2X3  =  0
          CALL N_TRASET_0
@@ -2956,10 +2957,10 @@ C
 !        ITUSYM =  1
 !        LX2X3  = ( LMSBIN*(IRAT+1)+2 - 1 ) / IRAT + 1
 !
-      ELSE IF (IRDAO.EQ.2) THEN
+      ELSE IF (IRDAO.EQ.2) THEN ! Spin-orbit AO integrals
          ITUSYM = -1
          CALL N_TRASET_2(LX2X3, LWORK)
-      ELSE IF (IRDAO .EQ. 3) THEN
+      ELSE IF (IRDAO .EQ. 3) THEN ! AO integrals from AOTWOINT
          ITUSYM = 1
          CALL N_TRASET_3(LX2X3, LWORK)
       ELSE IF (IRDAO .LT. 0) THEN
@@ -3083,11 +3084,8 @@ C
 C
       CALL QENTER('N_TRASET_3')
 C
-      LX2X3  = 2*600 + 4*600
-C     for BUF(600), IBUF(600), and INDX(4,600) for both i*4 and i*8
-C        /Bugfix Oct07-hjaaj
-C MAERKE: remember to change here when new UN2OUT in her2out.F
-C TODO: use info on LUINTA for allocation /Sep 2010 hjaaj
+      LX2X3  = 6*LBUF
+C     for BUF(LBUF), IBUF(LBUF), and INDX(4,LBUF) for both i*4 and i*8
 C
       KEEP(1) = MSYM
       INTSYM = 1
@@ -3133,7 +3131,7 @@ C
 #include "iratdef.h"
 #include "priunit.h"
 #include "mxcent.h"
-      DIMENSION H2_RSPQ(*), BUF(*), IINDX4(4,600)
+      DIMENSION H2_RSPQ(*), BUF(*), IINDX4(4,*)
 C
 C Used from common blocsk:
 C   INFORB : IBAS(8)
@@ -3476,6 +3474,7 @@ C
      &      ' for frozen+inactive+active orbitals.'
          END SELECT
       END IF
+      FLUSH(LUPRI)
       NTRLVL = 100*KTRLVL + JTRLVL
       CALL QEXIT('N_TRALVL')
       RETURN
@@ -3507,10 +3506,12 @@ C
       ELSE IF (IRDAO .EQ. 2) THEN
          CALL RDHSO2(LUORDA,WRK,WRK(600*(1+IRAT) + 1),X1,IDA)
       ELSE IF (IRDAO .EQ. 3) THEN
-         CALL RDAO2(LUORDA,WRK,WRK(600*(1+IRAT) + 1),X1,IDA)
+         LENINT4 = 2*LBUF + NIBUF*LBUF + 1 ! counted in INTEGER*4
+         CALL RDAO2(LUORDA,WRK,WRK(LENINT4/2+1),X1,IDA)
+!        CALL RDAO2(LUINTA,BUF,IINDX4,H2_RSPQ,MPQOFF)
       ELSE
-         WRITE (LUPRI,'(/A,I10)')
-     &      ' TRDDAO ERROR, illegal code: IRDAO =',IRDAO
+         WRITE (LUPRI,'(/A,I0)')
+     &      ' TRDDAO ERROR, illegal code: IRDAO = ',IRDAO
          CALL QTRACE(LUPRI)
          CALL QUIT('ILLEGAL IRDAO CODE IN TRRDAO')
       END IF

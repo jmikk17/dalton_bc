@@ -4132,7 +4132,7 @@ C ---------------------------- not non-adiabatic coupling:
      &      '  ( ',REP(KSYMST-1),') - singlet excitation'
             END IF
             CALL HEADER(PRI_LINE,0)
-            IF (KZCONF .GT. 1) THEN
+            IF (KZCONF .GT. 1 .AND. KZWOPT .GT. 0) THEN
                EXCIT_TEST =
      &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZCONF),1) +
      &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZVAR+KZCONF),1)
@@ -5291,11 +5291,25 @@ C
          CALL DCOPY(KZVAR,WRK(KE2+JTOT),1,WRK(KE2+JTOT+KTOT+KZVAR),1)
          CALL DCOPY(KZVAR,WRK(KE2+JTOT+KZVAR),1,WRK(KE2+JTOT+KTOT),1)
          CALL DCOPY(KZVAR,WRK(KS2+JTOT),1,WRK(KS2+JTOT+KTOT+KZVAR),1)
-         CALL DCOPY(KZVAR,WRK(KS2+JTOT+KZVAR),1,WRK(KS2+JTOT+KTOT),1)
-         CALL DSCAL(KZYVAR,-1.0D0,WRK(KS2+JTOT+KTOT),1)
  105  CONTINUE
       WRITE(LUPRI,'(/A,I8)')' E(2) MATRIX : DIMENSION ',KZYVAR
       CALL OUTPUT(WRK(KE2),1,KZYVAR,1,KZYVAR,KZYVAR,KZYVAR,-1,LUPRI)
+
+      ! make A-B matrix
+      KAMB = KWRK1
+      call mcopy(kzvar,kzvar,wrk(ke2),kzyvar,wrk(kamb),kzvar)
+      call msub (kzvar,kzvar,wrk(ke2+kzvar),kzyvar,wrk(kamb),kzvar)
+      WRITE(LUPRI,'(/A,I8)')' A-B MATRIX : DIMENSION ',KZVAR
+      CALL OUTPUT(WRK(kamb),1,KZVAR,1,KZVAR,KZVAR,KZVAR,-1,LUPRI)
+
+      ! make A+B matrix
+      KAPB = KAMB + KZVAR*KZVAR
+      call mcopy(kzvar,kzvar,wrk(ke2),kzyvar,wrk(kapb),kzvar)
+      call madd (kzvar,kzvar,wrk(ke2+kzvar),kzyvar,wrk(kapb),kzvar)
+      WRITE(LUPRI,'(/A,I8)')' A+B MATRIX : DIMENSION ',KZVAR
+      CALL OUTPUT(WRK(kapb),1,KZVAR,1,KZVAR,KZVAR,KZVAR,-1,LUPRI)
+
+
       WRITE(LUPRI,'(/A,I8)')' S(2) MATRIX : DIMENSION ',KZYVAR
       CALL OUTPUT(WRK(KS2),1,KZYVAR,1,KZYVAR,KZYVAR,KZYVAR,-1,LUPRI)
       ZAMAX = D0
@@ -5310,6 +5324,12 @@ C
       ZDMAX = D0
       ID    = 0
       JD    = 0
+      ZAMBMAX = D0
+      IAMB  = 0
+      JAMB  = 0
+      ZAPBMAX = D0
+      IAPB  = 0
+      JAPB  = 0
       DO 150 IZ = 1,KZVAR
          IY = IZ +KZVAR
          DO 160 JZ = 1,IZ
@@ -5336,6 +5356,23 @@ C
                IB    = IZ
                JB    = JZ
             END IF
+            AMBIJ = WRK(kamb-1+(IZ-1)*KZVAR+JZ)
+            AMBJI = WRK(kamb-1+(JZ-1)*KZVAR+IZ)
+            ZDEV  = ABS(AMBIJ-AMBJI)
+            IF (ZDEV.GT.ZAMBMAX) THEN
+               ZAMBMAX = ZDEV
+               IAMB    = IZ
+               JAMB    = JZ
+            END IF
+            APBIJ = WRK(kAPb-1+(IZ-1)*KZVAR+JZ)
+            APBJI = WRK(kAPb-1+(JZ-1)*KZVAR+IZ)
+            ZDEV  = ABS(APBIJ-APBJI)
+            IF (ZDEV.GT.ZAPBMAX) THEN
+               ZAPBMAX = ZDEV
+               IAPB    = IZ
+               JAPB    = JZ
+            END IF
+
             ZSIJ  = WRK(KS2-1+(IZ-1)*KZYVAR+JZ)
             ZSJI  = WRK(KS2-1+(JZ-1)*KZYVAR+IZ)
             YSIJ  =-WRK(KS2-1+(IY-1)*KZYVAR+JY)
@@ -5361,39 +5398,65 @@ C
  160     CONTINUE
  150  CONTINUE
 
-      IF ( ZAMAX.GT.DTOL) THEN
          IZ=IA
          JZ=JA
          IY=IZ+KZVAR
          JY=JZ+KZVAR
+      IF ( ZAMAX.GT.DTOL) THEN
          WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'WARNING '//
      *' A(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IA,' J=',JA,' DEV=',ZAMAX
+      ELSE
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'INFO '//
+     *' A(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IA,' J=',JA,' DEV=',ZAMAX
+      END IF
          WRITE(LUPRI,'(4(/A,I5,A,I5,A,1P,G16.8))')
      *' IZ=',JZ,' JZ=',IZ,' E2(IZ,JZ)',WRK(KE2-1+(IZ-1)*KZYVAR+JZ),
      *' IZ=',IZ,' JZ=',JZ,' E2(IZ,JZ)',WRK(KE2-1+(JZ-1)*KZYVAR+IZ),
      *' IZ=',JY,' JZ=',IY,' E2(IZ,JZ)',WRK(KE2-1+(IY-1)*KZYVAR+JY),
      *' IZ=',IY,' JZ=',JY,' E2(IZ,JZ)',WRK(KE2-1+(JY-1)*KZYVAR+IY)
-      ELSE
-         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)')
-     *' A(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IA,' J=',JA,' DEV=',ZAMAX
-      END IF
 
-      IF (ZBMAX.GT.DTOL) THEN
          IZ=IB
          JZ=JB
          IY=IZ+KZVAR
          JY=JZ+KZVAR
+      IF (ZBMAX.GT.DTOL) THEN
          WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'WARNING '//
      *' B(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IB,' J=',JB,' DEV=',ZBMAX
+      ELSE
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'INFO '//
+     *' B(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IB,' J=',JB,' DEV=',ZBMAX
+      END IF
          WRITE(LUPRI,'(4(/A,I5,A,I5,A,1P,G16.8))')
      *' IZ=',JY,' JZ=',IZ,' E2(IZ,JZ)',WRK(KE2-1+(IZ-1)*KZYVAR+JY),
      *' IZ=',IY,' JZ=',JZ,' E2(IZ,JZ)',WRK(KE2-1+(JZ-1)*KZYVAR+IY),
      *' IZ=',JZ,' JZ=',IY,' E2(IZ,JZ)',WRK(KE2-1+(IY-1)*KZYVAR+JZ),
      *' IZ=',IZ,' JZ=',JY,' E2(IZ,JZ)',WRK(KE2-1+(JY-1)*KZYVAR+IZ)
+
+      IZ=IAMB
+      JZ=JAMB
+      IF ( ZAMBMAX.GT.DTOL) THEN
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'WARNING '//
+     *' A-B MATRIX MAXIMUM DEVIATION, I=',IZ,' J=',JZ,' DEV=',ZAMBMAX
       ELSE
-         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)')
-     *' B(I,J)-MATRIX : MAXIMUM DEVIATION, I=',IB,' J=',JB,' DEV=',ZBMAX
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'INFO '//
+     *' A-B MATRIX MAXIMUM DEVIATION, I=',IZ,' J=',JZ,' DEV=',ZAMBMAX
       END IF
+      WRITE(LUPRI,'(2(/A,I5,A,I5,A,1P,G16.8))')
+     *' IZ=',JZ,' JZ=',IZ,' (A-B)(IZ,JZ)',WRK(kamb-1+(IZ-1)*KZVAR+JZ),
+     *' IZ=',IZ,' JZ=',JZ,' (A-B)(IZ,JZ)',WRK(kamb-1+(JZ-1)*KZVAR+IZ)
+
+      IZ=IAPB
+      JZ=JAPB
+      IF ( ZAPBMAX.GT.DTOL) THEN
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'WARNING '//
+     *' A+B MATRIX MAXIMUM DEVIATION, I=',IZ,' J=',JZ,' DEV=',ZAPBMAX
+      ELSE
+         WRITE(LUPRI,'(/A,I5,A,I5,A,1P,G16.8)') 'INFO '//
+     *' A+B MATRIX MAXIMUM DEVIATION, I=',IZ,' J=',JZ,' DEV=',ZAPBMAX
+      END IF
+      WRITE(LUPRI,'(2(/A,I5,A,I5,A,1P,G16.8))')
+     *' IZ=',JZ,' JZ=',IZ,' (A+B)(IZ,JZ)',WRK(kAPb-1+(IZ-1)*KZVAR+JZ),
+     *' IZ=',IZ,' JZ=',JZ,' (A+B)(IZ,JZ)',WRK(kAPb-1+(JZ-1)*KZVAR+IZ)
 
       IF (ZSMAX.GT.DTOL) THEN
          IZ=IS

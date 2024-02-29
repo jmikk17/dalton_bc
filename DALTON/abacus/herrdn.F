@@ -4486,7 +4486,11 @@ C
 C
       IF (.NOT. ACTSEL) GOTO 100
 C
+#ifdef NO_FORTRAN_2008
       CALL SYSTEM('cp molden.inp MOLDEN2.INP')
+#else
+      call execute_command_line('cp molden.inp MOLDEN2.INP')
+#endif
 C
       ICOUNT = 0
       DO ISYM = 1,MAXREP+1

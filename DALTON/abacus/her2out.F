@@ -44,7 +44,7 @@ C
      &          NINDAB(NORBA*NORBB,2), NINDCD(NORBC*NORBD,2)
 
 
-      PARAMETER (LBUF_alloc = 600)
+      PARAMETER (LBUF_alloc = 12000)
       REAL*8    BUF(LBUF_alloc)
       INTEGER*4 IBUF4(LBUF_alloc*2)
       SAVE      BUF, IBUF4, ICOUNT
@@ -827,7 +827,6 @@ C
             CALL NEWLAB('BASINFO ',LU2DER,LUPRI)
             LENINT4 = 2*LBUF + NIBUF*LBUF + 1 ! BUF(LBUF),IBUF4(LBUF*NIBUF),ICOUNT4
             WRITE (LU2DER) MAXREP+1,NAOS(1:8),LBUF,NIBUF,NBITS,LENINT4
-            CALL REWSPL(LU2DER)
             CALL NEWLAB('AO2MGINT',LU2DER,LUPRI)
          ELSE
             IF (LU2DER .LE. 0) THEN
@@ -1517,10 +1516,10 @@ C        NALL   = NDIST*(NBASIS + 1)*(NBASIS**2)/2
          FNALL  = NDIST*(FNBASIS+1.0D0)*FNBASIS*FNBASIS*0.5D0
          PERCNT = NWRIT
          PERCNT = 100.0D0*PERCNT / FNALL
-         IF ((.NOT. CHOINT) .AND. (IPRINT.GE.0))
-     &         WRITE (LUPRI,'(/A,I10,A,F4.1,A)')
-     &         ' Number of two-electron spin-orbit integrals written:',
-     &         NWRIT,' (',PERCNT,'%)'
+         IF ((.NOT. CHOINT) .AND. (IPRINT.GE.1))
+     &      WRITE (LUPRI,'(/A,I5,A,I10,A,F4.1,A)')
+     &      ' Number of AO two-electron integrals written for ',NDIST,
+     &      'ADISTR:', NWRIT,' (',PERCNT,'%)'
       END IF
 C
       RETURN

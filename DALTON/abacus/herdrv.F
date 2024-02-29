@@ -156,7 +156,11 @@ C     Delete old MO integrals integrals
       ELSE
          CALL GPINQ('AOSRTINT.DA','EXIST',FEXIST)
          IF (FEXIST) THEN
+#ifdef NO_FORTRAN_2008
             CALL SYSTEM('rm -f AOSRTINT.DA*')
+#else
+            call execute_command_line('rm -f AOSRTINT.DA*')
+#endif
          END IF
          CALL GPINQ('MOTWOINT','EXIST',FEXIST)
          IF (FEXIST) THEN
@@ -3923,7 +3927,7 @@ C
             CALL GETTIM(DA2CPU,DA2WAL)
             DACPU=DA2CPU-DA1CPU
             DAWAL=DA2WAL-DA1WAL
-            CALL TIMER('TWOINT',TIMSTR,TIMEND)
+            CALL TIMER('TWOINT 2-el orbit-orbit',TIMSTR,TIMEND)
             WRITE(LUPRI,'(2(/A),2(/A,F5.0,A))')
      &      '   Two-electron Darwin integrals',
      &      '   =================================',
