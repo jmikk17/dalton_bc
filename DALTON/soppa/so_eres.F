@@ -612,6 +612,18 @@ C
      &                 LB2DENSAB,WORK(KCMO),LCMO)
          END IF
             
+            CALL MPI_BCAST(WORK(KBDENSIJ), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+            CALL MPI_BCAST(WORK(KBDENSIJT), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+            CALL MPI_BCAST(WORK(KBDENSAB), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+            CALL MPI_BCAST(WORK(KBDENSABT), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+            CALL MPI_BCAST(WORK(KB2DENSIJ), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+            CALL MPI_BCAST(WORK(KB2DENSAB), LTRTOT_mpi, my_MPI_REAL8,
+     &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
 C KFSchaltz end
 C
 C=======================================================
