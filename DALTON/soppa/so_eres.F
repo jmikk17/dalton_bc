@@ -610,7 +610,6 @@ C
      &                 WORK(KBDENSAB),WORK(KBDENSABT),LBDENSAB, 
      &                 WORK(KB2DENSIJ),LB2DENSIJ,WORK(KB2DENSAB),
      &                 LB2DENSAB,WORK(KCMO),LCMO)
-         END IF
             
             CALL MPI_BCAST(WORK(KBDENSIJ), LTRTOT_mpi, my_MPI_REAL8,
      &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
@@ -624,6 +623,8 @@ C
      &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
             CALL MPI_BCAST(WORK(KB2DENSAB), LTRTOT_mpi, my_MPI_REAL8,
      &                  sop_master, SOPPA_COMM_ACTIVE, ierr_mpi)
+
+         END IF
 C KFSchaltz end
 C
 C=======================================================
