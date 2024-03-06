@@ -490,9 +490,6 @@ c        call OUTPUT(aux3,1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)  ! prints aux1
       ENDIF
 C
 C ---------------------------------------------------------------------
-C
-C
-C
 C   AngPso is done with a unity matrix inside : AngPso = ANGMOM.1.PSO
 C
 cx      IF(KEY.EQ."ANGP") THEN
@@ -746,18 +743,6 @@ C  /* Deck Regenerate_integrals */
       CALL QENTER('REGENERATE_INTEGRALS')
 c      CALL GETTIM(TIMHER,WALHER)
 
-      do i = 1, 3
-         ICOORD = i !(x,y,z)
-         ISCOOR = LRATOM*3 + (ICOORD - 3)
-         IFIRST=ISCOOR/100
-         ISECND = MOD(ISCOOR,100)/10
-         ITHIRD = MOD(MOD(ISCOOR,100),10)
-         nuc_coord(i)=CHRNOS(IFIRST)//CHRNOS(ISECND)//CHRNOS(ITHIRD)
-      end do
-
-      nuc_number=CHRNOS(LRATOM/100)//CHRNOS(MOD(LRATOM,100)/10)//
-     &              CHRNOS(MOD(LRATOM,10))
-
       namefile='DALTON.INP'
       fileID = -1
       CALL GPOPEN(fileID,namefile,'UNKNOWN',' ','FORMATTED',
@@ -772,10 +757,11 @@ c      write(fileID,'(a)') ' 1'
 
 
       write(fileID,'(a)') '**INTEGRALS'
+c     CARE! Some Gauge variable stills unchanged.
       write(fileID,'(a)') '.GAUGEO'
       write(fileID,'(3f11.7)') COORDENADAS
 c      write(fileID,'(a)') '.PROPRI'
-c      write(fileID,'(a)') '.LR-SHI'
+      write(fileID,'(a)') '.LR-SHI'
 c      write(fileID,'(a)') '*LR-SHI'
 c      write(fileID,'(a)') '.LRGAUGEO'
 c      write(fileID,'(3f11.7)') COORDENADAS

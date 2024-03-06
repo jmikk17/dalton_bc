@@ -377,6 +377,11 @@ C     PySCF(libcint) integrals
          call import_matrix(19*NUCIND,"shi")
       end if
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C     PSOK (AVG) integrals
+      IF (SIGMAP1S)  THEN
+         CALL construct_operator('PSOK') ! PSOK with AVG
+      END IF
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 C --------------------------------------------------
 c     Construct LR singlet inputs and run responses (all at once)
       IF (SIGMAPNR.OR.SIGMAP1S.OR.SIGMAD1S) THEN
@@ -504,7 +509,7 @@ C     Non-relativistic singlet
       END IF
 C     First Order Singlet
       IF (SIGMAP1S)  THEN
-         CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K
+         CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K with AVG
          CALL GET_LR('OZK ',.FALSE.) !   PSO  | OZ-KE
       END IF
 

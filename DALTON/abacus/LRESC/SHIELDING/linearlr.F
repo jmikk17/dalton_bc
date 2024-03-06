@@ -51,7 +51,7 @@ c     NopB: number of B operators for each shield tensor element
 C  LINEAR LRESC SINGLET ROUTINE
 C   KEY = 'DIAM'  DIAMAGNETIC <<DIA,MV>>
 C         'DIAD'  DIAMAGNETIC <<DIA,DW>>
-C         'PSOK'  PARAMAGNETIC with built-in integrals
+C         'PSOK'  PARAMAGNETIC with built-in integrals and AVG integrals
 C         'PSKI'  PARAMAGNETIC with angkin routine <<PSO.1.Kinenerg;PSO>>
 C         'OZK '  PARAMAGNETIC
 C         'FCBS' 'SDBS'
@@ -70,8 +70,8 @@ C         'FCDE' 'FCDE'
          IF (KEY.EQ.'PSOK') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (PSOK)',
      &   ' correction is under calculation'
-         IF (KEY.EQ.'PSOKI') WRITE(LUPRI,'(5X,A,A)')
-     &   'Paramagnetic Second Order Singlet (PSOKI)',
+         IF (KEY.EQ.'PSKI') WRITE(LUPRI,'(5X,A,A)')
+     &   'Paramagnetic Second Order Singlet (PSKI)',
      &   ' correction is under calculation'
          IF (KEY.EQ.'OZK ') WRITE(LUPRI,'(5X,A,A)')
      &   'Paramagnetic Second Order Singlet (OZK)',
@@ -166,6 +166,35 @@ C        -----------------------------------
       END IF
 
 
+c      IF(KEY.EQ."PSOK") THEN !old implementation
+c         NopA = 1
+c         NopB = 1
+c         TRPLET_FLAG = .FALSE.
+C        -----------------------------------
+c         allocate(operadores_A(3,3,NopA))
+c                  3*i+j-3                                    ij
+c         operadores_A(1,1,1) = 'PSOKE'//nuc_coord(1)           !11 
+c         operadores_A(1,2,1) = 'PSOKE'//nuc_coord(1)           !12
+c         operadores_A(1,3,1) = 'PSOKE'//nuc_coord(1)           !13
+c         operadores_A(2,1,1) = 'PSOKE'//nuc_coord(2)           !21
+c         operadores_A(2,2,1) = 'PSOKE'//nuc_coord(2)           !22
+c         operadores_A(2,3,1) = 'PSOKE'//nuc_coord(2)           !23
+c         operadores_A(3,1,1) = 'PSOKE'//nuc_coord(3)           !31
+c         operadores_A(3,2,1) = 'PSOKE'//nuc_coord(3)           !32
+c         operadores_A(3,3,1) = 'PSOKE'//nuc_coord(3)           !33
+C        -----------------------------------
+c         allocate(operadores_B(3,3,NopB))
+c         operadores_B(1,1,1) = 'XANGMOM '                      !11 
+c         operadores_B(1,2,1) = 'YANGMOM '                      !12 
+c         operadores_B(1,3,1) = 'ZANGMOM '                      !13 
+c         operadores_B(2,1,1) = 'XANGMOM '                      !21 
+c         operadores_B(2,2,1) = 'YANGMOM '                      !22 
+c         operadores_B(2,3,1) = 'ZANGMOM '                      !23 
+c         operadores_B(3,1,1) = 'XANGMOM '                      !31 
+c         operadores_B(3,2,1) = 'YANGMOM '                      !32 
+c         operadores_B(3,3,1) = 'ZANGMOM '                      !33 
+c      END IF
+
       IF(KEY.EQ."PSOK") THEN
          NopA = 1
          NopB = 1
@@ -173,15 +202,15 @@ C        -----------------------------------
 C        -----------------------------------
          allocate(operadores_A(3,3,NopA))
 c                  3*i+j-3                                    ij
-         operadores_A(1,1,1) = 'PSOKE'//nuc_coord(1)           !11 
-         operadores_A(1,2,1) = 'PSOKE'//nuc_coord(1)           !12
-         operadores_A(1,3,1) = 'PSOKE'//nuc_coord(1)           !13
-         operadores_A(2,1,1) = 'PSOKE'//nuc_coord(2)           !21
-         operadores_A(2,2,1) = 'PSOKE'//nuc_coord(2)           !22
-         operadores_A(2,3,1) = 'PSOKE'//nuc_coord(2)           !23
-         operadores_A(3,1,1) = 'PSOKE'//nuc_coord(3)           !31
-         operadores_A(3,2,1) = 'PSOKE'//nuc_coord(3)           !32
-         operadores_A(3,3,1) = 'PSOKE'//nuc_coord(3)           !33
+         operadores_A(1,1,1) = 'PSOKJ'//nuc_coord(1)           !11 
+         operadores_A(1,2,1) = 'PSOKJ'//nuc_coord(1)           !12
+         operadores_A(1,3,1) = 'PSOKJ'//nuc_coord(1)           !13
+         operadores_A(2,1,1) = 'PSOKJ'//nuc_coord(2)           !21
+         operadores_A(2,2,1) = 'PSOKJ'//nuc_coord(2)           !22
+         operadores_A(2,3,1) = 'PSOKJ'//nuc_coord(2)           !23
+         operadores_A(3,1,1) = 'PSOKJ'//nuc_coord(3)           !31
+         operadores_A(3,2,1) = 'PSOKJ'//nuc_coord(3)           !32
+         operadores_A(3,3,1) = 'PSOKJ'//nuc_coord(3)           !33
 C        -----------------------------------
          allocate(operadores_B(3,3,NopB))
          operadores_B(1,1,1) = 'XANGMOM '                      !11 
@@ -194,6 +223,7 @@ C        -----------------------------------
          operadores_B(3,2,1) = 'YANGMOM '                      !32 
          operadores_B(3,3,1) = 'ZANGMOM '                      !33 
       END IF
+
 
       IF(KEY.EQ."OZK ") THEN
          NopA = 1
@@ -477,7 +507,7 @@ c     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
 
             call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
             TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
-c            IF (JIMPRT .GE. 3) write(lupri,*) 'Labels:', operadores_duo(1),
+c         IF (JIMPRT .GE. 3) write(lupri,*) 'Labels:', operadores_duo(1),
 c     &      ' ',operadores_duo(2)," LR:",LR(i,j)
          end if
          end do
@@ -590,6 +620,13 @@ C         'FCDE' 'FCDE'
          IF (SIGMAPNR) NLRoperators = NLRoperators + 6
          IF (SIGMAD1S) NLRoperators = NLRoperators + 11
          IF (SIGMAP1S) NLRoperators = NLRoperators + 12
+c         IF (SIGMAP1S) THEN
+c            IF(AVGINTS) THEN
+c               NLRoperators = NLRoperators + 15
+c            ELSE
+c               NLRoperators = NLRoperators + 12
+c            END IF
+c         END IF
       END IF
       IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 26
 
@@ -634,24 +671,38 @@ C        ---------------------------------------------------
 
       IF (SIGMAP1S) THEN !SIGMAP1S: PSOK and OZK
 C        ---------------------------------------------------
-         operadores(el)   = 'PSOKE'//nuc_coord(1)
-         operadores(el+1) = 'PSOKE'//nuc_coord(2)
-         operadores(el+2) = 'PSOKE'//nuc_coord(3)
+c        !old implementation
+c         operadores(el)   = 'PSOKE'//nuc_coord(1)
+c         operadores(el+1) = 'PSOKE'//nuc_coord(2)
+c         operadores(el+2) = 'PSOKE'//nuc_coord(3)
 C        ---------------------------------------------------
-         operadores(el+3) = 'XANGMOM '
-         operadores(el+4) = 'YANGMOM '
-         operadores(el+5) = 'ZANGMOM '
+         operadores(el) = 'XANGMOM '
+         operadores(el+1) = 'YANGMOM '
+         operadores(el+2) = 'ZANGMOM '
 C        ---------------------------------------------------
 C        ---------------------------------------------------
-         operadores(el+6) = 'PSO '//nuc_coord(1)//' '
-         operadores(el+7) = 'PSO '//nuc_coord(2)//' '
-         operadores(el+8) = 'PSO '//nuc_coord(3)//' '
+         operadores(el+3) = 'PSO '//nuc_coord(1)//' '
+         operadores(el+4) = 'PSO '//nuc_coord(2)//' '
+         operadores(el+5) = 'PSO '//nuc_coord(3)//' '
 C        ---------------------------------------------------
-         operadores(el+9)  = CHRXYZ(1)//'OZKE   '
-         operadores(el+10) = CHRXYZ(2)//'OZKE   '
-         operadores(el+11) = CHRXYZ(3)//'OZKE   '
+         operadores(el+6)  = CHRXYZ(1)//'OZKE   '
+         operadores(el+7) = CHRXYZ(2)//'OZKE   '
+         operadores(el+8) = CHRXYZ(3)//'OZKE   '
 C        ---------------------------------------------------
-         el = el + 12
+c         el = el + 12
+C        ---------------------------------------------------
+c         IF (AVGINTS) THEN ALWAYS DO THIS!
+            operadores(el+9)   = 'PSOKJ'//nuc_coord(1)
+            operadores(el+10) = 'PSOKJ'//nuc_coord(2)
+            operadores(el+11) = 'PSOKJ'//nuc_coord(3)
+            el = el + 12
+c            write(LUPRI,*) "TEST: HERE"
+c         ELSE
+c            el = el + 12
+c            write(LUPRI,*) "TEST: not AVG"
+c         END IF
+C        ---------------------------------------------------
+         
       END IF
       END IF
 

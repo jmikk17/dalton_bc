@@ -157,13 +157,13 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Dec 11 21:25:53 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:42 2024
+     Host name              : compute-9                               
 
- * Work memory size             :    64000000 =  488.28 megabytes.
+ * Work memory size             :   256000000 =  1.907 gigabytes.
 
  * Directories for basis set searches:
-   1) /home/jaucar/DALTON/shielding_withPySCF/build-impi-mkl-parallel-32/test/prop_lresc
+   1) /tmp/jaucar/LRESC-shielding_FH-dyall.cv2z-1/entradas
    2) /home/jaucar/DALTON/shielding_withPySCF/build-impi-mkl-parallel-32/basis
 
 
@@ -172,7 +172,7 @@ Compilation information
 
  Who compiled             | jaucar
  Host                     | dirac
- System                   | Linux-3.10.0-1160.102.1.el7.x86_64
+ System                   | Linux-3.10.0-1160.105.1.el7.x86_64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
@@ -194,11 +194,11 @@ Compilation information
                           | /libmkl_lapack95_lp64.a;/home/jaucar/intel/oneapi/
                           | mkl/2022.0.1/lib/intel64/libmkl_intel_lp64.so
  Static linking           | OFF
- Last Git revision        | acede3cc06cc08bf044513fd59d26933fa1300fb
+ Last Git revision        | 60b193947128ea6c089d9911ecfab69f06017ce1
  Git branch               | lresc_withPySCF
- Configuration time       | 2023-12-11 20:34:06.523719
+ Configuration time       | 2024-03-06 00:01:10.282491
 
- * Sequential calculation.
+ * MPI parallel run using 16 processes.
 
 
    Content of the .dal input file
@@ -232,6 +232,7 @@ H      0.0000000000       0.0000000000     0.9169000000
 FINISH
 
 
+
        *******************************************************************
        *********** Output from DALTON general input processing ***********
        *******************************************************************
@@ -240,6 +241,8 @@ FINISH
    Overall default print level:    0
    Print level for DALTON.STAT:    1
 
+    Parallel calculation using MPI
+    AO-direct calculation (in sections where implemented)
     HERMIT 1- and 2-electron integral sections will be executed
     "Old" integral transformation used (limited to max 255 basis functions)
     Wave function sections will be executed (SIRIUS module)
@@ -394,7 +397,7 @@ FINISH
 
  Default print level:        1
 
- Calculation of one- and two-electron Hamiltonian integrals.
+ Calculation of one-electron Hamiltonian integrals.
 
  The following one-electron property integrals are calculated as requested:
           - overlap integrals
@@ -428,8 +431,6 @@ FINISH
 
             1
 
-Calculation of 2-electron integrals are postponed until they are needed.
-
 
      ************************************************************************
      ************************** Output from HERINT **************************
@@ -447,9 +448,10 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Time used in PSO-OZ     is       0.11 seconds
-  Total CPU  time used in HERMIT:   0.58 seconds
-  Total wall time used in HERMIT:   0.87 seconds
+  Time used in DNSKE      is       0.11 seconds
+  Time used in PSO-OZ     is       0.16 seconds
+  Total CPU  time used in HERMIT:   0.79 seconds
+  Total wall time used in HERMIT:   0.79 seconds
 
 
                         .----------------------------------.
@@ -482,8 +484,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Dec 11 21:25:55 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:43 2024
+     Host name              : compute-9                               
 
  Title lines from ".mol" input file:
      
@@ -495,6 +497,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
 @    Restricted, closed shell Hartree-Fock calculation.
 
 @    Time-dependent Hartree-Fock calculation (random phase approximation).
+ Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EWMO  " input option
@@ -541,72 +544,56 @@ Calculation of 2-electron integrals are postponed until they are needed.
 
  Iter      Total energy        Error norm    Delta(E)  DIIS dim.
  -----------------------------------------------------------------------------
-
-Calculating AOSUPINT
-
----> (Re)generating AOTWOINT
-
-
-     ************************************************************************
-     ************************** Output from HERINT **************************
-     ************************************************************************
-
-
- Threshold for neglecting two-electron integrals:  1.00D-12
- HERMIT - Number of two-electron integrals written:     3426987 ( 15.4% )
- HERMIT - Megabytes written:                             39.243
-
-  Total CPU  time used in TWOINT:   0.31 seconds
-  Total wall time used in TWOINT:   0.42 seconds
-  Time used in TWOINT     is       0.31 seconds
-  CPU  time used in MAKE_AOTWOINT is   0.31 seconds
-  WALL time used in MAKE_AOTWOINT is   0.43 seconds
-     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
-      Threshold for discarding integrals :  1.00D-12 )
-
-  CPU  time used in FORMSUP    is   0.45 seconds
-  WALL time used in FORMSUP    is   0.88 seconds
-@  1    -99.9489276717        3.09491D+02   -9.99D+01    1
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  7.62D-02  7.60D-02
+@  1    -99.9489276715        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  5.38D-02  5.30D-02
 @  2    -100.058423295        3.71217D-01   -1.09D-01    2
       Virial theorem: -V/T =      2.004189
 @    MULPOP   F      -0.28; H       0.28; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  5.19D-02  5.20D-02
 @  3    -100.063464762        1.37467D-01   -5.04D-03    3
       Virial theorem: -V/T =      1.998449
 @    MULPOP   F      -0.28; H       0.28; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  5.38D-02  5.40D-02
 @  4    -100.064194481        4.83612D-02   -7.30D-04    4
       Virial theorem: -V/T =      2.001166
 @    MULPOP   F      -0.27; H       0.27; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  5.57D-02  5.60D-02
 @  5    -100.064324043        8.48380D-03   -1.30D-04    5
       Virial theorem: -V/T =      2.000456
 @    MULPOP   F      -0.27; H       0.27; 
  -----------------------------------------------------------------------------
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  5.55D-02  5.60D-02
 @  6    -100.064333405        1.87828D-03   -9.36D-06    6
       Virial theorem: -V/T =      2.000502
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  5.20D-02  5.20D-02
 @  7    -100.064333863        3.29465D-04   -4.58D-07    7
       Virial theorem: -V/T =      2.000506
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-@  8    -100.064333875        5.24282D-05   -1.23D-08    8
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  5.46D-02  5.50D-02
+@  8    -100.064333875        5.24278D-05   -1.23D-08    8
       Virial theorem: -V/T =      2.000508
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-@  9    -100.064333876        5.36691D-06   -2.43D-10    8
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  5.22D-02  5.20D-02
+@  9    -100.064333876        5.36674D-06   -2.43D-10    8
 
 @ *** DIIS converged in   9 iterations !
 @     Converged SCF energy, gradient:   -100.064333875595    5.37D-06
-    - total time used in SIRFCK :              0.00 seconds
+    - total time used in SIRFCK :              0.51 seconds
 
 
  *** SCF orbital energy analysis ***
@@ -654,7 +641,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       1.312       2.603
+ CPU and wall time for SCF :       0.579       0.579
 
 
                        .-----------------------------------.
@@ -670,13 +657,13 @@ Calculating AOSUPINT
 @    Nuclear repulsion:             5.194235900534
 @    Electronic energy:          -105.258569776129
 
-@    Final gradient norm:           0.000005366905
+@    Final gradient norm:           0.000005366736
 
  
-     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:44 2024
+     Host name              : compute-9                               
 
-File label for MO orbitals:  11Dec23   FOCKDIIS
+File label for MO orbitals:   6Mar24   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -684,100 +671,100 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
  ------------------------------------------------
 
     Orbital         1        2        3        4        5        6        7
-   7 F   :1s    -0.0202   0.0045   0.0011  -0.0000   0.0000  -0.0004  -0.0002
-   8 F   :1s    -0.0791   0.0181   0.0043  -0.0000   0.0000  -0.0017  -0.0010
-   9 F   :1s    -0.2303   0.0566   0.0136  -0.0000   0.0000  -0.0051  -0.0027
-  10 F   :1s    -0.4331   0.1329   0.0320  -0.0000   0.0000  -0.0130  -0.0077
-  11 F   :1s    -0.3493   0.1669   0.0413  -0.0000   0.0000  -0.0148  -0.0068
-  12 F   :1s    -0.0452  -0.1580  -0.0447   0.0000  -0.0000   0.0105  -0.0003
-  13 F   :1s     0.0115  -0.5633  -0.1426   0.0000  -0.0000   0.0697   0.0793
-  14 F   :1s    -0.0077  -0.3327  -0.2746   0.0000  -0.0000   0.3409  -1.1551
-  15 F   :1s    -0.0008  -0.0338  -0.0554   0.0000  -0.0000   1.3251  -7.4938
-  25 F   :2px   -0.0000   0.0000   0.0000   0.0028  -0.0148  -0.0000  -0.0000
-  26 F   :2py   -0.0000   0.0000  -0.0000  -0.0148  -0.0028   0.0000   0.0000
-  27 F   :2pz   -0.0002  -0.0014   0.0129  -0.0000   0.0000   0.0014   0.0038
-  28 F   :2px   -0.0000   0.0000   0.0000   0.0187  -0.0996  -0.0000  -0.0000
-  29 F   :2py   -0.0000   0.0000  -0.0000  -0.0996  -0.0187   0.0000   0.0000
-  30 F   :2pz   -0.0007  -0.0088   0.0855  -0.0000   0.0000   0.0099   0.0225
-  31 F   :2px   -0.0000   0.0000   0.0000   0.0559  -0.2971  -0.0000  -0.0000
-  32 F   :2py   -0.0000   0.0000  -0.0000  -0.2971  -0.0559   0.0000   0.0000
-  33 F   :2pz   -0.0005  -0.0280   0.2580  -0.0000   0.0000   0.0277   0.0802
-  34 F   :2px   -0.0000   0.0000   0.0000   0.0871  -0.4632  -0.0000  -0.0000
-  35 F   :2py   -0.0000   0.0000  -0.0000  -0.4632  -0.0871   0.0000   0.0000
-  36 F   :2pz    0.0009  -0.0473   0.3899  -0.0000   0.0000   0.0633   0.0559
-  37 F   :2px   -0.0000   0.0000   0.0000   0.0595  -0.3165  -0.0000  -0.0000
-  38 F   :2py   -0.0000   0.0000  -0.0000  -0.3165  -0.0595   0.0000   0.0000
-  39 F   :2pz   -0.0035  -0.0207   0.1715  -0.0000   0.0000   0.3495  -0.7261
-  40 F   :2px   -0.0000   0.0000   0.0000   0.0051  -0.0271  -0.0000  -0.0000
-  41 F   :2py   -0.0000   0.0000  -0.0000  -0.0271  -0.0051   0.0000   0.0000
-  42 F   :2pz   -0.0002  -0.0049   0.0098  -0.0000   0.0000   0.2077  -2.3287
-  64 F   :3d1-  -0.0000   0.0000  -0.0000  -0.0104  -0.0020   0.0000   0.0000
-  65 F   :3d0    0.0006  -0.0078   0.0176  -0.0000   0.0000   0.0100  -0.0170
-  66 F   :3d1+  -0.0000   0.0000   0.0000   0.0020  -0.0104  -0.0000  -0.0000
-  70 F   :3d0   -0.0015  -0.0023  -0.0103  -0.0000   0.0000   0.0803  -0.1817
-  92 H   :1s     0.0001  -0.0170   0.0305  -0.0000   0.0000  -0.0031  -0.0033
-  93 H   :1s    -0.0009  -0.0716   0.1361  -0.0000   0.0000   0.0101  -0.0306
-  94 H   :1s     0.0049  -0.0543   0.3085  -0.0000   0.0000  -0.4543   0.8652
-  95 H   :1s     0.0010   0.0260   0.0611  -0.0000   0.0000  -0.8285   6.6703
-  96 H   :1s    -0.0001   0.0003   0.0010  -0.0000   0.0000  -1.3096   1.0721
-  97 H   :2px   -0.0000   0.0000   0.0000   0.0022  -0.0116  -0.0000  -0.0000
-  98 H   :2py   -0.0000   0.0000  -0.0000  -0.0116  -0.0022   0.0000   0.0000
-  99 H   :2pz    0.0007   0.0152  -0.0153   0.0000  -0.0000  -0.0046  -0.0004
- 100 H   :2px    0.0000  -0.0000  -0.0000   0.0060  -0.0320   0.0000   0.0000
- 101 H   :2py    0.0000  -0.0000   0.0000  -0.0320  -0.0060  -0.0000  -0.0000
- 102 H   :2pz   -0.0009   0.0114  -0.0683  -0.0000   0.0000   0.1459  -0.5453
- 103 H   :2px   -0.0000   0.0000   0.0000   0.0025  -0.0132  -0.0000  -0.0000
- 104 H   :2py   -0.0000   0.0000  -0.0000  -0.0132  -0.0025   0.0000   0.0000
- 105 H   :2pz   -0.0003  -0.0079  -0.0015   0.0000  -0.0000   0.2283  -2.4324
- 113 H   :3d0   -0.0005  -0.0023   0.0092   0.0000  -0.0000  -0.0188   0.1642
+   7 F   :1s    -0.0202   0.0045   0.0011   0.0000  -0.0000  -0.0004  -0.0002
+   8 F   :1s    -0.0791   0.0181   0.0043   0.0000  -0.0000  -0.0017  -0.0010
+   9 F   :1s    -0.2303   0.0566   0.0136   0.0000  -0.0000  -0.0051  -0.0027
+  10 F   :1s    -0.4331   0.1329   0.0320   0.0000  -0.0000  -0.0130  -0.0077
+  11 F   :1s    -0.3493   0.1669   0.0413   0.0000  -0.0000  -0.0148  -0.0068
+  12 F   :1s    -0.0452  -0.1580  -0.0447  -0.0000   0.0000   0.0105  -0.0003
+  13 F   :1s     0.0115  -0.5633  -0.1426  -0.0000   0.0000   0.0697   0.0793
+  14 F   :1s    -0.0077  -0.3327  -0.2746  -0.0000   0.0000   0.3409  -1.1551
+  15 F   :1s    -0.0008  -0.0338  -0.0554  -0.0000   0.0000   1.3251  -7.4938
+  25 F   :2px   -0.0000   0.0000   0.0000  -0.0148   0.0028  -0.0000  -0.0000
+  26 F   :2py   -0.0000   0.0000  -0.0000  -0.0028  -0.0148   0.0000   0.0000
+  27 F   :2pz   -0.0002  -0.0014   0.0129   0.0000  -0.0000   0.0014   0.0038
+  28 F   :2px   -0.0000   0.0000   0.0000  -0.0996   0.0187  -0.0000  -0.0000
+  29 F   :2py   -0.0000   0.0000  -0.0000  -0.0187  -0.0996   0.0000   0.0000
+  30 F   :2pz   -0.0007  -0.0088   0.0855   0.0000  -0.0000   0.0099   0.0225
+  31 F   :2px   -0.0000   0.0000   0.0000  -0.2971   0.0559  -0.0000  -0.0000
+  32 F   :2py   -0.0000   0.0000  -0.0000  -0.0559  -0.2971   0.0000   0.0000
+  33 F   :2pz   -0.0005  -0.0280   0.2580   0.0000  -0.0000   0.0277   0.0802
+  34 F   :2px   -0.0000   0.0000   0.0000  -0.4632   0.0871  -0.0000  -0.0000
+  35 F   :2py   -0.0000   0.0000  -0.0000  -0.0871  -0.4632   0.0000   0.0000
+  36 F   :2pz    0.0009  -0.0473   0.3899   0.0000  -0.0000   0.0633   0.0559
+  37 F   :2px   -0.0000   0.0000   0.0000  -0.3165   0.0595  -0.0000  -0.0000
+  38 F   :2py   -0.0000   0.0000  -0.0000  -0.0595  -0.3165   0.0000   0.0000
+  39 F   :2pz   -0.0035  -0.0207   0.1715   0.0000  -0.0000   0.3495  -0.7261
+  40 F   :2px   -0.0000   0.0000   0.0000  -0.0271   0.0051  -0.0000  -0.0000
+  41 F   :2py   -0.0000   0.0000  -0.0000  -0.0051  -0.0271   0.0000   0.0000
+  42 F   :2pz   -0.0002  -0.0049   0.0098   0.0000  -0.0000   0.2077  -2.3287
+  64 F   :3d1-  -0.0000   0.0000  -0.0000  -0.0020  -0.0104   0.0000   0.0000
+  65 F   :3d0    0.0006  -0.0078   0.0176   0.0000  -0.0000   0.0100  -0.0170
+  66 F   :3d1+  -0.0000   0.0000   0.0000  -0.0104   0.0020  -0.0000  -0.0000
+  70 F   :3d0   -0.0015  -0.0023  -0.0103   0.0000  -0.0000   0.0803  -0.1817
+  92 H   :1s     0.0001  -0.0170   0.0305   0.0000  -0.0000  -0.0031  -0.0033
+  93 H   :1s    -0.0009  -0.0716   0.1361   0.0000  -0.0000   0.0101  -0.0306
+  94 H   :1s     0.0049  -0.0543   0.3085   0.0000  -0.0000  -0.4543   0.8652
+  95 H   :1s     0.0010   0.0260   0.0611   0.0000  -0.0000  -0.8285   6.6703
+  96 H   :1s    -0.0001   0.0003   0.0010   0.0000  -0.0000  -1.3096   1.0721
+  97 H   :2px   -0.0000   0.0000   0.0000  -0.0116   0.0022  -0.0000  -0.0000
+  98 H   :2py   -0.0000   0.0000  -0.0000  -0.0022  -0.0116   0.0000   0.0000
+  99 H   :2pz    0.0007   0.0152  -0.0153  -0.0000   0.0000  -0.0046  -0.0004
+ 100 H   :2px    0.0000  -0.0000  -0.0000  -0.0320   0.0060   0.0000   0.0000
+ 101 H   :2py    0.0000  -0.0000   0.0000  -0.0060  -0.0320  -0.0000  -0.0000
+ 102 H   :2pz   -0.0009   0.0114  -0.0683   0.0000  -0.0000   0.1459  -0.5453
+ 103 H   :2px   -0.0000   0.0000   0.0000  -0.0132   0.0025  -0.0000  -0.0000
+ 104 H   :2py   -0.0000   0.0000  -0.0000  -0.0025  -0.0132   0.0000   0.0000
+ 105 H   :2pz   -0.0003  -0.0079  -0.0015  -0.0000   0.0000   0.2283  -2.4324
+ 113 H   :3d0   -0.0005  -0.0023   0.0092  -0.0000   0.0000  -0.0188   0.1642
 
     Orbital         8        9       10       11       12       13       14
-   9 F   :1s    -0.0000   0.0000  -0.0120   0.0000  -0.0000  -0.0115   0.0067
-  10 F   :1s    -0.0000   0.0000  -0.0251   0.0000  -0.0000  -0.0209   0.0132
-  11 F   :1s    -0.0000   0.0000  -0.0407   0.0000  -0.0000  -0.0427   0.0233
-  12 F   :1s     0.0000  -0.0000   0.0624  -0.0000   0.0000   0.0810  -0.0357
-  13 F   :1s     0.0000  -0.0000   0.0853  -0.0000   0.0000   0.0255   0.0370
-  14 F   :1s     0.0000  -0.0000  -0.2376  -0.0000   0.0000  -0.2802  -3.4136
-  15 F   :1s     0.0000  -0.0000   0.5464  -0.0000   0.0000  -5.3070 -14.6658
-  28 F   :2px   -0.0000   0.0222  -0.0000  -0.0000   0.0066  -0.0000   0.0000
-  29 F   :2py    0.0222   0.0000   0.0000   0.0066   0.0000   0.0000  -0.0000
-  30 F   :2pz   -0.0000   0.0000   0.0094   0.0000  -0.0000  -0.0066  -0.0469
-  31 F   :2px   -0.0000   0.0882  -0.0000  -0.0000   0.0286  -0.0000   0.0000
-  32 F   :2py    0.0882   0.0000   0.0000   0.0286   0.0000   0.0000  -0.0000
-  33 F   :2pz   -0.0000   0.0000   0.0336   0.0000  -0.0000  -0.0228  -0.1084
-  34 F   :2px   -0.0000   0.0627  -0.0000  -0.0000   0.0141  -0.0000   0.0000
-  35 F   :2py    0.0627   0.0000   0.0000   0.0141   0.0000   0.0000  -0.0000
-  36 F   :2pz   -0.0000   0.0000   0.0076   0.0000  -0.0000  -0.0610  -0.3747
-  37 F   :2px   -0.0000   0.4571  -0.0000  -0.0000   0.4737  -0.0000   0.0000
-  38 F   :2py    0.4571   0.0000   0.0000   0.4737   0.0000   0.0000  -0.0000
-  39 F   :2pz   -0.0000   0.0000  -0.5388   0.0000  -0.0000  -1.4048  -2.4842
-  40 F   :2px    0.0000  -1.2722  -0.0000  -0.0001   1.6214  -0.0000   0.0000
-  41 F   :2py   -1.2722  -0.0000   0.0000   1.6214   0.0001   0.0000  -0.0000
-  42 F   :2pz   -0.0000   0.0000   1.6927   0.0000  -0.0000  -1.9528  -2.7241
-  64 F   :3d1-   0.0185   0.0000   0.0000  -0.0384  -0.0000   0.0000  -0.0000
-  65 F   :3d0   -0.0000   0.0000  -0.0459   0.0000  -0.0000   0.0015  -0.0942
-  66 F   :3d1+  -0.0000   0.0185  -0.0000   0.0000  -0.0384  -0.0000   0.0000
-  69 F   :3d1-   0.0112   0.0000   0.0000   0.2714   0.0000   0.0000  -0.0000
-  70 F   :3d0   -0.0000   0.0000  -0.1254   0.0000  -0.0000  -0.4985  -0.2870
-  71 F   :3d1+  -0.0000   0.0112  -0.0000  -0.0000   0.2714  -0.0000   0.0000
-  92 H   :1s    -0.0000   0.0000  -0.0040   0.0000  -0.0000   0.0047   0.0131
-  93 H   :1s    -0.0000   0.0000  -0.1095   0.0000  -0.0000  -0.0211  -0.0032
-  94 H   :1s    -0.0000   0.0000   0.9689   0.0000  -0.0000   1.8475   2.5508
-  95 H   :1s    -0.0000   0.0000  -2.5855   0.0000  -0.0000   4.1685  14.6202
-  96 H   :1s    -0.0000   0.0000   0.7706   0.0000  -0.0000   0.4608   0.8424
-  99 H   :2pz    0.0000  -0.0000  -0.0263  -0.0000   0.0000   0.0132   0.0184
- 100 H   :2px    0.0000  -0.0745   0.0000   0.0000  -0.1288   0.0000  -0.0000
- 101 H   :2py   -0.0745  -0.0000  -0.0000  -0.1288  -0.0000  -0.0000   0.0000
- 102 H   :2pz   -0.0000   0.0000  -0.3053   0.0000  -0.0000  -0.6425  -1.2834
- 103 H   :2px   -0.0000   0.1094  -0.0000   0.0001  -2.2236  -0.0000   0.0000
- 104 H   :2py    0.1094   0.0000   0.0000  -2.2236  -0.0001   0.0000  -0.0000
- 105 H   :2pz    0.0000  -0.0000  -0.4176  -0.0000   0.0000   0.2858  -4.9783
- 107 H   :3d1-  -0.0020  -0.0000  -0.0000  -0.0294  -0.0000  -0.0000   0.0000
- 108 H   :3d0    0.0000  -0.0000   0.0270  -0.0000   0.0000   0.0450   0.0323
- 109 H   :3d1+   0.0000  -0.0020   0.0000   0.0000  -0.0294   0.0000  -0.0000
- 112 H   :3d1-   0.0518   0.0000   0.0000   0.2142   0.0000   0.0000  -0.0000
- 113 H   :3d0    0.0000  -0.0000   0.0193  -0.0000   0.0000  -0.0608   0.4415
- 114 H   :3d1+  -0.0000   0.0518  -0.0000  -0.0000   0.2142  -0.0000   0.0000
+   9 F   :1s     0.0000  -0.0000  -0.0120  -0.0000   0.0000  -0.0115   0.0067
+  10 F   :1s     0.0000  -0.0000  -0.0251  -0.0000   0.0000  -0.0209   0.0132
+  11 F   :1s     0.0000  -0.0000  -0.0407  -0.0000   0.0000  -0.0427   0.0233
+  12 F   :1s    -0.0000   0.0000   0.0624   0.0000  -0.0000   0.0810  -0.0357
+  13 F   :1s    -0.0000   0.0000   0.0853   0.0000  -0.0000   0.0255   0.0370
+  14 F   :1s    -0.0000   0.0000  -0.2376   0.0000  -0.0000  -0.2802  -3.4136
+  15 F   :1s    -0.0000   0.0000   0.5464   0.0000  -0.0000  -5.3070 -14.6658
+  28 F   :2px    0.0222  -0.0000  -0.0000   0.0066  -0.0000  -0.0000   0.0000
+  29 F   :2py    0.0000   0.0222   0.0000   0.0000   0.0066   0.0000  -0.0000
+  30 F   :2pz    0.0000  -0.0000   0.0094  -0.0000   0.0000  -0.0066  -0.0469
+  31 F   :2px    0.0882  -0.0000  -0.0000   0.0286  -0.0000  -0.0000   0.0000
+  32 F   :2py    0.0000   0.0882   0.0000   0.0000   0.0286   0.0000  -0.0000
+  33 F   :2pz    0.0000  -0.0000   0.0336  -0.0000   0.0000  -0.0228  -0.1084
+  34 F   :2px    0.0627  -0.0000  -0.0000   0.0141  -0.0000  -0.0000   0.0000
+  35 F   :2py    0.0000   0.0627   0.0000   0.0000   0.0141   0.0000  -0.0000
+  36 F   :2pz    0.0000  -0.0000   0.0076  -0.0000   0.0000  -0.0610  -0.3747
+  37 F   :2px    0.4571  -0.0000  -0.0000   0.4737  -0.0000  -0.0000   0.0000
+  38 F   :2py    0.0000   0.4571   0.0000   0.0000   0.4737   0.0000  -0.0000
+  39 F   :2pz    0.0000  -0.0000  -0.5388  -0.0000   0.0000  -1.4048  -2.4842
+  40 F   :2px   -1.2722   0.0000  -0.0000   1.6214  -0.0001  -0.0000   0.0000
+  41 F   :2py   -0.0000  -1.2722   0.0000   0.0001   1.6214   0.0000  -0.0000
+  42 F   :2pz    0.0000  -0.0000   1.6927  -0.0000   0.0000  -1.9528  -2.7241
+  64 F   :3d1-   0.0000   0.0185   0.0000  -0.0000  -0.0384   0.0000  -0.0000
+  65 F   :3d0    0.0000  -0.0000  -0.0459  -0.0000   0.0000   0.0015  -0.0942
+  66 F   :3d1+   0.0185  -0.0000  -0.0000  -0.0384   0.0000  -0.0000   0.0000
+  69 F   :3d1-   0.0000   0.0112   0.0000   0.0000   0.2714   0.0000  -0.0000
+  70 F   :3d0    0.0000  -0.0000  -0.1254  -0.0000   0.0000  -0.4985  -0.2870
+  71 F   :3d1+   0.0112  -0.0000  -0.0000   0.2714  -0.0000  -0.0000   0.0000
+  92 H   :1s     0.0000  -0.0000  -0.0040  -0.0000   0.0000   0.0047   0.0131
+  93 H   :1s     0.0000  -0.0000  -0.1095  -0.0000   0.0000  -0.0211  -0.0032
+  94 H   :1s     0.0000  -0.0000   0.9689  -0.0000   0.0000   1.8475   2.5508
+  95 H   :1s     0.0000  -0.0000  -2.5855  -0.0000   0.0000   4.1685  14.6202
+  96 H   :1s     0.0000  -0.0000   0.7706  -0.0000   0.0000   0.4608   0.8424
+  99 H   :2pz   -0.0000   0.0000  -0.0263   0.0000  -0.0000   0.0132   0.0184
+ 100 H   :2px   -0.0745   0.0000   0.0000  -0.1288   0.0000   0.0000  -0.0000
+ 101 H   :2py   -0.0000  -0.0745  -0.0000  -0.0000  -0.1288  -0.0000   0.0000
+ 102 H   :2pz    0.0000  -0.0000  -0.3053  -0.0000   0.0000  -0.6425  -1.2834
+ 103 H   :2px    0.1094  -0.0000  -0.0000  -2.2236   0.0001  -0.0000   0.0000
+ 104 H   :2py    0.0000   0.1094   0.0000  -0.0001  -2.2236   0.0000  -0.0000
+ 105 H   :2pz   -0.0000   0.0000  -0.4176   0.0000  -0.0000   0.2858  -4.9783
+ 107 H   :3d1-  -0.0000  -0.0020  -0.0000  -0.0000  -0.0294  -0.0000   0.0000
+ 108 H   :3d0   -0.0000   0.0000   0.0270   0.0000  -0.0000   0.0450   0.0323
+ 109 H   :3d1+  -0.0020   0.0000   0.0000  -0.0294   0.0000   0.0000  -0.0000
+ 112 H   :3d1-   0.0000   0.0518   0.0000   0.0000   0.2142   0.0000  -0.0000
+ 113 H   :3d0   -0.0000   0.0000   0.0193   0.0000  -0.0000  -0.0608   0.4415
+ 114 H   :3d1+   0.0518  -0.0000  -0.0000   0.2142  -0.0000  -0.0000   0.0000
 
     Orbital        15
   10 F   :1s     0.0268
@@ -802,12 +789,12 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   1.36 seconds
-  Total wall time used in SIRIUS :   2.73 seconds
+  Total CPU  time used in SIRIUS :   0.64 seconds
+  Total wall time used in SIRIUS :   0.64 seconds
 
  
-     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:44 2024
+     Host name              : compute-9                               
 
 
                      .---------------------------------------.
@@ -827,6 +814,8 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
 
  Default print level:        0
 
+      Direct calculation - no two-electron integrals written or read.
+      Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
       Linear Response Elimination of Small Component (LRESC) applied to shielding.
@@ -842,8 +831,8 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:44 2024
+     Host name              : compute-9                               
 
 
    ***************************************************************************
@@ -852,8 +841,8 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Dec 11 21:25:57 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:51:44 2024
+     Host name              : compute-9                               
 
 
                              Molecular geometry (au)
@@ -954,10 +943,11 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
     -  Definitions according to : 
        J. Mason, Solid state Nuc. Magn. Res. 2 (1993), 285 
 
+    -  Tensor treatment according to : 
+       F. A. Anet et. alter, Concepts Magn. Reson. (1991), 3 
+
     -  All LRESC corrections were activated
  
-    -  Selected Atom    : # 1: F   
-    -  Atom coordinates :    0.0000    0.0000    0.0000
        For printing LRESC corrections, add .PRTALL in your input file under *LROPTS
   
 
@@ -966,7 +956,7 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
                  -----------------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :           -101.2812     -101.2812        -0.0000    -67.5208                           [ppm]
+     Paramagnetic :           -101.2812     -101.2812         0.0000    -67.5208                           [ppm]
      Diamagnetic  :            481.7014      481.7014       481.5890    481.6639                           [ppm]
      Total non-rel             380.4201      380.4201       481.5890    414.1431    101.1689       1.0000  [ppm]
 
@@ -975,18 +965,18 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
                     -----------------------------------------
 
                                    xx            yy             zz          iso
-     Paramagnetic :              9.1372        9.1372        10.2957      9.5233                           [ppm]
+     Paramagnetic :              9.3171        9.3171        10.2957      9.6433                           [ppm]
      Diamagnetic  :             -5.3039       -5.3039        -5.3012     -5.3030                           [ppm]
-     Total LRESC  :              3.8333        3.8333         4.9944      4.2203                           [ppm]
+     Total LRESC  :              4.0132        4.0132         4.9944      4.3403                           [ppm]
 
 
                        Total Relativistic Values for F    :
                        ------------------------------------
 
                                    xx            yy             zz          iso         span         skew
-     Paramagnetic :            -92.1441      -92.1441        10.2957    -57.9975                           [ppm]
+     Paramagnetic :            -91.9641      -91.9641        10.2957    -57.8775                           [ppm]
      Diamagnetic  :            476.3975      476.3975       476.2878    476.3609                           [ppm]
-     Total LRESC  :            384.2534      384.2534       486.5835    418.3634    102.3301       1.0000  [ppm]
+     Total LRESC  :            384.4334      384.4334       486.5835    418.4834    102.1501       1.0000  [ppm]
  
 
 
@@ -994,20 +984,20 @@ File label for MO orbitals:  11Dec23   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:59     100 %
+ TOTAL      00:00:43     100 %
 
 
-  Total CPU  time used in ABACUS:  58.77 seconds
-  Total wall time used in ABACUS:  2 minutes  8 seconds
+  Total CPU  time used in ABACUS:  43.44 seconds
+  Total wall time used in ABACUS:  43.52 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  1 minute   1 second 
-  Total wall time used in DALTON:  2 minutes 11 seconds
+  Total CPU  time used in DALTON:  44.91 seconds
+  Total wall time used in DALTON:  45.00 seconds
 
  
-     Date and time (Linux)  : Mon Dec 11 21:28:05 2023
-     Host name              : dirac                                   
+     Date and time (Linux)  : Wed Mar  6 00:52:27 2024
+     Host name              : compute-9                               

@@ -175,6 +175,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/AVG/avgdrv.F
     DALTON/abacus/LRESC/AVG/checks.F
     DALTON/abacus/LRESC/AVG/operators.F
+    DALTON/abacus/LRESC/AVG/construct_operator.F
     DALTON/abacus/LRESC/PySCF/read_matrix.F
     DALTON/abacus/LRESC/PySCF/generate_xyz.F
     DALTON/abacus/LRESC/EIGEN/dtqli.F
