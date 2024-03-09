@@ -5665,7 +5665,7 @@ C
 #include "ccsdsym.h"
 C
       KOFF1 = 1
-      DO 100 ISYMG = 1,NSYM
+      DO ISYMG = 1, NSYM
 C
          ISYMC  = MULD2H(ISYMLP,ISYMG)
          ISYMAB = MULD2H(ISYMG,ISYDIS)
@@ -5682,7 +5682,7 @@ C
 C
          KOFF1 = KOFF1 + NNBST(ISYMAB)*NBAS(ISYMG)
 C
-  100 CONTINUE
+      END DO
 C
       RETURN
       END
