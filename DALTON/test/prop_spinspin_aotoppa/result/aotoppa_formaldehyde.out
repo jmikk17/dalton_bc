@@ -48,7 +48,7 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
@@ -98,8 +98,8 @@
   Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
   Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
-  Christoph Jacob              TU Braunschweig            Germany     (Frozen density embedding)
-  Brano Jansik                 Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
   Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
   Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
@@ -114,7 +114,7 @@
   Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
   Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
   Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
-  Nanna H. List                Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
   Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
   Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
@@ -136,7 +136,7 @@
   Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
   Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
   Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
-  Claire C. M. Samson          University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
   Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
   Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
   Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
@@ -157,45 +157,46 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:14 2023
+     Host name              : node708                                 
 
- * Work memory size             :    64000000 =  488.28 megabytes.
+ * Work memory size             :   512000000 =  3.815 gigabytes.
 
  * Directories for basis set searches:
-   1) /home/juliane/bin/source/dalton/build/test/prop_spinspin_aotoppa
-   2) /home/juliane/bin/source/dalton/build/basis
+   1) /home/kasperf/dalton_program/dalton/DALTON/test/prop_spinspin_aotoppa
+   2) /home/kasperf/dalton_program/dalton/build_64/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | juliane
+ Who compiled             | kasperf
  Host                     | sunray
  System                   | Linux-3.16.0-4-amd64
  CMake generator          | Unix Makefiles
  Processor                | x86_64
- 64-bit integers          | OFF
+ 64-bit integers          | ON
  MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (Debian 4.9.2-10+deb8u2) 4.9.2
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (Debian 4.9.2-10+deb8u2) 4.9.2
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (Debian 4.9.2-10+deb8u2) 4.9.2
+ Fortran compiler         | /opt/intel/composer_xe_2013.1.117/bin/intel64/ifor
+                          | t
+ Fortran compiler version | ifort (IFORT) 13.0.1 20121010
+ C compiler               | /opt/intel/composer_xe_2013.1.117/bin/intel64/icc
+ C compiler version       | icc (ICC) 13.0.1 20121010
+ C++ compiler             | /opt/intel/composer_xe_2013.1.117/bin/intel64/icpc
+ C++ compiler version     | icpc (ICC) 13.0.1 20121010
  BLAS                     | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_gf_lp64.so;/opt/intel/composer_xe_2013.1.11
-                          | 7/mkl/lib/intel64/libmkl_sequential.so;/opt/intel/
-                          | composer_xe_2013.1.117/mkl/lib/intel64/libmkl_core
-                          | .so;/usr/lib/x86_64-linux-gnu/libpthread.so;/usr/l
-                          | ib/x86_64-linux-gnu/libm.so
+                          | libmkl_intel_ilp64.so;/opt/intel/composer_xe_2013.
+                          | 1.117/mkl/lib/intel64/libmkl_sequential.so;/opt/in
+                          | tel/composer_xe_2013.1.117/mkl/lib/intel64/libmkl_
+                          | core.so;/usr/lib/x86_64-linux-gnu/libpthread.so;/u
+                          | sr/lib/x86_64-linux-gnu/libm.so
  LAPACK                   | /opt/intel/composer_xe_2013.1.117/mkl/lib/intel64/
-                          | libmkl_lapack95_lp64.a;/opt/intel/composer_xe_2013
-                          | .1.117/mkl/lib/intel64/libmkl_gf_lp64.so
+                          | libmkl_lapack95_ilp64.a;/opt/intel/composer_xe_201
+                          | 3.1.117/mkl/lib/intel64/libmkl_intel_ilp64.so
  Static linking           | OFF
- Last Git revision        | 17bdd0d16aeed8c81483f51f71f5664e56d04a4e
- Git branch               | new_soppa_feature
- Configuration time       | 2023-03-10 16:28:32.320752
+ Last Git revision        | 4981584407d61e6ad21a7e511842694235426073
+ Git branch               | new_feature_kasper
+ Configuration time       | 2023-11-21 09:34:47.178472
 
 
    Content of the .dal input file
@@ -259,10 +260,10 @@ H1   0.0000000000            1.7597110083            3.3972521023
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: Formaldehyde                                                            
- 2:                                                                         
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1: Formaldehyde
+ 2: 
+    --------------------------------------------------------------------------------
 
   Atomic type no.    1
   --------------------
@@ -270,7 +271,7 @@ H1   0.0000000000            1.7597110083            3.3972521023
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/juliane/bin/source/dalton/build/basis/pcJ-1"
+     "/home/kasperf/dalton_program/dalton/build_64/basis/pcJ-1"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: pcJ-1                                                                           
@@ -281,7 +282,7 @@ H1   0.0000000000            1.7597110083            3.3972521023
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   6 :
-     "/home/juliane/bin/source/dalton/build/basis/pcJ-1"
+     "/home/kasperf/dalton_program/dalton/build_64/basis/pcJ-1"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: pcJ-1                                                                           
@@ -292,7 +293,7 @@ H1   0.0000000000            1.7597110083            3.3972521023
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juliane/bin/source/dalton/build/basis/pcJ-1"
+     "/home/kasperf/dalton_program/dalton/build_64/basis/pcJ-1"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: pcJ-1                                                                           
@@ -616,8 +617,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z     20.90088465        53.12474638       177.20507959
 
 
-  Total CPU  time used in HERMIT:   0.03 seconds
-  Total wall time used in HERMIT:   0.03 seconds
+  Total CPU  time used in HERMIT:   0.05 seconds
+  Total wall time used in HERMIT:   0.06 seconds
 
 
                         .----------------------------------.
@@ -652,12 +653,12 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
+     Host name              : node708                                 
 
  Title lines from ".mol" input file:
-     Formaldehyde                                                            
-                                                                             
+     Formaldehyde
+     
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
@@ -738,11 +739,14 @@ Calculating AOSUPINT
  HERMIT - Number of two-electron integrals written:      771510 ( 20.0% )
  HERMIT - Megabytes written:                              8.835
 
-  Time used in TWOINT     is       0.12 seconds
-  CPU  time used in MAKE_AOTWOINT is   0.12 seconds
-  WALL time used in MAKE_AOTWOINT is   0.12 seconds
+  Total CPU  time used in TWOINT:   0.16 seconds
+  Total wall time used in TWOINT:   0.16 seconds
+  Time used in TWOINT     is       0.16 seconds
+  CPU  time used in MAKE_AOTWOINT is   0.16 seconds
+  WALL time used in MAKE_AOTWOINT is   0.16 seconds
      (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-12 )
+
 @  1  -113.377557595       4.86D+00  -1.13D+02     5   1   2   0
       Virial theorem: -V/T =      1.996206
 @    MULPOP   O1     -0.65; C1      0.82; H1  _1 -0.08; H1  _2 -0.08; 
@@ -787,11 +791,11 @@ Calculating AOSUPINT
       Virial theorem: -V/T =      2.000985
 @    MULPOP   O1     -0.43; C1      0.19; H1  _1  0.12; H1  _2  0.12; 
  -----------------------------------------------------------------------------
-@ 11  -113.864413944       2.31D-06  -1.84D-11     5   1   2   0
+@ 11  -113.864413944       2.31D-06  -1.83D-11     5   1   2   0
       Virial theorem: -V/T =      2.000985
 @    MULPOP   O1     -0.43; C1      0.19; H1  _1  0.12; H1  _2  0.12; 
  -----------------------------------------------------------------------------
-@ 12  -113.864413944       4.83D-07  -6.54D-13     5   1   2   0
+@ 12  -113.864413944       4.83D-07  -6.82D-13     5   1   2   0
 
 @ *** DIIS converged in  12 iterations !
 @     Converged SCF energy, gradient:   -113.864413944473    4.83D-07
@@ -875,7 +879,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.204       0.205
+ CPU and wall time for SCF :       0.304       0.338
 
 
                        .-----------------------------------.
@@ -894,10 +898,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000000483467
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
+     Host name              : node708                                 
 
-File label for MO orbitals:  12Mar23   FOCKDIIS
+File label for MO orbitals:  27Nov23   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -1060,12 +1064,12 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
    5 H1  :2px   -0.0048  -0.0054  -0.0057  -0.7382  -0.0039   0.0004
    6 H1  :2px    0.3861   0.4267   0.5039   0.2168   0.0153  -0.0015
 
-  Total CPU  time used in SIRIUS :   0.22 seconds
-  Total wall time used in SIRIUS :   0.22 seconds
+  Total CPU  time used in SIRIUS :   0.32 seconds
+  Total wall time used in SIRIUS :   0.36 seconds
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:15 2023
+     Host name              : node708                                 
 
 
                      .---------------------------------------.
@@ -1115,7 +1119,7 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
           Number of t2 amplitudes                 :     39296
           Total number of amplitudes in ccsd      :     39490
 
- Iter.  1: Coupled cluster MP2   energy :    -114.2868277859010533
+ Iter.  1: Coupled cluster MP2   energy :    -114.2868277859009680
 
 
 
@@ -1240,11 +1244,11 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
  *******************************************************************************
 
 
- CPU and wall time for CC :       0.368       0.366
+ CPU and wall time for CC :       0.560       0.566
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:16 2023
+     Host name              : node708                                 
 
 
                       .-------------------------------------.
@@ -1298,8 +1302,8 @@ File label for MO orbitals:  12Mar23   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:06 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:48:16 2023
+     Host name              : node708                                 
 
 
      #######################################################################
@@ -1337,17 +1341,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.12230335D+04     2.2260D+00       no
-      2    0.000000   0.12544577D+04     7.2975D-01       no
-      3    0.000000   0.12604849D+04     5.1797D-01       no
-      4    0.000000   0.12627185D+04     1.2479D-01       no
-      5    0.000000   0.12630531D+04     4.8915D-02       no
-      6    0.000000   0.12631096D+04     2.3640D-02       no
-      7    0.000000   0.12631189D+04     5.2200D-03       no
-      8    0.000000   0.12631201D+04     3.6526D-03       no
-      9    0.000000   0.12631203D+04     6.0220D-04       no
-     10    0.000000   0.12631203D+04     2.6174D-04       no
-     11    0.000000   0.12631203D+04     4.8537D-05      yes
+      1    0.000000   0.12223144D+04     2.2030D+00       no
+      2    0.000000   0.12515625D+04     7.0138D-01       no
+      3    0.000000   0.12561524D+04     4.4638D-01       no
+      4    0.000000   0.12575923D+04     9.7627D-02       no
+      5    0.000000   0.12577938D+04     4.4963D-02       no
+      6    0.000000   0.12578270D+04     1.8356D-02       no
+      7    0.000000   0.12578322D+04     4.5277D-03       no
+      8    0.000000   0.12578328D+04     2.9428D-03       no
+      9    0.000000   0.12578329D+04     5.2367D-04       no
+     10    0.000000   0.12578329D+04     2.0654D-04       no
+     11    0.000000   0.12578329D+04     4.0128D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1355,17 +1359,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.60718417D+03     1.2465D+00       no
-      2    0.000000   0.61102125D+03     6.1590D-01       no
-      3    0.000000   0.61157547D+03     2.7141D-01       no
-      4    0.000000   0.61179647D+03     8.0135D-02       no
-      5    0.000000   0.61185069D+03     6.4645D-02       no
-      6    0.000000   0.61186220D+03     1.7834D-02       no
-      7    0.000000   0.61186432D+03     9.6913D-03       no
-      8    0.000000   0.61186456D+03     2.8636D-03       no
-      9    0.000000   0.61186459D+03     7.7396D-04       no
-     10    0.000000   0.61186460D+03     2.9043D-04       no
-     11    0.000000   0.61186460D+03     7.0628D-05      yes
+      1    0.000000   0.60708524D+03     1.2408D+00       no
+      2    0.000000   0.61073366D+03     5.9508D-01       no
+      3    0.000000   0.61118715D+03     2.2494D-01       no
+      4    0.000000   0.61133219D+03     6.8319D-02       no
+      5    0.000000   0.61136507D+03     5.1634D-02       no
+      6    0.000000   0.61137162D+03     1.3289D-02       no
+      7    0.000000   0.61137278D+03     7.9173D-03       no
+      8    0.000000   0.61137292D+03     2.1399D-03       no
+      9    0.000000   0.61137294D+03     6.3051D-04       no
+     10    0.000000   0.61137294D+03     2.2460D-04       no
+     11    0.000000   0.61137294D+03     5.6125D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1373,17 +1377,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.14662334D+01     1.3112D+00       no
-      2    0.000000   0.16335339D+01     2.5024D-01       no
-      3    0.000000   0.16561812D+01     1.1557D-01       no
-      4    0.000000   0.16629427D+01     7.1674D-02       no
-      5    0.000000   0.16651146D+01     3.2781D-02       no
-      6    0.000000   0.16657321D+01     2.0532D-02       no
-      7    0.000000   0.16658393D+01     5.3717D-03       no
-      8    0.000000   0.16658504D+01     2.2272D-03       no
-      9    0.000000   0.16658521D+01     7.3191D-04       no
-     10    0.000000   0.16658522D+01     1.7114D-04       no
-     11    0.000000   0.16658522D+01     4.9470D-05      yes
+      1    0.000000   0.14580694D+01     1.2985D+00       no
+      2    0.000000   0.16175984D+01     2.4064D-01       no
+      3    0.000000   0.16369205D+01     1.0410D-01       no
+      4    0.000000   0.16417144D+01     5.9322D-02       no
+      5    0.000000   0.16430278D+01     2.4864D-02       no
+      6    0.000000   0.16433632D+01     1.5950D-02       no
+      7    0.000000   0.16434243D+01     4.1854D-03       no
+      8    0.000000   0.16434304D+01     1.6673D-03       no
+      9    0.000000   0.16434312D+01     5.5725D-04       no
+     10    0.000000   0.16434313D+01     1.3657D-04       no
+     11    0.000000   0.16434313D+01     3.7889D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1391,17 +1395,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.11747993D+01     1.3483D+00       no
-      2    0.000000   0.13581953D+01     2.7838D-01       no
-      3    0.000000   0.13850249D+01     1.1912D-01       no
-      4    0.000000   0.13932031D+01     7.0517D-02       no
-      5    0.000000   0.13957352D+01     3.4041D-02       no
-      6    0.000000   0.13962320D+01     1.3559D-02       no
-      7    0.000000   0.13963164D+01     5.8195D-03       no
-      8    0.000000   0.13963282D+01     1.8324D-03       no
-      9    0.000000   0.13963294D+01     6.2598D-04       no
-     10    0.000000   0.13963296D+01     1.6947D-04       no
-     11    0.000000   0.13963296D+01     5.0947D-05      yes
+      1    0.000000   0.11670265D+01     1.3339D+00       no
+      2    0.000000   0.13397452D+01     2.6656D-01       no
+      3    0.000000   0.13619920D+01     1.0511D-01       no
+      4    0.000000   0.13674179D+01     5.7274D-02       no
+      5    0.000000   0.13688945D+01     2.6366D-02       no
+      6    0.000000   0.13691678D+01     1.0561D-02       no
+      7    0.000000   0.13692138D+01     4.5063D-03       no
+      8    0.000000   0.13692204D+01     1.4461D-03       no
+      9    0.000000   0.13692211D+01     4.8599D-04       no
+     10    0.000000   0.13692212D+01     1.3640D-04       no
+     11    0.000000   0.13692212D+01     3.8563D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1409,17 +1413,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.12091226D+04     2.1684D+00       no
-      2    0.000000   0.12703404D+04     8.7970D-01       no
-      3    0.000000   0.12887103D+04     4.1820D-01       no
-      4    0.000000   0.12923338D+04     6.2486D-02       no
-      5    0.000000   0.12927289D+04     4.2340D-02       no
-      6    0.000000   0.12927837D+04     7.7785D-03       no
-      7    0.000000   0.12927888D+04     3.7398D-03       no
-      8    0.000000   0.12927893D+04     1.4082D-03       no
-      9    0.000000   0.12927895D+04     4.3017D-04       no
-     10    0.000000   0.12927895D+04     1.5950D-04       no
-     11    0.000000   0.12927895D+04     3.1992D-05      yes
+      1    0.000000   0.12079037D+04     2.1324D+00       no
+      2    0.000000   0.12611305D+04     8.3743D-01       no
+      3    0.000000   0.12740398D+04     3.7038D-01       no
+      4    0.000000   0.12763937D+04     5.8988D-02       no
+      5    0.000000   0.12766379D+04     3.7473D-02       no
+      6    0.000000   0.12766709D+04     6.7715D-03       no
+      7    0.000000   0.12766739D+04     3.3488D-03       no
+      8    0.000000   0.12766742D+04     1.0552D-03       no
+      9    0.000000   0.12766743D+04     3.8732D-04       no
+     10    0.000000   0.12766743D+04     1.2311D-04       no
+     11    0.000000   0.12766743D+04     2.8967D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1427,17 +1431,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.60446654D+03     1.2593D+00       no
-      2    0.000000   0.61134801D+03     8.8284D-01       no
-      3    0.000000   0.61343523D+03     3.2280D-01       no
-      4    0.000000   0.61400908D+03     8.1888D-02       no
-      5    0.000000   0.61409016D+03     4.9351D-02       no
-      6    0.000000   0.61410147D+03     1.0025D-02       no
-      7    0.000000   0.61410313D+03     7.0939D-03       no
-      8    0.000000   0.61410333D+03     1.6129D-03       no
-      9    0.000000   0.61410335D+03     4.9048D-04       no
-     10    0.000000   0.61410335D+03     1.6597D-04       no
-     11    0.000000   0.61410335D+03     4.2204D-05      yes
+      1    0.000000   0.60431014D+03     1.2495D+00       no
+      2    0.000000   0.61043449D+03     8.3329D-01       no
+      3    0.000000   0.61195779D+03     2.7073D-01       no
+      4    0.000000   0.61232515D+03     7.7606D-02       no
+      5    0.000000   0.61237511D+03     4.2285D-02       no
+      6    0.000000   0.61238183D+03     8.7008D-03       no
+      7    0.000000   0.61238279D+03     6.1333D-03       no
+      8    0.000000   0.61238291D+03     1.2630D-03       no
+      9    0.000000   0.61238292D+03     4.1288D-04       no
+     10    0.000000   0.61238292D+03     1.3687D-04       no
+     11    0.000000   0.61238292D+03     3.4931D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1445,17 +1449,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.62526235D+00     1.3796D+00       no
-      2    0.000000   0.71380483D+00     2.3828D-01       no
-      3    0.000000   0.72099889D+00     6.6571D-02       no
-      4    0.000000   0.72173722D+00     2.7385D-02       no
-      5    0.000000   0.72185545D+00     9.9925D-03       no
-      6    0.000000   0.72187730D+00     5.5185D-03       no
-      7    0.000000   0.72188443D+00     3.2711D-03       no
-      8    0.000000   0.72188724D+00     2.0057D-03       no
-      9    0.000000   0.72188788D+00     6.7794D-04       no
-     10    0.000000   0.72188795D+00     2.2119D-04       no
-     11    0.000000   0.72188796D+00     5.0276D-05      yes
+      1    0.000000   0.62154102D+00     1.3659D+00       no
+      2    0.000000   0.70620399D+00     2.3311D-01       no
+      3    0.000000   0.71290404D+00     6.5217D-02       no
+      4    0.000000   0.71358043D+00     2.6412D-02       no
+      5    0.000000   0.71368669D+00     9.5421D-03       no
+      6    0.000000   0.71370495D+00     4.9262D-03       no
+      7    0.000000   0.71370996D+00     2.6102D-03       no
+      8    0.000000   0.71371158D+00     1.5016D-03       no
+      9    0.000000   0.71371193D+00     5.1273D-04       no
+     10    0.000000   0.71371197D+00     1.7203D-04       no
+     11    0.000000   0.71371197D+00     3.8334D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1463,17 +1467,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.12037125D+04     2.1769D+00       no
-      2    0.000000   0.12321227D+04     7.6770D-01       no
-      3    0.000000   0.12375207D+04     4.7179D-01       no
-      4    0.000000   0.12397761D+04     1.0552D-01       no
-      5    0.000000   0.12401770D+04     7.3206D-02       no
-      6    0.000000   0.12402339D+04     1.4086D-02       no
-      7    0.000000   0.12402402D+04     6.9747D-03       no
-      8    0.000000   0.12402409D+04     2.6618D-03       no
-      9    0.000000   0.12402411D+04     7.4975D-04       no
-     10    0.000000   0.12402411D+04     2.9781D-04       no
-     11    0.000000   0.12402411D+04     6.2984D-05      yes
+      1    0.000000   0.12030212D+04     2.1546D+00       no
+      2    0.000000   0.12293081D+04     7.3619D-01       no
+      3    0.000000   0.12333877D+04     3.9885D-01       no
+      4    0.000000   0.12348431D+04     9.3604D-02       no
+      5    0.000000   0.12350898D+04     6.2252D-02       no
+      6    0.000000   0.12351239D+04     1.1352D-02       no
+      7    0.000000   0.12351276D+04     6.0701D-03       no
+      8    0.000000   0.12351280D+04     1.9986D-03       no
+      9    0.000000   0.12351281D+04     6.4731D-04       no
+     10    0.000000   0.12351281D+04     2.2959D-04       no
+     11    0.000000   0.12351281D+04     5.4579D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1481,17 +1485,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.60664297D+03     1.2675D+00       no
-      2    0.000000   0.61038397D+03     6.5508D-01       no
-      3    0.000000   0.61115525D+03     3.1598D-01       no
-      4    0.000000   0.61151584D+03     1.3462D-01       no
-      5    0.000000   0.61158854D+03     5.8769D-02       no
-      6    0.000000   0.61159680D+03     1.0961D-02       no
-      7    0.000000   0.61159757D+03     6.0688D-03       no
-      8    0.000000   0.61159764D+03     1.1210D-03       no
-      9    0.000000   0.61159765D+03     4.8703D-04       no
-     10    0.000000   0.61159765D+03     1.7549D-04       no
-     11    0.000000   0.61159765D+03     5.8298D-05      yes
+      1    0.000000   0.60653360D+03     1.2608D+00       no
+      2    0.000000   0.61004549D+03     6.2579D-01       no
+      3    0.000000   0.61065026D+03     2.5878D-01       no
+      4    0.000000   0.61088769D+03     1.2052D-01       no
+      5    0.000000   0.61093416D+03     4.8334D-02       no
+      6    0.000000   0.61093928D+03     9.5297D-03       no
+      7    0.000000   0.61093973D+03     5.0423D-03       no
+      8    0.000000   0.61093978D+03     8.4988D-04       no
+      9    0.000000   0.61093978D+03     3.8740D-04       no
+     10    0.000000   0.61093978D+03     1.2932D-04       no
+     11    0.000000   0.61093978D+03     4.5594D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1499,17 +1503,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.62319129D+00     1.2990D+00       no
-      2    0.000000   0.68163708D+00     2.5305D-01       no
-      3    0.000000   0.69427754D+00     1.7080D-01       no
-      4    0.000000   0.70021409D+00     9.9818D-02       no
-      5    0.000000   0.70117031D+00     2.1436D-02       no
-      6    0.000000   0.70124319D+00     9.1735D-03       no
-      7    0.000000   0.70125494D+00     3.0030D-03       no
-      8    0.000000   0.70125596D+00     7.8877D-04       no
-      9    0.000000   0.70125604D+00     2.2430D-04       no
-     10    0.000000   0.70125605D+00     1.0067D-04       no
-     11    0.000000   0.70125605D+00     2.9416D-05      yes
+      1    0.000000   0.62024205D+00     1.2860D+00       no
+      2    0.000000   0.67538961D+00     2.3584D-01       no
+      3    0.000000   0.68506618D+00     1.4741D-01       no
+      4    0.000000   0.68892496D+00     8.4632D-02       no
+      5    0.000000   0.68954840D+00     1.8609D-02       no
+      6    0.000000   0.68959380D+00     7.4231D-03       no
+      7    0.000000   0.68960077D+00     2.5229D-03       no
+      8    0.000000   0.68960140D+00     6.4170D-04       no
+      9    0.000000   0.68960144D+00     1.7843D-04       no
+     10    0.000000   0.68960144D+00     7.2947D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1517,18 +1520,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.10481655D+07     8.1509D+00       no
-      2    0.000000   0.10522291D+07     7.3272D-01       no
-      3    0.000000   0.10524422D+07     9.7860D-02       no
-      4    0.000000   0.10524541D+07     4.5047D-02       no
-      5    0.000000   0.10524574D+07     2.5202D-02       no
-      6    0.000000   0.10524592D+07     2.0555D-02       no
-      7    0.000000   0.10524594D+07     6.6031D-03       no
-      8    0.000000   0.10524595D+07     2.1953D-03       no
-      9    0.000000   0.10524595D+07     1.0045D-03       no
-     10    0.000000   0.10524595D+07     3.0758D-04       no
-     11    0.000000   0.10524595D+07     1.3405D-04       no
-     12    0.000000   0.10524595D+07     2.3803D-05      yes
+      1    0.000000   0.10481123D+07     8.1388D+00       no
+      2    0.000000   0.10521446D+07     7.2012D-01       no
+      3    0.000000   0.10523488D+07     9.3709D-02       no
+      4    0.000000   0.10523589D+07     3.9159D-02       no
+      5    0.000000   0.10523611D+07     1.9364D-02       no
+      6    0.000000   0.10523622D+07     1.6306D-02       no
+      7    0.000000   0.10523623D+07     4.6433D-03       no
+      8    0.000000   0.10523624D+07     1.7696D-03       no
+      9    0.000000   0.10523624D+07     6.4200D-04       no
+     10    0.000000   0.10523624D+07     2.3503D-04       no
+     11    0.000000   0.10523624D+07     9.8233D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1536,18 +1538,18 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.31745848D+06     6.2017D+00       no
-      2    0.000000   0.31928756D+06     4.0317D-01       no
-      3    0.000000   0.31937185D+06     9.5151D-02       no
-      4    0.000000   0.31937845D+06     4.6337D-02       no
-      5    0.000000   0.31938071D+06     2.8221D-02       no
-      6    0.000000   0.31938154D+06     2.7199D-02       no
-      7    0.000000   0.31938177D+06     5.8955D-03       no
-      8    0.000000   0.31938180D+06     4.0696D-03       no
-      9    0.000000   0.31938181D+06     1.5457D-03       no
-     10    0.000000   0.31938181D+06     3.3347D-04       no
-     11    0.000000   0.31938181D+06     1.4454D-04       no
-     12    0.000000   0.31938181D+06     2.8838D-05      yes
+      1    0.000000   0.31743385D+06     6.1912D+00       no
+      2    0.000000   0.31924933D+06     3.9474D-01       no
+      3    0.000000   0.31932929D+06     9.1512D-02       no
+      4    0.000000   0.31933498D+06     4.1000D-02       no
+      5    0.000000   0.31933674D+06     2.4628D-02       no
+      6    0.000000   0.31933724D+06     2.0166D-02       no
+      7    0.000000   0.31933738D+06     4.5730D-03       no
+      8    0.000000   0.31933740D+06     2.9953D-03       no
+      9    0.000000   0.31933740D+06     1.0865D-03       no
+     10    0.000000   0.31933740D+06     2.5891D-04       no
+     11    0.000000   0.31933740D+06     1.0909D-04       no
+     12    0.000000   0.31933740D+06     1.9068D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1555,18 +1557,17 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.11025965D+04     3.6124D+00       no
-      2    0.000000   0.11316294D+04     4.0786D-01       no
-      3    0.000000   0.11340105D+04     8.9814D-02       no
-      4    0.000000   0.11343068D+04     5.6449D-02       no
-      5    0.000000   0.11343824D+04     2.2439D-02       no
-      6    0.000000   0.11344196D+04     2.5900D-02       no
-      7    0.000000   0.11344241D+04     5.4879D-03       no
-      8    0.000000   0.11344252D+04     5.3295D-03       no
-      9    0.000000   0.11344253D+04     7.5543D-04       no
-     10    0.000000   0.11344254D+04     5.5839D-04       no
-     11    0.000000   0.11344254D+04     1.3409D-04       no
-     12    0.000000   0.11344254D+04     2.9681D-05      yes
+      1    0.000000   0.11021578D+04     3.5800D+00       no
+      2    0.000000   0.11303494D+04     3.9800D-01       no
+      3    0.000000   0.11325357D+04     8.4692D-02       no
+      4    0.000000   0.11327788D+04     5.0203D-02       no
+      5    0.000000   0.11328338D+04     1.8210D-02       no
+      6    0.000000   0.11328544D+04     2.0062D-02       no
+      7    0.000000   0.11328569D+04     3.6504D-03       no
+      8    0.000000   0.11328575D+04     4.0511D-03       no
+      9    0.000000   0.11328576D+04     5.3228D-04       no
+     10    0.000000   0.11328576D+04     4.3462D-04       no
+     11    0.000000   0.11328576D+04     9.3182D-05      yes
  -------------------------------------------------------------
 
 
@@ -1594,15 +1595,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.89929178D+03     2.1947D+00       no
-      2    0.000000   0.92944923D+03     8.2550D-01       no
-      3    0.000000   0.93367135D+03     2.7918D-01       no
-      4    0.000000   0.93423665D+03     5.0290D-02       no
-      5    0.000000   0.93428534D+03     2.6863D-02       no
-      6    0.000000   0.93429119D+03     5.6538D-03       no
-      7    0.000000   0.93429175D+03     1.7327D-03       no
-      8    0.000000   0.93429177D+03     3.4844D-04       no
-      9    0.000000   0.93429178D+03     9.8533D-05      yes
+      1    0.000000   0.89862121D+03     2.1660D+00       no
+      2    0.000000   0.92616536D+03     7.9840D-01       no
+      3    0.000000   0.92968295D+03     2.5602D-01       no
+      4    0.000000   0.93014888D+03     5.2091D-02       no
+      5    0.000000   0.93018778D+03     2.4359D-02       no
+      6    0.000000   0.93019207D+03     4.7006D-03       no
+      7    0.000000   0.93019246D+03     1.6356D-03       no
+      8    0.000000   0.93019248D+03     2.8069D-04       no
+      9    0.000000   0.93019248D+03     9.4057D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1610,16 +1611,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.45373782D+03     1.2713D+00       no
-      2    0.000000   0.45718486D+03     7.2037D-01       no
-      3    0.000000   0.45766446D+03     1.6432D-01       no
-      4    0.000000   0.45774645D+03     7.3872D-02       no
-      5    0.000000   0.45775984D+03     3.6252D-02       no
-      6    0.000000   0.45776173D+03     6.1979D-03       no
-      7    0.000000   0.45776191D+03     3.0677D-03       no
-      8    0.000000   0.45776192D+03     5.2691D-04       no
-      9    0.000000   0.45776192D+03     1.6677D-04       no
-     10    0.000000   0.45776192D+03     4.9619D-05      yes
+      1    0.000000   0.45364225D+03     1.2632D+00       no
+      2    0.000000   0.45686200D+03     6.9440D-01       no
+      3    0.000000   0.45727725D+03     1.4530D-01       no
+      4    0.000000   0.45734358D+03     7.0947D-02       no
+      5    0.000000   0.45735380D+03     3.1218D-02       no
+      6    0.000000   0.45735517D+03     5.2748D-03       no
+      7    0.000000   0.45735529D+03     2.7766D-03       no
+      8    0.000000   0.45735530D+03     4.4382D-04       no
+      9    0.000000   0.45735530D+03     1.5114D-04       no
+     10    0.000000   0.45735530D+03     4.2173D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1627,15 +1628,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.68258354D+00     1.3583D+00       no
-      2    0.000000   0.76737924D+00     2.4167D-01       no
-      3    0.000000   0.77476827D+00     6.7250D-02       no
-      4    0.000000   0.77517864D+00     1.4653D-02       no
-      5    0.000000   0.77523975D+00     9.8034D-03       no
-      6    0.000000   0.77525599D+00     3.7265D-03       no
-      7    0.000000   0.77525759D+00     8.3867D-04       no
-      8    0.000000   0.77525770D+00     3.4442D-04       no
-      9    0.000000   0.77525772D+00     5.7160D-05      yes
+      1    0.000000   0.67745710D+00     1.3416D+00       no
+      2    0.000000   0.75758912D+00     2.3386D-01       no
+      3    0.000000   0.76439438D+00     6.6825D-02       no
+      4    0.000000   0.76476894D+00     1.3465D-02       no
+      5    0.000000   0.76481487D+00     8.4509D-03       no
+      6    0.000000   0.76482640D+00     3.2108D-03       no
+      7    0.000000   0.76482756D+00     7.3542D-04       no
+      8    0.000000   0.76482764D+00     2.8501D-04       no
+      9    0.000000   0.76482765D+00     5.0563D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1643,16 +1644,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.25601766D+00     1.3370D+00       no
-      2    0.000000   0.28114217D+00     2.6438D-01       no
-      3    0.000000   0.28418430D+00     8.9603D-02       no
-      4    0.000000   0.28438655D+00     1.9531D-02       no
-      5    0.000000   0.28441763D+00     1.2913D-02       no
-      6    0.000000   0.28442469D+00     4.6893D-03       no
-      7    0.000000   0.28442569D+00     1.4454D-03       no
-      8    0.000000   0.28442578D+00     5.4332D-04       no
-      9    0.000000   0.28442579D+00     1.1641D-04       no
-     10    0.000000   0.28442579D+00     4.6240D-05      yes
+      1    0.000000   0.25470428D+00     1.3220D+00       no
+      2    0.000000   0.27855631D+00     2.5437D-01       no
+      3    0.000000   0.28132223D+00     8.7492D-02       no
+      4    0.000000   0.28150154D+00     1.7517D-02       no
+      5    0.000000   0.28152435D+00     1.1096D-02       no
+      6    0.000000   0.28152923D+00     3.8974D-03       no
+      7    0.000000   0.28152993D+00     1.2633D-03       no
+      8    0.000000   0.28152999D+00     4.5878D-04       no
+      9    0.000000   0.28153000D+00     1.0181D-04       no
+     10    0.000000   0.28153000D+00     3.7675D-05      yes
  -------------------------------------------------------------
 
 
@@ -1680,16 +1681,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.44259658D+00     1.3325D+00       no
-      2    0.000000   0.49101966D+00     2.7991D-01       no
-      3    0.000000   0.49730827D+00     9.6667D-02       no
-      4    0.000000   0.49810518D+00     3.6137D-02       no
-      5    0.000000   0.49822442D+00     1.3702D-02       no
-      6    0.000000   0.49823941D+00     4.4738D-03       no
-      7    0.000000   0.49824110D+00     1.3956D-03       no
-      8    0.000000   0.49824125D+00     4.3311D-04       no
-      9    0.000000   0.49824126D+00     1.2976D-04       no
-     10    0.000000   0.49824127D+00     3.8279D-05      yes
+      1    0.000000   0.44088995D+00     1.3206D+00       no
+      2    0.000000   0.48745017D+00     2.7351D-01       no
+      3    0.000000   0.49330633D+00     9.4475D-02       no
+      4    0.000000   0.49403575D+00     3.4818D-02       no
+      5    0.000000   0.49414429D+00     1.3344D-02       no
+      6    0.000000   0.49415798D+00     4.3028D-03       no
+      7    0.000000   0.49415950D+00     1.3420D-03       no
+      8    0.000000   0.49415963D+00     4.1441D-04       no
+      9    0.000000   0.49415965D+00     1.2400D-04       no
+     10    0.000000   0.49415965D+00     3.5732D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1697,16 +1698,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.52111460D+00     1.3126D+00       no
-      2    0.000000   0.55948078D+00     2.0019D-01       no
-      3    0.000000   0.56227794D+00     7.0757D-02       no
-      4    0.000000   0.56266030D+00     3.1546D-02       no
-      5    0.000000   0.56276377D+00     1.5498D-02       no
-      6    0.000000   0.56277448D+00     3.3683D-03       no
-      7    0.000000   0.56277570D+00     1.7022D-03       no
-      8    0.000000   0.56277585D+00     4.3076D-04       no
-      9    0.000000   0.56277587D+00     2.0143D-04       no
-     10    0.000000   0.56277587D+00     4.5359D-05      yes
+      1    0.000000   0.51928284D+00     1.3019D+00       no
+      2    0.000000   0.55656349D+00     1.9683D-01       no
+      3    0.000000   0.55923113D+00     6.9660D-02       no
+      4    0.000000   0.55958343D+00     2.9788D-02       no
+      5    0.000000   0.55967639D+00     1.5026D-02       no
+      6    0.000000   0.55968625D+00     3.2355D-03       no
+      7    0.000000   0.55968734D+00     1.6118D-03       no
+      8    0.000000   0.55968747D+00     4.0019D-04       no
+      9    0.000000   0.55968749D+00     1.8923D-04       no
+     10    0.000000   0.55968749D+00     4.1033D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1714,17 +1715,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.91416227D+03     2.2256D+00       no
-      2    0.000000   0.93208025D+03     6.3945D-01       no
-      3    0.000000   0.93316032D+03     1.6789D-01       no
-      4    0.000000   0.93331972D+03     5.2648D-02       no
-      5    0.000000   0.93334487D+03     2.7745D-02       no
-      6    0.000000   0.93334806D+03     4.6687D-03       no
-      7    0.000000   0.93334855D+03     4.3649D-03       no
-      8    0.000000   0.93334864D+03     8.7428D-04       no
-      9    0.000000   0.93334865D+03     4.7553D-04       no
-     10    0.000000   0.93334865D+03     1.0688D-04       no
-     11    0.000000   0.93334865D+03     4.4517D-05      yes
+      1    0.000000   0.91372284D+03     2.2069D+00       no
+      2    0.000000   0.93085101D+03     6.2757D-01       no
+      3    0.000000   0.93184790D+03     1.5789D-01       no
+      4    0.000000   0.93199306D+03     5.3190D-02       no
+      5    0.000000   0.93201587D+03     2.6255D-02       no
+      6    0.000000   0.93201872D+03     4.5212D-03       no
+      7    0.000000   0.93201914D+03     4.1482D-03       no
+      8    0.000000   0.93201921D+03     7.8858D-04       no
+      9    0.000000   0.93201922D+03     4.5150D-04       no
+     10    0.000000   0.93201922D+03     9.5170D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1732,16 +1732,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.45575776D+03     1.2713D+00       no
-      2    0.000000   0.45824586D+03     5.6686D-01       no
-      3    0.000000   0.45845806D+03     1.0496D-01       no
-      4    0.000000   0.45848850D+03     5.8387D-02       no
-      5    0.000000   0.45849423D+03     2.5010D-02       no
-      6    0.000000   0.45849512D+03     6.0894D-03       no
-      7    0.000000   0.45849523D+03     3.1674D-03       no
-      8    0.000000   0.45849524D+03     5.1579D-04       no
-      9    0.000000   0.45849524D+03     2.5045D-04       no
-     10    0.000000   0.45849524D+03     6.7798D-05      yes
+      1    0.000000   0.45569267D+03     1.2663D+00       no
+      2    0.000000   0.45810108D+03     5.5672D-01       no
+      3    0.000000   0.45830060D+03     9.8012D-02       no
+      4    0.000000   0.45832837D+03     5.7240D-02       no
+      5    0.000000   0.45833351D+03     2.3358D-02       no
+      6    0.000000   0.45833431D+03     5.8688D-03       no
+      7    0.000000   0.45833440D+03     3.0090D-03       no
+      8    0.000000   0.45833441D+03     4.9043D-04       no
+      9    0.000000   0.45833441D+03     2.3416D-04       no
+     10    0.000000   0.45833441D+03     6.2762D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1749,16 +1749,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.94007735D+00     1.3467D+00       no
-      2    0.000000   0.10421694D+01     2.6705D-01       no
-      3    0.000000   0.10542458D+01     8.9110D-02       no
-      4    0.000000   0.10559226D+01     3.9090D-02       no
-      5    0.000000   0.10562439D+01     1.4910D-02       no
-      6    0.000000   0.10562773D+01     4.3460D-03       no
-      7    0.000000   0.10562813D+01     1.6700D-03       no
-      8    0.000000   0.10562818D+01     5.0479D-04       no
-      9    0.000000   0.10562818D+01     1.2209D-04       no
-     10    0.000000   0.10562818D+01     3.3829D-05      yes
+      1    0.000000   0.93622440D+00     1.3343D+00       no
+      2    0.000000   0.10343883D+01     2.6106D-01       no
+      3    0.000000   0.10456363D+01     8.7168D-02       no
+      4    0.000000   0.10471705D+01     3.7673D-02       no
+      5    0.000000   0.10474656D+01     1.4582D-02       no
+      6    0.000000   0.10474962D+01     4.1630D-03       no
+      7    0.000000   0.10474997D+01     1.5860D-03       no
+      8    0.000000   0.10475001D+01     4.7590D-04       no
+      9    0.000000   0.10475002D+01     1.1727D-04       no
+     10    0.000000   0.10475002D+01     3.0460D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1766,16 +1766,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.86063759D+00     1.3140D+00       no
-      2    0.000000   0.95497844D+00     2.6470D-01       no
-      3    0.000000   0.96441462D+00     7.7541D-02       no
-      4    0.000000   0.96574402D+00     3.8447D-02       no
-      5    0.000000   0.96597395D+00     1.2250D-02       no
-      6    0.000000   0.96600562D+00     5.1584D-03       no
-      7    0.000000   0.96600923D+00     1.4315D-03       no
-      8    0.000000   0.96600961D+00     5.4349D-04       no
-      9    0.000000   0.96600965D+00     1.4994D-04       no
-     10    0.000000   0.96600965D+00     5.8490D-05      yes
+      1    0.000000   0.85704915D+00     1.3018D+00       no
+      2    0.000000   0.94774278D+00     2.5932D-01       no
+      3    0.000000   0.95652309D+00     7.5064D-02       no
+      4    0.000000   0.95772525D+00     3.6986D-02       no
+      5    0.000000   0.95793274D+00     1.1795D-02       no
+      6    0.000000   0.95796100D+00     4.9164D-03       no
+      7    0.000000   0.95796418D+00     1.3650D-03       no
+      8    0.000000   0.95796451D+00     5.1310D-04       no
+      9    0.000000   0.95796454D+00     1.4185D-04       no
+     10    0.000000   0.95796455D+00     5.4772D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1783,17 +1783,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.11095937D+04     3.6954D+00       no
-      2    0.000000   0.11443950D+04     4.2299D-01       no
-      3    0.000000   0.11474339D+04     8.8274D-02       no
-      4    0.000000   0.11477236D+04     4.2492D-02       no
-      5    0.000000   0.11477906D+04     1.5609D-02       no
-      6    0.000000   0.11477975D+04     8.6978D-03       no
-      7    0.000000   0.11477983D+04     2.3194D-03       no
-      8    0.000000   0.11477984D+04     5.7171D-04       no
-      9    0.000000   0.11477984D+04     1.9237D-04       no
-     10    0.000000   0.11477984D+04     1.0429D-04       no
-     11    0.000000   0.11477984D+04     1.1126D-05      yes
+      1    0.000000   0.11091106D+04     3.6614D+00       no
+      2    0.000000   0.11428621D+04     4.1347D-01       no
+      3    0.000000   0.11456839D+04     8.5622D-02       no
+      4    0.000000   0.11459458D+04     4.0984D-02       no
+      5    0.000000   0.11460076D+04     1.5119D-02       no
+      6    0.000000   0.11460137D+04     8.1080D-03       no
+      7    0.000000   0.11460144D+04     2.2898D-03       no
+      8    0.000000   0.11460144D+04     5.1199D-04       no
+      9    0.000000   0.11460144D+04     1.8807D-04       no
+     10    0.000000   0.11460144D+04     9.6818D-05      yes
  -------------------------------------------------------------
 
 
@@ -1821,16 +1820,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.93019577D+03     2.2638D+00       no
-      2    0.000000   0.10091307D+04     8.9740D-01       no
-      3    0.000000   0.10424643D+04     3.7055D-01       no
-      4    0.000000   0.10490222D+04     8.9014D-02       no
-      5    0.000000   0.10496678D+04     4.1773D-02       no
-      6    0.000000   0.10497606D+04     1.2096D-02       no
-      7    0.000000   0.10497712D+04     2.1898D-03       no
-      8    0.000000   0.10497717D+04     9.5494D-04       no
-      9    0.000000   0.10497718D+04     2.4140D-04       no
-     10    0.000000   0.10497718D+04     8.1025D-05      yes
+      1    0.000000   0.92915156D+03     2.2268D+00       no
+      2    0.000000   0.99863990D+03     8.6994D-01       no
+      3    0.000000   0.10237727D+04     3.4182D-01       no
+      4    0.000000   0.10286390D+04     9.3237D-02       no
+      5    0.000000   0.10290954D+04     3.8480D-02       no
+      6    0.000000   0.10291552D+04     1.0410D-02       no
+      7    0.000000   0.10291620D+04     2.1649D-03       no
+      8    0.000000   0.10291623D+04     7.9771D-04       no
+      9    0.000000   0.10291623D+04     2.3418D-04       no
+     10    0.000000   0.10291623D+04     7.1756D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1838,16 +1837,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.45464176D+03     1.2477D+00       no
-      2    0.000000   0.45830914D+03     6.4711D-01       no
-      3    0.000000   0.45871719D+03     1.5140D-01       no
-      4    0.000000   0.45881387D+03     7.6669D-02       no
-      5    0.000000   0.45886540D+03     9.8926D-02       no
-      6    0.000000   0.45888638D+03     2.7745D-02       no
-      7    0.000000   0.45888905D+03     8.4502D-03       no
-      8    0.000000   0.45888924D+03     2.7834D-03       no
-      9    0.000000   0.45888926D+03     4.4509D-04       no
-     10    0.000000   0.45888926D+03     8.6457D-05      yes
+      1    0.000000   0.45455262D+03     1.2411D+00       no
+      2    0.000000   0.45803908D+03     6.3250D-01       no
+      3    0.000000   0.45841202D+03     1.3895D-01       no
+      4    0.000000   0.45849379D+03     7.3856D-02       no
+      5    0.000000   0.45853137D+03     8.3861D-02       no
+      6    0.000000   0.45854524D+03     2.1952D-02       no
+      7    0.000000   0.45854693D+03     7.2573D-03       no
+      8    0.000000   0.45854705D+03     2.1352D-03       no
+      9    0.000000   0.45854706D+03     3.9210D-04       no
+     10    0.000000   0.45854706D+03     7.2327D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1855,16 +1854,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.45607745D+00     1.4015D+00       no
-      2    0.000000   0.53337563D+00     3.6089D-01       no
-      3    0.000000   0.55596895D+00     1.5784D-01       no
-      4    0.000000   0.56417152D+00     1.3590D-01       no
-      5    0.000000   0.56864896D+00     4.8778D-02       no
-      6    0.000000   0.56898058D+00     1.0419D-02       no
-      7    0.000000   0.56899927D+00     2.2951D-03       no
-      8    0.000000   0.56900033D+00     7.5055D-04       no
-      9    0.000000   0.56900044D+00     1.7584D-04       no
-     10    0.000000   0.56900045D+00     5.1950D-05      yes
+      1    0.000000   0.45324716D+00     1.3841D+00       no
+      2    0.000000   0.52526248D+00     3.4528D-01       no
+      3    0.000000   0.54453036D+00     1.5036D-01       no
+      4    0.000000   0.55049743D+00     1.1696D-01       no
+      5    0.000000   0.55352207D+00     4.3848D-02       no
+      6    0.000000   0.55374774D+00     9.1704D-03       no
+      7    0.000000   0.55376035D+00     2.0774D-03       no
+      8    0.000000   0.55376107D+00     6.4713D-04       no
+      9    0.000000   0.55376114D+00     1.5878D-04       no
+     10    0.000000   0.55376114D+00     4.4452D-05      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -1872,16 +1871,16 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.21723954D+00     1.4204D+00       no
-      2    0.000000   0.25281594D+00     3.2115D-01       no
-      3    0.000000   0.25989001D+00     1.3738D-01       no
-      4    0.000000   0.26230516D+00     1.3346D-01       no
-      5    0.000000   0.26399044D+00     5.1903D-02       no
-      6    0.000000   0.26414347D+00     1.2348D-02       no
-      7    0.000000   0.26415503D+00     3.5590D-03       no
-      8    0.000000   0.26415601D+00     1.2165D-03       no
-      9    0.000000   0.26415610D+00     2.6207D-04       no
-     10    0.000000   0.26415610D+00     5.0406D-05      yes
+      1    0.000000   0.21601442D+00     1.4038D+00       no
+      2    0.000000   0.24947371D+00     3.0998D-01       no
+      3    0.000000   0.25574707D+00     1.3263D-01       no
+      4    0.000000   0.25760414D+00     1.1516D-01       no
+      5    0.000000   0.25875758D+00     4.5573D-02       no
+      6    0.000000   0.25886108D+00     1.0618D-02       no
+      7    0.000000   0.25886875D+00     3.0940D-03       no
+      8    0.000000   0.25886938D+00     1.0118D-03       no
+      9    0.000000   0.25886943D+00     2.3230D-04       no
+     10    0.000000   0.25886944D+00     4.3652D-05      yes
  -------------------------------------------------------------
 
  |=====================================================| 
@@ -1907,41 +1906,43 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   SO_OPTVEC           0:00:07     20.3 %     20.3 % |
- |   SO_SIGAI            0:00:06     15.1 %     35.5 % |
- |   SO_RES_A            0:00:05     14.6 %     50.1 % |
- |   SO_RES_TCB          0:00:05     13.7 %     63.8 % |
- |   SO_RES_CB           0:00:04     10.2 %     74.0 % |
- |   SO_T2M1             0:00:02      6.7 %     80.7 % |
- |   CCRDAO              0:00:02      4.8 %     85.4 % |
- |   SO_ERES             0:00:01      3.7 %     89.1 % |
- |   CC_AOFOCK           0:00:01      3.3 %     92.4 % |
- |   CCTRBT              0:00:01      2.6 %     95.0 % |
- |   SO_TRIAL2           0:00:01      1.8 %     96.9 % |
- |   SO_INCRED           0:00:01      1.4 %     98.2 % |
- |   SO_ORTH_TRN         0:00:00      0.9 %     99.2 % |
- |   SO_TRIAL1           0:00:00      0.1 %     99.3 % |
- |   SO_GETMO            0:00:00      0.0 %     99.3 % |
- |   SO_RES_CD           0:00:00      0.0 %     99.4 % |
- |   SO_AODENS           0:00:00      0.0 %     99.4 % |
- |   SO_RES_FCK          0:00:00      0.0 %     99.4 % |
- |   SO_RES_OVL          0:00:00      0.0 %     99.5 % |
- |   CC_FCKMO            0:00:00      0.0 %     99.5 % |
- |   SO_DENSAI           0:00:00      0.0 %     99.5 % |
- |   SO_DENS3            0:00:00      0.0 %     99.5 % |
- |   SO_DIAG             0:00:00      0.0 %     99.5 % |
- |   SO_REDEV            0:00:00      0.0 %     99.5 % |
- |   SO_RES_SYM          0:00:00      0.0 %     99.6 % |
- |   SO_ROPT             0:00:00      0.0 %     99.6 % |
+ |   SO_OPTVEC           0:02:12     46.2 %     46.2 % |
+ |   SO_SIGAI            0:01:49     37.9 %     84.1 % |
+ |   SO_RES_A            0:00:09      3.3 %     87.3 % |
+ |   SO_RES_TCB          0:00:09      3.1 %     90.5 % |
+ |   SO_RES_CB           0:00:06      2.1 %     92.6 % |
+ |   SO_TRIAL2           0:00:05      1.8 %     94.4 % |
+ |   SO_T2M1             0:00:04      1.3 %     95.7 % |
+ |   CCRDAO              0:00:03      1.1 %     96.9 % |
+ |   CCTRBT              0:00:02      0.9 %     97.7 % |
+ |   SO_ERES             0:00:02      0.7 %     98.4 % |
+ |   SO_INCRED           0:00:02      0.5 %     99.0 % |
+ |   CC_AOFOCK           0:00:01      0.4 %     99.3 % |
+ |   SO_ORTH_TRN         0:00:01      0.3 %     99.6 % |
+ |   SO_TRIAL1           0:00:01      0.2 %     99.8 % |
+ |   SO_GETMO            0:00:00      0.0 %     99.8 % |
+ |   SO_RES_OVL          0:00:00      0.0 %     99.9 % |
+ |   CC_FCKMO            0:00:00      0.0 %     99.9 % |
+ |   SO_RES_CD           0:00:00      0.0 %     99.9 % |
+ |   SO_DIAG             0:00:00      0.0 %     99.9 % |
+ |   SO_REDEV            0:00:00      0.0 %     99.9 % |
+ |   SO_AODENS           0:00:00      0.0 %     99.9 % |
+ |   SO_BCKTR            0:00:00      0.0 %     99.9 % |
+ |   SO_DENSAI           0:00:00      0.0 %     99.9 % |
+ |   SO_DENS             0:00:00      0.0 %     99.9 % |
+ |   SO_RES_SYM          0:00:00      0.0 %     99.9 % |
+ |   SO_RES_FCK          0:00:00      0.0 %     99.9 % |
+ |   SO_T2MP             0:00:00      0.0 %     99.9 % |
+ |   SO_ROPT             0:00:00      0.0 %     99.9 % |
  |-----------------------------------------------------| 
- |  Total CPU time       0:00:37                       |
+ |  Total CPU time       0:04:47                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 1      1.6 %            |
- |   SO_WRITE            0: 0: 1      1.7 %            |
- |   SO_OPEN             0: 0: 0      0.1 %            |
- |   SO_CLOSE            0: 0: 0      0.1 %            |
+ |   SO_READ             0: 0: 2      0.8 %            |
+ |   SO_WRITE            0: 0: 1      0.3 %            |
+ |   SO_OPEN             0: 0: 0      0.0 %            |
+ |   SO_CLOSE            0: 0: 0      0.0 %            |
  |-----------------------------------------------------| 
 
  |=====================================================| 
@@ -1949,12 +1950,12 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0:00:28     74.9 %     74.9 % |
- |   SO_SRES             0:00:00      0.0 %     74.9 % |
- |   SO_REDEV            0:00:08     21.6 %     96.5 % |
- |   SO_TRIAL2           0:00:01      2.8 %     99.3 % |
+ |   SO_ERES             0:02:26     52.4 %     52.4 % |
+ |   SO_SRES             0:00:00      0.0 %     52.4 % |
+ |   SO_REDEV            0:02:06     45.1 %     97.5 % |
+ |   SO_TRIAL2           0:00:06      2.2 %     99.7 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0:37                       |
+ |   Total wall time     0: 4:39                       |
  |=====================================================| 
 
 
@@ -1993,14 +1994,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.14107888D+01     1.2291D+00       no
-      2    0.000000   0.14654716D+01     2.6266D-01       no
-      3    0.000000   0.14728350D+01     1.2255D-01       no
-      4    0.000000   0.14742392D+01     5.0358D-02       no
-      5    0.000000   0.14744402D+01     1.5943D-02       no
-      6    0.000000   0.14744631D+01     5.8741D-03       no
-      7    0.000000   0.14744662D+01     2.3626D-03       no
-      8    0.000000   0.14744667D+01     6.9322D-04      yes
+      1    0.000000   0.14102151D+01     1.2283D+00       no
+      2    0.000000   0.14653007D+01     2.6677D-01       no
+      3    0.000000   0.14729710D+01     1.2504D-01       no
+      4    0.000000   0.14744502D+01     5.1593D-02       no
+      5    0.000000   0.14746607D+01     1.6110D-02       no
+      6    0.000000   0.14746841D+01     5.8656D-03       no
+      7    0.000000   0.14746872D+01     2.3197D-03       no
+      8    0.000000   0.14746876D+01     6.7989D-04      yes
  -------------------------------------------------------------
 
 
@@ -2028,13 +2029,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.28401413D+03     2.2609D+00       no
-      2    0.000000   0.32469780D+03     5.9944D-01       no
-      3    0.000000   0.33108635D+03     1.6843D-01       no
-      4    0.000000   0.33189132D+03     5.4374D-02       no
-      5    0.000000   0.33195721D+03     1.3582D-02       no
-      6    0.000000   0.33196250D+03     3.2278D-03       no
-      7    0.000000   0.33196281D+03     8.1954D-04      yes
+      1    0.000000   0.28177655D+03     2.2301D+00       no
+      2    0.000000   0.31941386D+03     5.7767D-01       no
+      3    0.000000   0.32501746D+03     1.6072D-01       no
+      4    0.000000   0.32571482D+03     5.3580D-02       no
+      5    0.000000   0.32577128D+03     1.2509D-02       no
+      6    0.000000   0.32577549D+03     3.0210D-03       no
+      7    0.000000   0.32577574D+03     7.7488D-04      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2042,13 +2043,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.40458184D+02     1.7708D+00       no
-      2    0.000000   0.45686996D+02     4.9803D-01       no
-      3    0.000000   0.46503448D+02     1.3923D-01       no
-      4    0.000000   0.46630603D+02     6.7142D-02       no
-      5    0.000000   0.46646492D+02     1.5730D-02       no
-      6    0.000000   0.46647804D+02     4.3930D-03       no
-      7    0.000000   0.46647899D+02     1.4263D-03      yes
+      1    0.000000   0.40192983D+02     1.7550D+00       no
+      2    0.000000   0.45123854D+02     4.8275D-01       no
+      3    0.000000   0.45853722D+02     1.3355D-01       no
+      4    0.000000   0.45961290D+02     6.3374D-02       no
+      5    0.000000   0.45974521D+02     1.4445D-02       no
+      6    0.000000   0.45975584D+02     4.1644D-03       no
+      7    0.000000   0.45975662D+02     1.3162D-03      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2056,13 +2057,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.63603297D+00     1.2972D+00       no
-      2    0.000000   0.66761405D+00     3.4037D-01       no
-      3    0.000000   0.67445430D+00     1.6778D-01       no
-      4    0.000000   0.67548632D+00     4.9006D-02       no
-      5    0.000000   0.67557315D+00     1.4291D-02       no
-      6    0.000000   0.67557995D+00     3.6984D-03       no
-      7    0.000000   0.67558026D+00     6.7253D-04      yes
+      1    0.000000   0.63516332D+00     1.2905D+00       no
+      2    0.000000   0.66560491D+00     3.2693D-01       no
+      3    0.000000   0.67172240D+00     1.6068D-01       no
+      4    0.000000   0.67262637D+00     4.6491D-02       no
+      5    0.000000   0.67270000D+00     1.3146D-02       no
+      6    0.000000   0.67270569D+00     3.4916D-03       no
+      7    0.000000   0.67270595D+00     5.7612D-04      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2070,13 +2071,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.12704112D+01     1.2091D+00       no
-      2    0.000000   0.13238725D+01     2.9111D-01       no
-      3    0.000000   0.13310586D+01     1.0390D-01       no
-      4    0.000000   0.13319619D+01     3.9554D-02       no
-      5    0.000000   0.13321180D+01     1.9737D-02       no
-      6    0.000000   0.13321421D+01     4.4272D-03       no
-      7    0.000000   0.13321433D+01     1.0637D-03      yes
+      1    0.000000   0.12692762D+01     1.2053D+00       no
+      2    0.000000   0.13216314D+01     2.8403D-01       no
+      3    0.000000   0.13283151D+01     1.0044D-01       no
+      4    0.000000   0.13291118D+01     3.6276D-02       no
+      5    0.000000   0.13292345D+01     1.7408D-02       no
+      6    0.000000   0.13292540D+01     4.1871D-03       no
+      7    0.000000   0.13292550D+01     9.7149D-04      yes
  -------------------------------------------------------------
 
 
@@ -2104,14 +2105,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.31908406D+03     2.2928D+00       no
-      2    0.000000   0.34334999D+03     4.7093D-01       no
-      3    0.000000   0.34520225D+03     1.0642D-01       no
-      4    0.000000   0.34542791D+03     4.6766D-02       no
-      5    0.000000   0.34545901D+03     1.4033D-02       no
-      6    0.000000   0.34546245D+03     4.3493D-03       no
-      7    0.000000   0.34546296D+03     2.1809D-03       no
-      8    0.000000   0.34546304D+03     5.5572D-04      yes
+      1    0.000000   0.31777764D+03     2.2749D+00       no
+      2    0.000000   0.34113543D+03     4.6145D-01       no
+      3    0.000000   0.34288274D+03     1.0345D-01       no
+      4    0.000000   0.34309408D+03     4.6301D-02       no
+      5    0.000000   0.34312330D+03     1.3605D-02       no
+      6    0.000000   0.34312649D+03     4.3087D-03       no
+      7    0.000000   0.34312696D+03     2.1060D-03       no
+      8    0.000000   0.34312703D+03     5.3133D-04      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2119,13 +2120,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.45722002D+02     1.7017D+00       no
-      2    0.000000   0.48842536D+02     3.4873D-01       no
-      3    0.000000   0.49044432D+02     7.0928D-02       no
-      4    0.000000   0.49060595D+02     2.9531D-02       no
-      5    0.000000   0.49062842D+02     7.4195D-03       no
-      6    0.000000   0.49063076D+02     3.3173D-03       no
-      7    0.000000   0.49063115D+02     1.3853D-03      yes
+      1    0.000000   0.45573994D+02     1.6946D+00       no
+      2    0.000000   0.48628205D+02     3.4483D-01       no
+      3    0.000000   0.48824474D+02     7.0677D-02       no
+      4    0.000000   0.48839976D+02     2.8919D-02       no
+      5    0.000000   0.48842116D+02     7.2788D-03       no
+      6    0.000000   0.48842336D+02     3.2395D-03       no
+      7    0.000000   0.48842372D+02     1.3219D-03      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2133,13 +2134,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.91042660D+00     1.2219D+00       no
-      2    0.000000   0.93946848D+00     2.1704D-01       no
-      3    0.000000   0.94174337D+00     7.5884D-02       no
-      4    0.000000   0.94200244D+00     2.4516D-02       no
-      5    0.000000   0.94203513D+00     1.0449D-02       no
-      6    0.000000   0.94204001D+00     3.5176D-03       no
-      7    0.000000   0.94204049D+00     1.0509D-03      yes
+      1    0.000000   0.90985037D+00     1.2193D+00       no
+      2    0.000000   0.93860426D+00     2.1498D-01       no
+      3    0.000000   0.94082106D+00     7.5075D-02       no
+      4    0.000000   0.94107224D+00     2.4100D-02       no
+      5    0.000000   0.94110312D+00     1.0083D-02       no
+      6    0.000000   0.94110773D+00     3.4651D-03       no
+      7    0.000000   0.94110819D+00     1.0126D-03      yes
  -------------------------------------------------------------
 
 
@@ -2167,13 +2168,13 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.37581137D+03     2.2411D+00       no
-      2    0.000000   0.50384529D+03     7.9836D-01       no
-      3    0.000000   0.55864744D+03     2.3384D-01       no
-      4    0.000000   0.56775729D+03     8.2306D-02       no
-      5    0.000000   0.56849538D+03     2.1372D-02       no
-      6    0.000000   0.56857920D+03     5.9410D-03       no
-      7    0.000000   0.56858592D+03     1.3458D-03      yes
+      1    0.000000   0.37170476D+03     2.2033D+00       no
+      2    0.000000   0.48503512D+03     7.6686D-01       no
+      3    0.000000   0.52903329D+03     2.2625D-01       no
+      4    0.000000   0.53627972D+03     8.1750D-02       no
+      5    0.000000   0.53684616D+03     1.9694D-02       no
+      6    0.000000   0.53690571D+03     5.4877D-03       no
+      7    0.000000   0.53691055D+03     1.3139D-03      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2181,14 +2182,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.42674280D+02     1.6716D+00       no
-      2    0.000000   0.48318612D+02     4.3791D-01       no
-      3    0.000000   0.49099313D+02     1.2929D-01       no
-      4    0.000000   0.49322942D+02     1.0616D-01       no
-      5    0.000000   0.49422142D+02     6.0486D-02       no
-      6    0.000000   0.49448034D+02     1.6996D-02       no
-      7    0.000000   0.49450534D+02     5.9663D-03       no
-      8    0.000000   0.49450740D+02     1.4899D-03      yes
+      1    0.000000   0.42426340D+02     1.6592D+00       no
+      2    0.000000   0.47832502D+02     4.2964D-01       no
+      3    0.000000   0.48558185D+02     1.2485D-01       no
+      4    0.000000   0.48747766D+02     9.8020D-02       no
+      5    0.000000   0.48822688D+02     5.2118D-02       no
+      6    0.000000   0.48841217D+02     1.4922D-02       no
+      7    0.000000   0.48842978D+02     5.1477D-03       no
+      8    0.000000   0.48843119D+02     1.2199D-03      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2196,14 +2197,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.31227803D+00     1.2469D+00       no
-      2    0.000000   0.33485928D+00     2.5923D-01       no
-      3    0.000000   0.33800841D+00     1.0889D-01       no
-      4    0.000000   0.33832998D+00     3.1428D-02       no
-      5    0.000000   0.33842140D+00     2.7095D-02       no
-      6    0.000000   0.33845640D+00     1.3704D-02       no
-      7    0.000000   0.33846686D+00     6.1339D-03       no
-      8    0.000000   0.33846779D+00     1.1947D-03      yes
+      1    0.000000   0.31142601D+00     1.2355D+00       no
+      2    0.000000   0.33316275D+00     2.5346D-01       no
+      3    0.000000   0.33612586D+00     1.0779D-01       no
+      4    0.000000   0.33642954D+00     3.0294D-02       no
+      5    0.000000   0.33650819D+00     2.4906D-02       no
+      6    0.000000   0.33653544D+00     1.1707D-02       no
+      7    0.000000   0.33654277D+00     5.2136D-03       no
+      8    0.000000   0.33654341D+00     9.7850D-04      yes
  -------------------------------------------------------------
 
  -------------------------------------------------------------
@@ -2211,14 +2212,14 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  -------------------------------------------------------------
  Iteration Frequency    Property (au)   Residual    Converged
  -------------------------------------------------------------
-      1    0.000000   0.48447914D+00     1.1324D+00       no
-      2    0.000000   0.49911768D+00     1.9071D-01       no
-      3    0.000000   0.50264712D+00     2.1920D-01       no
-      4    0.000000   0.50439040D+00     8.1559D-02       no
-      5    0.000000   0.50477888D+00     4.3865D-02       no
-      6    0.000000   0.50482280D+00     7.2006D-03       no
-      7    0.000000   0.50482520D+00     2.9487D-03       no
-      8    0.000000   0.50482547D+00     6.7155D-04      yes
+      1    0.000000   0.48390693D+00     1.1268D+00       no
+      2    0.000000   0.49817505D+00     1.8348D-01       no
+      3    0.000000   0.50124230D+00     2.0470D-01       no
+      4    0.000000   0.50265346D+00     7.3047D-02       no
+      5    0.000000   0.50293879D+00     3.8908D-02       no
+      6    0.000000   0.50297152D+00     6.5275D-03       no
+      7    0.000000   0.50297324D+00     2.5394D-03       no
+      8    0.000000   0.50297343D+00     5.7752D-04      yes
  -------------------------------------------------------------
 
  |=====================================================| 
@@ -2244,33 +2245,33 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   SO_OPTVEC           0:00:02     20.8 %     20.8 % |
- |   SO_RES_TCB          0:00:02     15.2 %     36.0 % |
- |   SO_RES_A            0:00:01     14.7 %     50.7 % |
- |   SO_SIGAI            0:00:01     14.7 %     65.4 % |
- |   SO_T2M1             0:00:01      7.2 %     72.5 % |
- |   SO_RES_CB           0:00:01      6.5 %     79.0 % |
- |   CCRDAO              0:00:01      5.2 %     84.2 % |
- |   SO_ERES             0:00:00      4.4 %     88.6 % |
- |   CCTRBT              0:00:00      2.9 %     91.5 % |
- |   CC_AOFOCK           0:00:00      2.8 %     94.3 % |
- |   SO_ORTH_TRN         0:00:00      2.6 %     96.8 % |
- |   SO_INCRED           0:00:00      1.2 %     98.1 % |
- |   SO_TRIAL2           0:00:00      1.2 %     99.3 % |
- |   SO_TRIAL1           0:00:00      0.2 %     99.4 % |
- |   SO_RES_OVL          0:00:00      0.1 %     99.6 % |
- |   SO_AODENS           0:00:00      0.0 %     99.6 % |
- |   SO_RES_FCK          0:00:00      0.0 %     99.6 % |
- |   SO_DIAG             0:00:00      0.0 %     99.7 % |
- |   SO_REDEV            0:00:00      0.0 %     99.7 % |
+ |   SO_SIGAI            0:00:36     43.9 %     43.9 % |
+ |   SO_OPTVEC           0:00:34     41.7 %     85.6 % |
+ |   SO_RES_A            0:00:03      3.4 %     89.0 % |
+ |   SO_RES_TCB          0:00:03      3.2 %     92.3 % |
+ |   SO_RES_CB           0:00:01      1.5 %     93.8 % |
+ |   SO_T2M1             0:00:01      1.4 %     95.2 % |
+ |   SO_TRIAL2           0:00:01      1.2 %     96.4 % |
+ |   CCRDAO              0:00:01      1.0 %     97.3 % |
+ |   CCTRBT              0:00:01      0.8 %     98.1 % |
+ |   SO_ERES             0:00:01      0.7 %     98.8 % |
+ |   SO_INCRED           0:00:00      0.3 %     99.1 % |
+ |   CC_AOFOCK           0:00:00      0.3 %     99.5 % |
+ |   SO_ORTH_TRN         0:00:00      0.2 %     99.7 % |
+ |   SO_TRIAL1           0:00:00      0.2 %     99.9 % |
+ |   SO_GETMO            0:00:00      0.0 %     99.9 % |
+ |   SO_RES_FCK          0:00:00      0.0 %     99.9 % |
+ |   SO_BCKTR            0:00:00      0.0 %     99.9 % |
+ |   SO_RES_OVL          0:00:00      0.0 %     99.9 % |
+ |   CC_FCKMO            0:00:00      0.0 %     99.9 % |
  |-----------------------------------------------------| 
- |  Total CPU time       0:00:10                       |
+ |  Total CPU time       0:01:21                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      1.2 %            |
- |   SO_WRITE            0: 0: 0      1.2 %            |
- |   SO_OPEN             0: 0: 0      0.1 %            |
+ |   SO_READ             0: 0: 0      0.4 %            |
+ |   SO_WRITE            0: 0: 0      0.2 %            |
+ |   SO_OPEN             0: 0: 0      0.0 %            |
  |   SO_CLOSE            0: 0: 0      0.0 %            |
  |-----------------------------------------------------| 
 
@@ -2279,12 +2280,12 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0:00:07     73.7 %     73.7 % |
- |   SO_SRES             0:00:00      0.0 %     73.7 % |
- |   SO_REDEV            0:00:02     21.8 %     95.5 % |
- |   SO_TRIAL2           0:00:00      3.9 %     99.4 % |
+ |   SO_ERES             0:00:46     56.1 %     56.1 % |
+ |   SO_SRES             0:00:00      0.0 %     56.1 % |
+ |   SO_REDEV            0:00:34     42.1 %     98.3 % |
+ |   SO_TRIAL2           0:00:01      1.4 %     99.7 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0:10                       |
+ |   Total wall time     0: 1:21                       |
  |=====================================================| 
 
 
@@ -2294,8 +2295,8 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:54 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:54:17 2023
+     Host name              : node708                                 
 
 
                              Molecular geometry (au)
@@ -2346,15 +2347,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:   13;   Abundance:   1.100 %;   g factor:   1.404824
   Mass number atom 2:   17;   Abundance:   0.040 %;   g factor:  -0.757516
 
-  Isotropic coupling        :     32.3756 Hz
-  Anisotropic coupling      :     74.5721 Hz
-  Asymmetry                 :     -0.0117   
-  S parameter               :    -74.5738 Hz
-  A parameter               :     -0.0000 Hz
-  Isotropic DSO contribution:     -0.0053 Hz
-  Isotropic PSO contribution:     23.5901 Hz
-  Isotropic SD contribution :     -1.7122 Hz
-  Isotropic FC contribution :     10.5030 Hz
+  Isotropic coupling        :   31.937035 Hz
+  Anisotropic coupling      :   70.124260 Hz
+  Asymmetry                 :   -0.136980   
+  S parameter               :  -70.343214 Hz
+  A parameter               :    0.000000 Hz
+  Isotropic DSO contribution:   -0.005320 Hz
+  Isotropic PSO contribution:   21.968262 Hz
+  Isotropic SD contribution :   -1.285201 Hz
+  Isotropic FC contribution :   11.259293 Hz
 
 
 
@@ -2364,9 +2365,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x    7.226721      -0.000000      -0.000000    
-                y   -0.000000       82.09026      -0.000000    
-                z   -0.000000      -0.000000       7.809688    
+                x    11.76415       0.000000       0.000000    
+                y    0.000000       78.68654       0.000000    
+                z    0.000000       0.000000       5.360410    
 
 
               Indirect spin-spin coupling between H1  _1 and O1    :
@@ -2376,15 +2377,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:    1;   Abundance:  99.985 %;   g factor:   5.585694
   Mass number atom 2:   17;   Abundance:   0.040 %;   g factor:  -0.757516
 
-  Isotropic coupling        :     -2.2106 Hz
-  Anisotropic coupling      :     -9.3478 Hz
-  Asymmetry                 :      0.0227   
-  S parameter               :     -9.3486 Hz
-  A parameter               :     -3.2213 Hz
-  Isotropic DSO contribution:      0.4943 Hz
-  Isotropic PSO contribution:      3.6253 Hz
-  Isotropic SD contribution :     -0.8956 Hz
-  Isotropic FC contribution :     -5.4346 Hz
+  Isotropic coupling        :   -2.540690 Hz
+  Anisotropic coupling      :   -8.217032 Hz
+  Asymmetry                 :    0.079457   
+  S parameter               :   -8.225674 Hz
+  A parameter               :   -3.157281 Hz
+  Isotropic DSO contribution:    0.494290 Hz
+  Isotropic PSO contribution:    3.338300 Hz
+  Isotropic SD contribution :   -0.721997 Hz
+  Isotropic FC contribution :   -5.651282 Hz
 
 
 
@@ -2394,9 +2395,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x   0.9762502      -0.000000      -0.000000    
-                y   -0.000000      -7.861518      -5.468914    
-                z   -0.000000      0.9736302      0.2535645    
+                x  -1.9313198E-02   0.000000       0.000000    
+                y    0.000000      -7.414169      -5.332974    
+                z    0.000000      0.9815879     -0.1885880    
 
 
               Indirect spin-spin coupling between H1  _1 and C1    :
@@ -2406,15 +2407,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:    1;   Abundance:  99.985 %;   g factor:   5.585694
   Mass number atom 2:   13;   Abundance:   1.100 %;   g factor:   1.404824
 
-  Isotropic coupling        :    179.0193 Hz
-  Anisotropic coupling      :    -34.8996 Hz
-  Asymmetry                 :     -0.2137   
-  S parameter               :     35.1643 Hz
-  A parameter               :      0.2986 Hz
-  Isotropic DSO contribution:      0.6050 Hz
-  Isotropic PSO contribution:     -0.8320 Hz
-  Isotropic SD contribution :      0.3380 Hz
-  Isotropic FC contribution :    178.9082 Hz
+  Isotropic coupling        :  175.236800 Hz
+  Anisotropic coupling      :  -33.714800 Hz
+  Asymmetry                 :   -0.183064   
+  S parameter               :   33.902588 Hz
+  A parameter               :    0.262698 Hz
+  Isotropic DSO contribution:    0.605024 Hz
+  Isotropic PSO contribution:   -0.761317 Hz
+  Isotropic SD contribution :    0.319016 Hz
+  Isotropic FC contribution :  175.074077 Hz
 
 
 
@@ -2424,9 +2425,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x    193.1386       0.000000       0.000000    
-                y    0.000000       165.1223      -14.39532    
-                z    0.000000      -14.99252       178.7969    
+                x    188.5324       0.000000       0.000000    
+                y    0.000000       161.9051      -14.08560    
+                z    0.000000      -14.61100       175.2730    
 
 
               Indirect spin-spin coupling between H1  _2 and O1    :
@@ -2436,15 +2437,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:    1;   Abundance:  99.985 %;   g factor:   5.585694
   Mass number atom 2:   17;   Abundance:   0.040 %;   g factor:  -0.757516
 
-  Isotropic coupling        :     -2.2106 Hz
-  Anisotropic coupling      :     -9.3478 Hz
-  Asymmetry                 :      0.0227   
-  S parameter               :     -9.3486 Hz
-  A parameter               :     -3.2213 Hz
-  Isotropic DSO contribution:      0.4943 Hz
-  Isotropic PSO contribution:      3.6253 Hz
-  Isotropic SD contribution :     -0.8956 Hz
-  Isotropic FC contribution :     -5.4346 Hz
+  Isotropic coupling        :   -2.540690 Hz
+  Anisotropic coupling      :   -8.217032 Hz
+  Asymmetry                 :    0.079457   
+  S parameter               :   -8.225674 Hz
+  A parameter               :   -3.157281 Hz
+  Isotropic DSO contribution:    0.494290 Hz
+  Isotropic PSO contribution:    3.338300 Hz
+  Isotropic SD contribution :   -0.721997 Hz
+  Isotropic FC contribution :   -5.651282 Hz
 
 
 
@@ -2454,9 +2455,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x   0.9762502      -0.000000      -0.000000    
-                y   -0.000000      -7.861518       5.468914    
-                z   -0.000000     -0.9736302      0.2535645    
+                x  -1.9313198E-02   0.000000       0.000000    
+                y    0.000000      -7.414169       5.332974    
+                z    0.000000     -0.9815879     -0.1885880    
 
 
               Indirect spin-spin coupling between H1  _2 and C1    :
@@ -2466,15 +2467,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:    1;   Abundance:  99.985 %;   g factor:   5.585694
   Mass number atom 2:   13;   Abundance:   1.100 %;   g factor:   1.404824
 
-  Isotropic coupling        :    179.0193 Hz
-  Anisotropic coupling      :    -34.8996 Hz
-  Asymmetry                 :     -0.2137   
-  S parameter               :     35.1643 Hz
-  A parameter               :      0.2986 Hz
-  Isotropic DSO contribution:      0.6050 Hz
-  Isotropic PSO contribution:     -0.8320 Hz
-  Isotropic SD contribution :      0.3380 Hz
-  Isotropic FC contribution :    178.9082 Hz
+  Isotropic coupling        :  175.236800 Hz
+  Anisotropic coupling      :  -33.714800 Hz
+  Asymmetry                 :   -0.183064   
+  S parameter               :   33.902588 Hz
+  A parameter               :    0.262698 Hz
+  Isotropic DSO contribution:    0.605024 Hz
+  Isotropic PSO contribution:   -0.761317 Hz
+  Isotropic SD contribution :    0.319016 Hz
+  Isotropic FC contribution :  175.074077 Hz
 
 
 
@@ -2484,9 +2485,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x    193.1386       0.000000       0.000000    
-                y    0.000000       165.1223       14.39532    
-                z    0.000000       14.99252       178.7969    
+                x    188.5324       0.000000       0.000000    
+                y    0.000000       161.9051       14.08560    
+                z    0.000000       14.61100       175.2730    
 
 
               Indirect spin-spin coupling between H1  _2 and H1  _1:
@@ -2496,15 +2497,15 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
   Mass number atom 1:    1;   Abundance:  99.985 %;   g factor:   5.585694
   Mass number atom 2:    1;   Abundance:  99.985 %;   g factor:   5.585694
 
-  Isotropic coupling        :     36.2582 Hz
-  Anisotropic coupling      :     -9.5104 Hz
-  Asymmetry                 :     -0.1287   
-  S parameter               :      9.5366 Hz
-  A parameter               :      1.8695 Hz
-  Isotropic DSO contribution:     -3.7339 Hz
-  Isotropic PSO contribution:      3.6786 Hz
-  Isotropic SD contribution :      0.2346 Hz
-  Isotropic FC contribution :     36.0789 Hz
+  Isotropic coupling        :   35.672484 Hz
+  Anisotropic coupling      :   -9.320732 Hz
+  Asymmetry                 :   -0.102994   
+  S parameter               :    9.337196 Hz
+  A parameter               :    1.763855 Hz
+  Isotropic DSO contribution:   -3.733945 Hz
+  Isotropic PSO contribution:    3.682424 Hz
+  Isotropic SD contribution :    0.228356 Hz
+  Isotropic FC contribution :   35.495648 Hz
 
 
 
@@ -2514,9 +2515,9 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
 
                              x              y              z
 
-                x    29.91791       0.000000       0.000000    
-                y    0.000000       39.83643      -1.869508    
-                z    0.000000       1.869508       39.02019    
+                x    29.45866       0.000000       0.000000    
+                y    0.000000       39.09939      -1.763855    
+                z    0.000000       1.763855       38.45940    
 
 
    Interatomic separations (in Angstrom):
@@ -2563,23 +2564,23 @@ The T2 MP3 ampliltudes are read from the file: MP3__TAM
  CPU time statistics for ABACUS
  ------------------------------
 
- LINRES     00:00:10      21 %
- TRP LR     00:00:37      78 %
+ LINRES     00:01:21      22 %
+ TRP LR     00:04:47      78 %
 
- TOTAL      00:00:47     100 %
+ TOTAL      00:06:08     100 %
 
 
-  Total CPU  time used in ABACUS:  47.09 seconds
-  Total wall time used in ABACUS:  47.42 seconds
+  Total CPU  time used in ABACUS:  6 minutes  8 seconds
+  Total wall time used in ABACUS:  6 minutes  1 second 
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:  47.72 seconds
-  Total wall time used in DALTON:  48.05 seconds
+  Total CPU  time used in DALTON:  6 minutes  9 seconds
+  Total wall time used in DALTON:  6 minutes  2 seconds
 
  
-     Date and time (Linux)  : Sun Mar 12 21:05:54 2023
-     Host name              : sunray                                  
+     Date and time (Linux)  : Mon Nov 27 12:54:17 2023
+     Host name              : node708                                 

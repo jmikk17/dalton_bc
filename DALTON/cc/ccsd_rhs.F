@@ -5648,6 +5648,44 @@ C
 C
       RETURN
       END
+C  /* Deck cctrbt_vir */
+      SUBROUTINE CCTRBT_VIR(XINT,DSVIR,XLAMDP,ISYMLP,WORK,LWORK,ISYDIS)
+C
+C     Kasper F. Schaltz 21/12-2022: Adapted from CCTRBT
+C     
+C     Purpose: Transform integral batch to a virtual index.
+C
+#include "implicit.h"
+      PARAMETER(ZERO = 0.0D0, ONE = 1.0D0)
+C
+      DIMENSION XINT(*),DSVIR(*),XLAMDP(*),WORK(LWORK)
+C
+#include "priunit.h"
+#include "ccorb.h"
+#include "ccsdsym.h"
+C
+      KOFF1 = 1
+      DO ISYMG = 1, NSYM
+C
+         ISYMC  = MULD2H(ISYMLP,ISYMG)
+         ISYMAB = MULD2H(ISYMG,ISYDIS)
+C
+         NNBSAB = MAX(NNBST(ISYMAB),1)
+         NBASG  = MAX(NBAS(ISYMG),1)
+C
+         KOFF2  = 1 + IGLMVI(ISYMG,ISYMC)
+         KOFF3  = 1 + IDSVIR(ISYMAB,ISYMC)
+C
+         CALL DGEMM('N','N',NNBST(ISYMAB),NVIR(ISYMC),NBAS(ISYMG),
+     *              ONE,XINT(KOFF1),NNBSAB,XLAMDP(KOFF2),NBASG,
+     *              ZERO,DSVIR(KOFF3),NNBSAB)
+C
+         KOFF1 = KOFF1 + NNBST(ISYMAB)*NBAS(ISYMG)
+C
+      END DO
+C
+      RETURN
+      END
 C  /* Deck ccrdao */
       SUBROUTINE CCRDAO(XINT,IDELTA,IDEL2,WORK,LWORK,IRECNR,DIRECT)
 C
