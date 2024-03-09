@@ -4153,7 +4153,7 @@ Chol
          NMATKI(ISYMK) = ICOU25
          NMATAK(ISYMK) = ICOU26
 C
-  610 CONTINUE 
+  610 CONTINUE
 C
       DO 630 ISYMK = 1,NSYM
          ICOUN1 = 0
