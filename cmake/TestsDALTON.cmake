@@ -426,6 +426,8 @@ add_dalton_runtest(mp3_energy_sym                "dalton;serial;mp3;runtest;shor
 add_dalton_runtest(mp3_energy_nofc               "dalton;serial;mp3;runtest;short")
 add_dalton_runtest(mp3_energy_sym_nofc           "dalton;serial;mp3;runtest;short;essential")
 
+add_dalton_runtest(ghost_basis                   "dalton;runtest;essential")
+
 if(ENABLE_PELIB)
     add_dalton_runtest(pehf_iter                     "dalton;pelib;runtest;short")
     add_dalton_runtest(pehf_direct                   "dalton;pelib;runtest;short")
