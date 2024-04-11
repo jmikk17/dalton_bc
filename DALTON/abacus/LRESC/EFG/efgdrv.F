@@ -170,23 +170,22 @@ C     Main routine of LRESC module.
 C     This routine is call by ABACTL : abacus/abadrv.F
 C Author:
 C     Juan J. Aucar, 2021
-#include "implicit.h"
+c#include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
 #include "wrkrsp.h"
 #include "lrescinf.h"
 #include "inforb.h"
-C this is for print section
 #include "nuclei.h"
 C
 C
       LOGICAL PING
       PING=.FALSE.
-cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_EFG')
 
-      CALL TITLER('EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS','*',124) !REMOVE... just testing
+C     Print information about LRESC metodology
+      CALL HEADER_LREFG
 
 
 c c^-2
@@ -212,33 +211,7 @@ C           Import generated PySCF matrix to AOPROPER
             CALL LINEARLR_EFG('SOSz',WORK,LWORK)
       END IF
 
-      WRITE(lupri,*)
-      WRITE(lupri,*)'   First order relativistic '// 
-     & 'corrections to the zz component of the electronic EFG.'
-      WRITE(LUPRI,*)
-       WRITE(LUPRI,*)'   -  Original LRESC papers at :'
-       WRITE(LUPRI,'(33X,A)')' J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi: 10.1063/1.1525808' 
-       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2019), '//
-     & 'doi: 10.1002/qua.25935'
-       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2021), '//
-     & 'doi: 10.1002/qua.26769'
    
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,*)'   -  Corrections calculated in all symmetry '// 
-     & 'independent centers'
-
-      IF (PRTALL2) THEN 
-      WRITE(LUPRI,*)'   -  To identify LRESC corrections '// 
-     & 'see related papers'
-      END IF
-        
-      IF (.NOT. PRTALL2) THEN 
-         WRITE(LUPRI,'(14X,A)')'*  For LRESC corrections, add '//
-     &   '.PRTALL in your input file under *LROPTE'
-      ENDIF
-    
 C
 C NR value
 C

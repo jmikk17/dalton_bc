@@ -164,6 +164,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EFG/expval.F
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F
+    DALTON/abacus/LRESC/EFG/header.F
     DALTON/abacus/LRESC/SHIELDING/expval.F
     DALTON/abacus/LRESC/SHIELDING/angkin.F
     DALTON/abacus/LRESC/SHIELDING/linearlr.F
