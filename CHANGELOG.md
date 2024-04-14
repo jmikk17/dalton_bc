@@ -27,7 +27,7 @@
 ### Other new features added
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
-- Print total oscillator strenghts when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
+- Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba
@@ -39,10 +39,12 @@
 ### Fixed
 - Fixed error in PE-MCSCF calculation with GSPOL
 - Fixed parallel calculation of molecular gradient with CAMB3LYP
+- Abort if basis= option used in .mol file with BASIS (previously it was just ignored)
+- Use correct atomic symbols in final\_geometry.xyz output file instead of those user had specified in .mol file (H. J. Aa. Jensen)
 
 ### Changed
-- Select FCKTRA for MO transformation by default if > 255 basis functions and parallel.
-- Abort if molecular charge is -4 or lower (it is probably an input error). Can be overridden with new .MINCHA keyword.
+- Select FCKTRA for MO transformation by default if > 255 basis functions and parallel. (H. J. Aa. Jensen)
+- Abort if molecular charge is -4 or lower (it is probably an input error). Can be overridden with new .MINCHA keyword. (H. J. Aa. Jensen)
 
 
 ## [2020.1] (2022-01-20)
