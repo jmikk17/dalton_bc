@@ -834,7 +834,7 @@ subroutine pelib_ifc_london(fckmats)
         k = i * nnbasx
         l = (i - 1) * n2basx + 1
         m = i * n2basx
-        call daptge(nbas, fckmats_packed(j:k), fckmats(l:m))
+        call daptge(nbast, fckmats_packed(j:k), fckmats(l:m))
     end do
     deallocate(fckmats_packed)
     call qexit('pelib_ifc_london')
@@ -2507,7 +2507,7 @@ subroutine pelib_ifc_pecc(aoden, aodencc, converged, t_or_tbar)
     end if
     allocate(denmat(nnbasx), fockmat(nnbasx))
     fockmat = 0.0d0
-    call dgefsp(nbas, aoden, denmat)
+    call dgefsp(nbast, aoden, denmat)
     if (hffld) then
         call pelib_ifc_energy(denmat, energy)
     else
@@ -2619,9 +2619,9 @@ subroutine pelib_ifc_transformer(rho1,rho2,ctr1,ctr2,model,isymtr,lr,work,lwork)
     end if
     call ccmm_d1ao(denmattemp,ctr1,ctr2,trim(model),lr,lisdum,idldum, &
                    isydum,work,lwork)
-    call dgefsp(nbas,denmattemp,denmats)
+    call dgefsp(nbast,denmattemp,denmats)
     call pelib_ifc_response(denmats,gmattemp,1)
-    call dsptsi(nbas,gmattemp,gmat)
+    call dsptsi(nbast,gmattemp,gmat)
     if ((lr .eq. 'L') .or. (lr .eq. 'F')) then
         label = 'GIVE INT'
         list = 'L0'
@@ -2849,35 +2849,35 @@ subroutine pelib_ifc_qrtransformer(rho1,rho2,isyres,listb,idlstb,isymtb, &
         end if
     end if
 !   construct effective G operator
-    call dgefsp(nbas,denmattemp,denmats)
+    call dgefsp(nbast,denmattemp,denmats)
     if (.not. lsame) then
-        call dgefsp(nbas,denmattemp(n2bst(isymtb)+1),denmats(nnbasx+1))
+        call dgefsp(nbast,denmattemp(n2bst(isymtb)+1),denmats(nnbasx+1))
         if (rsptyp .eq. 'B') then
-            call dgefsp(nbas,denmattemp(n2bst(isymtb)+n2bst(isymtc)+1), &
+            call dgefsp(nbast,denmattemp(n2bst(isymtb)+n2bst(isymtc)+1), &
                         denmats(2*nnbasx+1))
         else if ((rsptyp .eq. 'F').or.(rsptyp.eq.'G')) then
-            call dgefsp(nbas,denmattemp(n2bst(isymtb)+n2bst(isymtc)+1), &
+            call dgefsp(nbast,denmattemp(n2bst(isymtb)+n2bst(isymtc)+1), &
                         denmats(2*nnbasx+1))
         end if
     else if (lsame) then
         if ((rsptyp .eq. 'G') .or. (rsptyp .eq. 'B')) then
-            call dgefsp(nbas,denmattemp(n2bst(isymtb)+1),denmats(nnbasx+1))
+            call dgefsp(nbast,denmattemp(n2bst(isymtb)+1),denmats(nnbasx+1))
         end if
     end if
     call pelib_ifc_response(denmats,gbmattemp,ndim)
-    call dsptsi(nbas,gbmattemp,gbmat)
+    call dsptsi(nbast,gbmattemp,gbmat)
     if (.not. lsame) then
-        call dsptsi(nbas,gbmattemp(nnbasx+1),gbmat(n2bst(isymtb)+1))
+        call dsptsi(nbast,gbmattemp(nnbasx+1),gbmat(n2bst(isymtb)+1))
         if ((rsptyp .eq. 'B')) then
-            call dsptsi(nbas,gbmattemp(2*nnbasx+1),gbmat(n2bst(isymtb)+ &
+            call dsptsi(nbast,gbmattemp(2*nnbasx+1),gbmat(n2bst(isymtb)+ &
                         n2bst(isymtc)+1))
         else if ((rsptyp .eq. 'F').or.(rsptyp.eq.'G')) then
-            call dsptsi(nbas,gbmattemp(2*nnbasx+1),gbmat(n2bst(isymtb)+ &
+            call dsptsi(nbast,gbmattemp(2*nnbasx+1),gbmat(n2bst(isymtb)+ &
                         n2bst(isymtc)+1))
         end if
     else if (lsame) then
         if ((rsptyp .eq. 'G') .or. (rsptyp .eq. 'B')) then
-            call dsptsi(nbas,gbmattemp(nnbasx+1),gbmat(n2bst(isymtb)+1))
+            call dsptsi(nbast,gbmattemp(nnbasx+1),gbmat(n2bst(isymtb)+1))
         end if
     end if
     if ((locdeb) .or. (ipqmmm .gt. 14)) then
