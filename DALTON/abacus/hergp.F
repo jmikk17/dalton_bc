@@ -421,11 +421,13 @@ C
       RETURN
       END
 C  /* Deck molchr */
-      SUBROUTINE MOLCHR(ICHRG)
+      SUBROUTINE MOLCHR(ICHRG, total_point_charge, n_point_charge)
 C
 C     Calculates total charge of molecule, excluding point charges
 C
-#include "implicit.h"
+      implicit none
+      integer :: ichrg, n_point_charge
+      real*8  :: total_point_charge
 #include "maxaqn.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -435,18 +437,32 @@ C
 #include "symmet.h"
 #include "infinp.h"
 #include "inforb.h"
+
+      integer iatom, npc
+      real*8  chrgnu, chrgpc
 C
-C     Nuclear charge
+C     Total nuclear charge and total point charge
 C
       CHRGNU = 0.0D0
+      CHRGPC = 0.0D0
+      NPC    = 0
       DO IATOM = 1, NUCIND
-         IF (IZATOM(IATOM) .NE. -1234567890) ! do not include point charges
-     &      CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+         IF (IZATOM(IATOM) .EQ. -1234567890) THEN ! a point charge
+            CHRGPC = CHRGPC + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+            NPC    = NPC + 1
+         ELSE
+            CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+         END IF
       END DO
 C
 C     Subtract number of electrons
 C
       ICHRG = NINT(CHRGNU) - (2*NISHT + NACTEL)
+
+C     return total point charge and number of point charges
+      total_point_charge = CHRGPC
+      n_point_charge = NPC
+
       RETURN
       END
 C  /* Deck rmolchr */

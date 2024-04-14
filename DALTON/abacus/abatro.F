@@ -1605,7 +1605,7 @@ C
       CALL DZERO(AMAT,NROW*NCOL)
       IF (DODMAT) THEN
          MAXATM = 1
-         CALL MOLCHR(ICHRGE)
+         CALL MOLCHR(ICHRGE,CHRGPC,NPC)
       ELSE
          MAXATM = NUCIND
       END IF

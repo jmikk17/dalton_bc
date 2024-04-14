@@ -53,8 +53,9 @@ subroutine qfitlib_ifc_initialize
 #include "mxcent.h"
 #include "nuclei.h"
 #include "orgcom.h"
-  integer :: mol_charge
-  call molchr(mol_charge)
+  integer :: mol_charge, n_pc
+  real*8  :: sum_point_charges
+  call molchr(mol_charge,sum_point_charges,n_pc)
   call qenter('qfitlib_ifc_initialize')
   call qfit_initialize(cord(1:3,1:nucdep), charge(1:nucdep), mol_charge, RCM=cmxyz)
   call qexit('qfitlib_ifc_initialize')

@@ -2447,13 +2447,17 @@ C
 C     Energy
 C
          CALL HEADER('Molecular wave function and energy',-1)
-         CALL MOLCHR(ICHRGE)
+         CALL MOLCHR(ICHRGE,CHRGPC,NPC)
          WRITE (LUPRI,'(5X,A,I3,3A,4(/5X,A,I3))')
      &        'Spatial symmetry ',LSYM,' ( ',REP(LSYM-1),' )',
      &        'Spin multiplicity',ISPIN,
      &        '2 * M_S          ',MS2,
      &        'State number     ',ISTATE,
      &        'Total charge     ',ICHRGE
+         IF (NPC .GT. 0) THEN
+            WRITE(LUPRI,'(/T6,A,I0,A,1P,G17.10)')
+     &        '+ ',NPC,' point charges with a total charge of',CHRGPC
+         END IF
          WRITE (LUPRI,'(/T6,A,F17.10,A/T6,A,F17.8,A,2(/T6,A,F17.4,A))')
      &        'Total energy     ',       EMCSCF,' au (Hartrees)',
      &        '                 ',  XTEV*EMCSCF,' eV',
