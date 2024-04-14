@@ -7218,8 +7218,8 @@ C
 C
 C     Read in basis set information
 C
+         IPOS = INDEX(BKPLIN,'BAS')
          IF (ATOMBA) THEN
-            IPOS = INDEX(BKPLIN,'BAS')
             IF (IPOS .NE. 0) THEN
                IPOS2 = INDEX(BKPLIN(IPOS:),'=')
                IF (IPOS2 .EQ. 0 .OR. (IPOS2 .GT. 6)) THEN
@@ -7256,6 +7256,13 @@ C
                CALL QUIT( 'ATOMBASIS selected, but no '//
      &              'atomic basis set specified for one atom type')
             END IF
+         ELSE IF (IPOS .NE. 0) THEN
+            WRITE(LUPRI,'(/A/2X,A)')
+     &         'ERROR: BASIS selected in first line of .mol file, '//
+     &         'but "Basis=" used in atom entry:',
+     &         TMPLN
+            CALL QUIT('BASIS selected in first line of .mol file, '//
+     &         'but "Basis=" used in atom entry in .mol file.')
          END IF
 
 ! Blocks= not valid for library basis sets
