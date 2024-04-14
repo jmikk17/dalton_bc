@@ -5562,7 +5562,10 @@ C          to get here unless someone modifies SIRIUS incorrectly
      &      '      (ROHF open shell orbitals are not included.)'
          NUMRUN_LOCAL = NUMRUN_LOCAL - 1
       ELSE IF ( DOMP2 ) THEN
-         IF (MP2_SCS) THEN
+         IF (ADDSRI) THEN
+            IF (WFTYPE .EQ. ' ') WFTYPE='MP2-srDFT'
+            WRITE(IWUNIT,1050) 'MP2-srDFT'
+         ELSE IF (MP2_SCS) THEN
             IF (WFTYPE .EQ. ' ') WFTYPE='SCS-MP2'
             WRITE(IWUNIT,1050) 'SCS-MP2'
          ELSE IF (MP2_SOS) THEN
@@ -5632,7 +5635,9 @@ C          to get here unless someone modifies SIRIUS incorrectly
             NUMRUN_LOCAL = NUMRUN_LOCAL - 1
          END IF
          IF (DOMP2 .AND. NUMRUN_LOCAL .GT. 0) THEN
-            IF (MP2_SCS) THEN
+            IF (ADDSRI) THEN
+               WRITE(IWUNIT,1051) 'an MP2-srDFT calculation'
+            ELSE IF (MP2_SCS) THEN
                WRITE(IWUNIT,1051) 'an SCS-MP2 calculation'
             ELSE IF (MP2_SOS) THEN
                WRITE(IWUNIT,1051) 'an SOS-MP2 calculation'

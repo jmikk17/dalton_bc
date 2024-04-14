@@ -1,5 +1,6 @@
 C --- File: inftra.h ---
 C     Global information for the sirius/sir*tra.F 2-el integral transformation modules
+C     THRP : threshold for discarding integrals during AO to MO transformation
 C
       REAL*8  THRP
       INTEGER LSRTAO, IPRTRA, LBUF, NIBUF, NBITS, FCKTRA_TYPE

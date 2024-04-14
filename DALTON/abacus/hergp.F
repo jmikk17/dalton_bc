@@ -368,6 +368,7 @@ C
 !     prints coordinates in xyz format to io_unit
 !     optionally writes coordinates to file_name
 !     author: radovan bast <bast@kth.se>
+!     Revised to use standard atomic labels and not user specified labels
 
       implicit none
 
@@ -380,21 +381,27 @@ C
 #include "nuclei.h"
 #include "symmet.h"
 #include "codata.h"
+#include "asymb.h"
 
-      integer :: iatom
-      integer :: icent
-      integer :: isymop
-      integer :: mulcnt
-      integer :: i
+      integer :: iatom, icent, inuc, isymop, mulcnt, i
+      character*4 :: atom_symbol
 
       write (io_unit, '(i0/)') nucdep
       iatom = 0
       do icent = 1, nucind
+         inuc = izatom(icent)
+         if (inuc .eq. -1234567890) then ! point charge
+            atom_symbol = NAMN(icent)
+         else if (INUC .ge. 0 .and. INUC .le. 103) then
+            atom_symbol = ' '//asymb( inuc )
+         else
+            atom_symbol = NAMN(icent)
+         end if
          mulcnt = istbnu(icent)
          do isymop = 0, maxopr
             if (iand(isymop,mulcnt) .eq. 0) then
                iatom = iatom + 1
-               write (io_unit,'(a,f17.10,2f24.10)') namdep(iatom)(1:4),
+               write (io_unit,'(a,f19.10,2f24.10)') atom_symbol,
      &        (pt(iand(isymax(i,1),isymop))*coord(i,icent)*xtang,i=1,3)
             end if
          end do

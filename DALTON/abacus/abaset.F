@@ -15,22 +15,6 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-#ifdef OLD_LOG
-!===========================================================================
-!900105-hjaaj: flag(27) true se MAERKE, to do: transfer flags from Sirius
-!900216-hjaaj: call sir_intopen to open luintm, revised check if luintm ok.
-!900402-tuh:   H2MO defined according to info from LUSIFC
-!900418-hjaaj: NSETUP: call sirini
-!901203-hjaaj: SETSIR: FLAG now read from SIRIUS
-!910214-hjaaj: SETSIR: IPRSTAT = MAX(IPRIN4,IPRIN6), var altid = 1
-!              SETSIR: THRP = 1.0D-12, var = 1.0D-10
-!              SETSIR: print RAS parameters after reading LUSIFC
-!920113-hjaaj: SETSIR: IPRDNS=IPRCIX=...=IPRSIR=MAX(IPRIN4,IPRIN6)
-!920226-hjaaj: NSETUP: check if NCONF from SETCI same as NCONF from LUSIFC
-!921014-hjaaj: SETSIR: CBISOL added, get SOLVNT information
-!921216-hjaaj: SETSIR: read solvent information; check SUPSYM
-!===========================================================================
-#endif
 C  /* Deck setsir */
       SUBROUTINE SETSIR(MAKE_MOTWOINT,WORK,LWORK)
 C

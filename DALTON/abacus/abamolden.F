@@ -383,7 +383,7 @@ C           2 : save orbital energies in OREN in molde.h
          WRITE(LUMOLDEN_MOS,'(A/2A,2X,A,2X,A)')
      &      '[TITLE]',
      &      '*** Dalton interface to Molden, wave function type : ',
-     &         WFTYPE,MDATE,MTIME
+     &         trim(WFTYPE),MDATE,MTIME
 
          CALL MOLDEN_ATOMS('ATOM',LUMOLDEN_MOS) ! atomic coordinates are OK, also for Cartesian GTOs ;-)
 
