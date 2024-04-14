@@ -1783,11 +1783,11 @@ C
 C     ***** SET THRESHOLDS *****
 C     *********** THRP: THRESHOLD USED IN TRACD AND TRAAB
 C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
-      IF (THRP.LT.THRS) THEN
+      IF (THRP.LT.1.D-15) THEN
          WRITE(LUPRI,'(/A,1P,D10.2,A,D10.2)')
      &      ' INFO: Changed THRP threshold used in 2-el.'//
-     &      ' integral transformation from',THRP,' to',THRS
-         THRP=THRS
+     &      ' integral transformation from',THRP,' to',1.D-15
+         THRP=1.D-15
       END IF
 C
       IF (FCKTRA_TYPE .gt. 0) THEN
