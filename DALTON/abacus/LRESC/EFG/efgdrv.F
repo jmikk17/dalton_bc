@@ -109,9 +109,6 @@ c                 write(lupri,*)' ..Reading print level :', JJAPRT
             END IF
          END IF
  300  CONTINUE
-c jim-dbg ICHANG > 0 default variables change
-c jim-dbg ICHANG < 0 no changes in default variables
-
 
       RETURN
       END
@@ -136,6 +133,8 @@ C
       PARAMETER(D0 = 0.0D+0)
 
       JJAPRT    = 0
+      EFGC2 = 0.0D0
+      EFGC4 = 0.0D0
 
       ORBCON=.FALSE.
       PQPKINLRESC= .FALSE.
@@ -169,8 +168,8 @@ C Purpose:
 C     Main routine of LRESC module.
 C     This routine is call by ABACTL : abacus/abadrv.F
 C Author:
-C     Juan J. Aucar, 2021
-c#include "implicit.h"
+C     Juan J. Aucar, 2021. Revisited in 2024
+#include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
@@ -180,22 +179,18 @@ c#include "implicit.h"
 #include "nuclei.h"
 C
 C
-      LOGICAL PING
-      PING=.FALSE.
       CALL QENTER('LRSCDRV_EFG')
 
 C     Print information about LRESC metodology
       CALL HEADER_LREFG
 
-
 c c^-2
-            CALL AVELRSC_EFG('EFG ',WORK,LWORK) !Contains NR value
+      CALL AVELRSC_EFG('EFG ',WORK,LWORK) !Contains NR value
       IF (EFGC2FLAG) THEN
-            CALL AVELRSC_EFG('EFG2',WORK,LWORK)
+            IF (PQPKINLRESC) CALL AVELRSC_EFG('EFG2',WORK,LWORK)
             CALL LINEARLR_EFG('J-Dw',WORK,LWORK) 
             CALL LINEARLR_EFG('J-Mv',WORK,LWORK)
       END IF
-
 
 c c^-4
       IF (EFGC4FLAG) THEN
@@ -204,124 +199,29 @@ c            CALL LINEARLR_EFG('Mvc4',WORK,LWORK) ! From SS contribution
 c            CALL LINEARLR_EFG('Dwc4',WORK,LWORK) ! From SS contribution
 c           Triplet responses must be calculated at the end            
 c            CALL LINEARLR_EFG('JSO2',WORK,LWORK) !wrong results...
-C           Import generated PySCF matrix to AOPROPER
+
+C           Import generated PySCF matrix to AOPROPER for SO-S
             call import_matrix(3*NUCIND+3,"efg")
             CALL LINEARLR_EFG('SOSx',WORK,LWORK)
             CALL LINEARLR_EFG('SOSy',WORK,LWORK)
             CALL LINEARLR_EFG('SOSz',WORK,LWORK)
+
+c           SO-L correction
+            CALL QRLREFG('EFG-SO-SO',WORK,LWORK)
       END IF
 
-   
-C
-C NR value
-C
-      IF (PRTALL2) THEN
-            WRITE(LUPRI,*)
-            CALL HEADER('Non-relativistic Values (NR) [au]',-1)
 
-
-            WRITE(LUPRI,'(10X,A,19X,A)') 'Atom','NR'
-            WRITE(LUPRI,'(10X,A)') REPEAT('-',28)
-            IJ = 0
-            DO I=1,NUCIND
-                  WRITE (LUPRI,'(10X,A,9X,F15.5)')
-     &            NAMN(I),EFGC0(I)
-                  IJ = IJ + 1
-            END DO
-       ENDIF
-
-
-
-
-C First order corrections
-C
-      IF (PRTALL2.AND.EFGC2FLAG) THEN
-            WRITE(LUPRI,*)
-            CALL HEADER('First Order Corrections (1st Order) [au]',-1)
-            WRITE(LUPRI,*)'         Atom           Mv  '//
-     &              '            Dw              Lap            Total'
-            WRITE(LUPRI,'(10X,A)') REPEAT('-',67)
-            IJ = 0
-            DO I=1,NUCIND
-               relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
-               WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5,X,F15.5)')
-     &         NAMN(I),EFGC2(I,1),EFGC2(I,2),EFGC2(I,5),relall
-               IJ = IJ + 1
-            END DO
-
-
-            IF (PQPKINLRESC.AND.EFGC2FLAG) THEN
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,'(10X,A)') 'Extra info :' 
-                  WRITE(LUPRI,'(10X,A)') REPEAT('-',12)
-                  WRITE(LUPRI,'(10X,A)')' pqpkin should approach'//
-     &            '  Lap in the basis set limit'
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)'         Atom           pqp'//
-     &              '     +       kin    =        pqpkin'
-                  WRITE(LUPRI,'(10X,A)') REPEAT('-',53)
-                  IJ = 0
-                  DO I=1,NUCIND
-                        WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5)')
-     &               NAMN(I),EFGC2(I,3),EFGC2(I,4),EFGC2(I,3)+EFGC2(I,4)
-                        IJ = IJ + 1
-                  END DO
-            END IF
-
-      ENDIF
-C
-
-      IF (EFGC2FLAG) THEN
-         WRITE(LUPRI,*) 
-         WRITE(LUPRI,*) 
-         WRITE(LUPRI,*) 
-         WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
-         WRITE(LUPRI,'(27X,A)') 'Total EFG (zz component) [au]'
-         WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
-         WRITE(LUPRI,*) 
-       
-         WRITE(LUPRI,*) '         Atom           '//
-     &            'NR           1st Order          Total'
-
-         WRITE(LUPRI,'(10X,A)') REPEAT('-',52)
-         IJ = 0
-         DO I=1,NUCIND
-            relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
-            total=EFGC0(I)+relall
-            WRITE (LUPRI,'(10X,A,A,F15.5,X,F15.5,X,F15.5)')
-     &                   '@',NAMN(I),EFGC0(I),relall,total
-            IJ = IJ + 1
-         END DO
-         WRITE(LUPRI,*) 
-      END IF
-
-c TEST FOR c4 order
-
-      IF (EFGC4FLAG) THEN
-      WRITE(LUPRI,*) 
-      WRITE(LUPRI,'(27X,A)') REPEAT('=',41)
-      WRITE(LUPRI,'(27X,A)') 'C-4 order corrections (zz component) [au]'
-      WRITE(LUPRI,'(27X,A)') REPEAT('=',41)
-      WRITE(LUPRI,*) 
-       
-      WRITE(LUPRI,*) '         Atom           '//
-     &         'SO-S         MV , pqp        Dw , pqp'
-
-      WRITE(LUPRI,'(10X,A)') REPEAT('-',52)
-c      IJ = 0
+C     First and Second order Total Contributions
       DO I=1,NUCIND
-         WRITE (LUPRI,'(10X,A,A,F15.5,X,F15.5,X,F15.5)')
-     &       '@',NAMN(I),EFGC4(I,4)+EFGC4(I,5)+EFGC4(I,6)
-     &       ,EFGC4(I,2),EFGC4(I,3)
-c         IJ = IJ + 1
+         EFGC2(I,6)=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,3)+EFGC2(I,4)
+         EFGC4(I,7)=EFGC4(I,1)+EFGC4(I,4)+EFGC4(I,5)+EFGC4(I,6)
       END DO
-      WRITE(LUPRI,*) 
-      END IF
-c
+
+c     Print Results
+      call PRINT_LREFG
+
       CALL QEXIT('LRSCDRV_EFG')
       RETURN
       END
 c    ---------------------------------------
 c    ---------------------------------------
-

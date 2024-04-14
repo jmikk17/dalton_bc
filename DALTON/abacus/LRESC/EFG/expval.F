@@ -270,9 +270,9 @@ C
      &         LISTA1(IDIP), ' > = ',SNDPRP
             ENDIF
 
-			IF (KEY.EQ.'EFG ') THEN 
-				EFGC0(IDIP)=SNDPRP
-			ENDIF
+         IF (KEY.EQ.'EFG ') THEN
+            EFGC0(IDIP)=SNDPRP
+         ENDIF
 cx         ENDIF
 C
 C       =========================================================

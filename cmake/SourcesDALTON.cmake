@@ -165,6 +165,8 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F
     DALTON/abacus/LRESC/EFG/header.F
+    DALTON/abacus/LRESC/EFG/quadratic.F
+    DALTON/abacus/LRESC/EFG/print_results.F
     DALTON/abacus/LRESC/SHIELDING/expval.F
     DALTON/abacus/LRESC/SHIELDING/angkin.F
     DALTON/abacus/LRESC/SHIELDING/linearlr.F
@@ -183,7 +185,8 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EIGEN/dtred2.F
     DALTON/abacus/LRESC/EIGEN/eigsrt.F
     DALTON/abacus/LRESC/EIGEN/main.F
-    DALTON/abacus/LRESC/checks/warnings.F
+    DALTON/abacus/LRESC/filesmanagement/warnings.F
+    DALTON/abacus/LRESC/filesmanagement/files.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F

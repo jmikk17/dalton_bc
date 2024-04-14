@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2021.alpha (2020)
+    This is output from DALTON release Dalton2024.0-dev (2024)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -25,7 +25,7 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, J. J. Aucar, K. L. Bak, V. Bakken,
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
        R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
        S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
@@ -48,119 +48,123 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2021.alpha (2020), see http://daltonprogram.org
+       Release Dalton2024.0-dev (2024), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Juan J. Aucar,            Northeast National University,Argentina   (LRESC, Relativistic Effects on EFG)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Bruno N. Cabral Tenorio,  Technical Univ. of Denmark,   Denmark     (Lanczos-based CC methods)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            Technical Univ. of Denmark,   Denmark     (CC and RESPONS modules)
-  Janusz Cukras,            University of Warsaw,         Poland      (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding, TDA)
-  Rasmus Faber,             Technical Univ. of Denmark,   Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
-  Tobias Fahleson,          KTH Stockholm,                Sweden      (Damped cubic response)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (Doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Emmanuel Fromager,        Univ. Strasbourg,             France      (MC-srDFT)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Andre S. P. Gomes,        CNRS/Universite de Lille,     France      (Frozen density embedding)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Frederik Beyer Hansen,    University of Copenhagen,     Denmark     (Parallel AO-SOPPA)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
-  Hanne Heiberg,            University of Oslo,           Norway      (Geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Pi A. B. Haase,           University of Copenhagen,     Denmark     (Triplet AO-SOPPA)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Christoph Jacob           TU Braunschweig               Germany     (Frozen density embedding)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (Cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Erik Kjellgren,           Univ. of Southern Denmark,    Denmark     (MC-srDFT)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF, MC-srDFT)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Subsystems and CC3)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           KTH Stockholm,                Sweden      (Cubic response and complex frequency response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Aarhus University,            Denmark     (Polarizable embedding and polarizable density embedding)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Peter Reinholdt,          Univ. of Southern Denmark,    Denmark     (Polarizable embedding and polarizable density embedding)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Anna K. Schnack-Petersen, University of Copenhagen,     Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, polarizable embedding)
-  Casper Steinmann,         Aalborg University,           Denmark     (QFIT, polarizable embedding)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Julien Toulouse,          Sorbonne Univ.,               France      (MC-srDFT)
-  Olav Vahtras,             KTH Stockholm,                Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  Lucas Visscher,           Vrije Universiteit Amsterdam, Netherlands (Frozen density embedding)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on NMR Shieldings and EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Sep 13 12:30:51 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:19 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
- * Work memory size             :   128000000 =  976.56 megabytes.
+ * Work memory size             :   256000000 =  1.907 gigabytes.
 
  * Directories for basis set searches:
-   1) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/CORRIDA/INPUTs
-   2) /home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis
+   1) /home/juanjoaucar/Documentos/dalton_shielding_withPySCF/CORRIDA/scratch/HF-FH-dyall.cv2z-1E+05-C2/entradas
+   2) /home/juanjoaucar/Documentos/dalton_shielding_withPySCF/build-basic/basis
 
 
 Compilation information
@@ -168,42 +172,34 @@ Compilation information
 
  Who compiled             | juanjoaucar
  Host                     | juanjoaucar-Nitro-AN515-55
- System                   | Linux-5.8.0-55-generic
+ System                   | Linux-6.5.0-26-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/c
-                          | ompilers_and_libraries_2020.4.304/linux/mpi/intel6
-                          | 4/bin/mpif90
- Fortran compiler version | GNU Fortran (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
- C compiler               | /home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/c
-                          | ompilers_and_libraries_2020.4.304/linux/mpi/intel6
-                          | 4/bin/mpicc
- C compiler version       | gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
- C++ compiler             | /home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/c
-                          | ompilers_and_libraries_2020.4.304/linux/mpi/intel6
-                          | 4/bin/mpicxx
+ Fortran compiler         | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
+                          | pif90
+ Fortran compiler version | GNU Fortran (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+ C compiler               | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
+                          | picc
+ C compiler version       | gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+ C++ compiler             | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
+                          | picxx
  C++ compiler version     | unknown
- BLAS                     | /home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/c
-                          | ompilers_and_libraries_2020.4.304/linux/mkl/lib/in
-                          | tel64/libmkl_gf_lp64.so;/home/juanjoaucar/Archivos
-                          | _Juan/TEST-DIRAC/intel/compilers_and_libraries_202
-                          | 0.4.304/linux/mkl/lib/intel64/libmkl_sequential.so
-                          | ;/home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/
-                          | compilers_and_libraries_2020.4.304/linux/mkl/lib/i
+ BLAS                     | /home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/in
+                          | tel64/libmkl_gf_lp64.so;/home/juanjoaucar/intel/on
+                          | eapi/mkl/2023.2.0/lib/intel64/libmkl_sequential.so
+                          | ;/home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/i
                           | ntel64/libmkl_core.so;/usr/lib/x86_64-linux-gnu/li
-                          | bpthread.so;/usr/lib/x86_64-linux-gnu/libm.so
- LAPACK                   | /home/juanjoaucar/Archivos_Juan/TEST-DIRAC/intel/c
-                          | ompilers_and_libraries_2020.4.304/linux/mkl/lib/in
-                          | tel64/libmkl_lapack95_lp64.a;/home/juanjoaucar/Arc
-                          | hivos_Juan/TEST-DIRAC/intel/compilers_and_librarie
-                          | s_2020.4.304/linux/mkl/lib/intel64/libmkl_gf_lp64.
+                          | bpthread.a;/usr/lib/x86_64-linux-gnu/libm.so
+ LAPACK                   | /home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/in
+                          | tel64/libmkl_lapack95_lp64.a;/home/juanjoaucar/int
+                          | el/oneapi/mkl/2023.2.0/lib/intel64/libmkl_gf_lp64.
                           | so
  Static linking           | OFF
- Last Git revision        | 20b2752d5cb38a2b72b13d60e5bc268c2e4fd071
- Git branch               | lresc_efg
- Configuration time       | 2021-08-20 14:19:15.378626
+ Last Git revision        | 89bb84384f2418a840f6204e6a4db59fcb839a9f
+ Git branch               | lresc_withPySCF
+ Configuration time       | 2024-04-13 23:07:08.151798
 
  * MPI parallel run using 4 processes.
 
@@ -223,15 +219,16 @@ Compilation information
 .LR-EFG
 *LROPTE
 .PRTALL
+.C2
 **END OF DALTON INPUT
 
 
    Content of the .mol file
  ----------------------------
 
-ATOMBASIS		 #Es un comentario la línea
-			 #Es un comentario la línea
-		         #Es un comentario la línea
+ATOMBASIS                #Comment line
+                         #Comment line
+                         #Comment line
 Angstrom Atomtypes=2 Generators=0
 Charge= 9.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
 F      0.0000000000       0.0000000000     0.0000000000
@@ -256,8 +253,6 @@ FINISH
     Static molecular property section will be executed (ABACUS module)
  --------------------------------------------------------------------------------
 
-@ * Nuclear model: Point charge.
-
 
  Changes of defaults for *MOLBAS
  -------------------------------
@@ -265,6 +260,7 @@ FINISH
 
  Uncontracted basis forced, irrespective of basis input file.
 
+@ * Nuclear model: Point charge.
 
 
    ****************************************************************************
@@ -273,13 +269,13 @@ FINISH
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: 			 #Es un comentario la línea                                         
- 2: 		         #Es un comentario la línea                                  
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1:                          #Comment line
+ 2:                          #Comment line
+    --------------------------------------------------------------------------------
 
   Coordinates are entered in Angstrom and converted to atomic units.
-          - Conversion factor : 1 bohr = 0.52917721 A
+          - Conversion factor : 1 bohr = 0.52917721080 A
 
   Atomic type no.    1
   --------------------
@@ -288,7 +284,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "aug-cc-pVTZ-lresc" from the basis set library.
   Basis set file used for this atomic type with Z =   9 :
-     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis/aug-cc-pVTZ-lresc"
+     "/home/juanjoaucar/Documentos/dalton_shielding_withPySCF/build-basic/basis/aug-cc-pVTZ-lresc"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: aug-cc-pVTZ-lresc                                                               
@@ -300,7 +296,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "aug-cc-pVTZ-lresc" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juanjoaucar/Archivos_Juan/DALTON-proyects/dalton-lresc/build/basis/aug-cc-pVTZ-lresc"
+     "/home/juanjoaucar/Documentos/dalton_shielding_withPySCF/build-basic/basis/aug-cc-pVTZ-lresc"
 
   Info about the basis set file: your basis has no documentation.
   Basis set: aug-cc-pVTZ-lresc                                                               
@@ -416,8 +412,6 @@ FINISH
 
  Calculation of one-electron Hamiltonian integrals.
 
- Calculate two-electron spin-orbit integrals
-
  The following one-electron property integrals are calculated as requested:
           - overlap integrals
           - dipole length integrals
@@ -426,6 +420,7 @@ FINISH
           - mass velocity integrals
           - 1-electron Darwin integrals
           - spatial spin-orbit integrals
+          but no two-electron spin-orbit integrals
           - Electric field at the nuclei
           - Cartesien electric field gradient integrals
           - Gradient of the zz EFG component at the nuclei
@@ -453,8 +448,9 @@ FINISH
       z      1.73268988         4.40405812        14.69035660
 
 
-  Total CPU  time used in HERMIT:   0.19 seconds
-  Total wall time used in HERMIT:   0.19 seconds
+  Time used in GABGEN     is       0.12 seconds
+  Total CPU  time used in HERMIT:   0.54 seconds
+  Total wall time used in HERMIT:   0.54 seconds
 
 
                         .----------------------------------.
@@ -487,17 +483,19 @@ FINISH
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:51 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:19 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
  Title lines from ".mol" input file:
-     			 #Es un comentario la línea                                         
-     		         #Es un comentario la línea                                  
+                              #Comment line
+                              #Comment line
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+
+@    Time-dependent Hartree-Fock calculation (random phase approximation).
  Fock matrices are calculated directly and in parallel without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
@@ -545,56 +543,56 @@ FINISH
 
  Iter      Total energy        Error norm    Delta(E)  DIIS dim.
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  1.53D-01  1.53D-01
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    1    T  3.76D-01  3.78D-01
 @  1    -99.9489276715        3.09491D+02   -9.99D+01    1
       Virial theorem: -V/T =      1.993953
 @    MULPOP   F      -0.56; H       0.56; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  1.56D-01  1.56D-01
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    2    F  3.77D-01  3.77D-01
 @  2    -100.058416262        3.71539D-01   -1.09D-01    2
       Virial theorem: -V/T =      2.004191
 @    MULPOP   F      -0.28; H       0.28; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  1.46D-01  1.46D-01
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    3    T  3.79D-01  3.79D-01
 @  3    -100.063463927        1.37564D-01   -5.05D-03    3
       Virial theorem: -V/T =      1.998447
 @    MULPOP   F      -0.28; H       0.28; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  1.52D-01  1.52D-01
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -8    4    T  3.90D-01  3.90D-01
 @  4    -100.064194499        4.83640D-02   -7.31D-04    4
       Virial theorem: -V/T =      2.001166
 @    MULPOP   F      -0.27; H       0.27; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  1.62D-01  1.62D-01
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    5    F  4.11D-01  4.12D-01
 @  5    -100.064324046        8.48605D-03   -1.30D-04    5
       Virial theorem: -V/T =      2.000455
 @    MULPOP   F      -0.27; H       0.27; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  1.58D-01  1.59D-01
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    6    T  4.00D-01  4.01D-01
 @  6    -100.064333404        1.88009D-03   -9.36D-06    6
       Virial theorem: -V/T =      2.000502
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  1.48D-01  1.48D-01
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    7    T  3.78D-01  3.80D-01
 @  7    -100.064333863        3.29001D-04   -4.59D-07    7
       Virial theorem: -V/T =      2.000506
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  1.52D-01  1.53D-01
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    8    T  3.96D-01  3.97D-01
 @  8    -100.064333875        5.23684D-05   -1.22D-08    8
       Virial theorem: -V/T =      2.000508
 @    MULPOP   F      -0.28; H       0.28; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  1.53D-01  1.54D-01
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -12    9    T  3.85D-01  3.89D-01
 @  9    -100.064333876        5.40012D-06   -2.42D-10    8
 
 @ *** DIIS converged in   9 iterations !
 @     Converged SCF energy, gradient:   -100.064333875595    5.40D-06
-    - total time used in SIRFCK :              0.00 seconds
+    - total time used in SIRFCK :              3.49 seconds
 
 
  *** SCF orbital energy analysis ***
@@ -622,36 +620,27 @@ FINISH
 --------------------------------------------------------------------------------
 
 
-     .---------------------------------------------------------------.
-     | HF-SCF KT IPs [a.u. & eV], pole strengths, and Dyson orbitals |
-     `---------------------------------------------------------------'
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
 
-     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles
+
+     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles with pole strength 1
 
    ============  ============  ============  ============  ============
       26.297217      1.602295      0.768729      0.650640      0.650640
      715.583687     43.600654     20.918187     17.704804     17.704804
-   ------------  ------------  ------------  ------------  ------------
-       1.000000      1.000000      1.000000      1.000000      1.000000
    ============  ============  ============  ============  ============
-       1.000000     -0.000000     -0.000000     -0.000000      0.000000
-      -0.000000     -1.000000      0.000001      0.000000     -0.000000
-      -0.000000     -0.000001     -1.000000      0.000000     -0.000000
-      -0.000000     -0.000000     -0.000000     -0.792546      0.609809
-       0.000000     -0.000000     -0.000000     -0.609812     -0.792549
-   ============  ============  ============  ============  ============
-  
 
-@ Summary of HF-SCF KT ionization potentials [eV] and pole strengths:
+@ Summary of HF-SCF KT ionization potentials [eV]:
 
 @ Symmetry 1 (A  ) :   715.584      43.601      20.918      17.705      17.705
-@ Pole strengths   :     1.000       1.000       1.000       1.000       1.000
 
   === End of HF-SCF KT output ===
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       1.448       1.447
+ CPU and wall time for SCF :       3.706       3.716
 
 
                        .-----------------------------------.
@@ -667,13 +656,13 @@ FINISH
 @    Nuclear repulsion:             5.194235900534
 @    Electronic energy:          -105.258569776129
 
-@    Final gradient norm:           0.000005400118
+@    Final gradient norm:           0.000005400119
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:23 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
-File label for MO orbitals:  13Sep21   FOCKDIIS
+File label for MO orbitals:  13Apr24   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -799,11 +788,11 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
  108 H   :3d0    0.0146
  113 H   :3d0   -0.0772
 
-  Total CPU  time used in SIRIUS :   1.49 seconds
-  Total wall time used in SIRIUS :   1.49 seconds
+  Total CPU  time used in SIRIUS :   3.86 seconds
+  Total wall time used in SIRIUS :   3.87 seconds
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:23 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -828,7 +817,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
       Two-electron integrals will be calculated in parallel
       Natural orbital connection is used
       for perturbation dependent basis sets.
-      Linear Response Elimination of Small Component (LRESC) applied to EFG. Observations :   
+      Linear Response Elimination of Small Component (LRESC) applied to EFG.  Observations :   
           1) Uncontracted Basis set should be used 
           2) First order LRESC Corrections
 
@@ -843,7 +832,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:23 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -853,7 +842,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:52 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:23 2024
      Host name              : juanjoaucar-Nitro-AN515-55              
 
 
@@ -949,7 +938,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
  ****************************************************************************************
 
 
-    First order relativistic corrections to the zz component of the electronic EFG.
+    Relativistic corrections to the zz component of the electronic EFG.
 
     -  Original LRESC papers at :
                                   J. Chem. Phys. 118, 2 (2003), doi: 10.1063/1.1525808
@@ -958,6 +947,7 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
 
     -  Corrections calculated in all symmetry independent centers
     -  To identify LRESC corrections see related papers
+  Time used in AVELRSC    is       0.14 seconds
 
 
 
@@ -974,10 +964,10 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
                      First Order Corrections (1st Order) [au]
                      ----------------------------------------
 
-          Atom           Mv              Dw              Lap            Total
-          -------------------------------------------------------------------
-          F           0.01565        -0.00174        -0.00444         0.00947
-          H          -0.00019        -0.00027         0.00006        -0.00040
+          Atom           Mv              Dw             pqp             kin             Total
+          -----------------------------------------------------------------------------------
+          F           0.01565        -0.00174        -0.00179        -0.00319         0.00893
+          H          -0.00019        -0.00027        -0.00098         0.00103        -0.00041
 
 
 
@@ -985,10 +975,10 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
                            Total EFG (zz component) [au]
                            =============================
 
-          Atom           NR           1st Order          Total
-          ----------------------------------------------------
-          @F           2.41357         0.00947         2.42304
-          @H          -2.91592        -0.00040        -2.91632
+           Atom           NR           1st Order      2nd Order          Total
+          --------------------------------------------------------------------
+          @F           2.41357         0.00893         0.00000         2.42250
+          @H          -2.91592        -0.00041         0.00000        -2.91632
 
 
 
@@ -996,20 +986,20 @@ File label for MO orbitals:  13Sep21   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:06     100 %
+ TOTAL      00:00:15     100 %
 
 
-  Total CPU  time used in ABACUS:   5.55 seconds
-  Total wall time used in ABACUS:   5.55 seconds
+  Total CPU  time used in ABACUS:  14.85 seconds
+  Total wall time used in ABACUS:  14.97 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   7.26 seconds
-  Total wall time used in DALTON:   7.26 seconds
+  Total CPU  time used in DALTON:  19.28 seconds
+  Total wall time used in DALTON:  19.41 seconds
 
  
-     Date and time (Linux)  : Mon Sep 13 12:30:58 2021
+     Date and time (Linux)  : Sat Apr 13 23:12:38 2024
      Host name              : juanjoaucar-Nitro-AN515-55              

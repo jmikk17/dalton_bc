@@ -18,20 +18,20 @@
 !
 C
 
-C     /* Deck header_lrshield */
+C     /* Deck header_lrefg */
       SUBROUTINE HEADER_LREFG
 C Purpose:
 C     Print information about LRESC-EFG module              
 C Author:
 C     J. J. Aucar 2024 (moved from workplace)
 c#include "implicit.h"
-#include "dummy.h"
-#include "mxcent.h"
+c#include "dummy.h"
+c#include "mxcent.h"
 #include "priunit.h"
-#include "wrkrsp.h"
+c#include "wrkrsp.h"
 #include "lrescinf.h"
-#include "inforb.h"
-#include "nuclei.h"
+c#include "inforb.h"
+c#include "nuclei.h"
 
       CALL QENTER('HEADER_LREFG')
 C
@@ -41,8 +41,8 @@ C ---- Default
       CALL TITLER('EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS','*',124)
 
       WRITE(lupri,*)
-      WRITE(lupri,*)'   First order relativistic '// 
-     & 'corrections to the zz component of the electronic EFG.'
+      WRITE(lupri,*)'   Relativistic corrections to the'// 
+     & ' zz component of the electronic EFG.'
       WRITE(LUPRI,*)
        WRITE(LUPRI,*)'   -  Original LRESC papers at :'
        WRITE(LUPRI,'(33X,A)')' J. Chem. Phys.'//
@@ -56,17 +56,14 @@ C ---- Default
       WRITE(LUPRI,*)
       WRITE(LUPRI,*)'   -  Corrections calculated in all symmetry '// 
      & 'independent centers'
-
       IF (PRTALL2) THEN 
       WRITE(LUPRI,*)'   -  To identify LRESC corrections '// 
      & 'see related papers'
       END IF
-        
       IF (.NOT. PRTALL2) THEN 
          WRITE(LUPRI,'(14X,A)')'*  For LRESC corrections, add '//
      &   '.PRTALL in your input file under *LROPTE'
       ENDIF
-
 
       CALL QEXIT('HEADER_LREFG')
       RETURN

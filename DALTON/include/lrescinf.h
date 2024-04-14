@@ -10,6 +10,7 @@
       REAL*8 calfa, CPNR, CDNR, CFCZK, CFCDE, CSDK, CSDD, CSDBS, CPSOK,
      &        CFCBS, COZK, CDIAM, CDIAD, CDIAK, CSDAV, CANGP,CFCAV, CPSOOZMV, 
      &        CPSOOZDW, CEFGDW, CEFGMV, CEFGpqp, CEFGkin, C4EFGSO, C4EFGMvpqp,
+     &        C4EFGSOL,
      &        CEFGlap, C4EFGDwpqp, CFCAV0, CFCAV1, CFCAV2, CFCAV3
 
       PARAMETER (calfa=1.0/137.036, CFCZK=-3.0/8.0, CFCDE=0.25D0,
@@ -23,6 +24,7 @@
      &            CPSOOZDW=-0.5D0, COZFCSO=-0.25D0, COZSDSO=-0.25D0, 
      &            CEFGDW=1.0D0, CEFGMV=1.0D0, CEFGpqp=0.25D0, 
      &            CEFGkin=-0.5D0, CEFGlap=1.0/8.0, C4EFGSO=0.25D0,
+     &            C4EFGSOL=1.0D0,
      &            C4EFGMvpqp=0.25D0, C4EFGDwpqp=0.25D0)
 
       INTEGER JIMPRT, LRATOM, NLRATOMS, JJAPRT
@@ -50,8 +52,8 @@
      &                  SGP1S(3,3), SGP1T(3,3), SGP3S(3,3),SGP3T(3,3),
      &                  QRPSOOZMV(3,3), QRPSOOZDW(3,3),
      &                  QROZFCSO(3,3), QROZSDSO(3,3),
-     &                  LRGAUG(3),EFGC0(100),EFGC2(100,5),LRNUCEXP,
-     &                  EFGC4(100,6)
+     &                  LRGAUG(3),EFGC0(100),EFGC2(100,6),LRNUCEXP,
+     &                  EFGC4(100,7)
 
       COMMON /LRESCINF/ SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
      &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, JIMPRT, LRATOM,
