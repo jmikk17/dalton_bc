@@ -301,15 +301,19 @@ C
 C
 C *** FINAL RESULTS
 C
-      CALL MOLCHR(ICHRG)
+      CALL MOLCHR(ICHRG, total_point_charge, NPC)
 C     ... get total molecular charge
       CALL TITLER('--- Final results from SIRIUS ---',' ',200)
       WRITE (LUPRI,5000) ISPIN,LSYM,REP(LSYM-1),GROUP,ICHRG
+      IF (NPC .gt. 0) THEN
+         WRITE (LUPRI,'(/A,I0,A,T31,1P,G18.8)')
+     &        '@    Sum of ',NPC,' point charges:',total_point_charge
+      END IF
       IF (NFIELD .GT. 0) THEN
          WRITE (LUPRI,'(/A/A/A)')
-     *      ' The molecule is placed in a static field.',
-     *      ' Field strength (a.u.)          Field operator',
-     *      ' ---------------------          --------------'
+     &      '@  The molecule is placed in a static field.',
+     &      '@  Field strength (a.u.)          Field operator',
+     &      '@  ---------------------          --------------'
 csonia 04/10/95: LUCME output
          IF (LUCME.GT.0) WRITE (LUCME,'(/A/A/A)')
      &         ' The molecule is placed in a static field.',
@@ -317,8 +321,8 @@ csonia 04/10/95: LUCME output
      &         ' ---------------------          --------------'
          FF_DIPNUC = 0.0D0
          DO IFIELD = 1,NFIELD
-            WRITE (LUPRI,'(1P,G18.8,18X,A8)')
-     *         EFIELD(IFIELD),LFIELD(IFIELD)
+            WRITE (LUPRI,'(A,1P,G18.8,18X,A8)')
+     *         '@ ',EFIELD(IFIELD),LFIELD(IFIELD)
             IF (LUCME.GT.0) WRITE (LUCME,'(1P,G18.8,18X,A8)')
      &         EFIELD(IFIELD), LFIELD(IFIELD)
 !           Energy contribution is -\mu Efield

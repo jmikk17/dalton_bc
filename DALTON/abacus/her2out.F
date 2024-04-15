@@ -83,8 +83,8 @@ C     *******************************************************
 C     ***** Initialization when subroutine first called *****
 C     *******************************************************
 C
-      IF (FIRST) CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,-1,NBITS,0,
-     &                       IPRINT)
+      IF (FIRST) CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,-1,
+     &                       NBITS,IPRINT)
 C
       ISOFF  = 0
       NBUFCL = 0
@@ -123,7 +123,7 @@ C
                        IF (ICOUNT.EQ.LBUF) THEN
                           NBUFCL = NBUFCL + 1
                           CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,0,
-     &                                NBITS,0,IPRINT)
+     &                                NBITS,IPRINT)
                        END IF
                      END IF
   210             CONTINUE
@@ -152,7 +152,7 @@ C
                        IF (ICOUNT.EQ.LBUF) THEN
                           NBUFCL = NBUFCL + 1
                           CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,0,
-     &                                NBITS,0,IPRINT)
+     &                                NBITS,IPRINT)
                        END IF
                      END IF
   215             CONTINUE
@@ -204,7 +204,7 @@ C
                      END IF
                      IF (ICOUNT.EQ.LBUF) THEN
                         CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,0,
-     &                              NBITS,0,IPRINT)
+     &                              NBITS,IPRINT)
                         NBUFCL = NBUFCL + 1
                      END IF
                   END IF
@@ -223,7 +223,7 @@ C
       IF (LAST) THEN
          WRITE (LUPRI,'(/A,1P,D10.2)') ' Threshold for neglecting '//
      &      'two-electron integrals:',THRESH
-         CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,1,NBITS,0,IPRINT)
+         CALL UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,1,NBITS,IPRINT)
       END IF
       IF (SRINTS) THEN
          LUINTA_SR = LUINTA ! to signal if closed or not
@@ -232,7 +232,7 @@ C
       RETURN
       END   ! subroutine UN2OUT
 C  /* Deck un2wrt */
-      SUBROUTINE UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,ITYPE,NBITS,INDA,
+      SUBROUTINE UN2WRT(BUF,IBUF4,LBUF,NIBUF,ICOUNT,ITYPE,NBITS,
      &                  IPRINT)
 C
 C     Write undifferentiated 2-electron integrals to disk file AOTWOINT
@@ -240,13 +240,12 @@ C
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
-#include "dummy.h"
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
 #include "ibtpar.h"
       REAL*8    BUF(LBUF)
-      INTEGER*4 IBUF4(LBUF*NIBUF), ICOUNT4, INDA4
+      INTEGER*4 IBUF4(LBUF*NIBUF), ICOUNT4
 #include "twosta.h"
 #include "inftap.h"
 #include "nuclei.h"
@@ -264,10 +263,6 @@ C
          NBUF   = 0
       ELSE IF (ITYPE .EQ. 0) THEN ! write next record
          ICOUNT4 = ICOUNT
-         IF (INDA .NE. 0) THEN
-            INDA4 = INDA
-            WRITE (LUINTA) (INDA4, I=1,8) ! so record length .eq. 32 for better label reading
-         END IF
          WRITE (LUINTA) BUF,IBUF4,ICOUNT4
          NBUF = NBUF + 1
 C
@@ -297,15 +292,9 @@ C
          ICOUNT = 0
       ELSE ! finished
          ICOUNT4 = ICOUNT
-         IF (INDA .NE. 0) THEN
-            INDA4 = -INDA
-            WRITE (LUINTA) (INDA4, I=1,8) ! so record length .eq. 32 for better label reading
-            WRITE (LUINTA) BUF,IBUF4,ICOUNT4
-         ELSE
-            IF (ICOUNT .GT. 0) WRITE (LUINTA) BUF,IBUF4,ICOUNT4
-            ICOUNT4 = -1
-            WRITE (LUINTA) BUF,IBUF4,ICOUNT4
-         END IF
+         IF (ICOUNT .GT. 0) WRITE (LUINTA) BUF,IBUF4,ICOUNT4
+         ICOUNT4 = -1
+         WRITE (LUINTA) BUF,IBUF4,ICOUNT4
          CALL GPCLOSE(LUINTA,'KEEP')
 C
          IF (IPRINT .GE. 6) THEN
@@ -337,7 +326,6 @@ C
 C
 C        Statistics
 C
-         IF (INDA .EQ. 0) THEN
 C           N2WRIT = LBUF*NBUF + ICOUNT
 C           hjaaj: do all intermediates with integer*8 N2WRIT
 C                  to avoid integer*4 overflows for big basis sets
@@ -345,11 +333,7 @@ C                  to avoid integer*4 overflows for big basis sets
             N2WRIT = N2WRIT*NBUF
             N2WRIT = N2WRIT + ICOUNT
 C
-            IF (ICOUNT.GT.0 .AND. INDA.NE.0) THEN
-               NBUF = NBUF + 2
-            ELSE
-               NBUF = NBUF + 1
-            END IF
+            NBUF = NBUF + 1
 Chjaaj:     FBYTES is calculed in four lines, to avoid integer overflows.
             LWORD = 4
             FBYTES = LBUF*2 + NIBUF*LBUF + 1
@@ -373,7 +357,6 @@ Chjaaj:     FBYTES is calculed in four lines, to avoid integer overflows.
      &         ' HERMIT - Megabytes written:                       ',
      &         FBYTES
             END IF
-         END IF
       END IF
       RETURN
       END
@@ -1526,6 +1509,12 @@ C
       END
 C  /* Deck un2wrn */
       SUBROUTINE UN2WRN(BUF,IBUF4,ICOUNT,ITYPE,INDA,IPRINT)
+C
+C Used for 
+C 1)  Write out blocks of undifferentiated symmetry integrals, eliminating duplicates
+C     Used when "ADISTR" distributions (all gabcd for fixed shell a, a = INDA)
+C 2)  Cholesky integrals (INDA .eq. 1 always)
+C
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
@@ -1556,7 +1545,8 @@ c        CALL NEWLAB('BASTWOEL',LUINTA,LUPRI)
 c        ICOUNT = 0
 c        NBUFX(0) = 0
       ELSE IF (ITYPE .EQ. 0) THEN
-         IF (INDA .NE. 0) WRITE (LUINTR) INDA
+         IF (INDA .EQ. 0) CALL QUIT('ERROR: INDA = 0 in UN2WRN')
+         WRITE (LUINTR) INDA
          WRITE (LUAORC(0),REC=NBUFX(0)) BUF,IBUF4,ICOUNT4
 C
          IF (IPRINT .GE. 6) THEN
@@ -1584,12 +1574,9 @@ C
          END IF
          ICOUNT = 0
       ELSE
-         IF (INDA .NE. 0) THEN
-            WRITE (LUINTR) INDA
-            WRITE (LUAORC(0),REC=NBUFX(0)) BUF,IBUF4,ICOUNT4
-         ELSE
-            CALL QUIT('Error in UN2WRN')
-         END IF
+         IF (INDA .EQ. 0) CALL QUIT('ERROR: INDA = 0 in UN2WRN')
+         WRITE (LUINTR) INDA
+         WRITE (LUAORC(0),REC=NBUFX(0)) BUF,IBUF4,ICOUNT4
 C
          IF (IPRINT .GE. 6) THEN
             IF (ICOUNT .GT. 0) THEN
@@ -1620,6 +1607,8 @@ C
 C
 C        Statistics
 C
+#ifdef DO_NOT_INCLUDE
+ hjaaj: INDA is never 0 here; code is copy from UN2WRT. Should be modified and controlled with IPRINT
          IF (INDA .EQ. 0) THEN
 C           N2WRIT = LBUF*NBUFX(0) + ICOUNT
 C           hjaaj: do all intermediates with integer*8 N2WRIT
@@ -1628,11 +1617,6 @@ C                  to avoid integer*4 overflows
             N2WRIT = N2WRIT*NBUFX(0)
             N2WRIT = N2WRIT + ICOUNT
 C
-            IF (ICOUNT.GT.0 .AND. INDA.NE.0) THEN
-               NBUFX(0) = NBUFX(0) + 2
-            ELSE
-               NBUFX(0) = NBUFX(0) + 1
-            END IF
             IF (IRAT .EQ. 1) LWORD = 8
             IF (IRAT .EQ. 2) LWORD = 4
             FMBYTES = LWORD*(LBUF*IRAT + NIBUF*LBUF + 1)
@@ -1646,6 +1630,7 @@ C
      &         ' (',PERCNT,'%)',
      &         ' Megabytes written:                       ',FMBYTES
          END IF
+#endif
       END IF
       RETURN
       END

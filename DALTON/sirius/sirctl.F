@@ -1045,7 +1045,7 @@ C
 #include "implicit.h"
 #include "inftra.h"
       DATA FCKTRA_TYPE/-1/, NEWTRA /.FALSE./
-      DATA THRP /1.D-15/
+      DATA THRP /-1.0D0/
       END
 C  /* Deck sbddim */
       BLOCK DATA SBDDIM

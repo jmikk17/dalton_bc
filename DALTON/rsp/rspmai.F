@@ -68,12 +68,15 @@ C
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0)
 C
 C Used from common blocks:
+C gnrinf.h : PARCAL
 C inftra.h : USEDRC
 C infinp.h : ?
 C dftcom.h : SRDFT_SPINDNS
+C pcmlog.h : PCM
 C
 #include "maxorb.h"
 #include "priunit.h"
+#include "gnrinf.h"
 #include "pgroup.h"
 #include "inforb.h"
 #include "infpri.h"
@@ -95,7 +98,6 @@ C
 #include "inftmo.h"
 #include "inftpa.h"
 #include "infsop.h"
-#include "gnrinf.h"
 #include "infinp.h"
 #include "absorp.h"
 #include "esg.h"
@@ -107,6 +109,7 @@ C
 #include "abslrs.h"
 #include "infvar.h"
 #include "dftcom.h"
+#include "pcmlog.h"
 C
       LOGICAL SAVLR, DORESP, FLAGSV, EX, NEED_PVX
 C
@@ -152,6 +155,10 @@ C
          CALL MP2SET
          CALL PHADR1(WRK,1) ! to calculate NPHTOT(1) needed in RSPACT
          CALL SETSOPPA
+         IF (PCM .AND. PARCAL) THEN
+         ! test pcm_soppa_excit gives wrong excitation energies if run in parallel /1-Feb-2024 hjaaj
+            CALL PARQUIT('SOPPA with PCM')
+         END IF
       END IF
 C
 C     set *ACT* variables in INFRSP (different settings for SOPPA and

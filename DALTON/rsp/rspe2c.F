@@ -772,6 +772,8 @@ C
 #include "infpri.h"
 #include "infrsp.h"
 #include "wrkrsp.h"
+#include "dftcom.h"
+
       IF (IPRRSP.GT.90) THEN
          DO 3000 ISIM = 1,NSIM
             WRITE(LUPRI,*) ISIM,
@@ -853,6 +855,12 @@ C
      &         '. ONE-INDEX TRANSFORMED FOCK VALENCE MATRIX'
                CALL OUTPUT(FVONE(1,1,ISIM),1,NORBT,1,NORBT,NORBT,NORBT
      &                     ,-1,LUPRI)
+             IF (SRDFT_SPINDNS) THEN
+               WRITE(LUPRI,*) ISIM,
+     &         '. ONE-INDEX TRANSFORMED FOCK spin VALENCE MATRIX'
+               CALL OUTPUT(FVONE(1,1,nsim+ISIM),1,NORBT,1,NORBT,
+     &                     NORBT,NORBT,-1,LUPRI)
+             END IF
             END IF
  2000    CONTINUE
          WRITE(LUPRI,*)' CORE FOCK MATRIX '

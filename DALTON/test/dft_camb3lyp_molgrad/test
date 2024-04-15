@@ -25,7 +25,7 @@ for term in (
         'DFT contribution to gradient',
         'Two-electron integral gradient',
         'Potential energy (NN + NE + EE) gradient',
-        'Molecular gradient',
+        'Molecular gradient (au)',
 ):
     f.add(from_string=term, abs_tolerance=1.0e-3, num_lines=5)
 

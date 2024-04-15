@@ -1955,6 +1955,9 @@ C
 #include "inforb.h"
 #include "incore.h"
 
+! dftcom.h: DFTRUN, SRDFTRUN, DODFTD
+#include "dftcom.h"
+
 #include "trkoor.h"
       REAL*8 ERGMOL, GRDMOL(NCOOR), HESMOL(NCOOR,NCOOR) ! automatic arrays
 C
@@ -2382,6 +2385,9 @@ C
             CALL HEADER('Molecular gradient',-1)
             CALL ADDGRD(GRADFS)
             CALL ADDGRD(GRADKE)
+            IF (DFTRUN .OR. SRDFTRUN) CALL ADDGRD(GRADFT)
+CAMT Add empirical DFT-D gradient...
+            IF (DODFTD) CALL ADDGRD(GRADFTD)
             IF (SOLVNT .OR. PCM) THEN
                CALL ADDGRD(GSOLTT)
                CALL ADDGRD(GSOLNN)

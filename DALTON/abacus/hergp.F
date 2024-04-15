@@ -368,6 +368,7 @@ C
 !     prints coordinates in xyz format to io_unit
 !     optionally writes coordinates to file_name
 !     author: radovan bast <bast@kth.se>
+!     Revised to use standard atomic labels and not user specified labels
 
       implicit none
 
@@ -380,21 +381,27 @@ C
 #include "nuclei.h"
 #include "symmet.h"
 #include "codata.h"
+#include "asymb.h"
 
-      integer :: iatom
-      integer :: icent
-      integer :: isymop
-      integer :: mulcnt
-      integer :: i
+      integer :: iatom, icent, inuc, isymop, mulcnt, i
+      character*4 :: atom_symbol
 
       write (io_unit, '(i0/)') nucdep
       iatom = 0
       do icent = 1, nucind
+         inuc = izatom(icent)
+         if (inuc .eq. -1234567890) then ! point charge
+            atom_symbol = NAMN(icent)
+         else if (INUC .ge. 0 .and. INUC .le. 103) then
+            atom_symbol = ' '//asymb( inuc )
+         else
+            atom_symbol = NAMN(icent)
+         end if
          mulcnt = istbnu(icent)
          do isymop = 0, maxopr
             if (iand(isymop,mulcnt) .eq. 0) then
                iatom = iatom + 1
-               write (io_unit,'(a,f17.10,2f24.10)') namdep(iatom)(1:4),
+               write (io_unit,'(a,f19.10,2f24.10)') atom_symbol,
      &        (pt(iand(isymax(i,1),isymop))*coord(i,icent)*xtang,i=1,3)
             end if
          end do
@@ -421,32 +428,48 @@ C
       RETURN
       END
 C  /* Deck molchr */
-      SUBROUTINE MOLCHR(ICHRG)
+      SUBROUTINE MOLCHR(ICHRG, total_point_charge, n_point_charge)
 C
-C     Calculates total charge of molecule
+C     Calculates total charge of molecule, excluding point charges
 C
-#include "implicit.h"
+      implicit none
+      integer :: ichrg, n_point_charge
+      real*8  :: total_point_charge
 #include "maxaqn.h"
 #include "mxcent.h"
 #include "maxorb.h"
-      PARAMETER (D0 = 0.0D00)
 C
 #include "abainf.h"
 #include "nuclei.h"
 #include "symmet.h"
 #include "infinp.h"
 #include "inforb.h"
+
+      integer iatom, npc
+      real*8  chrgnu, chrgpc
 C
-C     Nuclear charge
+C     Total nuclear charge and total point charge
 C
-      CHRGNU = D0
-      DO 100 IATOM = 1, NUCIND
-         CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
-  100 CONTINUE
+      CHRGNU = 0.0D0
+      CHRGPC = 0.0D0
+      NPC    = 0
+      DO IATOM = 1, NUCIND
+         IF (IZATOM(IATOM) .EQ. -1234567890) THEN ! a point charge
+            CHRGPC = CHRGPC + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+            NPC    = NPC + 1
+         ELSE
+            CHRGNU = CHRGNU + FMULT(ISTBNU(IATOM))*CHARGE(IATOM)
+         END IF
+      END DO
 C
 C     Subtract number of electrons
 C
       ICHRG = NINT(CHRGNU) - (2*NISHT + NACTEL)
+
+C     return total point charge and number of point charges
+      total_point_charge = CHRGPC
+      n_point_charge = NPC
+
       RETURN
       END
 C  /* Deck rmolchr */

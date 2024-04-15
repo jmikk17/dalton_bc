@@ -81,9 +81,6 @@ C
 !   MP2] to cases when LUINTM is opened.
 !900108-hjaaj
 ! NXTH2D: read LBINTD,LVLDRC after label DRCINFO on LUINTD
-!891208-hjaaj
-! SORTA,TRACD,TRAAB: print threshold for discarding integrals
-! TRACTL: if (thrp.le.0) thrp=1.d-12 (was 1.d-9)
 !891116-hjaaj
 ! NXTH2M,NXTH2D: more tests that buffers are allocated/have not been
 !   corrupted. Release buffer allocation when no more buffers.
@@ -153,6 +150,7 @@ C
       IF (.NOT. OPINTM) RETURN
 
 
+      IF (THRP .LT. 0.0D0) THRP = THRS
       IF (THRP .LT. THRS) THEN
          WRITE(LUPRI,'(/A,1P,D10.2,A,D10.2)')
      &      ' INFO: Changed THRP threshold used in'//
@@ -1785,11 +1783,11 @@ C
 C     ***** SET THRESHOLDS *****
 C     *********** THRP: THRESHOLD USED IN TRACD AND TRAAB
 C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
-      IF (THRP.LE.1.D-16) THEN
+      IF (THRP.LT.1.D-15) THEN
          WRITE(LUPRI,'(/A,1P,D10.2,A,D10.2)')
      &      ' INFO: Changed THRP threshold used in 2-el.'//
-     &      ' integral transformation from',THRP,' to',1.D-14
-         THRP=1.D-14
+     &      ' integral transformation from',THRP,' to',1.D-15
+         THRP=1.D-15
       END IF
 C
       IF (FCKTRA_TYPE .gt. 0) THEN

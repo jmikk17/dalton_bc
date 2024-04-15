@@ -4,7 +4,7 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON release Dalton2022.0-dev (2022)
+    This is output from DALTON release Dalton2024.0-dev (2024)
          ( Web site: http://daltonprogram.org )
 
    ----------------------------------------------------------------------------
@@ -48,12 +48,12 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2014, 4:269–284 (doi: 10.1002/wcms.1172)
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
      
     and
      
        Dalton, a molecular electronic structure program,
-       Release Dalton2022.0-dev (2022), see http://daltonprogram.org
+       Release Dalton2024.0-dev (2024), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
     Authors in alphabetical order (Major contribution(s) in parenthesis):
@@ -98,8 +98,8 @@
   Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
   Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
   Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
-  Christoph Jacob              TU Braunschweig            Germany     (Frozen density embedding)
-  Brano Jansik                 Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
   Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
   Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
   Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
@@ -114,7 +114,7 @@
   Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
   Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
   Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
-  Nanna H. List                Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
   Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
   Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
   Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
@@ -136,7 +136,7 @@
   Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
   Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
   Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
-  Claire C. M. Samson          University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
   Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
   Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
   Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
@@ -157,38 +157,38 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/reinholdt/Programs/dalton/DALTON/test/dft_camb3lyp_molgrad
-   2) /home/reinholdt/Programs/dalton/build/basis
+   1) /home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/test/dft_camb3lyp_molgrad
+   2) /home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | reinholdt
- Host                     | gemini
- System                   | Linux-5.15.34-1-lts
+ Who compiled             | hjj
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-6.2.0-39-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | ON
- Fortran compiler         | /usr/bin/mpif90
- Fortran compiler version | GNU Fortran (GCC) 11.2.0
- C compiler               | /usr/bin/mpicc
- C compiler version       | gcc (GCC) 11.2.0
- C++ compiler             | /usr/bin/mpicxx
+ Fortran compiler         | /home/hjj/my_libs/openmpi/bin/mpif90
+ Fortran compiler version | GNU Fortran (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+ C compiler               | /home/hjj/my_libs/openmpi/bin/mpicc
+ C compiler version       | gcc (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+ C++ compiler             | /home/hjj/my_libs/openmpi/bin/mpicxx
  C++ compiler version     | unknown
- BLAS                     | /lib64/libopenblas.so
- LAPACK                   | /lib64/liblapack.so
+ BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
+ LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | 07292fe2d2f7d5349434b1d9c2de3151ddb86ccb
- Git branch               | master
- Configuration time       | 2022-06-08 14:47:44.344968
+ Last Git revision        | 1240d317ad361e565fff8041c77f25704210d4cd
+ Git branch               | WIP-master
+ Configuration time       | 2024-04-14 23:03:28.209135
 
  * Sequential calculation.
 
@@ -248,10 +248,10 @@ H     0 0 1
  Basis set 1 is  "STO-3G" from the basis set library.
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1:                                                                         
- 2:                                                                         
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1: 
+ 2: 
+    --------------------------------------------------------------------------------
 
   Coordinates are entered in Angstrom and converted to atomic units.
           - Conversion factor : 1 bohr = 0.52917721 A
@@ -262,11 +262,11 @@ H     0 0 1
   Number of symmetry independent centers:    2
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-  Trying file: "/home/reinholdt/Programs/dalton/DALTON/test/dft_camb3lyp_molgrad/STO-3G"
-  Trying file: "/home/reinholdt/Programs/dalton/build/basis/STO-3G"
-     "/home/reinholdt/Programs/dalton/build/basis/STO-3G"
+  Trying file: "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/test/dft_camb3lyp_molgrad/STO-3G"
+  Trying file: "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/basis/STO-3G"
+     "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/basis/STO-3G"
   Basis set file used for this atomic type with Z =   1 :
-     "/home/reinholdt/Programs/dalton/build/basis/ano-4"
+     "/home/hjj/progs/gitDalton_hjaaj-srdft/build_WIP-master_myompi32/basis/ano-4"
 
 
                          SYMGRP: Point group information
@@ -384,14 +384,14 @@ H     0 0 1
 
 
 --------------------------------------------------------------------------------
-BASIS                                                                           
-STO-3G                                                                          
-                                                                                
-                                                                                
-ATOMTYPES=1 CHARGE=0 ANGSTROM NOSYMMETRY                                        
-Charge=1 Atoms=2                                                                
-H           0.0000000000        0.0000000000        0.0000000000                
-H           0.0000000000        0.0000000000        1.0000000000                
+BASIS                                                                                                                   
+STO-3G                                                                                                                  
+                                                                                                                        
+                                                                                                                        
+ATOMTYPES=1 CHARGE=0 ANGSTROM NOSYMMETRY                                                                                
+Charge=1 Atoms=2                                                                                                        
+H           0.0000000000        0.0000000000        0.0000000000                                                        
+H           0.0000000000        0.0000000000        1.0000000000                                                        
 --------------------------------------------------------------------------------
 
 
@@ -475,17 +475,19 @@ H           0.0000000000        0.0000000000        1.0000000000
  **********************************************************************
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-                                                                             
-                                                                             
+     
+     
 
  Print level on unit LUPRI =   2 is   1
  Print level on unit LUW4  =   2 is   6
 
 @    Restricted, closed shell Kohn-Sham DFT calculation.
+
+@    Time-dependent Kohn-Sham DFT calculation (TD-DFT).
  Fock matrices are calculated directly without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
@@ -544,7 +546,7 @@ SIRFCK: AO-direct construction of   1 Fock matrices
         IFCTYP:   13
 
  SIRFCK: CPU and WALL time used in Fock matrix constructions     0.000     0.000
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -4    1    F  1.67D-04  0.00D+00
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -4    1    F  4.56D-04  0.00D+00
          DFT grid generation - Radial Quadrature  : LMG scheme
          DFT grid generation - Partitioning : Original Becke partitioning
          DFT grid generation - Radial integration threshold: 1e-13
@@ -552,10 +554,10 @@ SIRFCK: AO-direct construction of   1 Fock matrices
          DFT grid generation - Number of grid points:    36516; grid generation time:      0.0 s 
 
       K-S energy, electrons, error :     -0.411196647996   1.9999999956   -4.44D-09
-@  1    -1.11524205136        2.22473D-15   -1.12D+00    1
+@  1    -1.11524205136        1.71713D-15   -1.12D+00    1
 
 @ *** DIIS converged in   1 iterations !
-@     Converged SCF energy, gradient:     -1.115242051362    2.22D-15
+@     Converged SCF energy, gradient:     -1.115242051362    1.72D-15
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -595,7 +597,7 @@ SIRFCK: AO-direct construction of   1 Fock matrices
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.052       0.053
+ CPU and wall time for SCF :       0.062       0.063
 
 
                        .-----------------------------------.
@@ -614,10 +616,10 @@ SIRFCK: AO-direct construction of   1 Fock matrices
 @    Final gradient norm:           0.000000000000
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
-File label for MO orbitals:   8Jun22   FOCKDIIS
+File label for MO orbitals:  14Apr24   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -628,12 +630,12 @@ File label for MO orbitals:   8Jun22   FOCKDIIS
    1 H   :1s     0.5780  -0.9965
    2 H   :1s     0.5780   0.9965
 
-  Total CPU  time used in SIRIUS :   0.05 seconds
-  Total wall time used in SIRIUS :   0.05 seconds
+  Total CPU  time used in SIRIUS :   0.06 seconds
+  Total wall time used in SIRIUS :   0.07 seconds
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                      .---------------------------------------.
@@ -675,8 +677,8 @@ File label for MO orbitals:   8Jun22   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                             **************************
@@ -790,8 +792,8 @@ File label for MO orbitals:   8Jun22   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                              Molecular geometry (au)
@@ -896,9 +898,9 @@ File label for MO orbitals:   8Jun22   FOCKDIIS
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   0.10 seconds
-  Total wall time used in DALTON:   0.10 seconds
+  Total CPU  time used in DALTON:   0.11 seconds
+  Total wall time used in DALTON:   0.12 seconds
 
  
-     Date and time (Linux)  : Wed Jun  8 14:50:52 2022
-     Host name              : gemini                                  
+     Date and time (Linux)  : Sun Apr 14 23:04:27 2024
+     Host name              : adm-110765.pc.sdu.dk                    

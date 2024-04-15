@@ -1321,23 +1321,16 @@ cs              WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
 cs              CALL QUIT('Error in reading (GAGORG(I),I=1,3)!')
 cs            ENDIF
             GO TO 100
-  244    CONTINUE
+  244    CONTINUE   ! .NORMAOtwo
             RMAOTWO = .FALSE.
             GO TO 100 
-  245    CONTINUE   ! .TWOBYTEPACKING
+  245    CONTINUE   ! .TWOBYTepacking
             TWOBYTEPACKING = .TRUE.
             GO TO 100 
-  246    CONTINUE
+  246    CONTINUE   ! .LFDIPL
             LFDIPLN = .TRUE.
             ONEPRP = .TRUE.
             GO TO 100
-      ELSE IF (PROMPT .EQ. '*') THEN
-         GO TO 300
-      ELSE
-         WRITE (LUPRI,'(/3A/)') ' Prompter "',PROMPT,'" illegal'
-         CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
-         CALL QUIT('Illegal prompt in '//WORD1)
-      END IF
   247    CONTINUE
             GZZEFG = .TRUE.
             ONEPRP = .TRUE.
@@ -1365,7 +1358,14 @@ c Setting all integrals for LRESC-EFG module
                LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
                SPNORB = .TRUE. ! 104 Spin-Orbit
                EFGCAR = .TRUE. ! 147 Cartesian EFG components
-               GO TO 100
+         GO TO 100
+      ELSE IF (PROMPT .EQ. '*') THEN
+         GO TO 300
+      ELSE
+         WRITE (LUPRI,'(/3A/)') ' Prompter "',PROMPT,'" illegal'
+         CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+         CALL QUIT('Illegal prompt in '//WORD1)
+      END IF
   300 CONTINUE
 
       IF (.NOT. BGWEIL) BGWEIN = WEINBG 

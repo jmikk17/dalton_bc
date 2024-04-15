@@ -564,8 +564,8 @@ C 960625-hjaaj: NISHT and NACTEL used in MOLCHR in
 C               ICHARG = ICHRGNU - (2*NISHT+NACTEL)
       NISHT  = 0
       NACTEL = 0
-      CALL MOLCHR(ICHARG)
-C     ICHARG is now total nuclear charge;
+      CALL MOLCHR(ICHARG, CHRGPC, NPC)
+C     ICHARG is now total nuclear charge without point charges;
 C     KCHARG is input in .mol file for total molecular charge
       NACTEL = -1
       NRHFEL = ICHARG - KCHARG
@@ -5562,7 +5562,10 @@ C          to get here unless someone modifies SIRIUS incorrectly
      &      '      (ROHF open shell orbitals are not included.)'
          NUMRUN_LOCAL = NUMRUN_LOCAL - 1
       ELSE IF ( DOMP2 ) THEN
-         IF (MP2_SCS) THEN
+         IF (ADDSRI) THEN
+            IF (WFTYPE .EQ. ' ') WFTYPE='MP2-srDFT'
+            WRITE(IWUNIT,1050) 'MP2-srDFT'
+         ELSE IF (MP2_SCS) THEN
             IF (WFTYPE .EQ. ' ') WFTYPE='SCS-MP2'
             WRITE(IWUNIT,1050) 'SCS-MP2'
          ELSE IF (MP2_SOS) THEN
@@ -5632,7 +5635,9 @@ C          to get here unless someone modifies SIRIUS incorrectly
             NUMRUN_LOCAL = NUMRUN_LOCAL - 1
          END IF
          IF (DOMP2 .AND. NUMRUN_LOCAL .GT. 0) THEN
-            IF (MP2_SCS) THEN
+            IF (ADDSRI) THEN
+               WRITE(IWUNIT,1051) 'an MP2-srDFT calculation'
+            ELSE IF (MP2_SCS) THEN
                WRITE(IWUNIT,1051) 'an SCS-MP2 calculation'
             ELSE IF (MP2_SOS) THEN
                WRITE(IWUNIT,1051) 'an SOS-MP2 calculation'
@@ -5763,7 +5768,7 @@ C
       END IF
 C     for SIRIUS (not LUCITA) :
       NINEL = 2*NISHT
-      CALL MOLCHR(ICHARG)
+      CALL MOLCHR(ICHARG,CHRGPC,NPC)
 C     ... get total charge
       IF (.NOT. (DOLUCITA .AND. NUMRUN.EQ.1) ) WRITE(IWUNIT,1002)
      &   TRIM(WFTYPE),NINEL,NACTEL,ICHARG,ISPIN,MS2,
@@ -5779,6 +5784,10 @@ C     ... get total charge
      &        ' (point group: ',A,')',
      &       /'@    Reference state symmetry',I20,
      &        ' (irrep name : ',A,')')
+      IF (NPC .GT. 0) THEN
+         WRITE(LUPRI,'(/A,I0,A,1P,G17.10)')
+     &   '@    ',NPC,' point charges with a total charge of',CHRGPC
+      END IF
 C
       IF (MCTYPE .EQ. 2) THEN
          WRITE (IWUNIT,1075) NAS1T, NAS2T, NAS3T
