@@ -20,11 +20,13 @@ command_d = {}
 
 # Fotran compilers
 command_d['mpif90']       = 'mpif90       --version'
+command_d['mpiifx']       = 'mpiifx       --version'
 command_d['gfortran']     = 'gfortran     --version'
 command_d['gfortran.exe'] = 'gfortran.exe --version'
 command_d['gfortran44']   = 'gfortran44   --version'
 command_d['f95']          = 'f95          --version'
 command_d['ifort']        = 'ifort        --version'
+command_d['ifx']          = 'ifx          --version'
 command_d['pgf90']        = 'pgf90        -V'
 command_d['xlf']          = 'xlf          -qversion'
 

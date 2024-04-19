@@ -79,14 +79,14 @@ intel:
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
+    - ifx --version
     - icc --version
     - icpc --version
     - python3 --version
     - git --version
     - cmake --version
   script:
-    - python setup --fc=ifort --cc=icc --cxx=icpc --mkl=sequential --type=release
+    - python setup --fc=ifx --cc=icc --cxx=icpc --mkl=sequential --type=release
     - cd build
     - make -j 32
     - ctest -j 16 --timeout 120 --output-on-failure -L essential
@@ -116,7 +116,7 @@ intel-mpi:
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
+    - ifx --version
     - icc --version
     - icpc --version
     - mpirun --version
@@ -124,7 +124,7 @@ intel-mpi:
     - git --version
     - cmake --version
   script:
-    - python setup --fc=mpiifort --cc=mpiicc --cxx=mpiicpc --mkl=sequential --type=release
+    - python setup --fc=mpiifx --cc=mpiicc --cxx=mpiicpc --mkl=sequential --type=release
     - cd build
     - make -j 32
     - ctest -j 4 --timeout 120 --output-on-failure -L essential
@@ -826,7 +826,7 @@ nightly-intel:
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
+    - ifx --version
     - icc --version
     - icpc --version
     - mpirun --version
@@ -834,7 +834,7 @@ nightly-intel:
     - git --version
     - cmake --version
   script:
-    - python setup --fc=mpiifort --cc=mpiicc --cxx=mpiicpc --mpi --mkl=sequential --type=release
+    - python setup --fc=mpiifx --cc=mpiicc --cxx=mpiicpc --mpi --mkl=sequential --type=release
                    -DSITE=GitLab -DBUILDNAME=$CI_COMMIT_REF_NAME-intel-mpi
     - cd build
     - export CTEST_MAKE_NUM_PROCS=4
