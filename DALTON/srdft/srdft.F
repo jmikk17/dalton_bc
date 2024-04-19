@@ -539,7 +539,7 @@ C*****************************************************************************
 #include "dftcom.h"
       logical, intent(in) :: DO_MOLGRAD, DOERG, DOATR, TRIPLET
       logical :: DOLND, DOGGA, do_metagga
-      logical :: first_call, LSRHYBR
+      logical :: first_call, LSRHYBR, dp_is_NAN
       DATA       first_call /.true./
       real*8 :: EXCMAT(NBAST,NBAST,*),DMAT(N2BASX,*),ESRDFT(3)
       real*8 :: WORK(LWORK)
@@ -784,6 +784,8 @@ C
          ESRDFT(1) = EXint + ECint
          ESRDFT(2) = Exint
          ESRDFT(3) = Ecint
+         if (dp_is_NAN(Exint) .or. dp_is_NAN(Ecint))
+     &      iprint = 787 ! code for NaN, which 1) makes sure values are printed below, 2) then used for quit
          IF (LSRHYBR) THEN
             ESRDFT(1) = ESRDFT(1) + EXTOT - EXSR + ECTOT - ECSR
          END IF
@@ -840,6 +842,10 @@ C
      & ' DFT exchange-correlation energy                :',ESRDFT(1),
      & ' Number of times RHO(2) > RHO(1)                :',NRSGTR
 
+            if (iprint .eq. 787) then
+               call quit('Fatal error in srDFT functional evaluation:'//
+     &         ' Excint is NaN')
+            end if
       END IF ! DOERG
       IF (DOATR) THEN
          WRITE(LUPRI,'(/A)') ' srDFT linear transformation finished'
