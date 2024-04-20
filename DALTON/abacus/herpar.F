@@ -771,7 +771,11 @@ C
         ! set # of fmat/dmat outside the RMA window ==> min = 1 otherwise we introduce some stupid communication
         !                                                       overhead in regular SCF calculations...
         nmat_wo_win_env = ' '
+#ifdef NO_FORTRAN_2008
         call getenv('NO_RMA_MTX',nmat_wo_win_env)
+#else
+        call get_environment_variable('NO_RMA_MTX',nmat_wo_win_env)
+#endif
         read(nmat_wo_win_env,'(i6)') rma_win_info%nmat_max_wo_win
 
 !       sanity checks: minimum == 1; maximum == ndmat

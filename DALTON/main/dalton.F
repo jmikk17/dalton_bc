@@ -520,7 +520,11 @@ C           structure of BASDIR: 'dir1:dir2:dir3'
 #endif
 
 #ifdef VAR_OMP
+#ifdef NO_FORTRAN_2008
          call getenv('OMP_NUM_THREADS', env_value)
+#else
+         call get_environment_variable('OMP_NUM_THREADS', env_value)
+#endif
          read(env_value, '(i6)') omp_num_threads
          if (omp_num_threads > 1) then
             WRITE(LUPRI,'(/A,I0,A)')
@@ -772,9 +776,15 @@ C         options to transfer UNIX environment variables to
 C         slave nodes. /hjaaj June 2005
         WRKMEM = ' '
         NODE_WRKMEM = ' '
-        CALL GETENV('WRKMEM',WRKMEM)
-        CALL GETENV('NODE_WRKMEM',NODE_WRKMEM)
-        CALL GETENV('BASDIR',BASDIR)
+#ifdef NO_FORTRAN_2008
+        call getenv('WRKMEM',WRKMEM)
+        call getenv('NODE_WRKMEM',NODE_WRKMEM)
+        call getenv('BASDIR',BASDIR)
+#else
+        call get_environment_variable('WRKMEM',WRKMEM)
+        call get_environment_variable('NODE_WRKMEM',NODE_WRKMEM)
+        call get_environment_variable('BASDIR',BASDIR)
+#endif
         !debug! write (0,*) 'GETENV WRKMEM ',WRKMEM
         !debug! write (0,*) 'GETENV BASDIR ',BASDIR
 

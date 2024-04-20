@@ -1005,7 +1005,11 @@ C
       IF (MYNUM .EQ. 0) THEN
       IF (FILENM(1:FILELN) .EQ. 'DALTON.OUT') THEN
          OUTFIL = ' '
-         CALL GETENV ('OUTFIL',OUTFIL)
+#ifdef NO_FORTRAN_2008
+         call getenv('OUTFIL',OUTFIL)
+#else
+         call get_environment_variable('OUTFIL',OUTFIL)
+#endif
          LENOUT = LEN_TRIM(OUTFIL)
          if (LENOUT .EQ. max_filename_length) then
             write (lugppri,*) 'max_filename_length is too short'
@@ -1020,7 +1024,11 @@ c              IF (OUTFIL(I:I) .EQ. ' ') GO TO 43
 c              LENOUT = LENOUT + 1
 c           END DO
 c43         CONTINUE
-            CALL GETENV ('WRKDIR',WRKDIR)
+#ifdef NO_FORTRAN_2008
+            call getenv('WRKDIR',WRKDIR)
+#else
+            call get_environment_variable('WRKDIR',WRKDIR)
+#endif
             LENWRK = LEN_TRIM(WRKDIR)
             if (LENWRK .EQ. max_filename_length) then
                write (lugppri,*) 'max_filename_length is too short'

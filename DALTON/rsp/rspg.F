@@ -1359,7 +1359,11 @@ C
       DIA2SO = .TRUE.
       NOBLK = .FALSE.
       STRING="     "
-      CALL GETENV("PRINT",STRING)
+#ifdef NO_FORTRAN_2008
+      call getenv("PRINT",STRING)
+#else
+      call get_environment_variable("PRINT",STRING)
+#endif
       IF (STRING.NE."     " ) THEN
          READ(STRING,'(I5)') IPRINT
       ELSE

@@ -407,7 +407,11 @@ contains
 !     !> NUMA node mode...
       numa_procs          = 0
       numa_procs_env(1:6) = '      '
+#ifdef NO_FORTRAN_2008
       call getenv('NUMA_PROCS',numa_procs_env)
+#else
+      call get_environment_variable('NUMA_PROCS',numa_procs_env)
+#endif
       read(numa_procs_env, '(i6)') numa_procs
 
 !     if( numa_procs > 0)then
