@@ -6,10 +6,11 @@ variables:
 
 default:
   before_script:
-    - dnf install -y -q gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
-                        mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
-                        python python3 python3-pip python3-h5py redhat-rpm-config findutils
-                        which procps-ng coreutils
+    - dnf install -y gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
+                     mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
+                     python python3 python3-pip python3-h5py redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+    - . ~/.bashrc
     - . /etc/profile.d/modules.sh
     - module purge
     - module avail
@@ -70,9 +71,9 @@ intel-oneapi:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4 python python3
-                     redhat-rpm-config environment-modules
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
                      intel-oneapi-compiler-fortran
@@ -112,9 +113,9 @@ intel-oneapi-mpi:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4 python python3
-                     redhat-rpm-config environment-modules
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
                      intel-oneapi-compiler-fortran
@@ -156,9 +157,9 @@ intel-classic:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4 python python3
-                     redhat-rpm-config environment-modules
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
                      intel-oneapi-compiler-fortran
@@ -198,9 +199,9 @@ intel-classic-mpi:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4 python python3
-                     redhat-rpm-config environment-modules
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
                      intel-oneapi-compiler-fortran
