@@ -70,7 +70,7 @@ intel-oneapi:
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
     - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4
+                     findutils procps-ng coreutils m4 python python3
                      redhat-rpm-config environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
@@ -112,7 +112,7 @@ intel-oneapi-mpi:
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
     - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4
+                     findutils procps-ng coreutils m4 python python3
                      redhat-rpm-config environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
@@ -156,7 +156,7 @@ intel-classic:
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
     - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4
+                     findutils procps-ng coreutils m4 python python3
                      redhat-rpm-config environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
@@ -198,7 +198,7 @@ intel-classic-mpi:
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
     - dnf install -y git make cmake gcc gcc-c++ gcc-gfortran
-                     findutils procps-ng coreutils m4
+                     findutils procps-ng coreutils m4 python python3
                      redhat-rpm-config environment-modules
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
