@@ -8,7 +8,7 @@ default:
   before_script:
     - dnf install -y -q gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
                         mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
-                        python python3 python3-h5py redhat-rpm-config findutils which procps-ng coreutils
+                        python3 python3-pip python3-h5py redhat-rpm-config findutils which procps-ng coreutils
     - . /etc/profile.d/modules.sh
     - module purge
     - uname -a
@@ -17,10 +17,10 @@ default:
     - gfortran --version
     - gcc --version
     - g++ --version
-    - module load mpi/openmpi
+    - module load mpi/openmpi-x86_64
     - mpirun --version
     - module purge
-    - module load mpi/mpich
+    - module load mpi/mpich-x86_64
     - mpirun --version
     - module purge
     - python3 --version
@@ -40,8 +40,6 @@ coverage:
     - dnf install -y -q gcovr
     - module load mpi/mpich-x86_64
     - mpirun --version
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
     - pip install -q codecov
     - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release --coverage
                    -DENABLE_PDE=ON
@@ -70,12 +68,12 @@ intel-oneapi:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y -q git make cmake gcc gcc-c++ gcc-gfortran \
-                        findutils procps-ng coreutils m4 \
-                        redhat-rpm-config environment-modules \
-                        intel-oneapi-compiler-dpcpp-cpp \
-                        intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
-                        intel-oneapi-compiler-fortran \
+    - dnf install -y -q git make cmake gcc gcc-c++ gcc-gfortran
+                        findutils procps-ng coreutils m4
+                        redhat-rpm-config environment-modules
+                        intel-oneapi-compiler-dpcpp-cpp
+                        intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+                        intel-oneapi-compiler-fortran
                         intel-oneapi-mkl intel-oneapi-mkl-devel
     - . /etc/profile.d/modules.sh
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
@@ -198,7 +196,7 @@ intel-classic-mpi:
   allow_failure: true
   before_script:
     - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf list | grep oneapi
+    - dnf -y list | grep oneapi-compiler
     - dnf install -y -q git make cmake gcc gcc-c++ gcc-gfortran \
                         findutils procps-ng coreutils m4 \
                         redhat-rpm-config environment-modules \
