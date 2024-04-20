@@ -12,6 +12,7 @@ default:
                         which procps-ng coreutils
     - . /etc/profile.d/modules.sh
     - module purge
+    - module avail
     - uname -a
     - lscpu
     - free -h
