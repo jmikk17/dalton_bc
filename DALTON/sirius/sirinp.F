@@ -5431,8 +5431,8 @@ C
       END IF
   500 FORMAT(/' Title     :',T14,A60)
   600 FORMAT(T14,A60)
-      LEN1 = LNBLNK(TITMOL(1))
-      LEN2 = LNBLNK(TITMOL(2))
+      LEN1 = LEN_TRIM(TITMOL(1))
+      LEN2 = LEN_TRIM(TITMOL(2))
       WRITE (IWUNIT,700) TITMOL(1)(1:LEN1),TITMOL(2)(1:LEN2)
   700 FORMAT(/' Title lines from ".mol" input file:'/T6,A/T6,A)
 C

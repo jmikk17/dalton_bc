@@ -436,7 +436,7 @@ C ::::::::::::::::::::::::::::::::::::::::::::::
 #include "mxcent.h"
 #include "nuclei.h"
 
-      I = LNBLNK(TEXT)
+      I = LEN_TRIM(TEXT)
       WRITE(LUPRI,'(/1X,A/1X,80A1)') TEXT, ('-',J=1,I)
 
       DO I = 1,NINT(ATMARR(1,0))

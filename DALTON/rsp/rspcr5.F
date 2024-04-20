@@ -202,7 +202,7 @@ Chj         from a different calculation /hjaaj-Mar2006
 C
  198  CONTINUE
          INQUIRE(UNIT=LU,NAME=FILE_NAME)
-         LFN = LNBLNK(FILE_NAME)
+         LFN = LEN_TRIM(FILE_NAME)
          WRITE (LUPRI,'(/3A)')
      &      ' INFO: ',FILE_NAME(1:LFN),' is reset to empty file'
          REWIND (LU)

@@ -91,7 +91,7 @@ C
 !     append lines from LUMOLDEN_MOS to LUMOLDEN
       DO WHILE (.TRUE.)
          READ(LUMOLDEN_MOS, '(A)', END=300, ERR=200) LINE
-         LEN_LINE = MAX(1,LNBLNK(LINE))
+         LEN_LINE = MAX(1,LEN_TRIM(LINE))
          WRITE(LUMOLDEN, '(A)') LINE(1:LEN_LINE)
       END DO
   200 CONTINUE

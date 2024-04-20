@@ -767,7 +767,7 @@ C***********************************************************************
          MULNAM(J) = ' '
       END DO
       IF (BASIS) THEN
-         J = LNBLNK(MLINE(NMLINE)(6:))
+         J = LEN_TRIM(MLINE(NMLINE)(6:))
          IF (J .eq. 0) THEN
 C     Card 1b: If basis set library, basis set info may be on next card
 C              (old format from before 2019)
@@ -799,8 +799,8 @@ C*****************************************************************************
 
       IF (IPREAD .GT. 0) THEN
         IF ((.NOT.SLAVE) .OR. (NODTOT.LE.20)) THEN
-           LEN1 = LNBLNK(TTITLE(1))
-           LEN2 = LNBLNK(TTITLE(2))
+           LEN1 = LEN_TRIM(TTITLE(1))
+           LEN2 = LEN_TRIM(TTITLE(2))
            WRITE (LUPRI,'(/4X,A/4X,A/2A/2A/4X,A)')
      &     'The two title cards from your ".mol" input:', SEPARATOR,
      &     ' 1: ',TTITLE(1)(1:LEN1),' 2: ',TTITLE(2)(1:LEN2),SEPARATOR
@@ -1618,7 +1618,7 @@ C                        It will be interpreted in BASLIB.
  34                CONTINUE
                    AUXNAM = AUXNAM(IAUX:)
                  ENDIF
-                 LBASNAM = LNBLNK(BASNAM)
+                 LBASNAM = LEN_TRIM(BASNAM)
                  IF (IPREAD .GT. 0) THEN
                     IF (J.EQ.ISETHUCKEL) THEN
                         IF (BASNAM(1:2) .NE. 'MM') WRITE(LUPRI,'(2X,A)')
@@ -1638,7 +1638,7 @@ C     &                 'Basis set : '//
 C     &                 'the effective core potential basis set "',
 C     &                 BASNAM(1:LBASNAM),'"'
                     ELSE IF (ATOMDF) THEN
-                       LAUXNAM = LNBLNK(AUXNAM)
+                       LAUXNAM = LEN_TRIM(AUXNAM)
                        WRITE (LUPRI,'(2X,3A)')
      &                 'The auxiliary density fit basis set is "',
      &                 AUXNAM(1:LAUXNAM),'" from the basis set library.'
@@ -2522,13 +2522,13 @@ C
           IF (LMULBS) THEN
 C           Output for multiple basis sets (WK/UniKA/04-11-2002).
            DO IMULBS = 1, NMULBS
-            ILEN = LNBLNK(MULNAM(IMULBS))
+            ILEN = LEN_TRIM(MULNAM(IMULBS))
             WRITE (LUPRI,'(A,I2,A/)') '  Basis set',IMULBS,
      &      ' refers to the basis "'//MULNAM(IMULBS)(1:ILEN)//
      &      '" from the basis set library.'
            END DO
           ELSE
-            ILEN = LNBLNK(MULNAM(1))
+            ILEN = LEN_TRIM(MULNAM(1))
             WRITE (LUPRI,'(3A/)') '  Basis set used is "',
      &      MULNAM(1)(1:ILEN),'" from the basis set library.'
           END IF
@@ -2679,7 +2679,7 @@ C
 ! hjaaj: info not availiable here any more - don't really understand
 ! that it ever has, because AUXNAM may change for each atom type ???
 !     IF (ATOMDF) THEN
-!        ILEN = LNBLNK(AUXNAM)
+!        ILEN = LEN_TRIM(AUXNAM)
 !        WRITE (LUPRI,'(/3A/)') '  Density fitting basis is "',
 !    &      AUXNAM(1:ILEN),'" from the basis set library.'
 !     END IF
@@ -5731,7 +5731,7 @@ C
 
       IF (len_NOT_COMMENT .eq. 0) GO TO 10 ! this was a comment line with one of #!$ in column 1
 
-      IF (LNBLNK( NEXT_INPUT_LINE(1:len_NOT_COMMENT) ) .GT. len_MLINE)
+      IF (LEN_TRIM( NEXT_INPUT_LINE(1:len_NOT_COMMENT) ) .GT. len_MLINE)
      &   THEN
          WRITE(LUPRI,'(//A,I5/2A/2A//A,I5/A)')
      &   ' FATAL ERROR -- line in ".mol" file truncated, line',NMLINE,

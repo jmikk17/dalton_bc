@@ -158,7 +158,7 @@ C integer (we used IEIR=3000000).
       END IF
 Cef end
 
-      LEN_BASDIR = MAX(1,LNBLNK(BASDIR))
+      LEN_BASDIR = MAX(1,LEN_TRIM(BASDIR))
       IF (MYNUM .LE. 1) THEN
          WRITE(*,'(/I4,A/5X,A)')
      &      MYNUM,': Directories for basis set searches:',
@@ -479,7 +479,7 @@ C
 C
          WRITE(LUPRI,'(/A)')
      &   ' * Directories for basis set searches:'
-         J_END = LNBLNK(BASDIR)
+         J_END = LEN_TRIM(BASDIR)
          IF (J_END .LE. 0) THEN
             WRITE(LUPRI,'(5X,A)') 'NONE SPECIFIED!'
          ELSE
@@ -807,7 +807,7 @@ C
 C
 C       ... or user specified memory size.
 C
-          LWMEM = MAX(1,LNBLNK(WRKMEM))
+          LWMEM = MAX(1,LEN_TRIM(WRKMEM))
           WRITE(*,'(/A/3A)')
      &    ' DALTON: user specified work memory size used,',
      &    '         environment variable WRKMEM = "',WRKMEM(1:LWMEM),'"'
@@ -844,7 +844,7 @@ C
 C
 C       ... or user specified memory size.
 C
-          LWMEM = MAX(1,LNBLNK(NODE_WRKMEM))
+          LWMEM = MAX(1,LEN_TRIM(NODE_WRKMEM))
           WRITE(*,'(/A/3A)')
      &    ' DALTON: user specified work memory size used,',
      &    '         environment variable NODE_WRKMEM = "',
@@ -854,7 +854,7 @@ C
 
       END IF ! .not. slave
 
-      IF (LNBLNK(BASDIR) .LT. 1) BASDIR = './:'
+      IF (LEN_TRIM(BASDIR) .LT. 1) BASDIR = './:'
 #ifdef VAR_MPI
 
 !     scan input for RMA (remote memory access model parallelization) keyword

@@ -52,7 +52,7 @@ C
 C...  modified by Bin Gao, Dec. 30, 2010
 C...      STRING = 'ecp-sdd-pseudo '
       STRING = "ecp_data/"//trim(ECPNAME)
-      LEN_STRING = LNBLNK(STRING)
+      LEN_STRING = LEN_TRIM(STRING)
       LU = -1
       CALL FIND_BASFIL(STRING(1:LEN_STRING),LU,IPRINT)
 C

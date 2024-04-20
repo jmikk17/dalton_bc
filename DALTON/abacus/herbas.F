@@ -488,7 +488,7 @@ C
          FOUND = .FALSE.
          ISTART = IPOLST
  33      CONTINUE
-         len_BASNAM = LNBLNK(BASNAM(ISTART:))
+         len_BASNAM = LEN_TRIM(BASNAM(ISTART:))
          IF (len_BASNAM .GT. 0) THEN
             CALL FREFRM(BASNAM,ISTART,IQUANT,DUMMY,'INT',IERR)
             IF (IERR .EQ. 0) THEN
@@ -683,7 +683,7 @@ C
          IF (POLFUN) THEN
             ISTART = IPOLST
  33         CONTINUE
-            len_BASNAM = LNBLNK(BASNAM(ISTART:))
+            len_BASNAM = LEN_TRIM(BASNAM(ISTART:))
             IF (len_BASNAM .GT. 0) THEN
                CALL FREFRM(BASNAM,ISTART,IQUANT,DUMMY,'INT',IERR)
                IF (IERR .EQ. 0) THEN
@@ -792,7 +792,7 @@ C           skip core orbitals for Huckel guess for ECP
       IF (POLFUN) THEN
          IREAD = IPOLST
  33      CONTINUE
-         len_BASNAM = LNBLNK(BASNAM(IREAD:))
+         len_BASNAM = LEN_TRIM(BASNAM(IREAD:))
          IF (len_BASNAM .GT. 0) THEN
             CALL FREFRM(BASNAM,IREAD,IQUANT,DUMMY,'INT',IERR)
             IF (IERR .EQ. 0) THEN
@@ -914,7 +914,7 @@ C
      &   STRING(1:IEND),' IOSTAT =',IOERR
       CALL QUIT('I/O error in BASLIB(FIND_ELEMENT)')
  200  CONTINUE
-      len_BASNAM = LNBLNK(BASNAM)
+      len_BASNAM = LEN_TRIM(BASNAM)
       WRITE (LUPRI,'(//A,I5,2A/A//)')
      &   ' ERROR: Nuclear charge',INTQ,
      &   ' is an unsupported element for basis ',BASNAM(1:len_BASNAM),
@@ -1058,7 +1058,7 @@ C
                IF (POLFUN) THEN
                   ISTART = IPOLST
  33               CONTINUE
-                  len_BASNAM = LNBLNK(BASNAM(ISTART:))
+                  len_BASNAM = LEN_TRIM(BASNAM(ISTART:))
                   IF (len_BASNAM .GT. 0) THEN
                      CALL FREFRM(BASNAM,ISTART,IQUANT,DUMMY,'INT',IERR)
                      IF (IERR .EQ. 0) THEN
@@ -1190,7 +1190,7 @@ C           Check for start of documentation
             IF (INDEX(STRING,'REFERENCE').GT.0) IREF = 1
          ELSE
 C           We have documentation, omit blank lines and store in BASREF
-            len_STRING = LNBLNK(STRING(2:))
+            len_STRING = LEN_TRIM(STRING(2:))
             IF (len_STRING .GT. 0) THEN
                BASREF(IREF) = STRING(2:)
                IREF = IREF + 1
@@ -1266,7 +1266,7 @@ C
  20   CONTINUE
       READ (LUBAS, '(A)', IOSTAT = IOERR, ERR = 1000, END = 200)
      +     STRING
-      len_STRING = LNBLNK(STRING)
+      len_STRING = LEN_TRIM(STRING)
       IF (len_STRING .eq. 0) GOTO 20
       SIGN = STRING(1:1)
 C
@@ -1510,7 +1510,7 @@ C
          STRING(LSTR:LSTR) = '/'
       END IF
       LBAS = INDEX(BASNAM,' ') - 1
-C     ... cannot use LNBLNK because some basis sets have additional
+C     ... cannot use LEN_TRIM because some basis sets have additional
 C         information in BASNAM, e.g. "ano-2 4 3 2'
       IF (LBAS .LE. 0) LBAS = LEN(BASNAM)
 C     ... take care of basis set names with no trailing blanks

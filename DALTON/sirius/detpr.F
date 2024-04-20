@@ -528,9 +528,9 @@ C
                       write (iout,*) 'Overflow  beta orbital:', ibel
                    end if
                 end do
-                iend = LNBLNK(aline)
+                iend = LEN_TRIM(aline)
                 write(iout,'(2A)') ' alpha-string:',aline(1:iend)
-                iend = LNBLNK(bline)
+                iend = LEN_TRIM(bline)
                 write(iout,'(2A)') '  beta-string:',bline(1:iend)
 c               WRITE(IOUT,'(A,20I4:/,(14X,20I4))')
 c    &          ' alpha-string:',(ILTSOB(IASTR(IEL,IA)),IEL = 1, NAEL )
