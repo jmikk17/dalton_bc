@@ -32,8 +32,14 @@ C     J. J. Aucar 2022
 #include "nuclei.h"
 
       CHARACTER*15  :: slash
+      CHARACTER*9  :: aba,lib,avg
 
       slash = '---------------'
+
+
+      aba = '(abacus) '
+      lib = '(libcint)'
+      avg = '(avg)    '
 
       CALL QENTER('PRINT_LRSHIELD')
 C     Paramagnetic 1st singlet or triplet
@@ -48,19 +54,25 @@ C
          IF(SIGMAP1S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',LROZK,'iso ')
-               call PRINT_LRSHIELD_CORR('Pso-Kin ',LRPSOK,'iso ')
+               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'iso ')
+               call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'iso ')
+               IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
+     &         ('Pso-Kin ',aba,LRPSOKaba,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',LROZK,'ani1')
-               call PRINT_LRSHIELD_CORR('Pso-Kin ',LRPSOK,'ani1')
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'ani1')
+               call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'ani1')
+               IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
+     &         ('Pso-Kin ',aba,LRPSOKaba,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',LROZK,'ani2')
-               call PRINT_LRSHIELD_CORR('Pso-Kin ',LRPSOK,'ani2')
+               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'ani2')
+               call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'ani2')
+               IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
+     &         ('Pso-Kin ',aba,LRPSOKaba,'ani2')
                END IF
             ENDIF
          ENDIF
@@ -68,31 +80,46 @@ C
          IF (SIGMAP1T) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1T]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('Fc-Kin  ',LRFCZK,'iso ')
-               call PRINT_LRSHIELD_CORR('Fc-Der  ',LRFCDE,'iso ')
-               call PRINT_LRSHIELD_CORR('Sd-Kin  ',LRSDK,'iso ')
-               call PRINT_LRSHIELD_CORR('Sd-Der  ',LRSDD,'iso ')
-               call PRINT_LRSHIELD_CORR('Fc-Bso  ',LRFCBS,'iso ')
-               call PRINT_LRSHIELD_CORR('Sd-Bso  ',LRSDBS,'iso ')
+               IF (EXTRAINFO) THEN
+               call PRINT_LRSHIELD_CORR('Fc-Kin  ',aba,LRFCZK,'iso ')
+               call PRINT_LRSHIELD_CORR('Fc-Der  ',aba,LRFCDE,'iso ')
+               ELSE
+               call PRINT_LRSHIELD_CORR
+     &         ('Fc      ',aba,LRFCZK+LRFCDE,'iso ')
+               END IF
+               call PRINT_LRSHIELD_CORR('Sd-Kin  ',aba,LRSDK,'iso ')
+               call PRINT_LRSHIELD_CORR('Sd-Der  ',aba,LRSDD,'iso ')
+               call PRINT_LRSHIELD_CORR('Fc-Bso  ',aba,LRFCBS,'iso ')
+               call PRINT_LRSHIELD_CORR('Sd-Bso  ',aba,LRSDBS,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('Fc-Kin  ',LRFCZK,'ani1')
-               call PRINT_LRSHIELD_CORR('Fc-Der  ',LRFCDE,'ani1')
-               call PRINT_LRSHIELD_CORR('Sd-Kin  ',LRSDK,'ani1')
-               call PRINT_LRSHIELD_CORR('Sd-Der  ',LRSDD,'ani1')
-               call PRINT_LRSHIELD_CORR('Fc-Bso  ',LRFCBS,'ani1')
-               call PRINT_LRSHIELD_CORR('Sd-Bso  ',LRSDBS,'ani1')
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               IF (EXTRAINFO) THEN
+               call PRINT_LRSHIELD_CORR('Fc-Kin  ',aba,LRFCZK,'ani1')
+               call PRINT_LRSHIELD_CORR('Fc-Der  ',aba,LRFCDE,'ani1')
+               ELSE
+               call PRINT_LRSHIELD_CORR
+     &         ('Fc      ',aba,LRFCZK+LRFCDE,'ani1')
+               END IF
+               call PRINT_LRSHIELD_CORR('Sd-Kin  ',aba,LRSDK,'ani1')
+               call PRINT_LRSHIELD_CORR('Sd-Der  ',aba,LRSDD,'ani1')
+               call PRINT_LRSHIELD_CORR('Fc-Bso  ',aba,LRFCBS,'ani1')
+               call PRINT_LRSHIELD_CORR('Sd-Bso  ',aba,LRSDBS,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('Fc-Kin  ',LRFCZK,'ani2')
-               call PRINT_LRSHIELD_CORR('Fc-Der  ',LRFCDE,'ani2')
-               call PRINT_LRSHIELD_CORR('Sd-Kin  ',LRSDK,'ani2')
-               call PRINT_LRSHIELD_CORR('Sd-Der  ',LRSDD,'ani2')
-               call PRINT_LRSHIELD_CORR('Fc-Bso  ',LRFCBS,'ani2')
-               call PRINT_LRSHIELD_CORR('Sd-Bso  ',LRSDBS,'ani2')
+               IF (EXTRAINFO) THEN
+               call PRINT_LRSHIELD_CORR('Fc-Kin  ',aba,LRFCZK,'ani2')
+               call PRINT_LRSHIELD_CORR('Fc-Der  ',aba,LRFCDE,'ani2')
+               ELSE
+               call PRINT_LRSHIELD_CORR
+     &         ('Fc      ',aba,LRFCZK+LRFCDE,'ani1')
+               END IF
+               call PRINT_LRSHIELD_CORR('Sd-Kin  ',aba,LRSDK,'ani2')
+               call PRINT_LRSHIELD_CORR('Sd-Der  ',aba,LRSDD,'ani2')
+               call PRINT_LRSHIELD_CORR('Fc-Bso  ',aba,LRFCBS,'ani2')
+               call PRINT_LRSHIELD_CORR('Sd-Bso  ',aba,LRSDBS,'ani2')
                END IF
             ENDIF
          ENDIF
@@ -100,19 +127,19 @@ C
          IF (SIGMAP3S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3S]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('PSO-L-Mv',QRPSOOZMV,'iso ')
-               call PRINT_LRSHIELD_CORR('PSO-L-Dw',QRPSOOZDW,'iso ')
+               call PRINT_LRSHIELD_CORR('PSO-L-Mv',aba,QRPSOOZMV,'iso ')
+               call PRINT_LRSHIELD_CORR('PSO-L-Dw',aba,QRPSOOZDW,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('PSO-L-Mv',QRPSOOZMV,'ani1')
-               call PRINT_LRSHIELD_CORR('PSO-L-Dw',QRPSOOZDW,'ani1')
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               call PRINT_LRSHIELD_CORR('PSO-L-Mv',aba,QRPSOOZMV,'ani1')
+               call PRINT_LRSHIELD_CORR('PSO-L-Dw',aba,QRPSOOZDW,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('PSO-L-Mv',QRPSOOZMV,'ani2')
-               call PRINT_LRSHIELD_CORR('PSO-L-Dw',QRPSOOZDW,'ani2')
+               call PRINT_LRSHIELD_CORR('PSO-L-Mv',aba,QRPSOOZMV,'ani2')
+               call PRINT_LRSHIELD_CORR('PSO-L-Dw',aba,QRPSOOZDW,'ani2')
                END IF
             ENDIF
          ENDIF
@@ -120,23 +147,23 @@ C
          IF (SIGMAP3T) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3T]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('FC-L-So ',QROZFCSO,'iso ')
-               call PRINT_LRSHIELD_CORR('SD-L-So ',QROZSDSO,'iso ')
+               call PRINT_LRSHIELD_CORR('FC-L-So ',aba,QROZFCSO,'iso ')
+               call PRINT_LRSHIELD_CORR('SD-L-So ',aba,QROZSDSO,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('FC-L-So ',QROZFCSO,'ani1')
-               call PRINT_LRSHIELD_CORR('SD-L-So ',QROZSDSO,'ani1')
-               call PRINT_LRSHIELD_CORR('FC-L-So ',QROZFCSO,'ani2')
-               call PRINT_LRSHIELD_CORR('SD-L-So ',QROZSDSO,'ani2')
+               call PRINT_LRSHIELD_CORR('FC-L-So ',aba,QROZFCSO,'ani1')
+               call PRINT_LRSHIELD_CORR('SD-L-So ',aba,QROZSDSO,'ani1')
+               call PRINT_LRSHIELD_CORR('FC-L-So ',aba,QROZFCSO,'ani2')
+               call PRINT_LRSHIELD_CORR('SD-L-So ',aba,QROZSDSO,'ani2')
                END IF
             ENDIF
          ENDIF
 
          IF (PRTALL1) THEN
-         WRITE(LUPRI,'(/,7X,A,13X,A,12X,A,13X,A,10X,A)') 
+         WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'iso ')
@@ -147,7 +174,7 @@ C
          IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
      &                      SGP3T,'iso ')
          IF (LRANISO) THEN
-         WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
+         WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'ani1')
@@ -157,7 +184,7 @@ C
      &                      SGP3S,'ani1')
          IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
      &                      SGP3T,'ani1')
-         WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
+         WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'yx','zx','zy'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP1S,'ani2')
@@ -182,43 +209,47 @@ C
          IF(SIGMAD0S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'iso ')
+               call PRINT_LRSHIELD_CORR('FC      ',aba,LRFCAV,'iso ')
                if (PYINTS) then
-                  call PRINT_LRSHIELD_CORR('FC-py   ',LRFCAVpy,'iso ')
+                  call PRINT_LRSHIELD_CORR
+     &            ('FC      ',lib,LRFCAVpy,'iso ')
                end if
-               call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'iso ')
-               if (AVGINTS) then
-                  call PRINT_LRSHIELD_CORR('AngPso-J',LRANGPavg,'iso ')
+               call PRINT_LRSHIELD_CORR
+     &         ('AngPso  ',avg,LRANGPavg,'iso ')
+               if (EXTRAINFO) then
+                  call PRINT_LRSHIELD_CORR('AngPso  ',aba,LRANGP,'iso ')
                end if
-               call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'iso ')
-               call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'iso ')
+               call PRINT_LRSHIELD_CORR('DiaKin  ',aba,LRDIAK,'iso ')
+               call PRINT_LRSHIELD_CORR('SD      ',aba,LRSDAV,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'ani1')
+               call PRINT_LRSHIELD_CORR('FC      ',aba,LRFCAV,'ani1')
                if (PYINTS) then
-               call PRINT_LRSHIELD_CORR('FC-py   ',LRFCAVpy,'ani1')
+               call PRINT_LRSHIELD_CORR('FC      ',lib,LRFCAVpy,'ani1')
                end if
-               call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'ani1')
-               if (AVGINTS) then
-                  call PRINT_LRSHIELD_CORR('AngPso-J',LRANGPavg,'ani1')
+               call PRINT_LRSHIELD_CORR
+     &         ('AngPso  ',avg,LRANGPavg,'ani1')
+               if (EXTRAINFO) then
+                  call PRINT_LRSHIELD_CORR('AngPso  ',aba,LRANGP,'ani1')
                end if
-               call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'ani1')
-               call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'ani1')
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               call PRINT_LRSHIELD_CORR('DiaKin  ',aba,LRDIAK,'ani1')
+               call PRINT_LRSHIELD_CORR('SD      ',aba,LRSDAV,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('FC      ',LRFCAV,'ani2')
+               call PRINT_LRSHIELD_CORR('FC      ',aba,LRFCAV,'ani2')
                if (PYINTS) then
-               call PRINT_LRSHIELD_CORR('FC-py   ',LRFCAVpy,'ani2')
+               call PRINT_LRSHIELD_CORR('FC      ',lib,LRFCAVpy,'ani2')
                end if
-               call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP,'ani2')
-               if (AVGINTS) then
-                  call PRINT_LRSHIELD_CORR('AngPso-J',LRANGPavg,'ani2')
+               call PRINT_LRSHIELD_CORR
+     &         ('AngPso  ',avg,LRANGPavg,'ani2')
+               if (EXTRAINFO) then
+                  call PRINT_LRSHIELD_CORR('AngPso  ',aba,LRANGP,'ani2')
                end if
-               call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK,'ani2')
-               call PRINT_LRSHIELD_CORR('SD      ',LRSDAV,'ani2')
+               call PRINT_LRSHIELD_CORR('DiaKin  ',aba,LRDIAK,'ani2')
+               call PRINT_LRSHIELD_CORR('SD      ',aba,LRSDAV,'ani2')
                END IF
             ENDIF
          ENDIF
@@ -226,38 +257,38 @@ C
          IF(SIGMAD1S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM1S]'
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A,10X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('DiaMv   ',LRDIAM,'iso ')
-               call PRINT_LRSHIELD_CORR('DiaDw   ',LRDIAD,'iso ')
+               call PRINT_LRSHIELD_CORR('DiaMv   ',aba,LRDIAM,'iso ')
+               call PRINT_LRSHIELD_CORR('DiaDw   ',aba,LRDIAD,'iso ')
                IF (LRANISO) THEN
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('DiaMv   ',LRDIAM,'ani1')
-               call PRINT_LRSHIELD_CORR('DiaDw   ',LRDIAD,'ani1')
-               WRITE(LUPRI,'(8X,A,12X,A,12X,A,13X,A)') 
+               call PRINT_LRSHIELD_CORR('DiaMv   ',aba,LRDIAM,'ani1')
+               call PRINT_LRSHIELD_CORR('DiaDw   ',aba,LRDIAD,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('DiaMv   ',LRDIAM,'ani2')
-               call PRINT_LRSHIELD_CORR('DiaDw   ',LRDIAD,'ani2')
+               call PRINT_LRSHIELD_CORR('DiaMv   ',aba,LRDIAM,'ani2')
+               call PRINT_LRSHIELD_CORR('DiaDw   ',aba,LRDIAD,'ani2')
                END IF
             ENDIF
          ENDIF
 
          IF (PRTALL1) THEN
-         WRITE(LUPRI,'(/,7X,A,13X,A,12X,A,13X,A,10X,A)') 
+         WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD0S,'iso ')
          IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                                         SGD1S,'iso ')
          IF (LRANISO) THEN
-         WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
+         WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD0S,'ani1')
          IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                                         SGD1S,'ani1')
-         WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A)') 
+         WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'yx','zx','zy'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD0S,'ani2')
@@ -363,7 +394,7 @@ c     off-diagonal elements
       END
 
 C     /* Deck print_lrshield */
-      SUBROUTINE PRINT_LRSHIELD_CORR(names,tensor,elements)
+      SUBROUTINE PRINT_LRSHIELD_CORR(names,integrals,tensor,elements)
 C Purpose:
 C     Print information about LRESC-SHIELDING correction
 C Author:
@@ -377,25 +408,32 @@ C     J. J. Aucar 2022
       REAL*8, intent(in)       :: tensor(3,3)
       REAL*8                   :: iso
       CHARACTER*8, intent(in)  :: names
+      CHARACTER*9, intent(in)  :: integrals
+      CHARACTER*9              :: loc_integrals
       CHARACTER*4, intent(in)  :: elements
 
       CALL QENTER('PRINT_LRSHIELD_CORR')
+      IF (EXTRAINFO) THEN
+         loc_integrals = integrals
+      ELSE
+         loc_integrals = '         '
+      END IF
+
 
 C     Information about calculation of LRESC
       IF (elements == 'iso ') THEN
          iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-         WRITE (LUPRI,'(9X,A,A,9X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
-     &   names, ':',tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
-c      END IF
-c      IF (elements == 'ani1') THEN
+         WRITE (LUPRI,'(9X,2A,4X,A,F12.4,2X,F12.4,3X,2(F12.4),A)')
+     &   names, loc_integrals,':',
+     &   tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       ELSEIF (elements == 'ani1') THEN
-         WRITE (LUPRI,'(9X,A,A,9X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
-     &   names, ':',tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
-c      END IF
-c      IF (elements == 'ani2') THEN
+         WRITE (LUPRI,'(9X,2A,4X,A,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+     &   names, loc_integrals, ':',
+     &   tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       ELSEIF (elements == 'ani2') THEN
-         WRITE (LUPRI,'(9X,A,A,9X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
-     &   names, ':',tensor(2,1),tensor(3,1),tensor(3,2),'[ppm]'
+         WRITE (LUPRI,'(9X,2A,4X,A,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+     &   names, loc_integrals, ':',
+     &   tensor(2,1),tensor(3,1),tensor(3,2),'[ppm]'
       END IF
 
       CALL QEXIT('PRINT_LRSHIELD_CORR')
@@ -425,15 +463,15 @@ C     J. J. Aucar 2022
 C     Information about calculation of LRESC
       IF (elements == 'iso ') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
-      WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
+      WRITE (LUPRI,'(4X,A,6X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
      &      phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
 c      END IF
 c      IF (elements == 'ani1') THEN
       ELSEIF (elements == 'ani1') THEN
-      WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+      WRITE (LUPRI,'(4X,A,6X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
      &      phrase,tensor(1,2),tensor(1,3),tensor(2,3),'[ppm]'
       ELSEIF (elements == 'ani2') THEN
-      WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
+      WRITE (LUPRI,'(4X,A,6X,F12.4,2X,F12.4,3X,F12.4,13X,A)')
      &      phrase,tensor(2,1),tensor(3,1),tensor(3,2),'[ppm]'
       END IF
 

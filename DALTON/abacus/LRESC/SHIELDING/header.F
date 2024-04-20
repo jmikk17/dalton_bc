@@ -63,6 +63,12 @@ c      END IF
       IF (LRESCALL) THEN
             WRITE(lupri,'(/,4X,A)')
      &   '-  All LRESC corrections were activated'
+         IF(EXTRAINFO) THEN
+          WRITE(lupri,'(/,4X,A)') '-  Pso-Kin (avg) and AngPso '//
+     &               '(avg) selected for total contributions'
+         IF (PYINTS) WRITE(lupri,'(/,4X,A)') '-  FC (libcint) '//
+     &            'selected for total diamagnetic contribution'
+         END IF
       ELSE
             WRITE(lupri,'(/,4X,A)') 
      &   '-  Specific LRESC corrections were activated'

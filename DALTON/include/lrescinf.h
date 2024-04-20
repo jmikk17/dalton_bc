@@ -8,6 +8,7 @@
 !cx         jja  : edited on April 2021 to add variables for EFG
 !cx         jja  : edited on February 2023 to add and modify variables for shielding
       REAL*8 calfa, CPNR, CDNR, CFCZK, CFCDE, CSDK, CSDD, CSDBS, CPSOK,
+     &        CPSOKaba,
      &        CFCBS, COZK, CDIAM, CDIAD, CDIAK, CSDAV, CANGP,CFCAV, CPSOOZMV, 
      &        CPSOOZDW, CEFGDW, CEFGMV, CEFGpqp, CEFGkin, C4EFGSO, C4EFGMvpqp,
      &        C4EFGSOL,
@@ -16,7 +17,8 @@
       PARAMETER (calfa=1.0/137.036, CFCZK=-3.0/8.0, CFCDE=0.25D0,
      &            CSDK=-0.375D0, CSDD=1/4.D0, CPNR=-0.5D0, CDNR=1.0D0,
      &            CFCBS=0.25D0, CSDBS=0.25D0, 
-     &            CPSOK=-0.125D0, COZK=-1.0D0, CDIAM=1.0D0, 
+     &            CPSOK=-0.125D0, CPSOKaba=-0.5D0, COZK=-1.0D0,
+     &            CDIAM=1.0D0,
      &            CDIAD=1.0D0, CDIAK=1/6.0, CANGP=-0.5D0,
      &            CFCAV=-7.0/16.0, CSDAV=-3.0/8.0, CPSOOZMV=-0.5D0,
      &            CFCAV0=-3/8.0, CFCAV1=1/8.0, 
@@ -34,7 +36,7 @@
       LOGICAL SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
      &         SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG,
      &         PRTALL1, LRATOM_changed, LRANISO, SIGMAPNR, SIGMADNR,
-     &         PYINTS, AVGINTS, WARNLRS, WARNLRT, WARNQR
+     &         PYINTS, EXTRAINFO, WARNLRS, WARNLRT, WARNQR
 
     !LRESC corrections to EFG and common logicals
       LOGICAL ORBCON,PQPKINLRESC,PRTALL2,EFGC2FLAG,EFGC4FLAG
@@ -44,7 +46,7 @@
      &      LRFCAV0(3,3), LRFCAV1(3,3), LRFCAV2(3,3), LRFCAV3(3,3),
      &                  LRSDAV(3,3), LRDIAM(3,3), LRDIAD(3,3),
      &                  LROZK(3,3), LRPSOK(3,3), LRPSKI(3,3),
-     &                  LRFCZK(3,3),
+     &                  LRFCZK(3,3), LRPSOKaba(3,3),
      &                  LRFCDE(3,3), LRSDK(3,3),
      &                  LRSDD(3,3), LRFCBS(3,3), 
      &                  LRSDBS(3,3), LRPNR(3,3),LRDNR(3,3),SGDNR(3,3),
@@ -60,12 +62,13 @@
      &    LRATOMSS, LRFCAV, LRFCAVpy, LRDIAK, LRANGP, LRANGPavg,
      &    LRSDAV, LRDIAM, LRDIAD, LROZK,
      &    LRFCAV0, LRFCAV1, LRFCAV2, LRFCAV3,
-     &    LRPSOK, LRPSKI, LRFCZK, LRFCDE, LRSDK, LRSDD, SGDNR,
-     &    LRFCBS, LRSDBS, LRPNR, LRDNR, SLRESC, SGPNR, SGD0S, 
+     &    LRPSOK, LRPSKI, LRFCZK, LRPSOKaba, LRFCDE, LRSDK,
+     &    LRSDD, SGDNR,
+     &    LRFCBS, LRSDBS, LRPNR, LRDNR, SLRESC, SGPNR, SGD0S,
      &    SGD1S, SGP1S, SGP1T, SGP3S, SGP3T, QRPSOOZMV, QRPSOOZDW,
      &    QROZFCSO, QROZSDSO, LRGAUG, PRTALL1, LRANISO,
      &    EFGC0,EFGC2, ORBCON,PQPKINLRESC, PRTALL2, JJAPRT,
-     &    LRNUCEXP, LRATOM_changed, SIGMAPNR, SIGMADNR, PYINTS, 
-     &    AVGINTS, WARNLRS, WARNLRT, WARNQR, 
+     &    LRNUCEXP, LRATOM_changed, SIGMAPNR, SIGMADNR, PYINTS,
+     &    EXTRAINFO, WARNLRS, WARNLRT, WARNQR,
      &    EFGC2FLAG, EFGC4FLAG, EFGC4, NLRATOMS
 ! -- end of lrescinf.h --

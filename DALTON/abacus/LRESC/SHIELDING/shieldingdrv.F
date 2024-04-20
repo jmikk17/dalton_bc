@@ -31,7 +31,7 @@ C     J. I. Melo
 C  Edited:
 C     J. J. Aucar 2021 (LRESC Structure)
 C
-#include "implicit.h"
+c#include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "lrescinf.h"
@@ -51,7 +51,7 @@ C                      6         7         8	    9	      10
 C                      11       12        13       14         15
      &            '.DIAM1S','.ANISO ','.PARANR','.DIANR ','.PYINTS',
 C                      16
-     &            '.AVGINT'/
+     &            '.EXTRAI'/
 C
       NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
@@ -161,7 +161,7 @@ c                 Free option
                   ICHANG = ICHANG + 1
                   GOTO 100
  16            CONTINUE
-                  AVGINTS = .TRUE.
+                  EXTRAINFO = .TRUE.
                   ICHANG = ICHANG + 1
                   GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
@@ -219,8 +219,8 @@ C
 
       LRESCALL = .TRUE.
 
-      PYINTS = .FALSE.
-      AVGINTS = .FALSE.
+      PYINTS    = .FALSE.
+      EXTRAINFO = .FALSE.
 
       WARNLRS = .FALSE.
       WARNLRT = .FALSE.
@@ -263,6 +263,7 @@ C
       LRPNR  = D0
       LROZK  = D0
       LRPSOK = D0
+      LRPSOKaba = D0
       LRFCZK = D0
       LRFCDE = D0
       LRSDK = D0
@@ -486,7 +487,8 @@ c      HRINPC = .TRUE.
       IF (SIGMAD0S) THEN
          TRPLET = .FALSE.
          TRPFLG = .FALSE.
-         CALL AVELRSC('ANGP',WORK,LWORK) ! PSO-OZ
+         IF (EXTRAINFO) CALL AVELRSC('ANGP',WORK,LWORK) ! PSO-OZ
+         CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
          CALL AVELRSC('FCAV',WORK,LWORK) ! FC
          CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
          CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
@@ -497,8 +499,6 @@ c      HRINPC = .TRUE.
             CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
             CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
          END IF
-
-         IF (AVGINTS) CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
 
       END IF
 C --------------------------------------------------
@@ -511,6 +511,9 @@ C     First Order Singlet
       IF (SIGMAP1S)  THEN
          CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K with AVG
          CALL GET_LR('OZK ',.FALSE.) !   PSO  | OZ-KE
+         IF (EXTRAINFO) THEN
+            CALL GET_LR('PSKK',.FALSE.) ! ANGMOM | PSO-K with abacus integrals
+         END IF
       END IF
 
 C     Diamagnetic corrections to Shielding:
@@ -611,7 +614,7 @@ C     Add constants and print all in ppm's
          LRFCAV1 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV1*LRFCAV1
          LRFCAV2 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV2*LRFCAV2
          LRFCAV3 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV3*LRFCAV3
-         LRFCAVpy = LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3
+         LRFCAVpy = LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3 !Imported from pyscf
 !
 !     Paramagnetic non-relativistic value
          LRPNR = calfa*calfa*1.0D+6*CPNR*LRPNR
@@ -624,6 +627,7 @@ C     Add constants and print all in ppm's
          LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
          LROZK  = calfa*calfa*calfa*calfa*1.0D+6* COZK*LROZK
          LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
+         LRPSOKaba = calfa*calfa*calfa*calfa*1.0D+6* CPSOKaba*LRPSOKaba
 c
          QRPSOOZMV = calfa*calfa*1.0D+6* CPSOOZMV*QRPSOOZMV
          QRPSOOZDW = calfa*calfa*1.0D+6* CPSOOZDW*QRPSOOZDW
@@ -632,7 +636,11 @@ c
 C
 
 !     Diamagnetic corrections
-         SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGP + LRSDAV
+         IF (PYINTS) THEN
+            SGD0S = SGD0S + LRFCAVpy + LRDIAK + LRANGPavg + LRSDAV
+         ELSE
+            SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGPavg + LRSDAV
+         END IF
          SGD1S = SGD1S + LRDIAD + LRDIAM
 !     Paramagnetic corrections
          SGPNR = LRPNR
