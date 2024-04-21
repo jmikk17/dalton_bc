@@ -33,7 +33,7 @@ C  /* Deck header */
       CHARACTER HEAD*(*)
 #include "priunit.h"
 C
-      LHEAD = LNBLNK(HEAD)
+      LHEAD = LEN_TRIM(HEAD)
       IF (IN .GE. 0) THEN
          INDENT = IN + 1
       ELSE
@@ -53,7 +53,7 @@ C
       CHARACTER HEAD*(*)
 #include "priunit.h"
 C
-      LHEAD = LNBLNK(HEAD)
+      LHEAD = LEN_TRIM(HEAD)
       IF (IN .GE. 0) THEN
          INDENT = MAX(1,IN)
       ELSE
@@ -80,7 +80,7 @@ C
          TIMSTR = TIMEND
          IF (TIME .GT. 0.1D0) THEN
 C        Jun 06 hjaaj: do not print times less than 0.1 seconds
-            LTEXT = LNBLNK(TEXT)
+            LTEXT = LEN_TRIM(TEXT)
             LTEXT = MIN(30,LTEXT)
             IF (LTEXT .GE. 10) THEN
                OUT_TEXT = ' Time used in '//TEXT(1:LTEXT)//' is'
@@ -124,7 +124,7 @@ C
 
          IF (TIME .GT. 0.1D0 .OR. WALLT .GT. 0.1D0) THEN
 C        Jun 06 hjaaj: do not print times less than 0.1 seconds
-            LTEXT = LNBLNK(TEXT)
+            LTEXT = LEN_TRIM(TEXT)
             LTEXT = MIN(30,LTEXT)
             IF (LTEXT .GE. 10) THEN
                OUT_TEXT = ' CPU  time used in '//TEXT(1:LTEXT)//' is'
@@ -175,7 +175,7 @@ C  /* Deck titler */
 #include "priunit.h"
       CHARACTER HEAD*(*), A*(*)
 C
-      LHEAD  = LNBLNK(HEAD)
+      LHEAD  = LEN_TRIM(HEAD)
       LENGTH = LHEAD
       IF (IN .GE. 200) THEN
          LENGTH = LENGTH + 2
@@ -219,7 +219,7 @@ C  /* Deck around */
       SUBROUTINE AROUND(HEAD)
       CHARACTER HEAD*(*)
 #include "priunit.h"
-      LHEAD  = LNBLNK(HEAD)
+      LHEAD  = LEN_TRIM(HEAD)
       LNG    = LHEAD + 2
       IND = MAX(1,(80 - LNG)/2 + 1)
       WRITE (LUPRI,'(//150A)') (' ',I=1,IND), '+', ('-',I=1,LNG), '+'
@@ -239,7 +239,7 @@ C  /* Deck stopit */
       CHARACTER*(*) SUB, PLACE
       WRITE (LUPRI,'(//3A)') ' Work space exceeded in subroutine ',
      *                         SUB,'.'
-      IF (LNBLNK(PLACE) .GT. 0) THEN
+      IF (LEN_TRIM(PLACE) .GT. 0) THEN
          WRITE (LUPRI,'(/2A)') ' Location: ',PLACE
       END IF
       JNT1  = ABS(INT1)
@@ -944,14 +944,14 @@ C
 C     Copy input strings to local strings,
 C     remove trailing blanks, check for use of defaults
 C
-      FILELN = LNBLNK(FILEIN)
+      FILELN = LEN_TRIM(FILEIN)
       IF (FILELN .GT. 0) THEN
          FILENM(1:FILELN) = FILEIN(1:FILELN)
       ELSE
          FILENM = ' '
       END IF
 
-      ACCELN = LNBLNK(ACCEIN)
+      ACCELN = LEN_TRIM(ACCEIN)
       IF (ACCELN .GT. 0) THEN
          ACCESF(1:ACCELN) = ACCEIN(1:ACCELN)
          CALL UPCASE(ACCESF)
@@ -959,7 +959,7 @@ C
          ACCESF = ' '
       END IF
 
-      STATLN = LNBLNK(STATIN)
+      STATLN = LEN_TRIM(STATIN)
       IF (STATLN .GT. 0) THEN
          STATUF(1:STATLN) = STATIN(1:STATLN)
          CALL UPCASE(STATUF)
@@ -968,7 +968,7 @@ C
          STATUF(1:7) = 'UNKNOWN'
       END IF
 
-      FORMLN = LNBLNK(FORMIN)
+      FORMLN = LEN_TRIM(FORMIN)
       IF (FORMLN .GT. 0) THEN
          FORMF (1:FORMLN) = FORMIN(1:FORMLN)
          CALL UPCASE(FORMF)
@@ -1006,7 +1006,7 @@ C
       IF (FILENM(1:FILELN) .EQ. 'DALTON.OUT') THEN
          OUTFIL = ' '
          CALL GETENV ('OUTFIL',OUTFIL)
-         LENOUT = LNBLNK(OUTFIL)
+         LENOUT = LEN_TRIM(OUTFIL)
          if (LENOUT .EQ. max_filename_length) then
             write (lugppri,*) 'max_filename_length is too short'
             write (lugppri,*) OUTFIL
@@ -1021,7 +1021,7 @@ c              LENOUT = LENOUT + 1
 c           END DO
 c43         CONTINUE
             CALL GETENV ('WRKDIR',WRKDIR)
-            LENWRK = lnblnk(WRKDIR)
+            LENWRK = LEN_TRIM(WRKDIR)
             if (LENWRK .EQ. max_filename_length) then
                write (lugppri,*) 'max_filename_length is too short'
                write (lugppri,*) WRKDIR
@@ -1453,7 +1453,7 @@ C
 #include "maxorb.h"
 #include "infpar.h"
 C
-      FILELN = LNBLNK(FILENM)
+      FILELN = LEN_TRIM(FILENM)
       IF (MYNUM .GT. 0) THEN
          F_NODEID = '.n' //
      &             CHRNOS(    MYNUM/1000    ) //
@@ -1491,7 +1491,7 @@ C     Print requested file information to LUPRI
          CALL QUIT('Error, file unit < 0')
       ELSE IF (TASK(1:4) .EQ. 'NAME') THEN
          INQUIRE(UNIT=LU,NAME=FILENM)
-         FILELN = LNBLNK(FILENM)
+         FILELN = LEN_TRIM(FILENM)
          WRITE(LUPRI,'(/2A)')
      &      ' GPINQ_print: file name is ',FILENM(1:FILELN)
       ELSE
@@ -1521,10 +1521,10 @@ C     Remove in-line comment /hjaaj March 2010
       K  = MIN(K1, K2, K3)
       IF (K .EQ. 1) GO TO 9000
 C        ......... then whole line is a comment line, we skip it
-      LEN_WORD = LNBLNK(WORD)
+      LEN_WORD = LEN_TRIM(WORD)
       IF (K .GT. 0) THEN
          WORD(K:LEN_WORD) = ' '
-         LEN_WORD = LNBLNK(WORD)
+         LEN_WORD = LEN_TRIM(WORD)
       END IF
 C
       DO I = 1, LEN_WORD

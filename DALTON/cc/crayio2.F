@@ -30,7 +30,7 @@ c/* Deck WOPEN2 */
       CHARACTER*(*) FILE
       COMMON /UNICRAYIO/ IUNCRAY(1:99)
 C
-      ILEN=LNBLNK(FILE)
+      ILEN=LEN_TRIM(FILE)
 C
       IF (LUNIT .LE. 0) THEN
          IUN = 0
@@ -220,7 +220,7 @@ C
         CALL QUIT('I/O ERROR IN WCLOSE2')
       END IF
 
-      ILEN = LNBLNK(FILE)
+      ILEN = LEN_TRIM(FILE)
 
       IF (DEBUG) WRITE(LUPRI,*) 'CLOSE FILE "',FILE(1:ILEN),
      & '" with unit number ',LUNIT
