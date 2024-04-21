@@ -96,7 +96,7 @@ intel-oneapi:
     - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
     - cd build
     - make -j 32
-    - ctest -j 16 --timeout 120 --output-on-failure -L essential
+    - ctest -j 16 --output-on-failure -L serial -LE "long|verylong"
   interruptible: true
 
 intel-oneapi-mpi:
@@ -140,7 +140,7 @@ intel-oneapi-mpi:
     - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
     - cd build
     - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential
+    - ctest -j 4 --output-on-failure -L dalton -LE "serial|long|verylong"
   interruptible: true
 
 intel-classic:
