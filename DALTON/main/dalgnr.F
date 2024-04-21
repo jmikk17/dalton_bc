@@ -2069,7 +2069,11 @@ C     using RMA operations. It should probably be in a common block
 C
          I0 = 1
          LUNMCL = -9056
-         CALL GETENV('WRKDIR',WRKDIR)
+#ifdef NO_FORTRAN_2008
+         call getenv('WRKDIR',WRKDIR)
+#else
+         call get_environment_variable('WRKDIR',WRKDIR)
+#endif
          LENWRK = 0
          DO 43 I = 1, 60
             IF (WRKDIR(I:I) .EQ. ' ') GO TO 44
@@ -2153,7 +2157,11 @@ C
       CALL MPI_BCAST(PARIO,1,my_MPI_LOGICAL,MASTER,MPI_COMM_WORLD,
      &               IERR)
       IF (PARIO) THEN
-         CALL GETENV('WRKDIR',WRKDIR)
+#ifdef NO_FORTRAN_2008
+         call getenv('WRKDIR',WRKDIR)
+#else
+         call get_environment_variable('WRKDIR',WRKDIR)
+#endif
          LENWRK = 0
          DO 43 I = 1, 60
             IF (WRKDIR(I:I) .EQ. ' ') GO TO 44
