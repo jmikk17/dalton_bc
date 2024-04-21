@@ -349,9 +349,8 @@ C
      *              LSYM,MS2
          ESCF   = EMCSCF
          ECCGRS = EMCSCF
-
-         
          CALL GPCLOSE(LUSIFC,'KEEP')
+
 C        Run MP3 through the mp3_energy.F file 
          CALL MP3_ENERGY(WORK,LWORK,EMP2_CORR,EMP3_CORR)
 C
@@ -5786,8 +5785,9 @@ C
       CALL QENTER('CCSD_DELFRO')
 C
       IF (LWORK .LT. NORBT) THEN
-         WRITE(LUPRI,*) 'Insufficient space in CCSD_DELFRO'
-         CALL QUIT(' ')
+         WRITE(LUPRI,'(/A,1X,I0,1X,I0)') 'ERROR:'//
+     &   'Insufficient space in CCSD_DELFRO. Have, need:',LWORK,NORBT
+         CALL QUIT('Insufficient work space in CCSD_DELFRO')
       END IF
 C
       KOFF1 = 0
