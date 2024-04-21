@@ -170,8 +170,8 @@ C
                XL2JI = WRK(KL2-1+(I-1)*NVAR+J)
                DEV   = ABS(XL2IJ-XL2JI)
                IF (DEV.GT.ORMX) THEN
-                  IOC = I
-                  JOC = J
+                  IO = I
+                  JO = J
                   ORMX = DEV
                END IF
             END IF
