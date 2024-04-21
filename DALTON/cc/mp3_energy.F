@@ -70,8 +70,7 @@
 #include "ccnoddy.h"
 #include "ccfield.h"
 C
-      DIMENSION WORK(LWORK)
-      DOUBLE PRECISION ECPSD2, ECPSD3
+      REAL*8  WORK(LWORK), ECPSD2, ECPSD3
       PARAMETER(ZERO = 0.0D0, HALF = 0.5D0, ONE = 1.0D0, TWO = 2.0D0)
       PARAMETER(XMONE = -1.0D0)
 C
@@ -136,24 +135,25 @@ C
 C
 C           DYNAMIC ALLOCATION OF MEMORY
 C
+            ntamp = nt1amx + nt2amx
             KFOCKD = 1
-            KIAJB = KFOCKD + NORBTS
-            KT1AM = KIAJB + NT2AMX
-            KRHST1 = KT1AM + NT1AMX
+            KIAJB  = KFOCKD + NORBTS
+            KT1AM  = KIAJB  + NT2AMX
+            KRHST1 = KT1AM  + NT1AMX
             KRHST2 = KRHST1 + NT1AM(ISYMOP)
-            KT2P1 = KRHST2  +
+            KT2P1  = KRHST2 +
      *          MAX(NTAMP,NT2AO(ISYMOP),2*NT2ORT(ISYMOP))
-            KT1P2 = KT2P1 +
-     *          MAX(NT2SQ(ISYMOP),(NT2AMX+NTAMR12),NT2R12(1),NTG2SQ(1))     
-            KT2P2 = KT1P2 + NT1AMX
-            KT2P3 = KT2P2 + 
+            KT1P2  = KT2P1  +
      *          MAX(NT2SQ(ISYMOP),(NT2AMX+NTAMR12),NT2R12(1),NTG2SQ(1))
-            KEND1 = KT2P3 + NT2AMX
-            LWRK1 = LWORK - KEND1
+            KT2P2  = KT1P2  + NT1AMX
+            KT2P3  = KT2P2  + 
+     *          MAX(NT2SQ(ISYMOP),(NT2AMX+NTAMR12),NT2R12(1),NTG2SQ(1))
+            KEND1  = KT2P3  + NT2AMX
+            LWRK1  = LWORK  - KEND1
 C
             IF (LWRK1.LT.0) THEN
               WRITE(LUPRI,*) 'Need : ',KEND1,'Available : ',LWORK
-              CALL QUIT('Insufficient space in CPSD')
+              CALL QUIT('Insufficient space in MP3_ENERGY - CPSD')
             END IF  
 C
 C           GET CANONICAL ORBITAL ENERGIES
