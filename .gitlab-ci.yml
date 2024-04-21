@@ -4,30 +4,34 @@ variables:
   GIT_SUBMODULE_STRATEGY: "recursive"
   GET_SOURCES_ATTEMPTS: "10"
 
-before_script:
-  - dnf upgrade -y -q
-  - dnf install -y -q gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
-                      mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
-                      python python3 python3-h5py redhat-rpm-config findutils which procps-ng coreutils
-  - . ~/.bash_profile
-  - uname -a
-  - lscpu
-  - free -h
-  - gfortran --version
-  - gcc --version
-  - g++ --version
-  - module load mpi/openmpi-x86_64
-  - mpirun --version
-  - module unload mpi/openmpi-x86_64
-  - module load mpi/mpich-x86_64
-  - mpirun --version
-  - module unload mpi/mpich-x86_64
-  - python3 --version
-  - git --version
-  - cmake --version
+default:
+  before_script:
+    - dnf install -y gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
+                     mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
+                     python python3 python3-pip python3-h5py redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+    - . ~/.bashrc
+    - . /etc/profile.d/modules.sh
+    - module purge
+    - module avail
+    - uname -a
+    - lscpu
+    - free -h
+    - gfortran --version
+    - gcc --version
+    - g++ --version
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - module purge
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - module purge
+    - python3 --version
+    - git --version
+    - cmake --version
 
 coverage:
-  image: fedora:29
+  image: fedora:37
   tags:
     - saas-linux-2xlarge-amd64
   coverage: '/Percentage Coverage:\s*([^%]+)/'
@@ -39,8 +43,6 @@ coverage:
     - dnf install -y -q gcovr
     - module load mpi/mpich-x86_64
     - mpirun --version
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
     - pip install -q codecov
     - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release --coverage
                    -DENABLE_PDE=ON
@@ -55,8 +57,8 @@ coverage:
     - ctest -D ExperimentalCoverage
   interruptible: true
 
-intel:
-  image: fedora:32
+intel-oneapi:
+  image: fedora:37
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
@@ -68,14 +70,105 @@ intel:
       when: never
   allow_failure: true
   before_script:
-    - dnf upgrade -y -q
-    - dnf install -y -q gcc gcc-c++ gcc-gfortran git make cmake python python3
-                        redhat-rpm-config findutils which procps-ng coreutils
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d
-    - dnf install -y intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mkl
-    - set +e
-    - . /opt/intel/oneapi/setvars.sh
-    - set -e
+    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+                     intel-oneapi-compiler-dpcpp-cpp
+                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+                     intel-oneapi-compiler-fortran
+                     intel-oneapi-mkl intel-oneapi-mkl-devel
+    - . /etc/profile.d/modules.sh
+    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
+    - module use ~/intel-oneapi-modulefiles
+    - module purge
+    - module load tbb/2021.12 compiler-rt/2024.1.0 oclfpga/2024.1.0 compiler/2024.1.0 mkl/2024.1
+    - uname -a
+    - lscpu
+    - free -h
+    - ifx --version
+    - icx --version
+    - icpx --version
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
+    - cd build
+    - make -j 32
+    - ctest -j 16 --output-on-failure -L serial -LE "long|verylong"
+  interruptible: true
+
+intel-oneapi-mpi:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-2xlarge-amd64
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  allow_failure: true
+  before_script:
+    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+                     intel-oneapi-compiler-dpcpp-cpp
+                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+                     intel-oneapi-compiler-fortran
+                     intel-oneapi-mkl intel-oneapi-mkl-devel
+                     intel-oneapi-mpi intel-oneapi-mpi-devel
+    - . /etc/profile.d/modules.sh
+    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
+    - module use ~/intel-oneapi-modulefiles
+    - module purge
+    - module load tbb/2021.12 compiler-rt/2024.1.0 oclfpga/2024.1.0 compiler/2024.1.0 mpi/2021.12 mkl/2024.1
+    - uname -a
+    - lscpu
+    - free -h
+    - ifx --version
+    - icx --version
+    - icpx --version
+    - mpirun --version
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
+    - cd build
+    - make -j 32
+    - ctest -j 4 --output-on-failure -L dalton -LE "serial|long|verylong"
+  interruptible: true
+
+intel-classic:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  tags:
+    - saas-linux-2xlarge-amd64
+  rules:
+    - when: always
+    - if: $CI_PIPELINE_SOURCE == 'schedules'
+      when: never
+  allow_failure: true
+  before_script:
+    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+                     intel-oneapi-compiler-dpcpp-cpp
+                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+                     intel-oneapi-compiler-fortran
+                     intel-oneapi-mkl intel-oneapi-mkl-devel
+    - . /etc/profile.d/modules.sh
+    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
+    - module use ~/intel-oneapi-modulefiles
+    - module purge
+    - module load compiler-rt/2023.2.1 ifort/2024.1.0 icc/2023.2.1 mkl/2024.1
     - uname -a
     - lscpu
     - free -h
@@ -92,8 +185,8 @@ intel:
     - ctest -j 16 --timeout 120 --output-on-failure -L essential
   interruptible: true
 
-intel-mpi:
-  image: fedora:32
+intel-classic-mpi:
+  image: fedora:37
   variables:
     DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
@@ -105,14 +198,20 @@ intel-mpi:
       when: never
   allow_failure: true
   before_script:
-    - dnf upgrade -y -q
-    - dnf install -y -q gcc gcc-c++ gcc-gfortran git make cmake python python3
-                        redhat-rpm-config findutils which procps-ng coreutils
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d
-    - dnf install -y intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
-    - set +e
-    - . /opt/intel/oneapi/setvars.sh
-    - set -e
+    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
+    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
+                     python python3 python3-pip redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+                     intel-oneapi-compiler-dpcpp-cpp
+                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
+                     intel-oneapi-compiler-fortran
+                     intel-oneapi-mkl intel-oneapi-mkl-devel
+                     intel-oneapi-mpi intel-oneapi-mpi-devel
+    - . /etc/profile.d/modules.sh
+    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
+    - module use ~/intel-oneapi-modulefiles
+    - module purge
+    - module load compiler-rt/2023.2.1 ifort/2024.1.0 icc/2023.2.1 mpi/2021.12 mkl/2024.1
     - uname -a
     - lscpu
     - free -h
@@ -826,7 +925,7 @@ nightly-intel:
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
+    - ifx --version
     - icc --version
     - icpc --version
     - mpirun --version
@@ -834,7 +933,7 @@ nightly-intel:
     - git --version
     - cmake --version
   script:
-    - python setup --fc=mpiifort --cc=mpiicc --cxx=mpiicpc --mpi --mkl=sequential --type=release
+    - python setup --fc=mpiifx --cc=mpiicc --cxx=mpiicpc --mpi --mkl=sequential --type=release
                    -DSITE=GitLab -DBUILDNAME=$CI_COMMIT_REF_NAME-intel-mpi
     - cd build
     - export CTEST_MAKE_NUM_PROCS=4

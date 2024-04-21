@@ -66,7 +66,7 @@ C
       CHARACTER   PFMT*20, COLUMN*8
       PARAMETER (ZERO=0.D00, KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
-      LOGICAL IS_NAN
+      LOGICAL DP_IS_NAN
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
 C
       IF (NCTL .LT. 0) THEN
@@ -87,7 +87,7 @@ C
       CMAX = ZERO
       N_NAN = 0
       DO I = 1,J
-         IF (IS_NAN(AMATRX(I),AMATRX(I))) THEN
+         IF (DP_IS_NAN(AMATRX(I))) THEN
             N_NAN = N_NAN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
@@ -188,7 +188,7 @@ C
       DIMENSION AMATRX(*)
       CHARACTER*1 ASA(3),BLANK,CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     IS_NAN
+      LOGICAL     DP_IS_NAN
       PARAMETER (ZERO = 0.0D0, KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
@@ -213,7 +213,7 @@ C
       AMAX = ZERO
       N_NAN = 0
       DO I=1,MATLN
-         IF ( IS_NAN(AMATRX(I),AMATRX(I)) ) THEN
+         IF ( DP_IS_NAN(AMATRX(I)) ) THEN
             N_NAN = N_NAN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
@@ -479,7 +479,7 @@ C
       INTEGER NDIM(NBLK), BEGIN, KCOL
       CHARACTER*1 ASA(3), BLANK, CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     IS_NAN
+      LOGICAL     DP_IS_NAN
       PARAMETER (ZERO=0.D00, KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
@@ -504,7 +504,7 @@ C
       AMAX = ZERO
       N_NAN = 0
       DO I=1,MATDIM
-         IF ( IS_NAN(AMATRX(I),AMATRX(I)) ) THEN
+         IF ( DP_IS_NAN(AMATRX(I)) ) THEN
             N_NAN = N_NAN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
@@ -607,7 +607,7 @@ C
       DIMENSION AMATRX(ROWDIM,COLDIM)
       CHARACTER*1 ASA(3), BLANK, CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     IS_NAN
+      LOGICAL     DP_IS_NAN
       PARAMETER (ZERO=0.D00, KCOLP=5, KCOLN=8)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, BLANK/' '/, ASA/' ', '0', '-'/
@@ -619,7 +619,7 @@ C
       AMAX = ZERO
       DO 10 J = COLLOW,COLHI
          DO 10 I = ROWLOW,ROWHI
-            IF ( IS_NAN(AMATRX(I,J),AMATRX(I,J)) ) THEN
+            IF ( DP_IS_NAN(AMATRX(I,J)) ) THEN
                N_NAN = N_NAN + 1
             ELSE
                AMAX = MAX( AMAX, ABS(AMATRX(I,J)) )
@@ -1172,28 +1172,38 @@ C
       RETURN
  1000 FORMAT (/10X,6('      real < ',A6,I4,' > imag'))
       END
-C === Deck is_nan ===============
-      LOGICAL FUNCTION IS_NAN(XA,XB)
+C === Deck dp_is_NaN ===============
+      LOGICAL FUNCTION dp_is_NaN(X)
 C
-C     May 2010, Hans Joergen Aa. Jensen
-C     Purpose: IS_NAN(X,X) is true iff X is NAN
+C     May 2010, Hans Joergen Aa. Jensen; revised Apr 2024
+C     Purpose: DP_IS_NAN(X) is true iff X is NAN
 C
-      REAL*8 XA, XB
-      IS_NAN = XA .NE. XB
+      REAL*8 X
+      CHARACTER*20 TEST_STRING
+!     for DP_IS_NAN(XA,XB) and DP_IS_NAN = XA .NE. XB (2010 code):
+!     This gave false with gfortran for call DP_IS_NAN(X,X) with X=NaN
+!     Therefore now use a print format which I know will give NaN when X=NaN /HJAaJ Apr 2024
+      WRITE(TEST_STRING,'(D20.10)') X
+      DP_IS_NAN = INDEX(TEST_STRING,'NaN') .NE. 0
       RETURN
-      END
+      END 
+! Apr 2024: tried also the following found on the internet, it did not work, gave also .false. for a NaN in srDFT Ecint
+!     USE ieee_arithmetic, ONLY: ieee_is_nan
+!     Real*8  , Intent(IN) :: X
+!     dp_is_NaN = ieee_is_nan(X)
+!     End
 C === Deck n_nan ===============
       INTEGER FUNCTION N_NAN(N,AVEC)
 C
 C     May 2010, Hans Joergen Aa. Jensen
 C     Purpose: N_NAN returns number of NAN entries in AVEC(1:N)
 C
-      LOGICAL IS_NAN
+      LOGICAL DP_IS_NAN
       INTEGER N, I, J
       REAL*8  AVEC(N)
       J = 0
       DO I = 1,N
-         IF ( IS_NAN(AVEC(I),AVEC(I)) ) J = J + 1
+         IF ( DP_IS_NAN(AVEC(I)) ) J = J + 1
       END DO
       N_NAN  = J
       RETURN
