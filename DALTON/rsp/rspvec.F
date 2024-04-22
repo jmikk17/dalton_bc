@@ -1691,7 +1691,7 @@ C
      * '@ A operator, symmetry, spin: ',AQRLB(MSYMA,IAOP),MSYMA,ISPINA,
      * '@ B operator, symmetry, spin: ',BQRLB(MSYMB,IBOP),MSYMB,ISPINB,
      * '@ C operator, symmetry, spin: ',CQRLB(MSYMC,ICOP),MSYMC,ISPINC
-                                 WRITE(LUPRI,'(/A,3F15.8)')
+                                 WRITE(LUPRI,'(/A,3F20.8)')
      *                           '@ omega B, omega C, QR value :',
      *                           BQRFR(IBFR),CQRFR(ICFR),HYPVAL(IAOP)
                                  WRITE(LURSPRES,'(//A,3(/2A,2I5))')
@@ -1699,7 +1699,7 @@ C
      * '@ A operator, symmetry, spin: ',AQRLB(MSYMA,IAOP),MSYMA,ISPINA,
      * '@ B operator, symmetry, spin: ',BQRLB(MSYMB,IBOP),MSYMB,ISPINB,
      * '@ C operator, symmetry, spin: ',CQRLB(MSYMC,ICOP),MSYMC,ISPINC
-                                 WRITE(LURSPRES,'(/A,3F15.8)')
+                                 WRITE(LURSPRES,'(/A,3F20.8)')
      *                           '@ omega B, omega C, QR value :',
      *                           BQRFR(IBFR),CQRFR(ICFR),HYPVAL(IAOP)
                               END IF
@@ -3597,7 +3597,7 @@ C
      * '@ A operator, symmetry, spin: ',LABEL(1),KSYMA,KSPINA,
      * '@ B operator, symmetry, spin: ',LABEL(2),KSYMB,KSPINB,
      * '@ C operator, symmetry, spin: ',LABEL(3),KSYMC,KSPINC
-                   WRITE(LUPRI,'(/A,3F15.8)')
+                   WRITE(LUPRI,'(/A,3F20.8)')
      *                  '@ omega B, omega C, QR value :',
      *                  FRQB,FRQC,QUAVAL
                    IF (SOCOLL) CALL SODIST(ALAB,KSYMA,BLAB,KSYMB,

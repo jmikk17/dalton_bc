@@ -449,7 +449,7 @@ C Based on some lines of SUBROUTINE BCCHK
       IF (labels_read(1) .EQ. labels_in(1) .AND.
      &    labels_read(2) .EQ. labels_in(2) .AND.
      &    labels_read(3) .EQ. labels_in(3) ) then
-         READ (fileID,'(/,30X,3F15.8)') FRQB, FRQC, QUAVAL
+         READ (fileID,'(/,30X,3F20.8)') FRQB, FRQC, QUAVAL
       ELSE
          GOTO 346
       END IF
