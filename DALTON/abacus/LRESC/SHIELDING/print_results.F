@@ -56,20 +56,20 @@ C
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'iso ')
+               call PRINT_LRSHIELD_CORR('L-Kin   ',aba,LROZK,'iso ')
                call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'iso ')
                IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
      &         ('Pso-Kin ',aba,LRPSOKaba,'iso ')
                IF (LRANISO) THEN
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'ani1')
+               call PRINT_LRSHIELD_CORR('L-Kin   ',aba,LROZK,'ani1')
                call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'ani1')
                IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
      &         ('Pso-Kin ',aba,LRPSOKaba,'ani1')
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'yx','zx','zy'
-               call PRINT_LRSHIELD_CORR('L-Kin   ',lib,LROZK,'ani2')
+               call PRINT_LRSHIELD_CORR('L-Kin   ',aba,LROZK,'ani2')
                call PRINT_LRSHIELD_CORR('Pso-Kin ',avg,LRPSOK,'ani2')
                IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
      &         ('Pso-Kin ',aba,LRPSOKaba,'ani2')
