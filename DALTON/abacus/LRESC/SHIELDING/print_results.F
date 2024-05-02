@@ -156,6 +156,8 @@ C
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('FC-L-So ',aba,QROZFCSO,'ani1')
                call PRINT_LRSHIELD_CORR('SD-L-So ',aba,QROZSDSO,'ani1')
+               WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
+     &               slash,'yx','zx','zy'
                call PRINT_LRSHIELD_CORR('FC-L-So ',aba,QROZFCSO,'ani2')
                call PRINT_LRSHIELD_CORR('SD-L-So ',aba,QROZSDSO,'ani2')
                END IF
