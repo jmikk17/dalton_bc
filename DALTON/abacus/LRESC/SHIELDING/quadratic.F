@@ -18,12 +18,14 @@
       CHARACTER*8 :: operadores_trio(3)
       CHARACTER*1 :: spin_trio(3)
 
-      double precision, dimension(NBAST,NBAST) :: Identity,OVERLP,aux1
+c      double precision, dimension(:), allocatable :: xmos
+c      double precision, dimension(:,:), allocatable :: cmos
+c      double precision, dimension(:,:), allocatable :: Identity
+c      double precision, dimension(:,:), allocatable :: OVERLP
+c      integer :: naos,nmos
+
       CHARACTER*8 RTNLBL(2)
 
-      double precision, dimension(NBAST*NORBT) :: xmos
-      double precision   ::   cmos(NORBT,NBAST)
-      integer :: naos,nmos
       LOGICAL FOUND
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
@@ -42,8 +44,8 @@
       CALL QENTER('LRSCQUAD')
       CALL GETTIM(TIMQR,WALQR)
 
-      naos = NBAST ! NBAST: Total number of (atomic) basis functions
-      nmos= NORBT  ! NORBT: Total number of molecular orbitals
+c      naos = NBAST ! NBAST: Total number of (atomic) basis functions
+c      nmos= NORBT  ! NORBT: Total number of molecular orbitals
 
       TOTALQR = 0.d0
       QR = 0.d0

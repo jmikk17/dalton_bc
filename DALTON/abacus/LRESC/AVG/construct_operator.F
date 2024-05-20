@@ -21,7 +21,6 @@ C     Purpose:
 C     Construct operators matrices as productor of at 
 C     least two known ones.
 C     Author: Juan J. Aucar         2024
-
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -33,14 +32,21 @@ C     Author: Juan J. Aucar         2024
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"
-      double precision cmos(NORBT,NBAST)
       LOGICAL FOUND
       CHARACTER*4 KEY
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
-      double precision, dimension(NBAST,NBAST) :: AOPERATOR,BOPERATOR
-      double precision, dimension(NBAST,NBAST) :: aux0,aux1,aux2,aux3
-      double precision, dimension(NBAST*NORBT) :: xmos
+      double precision, dimension(:), allocatable :: xmos
+      double precision, dimension(:,:), allocatable :: cmos
+      double precision, dimension(:,:), allocatable :: AOPERATOR
+      double precision, dimension(:,:), allocatable :: BOPERATOR
+      double precision, dimension(:,:), allocatable :: aux0
+      double precision, dimension(:,:), allocatable :: aux1
+      double precision, dimension(:,:), allocatable :: aux2
+      double precision, dimension(:,:), allocatable :: aux3
+
+
+
       CHARACTER*8 RTNLBL(2)
 
 c     NBAST: Total number of (atomic) basis functions
@@ -67,6 +73,8 @@ cb      write(lupri,*)' selected atom is :', LRATOM
      &              CHRNOS(MOD(LRATOM,10))
 
 C      cmos(i,j)   :  Molecular orbitals coeficients matrix elements (from SIRIUS.RST)
+       allocate(xmos(NBAST*NORBT))
+       allocate(cmos(NORBT,NBAST))      
        CALL RD_SIRIFC('CMO',FOUND,xmos)
        k = 1
        cmos=0.0
@@ -76,14 +84,23 @@ C      cmos(i,j)   :  Molecular orbitals coeficients matrix elements (from SIRIU
              k = k + 1
           end do
        end do
+       deallocate(xmos)
 
+      allocate(aux0(NBAST,NBAST))
       aux0=matmul(transpose(cmos),cmos)
+      deallocate(cmos)
 C ---------------------------------------------------------------------
       IF(KEY.EQ."PSOK") THEN
          CALL GETDAT(RTNLBL(1),RTNLBL(2))
          RTNLBL(1)='1 A  21 '
 C        Replace time information with symmetry information
          RTNLBL(2)='SQUARE  '
+
+         allocate(AOPERATOR(NBAST,NBAST))
+         allocate(BOPERATOR(NBAST,NBAST))
+         allocate(aux1(NBAST,NBAST))
+         allocate(aux2(NBAST,NBAST))
+         allocate(aux3(NBAST,NBAST))
 
          call READAOP(AOPERATOR, NBAST, 'KINENERG') !gets KINENERG matrix
          DO I= 1, 3 !x, y, z
@@ -101,7 +118,15 @@ c           For debugging purposes:
 c           write(lupri,*) "IMPRIMIENDO EL OPERADOR: "
 c     &     //'PSOKJ'//nuc_coord(I)
 c           call OUTPUT(aux3,1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)  ! prints aux3
+
+
          END DO
+            deallocate(aux0)
+            deallocate(AOPERATOR)
+            deallocate(BOPERATOR)
+            deallocate(aux1)
+            deallocate(aux2)
+            deallocate(aux3)
       ENDIF
 C ---------------------------------------------------------------------
 
