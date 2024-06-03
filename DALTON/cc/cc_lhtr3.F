@@ -1040,7 +1040,7 @@ C        Transform the RHO2 vector to MO basis.
 C----------------------------------------------
 C
          AUTIME = SECOND()
-         CALL CC_T2MOT(PHONEY,FAKE,ISYMOP,
+         CALL CC_T2MOT(FAKE,ISYMOP,
      *                 RHO2,WORK(KT2AM),DUMMY,WORK(KLAMDH),
      *                 WORK(KLAMDH),1,WORK(KEND1),LWRK1,ISYRES,1)
          TIM2MO = SECOND() - AUTIME

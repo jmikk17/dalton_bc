@@ -1809,8 +1809,6 @@ C
 #include "ccsdsym.h"
 #include "cclr.h"
 C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
-C
       ISYRES = MULD2H(ISYMLV,ISYMRV)
 C
 C-----------------------------

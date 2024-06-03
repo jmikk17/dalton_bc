@@ -320,10 +320,8 @@ C
      &           ISYMA, ISYMB, ISYMI, ISYMJ
       INTEGER :: NAI, NBJ, NAJ, NBI, NAIAI, NAIBJ, NAJBI,
      &           NAJBJ, NBIBJ, NBJBJ
-      INTEGER :: NRHFI, NVIRA, INDEX
+      INTEGER :: NRHFI, NVIRA
       real(sop_dp) :: XAIBJ, XAJBI
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
 C
       SO_DOUBLES_LENGTH = ZERO
 
@@ -543,10 +541,8 @@ C
      &           ISYMA, ISYMB, ISYMI, ISYMJ
       INTEGER :: NAI, NBJ, NAJ, NBI, NAIAI, NAIBJ, NAJBI,
      &           NAJBJ, NBIBJ, NBJBJ
-      INTEGER :: NRHFI, NVIRA, INDEX
+      INTEGER :: NRHFI, NVIRA
       real(sop_dp) :: XAIBJ, XAJBI, YAIBJ, YAJBI
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
 C
       SO_DOUBLES_PRODUCT = ZERO
 

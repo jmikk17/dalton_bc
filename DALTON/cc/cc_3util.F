@@ -763,7 +763,7 @@ C
       RETURN
       END
 C  /* Deck cc_t2mot */
-      SUBROUTINE CC_T2MOT(RHO1,CTR2,ISYMC2,OMEGA2,RHO2,GAMMA,XLAMDP,
+      SUBROUTINE CC_T2MOT(CTR2,ISYMC2,OMEGA2,RHO2,GAMMA,XLAMDP,
      *                    XLAMPC,ISYMPC,WORK,LWORK,ISYMBF,ICON)
 C
 C     Rasmus Faber
@@ -783,7 +783,7 @@ C
       DOUBLE PRECISION, PARAMETER :: FOURTH = 0.25D0
       DOUBLE PRECISION, INTENT(IN):: CTR2(*), OMEGA2(*),
      &                               GAMMA(*), XLAMDP(*), XLAMPC(*)
-      DOUBLE PRECISION, INTENT(OUT):: RHO1(*), RHO2(*), WORK(*)
+      DOUBLE PRECISION, INTENT(OUT):: RHO2(*), WORK(*)
 #include "ccorb.h"
 #include "ccsdsym.h"
 #include "symsq.h"
