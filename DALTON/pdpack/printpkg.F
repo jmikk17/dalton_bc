@@ -59,14 +59,14 @@ C          FLORIDA, GAINESVILLE
 C..........VERSION = 09/05/73/03
 C.......................................................................
 C
+      USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #include "implicit.h"
       DIMENSION AMATRX(*)
       INTEGER BEGIN
       CHARACTER*1 ASA(3),BLANK,CTL
       CHARACTER   PFMT*20, COLUMN*8
-      PARAMETER (ZERO=0.D00, KCOLP=4, KCOLN=6)
+      PARAMETER (KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
-      LOGICAL DP_IS_NAN
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
 C
       IF (NCTL .LT. 0) THEN
@@ -82,22 +82,22 @@ C
       END IF
 C
       J = NROW*(NROW+1)/2
-      AMAX = ZERO
-      BMAX = ZERO
-      CMAX = ZERO
-      N_NAN = 0
+      AMAX = 0.0D0
+      BMAX = 0.0D0
+      CMAX = 0.0D0
+      N_NONFIN = 0
       DO I = 1,J
-         IF (DP_IS_NAN(AMATRX(I))) THEN
-            N_NAN = N_NAN + 1
+         IF (.NOT. ieee_is_finite(AMATRX(I))) THEN
+            N_NONFIN = N_NONFIN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
             BMAX = MAX( BMAX, AMATRX(I))
             CMAX = MIN( CMAX, AMATRX(I))
          END IF
       END DO
-      IF (N_NAN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
-     &   'WARNING: matrix contains',N_NAN,' NaN.'
-      IF (AMAX .EQ. ZERO) THEN
+      IF (N_NONFIN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
+     &   'WARNING: matrix contains',N_NONFIN,' non finite numbers.'
+      IF (AMAX .EQ. 0.0D0) THEN
          WRITE (LUPRI,'(/T6,A)') 'Zero matrix.'
          GO TO 200
       END IF
@@ -123,7 +123,7 @@ C.....BEGIN NON STANDARD DO LOOP.
             KTOTAL = (K*(K-1))/2 + BEGIN - 1
             IF (MCTL .GE. 10) GO TO 20 ! also print zero rows
             DO 10 I = 1,NCOL
-               IF (AMATRX(KTOTAL+I) .NE. ZERO) GO TO 20
+               IF (AMATRX(KTOTAL+I) .NE. 0.0D0) GO TO 20
    10       CONTINUE
             GO TO 30
    20       WRITE (LUPRI,PFMT) CTL,K,(AMATRX(J+KTOTAL),J=1,NCOL)
@@ -183,13 +183,13 @@ C          FLORIDA, GAINESVILLE
 C..........OUTPAK VERSION = 09/05/73/03
 C.......................................................................
 C
+      USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #include "implicit.h"
       INTEGER NDIM(NBLK),BEGIN
       DIMENSION AMATRX(*)
       CHARACTER*1 ASA(3),BLANK,CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     DP_IS_NAN
-      PARAMETER (ZERO = 0.0D0, KCOLP=4, KCOLN=6)
+      PARAMETER (KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
 C
@@ -210,18 +210,18 @@ C
          MATLN = MATLN + NDIM(IBLK)*(NDIM(IBLK)+1)/2
   200 CONTINUE
 C
-      AMAX = ZERO
-      N_NAN = 0
+      AMAX = 0.0D0
+      N_NONFIN = 0
       DO I=1,MATLN
-         IF ( DP_IS_NAN(AMATRX(I)) ) THEN
-            N_NAN = N_NAN + 1
+         IF (.NOT. ieee_is_finite(AMATRX(I))) THEN
+            N_NONFIN = N_NONFIN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
          END IF
       END DO
-      IF (N_NAN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
-     &   'WARNING: matrix contains',N_NAN,' NaN.'
-      IF (AMAX .EQ. ZERO) THEN
+      IF (N_NONFIN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
+     &   'WARNING: matrix contains',N_NONFIN,' non finite numbers.'
+      IF (AMAX .EQ. 0.0D0) THEN
          WRITE (LUPRI,3000) NBLK
          GO TO 800
       END IF
@@ -240,7 +240,7 @@ C
          IIDIM = IDIM*(IDIM+1)/2
 C
          DO 5 I=1,IIDIM
-            IF (AMATRX(IOFF+I).NE.ZERO) GO TO 15
+            IF (AMATRX(IOFF+I).NE.0.0D0) GO TO 15
     5    CONTINUE
          WRITE (LUPRI,1100) IBLK
          GO TO 90
@@ -261,7 +261,7 @@ C.....BEGIN NON STANDARD DO LOOP.
             DO 40 K = BEGIN,IDIM
                IF (MCTL .GE. 10) GO TO 20 ! also print zero rows
                DO 10 I = 1,NCOL
-                  IF (AMATRX(KTOTAL+I) .NE. ZERO) GO TO 20
+                  IF (AMATRX(KTOTAL+I) .NE. 0.0D0) GO TO 20
    10          CONTINUE
                GO TO 30
    20          WRITE (LUPRI,PFMT) CTL,K,(AMATRX(KTOTAL+J),J=1,NCOL)
@@ -474,13 +474,13 @@ C REVISED; FEBRUARY 26, 1971
 C
 C.......................................................................
 C
+      USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #include "implicit.h"
       DIMENSION AMATRX(*)
       INTEGER NDIM(NBLK), BEGIN, KCOL
       CHARACTER*1 ASA(3), BLANK, CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     DP_IS_NAN
-      PARAMETER (ZERO=0.D00, KCOLP=4, KCOLN=6)
+      PARAMETER (KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, ASA/' ', '0', '-'/, BLANK/' '/
 C
@@ -501,18 +501,18 @@ C
          MATDIM = MATDIM + NDIM(IBLK)*NDIM(IBLK)
   200 CONTINUE
 C
-      AMAX = ZERO
-      N_NAN = 0
+      AMAX = 0.0D0
+      N_NONFIN = 0
       DO I=1,MATDIM
-         IF ( DP_IS_NAN(AMATRX(I)) ) THEN
-            N_NAN = N_NAN + 1
+         IF (.NOT. ieee_is_finite(AMATRX(I))) THEN
+            N_NONFIN = N_NONFIN + 1
          ELSE
             AMAX = MAX( AMAX, ABS(AMATRX(I)) )
          END IF
       END DO
-      IF (N_NAN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
-     &   'WARNING: matrix contains',N_NAN,' NaN.'
-      IF (AMAX .EQ. ZERO) THEN
+      IF (N_NONFIN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
+     &   'WARNING: matrix contains',N_NONFIN,' non finite numbers.'
+      IF (AMAX .EQ. 0.0D0) THEN
          WRITE (LUPRI,3000) NBLK
          GO TO 800
       END IF
@@ -530,7 +530,7 @@ C
         IF (IDIM.EQ.0) GO TO 100
         I2DIM = IDIM*IDIM
           DO 10 I=1,I2DIM
-          IF (AMATRX(IOFF+I).NE.ZERO) GO TO 15
+          IF (AMATRX(IOFF+I).NE.0.0D0) GO TO 15
    10     CONTINUE
         WRITE (LUPRI,1100) IBLK
         GO TO 90
@@ -543,7 +543,7 @@ C
             IOFFK = IOFF + K
             IF (MCTL .GE. 10) GO TO 5 ! also print zero rows
               DO 4 I=BEGIN,LAST
-              IF (AMATRX(IOFFK+(I-1)*IDIM).NE.ZERO) GO TO 5
+              IF (AMATRX(IOFFK+(I-1)*IDIM).NE.0.0D0) GO TO 5
     4         CONTINUE
             GO TO 1
     5       WRITE (LUPRI,PFMT) CTL,K,(AMATRX(IOFFK+(I-1)*IDIM),
@@ -602,32 +602,32 @@ C REVISED; FEBRUARY 26, 1971
 C
 C.......................................................................
 C
+      USE, INTRINSIC :: ieee_arithmetic, ONLY: ieee_is_finite
 #include "implicit.h"
       INTEGER   ROWLOW,ROWHI,COLLOW,COLHI,ROWDIM,COLDIM,BEGIN,KCOL
       DIMENSION AMATRX(ROWDIM,COLDIM)
       CHARACTER*1 ASA(3), BLANK, CTL
       CHARACTER   PFMT*20, COLUMN*8
-      LOGICAL     DP_IS_NAN
-      PARAMETER (ZERO=0.D00, KCOLP=5, KCOLN=8)
+      PARAMETER (KCOLP=5, KCOLN=8)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, BLANK/' '/, ASA/' ', '0', '-'/
 C
-      N_NAN = 0
+      N_NONFIN = 0
       IF (ROWHI.LT.ROWLOW) GO TO 3
       IF (COLHI.LT.COLLOW) GO TO 3
 C
-      AMAX = ZERO
+      AMAX = 0.0D0
       DO 10 J = COLLOW,COLHI
          DO 10 I = ROWLOW,ROWHI
-            IF ( DP_IS_NAN(AMATRX(I,J)) ) THEN
-               N_NAN = N_NAN + 1
+            IF (.NOT. ieee_is_finite(AMATRX(I,J))) THEN
+               N_NONFIN = N_NONFIN + 1
             ELSE
                AMAX = MAX( AMAX, ABS(AMATRX(I,J)) )
             END IF
    10 CONTINUE
-      IF (N_NAN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
-     &   'WARNING: matrix contains',N_NAN,' NaN.'
-      IF (AMAX .EQ. ZERO) THEN
+      IF (N_NONFIN .GT. 0) WRITE (LUPRI,'(/T6,A,I10,A)')
+     &   'WARNING: matrix contains',N_NONFIN,' non finite numbers.'
+      IF (AMAX .EQ. 0.0D0) THEN
          WRITE (LUPRI,'(/T6,A)') 'Zero matrix.'
          GO TO 3
       END IF
@@ -1113,8 +1113,8 @@ C
       REAL*4    R4_test,R4_thrpri !        because no double complex absolute value :-(
       CHARACTER*1 ASA(3), BLANK, CTL
       CHARACTER   PFMT*30, COLUMN*8
-      DOUBLE PRECISION ZERO, FFMIN, FFMAX
-      PARAMETER (ZERO=0.D00, KCOLP=4, KCOLN=6)
+      DOUBLE PRECISION FFMIN, FFMAX
+      PARAMETER (KCOLP=4, KCOLN=6)
       PARAMETER (FFMIN=1.D-3, FFMAX = 1.D3)
       DATA COLUMN/'Column  '/, BLANK/' '/, ASA/' ', '0', '-'/
       DOUBLE PRECISION AMAX
@@ -1122,12 +1122,12 @@ C
       IF (ROWHI.LT.ROWLOW) GO TO 3
       IF (COLHI.LT.COLLOW) GO TO 3
 C
-      AMAX = ZERO
+      AMAX = 0.0D0
       DO 10 J = COLLOW,COLHI
          DO 10 I = ROWLOW,ROWHI
             AMAX = MAX( AMAX, ABS(AMATRX(I,J)) )
    10 CONTINUE
-      IF (AMAX .EQ. ZERO) THEN
+      IF (AMAX .EQ. 0.0D0) THEN
          WRITE (LUPRI,'(/T6,A)') 'Zero matrix.'
          GO TO 3
       END IF
@@ -1172,57 +1172,3 @@ C
       RETURN
  1000 FORMAT (/10X,6('      real < ',A6,I4,' > imag'))
       END
-C === Deck dp_is_NaN ===============
-      LOGICAL FUNCTION dp_is_NaN(X)
-C
-C     May 2010, Hans Joergen Aa. Jensen; revised Apr 2024
-C     Purpose: DP_IS_NAN(X) is true iff X is NAN
-C
-      REAL*8 X
-      CHARACTER*20 TEST_STRING
-!     for DP_IS_NAN(XA,XB) and DP_IS_NAN = XA .NE. XB (2010 code):
-!     This gave false with gfortran for call DP_IS_NAN(X,X) with X=NaN
-!     Therefore now use a print format which I know will give NaN when X=NaN /HJAaJ Apr 2024
-      WRITE(TEST_STRING,'(D20.10)') X
-      DP_IS_NAN = INDEX(TEST_STRING,'NaN') .NE. 0
-      RETURN
-      END 
-! Apr 2024: tried also the following found on the internet, it did not work, gave also .false. for a NaN in srDFT Ecint
-!     USE ieee_arithmetic, ONLY: ieee_is_nan
-!     Real*8  , Intent(IN) :: X
-!     dp_is_NaN = ieee_is_nan(X)
-!     End
-C === Deck n_nan ===============
-      INTEGER FUNCTION N_NAN(N,AVEC)
-C
-C     May 2010, Hans Joergen Aa. Jensen
-C     Purpose: N_NAN returns number of NAN entries in AVEC(1:N)
-C
-      LOGICAL DP_IS_NAN
-      INTEGER N, I, J
-      REAL*8  AVEC(N)
-      J = 0
-      DO I = 1,N
-         IF ( DP_IS_NAN(AVEC(I)) ) J = J + 1
-      END DO
-      N_NAN  = J
-      RETURN
-      END
-C === Deck n_not_equal ===============
-      INTEGER FUNCTION N_NOT_EQUAL(N,AVEC,BVEC)
-C
-C     May 2010, Hans Joergen Aa. Jensen
-C     Purpose: Number of not equal elements in AVEC and BVEC
-C
-C     NOTE: N_NOT_EQUAL(N,DA,DA) is number of NAN elements in DA(1:N)
-C
-      INTEGER N, I, J
-      REAL*8  AVEC(N), BVEC(N)
-      J = 0
-      DO I = 1,N
-         IF ( AVEC(I) .NE. BVEC(I) ) J = J + 1
-      END DO
-      N_NOT_EQUAL = J
-      RETURN
-      END
-C -------- end of printpkg.F -----------
