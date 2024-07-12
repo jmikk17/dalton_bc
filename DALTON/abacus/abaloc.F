@@ -2567,9 +2567,7 @@ C
 
       CHARACTER*4 NAME
       CHARACTER*4 WORD
-CPFP with pgi77
 #include "molde.h"
-Cend-PFP
 #include "priunit.h"
 #include "nuclei.h"
 #include "symmet.h"
@@ -2582,9 +2580,6 @@ Cend-PFP
 
 #include "codata.h"
 C from codata: XTANG
-CPFP with g77
-C#include "molde.h"
-Cend-PFP
 C
 C      CHARACTER*2 ASYMB
 C
