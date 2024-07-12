@@ -39,7 +39,7 @@ contains
     call lucita_close_parallel_model(.true.)
 !   possibly free parallel task list distribution in LUCITA/MCSCF-LUCITA
     call parallel_task_distribution_free_lucipar(ptask_distribution)
-    if(mytid > 0)then
+    if(mynum > 0)then
       inquire(unit=lupri,opened=file_open)
       if(file_open) close(lupri,status="keep")
     end if
