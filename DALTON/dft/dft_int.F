@@ -299,7 +299,7 @@ c
 #include "xyzpow.h"
 #include "dftacb.h"
 c     sync inforb:
-!     write(lupri,*) ' arrived in DFTINTBCAST', mytid
+!     write(lupri,*) ' arrived in DFTINTBCAST', mynum
       CALL MPI_Bcast(muld2h, 8*8,   my_MPI_INTEGER,
      &               0, MPI_COMM_WORLD,ierr)
       CALL MPI_Bcast(nbas,   8,     my_MPI_INTEGER,
@@ -409,7 +409,7 @@ c     /DFTASC/
       CALL MPI_Bcast(DFTBR1, 1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
       CALL MPI_Bcast(DFTBR2, 1,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ie)
 c     sync functionals, too.
-!     print *, 'calling DFTFUNCSYNC for mytid',mytid, NODTOT
+!     print *, 'calling DFTFUNCSYNC for mynum',mynum, NODTOT
       CALL DFTFUNCSYNC(MYNUM,NODTOT)
 c
 #endif
@@ -423,7 +423,7 @@ c
 #include "maxorb.h"
 #include "infpar.h"
       A = ELECTRONS
-!     print *, 'A is for mytid',mytid
+!     print *, 'A is for mynum',mynum
       CALL MPI_Reduce(A,ELECTRONS,1,MPI_DOUBLE_PRECISION,MPI_SUM,
      &                0,MPI_COMM_WORLD,IERR)
 #endif

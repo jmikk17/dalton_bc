@@ -73,7 +73,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES Intel)
     endif()
 endif()
 
-if(CMAKE_Fortran_COMPILER_ID MATCHES PGI)
+if(CMAKE_Fortran_COMPILER_ID MATCHES NVHPC)
 # Patrick: mcmodel=medium is not available on PGI Free for MacOS X
     if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
         if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64")

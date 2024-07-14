@@ -6871,7 +6871,7 @@ C     Number of different atom types
 C
 #ifdef VAR_DEBUG
 C     to test if .mol input transferred OK to slaves
-      print *, mytid,' LINE4: ',LINE
+      print *, mynum,' LINE4: ',LINE
 #endif
 
       IPOS = INDEX(LINE,'ATO')

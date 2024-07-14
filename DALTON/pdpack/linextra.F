@@ -1971,7 +1971,7 @@ C            LSAME; ILAENV, DSPTRI, DSPCON
       implicit none
       real*8 da(*), db(*), ddot
       integer n, inca, incb, i
-      ! only real*16 for debugging (e.g. PGI compilers do not allow real*16)
+      ! only real*16 for debugging (e.g. NVIDIA HPC compilers do not allow real*16)
       ! real*16 ddot_value 
       real*8 ddot_value
 

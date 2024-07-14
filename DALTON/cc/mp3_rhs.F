@@ -957,8 +957,6 @@ C
 #include "ccorb.h"
 #include "ccsdsym.h"
 C
-C      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
-C
       ISYMKC = ISYMAG
 C
       DO 100 L = 1,NRHF(ISYML)
@@ -1245,8 +1243,6 @@ C
 #include "ccsdsym.h"
 #include "ccsdio.h"
 #include "r12int.h"
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
 C
       IF (IOPTE.EQ.1) THEN
         IF (.NOT.CCR12) CALL QUIT('IOPTE only implemented for CC-R12')
@@ -1598,8 +1594,6 @@ C
 #include "ccsdsym.h"
 #include "maxorb.h"
 #include "ccsdio.h"
-C
-C      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
 C
       IF (OMEGSQ) THEN
          WRITE(LUPRI,*)
@@ -2036,8 +2030,6 @@ C
 #include "ccsdsym.h"
 #include "ccsdio.h"
 #include "r12int.h"
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
 C
       IF (IOPTE.EQ.1) THEN
         IF (.NOT.CCR12) CALL QUIT('IOPTE only implemented for CC-R12')
@@ -2578,8 +2570,6 @@ C
 #include "ccsdsym.h"
 #include "ccsdio.h"
 #include "r12int.h"
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J)-3)/2 + I + J
 C
       IF (IOPTE.EQ.1) THEN
         IF (.NOT.CCR12) CALL QUIT('IOPTE only implemented for CC-R12')

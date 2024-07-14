@@ -63,8 +63,8 @@ C     Set control variables in "mxsymm.h"
       IPRSYM = IPRSYM_INPUT
 
 CSK   only MASTER needs to print the information
-      IF( MYTID .eq. MPARID )THEN
-        CALL HEADER('SYMADD: Requested addition of symmetry',-1)
+      IF( MYNUM .eq. MASTER )THEN
+        CALL HEADER('SYMADD: Addition of symmetry requested',-1)
         WRITE(LUPRI,'(A,1P,G9.2)') ' Symmetry test threshold: ', TOLLRN
       END IF
 

@@ -2706,10 +2706,10 @@ C
           IF (CHIVAL .LT. 0.0D0) THEN
             CHIVAL = 0.4D0
             WRITE(LUPRI,'(/A)')
-     &      ' mu value for srDFT set to 0.4 (default)'
+     &      '@ mu value for srDFT set to 0.4 (default)'
           ELSE
-            WRITE(LUPRI,'(/A,F5.2,A)')
-     &      ' mu value for srDFT is',CHIVAL,' (user input)'
+            WRITE(LUPRI,'(/A,F6.3,A)')
+     &      '@ mu value for srDFT is',CHIVAL,' (user input)'
           END IF
           DOSRIN = .TRUE.
           ! default is erf

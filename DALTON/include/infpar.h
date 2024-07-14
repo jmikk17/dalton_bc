@@ -27,11 +27,11 @@
 #define NPARI  7
 extern struct common_infpar {
 #if defined (VAR_INT64)
-    long iprpar, ntask, ndegdi, master, mynum, mytid;
+    long iprpar, ntask, ndegdi, master, mynum;
     long nodtot, nfmat, mtottk, parher, debug, pario;
     long timing, slave, rma_model;
 #else
-    int  iprpar, ntask, ndegdi, master, mynum, mytid;
+    int  iprpar, ntask, ndegdi, master, mynum;
     int  nodtot, nfmat, mtottk, parher, debug, pario;
     int  rma_model, timing, slave;
 #endif
@@ -42,20 +42,20 @@ extern struct common_infpar {
 !
 !     Parameters NPARI must be updated after changes (for communication to co-workers)
 !
-!     NOTE: Integers  (IPRPAR,...,MASTER,...,MYTID)
+!     NOTE: Integers  (IPRPAR,...,MASTER,...,MYNUM)
 !           Logicals  (TIMING,SLAVE)
 !           Character (NODNAM,MYNAME) should NOT be sent to slaves
 !     THUS: NPARI is length from NODTOT,...,PARIO,rma_model
 !
       INTEGER   MAXNOD, NPARI
       PARAMETER ( MAXNOD = 9999, NPARI = 7 )
-      INTEGER IPRPAR, NTASK, NDEGDI, MASTER, MYNUM, MYTID
+      INTEGER IPRPAR, NTASK, NDEGDI, MASTER, MYNUM
       INTEGER NODTOT, NFMAT, MTOTTK
       LOGICAL PARHER, PARIO, INFPAR_DEBUG, TIMING, SLAVE, rma_model
       CHARACTER*20   NODNAM(0:MAXNOD), MYNAME
       COMMON /DALTONINFPAR/                                              &
-     &        IPRPAR, NTASK, NDEGDI, MASTER, MYNUM, MYTID                &
-     &       ,NODTOT, NFMAT, MTOTTK, PARHER, INFPAR_DEBUG, PARIO         &
+     &        IPRPAR, NTASK, NDEGDI, MASTER, MYNUM,                      &
+     &        NODTOT, NFMAT, MTOTTK, PARHER, INFPAR_DEBUG, PARIO         &
      &       ,rma_model, TIMING, SLAVE , NODNAM, MYNAME
 
 ! -- end of infpar.h --

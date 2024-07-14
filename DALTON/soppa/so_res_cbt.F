@@ -37,13 +37,6 @@ C
 #include "ccsdsym.h"
 #include "soppinf.h"
 C
-C------------------------------
-C     Statement function INDEX.
-C------------------------------
-C
-      INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
-      INDLT(I,J) = (MAX(I,J) - 1)*(MAX(I,J) - 2)/2 + MIN(I,J)
-C
 C------------------
 C     Add to trace.
 C------------------
