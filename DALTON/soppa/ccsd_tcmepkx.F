@@ -13,7 +13,8 @@ C
 C
       PARAMETER (ZERO = 0.0D0, ONE = 1.0D0, TWO = 2.0D0)
 C
-      DIMENSION T2AM(*)
+      REAL*8     T2AM(*)
+      INTEGER    INDEX
 C
 #include "ccorb.h"
 #include "ccsdinp.h"

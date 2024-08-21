@@ -589,7 +589,7 @@ contains
 !   ----------------------------------------------------------------------------
 
     A%exchange_file_init            = .true.
-    A%my_process_id                 = mytid
+    A%my_process_id                 = mynum
     A%exchange_file_open(1)         = .false.
     A%exchange_file_open(2)         = .false.
     A%present_fh_lu                 = -1

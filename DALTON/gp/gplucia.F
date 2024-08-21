@@ -5470,6 +5470,6 @@ C
       x_nonzero = ndim-n_zero_1-n_zero_2
       x_nonzero = x_nonzero / (0.01D0*ndim)
 !     write (lupri,'(a,i3,a,4i10,f7.2,a)')
-!    & 'Node ',mytid,' DIAVC2_TRUNC, NDIM,zero1/2,nonzero =',
+!    & 'Node ',mynum,' DIAVC2_TRUNC, NDIM,zero1/2,nonzero =',
 !    & NDIM,n_zero_1, n_zero_2, ndim-n_zero_1-n_zero_2,x_nonzero,'%'
       END

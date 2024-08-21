@@ -2031,7 +2031,6 @@ C
 #include "ccsdio.h"
 #include "r12int.h"
 C
-C
       IF (IOPTE.EQ.1) THEN
         IF (.NOT.CCR12) CALL QUIT('IOPTE only implemented for CC-R12')
         IBASX(1) = 0
@@ -2571,7 +2570,6 @@ C
 #include "ccsdsym.h"
 #include "ccsdio.h"
 #include "r12int.h"
-C
 C
       IF (IOPTE.EQ.1) THEN
         IF (.NOT.CCR12) CALL QUIT('IOPTE only implemented for CC-R12')

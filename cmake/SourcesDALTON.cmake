@@ -886,6 +886,14 @@ if(NOT ENABLE_MPI)
     )
 endif()
 
+if(CMAKE_Fortran_COMPILER_ID MATCHES LLVMFlang)
+# add intel-ifc.c for HOSTNM for flang-new, cf. Dalton issue #252 by Jeff Hammond
+    set(DALTON_C_SOURCES
+        ${DALTON_C_SOURCES}
+        DALTON/gp/intel-ifc.c
+        )
+endif()
+
 if(ENABLE_SRDFT)
     message("-- Enable srdft module")
     add_definitions(-DMOD_SRDFT)

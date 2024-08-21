@@ -1162,7 +1162,7 @@ C
       IF( IPRT  .GE. 5 ) THEN
         WRITE(LUWRT,*) ' Projected matrix and eigen pairs '
         CALL PRSYM(APROJ,NVEC)
-        WRITE(LUWRT,'(2X,E13.7)') (EIG(ITER,IROOT),IROOT = 1, NROOT)
+        WRITE(LUWRT,'(1P,E15.7)') (EIG(ITER,IROOT),IROOT = 1, NROOT)
         CALL WRTMATMN(AVEC,NVEC,NROOT,NVEC,NROOT,LUWRT)
       END IF
 *

@@ -376,7 +376,7 @@ c
       CALL MPI_Bcast(NORB,  8,  my_MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       CALL MPI_Bcast(KSYMOP,8,  my_MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
       CALL MPI_Bcast(MULD2H,8*8,my_MPI_INTEGER,0,MPI_COMM_WORLD,ierr)
-!     print *, 'done with sync mytid',mytid
+!     print *, 'done with sync mynum',mynum
       END
 #endif
       SUBROUTINE GETSHELLSCNT(nshells)

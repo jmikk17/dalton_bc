@@ -363,9 +363,10 @@ C        (we use point-to-point communication instead of mpi_bcast, so it can be
 #endif /* VAR_MPI */
       RETURN
       END
-C  /* Deck sendname */
-      SUBROUTINE SENDNAME(NASTER,NYTID)
+C  /* Deck myMPI_sendname */
+      SUBROUTINE myMPI_SENDNAME()
 C
+#if defined (VAR_MPI)
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
@@ -373,16 +374,12 @@ C
 C
 #include "infpar.h"
 C
-      MASTER = NASTER
-      MYTID  = NYTID
-C
 C     Get name of my host machine
 C
       CALL GETNAME(MYNAME)
 C
 C     Send name to master
 C
-#if defined (VAR_MPI)
       CALL MPIXSEND(MYNAME,20,'STRING',MASTER,MTAG8)
 #endif
 C
@@ -403,21 +400,21 @@ C
       CALL GETNAME(MYNAME)
       NODNAM(0) = MYNAME
 C
-C     Return name to master
+C     Receive node names
 C
-      DO I = 1,NODTOT
 #if defined (VAR_MPI)
+      DO I = 1,NODTOT
          NWHO = -1
          CALL MPIXRECV(NAME,20 ,'STRING',NWHO,MTAG8)
          NODNAM(NWHO) = NAME
-#endif
       END DO
-C
+
       IF (IPRPAR.GT.0) THEN
          WRITE (LUPRI,'(3X,A,A)') ' Slaves are : ',NODNAM(1)
          WRITE (LUPRI,'(17X,A)') (NODNAM(I),I=2,NODTOT)
       END IF
-C
+#endif
+
       RETURN
       END
 C  /* Deck sdtim */

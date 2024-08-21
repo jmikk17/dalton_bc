@@ -677,7 +677,7 @@ C
             LUSTAT = LUPRI ! LUSTAT may be used in GPCLOSE
             CALL GPCLOSE(LUPRI,'KEEP')
          ELSE
-            CALL SENDNAME(MASTER,MYNUM)
+            CALL myMPI_SENDNAME() ! send my hostname to master
 
 !           call main co-workers driver routine
             call dalton_nodedriver(lmwork,wrkdlm)

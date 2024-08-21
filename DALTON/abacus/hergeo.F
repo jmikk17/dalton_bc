@@ -613,17 +613,16 @@ C
  2000 FORMAT (1X,A6,':',6F12.6)
       END
 C  /* Deck radius */
-      FUNCTION RADIUS(NCHARGE)
-#include "implicit.h"
-#include "priunit.h"
+      REAL*8 FUNCTION RADIUS(NCHARGE)
 C
 C     Based on covalent radii and metallic radii in Angstrom.
 C     Returns -1 where data is inavailable
 C     Oct 2006 hjaaj: changed Hydrogen from 30 to 40 pm,
 C              such that H2 is printed as bonded ;-) .
 C
-      DIMENSION RAD(100)
-      DATA (RAD(I), I = 1, 100)/
+      INTEGER NCHARGE
+      REAL*8, SAVE ::  COVRAD(83)
+      DATA (COVRAD(I), I = 1, 83)/
      &        40.,  155.,  160.,  110.,
      & 90.,   80.,   70.,   68.,   65.,
      &154.,  190.,  160.,  140.,  110.,
@@ -640,11 +639,7 @@ C
      &175.,  175.,  175.,  175.,  170.,
      &170.,  170.,  155.,  145.,  140.,
      &135.,  135.,  135.,  135.,  145.,
-     &155.,  170.,  175.,  170.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100./
+     &155.,  170.,  175.,  170./
 C
       IF (NCHARGE .LE. 0) THEN
 Chj      =  0: solvent cavity center or floating orbital
@@ -652,12 +647,11 @@ Chj      = -Z: multiple basis for r12 methods for nuclear charge Z
 Chj      = -1234567890: point charges
 C
          RADIUS = -1.0D0
-      ELSE IF (NCHARGE .LT. 1 .OR. NCHARGE .GT. 100) THEN
-         WRITE (LUPRI,*) 
-     &          'ERROR, RADIUS called with CHARGE =',NCHARGE
-         CALL QUIT('RADIUS called with unvalid CHARGE')
+      ELSE IF (NCHARGE .GT. 83) THEN
+      ! undefined
+         RADIUS = -1.0D0
       ELSE
-         RADIUS = 0.01D0 * RAD(NCHARGE)
+         RADIUS = 0.01D0 * COVRAD(NCHARGE)
       END IF
       RETURN
       END
@@ -698,8 +692,7 @@ Chj      = -1234567890: point charges
 C
          VDWRAD = -1.0D0
       ELSE IF (NCHARGE .GT. 100) THEN
-         WRITE (LUPRI,*) 'ERROR, VDWRAD called with CHARGE =',NCHARGE
-         CALL QUIT('VDWRAD called with illegal CHARGE')
+         VDWRAD = -1.0D0
       ELSE
          VDWRAD = 0.01D0 * RAD(NCHARGE)
          IF (VDWRAD .LT. 0.0D0) THEN
