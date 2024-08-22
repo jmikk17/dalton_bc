@@ -33,11 +33,13 @@ C Check include files
 
       CHARACTER*8 RTNLBL(2)
       integer :: noperators
-      double precision,allocatable :: matrices(:,:,:)
+c      double precision,allocatable :: matrices(:,:,:)
+      real(8), allocatable :: matrices(:,:,:)
       character(len=8), dimension(noperators) :: newlabels
       character (len=8) :: label
       character (len=3) :: filename
-      double precision,allocatable :: matrix(:,:)
+c      double precision,allocatable :: matrix(:,:)
+      real(8), allocatable :: matrix(:,:)
       integer :: operadores
 
 C ------------------------------------------------------
@@ -74,8 +76,10 @@ c        call OUTPUT(matrix,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)! prints matrix 
      &                              ,operadores,filename)
 
       use iso_fortran_env
-      double precision,intent(out) :: matrices(naos,naos,noperators)
-      double precision :: matrix(naos,naos)
+c      double precision,intent(out) :: matrices(naos,naos,noperators)
+c      double precision :: matrix(naos,naos)
+      real(8), intent(out) :: matrices(naos, naos, noperators)
+      real(8) :: matrix(naos, naos)
       character(len=8), dimension(noperators),intent(out) :: labels
       character(len=3), intent(in) :: filename
       integer, intent(out) :: operadores

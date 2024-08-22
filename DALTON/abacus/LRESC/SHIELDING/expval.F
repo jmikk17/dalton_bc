@@ -36,7 +36,6 @@ C...  the subroutine ABACTOCD  as a model (2012)
 #include "priunit.h"
 #include "cbilnr.h"
 #include "infpri.h"
-c      double precision cmos(NORBT,NBAST)
       integer indice
       LOGICAL FOUND
       DIMENSION WORK(LWORK)
@@ -48,14 +47,14 @@ c      double precision cmos(NORBT,NBAST)
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
       INTEGER naoss, nmos
-      double precision, dimension(:), allocatable :: xmos
-      double precision, dimension(:,:), allocatable :: cmos
-      double precision, dimension(:,:), allocatable :: AOPERATOR
-      double precision, dimension(:,:), allocatable :: BOPERATOR
-      double precision, dimension(:,:), allocatable :: aux0
-      double precision, dimension(:,:), allocatable :: aux1
-      double precision, dimension(:,:), allocatable :: aux2
-      double precision, dimension(:,:), allocatable :: aux3
+      real(8), allocatable :: xmos(:)
+      real(8), allocatable :: cmos(:,:)
+      real(8), allocatable :: AOPERATOR(:,:)
+      real(8), allocatable :: BOPERATOR(:,:)
+      real(8), allocatable :: aux0(:,:)
+      real(8), allocatable :: aux1(:,:)
+      real(8), allocatable :: aux2(:,:)
+      real(8), allocatable :: aux3(:,:)
       CHARACTER*8 RTNLBL(2)
 
 C
@@ -609,7 +608,7 @@ C  /* Deck Regenerate_integrals */
 #include "chrnos.h"
 #include "chrxyz.h"
 
-      double precision COORDENADAS(3)
+      real(8) :: COORDENADAS(3)
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
       character*10 :: namefile

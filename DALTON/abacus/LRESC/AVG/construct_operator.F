@@ -36,15 +36,14 @@ C     Author: Juan J. Aucar         2024
       CHARACTER*4 KEY
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
-      double precision, dimension(:), allocatable :: xmos
-      double precision, dimension(:,:), allocatable :: cmos
-      double precision, dimension(:,:), allocatable :: AOPERATOR
-      double precision, dimension(:,:), allocatable :: BOPERATOR
-      double precision, dimension(:,:), allocatable :: aux0
-      double precision, dimension(:,:), allocatable :: aux1
-      double precision, dimension(:,:), allocatable :: aux2
-      double precision, dimension(:,:), allocatable :: aux3
-
+      real(8), allocatable :: xmos(:)
+      real(8), allocatable :: cmos(:,:)
+      real(8), allocatable :: AOPERATOR(:,:)
+      real(8), allocatable :: BOPERATOR(:,:)
+      real(8), allocatable :: aux0(:,:)
+      real(8), allocatable :: aux1(:,:)
+      real(8), allocatable :: aux2(:,:)
+      real(8), allocatable :: aux3(:,:)
 
 
       CHARACTER*8 RTNLBL(2)
