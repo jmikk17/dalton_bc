@@ -82,7 +82,7 @@ intel-oneapi:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load tbb/2021.12 compiler-rt/2024.1.0 oclfpga/2024.1.0 compiler/2024.1.0 mkl/2024.1
+    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1
     - uname -a
     - lscpu
     - free -h
@@ -125,7 +125,7 @@ intel-oneapi-mpi:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load tbb/2021.12 compiler-rt/2024.1.0 oclfpga/2024.1.0 compiler/2024.1.0 mpi/2021.12 mkl/2024.1
+    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1 mpi
     - uname -a
     - lscpu
     - free -h
@@ -168,18 +168,18 @@ intel-classic:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load compiler-rt/2023.2.1 ifort/2024.1.0 icc/2023.2.1 mkl/2024.1
+    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
-    - icc --version
-    - icpc --version
+    - ifx --version
+    - icx --version
+    - icpx --version
     - python3 --version
     - git --version
     - cmake --version
   script:
-    - python setup --fc=ifort --cc=icc --cxx=icpc --mkl=sequential --type=release
+    - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
     - cd build
     - make -j 32
     - ctest -j 16 --timeout 120 --output-on-failure -L essential
@@ -211,13 +211,13 @@ intel-classic-mpi:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load compiler-rt/2023.2.1 ifort/2024.1.0 icc/2023.2.1 mpi/2021.12 mkl/2024.1
+    - module load compiler-rt/2024.2.1 compiler/2024.2.1 mpi mkl/2024.2
     - uname -a
     - lscpu
     - free -h
-    - ifort --version
-    - icc --version
-    - icpc --version
+    - ix --version
+    - icx --version
+    - icpx --version
     - mpirun --version
     - python3 --version
     - git --version
