@@ -18,21 +18,22 @@ $ Li - Ne: T.H. Dunning, Jr. J. Chem. Phys. 90, 1007 (1989).
 $ Na - Mg: D.E. Woon and T.H. Dunning, Jr.  (to be published)
 $ Al - Ar: D.E. Woon and T.H. Dunning, Jr.  J. Chem. Phys. 98, 1358 (1993).
 $ Ca     : J. Koput and K.A. Peterson, J. Phys. Chem. A, 106, 9595 (2002).
-$ Sc - Zn:  N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 123, 064107 (2005)
+$ Sc - Zn: N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 123, 064107 (2005)
 $
 $  POLARIZATION AND/OR DIFFUSE FUNCTIONS
 $ Elements                             References
 $ --------                             ---------
-$ H     :  T.H. Dunning, Jr. J. Chem. Phys. 90, 1007 (1989).
+$  H    :  R.A. Kendall, T.H. Dunning, Jr. and R.J. Harrison, J. Chem. Phys. 96, 
+$          6796 (1992).
 $ He    :  D.E. Woon and T.H. Dunning, Jr., J. Chem. Phys. 100, 2975 (1994).
 $ B - F :  R.A. Kendall, T.H. Dunning, Jr. and R.J. Harrison, J. Chem. Phys. 96,
-$          6769 (1992).
+$          6796 (1992).
 $ Al - Cl: D.E. Woon and T.H. Dunning, Jr. J. Chem. Phys. 98, 1358 (1993).
-$ Sc - Zn:  N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 123, 064107 (2005)
+$ Sc - Zn: N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 123, 064107 (2005)
 $***********************************************************************
 a 1
-$ HYDROGEN     (8s,4p,3d,2f,1g) -> [5s,4p,3d,2f,1g]              
-$ HYDROGEN     (1s,1p,1d,1f,1g)                                  
+$ HYDROGEN     (8s,4p,3d,2f,1g) -> [5s,4p,3d,2f,1g]
+$ HYDROGEN     (1s,1p,1d,1f,1g)
 $ S-TYPE FUNCTIONS
     9    6    0
     402.0000000  0.00027900  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
@@ -67,8 +68,8 @@ $ G-TYPE FUNCTIONS
       2.3580000  1.00000000  0.00000000
       0.5430000  0.00000000  1.00000000
 a 2
-$ HELIUM       (8s,4p,3d,2f,1g) -> [5s,4p,3d,2f,1g]              
-$ HELIUM       (1s,1p,1d,1f,1g)                                  
+$ HELIUM       (8s,4p,3d,2f,1g) -> [5s,4p,3d,2f,1g]
+$ HELIUM       (1s,1p,1d,1f,1g)
 $ S-TYPE FUNCTIONS
     9    6    0
    1145.0000000  0.00035900  0.00000000  0.00000000  0.00000000  0.00000000  0.00000000
@@ -103,8 +104,8 @@ $ G-TYPE FUNCTIONS
       3.4300000  1.00000000  0.00000000
       0.7899000  0.00000000  1.00000000
 a 5
-$ BORON        (14s,8p,4d,3f,2g,1h) -> [6s,5p,4d,3f,2g,1h]       
-$ BORON        (1s,1p,1d,1f,1g,1h)                               
+$ BORON        (14s,8p,4d,3f,2g,1h) -> [6s,5p,4d,3f,2g,1h]
+$ BORON        (1s,1p,1d,1f,1g,1h)
 $ S-TYPE FUNCTIONS
    15    7    0
   68260.0000000  0.00002400 -0.00000500  0.00000000  0.00000000  0.00000000  0.00000000
