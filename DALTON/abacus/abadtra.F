@@ -136,16 +136,6 @@ C
       IF((IPRTRD.GT.2) .AND. (JTER.EQ.1)) WRITE(LUPRI,902) LPQRS
   902 FORMAT(' Maximum number of integrals =',I10)
 C
-C     max MXCORB orbitals (and max 255 because of index packing)
-C
-      MXBAST = MIN(255,MXCORB)
-      IF (NORBT.GT.MXBAST .OR. NBAST.GT.MXBAST) THEN
-         WRITE (LUPRI,9020) MXBAST, NORBT, NBAST
-         CALL QUIT('DERTRA error: too many orbitals for this version')
-      ENDIF
- 9020 FORMAT(' (DERTRA) ERROR, DERTRA is limited to',I5,' orbitals,'
-     *      /'          NORBT is',I5,' and NBAST is',I5)
-C
       JATOM = IATOM
       CALL TRDNEW(JCOOR,JCORSY,H2DAC,FQD,CMO,PV,WORK,LWORK,IPRTRD)
 C     CALL TRDNEW(JCOOR,JCORSY,H2DAC,FQD,CMO,PV,WRK,LWRK,IPRINT)
@@ -779,11 +769,11 @@ C H2CDAO and H2CDAC are both symmetry packed.
 C
 C H2CDAO and H2CDAC may share same memory location.
 C
-C Input : H2CDAO(a.b) = (a b | c d)
+C Input : H2CDAO(a,b) = (a b | c d)
 C         CMO = m.o. coefficients
 C         IABSYM = symmetry of H2CDAO, H2CDAC matrices
-C Output: H2CDAC(u.v) = (u v | c d) =
-C         sum(b) [ sum(a) [ CMO(a,u) H2CDAO(a.b) ] CMO(b,v) ]
+C Output: H2CDAC(u,v) = (u v | c d) =
+C         sum(b) [ sum(a) [ CMO(a,u) H2CDAO(a,b) ] CMO(b,v) ]
 C
 #include "implicit.h"
       DIMENSION CMO(NCMOT), H2CDAO(*), H2CDAC(*), WRK(*)
