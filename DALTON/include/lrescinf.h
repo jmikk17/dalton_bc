@@ -22,21 +22,24 @@
 
     !LRESC corrections to shielding
       LOGICAL SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
-     &         SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG,
-     &         PRTALL1
+     &        SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG,
+     &        PRTALL1
 
     !LRESC corrections to EFG and common logicals
       LOGICAL ORBCON,PQPKINLRESC,PRTALL2
 
-      DOUBLE PRECISION LRFCAV(3,3), LRDIAK(3,3), LRANGP(3,3),
-     &                  LRDIAM(3,3), LRDIAD(3,3), LRLKIN(3,3),
-     &                  LRPSOK(3,3), LRPSKI(3,3), LRFCZK(3,3),
-     &                  LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
-     &                  LRGAUG(3),EFGC0(100),EFGC2(100,5)
+      REAL*8 LRFCAV(3,3), LRDIAK(3,3), LRANGP(3,3),
+     &       LRDIAM(3,3), LRDIAD(3,3), LRLKIN(3,3),
+     &       LRPSOK(3,3), LRPSKI(3,3), LRFCZK(3,3),
+     &       LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
+     &       LRGAUG(3),EFGC0(100),EFGC2(100,5)
 
-      COMMON /LRESCINF/ SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
-     &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, JIMPRT, LRATOM,
-     &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,
-     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, LRGAUG, PRTALL1,
-     &    EFGC0,EFGC2, ORBCON,PQPKINLRESC, PRTALL2, JJAPRT
+      COMMON /LRESCINF/ 
+     &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,  ! real*8
+     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, LRGAUG,
+     &    EFGC0, EFGC2,
+     &    JIMPRT, LRATOM, JJAPRT,                                  ! integer
+     &    SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,                  ! logical
+     &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, 
+     &    PRTALL1, ORBCON, PQPKINLRESC, PRTALL2
 ! -- end of lrescinf.h --
