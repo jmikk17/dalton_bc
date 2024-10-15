@@ -550,6 +550,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/rsp/hypinp.F
     DALTON/rsp/lagrang.F
     DALTON/rsp/mcdrsp.F
+    DALTON/rsp/numint.F
     DALTON/rsp/qfock.F
     DALTON/rsp/qrhso.F
     DALTON/rsp/rspave.F
