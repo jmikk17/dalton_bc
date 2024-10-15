@@ -1999,6 +1999,7 @@ C
       PARAMETER ( NTABLE = 48 )
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       CHARACTER*8 LABEL, LABFND
+      CHARACTER*2 CHG2, IND2
       INTEGER NUMBER_ORBS(8)
 C
 !                    1          2          3          4
@@ -2024,7 +2025,7 @@ C
 !                   41         42         43         44
      &            '.SPIN-D', '.DIPLF ', '.DIPLFX', '.DIPLFY',
 !                   45         46         47         48
-     &            '.DIPLFZ', '.CHANNE', '.VIRTUA', '.xxxxxx'/
+     &            '.DIPLFZ', '.CHANNE', '.VIRTUA', '.ATMMOM'/
 C
 C
 C
@@ -2347,9 +2348,72 @@ C     .VIRTUAL
                READ (LUCMD,*) (CHANNEL_VIRT(I),I=1,NSYM)
                GO TO 100
 
- 48            continue
-!                do nothing
-                 go to 100
+ 48            CONTINUE ! ATMMOM input. 
+               ! A lot of stuff has been stored in infrsp.h
+               ! Check later is this is actually needed 
+
+               IF (NSYM.NE.1)
+     &            CALL QUIT('SYMMETRY NOT TESTED YET')
+
+               ! Read in order of multipole integrals
+               READ (LUCMD,*) IORATM 
+               IF (IORATM .GT. 1) 
+     &            CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+
+               ! Make a symmetry-proof charge array
+               K = 0
+               DO I = 1,NUCIND 
+                  DO J = 1,NUCDEG(I)
+                     K = K + 1
+                     ATMCHG(K) = CHARGE(I) 
+                  END DO
+               END DO
+
+               ! Look for atom selection input
+               READ (LUCMD,*) WORD
+               CALL UPCASE(WORD)
+               IF (WORD(1:7) .EQ. '.SELATM') THEN
+                  ATMSEL = .TRUE.
+                  READ (LUCMD,*) NATM
+                  DO I=1,NATM
+                     READ (LUCMD,*) ATMIND(I) 
+                     ! hardcoded to length of 100 in infrsp.h
+                  END DO
+               ELSE
+                  ATMSEL = .FALSE.
+                  NATM = NUCDEP
+                  DO I=1,NATM
+                     ATMIND(I) = I
+                  END DO
+                  BACKSPACE (LUCMD)
+               END IF                
+
+               ! Create labels
+               ISTR = 0
+               IF (IORATM .LT. 0) ISTR = ABS(IORATM)
+               DO IORDER = ISTR, ABS(IORATM)
+                  DO I=1,NATM
+                     J = ATMIND(I)
+                     WRITE(IND2,'(I2.2)') J
+                     ICHG = ATMCHG(J) 
+                     WRITE(CHG2,'(I2.2)') ICHG
+                     IF (IORDER .EQ. 0) THEN
+                        LABEL = 'AM'// IND2 // CHG2 // '00'
+                        LLROP( INDPRP(LABEL)) = .TRUE.
+                     ELSE IF (IORDER .EQ. 1) THEN
+                        LABEL = 'AM'// IND2 // CHG2 // '0x'
+                        LLROP( INDPRP(LABEL)) = .TRUE.
+                        LABEL = 'AM'// IND2 // CHG2 // '0y'
+                        LLROP( INDPRP(LABEL)) = .TRUE.
+                        LABEL = 'AM'// IND2 // CHG2 // '0z'
+                        LLROP( INDPRP(LABEL)) = .TRUE.
+                     ELSE
+                        CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+                     ENDIF
+                  END DO
+               END DO
+
+               GO TO 100 
 
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
@@ -3228,6 +3292,14 @@ C
      *               '@ PROPERTY CALCULATION NOT CARRIED OUT '
                END IF
             END IF
+         ELSE IF (LABEL(1:2) .EQ. 'AM') THEN
+            ! following structure of 'missing integrals' calculation below
+            ! but now using nummerical integration instead
+            CALL GPCLOSE(LUPROP,'KEEP')
+            CALL NUMINT_DRIVER(LABEL,WRK,LWRK) 
+            CALL GPOPEN(LUPROP,'AOPROPER','OLD',' ','UNFORMATTED',
+     &                  IDUMMY,.FALSE.)
+            GOTO 248
          ELSE
             IF (JTURN .GT. 1) THEN
 C           ... capture input errors as asking for ".DIPLENX" or "UDIPLEN"
