@@ -1,4 +1,15 @@
       subroutine numint_driver(integral_label,work,lwork) !,iorder,propri,iprint)
+!*****************************************************************************
+!     JESM 16-10-2024
+!     Driver routine for numerical integration of atomic moments
+!     
+!     Purpose on first call: 
+!     Calculate density, follow by MBIS population analysis in each grid point
+!      
+!     Purpose:
+!     Calculate AO integrals for moment and atom specified in input label, and
+!     write to AOPROPER
+!*****************************************************************************
 #include "implicit.h"
 #include "dftinf.h"
 #include "dftcom.h"
@@ -20,6 +31,23 @@
       logical, save :: first_call = .true.
 
       call qenter('numint')
+
+      kfrsav = 1
+      kfree  = kfrsav
+      lfree  = lwork 
+
+! open file for dumping density and basis functions in each grid point
+      luddump = -1
+      call gpopen(luddump,'DENSITY.GRID','UNKNOWN',
+     &            ' ','UNFORMATTED',idummy,.false.)
+
+      luwdump = -1
+      call gpopen(luwdump,'WEIGHT.GRID','UNKNOWN',
+     &            ' ','UNFORMATTED',idummy,.false.)
+
+      luprop = -1
+      call gpopen(luprop,'AOPROPER','UNKNOWN',
+     &            ' ','UNFORMATTED',idummy,.false.)
 
       if (first_call) then
 
@@ -52,9 +80,6 @@
       !nbuf = 100 000 
 
 ! taken from prpget, not sure the purpose 
-         kfrsav = 1
-         kfree  = kfrsav
-         lfree  = lwork 
 
          write(*,*) 'lfree before allocation', lfree
 
@@ -114,11 +139,6 @@
 
          write(*,*) 'dcao', (work(kdcao+i-1),i=1,n2basx)
 
-! open file for dumping density and evaluated orbitals
-         luddump = -1
-         call gpopen(luddump,'DENSITY.GRID','UNKNOWN',
-     &               ' ','UNFORMATTED',idummy,.false.)
-
 
          call numint_evaluate(work(kx),work(ky),work(kz),work(kw),
      &   work(kgso),work(kcnt),work(kdga),work(kdvao),work(kdcao),
@@ -140,29 +160,37 @@
          write(*,*) 'lfree mid mbis', lfree
 
          call memget('REAL',krho,max_pnt,work,kfree,lfree)
-         call memget('REAL',kw_mbis,max_pnt*max_atm,work,kfree,lfree)
+         call memget('REAL',kw_mbis,max_atm,work,kfree,lfree)
 
          write(*,*) 'lfree after mbis', lfree
 
          call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &                 work(krho),work(kw_mbis),
-     &                 max_pnt,max_atm,luddump)
+     &                 max_pnt,max_atm,luddump,luwdump)
 
          call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
-         call gpclose(luddump,'KEEP')
 
          first_call = .false.
 
 
       end if ! first_call
       
-!     call memget('REAL',kbas,max_pnt*nbast,work,kfree,lfree)
-!     call numint_write
+      call memget('REAL',kint,nnbasx,work,kfree,lfree)
+      call memget('REAL',kgso,nbast,work,kfree,lfree)
+
+      call numint_write(integral_label,work(kint),work(kgso),
+     &                  luddump,luwdump)
+
+      call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
+
+      CALL GPCLOSE(LUPROP,'KEEP')
+      call gpclose(luddump,'KEEP')
+      call gpclose(luwdump,'KEEP')
 
       call qexit('numint')
 
-      call quit('end of numint, implementation not done')
+!     call quit('end of numint, implementation not done')
 
       return
       end
@@ -202,6 +230,8 @@
       celctrn = d0
       velctrn = d0
 
+      rewind luddump
+
       npnts = 0
   100 continue
       read(luquad) npoint
@@ -227,9 +257,6 @@
 ! evaluate orbitals in the grid point
             call getsos(gso,ncnt,cor,work,lwork,
      &                  nbast,.false.,.false.,thrint,iprlr)
-            write(*,*) 'getsos test'
-            write(*,*) 'gso', gso
-            write(*,*) 'cor', cor
 !           CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
 !    &                  NBAST,DO_LONDON,DOGGA,THRINT,IPRINT)
 
@@ -287,9 +314,9 @@
       return
       end
 
-
+! Based on the MBIS article by Verstraelen et.al - doi.org/10.1021/acs.jctc.6b00456
       subroutine mbis_pop(corx,cory,corz,int_weight,rho,
-     &                 mbis_weight,max_pnt,max_atm,luddump)
+     &                 mbis_weight,max_pnt,max_atm,luddump,luwdump)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -302,7 +329,7 @@
 ! incoming
       real*8    corx(max_pnt),cory(max_pnt),corz(max_pnt),
      &          int_weight(max_pnt),rho(max_pnt),
-     &          mbis_weight(max_pnt,max_atm)
+     &          mbis_weight(max_atm)
       integer   max_pnt,max_atm,luddump
 ! defined in here, some should be allocated with memget instead
 ! 10 used as max l, but currently only imp. for 3
@@ -310,7 +337,7 @@
       real*8    zan(max_atm),qatm(max_atm),qtmp(max_atm),
      &          zeff(10,max_atm),zstmp(10,max_atm),
      &          qshell(10,max_atm),qstmp(10,max_atm),
-     &          vshell(10,max_atm),vatm(max_atm),wtatm(10,max_atm),
+     &          wtatm(10,max_atm),
      &          suma,tote,qtot,dx,dy,dz,rhom,fwt,tmp,ztmp,xtmp,rmsq,dis,
      &          coor(3,max_atm), wtot
 
@@ -337,6 +364,7 @@
       enddo
 
       rewind(luddump)
+      rewind(luwdump)
 
       suma = d0
       ipt=1
@@ -362,12 +390,6 @@
          goto 10
       end if
 
-      write(*,*) 'rho,int_weight'
-      write(*,*) (rho(i),i=1000,1005)
-      write(*,*) (int_weight(i),i=1000,1005)
-
-      write(*,*) 'luddump footer test', npoint
-
 ! tot grid points = ipt-1 due to the way the reading is constructed
       ipt=ipt-1
       write(lupri,*) ' grid points, tot elec.'
@@ -376,252 +398,195 @@
 14    format(i10,2f20.10)
 30    format(2i5,5f12.4)
       
-c     estimate initial Zeff
+! guess initial parameters for pro-atomic density 
       call zeffini(kpar,nat,zan,zeff,qshell,lmax)
-      write(*,*)'Zeff initial' !relateret til sigma
+      write(*,*)'Zeff initial' ! 1/sigma
       do i=1,nat
         write(*,30)i,lmax(i),(zeff(j,i),j=1,3)
       enddo
-      write(*,*)'Qshell initial' !samme som population, N(Ai) - også estimeret i zeffini
+      write(*,*)'Qshell initial' ! N_Ai 
       do i=1,nat
         write(*,30)i,lmax(i),(qshell(j,i),j=1,3)
       enddo
 
-c     iterate until MBIS charges are converged
+! iterate until MBIS charges are converged
       do kiter=1,kmax
-        mbis_weight = d0 
-        write(*,*)' '
-        write(*,*)' Iteration ',kiter
-c       update qshell
-        do n=1,nat
-          do l=1,lmax(n)
-            qstmp(l,n)= d0 !reset tmp vector for N(Ai) 
-          enddo
-        enddo
+         write(*,*)' '
+         write(*,*)' Iteration ',kiter
+
+! in the first part of the itteration we calculate the population of the pro-atomic densities
+         do n=1,nat
+            do l=1,lmax(n)
+               qstmp(l,n)= d0
+            enddo
+         enddo
+
 c       loop over points
-      suma=d0
-        do i=1,ipt
-      suma=suma+int_weight(i)*rho(i)
-          rhom = rho(i)
-          fwt = int_weight(i) 
-!         jcnt = icnt(i)
-!         xj = coor(1,jcnt)
-!         yj = coor(2,jcnt)
-!         zj = coor(3,jcnt)
+         do i=1,ipt
+            rhom = rho(i)
+            fwt = int_weight(i) 
 
-          do n=1,nat
-            do l=1,lmax(n)
-              wtatm(l,n)=0.0d0
-            enddo
-          enddo
-c         construct atomic weight function in the given point
-          do n=1,nat
-            dx = corx(i) - coor(1,n)
-            dy = cory(i) - coor(2,n)
-            dz = corz(i) - coor(3,n) 
-            dis = dx*dx + dy*dy + dz*dz
-            dis = sqrt(dis)
-            do l=1,lmax(n)
-              ztmp = zeff(l,n)
-              znorm = (ztmp**3)/epi !epi??
-              xtmp = znorm*exp(-ztmp*dis)
-              rhoa = qshell(l,n)
-              tmp = xtmp*rhoa*fwt
-              if (abs(tmp).lt.dencut) then
-                   tmp=d0 !eps = limit where we set 0 (10^-14) to not include noise
-              end if
-              wtatm(l,n) = wtatm(l,n) + tmp !making p0(Ai), eq 7
-!        if(tmp.lt.zero) write(*,*) ' tmp, wtatm', tmp, wtatm(l,n)
-!                   if(first.eqv..true.) then
-!                       write (*,*) 'debugo',ztmp,znorm,rhoa
-!                       first=.false.
-!                   end if 
-            enddo
-          enddo
-
-c         assign ISA fractions and partition electrons
-          wtot = d0
-          do n=1,nat
-            do l=1,lmax(n)
-              wtot = wtot + wtatm(l,n) !p0 made from p0(Ai), e.g. eq 5, maybe only p0i? or p0(r)
-            enddo
-          enddo
-          if (abs(wtot).gt.d0 .and. (abs(rhom*fwt).gt.eps)) then
-!           tmp = zero
             do n=1,nat
-              do l=1,lmax(n)
-                qstmp(l,n) = qstmp(l,n) + wtatm(l,n)*fwt*rhom/wtot !N(Ai) population, eq 18 
-!               tmp = tmp + wtatm(l,n) 
-!               wpnt(i,n) = wpnt(i,n) + wtatm(l,n)/wtot
-                mbis_weight(i,n) = mbis_weight(i,n) + wtatm(l,n)/wtot
-
-!               write(*,*) 'n,l,wpnt,wtatm,wtot,rhom,ipt', 
-!    &             n, l, wpnt(i,n), wtatm(l,n), wtot,rhom, i
-
-        if (mbis_weight(i,n) .lt. d0) write(*,*) 'wpnt lt zero'
-              enddo
+               do l=1,lmax(n)
+                  wtatm(l,n)=0.0d0
+               enddo
             enddo
-!           tmp = tmp/wtot
-!           if (abs(1.0d0-tmp).gt.1.0d-10) then
-!             write(*,*)' weight sum not one'
-!           endif
-!         else
-!           if (wtot.lt.zero) then
-!             write(*,*)' wtot less than zero???'
-!          !endif
-!           if (rhom*fwt.lt.zero) then
-!             write(*,*)' rhom*fwt less than zero???'
-!             write(*,*)rhom,fwt
-!           endif
-          endif
-        enddo
-c       end ipt loop
-!       write(*,*) 'mbis sum 1', wt1, ',mbis sum 2', wt2
-
-      tote=suma!+sumb
-      write(*,*)'tote', tote
-        write(*,*)' Qshell'
-        tote=d0
-        do n=1,nat
-          do l=1,lmax(n)
-            tote = tote + qstmp(l,n) !summation over amount of elec.
-            tmp = qstmp(l,n)-qshell(l,n) !change of N(Ai) in this iteration
-            write(*,21)n,l,qshell(l,n),qstmp(l,n),tmp 
-          enddo
-        enddo
-c       write(*,*)' electron count',tote
-        rmsq=d0
-        qtot=d0
-        qele=d0
-        write(*,*)' Qatom'
-        do n=1,nat
-          qtmp(n)=d0
-          do l=1,lmax(n)
-            qtmp(n)=qtmp(n)+qstmp(l,n) !N(Ai) to N(A)?, which is amount of electrons on atom A?
-          enddo
-          qele = qele + qtmp(n) !amount of electrons on A or n
-          qtmp(n) = zan(n) - qtmp(n) !Q(A)=Z(A)-N(A) (eq. 18) because shape-functions are normalized (integral over f = 1, text after eq. 7)
-          tmp = qtmp(n)-qatm(n) !Q from previouis iteration, 0 first time
-          rmsq = rmsq + tmp*tmp !Eq. 20 but shifted with Z, so looking at the total charge instead of electron charge
-          qtot = qtot + qtmp(n)
-          write(*,20)n,qatm(n),qtmp(n),tmp
-        enddo
-        qxs=nint(qele)
-        qxs=qele+qtot-qxs
-        rmsq=sqrt(rmsq)
-        write(*,22)rmsq,qele,qtot,qxs
-        if (rmsq.lt.qconv) goto 900
-        do n=1,nat
-          qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
-          do l=1,lmax(n)
-            qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
-          enddo
-        enddo
-22      format(' RMS-dQ , Qele, Qtot, Qxs',4f15.8)
-
-c       update zeff
-        do n=1,nat
-          do l=1,lmax(n)
-            zstmp(l,n)=d0
-            vshell(l,n)=d0
-          enddo
-        enddo
-
-c       loop over points
-        do i=1,ipt
-          rhom = rho(i)
-          fwt = int_weight(i)
-!         jcnt = icnt(i)
-!         xj = coor(1,jcnt)
-!         yj = coor(2,jcnt)
-!         zj = coor(3,jcnt)
-
-          do n=1,nat
-            do l=1,lmax(n)
-              wtatm(l,n)=d0
-            enddo
-          enddo
-
-c         reconstruct atomic weights functions - same as before
-          do n=1,nat
-            dx = corx(i) - coor(1,n)
-            dy = cory(i) - coor(2,n)
-            dz = corz(i) - coor(3,n) 
-            dis = dx*dx + dy*dy + dz*dz
-            dis = sqrt(dis)
-            do l=1,lmax(n)
-              ztmp = zeff(l,n)
-              znorm = (ztmp**3)/epi
-              xtmp = znorm*exp(-ztmp*dis)
-              rhoa = qshell(l,n)
-              tmp = xtmp*rhoa*fwt
-              if ((abs(tmp)).lt.dencut) tmp=d0
-              wtatm(l,n) = wtatm(l,n) + tmp
-            enddo
-          enddo
-c         assign ISA fractions and partition electrons 
-          wtot = d0
-          do n=1,nat
-            do l=1,lmax(n)
-              wtot = wtot + wtatm(l,n) !does the abs change these?
-            enddo
-          enddo
-          if (abs(wtot).gt.d0 .and. abs(rhom*fwt).gt.eps) then !abs(rhom*fwt)
+c         construct atomic weight function in the given point
             do n=1,nat
                dx = corx(i) - coor(1,n)
                dy = cory(i) - coor(2,n)
                dz = corz(i) - coor(3,n) 
-              dis = dx*dx + dy*dy + dz*dz
-              dis = sqrt(dis)
-              vtmp = zan(n)/dis
-              do l=1,lmax(n)
-                zstmp(l,n) = zstmp(l,n) + wtatm(l,n)*rhom*dis*fwt/wtot !looks similar to equation 18, just without 1/3N(Ai)
-c               vshell(l,n) = vshell(l,n) + wtatm(l,n)*vtmp*fwt/wtot
-             vshell(l,n) = vshell(l,n) + wtatm(l,n)*vtmp*rhom*fwt/wtot !what? something with valence maybe? or maybe just presented in another form, not actually used in itterations?
-              enddo
+               dis = dx*dx + dy*dy + dz*dz
+               dis = sqrt(dis)
+               do l=1,lmax(n)
+                  ztmp = zeff(l,n)
+                  znorm = (ztmp**3)/epi
+                  xtmp = znorm*exp(-ztmp*dis)
+                  rhoa = qshell(l,n)
+                  tmp = xtmp*rhoa*fwt
+                  if (abs(tmp).lt.dencut) tmp=d0
+                  wtatm(l,n) = wtatm(l,n) + tmp
+               enddo
             enddo
-          endif
-        enddo
-c       end ipt loop
 
-        write(*,*)' Zshell'
-!       write(lupri,*)' Zshell'
-        do n=1,nat
-          do l=1,lmax(n)
-            zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
-            tmp = zstmp(l,n)-zeff(l,n)
-                write(*,*) 'zeff debug', l, n, zeff(l,n)
-            write(*,21)n,l,zeff(l,n),zstmp(l,n),tmp
-!           write(lupri,21)n,l,zeff(l,n),zstmp(l,n),tmp
-            zeff(l,n) = zstmp(l,n) !zeff corresponds to 1/sigma in eq 19
-c
-            vshell(l,n) = vshell(l,n)/qshell(l,n) !vshell is leftover from old code 
-c
-          enddo
-        enddo
-        write(*,*)' Vshell'
-        do n=1,nat
-          vatm(n)=d0
-          do l=1,lmax(n)
-                write(*,*) 'vshell debug', l, n, vshell(l,n)
-            vatm(n)=vatm(n)+vshell(l,n)
-            write(*,21)n,l,vshell(l,n)
-          enddo
-        enddo
-        write(*,*)' Vatom'
-        do n=1,nat
-          write(*,20)n,vatm(n)
-        enddo
+!         assign ISA fractions and partition electrons
+            wtot = d0
+            do n=1,nat
+               do l=1,lmax(n)
+                  wtot = wtot + wtatm(l,n) 
+               enddo
+            enddo
+            if (abs(wtot).gt.d0 .and. (abs(rhom*fwt).gt.eps)) then
+               do n=1,nat
+                  do l=1,lmax(n)
+                     qstmp(l,n) = qstmp(l,n) + wtatm(l,n)*fwt*rhom/wtot !N(Ai) population, eq 18 
+                  enddo
+               enddo
+            endif
+         enddo
+!        end ipt loop
+
+         write(*,*)' Qshell'
+         tote=d0
+         do n=1,nat
+            do l=1,lmax(n)
+               tote = tote + qstmp(l,n)
+               tmp = qstmp(l,n)-qshell(l,n)
+               write(*,21)n,l,qshell(l,n),qstmp(l,n),tmp 
+            enddo
+         enddo
+         write(*,*)' Electrons from integration:', suma
+         write(*,*)' Electrons from MBIS       :', tote
+         rmsq=d0
+         qtot=d0
+         qele=d0
+         write(*,*)' Qatom'
+         do n=1,nat
+            qtmp(n)=d0
+            do l=1,lmax(n)
+               qtmp(n)=qtmp(n)+qstmp(l,n)
+            enddo
+            qele = qele + qtmp(n) 
+            qtmp(n) = zan(n) - qtmp(n)
+            tmp = qtmp(n)-qatm(n) 
+            rmsq = rmsq + tmp*tmp 
+            qtot = qtot + qtmp(n)
+            write(*,20)n,qatm(n),qtmp(n),tmp
+         enddo
+         qxs=nint(qele)
+         qxs=qele+qtot-qxs
+         rmsq=sqrt(rmsq)
+         write(*,22)rmsq,qele,qtot,qxs
+         if (rmsq.lt.qconv) goto 900
+         do n=1,nat
+            qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
+            do l=1,lmax(n)
+               qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
+            enddo
+         enddo
+
+c        update zeff
+         do n=1,nat
+            do l=1,lmax(n)
+               zstmp(l,n)=d0
+            enddo
+         enddo
+
+c        loop over points
+         do i=1,ipt
+            rhom = rho(i)
+            fwt = int_weight(i)
+
+            do n=1,nat
+               do l=1,lmax(n)
+                  wtatm(l,n)=d0
+               enddo
+            enddo
+
+c         reconstruct atomic weights functions - same as before
+            do n=1,nat
+               dx = corx(i) - coor(1,n)
+               dy = cory(i) - coor(2,n)
+               dz = corz(i) - coor(3,n) 
+               dis = dx*dx + dy*dy + dz*dz
+               dis = sqrt(dis)
+               do l=1,lmax(n)
+                  ztmp = zeff(l,n)
+                  znorm = (ztmp**3)/epi
+                  xtmp = znorm*exp(-ztmp*dis)
+                  rhoa = qshell(l,n)
+                  tmp = xtmp*rhoa*fwt
+                  if ((abs(tmp)).lt.dencut) tmp=d0
+                  wtatm(l,n) = wtatm(l,n) + tmp
+               enddo
+            enddo
+c         assign ISA fractions and partition electrons 
+            wtot = d0
+            do n=1,nat
+               do l=1,lmax(n)
+                  wtot = wtot + wtatm(l,n) !does the abs change these?
+               enddo
+            enddo
+            if (abs(wtot).gt.d0 .and. abs(rhom*fwt).gt.eps) then
+               do n=1,nat
+                  dx = corx(i) - coor(1,n)
+                  dy = cory(i) - coor(2,n)
+                  dz = corz(i) - coor(3,n) 
+                  dis = dx*dx + dy*dy + dz*dz
+                  dis = sqrt(dis)
+                  vtmp = zan(n)/dis
+                  do l=1,lmax(n)
+                     zstmp(l,n) = zstmp(l,n) + 
+     &                  wtatm(l,n)*rhom*dis*fwt/wtot 
+                  enddo
+               enddo
+            endif
+         enddo
+c        end ipt loop
+
+         write(*,*)' Zshell'
+!        write(lupri,*)' Zshell'
+         do n=1,nat
+            do l=1,lmax(n)
+               zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
+               tmp = zstmp(l,n)-zeff(l,n)
+               write(*,21)n,l,zeff(l,n),zstmp(l,n),tmp
+!              write(lupri,21)n,l,zeff(l,n),zstmp(l,n),tmp
+               zeff(l,n) = zstmp(l,n)
+            enddo
+         enddo
 
         write(*,*)' '
-      enddo
+      enddo 
+c     end kitter loop
 
 20    format(i5,3f15.8)
 21    format(2i5,3f15.8)
+22    format(' RMS-dQ , Qele, Qtot, Qxs',4f15.8)
 
 900   continue
 
-      write(*,*) 'MBIS converged!'
+      write(*,*) ' MBIS converged!'
 
       write(*,*)' '
       write(*,*)' Final converged results'
@@ -634,75 +599,57 @@ c
         qtmp(n) = nint(zan(n)) - qtmp(n)
         write(*,20)n,qtmp(n)
       enddo
-      write(*,*)' Vatom'
-      do n=1,nat
-        write(*,20)n,vatm(n)
-      enddo
 
-c     ISA weighting
-        do n=1,nat
-          do l=1,lmax(n)
-            vshell(l,n)=d0
-          enddo
-        enddo
-        do i=1,ipt
-          fwt = int_weight(i)
-!         jcnt = icnt(i)
-!         xj = coor(1,jcnt)
-!         yj = coor(2,jcnt)
-!         zj = coor(3,jcnt)
+! calculate final mbis weights for print in each point
+! using qstmp since qshell is not saved in final iteration
 
-          do n=1,nat
+      write(luwdump) ipt
+
+      do i=1,ipt
+         rhom = rho(i)
+         fwt  = int_weight(i) 
+         do n=1,nat
+            mbis_weight(n) = d0
+            do l=1,lmax(n)
+               wtatm(l,n) = d0
+            enddo
+         enddo
+         do n=1,nat
             dx = corx(i) - coor(1,n)
             dy = cory(i) - coor(2,n)
-            dz = corz(i) - coor(3,n)
+            dz = corz(i) - coor(3,n) 
             dis = dx*dx + dy*dy + dz*dz
             dis = sqrt(dis)
-            vtmp = d0
-            if(dis.gt.eps)vtmp = zan(n)/dis !eps or dencut?
             do l=1,lmax(n)
-              ztmp = zeff(l,n)
-              znorm = (ztmp**3)/epi
-              xtmp = znorm*exp(-ztmp*dis)
-              rhoa = qshell(l,n)
-              tmp = xtmp*rhoa*fwt
-              if (tmp.lt.dencut) tmp=d0 !eps or dencut?
-              vshell(l,n) = vshell(l,n) + vtmp*tmp
+               ztmp = zeff(l,n)
+               znorm = (ztmp**3)/epi
+               xtmp = znorm*exp(-ztmp*dis)
+               rhoa = qstmp(l,n)
+               tmp = xtmp*rhoa*fwt
+               if (abs(tmp).lt.dencut) then
+                  tmp=d0
+               end if
+               wtatm(l,n) = wtatm(l,n) + tmp
             enddo
-          enddo
-        enddo
-c       end ipt loop
-        write(*,*)' Vshell-ISA   '
-        do n=1,nat
-          vatm(n)=d0
-          do l=1,lmax(n)
-            vshell(l,n) = vshell(l,n)/qshell(l,n)
-            vatm(n)=vatm(n)+vshell(l,n)
-            write(*,21)n,l,vshell(l,n)
-          enddo
-        enddo
-        write(*,*)' Vatom-ISA   '
-        do n=1,nat
-          write(*,20)n,vatm(n)
-        enddo
+         enddo
 
-        do n=1,nat
-          vatm(n)=d0
-          tmp=d0
-          do l=1,lmax(n)
-            vatm(n)=vatm(n)+vshell(l,n)
-            tmp=tmp+qshell(l,n)
-          enddo
-          vatm(n)=vatm(n)/tmp
-        enddo
-        write(*,*)' Vatom-ISA2   '
-        do n=1,nat
-          write(*,20)n,vatm(n)
-        enddo
+         wtot = d0
+         do n=1,nat
+            do l=1,lmax(n)
+               wtot = wtot + wtatm(l,n)
+            enddo
+         enddo
+         if (abs(wtot).gt.d0 .and. (abs(rhom*fwt).gt.eps)) then
+            do n=1,nat
+               do l=1,lmax(n)
+                  mbis_weight(n) = mbis_weight(n) + wtatm(l,n)/wtot
+               enddo
+            enddo
+         endif
+         write(luwdump) (mbis_weight(j),j=1,nat)
+      enddo !ipt
 
-! CALCULATE GPV USING MBIS WEIGHT
-
-
+      write(luwdump) -1
 
       return
       end
@@ -721,31 +668,163 @@ c       end ipt loop
       lmax = 0
 
       do i=1,nat
-        znuc = zan(i)
-        zeff(1,i) = 2.0d0*znuc
-        if (znuc.le.2.0d0) then
-          lmax(i) = 1
-          qshell(1,i)=znuc
-          qshell(2,i)=d0
-        endif
-        if (znuc.gt.2.0d0 .and. znuc.le.10.0d0) then
-          lmax(i) = 2
-          zeff(2,i) = 2.0d0
-          qshell(1,i)=2.0d0
-          qshell(2,i)=znuc-2.0d0 
-        endif
-        if (znuc.gt.10.0d0 .and. znuc.le.18.0d0) then
-          lmax(i) = 3
-          zeff(2,i) = 2.0d0*sqrt(znuc)
-          zeff(3,i) = 2.0d0
-          qshell(1,i)=2.0d0
-          qshell(2,i)=8.0d0 
-          qshell(3,i)=znuc-10.0d0 !Z-core=valens, neccesary since we dont know if valence is full
-        endif
-        if (znuc.gt.18) call quit('Z > 18 not implemented in zeffini')
+         znuc = zan(i)
+         zeff(1,i) = 2.0d0*znuc
+         if (znuc.le.2.0d0) then
+            lmax(i) = 1
+            qshell(1,i)=znuc
+            qshell(2,i)=d0
+         endif
+         if (znuc.gt.2.0d0 .and. znuc.le.10.0d0) then
+            lmax(i) = 2
+            zeff(2,i) = 2.0d0
+            qshell(1,i)=2.0d0
+            qshell(2,i)=znuc-2.0d0 
+         endif
+         if (znuc.gt.10.0d0 .and. znuc.le.18.0d0) then
+            lmax(i) = 3
+            zeff(2,i) = 2.0d0*sqrt(znuc)
+            zeff(3,i) = 2.0d0
+            qshell(1,i)=2.0d0
+            qshell(2,i)=8.0d0 
+            qshell(3,i)=znuc-10.0d0 !Z-core=valens, neccesary since we dont know if valence is full
+         endif
+         if (znuc.gt.18) call quit('Z > 18 not implemented in zeffini')
       enddo
  
       return
       end
 
 
+      subroutine numint_write(integral_label,ao_int,gso,luddump,luwdump)
+#include "implicit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "inforb.h"
+#include "priunit.h"
+#include "rspprp.h"
+#include "inflr.h"
+      parameter (d0 = 0.0d0)
+!incoming
+      character*8 integral_label
+      integer     luddump,luwdump
+      real*8      ao_int(nnbasx),gso(nbast)
+!in here
+      character*8 integral_type, rtnlbl(2)
+      integer     ipt, ipt_check, atm_idx, atm_chg, cor_idx
+      real*8      tmp, int_weight, mbis_weight, cor(3),
+     &            ao_test(nbast,nbast)
+
+! we could in principle calc. all integrals the first time we are here, but
+! with the 'select' feature we will not know which integrals we need
+
+! label: AM + two char for index + two char for charge + two char for direc. and moment
+
+      read(integral_label(3:4),*) atm_idx
+      read(integral_label(5:6),*) atm_chg
+
+      cor_idx = 0
+
+      integral_type = integral_label(7:8)
+      select case (integral_type)
+! this can be extended to two cor_idx for quadrupole integrals
+         case ('00')
+            cor_idx = 0
+         case ('0x')
+            cor_idx = 1
+         case ('0y')
+            cor_idx = 2
+         case ('0z')
+            cor_idx = 3
+         case default
+            write(*,*) 'Label', integral_type, 'not reognized'
+     &         // 'or implemented yet'
+            call quit("Label not recognized in numint_write")
+         end select
+
+      rewind(luddump)
+      rewind(luwdump)
+
+      read(luwdump) ipt_check
+
+      ao_int = d0
+
+      start=1
+      ipt=0
+
+      if (cor_idx.eq.0) then
+      
+!luddump: corx(r),cory(r),corz(r),int_weight(r),rho(r),(chi_a(r),a=1,nbast)
+!luwdump: (mbis_weight_a(r),a=1,nucdep)
+
+10       continue
+         read(luddump) npoint
+         if (npoint.gt.0) then
+            do i=start,start+npoint-1
+               ipt=ipt+1
+               read(luddump) tmp,tmp,tmp,int_weight,tmp,
+     &                        (gso(j),j=1,nbast)
+               read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
+               do a=1,nbast
+                  ! index of the last element in previous row, i.e. the diagonal
+                  idx=(a*a-a)/2 
+                  do b=1,a
+                     ao_int(idx+b) = ao_int(idx+b) + 
+     &                  gso(a)*gso(b)*mbis_weight*int_weight
+                  enddo
+               enddo
+            enddo
+            start=start+npoint
+            goto 10
+         else if (npoint.eq.0) then
+            goto 10
+         end if
+
+      else if (cor_idx.gt.0) then
+
+20       continue
+         read(luddump) npoint
+         if (npoint.gt.0) then
+            do i=start,start+npoint-1
+               ipt=ipt+1
+               read(luwdump) cor(1),cor(2),cor(3),int_weight,tmp,
+     &                     (gso(j),j=1,nbast)
+               read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
+               dist = cor(cor_idx) - cord(cor_idx,atm_idx)
+               do a=1,nbast
+                  idx=(a*a-a)/2
+                  do b=1,a
+                     ao_int(idx+b) = ao_int(idx+b) + 
+     &                  gso(a)*gso(b)*mbis_weight*int_weight*dist
+                  enddo
+               enddo
+            enddo
+            start=start+npoint
+            goto 20
+         else if (npoint.eq.0) then
+            goto 20
+         end if
+
+      end if 
+
+      if (ipt .ne. ipt_check) 
+     &   call quit("Error in reading of files in numint")
+
+      read(luwdump) ipt_check
+      if (ipt_check .ne. -1) 
+     &   call quit("Error in reading of files in numint")
+      
+!     CALL DSPTSI(NBAST,ao_int,ao_test)
+!     write(lupri,*) 'ao_int test'
+!     CALL OUTPUT(ao_test,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
+
+      call getdat(rtnlbl(1),rtnlbl(2))
+
+      rtnlbl(2) = 'SYMMETRI'
+      !rtnlbl(1) holds opperator sym, we ignore that for now?
+         !this is not read in in getgpv, seems like its inferred from integral vals.?
+      
+      call wrtpro(ao_int,nnbasx,integral_label,rtnlbl,iprlr)
+
+      return
+      end
