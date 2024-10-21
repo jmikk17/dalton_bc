@@ -111,7 +111,7 @@ C
 #include "dftcom.h"
 #include "pcmlog.h"
 C
-      LOGICAL SAVLR, DORESP, FLAGSV, EX, NEED_PVX
+      LOGICAL SAVLR, DORESP, FLAGSV, EX, NEED_PVX, FOUND
 C
       CALL QENTER('RSPDRV')
 C
@@ -189,6 +189,44 @@ C
          CALL READT (LUSIFC,NCMOT,WRK(KCMO))
          CALL DFTSOI(WRK(KCMO),WRK(KLST),LFREE,IPRONE)
       END IF
+
+      if (atmmom) then
+         kfree  = 1
+         lfree  = lwrk
+         if (nisht>0) then
+            call memget('REAL',kcmo,ncmot,wrk,kfree,lfree)
+            call memget('REAL',kdcao,n2basx,wrk,kfree,lfree) 
+            call rd_sirifc('CMO',found,wrk(kcmo))
+            if (.not.found)
+     &         call quit('ATMMOM error: CMO not found on SIRIFC')
+            write(*,*) 'cmo in rspmai'
+            write(*,*) (wrk(kcmo+i-1),i=1,ncmot)
+         else
+            call memget('REAL',kcmo,0,wrk,kfree,lfree)
+            call memget('REAL',kdcao,0,wrk,kfree,lfree) 
+         end if
+         if (nasht>0) then
+            call memget('REAL',kdv,nnashx,wrk,kfree,lfree) 
+            call memget('REAL',kdvao,n2basx,wrk,kfree,lfree) 
+            call rd_sirifc('DV',found,wrk(kdv))
+            if (.not.found)
+     &         call quit('ATMMOM error: DV not found on SIRIFC')
+         else
+            call memget('REAL',kdv,0,wrk,kfree,lfree) 
+            call memget('REAL',kdvao,0,wrk,kfree,lfree) 
+         end if
+         call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
+     &      wrk(kcmo),wrk(kdv),wrk,lwrk)
+         if (nisht>0 .and. nasht>0) then
+            call daxpy(n2basx,1.0d0,wrk(kdvao),1,wrk(kdcao),1)
+            call numint_driver(wrk(kdcao),wrk(kfree),lwrk)
+         else if (nisht>0) then
+            call numint_driver(wrk(kdcao),wrk(kfree),lwrk)
+         else if (nasht>0) then
+            call numint_driver(wrk(kdvao),wrk(kfree),lwrk)
+         end if
+      end if
+
       KWSYM = 1
       LWSYM = LWRK  - KWSYM
       IF (LWSYM.LT.0) CALL ERRWRK('RSPDRV 2',KWSYM,LWRK)
@@ -350,6 +388,8 @@ C
 C     CALL RSPMC(CMO,UDV,PV,FOCK,FC,FV,FCAC,H2AC,WRK,LWRK)
 C
 C
+      write(*,*) 'cmo from rspmc'
+      write(*,*) (wrk(kcmo+i-1),i=1,ncmot)
       IF (DOMCSRDFT) THEN
          CALL TITLER('MC-srDFT response calculation','*',103)
       ELSE IF (DOHFSRDFT) THEN
@@ -2350,15 +2390,20 @@ C     .VIRTUAL
 
  48            CONTINUE ! ATMMOM input. 
                ! A lot of stuff has been stored in infrsp.h
-               ! Check later is this is actually needed 
+               ! Check later if this is actually needed 
+
+               ATMMOM = .TRUE.
 
                IF (NSYM.NE.1)
      &            CALL QUIT('SYMMETRY NOT TESTED YET')
+
 
                ! Read in order of multipole integrals
                READ (LUCMD,*) IORATM 
                IF (IORATM .GT. 1) 
      &            CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+               IF (IORATM .LT. -1) 
+     &            CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
 
                ! Make a symmetry-proof charge array
                K = 0
@@ -3292,14 +3337,6 @@ C
      *               '@ PROPERTY CALCULATION NOT CARRIED OUT '
                END IF
             END IF
-         ELSE IF (LABEL(1:2) .EQ. 'AM') THEN
-            ! following structure of 'missing integrals' calculation below
-            ! but now using nummerical integration instead
-            CALL GPCLOSE(LUPROP,'KEEP')
-            CALL NUMINT_DRIVER(LABEL,WRK,LWRK) 
-            CALL GPOPEN(LUPROP,'AOPROPER','OLD',' ','UNFORMATTED',
-     &                  IDUMMY,.FALSE.)
-            GOTO 248
          ELSE
             IF (JTURN .GT. 1) THEN
 C           ... capture input errors as asking for ".DIPLENX" or "UDIPLEN"

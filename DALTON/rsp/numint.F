@@ -1,13 +1,10 @@
-      subroutine numint_driver(integral_label,work,lwork) !,iorder,propri,iprint)
+      subroutine numint_driver(ao_density,work,lwork) !,iorder,propri,iprint)
 !*****************************************************************************
 !     JESM 16-10-2024
 !     Driver routine for numerical integration of atomic moments
 !     
-!     Purpose on first call: 
-!     Calculate density, follow by MBIS population analysis in each grid point
-!      
 !     Purpose:
-!     Calculate AO integrals for moment and atom specified in input label, and
+!     Calculate AO integrals for all atomic moments specificed in input and
 !     write to AOPROPER
 !*****************************************************************************
 #include "implicit.h"
@@ -16,6 +13,7 @@
 #include "inforb.h"
 #include "inftap.h"
 #include "dummy.h"
+#include "rspprp.h"
 !
 ! dftinf.h:       nder, ntypso 
 ! dftcom.h:       dftgrid_done_old, dfthri
@@ -23,14 +21,13 @@
 ! inftap.h:       lusifc, lbsifc
 ! dummy.h:        idummy
 !
-      logical do_dcao, do_dvao
       integer luddump, luquad
-      character integral_label*8
-      dimension work(lwork)
+      dimension work(lwork), ao_density(n2basx)
 
-      logical, save :: first_call = .true.
+      character(len=8) label
 
       call qenter('numint')
+      call newtimer('START')
 
       kfrsav = 1
       kfree  = kfrsav
@@ -40,164 +37,118 @@
       luddump = -1
       call gpopen(luddump,'DENSITY.GRID','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
-
+! file for dumping population weights
       luwdump = -1
       call gpopen(luwdump,'WEIGHT.GRID','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
-
+! file for ao property integrals
       luprop = -1
       call gpopen(luprop,'AOPROPER','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
 
-      if (first_call) then
-
 ! set up dft orbital common block so we don't evaluate uneccesary terms 
 ! TODO: maybe these should be saved and set back to original val?
 ! TODO: look into calling DFTINI or SETUPSOS instead of this
-         DFTHR0 = 1.0D-8
-         DFTHRL = 1.0D-10
-!        DFTHRI = 1.0D-13
-         DFTHRI = 2.0D-12
-         nder = 0
-         ntypso = 1
-         nso0 = 1
-         kso0 = 1
+      DFTHR0 = 1.0D-8
+      DFTHRL = 1.0D-10
+!     DFTHRI = 1.0D-13
+      DFTHRI = 2.0D-12
+      nder = 0
+      ntypso = 1
+      nso0 = 1
+      kso0 = 1
 
 ! make dftgrid BEFORE allocations, this requires a lot of mem but releases it again
-         if (.not. dftgrid_done_old) then
-            call make_dftgrid(work,lwork,ntot_dftgrid,1,.false.)
-            dftgrid_done_old = .true.
-         end if
-
-! check for active and inactive orbitals
-         do_dcao = (nisht.gt.0)
-         do_dvao = (nasht.gt.0)
+      if (.not. dftgrid_done_old) then
+         call make_dftgrid(work,lwork,ntot_dftgrid,1,.false.)
+         dftgrid_done_old = .true.
+      end if
 
 ! allocate static memory for 1 000 000 grid points
 ! this seems like its nbuf pr atom, so can probably be lowered?
-! but is set to 1 000 000 in grid routine
-         nbuf = 1 000 000
-      !nbuf = 100 000 
+! but is hardcoded to 1 000 000 in grid routine
+      nbuf = 1 000 000
 
-! taken from prpget, not sure the purpose 
-
-         write(*,*) 'lfree before allocation', lfree
+      write(*,*) 'lfree before allocation', lfree
 
 ! grid coords
-         call memget('REAL',kx,nbuf,work,kfree,lfree)
-         call memget('REAL',ky,nbuf,work,kfree,lfree)
-         call memget('REAL',kz,nbuf,work,kfree,lfree)
+      call memget('REAL',kx,nbuf,work,kfree,lfree)
+      call memget('REAL',ky,nbuf,work,kfree,lfree)
+      call memget('REAL',kz,nbuf,work,kfree,lfree)
 ! integrations weights
-         call memget('REAL',kw,nbuf,work,kfree,lfree)
+      call memget('REAL',kw,nbuf,work,kfree,lfree)
 ! basis functions evaluated in a point 
-         call memget('REAL',kgso,nbast,work,kfree,lfree)
-! for ncnt, goes into getsos, propbalby related to which center the basis func. is on 
-         call memget('INT4',kcnt,nbast,work,kfree,lfree) 
-! DMATGAO, unneccesary output from getrho_srdft
-         call memget('REAL',kdga,nbast,work,kfree,lfree) 
-! allocations for density mat. in ao basis
-         if (do_dvao) then
-            call memget('REAL',kdv,nnashx,work,kfree,lfree) 
-            call memget('REAL',kdvao,n2basx,work,kfree,lfree) 
-         else
-            call memget('REAL',kdv,0,work,kfree,lfree) 
-            call memget('REAL',kdvao,0,work,kfree,lfree) 
-         end if
-         if (do_dcao) then
-            call memget('REAL',kdcao,n2basx,work,kfree,lfree) 
-            call memget('REAL',kcmo,ncmot,work,kfree,lfree)
-         else
-            call memget('REAL',kdcao,0,work,kfree,lfree) 
-         end if
-
-         write(*,*) 'lfree after allocation', lfree
-      
-! read in mo coefficients and dv from sirius
-! lusifc file structure explained in RD_SIRIFC
-         if (lusifc .le. 0) call quit('SIRIFC not open in numint')
-         rewind lusifc 
-         call mollab(lbsifc,lusifc,lupri)
-         read (lusifc)
-         read (lusifc)
-         if (do_dcao) then
-! TODO: might need mo's for dvao calc. if we want uncoupled as well
-            call readt (lusifc,ncmot,work(kcmo))
-         else
-            read (lusifc)
-         end if
-         if (do_dvao) then
-            read (lusifc)
-            call readt (lusifc,nnashx,work(kdv))
-         end if
-
-         write(*,*) 'cmo', (work(kcmo+i-1),i=1,ncmot)
-
-! calculate dc from mo coeff. and backtransform dv and dc to ao basis
-      ! if possible we can memrel kdv here
-         call fckden(do_dcao,do_dvao,work(kdcao),work(kdvao),work(kcmo),
-     &               work(kdv),work,lwork)
-
-         write(*,*) 'dcao', (work(kdcao+i-1),i=1,n2basx)
-
-
-         call numint_evaluate(work(kx),work(ky),work(kz),work(kw),
-     &   work(kgso),work(kcnt),work(kdga),work(kdvao),work(kdcao),
-     &   do_dvao,do_dcao,luddump,nbuf,work,lwork)
-
-         call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
-
-! allocate for mbis routine 
-         max_pnt = 1 000 000 
-         max_atm = 50 !max atoms
-         
-         write(*,*) 'lfree before mbis', lfree
-
-         call memget('REAL',kx,max_pnt,work,kfree,lfree)
-         call memget('REAL',ky,max_pnt,work,kfree,lfree)
-         call memget('REAL',kz,max_pnt,work,kfree,lfree)
-         call memget('REAL',kw,max_pnt,work,kfree,lfree)
-
-         write(*,*) 'lfree mid mbis', lfree
-
-         call memget('REAL',krho,max_pnt,work,kfree,lfree)
-         call memget('REAL',kw_mbis,max_atm,work,kfree,lfree)
-
-         write(*,*) 'lfree after mbis', lfree
-
-         call mbis_pop(work(kx),work(ky),work(kz),work(kw),
-     &                 work(krho),work(kw_mbis),
-     &                 max_pnt,max_atm,luddump,luwdump)
-
-         call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
-
-
-         first_call = .false.
-
-
-      end if ! first_call
-      
-      call memget('REAL',kint,nnbasx,work,kfree,lfree)
       call memget('REAL',kgso,nbast,work,kfree,lfree)
+! for ncnt, goes into getsos, propbalby related to which center the basis func. is on 
+      call memget('INT4',kcnt,nbast,work,kfree,lfree) 
+! DMATGAO, unneccesary output from getrho_srdft
+      call memget('REAL',kdga,nbast,work,kfree,lfree) 
 
-      call numint_write(integral_label,work(kint),work(kgso),
-     &                  luddump,luwdump)
+      write(*,*) 'lfree after allocation', lfree
+      
+! print evaluated basis functions and density in each point to file
+      call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
+     &   work(kgso),work(kcnt),work(kdga),ao_density,
+     &   luddump,nbuf,work,lwork)
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
-      CALL GPCLOSE(LUPROP,'KEEP')
+! allocate for mbis routine 
+      max_pnt = 1 000 000 
+      max_atm = 50 !max atoms
+         
+      write(*,*) 'lfree before mbis', lfree
+
+      call memget('REAL',kx,max_pnt,work,kfree,lfree)
+      call memget('REAL',ky,max_pnt,work,kfree,lfree)
+      call memget('REAL',kz,max_pnt,work,kfree,lfree)
+      call memget('REAL',kw,max_pnt,work,kfree,lfree)
+
+      write(*,*) 'lfree mid mbis', lfree
+
+      call memget('REAL',krho,max_pnt,work,kfree,lfree)
+      call memget('REAL',kw_mbis,max_atm,work,kfree,lfree)
+
+      write(*,*) 'lfree after mbis', lfree
+
+! calculate mbis population weights in each point and print to file
+      call mbis_pop(work(kx),work(ky),work(kz),work(kw),
+     &   work(krho),work(kw_mbis),
+     &   max_pnt,max_atm,luddump,luwdump)
+
+      call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
+
+      
+! allocate for ao integrals
+
+      call memget('REAL',kint,nnbasx,work,kfree,lfree)
+      call memget('REAL',kgso,nbast,work,kfree,lfree)
+
+! calculate ao-integrals and print to AOPROPER
+! TODO: move this label loop inside the numerical integration
+      do i = 1,nprlbl
+         label = prplbl(i)
+         if (label(1:2) .eq. 'AM') then
+            call num_aoint(label,work(kint),work(kgso),
+     &         luddump,luwdump)
+         end if
+      enddo
+
+      call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
+
+      call gpclose(luprop,'KEEP')
       call gpclose(luddump,'KEEP')
       call gpclose(luwdump,'KEEP')
 
+      call newtimer('numint')
       call qexit('numint')
-
-!     call quit('end of numint, implementation not done')
 
       return
       end
 
 
-      subroutine numint_evaluate(corx,cory,corz,int_weight,
-     &   gso,ncnt,dmatgao,dvao,dcao,do_dvao,do_dcao,luddump,nbuf,
+      subroutine evaluate_grid(corx,cory,corz,int_weight,
+     &   gso,ncnt,dmatgao,ao_density,luddump,nbuf,
      &   work,lwork)
 #include "implicit.h"
 #include "inforb.h"
@@ -212,23 +163,23 @@
 ! ingoing
       real*8    corx(nbuf),cory(nbuf),corz(nbuf),int_weight(nbuf),
      &          gso(nbast),ncnt(nbast),dmatgao(nbast),
-     &          dvao(nbast,nbast),dcao(nbast,nbast),
-     &          work(lwork)
-      logical   do_dvao,do_dcao
+     &          ao_density(nbast,nbast),work(lwork)
       integer   luddump,nbuf
 
 ! defined within routine
       real*8    cor(3)
       integer   npnts,npoint,ipnt
-      real*8    celectrn,velectrn,weight,rho_inactive,rho_active,rho_tot
+      real*8    nelctrn,weight,rho
 
 ! open file where dft grid is stored 
       luquad = -1
       call gpopen(luquad,'DALTON.QUAD','OLD','SEQUENTIAL',
      &   'UNFORMATTED',idummy,.false.)
 
-      celctrn = d0
-      velctrn = d0
+      write(*,*) 'ao dens in eval grid'
+      write(*,*) ao_density
+
+      nelctrn = d0
 
       rewind luddump
 
@@ -261,24 +212,13 @@
 !    &                  NBAST,DO_LONDON,DOGGA,THRINT,IPRINT)
 
 ! get density in point
-            rho_inactive = d0
-            rho_active = d0
-            if (do_dcao) then
-!           ... inactive part
-               call getrho_srdft(dcao,gso,rho_inactive,dmatgao,
-     &                           thrint,iprlr)
-               celctrn = celctrn + weight*rho_inactive
-            end if
-!           ... active part
-            if (do_dvao) then
-               call getrho_srdft(dvao,gso,rho_active,dmatgao,
-     &                           thrint,iprlr)
-               velctrn = velctrn + weight*rho_active
-            end if
-            rho_tot = rho_inactive + rho_active
+            rho = d0
+            call getrho_srdft(ao_density,gso,rho,dmatgao,
+     &         thrint,iprlr)
+            nelctrn = nelctrn + weight*rho
 
             write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
-     &           int_weight(ipnt),rho_tot,(gso(j),j=1,nbast)
+     &           int_weight(ipnt),rho,(gso(j),j=1,nbast)
 
   200    continue
          goto 100
@@ -291,24 +231,20 @@
 
 ! testing we integrate correct num. of electrons
       elctrx = float(2*nrhft)
-      elctrn = celctrn + velctrn
-      error  = elctrn - elctrx
+      error  = nelctrn - elctrx
 
 ! print section for num int
-      write (lupri,'(3(/2X,A,F14.6))')
-     &' Nr. of inactive electrons from numerical integration :',celctrn,
-     &' Nr. of active electrons from numerical integration   :',velctrn,
-     &' Total nr. of electrons from numerical integration    :',elctrn
+      write (lupri,'(1(/2X,A,F14.6))')
+     &' Nr. of electrons from numerical integration          :',nelctrn
       write (lupri,'(2(/2X,A,F14.6))')
      &' Number of electrons from orbial occupations          :',elctrx,
      &' Error in the number of electrons                     :',error
       if (abs(error) .gt. dftels) then
-! dftels is 1.0d-3 as standard
          write (lupri,'(/2X,A,F14.6,/2X,A)')
      &' Error larger than DFTELS (set input)                 :',dftels,
      &   ' Calculation aborted.'
          call quit
-     &    ('Wrong number of electrons in Numint. Calculation aborted.')
+     &    ('Wrong number of electrons in numint_driver.')
       end if
 
       return
@@ -331,8 +267,9 @@
      &          int_weight(max_pnt),rho(max_pnt),
      &          mbis_weight(max_atm)
       integer   max_pnt,max_atm,luddump
-! defined in here, some should be allocated with memget instead
-! 10 used as max l, but currently only imp. for 3
+! defined in here
+! TODO: some should be allocated with memget instead
+! 10 used as max l, but currently only imp. for 3 in zeffini
       integer   npoint,lmax(max_atm),ipt
       real*8    zan(max_atm),qatm(max_atm),qtmp(max_atm),
      &          zeff(10,max_atm),zstmp(10,max_atm),
@@ -696,7 +633,7 @@ c     end kitter loop
       end
 
 
-      subroutine numint_write(integral_label,ao_int,gso,luddump,luwdump)
+      subroutine num_aoint(integral_label,ao_int,gso,luddump,luwdump)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -787,7 +724,7 @@ c     end kitter loop
          if (npoint.gt.0) then
             do i=start,start+npoint-1
                ipt=ipt+1
-               read(luwdump) cor(1),cor(2),cor(3),int_weight,tmp,
+               read(luddump) cor(1),cor(2),cor(3),int_weight,tmp,
      &                     (gso(j),j=1,nbast)
                read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
                dist = cor(cor_idx) - cord(cor_idx,atm_idx)
