@@ -809,6 +809,20 @@ C        ***** general set up for response calculations *****
 C        ****************************************************
 C------------------------------------------------------------
 C
+
+C
+C---------------------------------------------------------------
+C        calculate numerical atomic moment integrals
+C---------------------------------------------------------------
+C
+         if (atmmom) then
+            ! calculate integrals with numint_driver
+            kfree = 1
+            lfree = lwrk
+           !call numint_driver(wrk(kdvao),work,lwrk)
+            call quit("atmmom not implemented yet")
+         end if
+
          IF (LRSPSYM) THEN
            Call CCRSPSYM(MOLGRD,WORK,LWORK)
          END IF

@@ -4448,6 +4448,7 @@ Cholesky
 CTOCD  
 #include "ctocdcc.h"
 CTOCD  
+#include "ccorb.h"
 
 
 * local parameters:
@@ -4468,6 +4469,8 @@ CTOCD
       CHARACTER WORD*(7), LINE*(80)
       CHARACTER*8 LABELA,LABELB
       CHARACTER*8 LABDIP(3), LABDPV(3), LABANG(3)
+      CHARACTER*8 LABATM(100)
+      CHARACTER*2 CHG2, IND2
       CHARACTER TABLE(NTABLE)*(8)
 
       LOGICAL LRELAX, LRELAS, LOCSTAT
@@ -4489,7 +4492,7 @@ CTOCD
      *            '.OLD_LR','.ASYMSD','.DISPCF','.OPERAT','.AVERAG',
      *            '.PRINT ','.STATIC','.DIPGRA','.OR LEN','.OR VEL', 
      *            '.OR    ','.OR MVE','.ORGANL','.ORIGIN','.WAVELE', 
-     *            '.INCLRL','.EXCLRL','.CTOSUS','.CTOSHI','.XXXXXX'/ 
+     *            '.INCLRL','.EXCLRL','.CTOSUS','.CTOSHI','.ATMMOM'/ 
 
 *---------------------------------------------------------------------*
 * begin:
@@ -5027,10 +5030,80 @@ C
             GO TO 100
 C
 C           -------------------------------------------------
-C           .XXXXXXX unused keywords
+C           '.ATMMOM': atomic moment integrals
 C           -------------------------------------------------
 C
 25          CONTINUE
+
+!              IF (NSYM.NE.1)
+!    &            CALL QUIT('SYMMETRY NOT TESTED YET')
+                  ! nsym is always zero here??
+                  ! is it msym? see call to cc_input
+
+               ATMMOM = .TRUE.
+
+               ! Read in order of multipole integrals
+               READ (LUCMD,*) IORATM 
+               IF (IORATM .GT. 1) 
+     &            CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+               IF (IORATM .LT. -1) 
+     &            CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
+
+               ! Make a symmetry-proof charge array
+               K = 0
+               DO I = 1,NUCIND 
+                  DO J = 1,NUCDEG(I)
+                     K = K + 1
+                     ATMCHG(K) = CHARGE(I) 
+                  END DO
+               END DO
+
+               ! Look for atom selection input
+               READ (LUCMD,*) WORD
+               CALL UPCASE(WORD)
+               IF (WORD(1:7) .EQ. '.SELATM') THEN
+                  ATMSEL = .TRUE.
+                  READ (LUCMD,*) NATM
+                  DO I=1,NATM
+                     READ (LUCMD,*) ATMIND(I) 
+                     ! hardcoded to length of 100 in infrsp.h
+                  END DO
+               ELSE
+                  ATMSEL = .FALSE.
+                  NATM = NUCDEP
+                  DO I=1,NATM
+                     ATMIND(I) = I
+                  END DO
+                  BACKSPACE (LUCMD)
+               END IF                
+
+               ! Create labels
+               ISTR = 0
+               K = 0
+               IF (IORATM .LT. 0) ISTR = ABS(IORATM)
+               DO IORDER = ISTR, ABS(IORATM)
+                  DO I=1,NATM
+                     J = ATMIND(I)
+                     WRITE(IND2,'(I2.2)') J
+                     ICHG = ATMCHG(J) 
+                     WRITE(CHG2,'(I2.2)') ICHG
+                     IF (IORDER .EQ. 0) THEN
+                        K = K + 1
+                        LABATM(K) = 'AM'// IND2 // CHG2 // '00'
+                     ELSE IF (IORDER .EQ. 1) THEN
+                        K = K + 1
+                        LABATM(K) = 'AM'// IND2 // CHG2 // '0x'
+                        K = K + 1
+                        LABATM(K) = 'AM'// IND2 // CHG2 // '0y'
+                        K = K + 1
+                        LABATM(K) = 'AM'// IND2 // CHG2 // '0z'
+                     ELSE
+                        CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+                     ENDIF
+                  END DO
+               END DO
+               CALL CC_LRINPREQ(LABATM,LABATM,K,K,.FALSE.,LRELAX)
+
             GO TO 100
 C
           ELSE
