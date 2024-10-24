@@ -14,6 +14,7 @@
 #include "inftap.h"
 #include "dummy.h"
 #include "rspprp.h"
+#include "ccrspprp.h"
 !
 ! dftinf.h:       nder, ntypso 
 ! dftcom.h:       dftgrid_done_old, dfthri
@@ -126,15 +127,18 @@
 
 ! calculate ao-integrals and print to AOPROPER
 ! TODO: move this label loop inside the numerical integration
-      do i = 1,nprlbl
-         label = prplbl(i)
+      !do i = 1,nprlbl
+      do i = 1,nprlbl_cc
+         !label = prplbl(i)
+         label = prplbl_cc(i)
+         write(*,*) 'lbl check', label
          if (label(1:2) .eq. 'AM') then
             call num_aoint(label,work(kint),work(kgso),
      &         luddump,luwdump)
          end if
       enddo
 
-      call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
+      call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
 
       call gpclose(luprop,'KEEP')
       call gpclose(luddump,'KEEP')
@@ -213,7 +217,9 @@
 
 ! get density in point
             rho = d0
-            call getrho_srdft(ao_density,gso,rho,dmatgao,
+!           call getrho_srdft(ao_density,gso,rho,dmatgao,
+!    &         thrint,iprlr)
+            call getrho_cc(ao_density,gso,rho,dmatgao,
      &         thrint,iprlr)
             nelctrn = nelctrn + weight*rho
 
@@ -294,6 +300,7 @@
 ! TODO: change zan to atmchg from infrsp.h. Atmchg includes degenerate atoms
       do i=1,nat
         zan(i)=charge(i) !nuclear charge of atom, nuclei.h
+       !zan(i)=atmchg(i) !changed to symmetry-proof charge array, infrsp.h
         qatm(i)=d0
         do j=1,3
           coor(j,i)=cord(j,i) !cord(3,mxcent), nuclei.h
@@ -754,14 +761,60 @@ c     end kitter loop
 !     CALL DSPTSI(NBAST,ao_int,ao_test)
 !     write(lupri,*) 'ao_int test'
 !     CALL OUTPUT(ao_test,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
+      write(*,*) 'ao int test'
+      do i = 1,nnbasx
+         write(*,*) ao_int(i)
+      end do
 
       call getdat(rtnlbl(1),rtnlbl(2))
 
       rtnlbl(2) = 'SYMMETRI'
       !rtnlbl(1) holds opperator sym, we ignore that for now?
-         !this is not read in in getgpv, seems like its inferred from integral vals.?
+         !rtnlbl(1) is not read in in getgpv, seems like its inferred from integral vals.?
       
       call wrtpro(ao_int,nnbasx,integral_label,rtnlbl,iprlr)
 
       return
       end
+
+
+      subroutine getrho_cc(dmat,gso,rho,dmatgao,dfthri,iprint)
+#include "priunit.h"
+#include "maxaqn.h"
+#include "maxorb.h"
+#include "mxcent.h"
+#include "symmet.h"
+#include "inforb.h"
+      real*8, parameter :: d0 = 0.0d0
+      real*8, parameter :: d1 = 1.0d0
+
+      integer, intent(in) :: iprint
+      real*8, intent(in) :: dmat(nbast,nbast), gso(nbast), dfthri
+      real*8, intent(out) :: rho, dmatgao(nbast)
+
+      integer :: istr, isym, nbasi
+      real*8 :: ddot      
+
+      if (iprint .gt. 100) then
+         write(lupri,*) 'GETRHO_srdft NBAST, NSYM',nbast,nsym
+         write(lupri,*) 'DFTHRI, DMAT(1,1)',dfthri,dmat(1,1),gso(1)
+         write(lupri,*) 'IBAS',ibas(1:nsym)
+         write(lupri,*) 'NBAS',nbas(1:nsym)
+      end if
+      if (nsym .eq. 1) then
+         !call dsymv('U',nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
+         call dgemv('N',nbast,nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
+      else
+         call quit("sym in getrho_cc")
+         call dzero(dmatgao,nbast)
+         do isym = 1,nsym
+            istr  = ibas(isym) + 1
+            nbasi = nbas(isym)
+            call dsymv('U',nbasi,d1,dmat(istr,istr),nbast,gso(istr),1,
+     &                 d0,dmatgao(istr),1)
+         end do
+      end if
+      rho = ddot(nbast,gso,1,dmatgao,1)
+      return
+      end
+

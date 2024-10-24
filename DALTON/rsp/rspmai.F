@@ -2395,9 +2395,11 @@ C     .VIRTUAL
 
                ATMMOM = .TRUE.
 
+               ! Current symmetry problems
+               !  * Symmetry coordinates instead of true cords in MBIS algorithm
+               !  * Dimension of density / integration electrons
                IF (NSYM.NE.1)
      &            CALL QUIT('SYMMETRY NOT TESTED YET')
-
 
                ! Read in order of multipole integrals
                READ (LUCMD,*) IORATM 

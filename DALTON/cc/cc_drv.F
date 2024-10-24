@@ -815,13 +815,18 @@ C---------------------------------------------------------------
 C        calculate numerical atomic moment integrals
 C---------------------------------------------------------------
 C
-         if (atmmom) then
+         IF (ATMMOM) THEN
             ! calculate integrals with numint_driver
-            kfree = 1
-            lfree = lwrk
-           !call numint_driver(wrk(kdvao),work,lwrk)
-            call quit("atmmom not implemented yet")
-         end if
+            KDENS = 1
+            KFREE = KDENS + N2BST(ISYMOP)
+            LFREE = LWORK - KFREE
+            LUDMAT = -1
+            CALL GPOPEN(LUDMAT,'CCDENSITY.MAT','OLD',
+     &                  ' ','UNFORMATTED',IDUMMY,.false.)
+            READ(LUDMAT) WORK(KDENS)
+            CALL GPCLOSE(LUDMAT,'KEEP')
+            CALL NUMINT_DRIVER(WORK(KDENS),WORK(KFREE),LFREE)
+         END IF
 
          IF (LRSPSYM) THEN
            Call CCRSPSYM(MOLGRD,WORK,LWORK)

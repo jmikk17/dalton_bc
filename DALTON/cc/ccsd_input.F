@@ -4448,7 +4448,8 @@ Cholesky
 CTOCD  
 #include "ctocdcc.h"
 CTOCD  
-#include "ccorb.h"
+!#include "ccorb.h" for sym?
+#include "ccfop.h" ! for setting dipmom = true in atmmom response
 
 
 * local parameters:
@@ -5041,6 +5042,9 @@ C
                   ! is it msym? see call to cc_input
 
                ATMMOM = .TRUE.
+               DIPMOM = .TRUE.
+               ! Dipmom is set so we enter a density calculation
+               ! LTBAR0 is set automaticly by having CCLR = True
 
                ! Read in order of multipole integrals
                READ (LUCMD,*) IORATM 
@@ -5273,6 +5277,7 @@ C
       ELSE
 
          NTOT = NA*NB
+         write(lupri,*) 'ntot', ntot, na,nb
 
          IF (NLROP+NTOT .GT. MXLROP) THEN
              WRITE(LUPRI,'(2(/A,I5))')

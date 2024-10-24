@@ -93,6 +93,7 @@ C
 #include "qm3.h"
 !#include "qmmm.h"
 #include "ccqrinf.h"
+#include "cclrinf.h" ! for ATMMOM keyword in response, requires density on file
 C
       LOGICAL CCMMCONV,DIELCONV,CCDC
       LOGICAL CC1BSV,CC1ASV,NEWCMO_SAVE,CICLC,HFCLC, DAR2SA,
@@ -1790,6 +1791,36 @@ C
      *                     WORK(KWRK4),LWRK4)
           ENDIF
 C
+      END IF
+C
+C=======================================
+C     Print density matrix to file 
+C=======================================
+C
+      IF (ATMMOM) THEN
+         IF (CCR12) THEN
+            CALL QUIT("ATMMOM not tested for r12")
+         END IF
+         IF (ISYMOP .NE. 1) THEN
+            CALL QUIT("ATMMOM not implemented for sym in cc_fop")
+         END IF
+         LUDMAT = -1
+         CALL GPOPEN(LUDMAT,'CCDENSITY.MAT','UNKNOWN',
+     &               ' ','UNFORMATTED',IDUMMY,.false.)
+         REWIND LUDMAT
+         ! Add kdens2 and kdens3 contributions
+         IF (CCPT) THEN
+            IF (.NOT. RELORB) THEN
+               CALL DAXPY(N2BST(ISYMOP),1.0D0,
+     &                    WORK(KDENS2),1,WORK(KDENS),1)
+               CALL DAXPY(N2BST(ISYMOP),1.0D0,
+     &                    WORK(KDENS3),1,WORK(KDENS),1)
+            ELSE
+               CALL QUIT("CCSD(T) with relaxed orb. not supported")
+            END IF
+         END IF
+         WRITE(LUDMAT) WORK(KDENS)
+         CALL GPCLOSE(LUDMAT,'KEEP')
       END IF
 C
 C=======================================
