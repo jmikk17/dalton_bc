@@ -1797,30 +1797,37 @@ C=======================================
 C     Print density matrix to file 
 C=======================================
 C
+      write(*,*) 'density in fop'
+      write(*,*) (work(kdens+i-1),i=1,n2bst(isymop))
       IF (ATMMOM) THEN
          IF (CCR12) THEN
             CALL QUIT("ATMMOM not tested for r12")
          END IF
          IF (ISYMOP .NE. 1) THEN
-            CALL QUIT("ATMMOM not implemented for sym in cc_fop")
+            CALL QUIT("ATMMOM not tested for sym in cc_fop")
          END IF
-         LUDMAT = -1
-         CALL GPOPEN(LUDMAT,'CCDENSITY.MAT','UNKNOWN',
+         LUDMATAO = -1
+         CALL GPOPEN(LUDMATAO,'CCDENSITY.MAT','UNKNOWN',
      &               ' ','UNFORMATTED',IDUMMY,.false.)
-         REWIND LUDMAT
-         ! Add kdens2 and kdens3 contributions
+         REWIND LUDMATAO
+         KDENSTOT = KWRK3
+         KWRK4 = KDENSTOT + N2BST(ISYMOP)
+         LWRK4 = LWORK - KWRK4
+         CALL DZERO(WORK(KDENSTOT),N2BST(ISYMOP))
+         CALL DAXPY(N2BST(ISYMOP),1.0D0,
+     &              WORK(KDENS),1,WORK(KDENSTOT),1)
          IF (CCPT) THEN
             IF (.NOT. RELORB) THEN
                CALL DAXPY(N2BST(ISYMOP),1.0D0,
-     &                    WORK(KDENS2),1,WORK(KDENS),1)
+     &                    WORK(KDENS2),1,WORK(KDENSTOT),1)
                CALL DAXPY(N2BST(ISYMOP),1.0D0,
-     &                    WORK(KDENS3),1,WORK(KDENS),1)
+     &                    WORK(KDENS3),1,WORK(KDENSTOT),1)
             ELSE
                CALL QUIT("CCSD(T) with relaxed orb. not supported")
             END IF
          END IF
-         WRITE(LUDMAT) WORK(KDENS)
-         CALL GPCLOSE(LUDMAT,'KEEP')
+         WRITE(LUDMATAO) (WORK(KDENSTOT+I-1),I=1,N2BST(ISYMOP))
+         CALL GPCLOSE(LUDMATAO,'KEEP')
       END IF
 C
 C=======================================

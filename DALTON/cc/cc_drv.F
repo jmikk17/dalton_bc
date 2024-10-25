@@ -820,12 +820,16 @@ C
             KDENS = 1
             KFREE = KDENS + N2BST(ISYMOP)
             LFREE = LWORK - KFREE
-            LUDMAT = -1
-            CALL GPOPEN(LUDMAT,'CCDENSITY.MAT','OLD',
+            LUDMATAO = -1
+            CALL DZERO(WORK(KDENS),N2BST(ISYMOP))
+            CALL GPOPEN(LUDMATAO,'CCDENSITY.MAT','OLD',
      &                  ' ','UNFORMATTED',IDUMMY,.false.)
-            READ(LUDMAT) WORK(KDENS)
-            CALL GPCLOSE(LUDMAT,'KEEP')
-            CALL NUMINT_DRIVER(WORK(KDENS),WORK(KFREE),LFREE)
+            REWIND(LUDMATAO)
+            READ(LUDMATAO) (WORK(KDENS+J-1),J=1,N2BST(ISYMOP))
+            write(*,*) 'kdens in cc_drv'
+            write(*,*) (work(kdens+j-1),j=1,n2bst(isymop))
+            CALL GPCLOSE(LUDMATAO,'KEEP')
+            CALL NUMINT_DRIVER(WORK(KDENS),WORK(KFREE),LFREE,.TRUE.)
          END IF
 
          IF (LRSPSYM) THEN
