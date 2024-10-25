@@ -1,4 +1,4 @@
-      subroutine numint_driver(ao_density,work,lwork) !,iorder,propri,iprint)
+      subroutine numint_driver(ao_density,work,lwork,cc_flag) !,iorder,propri,iprint)
 !*****************************************************************************
 !     JESM 16-10-2024
 !     Driver routine for numerical integration of atomic moments
@@ -24,6 +24,7 @@
 !
       integer luddump, luquad
       dimension work(lwork), ao_density(n2basx)
+      logical cc_flag
 
       character(len=8) label
 
@@ -127,16 +128,25 @@
 
 ! calculate ao-integrals and print to AOPROPER
 ! TODO: move this label loop inside the numerical integration
-      !do i = 1,nprlbl
-      do i = 1,nprlbl_cc
-         !label = prplbl(i)
-         label = prplbl_cc(i)
-         write(*,*) 'lbl check', label
-         if (label(1:2) .eq. 'AM') then
-            call num_aoint(label,work(kint),work(kgso),
-     &         luddump,luwdump)
-         end if
-      enddo
+      if (cc_flag) then
+         do i = 1,nprlbl_cc
+            label = prplbl_cc(i)
+            write(*,*) 'lbl check', label
+            if (label(1:2) .eq. 'AM') then
+               call num_aoint(label,work(kint),work(kgso),
+     &            luddump,luwdump)
+            end if
+         enddo
+      else
+         do i = 1,nprlbl
+            label = prplbl(i)
+            write(*,*) 'lbl check', label
+            if (label(1:2) .eq. 'AM') then
+               call num_aoint(label,work(kint),work(kgso),
+     &            luddump,luwdump)
+            end if
+         enddo
+      end if
 
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
 
@@ -181,7 +191,21 @@
      &   'UNFORMATTED',idummy,.false.)
 
       write(*,*) 'ao dens in eval grid'
-      write(*,*) ao_density
+      do i = 1,nbast
+         write(*,*) (ao_density(i,j),j=1,nbast)
+      enddo
+
+!     do i = 1,nbast
+!        do j = 1,nbast
+!           ao_density(i,j) = 0.5d0 *(ao_density(i,j) + ao_density(j,i))
+!           ao_density(j,i) = ao_density(i,j)
+!        end do
+!     end do
+
+      write(*,*) 'ao dens in eval grid after sym'
+      do i = 1,nbast
+         write(*,*) (ao_density(i,j),j=1,nbast)
+      enddo
 
       nelctrn = d0
 
@@ -219,7 +243,7 @@
             rho = d0
 !           call getrho_srdft(ao_density,gso,rho,dmatgao,
 !    &         thrint,iprlr)
-            call getrho_cc(ao_density,gso,rho,dmatgao,
+            call getrho_ge(ao_density,gso,rho,dmatgao,
      &         thrint,iprlr)
             nelctrn = nelctrn + weight*rho
 
@@ -778,7 +802,7 @@ c     end kitter loop
       end
 
 
-      subroutine getrho_cc(dmat,gso,rho,dmatgao,dfthri,iprint)
+      subroutine getrho_ge(dmat,gso,rho,dmatgao,dfthri,iprint)
 #include "priunit.h"
 #include "maxaqn.h"
 #include "maxorb.h"
@@ -805,7 +829,7 @@ c     end kitter loop
          !call dsymv('U',nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
          call dgemv('N',nbast,nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
       else
-         call quit("sym in getrho_cc")
+         call quit("sym in getrho_ge")
          call dzero(dmatgao,nbast)
          do isym = 1,nsym
             istr  = ibas(isym) + 1

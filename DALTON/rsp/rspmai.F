@@ -219,11 +219,11 @@ C
      &      wrk(kcmo),wrk(kdv),wrk,lwrk)
          if (nisht>0 .and. nasht>0) then
             call daxpy(n2basx,1.0d0,wrk(kdvao),1,wrk(kdcao),1)
-            call numint_driver(wrk(kdcao),wrk(kfree),lfree)
+            call numint_driver(wrk(kdcao),wrk(kfree),lfree,.false.)
          else if (nisht>0) then
-            call numint_driver(wrk(kdcao),wrk(kfree),lfree)
+            call numint_driver(wrk(kdcao),wrk(kfree),lfree,.false.)
          else if (nasht>0) then
-            call numint_driver(wrk(kdvao),wrk(kfree),lfree)
+            call numint_driver(wrk(kdvao),wrk(kfree),lfree,.false.)
          end if
          call memrel('outside numint',wrk,1,1,kfree,lfree)
       end if
