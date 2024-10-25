@@ -91,7 +91,7 @@
 ! print evaluated basis functions and density in each point to file
       call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
      &   work(kgso),work(kcnt),work(kdga),ao_density,
-     &   luddump,nbuf,work,lwork)
+     &   luddump,nbuf,work,lwork,cc_flag)
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
@@ -163,7 +163,7 @@
 
       subroutine evaluate_grid(corx,cory,corz,int_weight,
      &   gso,ncnt,dmatgao,ao_density,luddump,nbuf,
-     &   work,lwork)
+     &   work,lwork,cc_flag)
 #include "implicit.h"
 #include "inforb.h"
 #include "dummy.h"
@@ -179,6 +179,7 @@
      &          gso(nbast),ncnt(nbast),dmatgao(nbast),
      &          ao_density(nbast,nbast),work(lwork)
       integer   luddump,nbuf
+      logical   cc_flag
 
 ! defined within routine
       real*8    cor(3)
@@ -195,17 +196,19 @@
          write(*,*) (ao_density(i,j),j=1,nbast)
       enddo
 
-!     do i = 1,nbast
-!        do j = 1,nbast
-!           ao_density(i,j) = 0.5d0 *(ao_density(i,j) + ao_density(j,i))
-!           ao_density(j,i) = ao_density(i,j)
-!        end do
-!     end do
-
-      write(*,*) 'ao dens in eval grid after sym'
-      do i = 1,nbast
-         write(*,*) (ao_density(i,j),j=1,nbast)
-      enddo
+      if (cc_flag) then
+         do i = 1,nbast
+            do j = 1,nbast
+               ao_density(i,j) = 0.5d0 * 
+     &            (ao_density(i,j) + ao_density(j,i))
+               ao_density(j,i) = ao_density(i,j)
+            end do
+         end do
+         write(*,*) 'ao dens in eval grid after sym'
+         do i = 1,nbast
+            write(*,*) (ao_density(i,j),j=1,nbast)
+         end do
+      end if
 
       nelctrn = d0
 
@@ -241,10 +244,10 @@
 
 ! get density in point
             rho = d0
-!           call getrho_srdft(ao_density,gso,rho,dmatgao,
-!    &         thrint,iprlr)
-            call getrho_ge(ao_density,gso,rho,dmatgao,
+            call getrho_srdft(ao_density,gso,rho,dmatgao,
      &         thrint,iprlr)
+!           call getrho_ge(ao_density,gso,rho,dmatgao,
+!    &         thrint,iprlr)
             nelctrn = nelctrn + weight*rho
 
             write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
@@ -801,8 +804,9 @@ c     end kitter loop
       return
       end
 
-
       subroutine getrho_ge(dmat,gso,rho,dmatgao,dfthri,iprint)
+! same as getrho_srdft but for non symmetric matrix
+! used for cc debugging
 #include "priunit.h"
 #include "maxaqn.h"
 #include "maxorb.h"
