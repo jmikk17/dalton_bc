@@ -312,6 +312,11 @@
      &          coor(3,max_atm), wtot
 
       write(*,*) 'check from mbis_pop', qconv
+      write(*,*) 'nucdep', nucdep
+      do i=1,nucdep
+         write(*,*) 'charge', charge(i) 
+         write(*,*) 'cord', (cord(j,i),j=1,3)
+      enddo
 
       kmax = 500
       kpar = max_atm
@@ -327,7 +332,7 @@
 ! TODO: change zan to atmchg from infrsp.h. Atmchg includes degenerate atoms
       do i=1,nat
         zan(i)=charge(i) !nuclear charge of atom, nuclei.h
-       !zan(i)=atmchg(i) !changed to symmetry-proof charge array, infrsp.h
+       !zan(i)=atmchg(i) !changed to symmetry-proof charge array, infrsp.h ! doesnt work for cc, needs something general
         qatm(i)=d0
         do j=1,3
           coor(j,i)=cord(j,i) !cord(3,mxcent), nuclei.h
@@ -373,11 +378,11 @@
       call zeffini(kpar,nat,zan,zeff,qshell,lmax)
       write(*,*)'Zeff initial' ! 1/sigma
       do i=1,nat
-        write(*,30)i,lmax(i),(zeff(j,i),j=1,3)
+        write(*,30)i,lmax(i),(zeff(j,i),j=1,lmax(i))
       enddo
       write(*,*)'Qshell initial' ! N_Ai 
       do i=1,nat
-        write(*,30)i,lmax(i),(qshell(j,i),j=1,3)
+        write(*,30)i,lmax(i),(qshell(j,i),j=1,lmax(i))
       enddo
 
 ! iterate until MBIS charges are converged
@@ -640,8 +645,15 @@ c     end kitter loop
 
       do i=1,nat
          znuc = zan(i)
-         zeff(1,i) = 2.0d0*znuc
-         if (znuc.le.2.0d0) then
+         zeff(1,i) = 2.0d0*znuc !used for everythin except ghost, where we overwrite
+         if (znuc.le.1.0d-8) then 
+         ! check for dummy atom - seems dangerous to check agains an exact zero
+            lmax(i) = 1
+            zeff(1,i) = 1.0d0
+            qshell(1,i)= 1.0d-3
+            qshell(2,i)=d0
+         end if
+         if (znuc.gt.1.0d-8 .and. znuc.le.2.0d0) then
             lmax(i) = 1
             qshell(1,i)=znuc
             qshell(2,i)=d0
@@ -807,6 +819,7 @@ c     end kitter loop
       subroutine getrho_ge(dmat,gso,rho,dmatgao,dfthri,iprint)
 ! same as getrho_srdft but for non symmetric matrix
 ! used for cc debugging
+! not used anymore, since cc density is symmetrized on entry
 #include "priunit.h"
 #include "maxaqn.h"
 #include "maxorb.h"

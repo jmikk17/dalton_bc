@@ -1797,8 +1797,6 @@ C=======================================
 C     Print density matrix to file 
 C=======================================
 C
-      write(*,*) 'density in fop'
-      write(*,*) (work(kdens+i-1),i=1,n2bst(isymop))
       IF (ATMMOM) THEN
          IF (CCR12) THEN
             CALL QUIT("ATMMOM not tested for r12")
