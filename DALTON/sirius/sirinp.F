@@ -6120,7 +6120,7 @@ C
 #include "infpri.h"
 #include "infpt2.h"
 C
-      DATA TABLE /'.FROZEN','.THRESH','.STATE'/
+      DATA TABLE /'.FROZEN','.THRESH','.STATE '/
 C
 C     ***** PROCESS INPUT FOR NEVPT2INP *****
 C
@@ -6161,7 +6161,7 @@ C
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal keyword for "*NEVPT2"')
 C
-C *** Option 1 >NEVPT2 FROZEN<   Frozen NEVPT2 orbitals
+C *** Option 1 >FROZEN<   Frozen NEVPT2 orbitals
   101 CONTINUE
          READ(LUCMD,*) (NFRNEVPT2(I),I=1,NSYM)
       GO TO 100
@@ -6171,7 +6171,7 @@ C                           the calculation of density matrices in koopro4
   102 READ(LUCMD,*) THRNEVPT
       GO TO 100
 C
-C *** Option 3 >ISTNEVCI < If .CI, state considered for NEVPT2
+C *** Option 3 >STATE    < If .CI, the CI state considered for NEVPT2
 C
   103 READ(LUCMD,*) ISTNEVCI
       GO TO 100
