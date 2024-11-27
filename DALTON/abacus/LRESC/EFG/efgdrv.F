@@ -185,11 +185,15 @@ C     Print information about LRESC metodology
       CALL HEADER_LREFG
 
 c c^-2
+      CALL GETTIM(CTIME0,WTIME0)
       CALL AVELRSC_EFG('EFG ',WORK,LWORK) !Contains NR value
+      CALL GETTIM(CTIME1,WTIME1)
+
       IF (EFGC2FLAG) THEN
             IF (PQPKINLRESC) CALL AVELRSC_EFG('EFG2',WORK,LWORK)
             CALL LINEARLR_EFG('J-Dw',WORK,LWORK) 
             CALL LINEARLR_EFG('J-Mv',WORK,LWORK)
+            CALL GETTIM(CTIME2,WTIME2)
       END IF
 
 c c^-4
@@ -205,11 +209,24 @@ C           Import generated PySCF matrix to AOPROPER for SO-S
             CALL LINEARLR_EFG('SOSx',WORK,LWORK)
             CALL LINEARLR_EFG('SOSy',WORK,LWORK)
             CALL LINEARLR_EFG('SOSz',WORK,LWORK)
+            CALL GETTIM(CTIME3,WTIME3)
 
 c           SO-L correction
             CALL QRLREFG('EFG-SO-SO',WORK,LWORK)
+            CALL GETTIM(CTIME4,WTIME4)
       END IF
 
+C     !Calculate (wall&cpu) times spent in each section
+      EFGTIME(1,1)=CTIME1-CTIME0
+      EFGTIME(1,2)=WTIME1-WTIME0
+      EFGTIME(2,1)=CTIME2-CTIME1
+      EFGTIME(2,2)=WTIME2-WTIME1
+      EFGTIME(3,1)=CTIME3-CTIME2
+      EFGTIME(3,2)=WTIME3-WTIME2
+      EFGTIME(4,1)=CTIME4-CTIME3
+      EFGTIME(4,2)=WTIME4-WTIME3
+      EFGTIME(5,1)=CTIME4-CTIME0
+      EFGTIME(5,2)=WTIME4-WTIME0
 
 C     First and Second order Total Contributions
       DO I=1,NUCIND

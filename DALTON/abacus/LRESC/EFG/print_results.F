@@ -140,6 +140,29 @@ C     Sum of contributions
       END IF
 
 
+C     Time statistic
+      IF(JJAPRT.GT.0) THEN
+         WRITE(LUPRI,'(3/,27X,A)') REPEAT('=',38)
+
+         IF (EFGTIME(5,1).GT.300) THEN
+         WRITE(LUPRI,'(27X,A)') 'Time Statistics for LRESC module [min]'
+         EFGTIME = EFGTIME / 60
+         ELSE
+         WRITE(LUPRI,'(27X,A)') 'Time Statistics for LRESC module [ s ]'
+         END IF
+
+         WRITE(LUPRI,'(27X,A)') REPEAT('=',38)
+         WRITE(LUPRI,*)
+         WRITE(LUPRI,'(25X,A)') ' AVG-C2     LR-C2       LR-C4'//
+     &                    '       QR-C4       TOTAL'
+         WRITE(LUPRI,'(10X,A)') REPEAT('-',68)
+         WRITE (LUPRI,'(10X,A,F11.2,X,F11.2,X,F11.2,X,F11.2,X,F11.2)')
+     &                'CPU  TIME',EFGTIME(:,1)
+         WRITE (LUPRI,'(10X,A,F11.2,X,F11.2,X,F11.2,X,F11.2,X,F11.2)')
+     &                'WALL TIME',EFGTIME(:,2)
+      END IF
+
+
       CALL QEXIT('PRINT_LREFG')
       RETURN
       END
