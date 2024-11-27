@@ -355,18 +355,21 @@ C
       NVEL = 0
       NCAR = 0
       NSPH = 0
+      NAMS = 0
       DO 900 IOP = 1,NGPC6(KSYMOP)
          IF(LBLC6(KSYMOP,IOP)(2:5).EQ.'DIPL' ) NCAR = NCAR + 1
          IF(LBLC6(KSYMOP,IOP)(3:6).EQ.'QUAD' ) NCAR = NCAR + 1
          IF(LBLC6(KSYMOP,IOP)(4:6).EQ.'MOM'  ) NCAR = NCAR + 1
          IF(LBLC6(KSYMOP,IOP)(2:5).EQ.'DIPV' ) NVEL = NVEL + 1
          IF(LBLC6(KSYMOP,IOP)(1:2).EQ.'SM'   ) NSPH = NSPH + 1
+         IF(LBLC6(KSYMOP,IOP)(1:2).EQ.'AM'   ) NAMS = NAMS + 1
  900  CONTINUE
       IF (IPRRSP.GT.15) THEN
-         WRITE(LUPRI,'(3(/A,I3))')
+         WRITE(LUPRI,'(4(/A,I3))')
      *   ' NUMBER OF CARTESIAN Cn LENGTH OPERATORS  : NCAR =',NCAR,
      *   ' NUMBER OF SPHERICAL Cn LENGTH OPERATORS  : NSPH =',NSPH,
-     *   ' NUMBER OF Cn VELOCITY OPERATORS          : NVEL =',NVEL
+     *   ' NUMBER OF Cn VELOCITY OPERATORS          : NVEL =',NVEL,
+     *   ' NUMBER OF ATOMIC LENGTH OPERATORS        : NAMS =',NAMS
       END IF
       NGRDMX = MAX(16,NGRID)
       NMOMC  = 20
@@ -377,7 +380,8 @@ C
       KCAUCH = KALPHA + (NGRDMX+1) * NGPC6(KSYMOP) * NGPC6(KSYMOP)
       KWRK1  = KCAUCH + (NMOMC+1) *  NGPC6(KSYMOP) * NGPC6(KSYMOP)
       LWRK1  = LWRK   - KWRK1
-      IF (NCAR.EQ.NGPC6(KSYMOP).OR.(NSPH.EQ.NGPC6(KSYMOP))) THEN
+      IF (NCAR.EQ.NGPC6(KSYMOP).OR.(NSPH.EQ.NGPC6(KSYMOP)).OR.
+     *    NAMS.EQ.NGPC6(KSYMOP)) THEN
          CALL EFPOLL(LDONE,WRK(KGRID),WRK(KALPHA),WRK(KCAUCH),NGRDMX,
      *               NMOMC,NGPC6(KSYMOP),EIVAL,XMOM,OLDAL)
       ELSE IF (NVEL.EQ.NGPC6(KSYMOP)) THEN
@@ -473,6 +477,7 @@ c-- compute gridpoints according to Gauss Chebychev scheme
          DO 15 I=1,N
             X=FAC*(2*I-1)
             GRIDSQ(N-I+1)=(D1/TAN(X))**2
+            write(*,*) 'gridsq debug:', I, N, GRIDSQ(N-I+1)
   15     CONTINUE
       ENDIF
 c

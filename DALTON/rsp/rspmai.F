@@ -2606,11 +2606,16 @@ C
 #include "infc6.h"
 #include "infpri.h"
 #include "inftap.h"
+!#include "maxorb.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "inforb.h"
 C
       LOGICAL NEWDEF
-      PARAMETER ( NTABLE = 41 )
+      PARAMETER ( NTABLE = 42 )
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
-      CHARACTER*8 LABEL
+      CHARACTER*8 LABEL, LABFND
+      CHARACTER*2 CHG2, IND2
 C
       DATA TABLE /'.DIPLEN', '.DIPLNX', '.DIPLNY', '.DIPLNZ',
      *            '.DIPVEL', '.DIPVLX', '.DIPVLY', '.DIPVLZ',
@@ -2622,7 +2627,7 @@ C
      *            '.FREQUE', '.XXXXXX', '.GSLEGN', '.NGRID ',
      *            '.XXXXXX', '.C10SPH', '.C6ATM ', '.C8ATM ',
      *            '.C10ATM', '.C6LMO ', '.C8LMO ', '.C10LMO',
-     *            '.RESTC6'/
+     *            '.RESTC6', '.ATMMOM'/
 C
 C
 C READ IN  INPUT
@@ -2642,7 +2647,7 @@ C
                   IF (TABLE(I) .EQ. WORD) THEN
                      GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,
      *                      18,19,20,21,22,23,24,25,26,27,28,29,30,31,
-     *                      32,33,34,35,36,37,38,39,40,41), I
+     *                      32,33,34,35,36,37,38,39,40,41,42), I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -2901,6 +2906,71 @@ C     .C10LMO
                GO TO 100
    41          CONTINUE
                   RESTC6 = .TRUE.
+               GO TO 100
+   42          CONTINUE
+                  ATMMOM = .TRUE.
+                  IF (NSYM.NE.1)
+     &               CALL QUIT('SYMMETRY NOT TESTED YET')
+   
+                  ! Read in order of multipole integrals
+                  READ (LUCMD,*) IORATM 
+                  IF (IORATM .GT. 1) 
+     &               CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+                  IF (IORATM .LT. -1) 
+     &               CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
+
+                  ! Make a symmetry-proof charge array
+                  K = 0
+                  DO I = 1,NUCIND 
+                     DO J = 1,NUCDEG(I)
+                        K = K + 1
+                        ATMCHG(K) = CHARGE(I) 
+                     END DO
+                  END DO
+
+                  ! Look for atom selection input
+                  READ (LUCMD,*) WORD
+                  CALL UPCASE(WORD)
+                  IF (WORD(1:7) .EQ. '.SELATM') THEN
+                     ATMSEL = .TRUE.
+                     READ (LUCMD,*) NATM
+                     DO I=1,NATM
+                        READ (LUCMD,*) ATMIND(I) 
+                        ! hardcoded to length of 100 in infrsp.h
+                     END DO
+                  ELSE
+                     ATMSEL = .FALSE.
+                     NATM = NUCDEP
+                     DO I=1,NATM
+                        ATMIND(I) = I
+                     END DO
+                     BACKSPACE (LUCMD)
+                  END IF                
+
+                  ! Create labels
+                  ISTR = 0
+                  IF (IORATM .LT. 0) ISTR = ABS(IORATM)
+                  DO IORDER = ISTR, ABS(IORATM)
+                     DO I=1,NATM
+                        J = ATMIND(I)
+                        WRITE(IND2,'(I2.2)') J
+                        ICHG = ATMCHG(J) 
+                        WRITE(CHG2,'(I2.2)') ICHG
+                        IF (IORDER .EQ. 0) THEN
+                           LABEL = 'AM'// IND2 // CHG2 // '00'
+                           LC6OP( INDPRP(LABEL)) = .TRUE.
+                        ELSE IF (IORDER .EQ. 1) THEN
+                           LABEL = 'AM'// IND2 // CHG2 // '0x'
+                           LC6OP( INDPRP(LABEL)) = .TRUE.
+                           LABEL = 'AM'// IND2 // CHG2 // '0y'
+                           LC6OP( INDPRP(LABEL)) = .TRUE.
+                           LABEL = 'AM'// IND2 // CHG2 // '0z'
+                           LC6OP( INDPRP(LABEL)) = .TRUE.
+                        ELSE
+                           CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
+                        ENDIF
+                     END DO
+                  END DO
                GO TO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
