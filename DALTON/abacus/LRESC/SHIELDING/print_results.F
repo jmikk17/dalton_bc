@@ -44,7 +44,7 @@ C     J. J. Aucar 2022
       CALL QENTER('PRINT_LRSHIELD')
 C     Paramagnetic 1st singlet or triplet
 C
-      IF ((SIGMAPNR).OR.(SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.
+      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.
      &   (SIGMAP3T)) THEN
          IF (PRTALL1) THEN
          CALL HEADER('Paramagnetic Corrections for '

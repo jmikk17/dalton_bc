@@ -111,6 +111,10 @@ C ---Not Default
          WRITE (LUPRI,'(4X,A)')
      &      '-  Not all corrections were activated. ' //
      &      'Only the following will be done : '
+         IF (SIGMADNR) WRITE (LUPRI,'(7X,A)')
+     &   'Non-relativistic diamagnetic contributions'
+         IF (SIGMAPNR) WRITE (LUPRI,'(7X,A)')
+     &   'Non-relativistic paramagnetic contributions'
          IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
      &   'Diamagnetic zero order singlet corrections'
          IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
