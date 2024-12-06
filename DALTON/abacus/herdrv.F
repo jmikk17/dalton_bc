@@ -1298,17 +1298,19 @@ c jim-dbg : setting all integrals for LRESC module
             SPNORB = .TRUE. ! 104 Spin-Orbit
             NO2SO  = .TRUE.  ! Do not calculate 2e spin-orbit
 
-            CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
-
 !           Takes the list introduced if calling to .SELECT
             IF (NPATOM.EQ.1) THEN
                NLRATOMS = 1
                LRATOM = IPATOM(1)
+               CALL DCOPY(3,CORD(:,LRATOM),1,GAGORG,1) !GAUGE in the nucleus position
                LRATOM_changed = .TRUE.
             ELSE IF (NPATOM.EQ.0) THEN
+               CALL QUIT('Select a nucleus under INTEGRALS, HERINP')
                LRATOM_changed = .FALSE.
                NLRATOMS = NUCIND
             ELSE
+               CALL QUIT('Select a nucleus under INTEGRALS, HERINP')
+               CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
                NLRATOMS = NPATOM
                LRATOM_changed = .TRUE.
                DO I = 1, NPATOM

@@ -285,13 +285,13 @@ This corrections are invoked through the keyword \Key{RELSHI} on the \Sec{*PROPE
 \noindent
 {\bf Reference literature:}
 \begin{list}{}{}
-\item J.I. Melo, M.C. Ruiz de Azua, C.G Giribet, G.A. Aucar, and R.H. Romero \newblock {\em J. Chem. Phys.}, {\bf 118},\hspace{0.25em}2, (2003).
+\item J. I. Melo, M. C. Ruiz de Azua, C. G. Giribet, G. A. Aucar and R. H. Romero (2003). \newblock {\em J. Chem. Phys.}, {\bf 118}(2), 471-486.
 
-\item M.C.Ruiz de Azua, J.I. Melo, and C.G Giribet \newblock {\em Mol. Phys.}, {\bf 101},\hspace{0.25em}20, (2003).
+%\item M.C.Ruiz de Azua, J.I. Melo, and C.G Giribet \newblock {\em Mol. Phys.}, {\bf 101},\hspace{0.25em}20, (2003).
 
-\item J.I. Melo, M.C.Ruiz de Azua, C.G Giribet, G.A. Aucar and P.F. Provasi \newblock {\em J.Chem.Phys.}, {\bf 121},\hspace{0.25em}14, (2004).
+%\item J.I. Melo, M.C.Ruiz de Azua, C.G Giribet, G.A. Aucar and P.F. Provasi \newblock {\em J.Chem.Phys.}, {\bf 121},\hspace{0.25em}14, (2004).
 
-\item P.G. Roura, J.I. Melo, M.C.Ruiz de Azua, and C.G Giribet \newblock {\em J.Chem.Phys.}, {\bf 125},\hspace{0.25em}064107, (2006).
+%\item P.G. Roura, J.I. Melo, M.C.Ruiz de Azua, and C.G Giribet \newblock {\em J.Chem.Phys.}, {\bf 125},\hspace{0.25em}064107, (2006).
 \end{list}
 }}
 \end{center}
@@ -302,10 +302,11 @@ LRESC module computes all first, second and third order (singlet and triplet) co
 \begin{verbatim}
 **DALTON INPUT
 .RUN PROPERTIES
-**INTEGRLAS 
-.LR-SHI
-*LR-SHI
+**INTEGRALS
+.SELECT
+ 1
  ATOM
+.LR-SHI
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
@@ -348,6 +349,7 @@ There are some important issues to keep in mind:
 \item Symmetry is not yet implemented.
 \item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
 \item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA3S, PARA3T, DIAM0S and DIAM1S described above).
+\item In the scratch directory files related to LRESC linear and quadratic responses are available.
 \end{itemize}
 \end{center}
 
@@ -356,10 +358,11 @@ An input example file for the shielding calculation of the first molecule atom p
 \begin{verbatim}
 **DALTON INPUT
 .RUN PROPERTIES
-**INTEGRLAS
-.LR-SHI
-*LR-SHI
+**INTEGRALS
+.SELECT
  1
+ ATOM
+.LR-SHI
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
@@ -371,6 +374,23 @@ An input example file for the shielding calculation of the first molecule atom p
 \end{verbatim}
 
 
+In the scratch directory there is a binary file called lresc-array.npy for users that prefer to manipulate data within Python. The proper way to load it is:
+\begin{lstlisting}
+import numpy as np
+with open("lresc-array.npy", 'rb') as f:
+...     shape = np.fromfile(f, dtype=np.int32, count=4)
+...     data = np.fromfile(f, dtype=np.float64)
+array = data.reshape(shape, order='F')
+\end{lstlisting}
+
+The array imported in this way has four dimensions, each one correspoding to:
+\begin{enumerate}%[1)]
+ \item Nucleus index.
+ \item Cartesian component (nuclear dipole moment).
+ \item Cartesian component (external magnetic field).
+ \item Non-relativistic values, LRESC corrections and relativistic results.
+\end{enumerate}
+In the fourth dimension, the results are ordered in this way: \textit{nr-para,nr-dia,nr-total,lr-para,lr-dia,lr-total,rel-para,rel-dia,rel-total,L-kin,Pso-kin,FC,SD,FC-Bso,SD-Bso,PSO-L-Mv,PSO-L-Dw,FC-L-SO,SD-L-SO,FC,AngPso,Diakin,SD,DiaMv,DiaDw}.
 
 
 

@@ -187,6 +187,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EIGEN/main.F
     DALTON/abacus/LRESC/filesmanagement/warnings.F
     DALTON/abacus/LRESC/filesmanagement/files.F
+    DALTON/abacus/LRESC/filesmanagement/shielding_binary.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F

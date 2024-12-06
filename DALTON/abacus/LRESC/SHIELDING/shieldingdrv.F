@@ -304,6 +304,8 @@ C
       logical :: file_exists, file_open
       logical :: warning_found
       INTEGER, allocatable :: LRATOMS(:)
+      real(8) ::  array_oneatom(3,3,25)
+      real(8), allocatable :: lresc_array(:,:,:,:)
       PING=.FALSE.
       CALL QENTER('LRSCDRV_SHI')
 
@@ -342,7 +344,7 @@ c     Nuclei list
       END IF
 
 
-
+      allocate(lresc_array(NLRATOMS,3,3,25))
 
 
 C --------------------------------------------------
@@ -655,7 +657,18 @@ C
 C
 C     LRESC-SHIELDING results section
       call PRINT_LRSHIELD
+
+
+C     Save results to array
+      call create_array_oneatom(array_oneatom)
+      lresc_array(LRATOM, :, :,:) = array_oneatom
+
       END DO
+
+C     Export results to binary file
+      call binary_lresc(lresc_array)
+      deallocate(lresc_array)
+
 
 c     SIRIFC has to remain open after all
       IF (SIGMAD1S.OR.SIGMAPNR.OR.SIGMAP1S.OR.SIGMAP1T) THEN
