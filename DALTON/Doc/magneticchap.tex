@@ -313,9 +313,8 @@ LRESC module computes all first, second and third order (singlet and triplet) co
 .RELSHI
 **END OF DALTON INPUT
 \end{verbatim}
-where \textit{ATOM} should be replaced for the atom number under study. In the current implementation the gauge origin is placed in its position, as recommended. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The complete list of control keywords for \Sec{LR-SHI} is:
+where \textit{ATOM} should be replaced for the atom number under study. In the current implementation the gauge origin is placed in its position, as recommended. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The complete list of control keywords for \Sec{LR-SHI} in the \Sec{**INTEGRALS} section is:
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
-\item[\Key{LRATOM}] Select the atom under study. If not defined, shielding over all nuclei will be calculated, with the gauge origin fixed at the same position, by default at the mass-center (not recommended for production calculations).
 \item[\Key{LRGAUGEO}] Define the gauge origin coordinates for the LRESC-shielding module (for debugging purposes).
 \item[\Key{LRCMG}] Define the gauge origin for the LRESC-shielding module at the mass-center (for debugging purposes).
 \end{list}
@@ -326,16 +325,17 @@ There are a few keywords to get more control over the calculation and the output
 \item[\Key{ANISO}] Off-diagonal elements will be printed.
 \item[\Key{EXTRAINFO}] Prints extra-info (for developers).
 \item[\Key{PYINTS}] Allows to import atomic integrals generated previously by pyscf (for developers).
-\item[\Key{PARANR}] Activate paramagnetic non-relativistic calculations. Deactivate full corrections calculation.
-\item[\Key{DIANR}] Activate diamagnetic non-relativistic calculations. Deactivate full corrections calculation.
-\item[\Key{PARA1S}] Activate Paramagnetic Singlet First order corrections. Deactivate full corrections calculation.
-\item[\Key{PARA1T}] Activate Paramagnetic Triplet First order order corrections. Deactivate full corrections calculation.
-\item[\Key{PARA3S}] Activate Paramagnetic Singlet Third order order order corrections. Deactivate full corrections calculation.
-\item[\Key{PARA3T}] Activate Paramagnetic Triplet Third order order order corrections. Deactivate full corrections calculation.
-\item[\Key{DIAM0S}] Activate Diamagnetic Singlet Zeroth order order order corrections. Deactivate full corrections calculation.
-\item[\Key{DIAM1S}] Activate Diamagnetic Singlet First order order order corrections. Deactivate full corrections calculation.
+\item[\Key{PARANR}] Request the paramagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
+\item[\Key{DIANR}] Request the diamagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
+\item[\Key{PARA1S}] Request the Paramagnetic Singlet First order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA1T}] Request the Paramagnetic Triplet First order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA3S}] Request the Paramagnetic Singlet Third order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA3T}] Request the Paramagnetic Triplet Third order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{DIAM0S}] Request the Diamagnetic Singlet Zeroth order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{DIAM1S}] Request the Diamagnetic Singlet First order order order corrections and disable the full corrections calculation that is set by default.
 \item[\Key{PRINT}] Controls the print level, for debugging purposes.
 \item[\Key{SELECT}] Deprecated.
+\item[\Key{LRATOM}] Deprecated.
 \end{list}
 
 
@@ -345,7 +345,7 @@ A detailed physical description on each correction can be found in Ref.~\cite{me
 There are some important issues to keep in mind:
 \begin{center}
 \begin{itemize}{}{}
-\item Uncontracted basis set is recommended.
+%\item Uncontracted basis set is recommended. !Too old
 \item Symmetry is not yet implemented.
 \item Only Hartree-Fock and DFT schemes are supported for the ground state wave function.
 \item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA3S, PARA3T, DIAM0S and DIAM1S described above).
@@ -374,7 +374,7 @@ An input example file for the shielding calculation of the first molecule atom p
 \end{verbatim}
 
 
-In the scratch directory there is a binary file called lresc-array.npy for users that prefer to manipulate data within Python. The proper way to load it is:
+In the scratch directory there is a binary file called lresc-array.npy for users that prefer to post-process data within Python. The proper way to load it is:
 \begin{lstlisting}
 import numpy as np
 with open("lresc-array.npy", 'rb') as f:
