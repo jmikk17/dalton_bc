@@ -24,7 +24,7 @@
 !
       integer luddump, luquad
       dimension work(lwork), ao_density(n2basx)
-      logical cc_flag
+      logical cc_flag, save_mem
 
       character(len=8) label
 
@@ -121,33 +121,43 @@
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
       
-! allocate for ao integrals
+! allocate for and calculate ao integrals
+      save_mem = .false.
+      if (save_mem) then
 
-      call memget('REAL',kint,nnbasx,work,kfree,lfree)
-      call memget('REAL',kgso,nbast,work,kfree,lfree)
+         call memget('REAL',kint,nnbasx,work,kfree,lfree)
+         call memget('REAL',kgso,nbast,work,kfree,lfree)
 
-! calculate ao-integrals and print to AOPROPER
-! TODO: move this label loop inside the numerical integration
-      if (cc_flag) then
-         do i = 1,nprlbl_cc
-            label = prplbl_cc(i)
-            write(*,*) 'lbl check', label
-            if (label(1:2) .eq. 'AM') then
-               call num_aoint(label,work(kint),work(kgso),
-     &            luddump,luwdump)
-            end if
-         enddo
+         if (cc_flag) then
+            do i = 1,nprlbl_cc
+               label = prplbl_cc(i)
+               write(*,*) 'lbl check', label
+               if (label(1:2) .eq. 'AM') then
+                  call num_aoint(label,work(kint),work(kgso),
+     &               luddump,luwdump)
+               end if
+            enddo
+         else
+            do i = 1,nprlbl
+               label = prplbl(i)
+               write(*,*) 'lbl check', label
+               if (label(1:2) .eq. 'AM') then
+                  call num_aoint(label,work(kint),work(kgso),
+     &               luddump,luwdump)
+               end if
+            enddo
+         end if
+
       else
-         do i = 1,nprlbl
-            label = prplbl(i)
-            write(*,*) 'lbl check', label
-            if (label(1:2) .eq. 'AM') then
-               call num_aoint(label,work(kint),work(kgso),
-     &            luddump,luwdump)
-            end if
-         enddo
-      end if
+         ! allocating for all int here requires to know how many atm labels we have!
+         ! or we can just "overallocate" with nprplbl
+         call memget('REAL',kint,nnbasx,work,kfree,lfree)
+         call memget('REAL',kgso,nbast,work,kfree,lfree)
 
+         call num_aoint_opt(work(kint),work(kgso),
+     &                  luddump,luwdump,cc_flag)
+
+      end if
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
 
       call gpclose(luprop,'KEEP')
@@ -204,7 +214,7 @@
                ao_density(j,i) = ao_density(i,j)
             end do
          end do
-         write(*,*) 'ao dens in eval grid after sym'
+         write(*,*) 'ao dens in evaluate_grid after sym'
          do i = 1,nbast
             write(*,*) (ao_density(i,j),j=1,nbast)
          end do
@@ -214,12 +224,14 @@
 
       rewind luddump
 
-      npnts = 0
+!     write(*,*) 'i,rho,intweight print' !debug
+
+!     npnts = 0
   100 continue
       read(luquad) npoint
       if (npoint .gt. 0) then
-         write(luddump) npoint
-         npnts = npnts + npoint
+!        write(luddump) npoint
+!        npnts = npnts + npoint
          call reaqua_srdft(corx,cory,corz,int_weight,luquad,npoint)
          do 200 ipnt = 1, npoint
 
@@ -252,13 +264,16 @@
 
             write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
      &           int_weight(ipnt),rho,(gso(j),j=1,nbast)
+!           write(*,*) ipnt, rho, weight !debug
 
   200    continue
          goto 100
       else if (npoint .eq. 0) then
          goto 100
       end if
-      write(luddump) npoint ! writing the negative npoint val as a footer?
+!     write(luddump) npoint ! writing the negative npoint val as a footer?
+
+!     write(*,*) 'print done' !debug
 
       call gpclose(luquad,'KEEP')
 
@@ -346,25 +361,36 @@
       ipt=1
       start=1
 10    continue
-      read(luddump) npoint
-      write(*,*) 'npoint', npoint
-      if (npoint.gt.0) then
-         do 200 i=start,start+npoint-1
-            read(luddump) corx(ipt),cory(ipt),corz(ipt),int_weight(ipt),
-     &                    rho(ipt)
-            suma=suma+int_weight(ipt)*rho(ipt)
-            ipt=ipt+1
-            if (ipt.eq.kpt) then
-               write(lupri,*) 'MBIS: too many points',ipt,kpt
-               call quit('MBIS: too many points')
-            endif
- 200     continue
-         write(*,*) 'suma', suma
-         start=start+npoint
-         goto 10
-      else if (npoint.eq.0) then
-         goto 10
-      end if
+!     read(luddump) npoint
+!     write(*,*) 'npoint', npoint
+!     if (npoint.gt.0) then
+!        do 200 i=start,start+npoint-1
+!           read(luddump) corx(ipt),cory(ipt),corz(ipt),int_weight(ipt),
+!    &                    rho(ipt)
+!           suma=suma+int_weight(ipt)*rho(ipt)
+!           ipt=ipt+1
+!           if (ipt.eq.kpt) then
+!              write(lupri,*) 'MBIS: too many points',ipt,kpt
+!              call quit('MBIS: too many points')
+!           endif
+!200     continue
+!        write(*,*) 'suma', suma
+!        start=start+npoint
+!        goto 10
+!     else if (npoint.eq.0) then
+!        goto 10
+!     end if
+      read(luddump,end=100) corx(ipt),cory(ipt),corz(ipt),
+     &                      int_weight(ipt),rho(ipt)
+      suma = suma + int_weight(ipt) * rho(ipt)
+      ipt = ipt + 1
+      if (ipt.eq.kpt) then
+         write(lupri,*) 'MBIS: too many points',ipt,kpt
+         call quit('MBIS: too many points')
+      endif
+      goto 10
+
+100   continue
 
 ! tot grid points = ipt-1 due to the way the reading is constructed
       ipt=ipt-1
@@ -580,6 +606,7 @@ c     end kitter loop
 ! using qstmp since qshell is not saved in final iteration
 
       write(luwdump) ipt
+!     write(*,*) 'i,mbis print' !debug
 
       do i=1,ipt
          rhom = rho(i)
@@ -623,9 +650,11 @@ c     end kitter loop
             enddo
          endif
          write(luwdump) (mbis_weight(j),j=1,nat)
+!        write(*,*) i,(mbis_weight(j),j=1,nat) !debug
       enddo !ipt
 
       write(luwdump) -1
+!     write(*,*) 'print done' !debug
 
       return
       end
@@ -741,61 +770,45 @@ c     end kitter loop
 !luwdump: (mbis_weight_a(r),a=1,nucdep)
 
 10       continue
-         read(luddump) npoint
-         if (npoint.gt.0) then
-            do i=start,start+npoint-1
-               ipt=ipt+1
-               read(luddump) tmp,tmp,tmp,int_weight,tmp,
-     &                        (gso(j),j=1,nbast)
-               read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
-               do a=1,nbast
+         read(luddump,end=100) tmp,tmp,tmp,int_weight,tmp,
+     &                 (gso(j),j=1,nbast)
+         read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
+         do a=1,nbast
                   ! index of the last element in previous row, i.e. the diagonal
-                  idx=(a*a-a)/2 
-                  do b=1,a
-                     ao_int(idx+b) = ao_int(idx+b) + 
-     &                  gso(a)*gso(b)*mbis_weight*int_weight
-                  enddo
-               enddo
+            idx=(a*a-a)/2 
+            do b=1,a
+               ao_int(idx+b) = ao_int(idx+b) + 
+     &            gso(a)*gso(b)*mbis_weight*int_weight
             enddo
-            start=start+npoint
-            goto 10
-         else if (npoint.eq.0) then
-            goto 10
-         end if
+         enddo
+         goto 10
 
       else if (cor_idx.gt.0) then
 
 20       continue
-         read(luddump) npoint
-         if (npoint.gt.0) then
-            do i=start,start+npoint-1
-               ipt=ipt+1
-               read(luddump) cor(1),cor(2),cor(3),int_weight,tmp,
+         read(luddump,end=100) cor(1),cor(2),cor(3),int_weight,tmp,
      &                     (gso(j),j=1,nbast)
-               read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
-               dist = cor(cor_idx) - cord(cor_idx,atm_idx)
-               do a=1,nbast
-                  idx=(a*a-a)/2
-                  do b=1,a
-                     ao_int(idx+b) = ao_int(idx+b) + 
-     &                  gso(a)*gso(b)*mbis_weight*int_weight*dist
-                  enddo
-               enddo
+         read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
+         dist = cor(cor_idx) - cord(cor_idx,atm_idx)
+         do a=1,nbast
+            idx=(a*a-a)/2
+            do b=1,a
+               ao_int(idx+b) = ao_int(idx+b) + 
+     &            gso(a)*gso(b)*mbis_weight*int_weight*dist
             enddo
-            start=start+npoint
-            goto 20
-         else if (npoint.eq.0) then
-            goto 20
-         end if
+         enddo
+         goto 20
 
       end if 
 
-      if (ipt .ne. ipt_check) 
-     &   call quit("Error in reading of files in numint")
+100   continue
 
-      read(luwdump) ipt_check
-      if (ipt_check .ne. -1) 
-     &   call quit("Error in reading of files in numint")
+!     if (ipt .ne. ipt_check) 
+!    &   call quit("Error in reading of files in numint")
+
+!     read(luwdump) ipt_check
+!     if (ipt_check .ne. -1) 
+!    &   call quit("Error in reading of files in numint")
       
 !     CALL DSPTSI(NBAST,ao_int,ao_test)
 !     write(lupri,*) 'ao_int test'
@@ -812,6 +825,159 @@ c     end kitter loop
          !rtnlbl(1) is not read in in getgpv, seems like its inferred from integral vals.?
       
       call wrtpro(ao_int,nnbasx,integral_label,rtnlbl,iprlr)
+
+      return
+      end
+
+      subroutine num_aoint_opt(ao_int,gso,
+     &           luddump,luwdump,cc_flag)
+#include "implicit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "inforb.h"
+#include "priunit.h"
+#include "rspprp.h"
+#include "inflr.h"
+#include "ccrspprp.h"
+      parameter (d0 = 0.0d0,MXLBL = 1000) ! TODO fix mxlbl in common
+!incoming
+      character*8 label
+      integer     luddump,luwdump
+      real*8      ao_int(nnbasx),gso(nbast)
+      logical     cc_flag
+!in here
+      character*8 rtnlbl(2), prplbl_atm(MXLBL)
+      integer     ipt, ipt_check, totlbl,
+     &            atm_idx(MXLBL), atm_chg(MXLBL), cor_idx(MXLBL)
+      real*8      tmp, int_weight, mbis_weight, cor(3),
+     &            ao_test(nbast,nbast)
+
+      totlbl = 0
+      if (cc_flag) then
+         do i = 1,nprlbl_cc
+            label = prplbl_cc(i)
+            if (label(1:2) .eq. 'AM') then
+               totlbl = totlbl + 1
+               prplbl_atm(totlbl) = label
+               read(label(3:4),*) atm_idx(totlbl)
+               read(label(5:6),*) atm_chg(totlbl)
+               if (label(7:8) .eq. '00') then
+                  cor_idx(totlbl) = 0
+               else if (label(7:8) .eq. '0x') then
+                  cor_idx(totlbl) = 1
+               else if (label(7:8) .eq. '0y') then
+                  cor_idx(totlbl) = 2
+               else if (label(7:8) .eq. '0z') then
+                  cor_idx(totlbl) = 3
+               else
+                  write(*,*) 'Label ', label, ' not recognized'
+                  call quit("Label not recognized in numint_write")
+               end if
+            endif
+         enddo
+      else
+         do i = 1,nprlbl
+            label = prplbl(i)
+            if (label(1:2) .eq. 'AM') then
+               totlbl = totlbl + 1
+               prplbl_atm(totlbl) = label
+               read(label(3:4),*) atm_idx(totlbl)
+               read(label(5:6),*) atm_chg(totlbl)
+               if (label(7:8) .eq. '00') then
+                  cor_idx(totlbl) = 0
+               else if (label(7:8) .eq. '0x') then
+                  cor_idx(totlbl) = 1
+               else if (label(7:8) .eq. '0y') then
+                  cor_idx(totlbl) = 2
+               else if (label(7:8) .eq. '0z') then
+                  cor_idx(totlbl) = 3
+               else
+                  write(*,*) 'Label ', label, ' not recognized'
+                  call quit("Label not recognized in numint_write")
+               end if
+            endif
+         enddo
+      end if
+
+
+
+      do i = 1,totlbl
+
+         ipt = 0
+         ao_int = d0
+
+         rewind(luddump)
+         rewind(luwdump)
+
+         read(luwdump) ipt_check
+
+
+         if (cor_idx(i).eq.0) then
+         
+!luddump: corx(r),cory(r),corz(r),int_weight(r),rho(r),(chi_a(r),a=1,nbast)
+!luwdump: (mbis_weight_a(r),a=1,nucdep)
+10          continue
+            read(luddump,end=100) tmp,tmp,tmp,int_weight,tmp,
+     &                    (gso(j),j=1,nbast)
+            read(luwdump) (tmp,j=1,atm_idx(i)-1), mbis_weight
+            ipt = ipt + 1
+            do a=1,nbast
+               ! index of the last element in previous row, i.e. the diagonal
+               idx=(a*a-a)/2 
+               do b=1,a
+                  ao_int(idx+b) = ao_int(idx+b) + 
+     &               gso(a)*gso(b)*mbis_weight*int_weight
+               enddo
+            enddo
+            goto 10
+
+         else if (cor_idx(i).gt.0) then
+
+20          continue
+            read(luddump,end=100) cor(1),cor(2),cor(3),int_weight,tmp,
+     &                        (gso(j),j=1,nbast)
+            read(luwdump) (tmp,j=1,atm_idx(i)-1), mbis_weight
+            ipt = ipt + 1
+            dist = cor(cor_idx(i)) - cord(cor_idx(i),atm_idx(i))
+            do a=1,nbast
+               idx=(a*a-a)/2
+               do b=1,a
+                  ao_int(idx+b) = ao_int(idx+b) + 
+     &               gso(a)*gso(b)*mbis_weight*int_weight*dist
+               enddo
+            enddo
+            goto 20
+
+         end if 
+
+100      continue
+
+         if (ipt .ne. ipt_check) then
+            write(*,*) 'ipt:', ipt
+            write(*,*) 'ipt_check:', ipt_check
+            call quit("Error1 in reading of files in numint")
+         end if
+
+         read(luwdump) ipt_check
+         if (ipt_check .ne. -1) 
+     &      call quit("Error2 in reading of files in numint")
+         
+!        CALL DSPTSI(NBAST,ao_int,ao_test)
+!        write(lupri,*) 'ao_int test'
+!        CALL OUTPUT(ao_test,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
+
+         write(*,*) 'ao int test'
+         do j = 1,nnbasx
+            write(*,*) ao_int(j)
+         end do
+
+         call getdat(rtnlbl(1),rtnlbl(2))
+
+         rtnlbl(2) = 'SYMMETRI'
+         !rtnlbl(1) holds opperator sym, we ignore that for now?
+            !rtnlbl(1) is not read in in getgpv, seems like its inferred from integral vals.?
+         call wrtpro(ao_int,nnbasx,prplbl_atm(i),rtnlbl,iprlr)
+      enddo
 
       return
       end

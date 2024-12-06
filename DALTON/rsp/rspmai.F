@@ -190,6 +190,9 @@ C
          CALL DFTSOI(WRK(KCMO),WRK(KLST),LFREE,IPRONE)
       END IF
 
+C
+C     ATMMOM integrals calculated here to support population analysis methods using the density
+C
       if (atmmom) then
          kfree  = 1
          lfree  = lwrk
