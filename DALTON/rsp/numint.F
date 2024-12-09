@@ -15,12 +15,15 @@
 #include "dummy.h"
 #include "rspprp.h"
 #include "ccrspprp.h"
+#include "mxcent.h"
+#include "nuclei.h"
 !
 ! dftinf.h:       nder, ntypso 
 ! dftcom.h:       dftgrid_done_old, dfthri
 ! inforb.h:       nbast, nnashx, n2basx, nisht, nasht, ncmot (TODO: ccorb.h is a seperate file, is that one neccesary?)
 ! inftap.h:       lusifc, lbsifc
 ! dummy.h:        idummy
+! nuclei.h:       nucdep
 !
       integer luddump, luquad
       dimension work(lwork), ao_density(n2basx)
@@ -121,7 +124,7 @@
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
       
-! allocate for and calculate ao integrals
+! allocate for and calculate ao integrals, memory saving version
       save_mem = .false.
       if (save_mem) then
 
@@ -148,14 +151,36 @@
             enddo
          end if
 
+! same as above, but hopefully faster 
       else
-         ! allocating for all int here requires to know how many atm labels we have!
-         ! or we can just "overallocate" with nprplbl
-         call memget('REAL',kint,nnbasx,work,kfree,lfree)
-         call memget('REAL',kgso,nbast,work,kfree,lfree)
+         nbuf2 = 100000
+         natmlbl = 0
+         if (cc_flag) then
+            do i = 1,nprlbl_cc
+               label = prplbl_cc(i)
+               if (label(1:2) .eq. 'AM') then
+                  natmlbl = natmlbl + 1
+               end if
+            enddo
+         else
+            do i = 1,nprlbl
+               label = prplbl(i)
+               if (label(1:2) .eq. 'AM') then
+                  natmlbl = natmlbl + 1
+               end if
+            enddo
+         end if
+         call memget('REAL',kint,nnbasx*natmlbl,work,kfree,lfree)
+         call memget('REAL',kgso,nbast*nbuf2,work,kfree,lfree)
+         call memget('REAL',kgso_scal,nbast*nbuf2,work,kfree,lfree)
+         call memget('REAL',kw,nbuf2,work,kfree,lfree)
+         call memget('REAL',kw_mbis,nucdep*nbuf2,work,kfree,lfree)
+         call memget('REAL',kcoor,3*nbuf2,work,kfree,lfree)
+   
 
-         call num_aoint_opt(work(kint),work(kgso),
-     &                  luddump,luwdump,cc_flag)
+         call num_aoint_opt(work(kint),work(kgso),work(kgso_scal),
+     &                  work(kw),work(kw_mbis),work(kcoor),
+     &                  luddump,luwdump,cc_flag,nbuf2,natmlbl)
 
       end if
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
@@ -829,8 +854,9 @@ c     end kitter loop
       return
       end
 
-      subroutine num_aoint_opt(ao_int,gso,
-     &           luddump,luwdump,cc_flag)
+      subroutine num_aoint_opt(ao_int, gso, gso_scaled,
+     &           int_weight, mbis_weight, cor,
+     &           luddump, luwdump, cc_flag, nbuf2, natmlbl)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -839,36 +865,38 @@ c     end kitter loop
 #include "rspprp.h"
 #include "inflr.h"
 #include "ccrspprp.h"
-      parameter (d0 = 0.0d0,MXLBL = 1000) ! TODO fix mxlbl in common
+      parameter (d0 = 0.0d0)
 !incoming
-      character*8 label
-      integer     luddump,luwdump
-      real*8      ao_int(nnbasx),gso(nbast)
+      integer     luddump,luwdump,nbuf2,natmlbl
+      real*8      ao_int(nnbasx,natmlbl),gso(nbast*nbuf2),
+     &            int_weight(nbuf2),mbis_weight(nucdep,nbuf2),
+     &            cor(3,nbuf2), gso_scaled(nbast*nbuf2)
       logical     cc_flag
 !in here
-      character*8 rtnlbl(2), prplbl_atm(MXLBL)
-      integer     ipt, ipt_check, totlbl,
-     &            atm_idx(MXLBL), atm_chg(MXLBL), cor_idx(MXLBL)
-      real*8      tmp, int_weight, mbis_weight, cor(3),
-     &            ao_test(nbast,nbast)
+      character*8 label, rtnlbl(2), prplbl_atm(natmlbl)
+      integer     npoints, lbl_idx, block_size, points_read, footer, 
+     &            atm_idx(natmlbl), atm_chg(natmlbl), cor_idx(natmlbl),
+     &            i,j,k,n,idx,offset
+      real*8      dist,scal,val
 
-      totlbl = 0
+! parse all labels in here, so we can calculate all integrals with minimal file i/o
+      lbl_idx = 0
       if (cc_flag) then
          do i = 1,nprlbl_cc
             label = prplbl_cc(i)
             if (label(1:2) .eq. 'AM') then
-               totlbl = totlbl + 1
-               prplbl_atm(totlbl) = label
-               read(label(3:4),*) atm_idx(totlbl)
-               read(label(5:6),*) atm_chg(totlbl)
+               lbl_idx = lbl_idx + 1
+               prplbl_atm(lbl_idx) = label
+               read(label(3:4),*) atm_idx(lbl_idx)
+               read(label(5:6),*) atm_chg(lbl_idx)
                if (label(7:8) .eq. '00') then
-                  cor_idx(totlbl) = 0
+                  cor_idx(lbl_idx) = 0
                else if (label(7:8) .eq. '0x') then
-                  cor_idx(totlbl) = 1
+                  cor_idx(lbl_idx) = 1
                else if (label(7:8) .eq. '0y') then
-                  cor_idx(totlbl) = 2
+                  cor_idx(lbl_idx) = 2
                else if (label(7:8) .eq. '0z') then
-                  cor_idx(totlbl) = 3
+                  cor_idx(lbl_idx) = 3
                else
                   write(*,*) 'Label ', label, ' not recognized'
                   call quit("Label not recognized in numint_write")
@@ -879,18 +907,19 @@ c     end kitter loop
          do i = 1,nprlbl
             label = prplbl(i)
             if (label(1:2) .eq. 'AM') then
-               totlbl = totlbl + 1
-               prplbl_atm(totlbl) = label
-               read(label(3:4),*) atm_idx(totlbl)
-               read(label(5:6),*) atm_chg(totlbl)
+               lbl_idx = lbl_idx + 1
+               prplbl_atm(lbl_idx) = label
+               read(label(3:4),*) atm_idx(lbl_idx)
+               write(*,*) 'atm idx', atm_idx(lbl_idx)
+               read(label(5:6),*) atm_chg(lbl_idx)
                if (label(7:8) .eq. '00') then
-                  cor_idx(totlbl) = 0
+                  cor_idx(lbl_idx) = 0
                else if (label(7:8) .eq. '0x') then
-                  cor_idx(totlbl) = 1
+                  cor_idx(lbl_idx) = 1
                else if (label(7:8) .eq. '0y') then
-                  cor_idx(totlbl) = 2
+                  cor_idx(lbl_idx) = 2
                else if (label(7:8) .eq. '0z') then
-                  cor_idx(totlbl) = 3
+                  cor_idx(lbl_idx) = 3
                else
                   write(*,*) 'Label ', label, ' not recognized'
                   call quit("Label not recognized in numint_write")
@@ -899,88 +928,107 @@ c     end kitter loop
          enddo
       end if
 
+      ao_int = d0
+      
+! luwdump is file for MBIS weights
+!  first line is npoints
+!  then npoints lines with nucdep MBIS weights
+!  final line footer is -1
+      rewind(luwdump)
+      read(luwdump) npoints
+! luddump is file for grid 
+!  npoints lines with coords, int. weight, density, orbitals
+!  no header or footer, so reading is controlled through luwdump
+      rewind(luddump)
 
+      points_read = 0
+      block_size = 0
 
-      do i = 1,totlbl
-
-         ipt = 0
-         ao_int = d0
-
-         rewind(luddump)
-         rewind(luwdump)
-
-         read(luwdump) ipt_check
-
-
-         if (cor_idx(i).eq.0) then
-         
-!luddump: corx(r),cory(r),corz(r),int_weight(r),rho(r),(chi_a(r),a=1,nbast)
-!luwdump: (mbis_weight_a(r),a=1,nucdep)
-10          continue
-            read(luddump,end=100) tmp,tmp,tmp,int_weight,tmp,
-     &                    (gso(j),j=1,nbast)
-            read(luwdump) (tmp,j=1,atm_idx(i)-1), mbis_weight
-            ipt = ipt + 1
-            do a=1,nbast
-               ! index of the last element in previous row, i.e. the diagonal
-               idx=(a*a-a)/2 
-               do b=1,a
-                  ao_int(idx+b) = ao_int(idx+b) + 
-     &               gso(a)*gso(b)*mbis_weight*int_weight
+      do while (points_read .lt. npoints)
+         call read_block(luddump,luwdump,gso,int_weight,mbis_weight,cor,
+     &                   nbuf2,points_read,npoints,block_size)
+         do k=1,natmlbl
+            if (cor_idx(k) .eq. 0) then
+               do n=1,block_size
+                  offset = 1 + (n-1)*nbast
+                  scal = mbis_weight(atm_idx(k),n)*int_weight(n)
+                  call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
+                  call dscal(nbast,scal,gso_scaled(offset),1)
+               enddo
+            else
+               do n=1,block_size
+                  offset = 1 + (n-1)*nbast
+                  dist = cor(cor_idx(k),n) - cord(cor_idx(k),atm_idx(k))
+                  scal = mbis_weight(atm_idx(k),n)*int_weight(n)*dist
+                  call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
+                  call dscal(nbast,scal,gso_scaled(offset),1)
+               enddo
+            end if
+            do i=1,nbast
+               do j=1,i 
+                  idx = (i*(i-1))/2 + j
+                  val = ddot(block_size,gso_scaled(i),nbast,
+     &                       gso(j),nbast)
+                  ao_int(idx,k) = ao_int(idx,k) + val
                enddo
             enddo
-            goto 10
+         enddo
+      end do
 
-         else if (cor_idx(i).gt.0) then
+      read(luwdump) footer
+      if (footer .ne. -1) then
+         write(*,*) 'Error in reading, footer is', footer
+         call quit("Error in reading in numint")
+      end if
 
-20          continue
-            read(luddump,end=100) cor(1),cor(2),cor(3),int_weight,tmp,
-     &                        (gso(j),j=1,nbast)
-            read(luwdump) (tmp,j=1,atm_idx(i)-1), mbis_weight
-            ipt = ipt + 1
-            dist = cor(cor_idx(i)) - cord(cor_idx(i),atm_idx(i))
-            do a=1,nbast
-               idx=(a*a-a)/2
-               do b=1,a
-                  ao_int(idx+b) = ao_int(idx+b) + 
-     &               gso(a)*gso(b)*mbis_weight*int_weight*dist
-               enddo
-            enddo
-            goto 20
+      call getdat(rtnlbl(1),rtnlbl(2))
+      rtnlbl(2) = 'SYMMETRI'
 
-         end if 
-
-100      continue
-
-         if (ipt .ne. ipt_check) then
-            write(*,*) 'ipt:', ipt
-            write(*,*) 'ipt_check:', ipt_check
-            call quit("Error1 in reading of files in numint")
-         end if
-
-         read(luwdump) ipt_check
-         if (ipt_check .ne. -1) 
-     &      call quit("Error2 in reading of files in numint")
-         
-!        CALL DSPTSI(NBAST,ao_int,ao_test)
-!        write(lupri,*) 'ao_int test'
-!        CALL OUTPUT(ao_test,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
-
+      do k=1,natmlbl
+         write(*,*) 'Writing lbl:', prplbl_atm(k)
+         call wrtpro(ao_int(1,k),nnbasx,prplbl_atm(k),rtnlbl,iprlr)
          write(*,*) 'ao int test'
-         do j = 1,nnbasx
-            write(*,*) ao_int(j)
+         do i = 1,nnbasx
+            write(*,*) ao_int(i,k)
          end do
-
-         call getdat(rtnlbl(1),rtnlbl(2))
-
-         rtnlbl(2) = 'SYMMETRI'
-         !rtnlbl(1) holds opperator sym, we ignore that for now?
-            !rtnlbl(1) is not read in in getgpv, seems like its inferred from integral vals.?
-         call wrtpro(ao_int,nnbasx,prplbl_atm(i),rtnlbl,iprlr)
       enddo
 
       return
       end
+
+      subroutine read_block(luddump,luwdump,gso,int_weight,mbis_weight,
+     &                     cor,max_block,points_read,npoints,block_size)
+#include "implicit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "inforb.h"
+#include "priunit.h"
+! incoming      
+      integer luddump, luwdump, max_block, points, i, block_size,
+     &       points_read
+      real*8 cor(3,max_block), int_weight(max_block),
+     &       mbis_weight(nucdep,max_block), gso(nbast,max_block)
+! in here
+      integer points_remaining
+      real*8 tmp
+
+      points_remaining = npoints - points_read
+
+      max_read = min(points_remaining, max_block)
+
+      do i=1,max_read
+         read(luddump) cor(1,i), cor(2,i), cor(3,i), int_weight(i),
+     &   tmp, (gso(j,i), j=1,nbast) ! tmp for rho
+         read(luwdump) (mbis_weight(j,i), j=1,nucdep)
+      enddo
+
+      points_read = points_read + max_read
+      ! block_size always = nbuf2 except in the last read
+      block_size = max_read
+
+      return
+      end
+
 
       subroutine getrho_ge(dmat,gso,rho,dmatgao,dfthri,iprint)
 ! same as getrho_srdft but for non symmetric matrix
