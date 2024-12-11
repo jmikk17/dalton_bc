@@ -202,8 +202,6 @@ C
             call rd_sirifc('CMO',found,wrk(kcmo))
             if (.not.found)
      &         call quit('ATMMOM error: CMO not found on SIRIFC')
-            write(*,*) 'cmo in rspmai'
-            write(*,*) (wrk(kcmo+i-1),i=1,ncmot)
          else
             call memget('REAL',kcmo,0,wrk,kfree,lfree)
             call memget('REAL',kdcao,0,wrk,kfree,lfree) 
@@ -392,8 +390,6 @@ C
 C     CALL RSPMC(CMO,UDV,PV,FOCK,FC,FV,FCAC,H2AC,WRK,LWRK)
 C
 C
-      write(*,*) 'cmo from rspmc'
-      write(*,*) (wrk(kcmo+i-1),i=1,ncmot)
       IF (DOMCSRDFT) THEN
          CALL TITLER('MC-srDFT response calculation','*',103)
       ELSE IF (DOHFSRDFT) THEN

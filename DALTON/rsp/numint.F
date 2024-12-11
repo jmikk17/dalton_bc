@@ -1,4 +1,4 @@
-      subroutine numint_driver(ao_density,work,lwork,cc_flag) !,iorder,propri,iprint)
+      subroutine numint_driver(ao_density,work,lwork,cc_flag)
 !*****************************************************************************
 !     JESM 16-10-2024
 !     Driver routine for numerical integration of atomic moments
@@ -8,99 +8,102 @@
 !     write to AOPROPER
 !*****************************************************************************
 #include "implicit.h"
-#include "dftinf.h"
 #include "dftcom.h"
 #include "inforb.h"
-#include "inftap.h"
 #include "dummy.h"
-#include "rspprp.h"
-#include "ccrspprp.h"
 #include "mxcent.h"
 #include "nuclei.h"
-!
-! dftinf.h:       nder, ntypso 
-! dftcom.h:       dftgrid_done_old, dfthri
-! inforb.h:       nbast, nnashx, n2basx, nisht, nasht, ncmot (TODO: ccorb.h is a seperate file, is that one neccesary?)
-! inftap.h:       lusifc, lbsifc
+#include "rspprp.h"
+#include "ccrspprp.h"
+#include "inftap.h"
+#include "inflr.h"
+#include "priunit.h"
+! Used from include:
+! implicit.h:     bad coding practice
+! dftcom.h:       dftgrid_done_old
+! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht (ccorb.h for cc?)
 ! dummy.h:        idummy
+! mxcent.h:       MXCENT, needed for nuclei.h
 ! nuclei.h:       nucdep
+! rspprp.h:       prplbl/prplbl_cc
+! inftap.h:       luprop
+! inflr.h:        iprlr
+! priunit.h:      lupri
 !
-      integer luddump, luquad
-      dimension work(lwork), ao_density(n2basx)
-      logical cc_flag, save_mem
+! Files used for:
+! luquad:         grid points of the quadrature
+! luddump:        dumping density and orbital values in grid points
+! luwdump:        dumping mbis weights in grid points
+! luprop:         property integrals
+! lupri:          output file
+!
 
+! incoming:
+      integer lwork
+      logical cc_flag
+      dimension work(lwork), ao_density(n2basx)
+! defined here:
+      integer luddump, luwdump, kfrsav, kfree, lfree, nbuf
+      logical save_mem
       character(len=8) label
 
-      call qenter('numint')
+! option for old or new num_aoint
+      save_mem = .false.
+
+! timers and memory pointers
+      call qenter('numint_driver')
       call newtimer('START')
 
       kfrsav = 1
       kfree  = kfrsav
       lfree  = lwork 
 
-! open file for dumping density and basis functions in each grid point
+! open files
       luddump = -1
       call gpopen(luddump,'DENSITY.GRID','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
-! file for dumping population weights
       luwdump = -1
       call gpopen(luwdump,'WEIGHT.GRID','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
-! file for ao property integrals
       luprop = -1
       call gpopen(luprop,'AOPROPER','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
 
-! set up dft orbital common block so we don't evaluate uneccesary terms 
-! TODO: maybe these should be saved and set back to original val?
-! TODO: look into calling DFTINI or SETUPSOS instead of this
-      DFTHR0 = 1.0D-8
-      DFTHRL = 1.0D-10
-!     DFTHRI = 1.0D-13
-      DFTHRI = 2.0D-12
-      nder = 0
-      ntypso = 1
-      nso0 = 1
-      kso0 = 1
+! set up dft orbital common block 
+      call setupsos(0,.false.,idum1,idum2)
 
-! make dftgrid BEFORE allocations, this requires a lot of mem but releases it again
+! make dftgrid if first run
       if (.not. dftgrid_done_old) then
-         call make_dftgrid(work,lwork,ntot_dftgrid,1,.false.)
+         call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
          dftgrid_done_old = .true.
       end if
 
-! allocate static memory for 1 000 000 grid points
-! this seems like its nbuf pr atom, so can probably be lowered?
-! but is hardcoded to 1 000 000 in grid routine
-      nbuf = 1 000 000
+! allocate for proccesing of grid data
+! make_dftgrid hardcodes limit of points per atom to 1.0d6
+! however, can never be more than total grid
+      nbuf = min(1 000 000,ntot_dftgrid)
 
-      write(*,*) 'lfree before allocation', lfree
-
-! grid coords
       call memget('REAL',kx,nbuf,work,kfree,lfree)
       call memget('REAL',ky,nbuf,work,kfree,lfree)
       call memget('REAL',kz,nbuf,work,kfree,lfree)
-! integrations weights
       call memget('REAL',kw,nbuf,work,kfree,lfree)
-! basis functions evaluated in a point 
+
       call memget('REAL',kgso,nbast,work,kfree,lfree)
-! for ncnt, goes into getsos, propbalby related to which center the basis func. is on 
+      call memget('REAL',kgso_prod,nnbasx,work,kfree,lfree)
       call memget('INT4',kcnt,nbast,work,kfree,lfree) 
-! DMATGAO, unneccesary output from getrho_srdft
       call memget('REAL',kdga,nbast,work,kfree,lfree) 
 
-      write(*,*) 'lfree after allocation', lfree
-      
-! print evaluated basis functions and density in each point to file
+! evaluate orbitals and density in grid points 
       call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
-     &   work(kgso),work(kcnt),work(kdga),ao_density,
-     &   luddump,nbuf,work,lwork,cc_flag)
+     &   work(kgso),work(kgso_prod),work(kcnt),work(kdga),ao_density,
+     &   luddump,nbuf,work,lwork,cc_flag,save_mem,ntot_screened)
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 
-! allocate for mbis routine 
-      max_pnt = 1 000 000 
-      max_atm = 50 !max atoms
+! allocate for MBIS populations routine 
+      ! maybe move these to a common block? or remove all together?
+      max_pnt = min(1 000 000,ntot_screened)
+      max_atm = min(50,nucdep)
          
       write(*,*) 'lfree before mbis', lfree
 
@@ -116,16 +119,13 @@
 
       write(*,*) 'lfree after mbis', lfree
 
-! calculate mbis population weights in each point and print to file
+! evaluate MBIS pop. weights in each point
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
      &   max_pnt,max_atm,luddump,luwdump)
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
-
-      
 ! allocate for and calculate ao integrals, memory saving version
-      save_mem = .false.
       if (save_mem) then
 
          call memget('REAL',kint,nnbasx,work,kfree,lfree)
@@ -153,7 +153,7 @@
 
 ! same as above, but hopefully faster 
       else
-         nbuf2 = 100000
+         nbuf2 = 30 000
          natmlbl = 0
          if (cc_flag) then
             do i = 1,nprlbl_cc
@@ -171,15 +171,12 @@
             enddo
          end if
          call memget('REAL',kint,nnbasx*natmlbl,work,kfree,lfree)
-         call memget('REAL',kgso,nbast*nbuf2,work,kfree,lfree)
-         call memget('REAL',kgso_scal,nbast*nbuf2,work,kfree,lfree)
+         call memget('REAL',kgso_prod,nnbasx*nbuf2,work,kfree,lfree)
          call memget('REAL',kw,nbuf2,work,kfree,lfree)
-         call memget('REAL',kw_mbis,nucdep*nbuf2,work,kfree,lfree)
-         call memget('REAL',kcoor,3*nbuf2,work,kfree,lfree)
-   
+         call memget('REAL',kw_mbis,natmlbl*nbuf2,work,kfree,lfree)
 
-         call num_aoint_opt(work(kint),work(kgso),work(kgso_scal),
-     &                  work(kw),work(kw_mbis),work(kcoor),
+         call num_aoint_opt(work(kint),work(kgso_prod),
+     &                  work(kw),work(kw_mbis),
      &                  luddump,luwdump,cc_flag,nbuf2,natmlbl)
 
       end if
@@ -189,36 +186,44 @@
       call gpclose(luddump,'KEEP')
       call gpclose(luwdump,'KEEP')
 
-      call newtimer('numint')
-      call qexit('numint')
+      call newtimer('numint_driver')
+      call qexit('numint_driver')
 
       return
       end
 
 
       subroutine evaluate_grid(corx,cory,corz,int_weight,
-     &   gso,ncnt,dmatgao,ao_density,luddump,nbuf,
-     &   work,lwork,cc_flag)
+     &   gso,gso_prod,ncnt,dmatgao,ao_density,luddump,nbuf,
+     &   work,lwork,cc_flag,save_mem,ntot_screened)
 #include "implicit.h"
+#include "dftcom.h"
 #include "inforb.h"
 #include "dummy.h"
 #include "rspprp.h"
 #include "inflr.h"
-#include "dftcom.h"
 #include "priunit.h"
+! Used from include:
+! implicit.h:     
+! dftcom.h        dftels, dfthri, dfthr0
+! inforb.h:       nrhft, nnbasx (ccorb.h for cc?)
+! dummy.h:        idummy
+! rspprp.h:       MXLLR (needed for inflr.h)
+! inflr.h:        iprlr
+! priunit.h:      lupri
+!
 
       parameter (d0 = 0.0d0)
-
 ! ingoing
       real*8    corx(nbuf),cory(nbuf),corz(nbuf),int_weight(nbuf),
      &          gso(nbast),ncnt(nbast),dmatgao(nbast),
-     &          ao_density(nbast,nbast),work(lwork)
+     &          ao_density(nbast,nbast),work(lwork), gso_prod(nnbasx)
       integer   luddump,nbuf
-      logical   cc_flag
+      logical   cc_flag, save_mem
 
 ! defined within routine
       real*8    cor(3)
-      integer   npnts,npoint,ipnt
+      integer   ntot_screened,atm_points,ipnt,idx,i,j
       real*8    nelctrn,weight,rho
 
 ! open file where dft grid is stored 
@@ -226,10 +231,10 @@
       call gpopen(luquad,'DALTON.QUAD','OLD','SEQUENTIAL',
      &   'UNFORMATTED',idummy,.false.)
 
-      write(*,*) 'ao dens in eval grid'
-      do i = 1,nbast
-         write(*,*) (ao_density(i,j),j=1,nbast)
-      enddo
+!     write(*,*) 'ao dens in eval grid'
+!     do i = 1,nbast
+!        write(*,*) (ao_density(i,j),j=1,nbast)
+!     enddo
 
       if (cc_flag) then
          do i = 1,nbast
@@ -239,10 +244,10 @@
                ao_density(j,i) = ao_density(i,j)
             end do
          end do
-         write(*,*) 'ao dens in evaluate_grid after sym'
-         do i = 1,nbast
-            write(*,*) (ao_density(i,j),j=1,nbast)
-         end do
+!        write(*,*) 'CC ao dens in evaluate_grid after sym'
+!        do i = 1,nbast
+!           write(*,*) (ao_density(i,j),j=1,nbast)
+!        end do
       end if
 
       nelctrn = d0
@@ -251,25 +256,22 @@
 
 !     write(*,*) 'i,rho,intweight print' !debug
 
-!     npnts = 0
+      ntot_screened = 0
   100 continue
-      read(luquad) npoint
-      if (npoint .gt. 0) then
-!        write(luddump) npoint
-!        npnts = npnts + npoint
-         call reaqua_srdft(corx,cory,corz,int_weight,luquad,npoint)
-         do 200 ipnt = 1, npoint
+      read(luquad) atm_points
+      if (atm_points .gt. 0) then
+         call reaqua_srdft(corx,cory,corz,int_weight,luquad,atm_points)
+         do 200 ipnt = 1,atm_points
 
             if (iprlr .gt. 150) then
                write (lupri,'(I8,4F12.6)')
      &         ipnt,corx(ipnt),cory(ipnt),corz(ipnt),int_weight(ipnt)
-            END IF
+            end if
 
             weight = int_weight(ipnt)
             cor(1) = corx(ipnt)
             cor(2) = cory(ipnt)
             cor(3) = corz(ipnt)
-            ! dfthri hardcoded to 10^-13 in driver
             ! TODO: add a check on weight being 0
             thrint = dfthri/weight 
 
@@ -283,20 +285,37 @@
             rho = d0
             call getrho_srdft(ao_density,gso,rho,dmatgao,
      &         thrint,iprlr)
-!           call getrho_ge(ao_density,gso,rho,dmatgao,
-!    &         thrint,iprlr)
+            if (rho .lt. dfthr0) cycle 
             nelctrn = nelctrn + weight*rho
 
-            write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
-     &           int_weight(ipnt),rho,(gso(j),j=1,nbast)
+            if (save_mem) then
+               write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
+     &               int_weight(ipnt),rho,(gso(j),j=1,nbast)
+            else
+               do i = 1,nbast
+                  idx = (i*i-i)/2
+                  do j = 1,i
+                     gso_prod(idx+j) = gso(i)*gso(j)*int_weight(ipnt)
+                  enddo
+               enddo
+               write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
+     &               int_weight(ipnt),rho,(gso_prod(j),j=1,nnbasx)
+            endif
+
 !           write(*,*) ipnt, rho, weight !debug
+
+            ntot_screened = ntot_screened + 1
 
   200    continue
          goto 100
-      else if (npoint .eq. 0) then
+      else if (atm_points .eq. 0) then
          goto 100
       end if
-!     write(luddump) npoint ! writing the negative npoint val as a footer?
+
+      if (atm_points .ne. -1) then
+         write(*,*) 'Error in reading, footer is', atm_points 
+         call quit("Error reading file in evaluate_grid")
+      end if
 
 !     write(*,*) 'print done' !debug
 
@@ -351,13 +370,6 @@
      &          suma,tote,qtot,dx,dy,dz,rhom,fwt,tmp,ztmp,xtmp,rmsq,dis,
      &          coor(3,max_atm), wtot
 
-      write(*,*) 'check from mbis_pop', qconv
-      write(*,*) 'nucdep', nucdep
-      do i=1,nucdep
-         write(*,*) 'charge', charge(i) 
-         write(*,*) 'cord', (cord(j,i),j=1,3)
-      enddo
-
       kmax = 500
       kpar = max_atm
       kpt = max_pnt
@@ -386,30 +398,11 @@
       ipt=1
       start=1
 10    continue
-!     read(luddump) npoint
-!     write(*,*) 'npoint', npoint
-!     if (npoint.gt.0) then
-!        do 200 i=start,start+npoint-1
-!           read(luddump) corx(ipt),cory(ipt),corz(ipt),int_weight(ipt),
-!    &                    rho(ipt)
-!           suma=suma+int_weight(ipt)*rho(ipt)
-!           ipt=ipt+1
-!           if (ipt.eq.kpt) then
-!              write(lupri,*) 'MBIS: too many points',ipt,kpt
-!              call quit('MBIS: too many points')
-!           endif
-!200     continue
-!        write(*,*) 'suma', suma
-!        start=start+npoint
-!        goto 10
-!     else if (npoint.eq.0) then
-!        goto 10
-!     end if
       read(luddump,end=100) corx(ipt),cory(ipt),corz(ipt),
      &                      int_weight(ipt),rho(ipt)
       suma = suma + int_weight(ipt) * rho(ipt)
       ipt = ipt + 1
-      if (ipt.eq.kpt) then
+      if (ipt-1.gt.kpt) then
          write(lupri,*) 'MBIS: too many points',ipt,kpt
          call quit('MBIS: too many points')
       endif
@@ -675,6 +668,7 @@ c     end kitter loop
             enddo
          endif
          write(luwdump) (mbis_weight(j),j=1,nat)
+!        write(luwdump) (mbis_weight(j)*int_weight(i),j=1,nat)
 !        write(*,*) i,(mbis_weight(j),j=1,nat) !debug
       enddo !ipt
 
@@ -799,7 +793,7 @@ c     end kitter loop
      &                 (gso(j),j=1,nbast)
          read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
          do a=1,nbast
-                  ! index of the last element in previous row, i.e. the diagonal
+            ! index of the last element in previous row, i.e. the diagonal
             idx=(a*a-a)/2 
             do b=1,a
                ao_int(idx+b) = ao_int(idx+b) + 
@@ -854,8 +848,8 @@ c     end kitter loop
       return
       end
 
-      subroutine num_aoint_opt(ao_int, gso, gso_scaled,
-     &           int_weight, mbis_weight, cor,
+      subroutine num_aoint_opt(ao_int, gso_prod,
+     &           int_weight, mbis_weight,
      &           luddump, luwdump, cc_flag, nbuf2, natmlbl)
 #include "implicit.h"
 #include "mxcent.h"
@@ -868,18 +862,18 @@ c     end kitter loop
       parameter (d0 = 0.0d0)
 !incoming
       integer     luddump,luwdump,nbuf2,natmlbl
-      real*8      ao_int(nnbasx,natmlbl),gso(nbast*nbuf2),
-     &            int_weight(nbuf2),mbis_weight(nucdep,nbuf2),
-     &            cor(3,nbuf2), gso_scaled(nbast*nbuf2)
+      real*8      ao_int(nnbasx,natmlbl),gso_prod(nnbasx,nbuf2),
+     &            int_weight(nbuf2),mbis_weight(nbuf2,natmlbl)
       logical     cc_flag
 !in here
       character*8 label, rtnlbl(2), prplbl_atm(natmlbl)
       integer     npoints, lbl_idx, block_size, points_read, footer, 
      &            atm_idx(natmlbl), atm_chg(natmlbl), cor_idx(natmlbl),
      &            i,j,k,n,idx,offset
-      real*8      dist,scal,val
+      real*8      dist,scal,val, ao_test(nnbasx)
 
 ! parse all labels in here, so we can calculate all integrals with minimal file i/o
+!     call newtimer('START')
       lbl_idx = 0
       if (cc_flag) then
          do i = 1,nprlbl_cc
@@ -910,7 +904,6 @@ c     end kitter loop
                lbl_idx = lbl_idx + 1
                prplbl_atm(lbl_idx) = label
                read(label(3:4),*) atm_idx(lbl_idx)
-               write(*,*) 'atm idx', atm_idx(lbl_idx)
                read(label(5:6),*) atm_chg(lbl_idx)
                if (label(7:8) .eq. '00') then
                   cor_idx(lbl_idx) = 0
@@ -945,40 +938,61 @@ c     end kitter loop
       block_size = 0
 
       do while (points_read .lt. npoints)
-         call read_block(luddump,luwdump,gso,int_weight,mbis_weight,cor,
-     &                   nbuf2,points_read,npoints,block_size)
-         do k=1,natmlbl
-            if (cor_idx(k) .eq. 0) then
-               do n=1,block_size
-                  offset = 1 + (n-1)*nbast
-                  scal = mbis_weight(atm_idx(k),n)*int_weight(n)
-                  call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
-                  call dscal(nbast,scal,gso_scaled(offset),1)
-               enddo
-            else
-               do n=1,block_size
-                  offset = 1 + (n-1)*nbast
-                  dist = cor(cor_idx(k),n) - cord(cor_idx(k),atm_idx(k))
-                  scal = mbis_weight(atm_idx(k),n)*int_weight(n)*dist
-                  call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
-                  call dscal(nbast,scal,gso_scaled(offset),1)
-               enddo
-            end if
-            do i=1,nbast
-               do j=1,i 
-                  idx = (i*(i-1))/2 + j
-                  val = ddot(block_size,gso_scaled(i),nbast,
-     &                       gso(j),nbast)
-                  ao_int(idx,k) = ao_int(idx,k) + val
-               enddo
-            enddo
-         enddo
-      end do
+         call read_block(luddump,luwdump,gso_prod,int_weight,
+     &            mbis_weight,nbuf2,points_read,npoints,block_size,
+     &            cor_idx,atm_idx,natmlbl)
+
+!        call dgemm('N', 'N', nnbasx, natmlbl, block_size,
+         call dgemm_test('N', 'N', nnbasx, natmlbl, nbuf2,
+     &     1.0d0, gso_prod, nnbasx,
+!    &     mbis_weight, block_size,
+     &     mbis_weight, nbuf2,
+     &     1.0d0, ao_int, nnbasx)
+      enddo
+!        do k=1,natmlbl
+!        ! we first try for only cor_idx = 0
+!        ! from changes to grid routine we now print gso_prod*int_weight(nnbasx,r)
+!        ! so we can multiply with mbis_weight(r,nucdep) to get a (nnbasx,nucdep)
+!           call dgemm('N', 'N', nnbasx, 1, block_size,
+!    &         1.0d0, gso_prod, nnbasx,
+!    &         mbis_weight(1,atm_idx(k)), nbuf2,
+!    &         1.0d0, ao_int(1,k), nnbasx)
+!           
+!        enddo
+!     enddo
+
+!        do k=1,natmlbl
+!           if (cor_idx(k) .eq. 0) then
+!              do n=1,block_size
+!                 offset = 1 + (n-1)*nbast
+!                 scal = mbis_weight(atm_idx(k),n)*int_weight(n)
+!                 call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
+!                 call dscal(nbast,scal,gso_scaled(offset),1)
+!              enddo
+!           else
+!              do n=1,block_size
+!                 offset = 1 + (n-1)*nbast
+!                 dist = cor(cor_idx(k),n) - cord(cor_idx(k),atm_idx(k))
+!                 scal = mbis_weight(atm_idx(k),n)*int_weight(n)*dist
+!                 call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
+!                 call dscal(nbast,scal,gso_scaled(offset),1)
+!              enddo
+!           end if
+!           do i=1,nbast
+!              do j=1,i 
+!                 idx = (i*(i-1))/2 + j
+!                 val = ddot_opt(block_size,gso_scaled(i),nbast,
+!    &                       gso(j),nbast) ! takes to long, need to redo mem. layout
+!                 ao_int(idx,k) = ao_int(idx,k) + val
+!              enddo
+!           enddo
+!        enddo
+!     end do
 
       read(luwdump) footer
       if (footer .ne. -1) then
          write(*,*) 'Error in reading, footer is', footer
-         call quit("Error in reading in numint")
+         call quit("Error reading file in num_aoint")
       end if
 
       call getdat(rtnlbl(1),rtnlbl(2))
@@ -986,90 +1000,279 @@ c     end kitter loop
 
       do k=1,natmlbl
          write(*,*) 'Writing lbl:', prplbl_atm(k)
-         call wrtpro(ao_int(1,k),nnbasx,prplbl_atm(k),rtnlbl,iprlr)
+         ao_test = ao_int(1:nnbasx,k)
+         call wrtpro(ao_test,nnbasx,prplbl_atm(k),rtnlbl,iprlr)
+!        call wrtpro(ao_int(1,k),nnbasx,prplbl_atm(k),rtnlbl,iprlr)
          write(*,*) 'ao int test'
          do i = 1,nnbasx
             write(*,*) ao_int(i,k)
          end do
       enddo
 
+!     call newtimer('num_aoint_opt')
+
       return
       end
 
-      subroutine read_block(luddump,luwdump,gso,int_weight,mbis_weight,
-     &                     cor,max_block,points_read,npoints,block_size)
+      subroutine read_block(luddump,luwdump,gso_prod,int_weight,
+     &      mbis_weight,max_block,points_read,npoints,block_size,
+     &      cor_idx,atm_idx,natmlbl)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
 #include "inforb.h"
 #include "priunit.h"
 ! incoming      
-      integer luddump, luwdump, max_block, points, i, block_size,
-     &       points_read
-      real*8 cor(3,max_block), int_weight(max_block),
-     &       mbis_weight(nucdep,max_block), gso(nbast,max_block)
+      integer luddump, luwdump, max_block, points, block_size,
+     &         points_read, cor_idx(natmlbl), atm_idx(natmlbl),
+     &         natmlbl
+      real*8   int_weight(max_block),
+     &         mbis_weight(max_block,natmlbl), 
+     &         gso_prod(nnbasx,max_block)
 ! in here
-      integer points_remaining
-      real*8 tmp
+      integer points_remaining, i, j
+      real*8 tmp, tmp_weight(nucdep), cor(3)
 
       points_remaining = npoints - points_read
-
       max_read = min(points_remaining, max_block)
 
-      do i=1,max_read
-         read(luddump) cor(1,i), cor(2,i), cor(3,i), int_weight(i),
-     &   tmp, (gso(j,i), j=1,nbast) ! tmp for rho
-         read(luwdump) (mbis_weight(j,i), j=1,nucdep)
-      enddo
+! 0 initilization important for the final read, which does not fill entire matrix
+      mbis_weight = 0.0d0
+      gso_prod = 0.0d0
+
+      if (maxval(cor_idx) .eq. 0) then
+         if (nucdep .eq. natmlbl) then
+            do i=1,max_read
+               read(luddump) cor(1), cor(2), cor(3),int_weight(i),
+     &         tmp, (gso_prod(j,i), j=1,nnbasx) ! tmp for rho
+               read(luwdump) (mbis_weight(i,j), j=1,nucdep)
+            enddo
+         else
+            do i=1,max_read
+               read(luddump) cor(1), cor(2), cor(3),int_weight(i),
+     &         tmp, (gso_prod(j,i), j=1,nnbasx)
+               read(luwdump) (tmp_weight(j), j=1,nucdep)
+               do k=1,natmlbl
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+               enddo
+            enddo
+         endif
+      else
+         do i=1,max_read
+            read(luddump) cor(1), cor(2), cor(3), int_weight(i),
+     &      tmp, (gso_prod(j,i), j=1,nnbasx)
+            read(luwdump) (tmp_weight(j), j=1,nucdep)
+            do k=1,natmlbl
+               if (cor_idx(k) .eq. 0) then
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+               else
+                  dist = cor(cor_idx(k)) - cord(cor_idx(k),atm_idx(k))
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k)) * dist
+               endif
+            enddo
+         enddo
+      endif
 
       points_read = points_read + max_read
-      ! block_size always = nbuf2 except in the last read
+      ! block_size always = max_block except in the last read
       block_size = max_read
+      write(*,*) 'block size:', block_size
 
       return
       end
 
-
-      subroutine getrho_ge(dmat,gso,rho,dmatgao,dfthri,iprint)
-! same as getrho_srdft but for non symmetric matrix
-! used for cc debugging
-! not used anymore, since cc density is symmetrized on entry
-#include "priunit.h"
-#include "maxaqn.h"
-#include "maxorb.h"
-#include "mxcent.h"
-#include "symmet.h"
-#include "inforb.h"
-      real*8, parameter :: d0 = 0.0d0
-      real*8, parameter :: d1 = 1.0d0
-
-      integer, intent(in) :: iprint
-      real*8, intent(in) :: dmat(nbast,nbast), gso(nbast), dfthri
-      real*8, intent(out) :: rho, dmatgao(nbast)
-
-      integer :: istr, isym, nbasi
-      real*8 :: ddot      
-
-      if (iprint .gt. 100) then
-         write(lupri,*) 'GETRHO_srdft NBAST, NSYM',nbast,nsym
-         write(lupri,*) 'DFTHRI, DMAT(1,1)',dfthri,dmat(1,1),gso(1)
-         write(lupri,*) 'IBAS',ibas(1:nsym)
-         write(lupri,*) 'NBAS',nbas(1:nsym)
-      end if
-      if (nsym .eq. 1) then
-         !call dsymv('U',nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
-         call dgemv('N',nbast,nbast,d1,dmat,nbast,gso,1,d0,dmatgao,1)
-      else
-         call quit("sym in getrho_ge")
-         call dzero(dmatgao,nbast)
-         do isym = 1,nsym
-            istr  = ibas(isym) + 1
-            nbasi = nbas(isym)
-            call dsymv('U',nbasi,d1,dmat(istr,istr),nbast,gso(istr),1,
-     &                 d0,dmatgao(istr),1)
-         end do
-      end if
-      rho = ddot(nbast,gso,1,dmatgao,1)
-      return
-      end
-
+      SUBROUTINE dgemm_test(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,
+     +         BETA,C,LDC)
+*
+*  -- Reference BLAS level3 routine --
+*  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
+*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
+*
+*     .. Scalar Arguments ..
+      DOUBLE PRECISION ALPHA,BETA
+      INTEGER K,LDA,LDB,LDC,M,N
+      CHARACTER TRANSA,TRANSB
+*     ..
+*     .. Array Arguments ..
+      DOUBLE PRECISION A(LDA,*),B(LDB,*),C(LDC,*)
+*     ..
+*
+*  =====================================================================
+*
+*     .. External Functions ..
+      LOGICAL LSAME
+      EXTERNAL lsame
+*     ..
+*     .. External Subroutines ..
+      EXTERNAL xerbla
+*     ..
+*     .. Intrinsic Functions ..
+      INTRINSIC max
+*     ..
+*     .. Local Scalars ..
+      DOUBLE PRECISION TEMP
+      INTEGER I,INFO,J,L,NROWA,NROWB
+      LOGICAL NOTA,NOTB
+*     ..
+*     .. Parameters ..
+      DOUBLE PRECISION ONE,ZERO
+      parameter(one=1.0d+0,zero=0.0d+0)
+*     ..
+*
+*     Set  NOTA  and  NOTB  as  true if  A  and  B  respectively are not
+*     transposed and set  NROWA and NROWB  as the number of rows of  A
+*     and  B  respectively.
+*
+      nota = lsame(transa,'N')
+      notb = lsame(transb,'N')
+      IF (nota) THEN
+          nrowa = m
+      ELSE
+          nrowa = k
+      END IF
+      IF (notb) THEN
+          nrowb = k
+      ELSE
+          nrowb = n
+      END IF
+*
+*     Test the input parameters.
+*
+      info = 0
+      IF ((.NOT.nota) .AND. (.NOT.lsame(transa,'C')) .AND.
+     +    (.NOT.lsame(transa,'T'))) THEN
+          info = 1
+      ELSE IF ((.NOT.notb) .AND. (.NOT.lsame(transb,'C')) .AND.
+     +         (.NOT.lsame(transb,'T'))) THEN
+          info = 2
+      ELSE IF (m.LT.0) THEN
+          info = 3
+      ELSE IF (n.LT.0) THEN
+          info = 4
+      ELSE IF (k.LT.0) THEN
+          info = 5
+      ELSE IF (lda.LT.max(1,nrowa)) THEN
+          info = 8
+      ELSE IF (ldb.LT.max(1,nrowb)) THEN
+          info = 10
+      ELSE IF (ldc.LT.max(1,m)) THEN
+          info = 13
+      END IF
+      IF (info.NE.0) THEN
+          CALL xerbla('DGEMM ',info)
+          RETURN
+      END IF
+*
+*     Quick return if possible.
+*
+      IF ((m.EQ.0) .OR. (n.EQ.0) .OR.
+     +    (((alpha.EQ.zero).OR. (k.EQ.0)).AND. (beta.EQ.one))) RETURN
+*
+*     And if  alpha.eq.zero.
+*
+      IF (alpha.EQ.zero) THEN
+          IF (beta.EQ.zero) THEN
+              DO 20 j = 1,n
+                  DO 10 i = 1,m
+                      c(i,j) = zero
+   10             CONTINUE
+   20         CONTINUE
+          ELSE
+              DO 40 j = 1,n
+                  DO 30 i = 1,m
+                      c(i,j) = beta*c(i,j)
+   30             CONTINUE
+   40         CONTINUE
+          END IF
+          RETURN
+      END IF
+*
+*     Start the operations.
+*
+      IF (notb) THEN
+          IF (nota) THEN
+*
+*           Form  C := alpha*A*B + beta*C.
+*
+              DO 90 j = 1,n
+                  IF (beta.EQ.zero) THEN
+                      DO 50 i = 1,m
+                          c(i,j) = zero
+   50                 CONTINUE
+                  ELSE IF (beta.NE.one) THEN
+                      DO 60 i = 1,m
+                          c(i,j) = beta*c(i,j)
+   60                 CONTINUE
+                  END IF
+                  DO 80 l = 1,k
+                      temp = alpha*b(l,j)
+                      DO 70 i = 1,m
+                          c(i,j) = c(i,j) + temp*a(i,l)
+   70                 CONTINUE
+   80             CONTINUE
+   90         CONTINUE
+          ELSE
+*
+*           Form  C := alpha*A**T*B + beta*C
+*
+              DO 120 j = 1,n
+                  DO 110 i = 1,m
+                      temp = zero
+                      DO 100 l = 1,k
+                          temp = temp + a(l,i)*b(l,j)
+  100                 CONTINUE
+                      IF (beta.EQ.zero) THEN
+                          c(i,j) = alpha*temp
+                      ELSE
+                          c(i,j) = alpha*temp + beta*c(i,j)
+                      END IF
+  110             CONTINUE
+  120         CONTINUE
+          END IF
+      ELSE
+          IF (nota) THEN
+*
+*           Form  C := alpha*A*B**T + beta*C
+*
+              DO 170 j = 1,n
+                  IF (beta.EQ.zero) THEN
+                      DO 130 i = 1,m
+                          c(i,j) = zero
+  130                 CONTINUE
+                  ELSE IF (beta.NE.one) THEN
+                      DO 140 i = 1,m
+                          c(i,j) = beta*c(i,j)
+  140                 CONTINUE
+                  END IF
+                  DO 160 l = 1,k
+                      temp = alpha*b(j,l)
+                      DO 150 i = 1,m
+                          c(i,j) = c(i,j) + temp*a(i,l)
+  150                 CONTINUE
+  160             CONTINUE
+  170         CONTINUE
+          ELSE
+*
+*           Form  C := alpha*A**T*B**T + beta*C
+*
+              DO 200 j = 1,n
+                  DO 190 i = 1,m
+                      temp = zero
+                      DO 180 l = 1,k
+                          temp = temp + a(l,i)*b(j,l)
+  180                 CONTINUE
+                      IF (beta.EQ.zero) THEN
+                          c(i,j) = alpha*temp
+                      ELSE
+                          c(i,j) = alpha*temp + beta*c(i,j)
+                      END IF
+  190             CONTINUE
+  200         CONTINUE
+          END IF
+      END IF
+*
+      RETURN
+*
+*     End of DGEMM
+*
+      END
