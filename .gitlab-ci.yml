@@ -229,47 +229,6 @@ intel-classic-mpi:
     - ctest -j 4 --timeout 120 --output-on-failure -L essential
   interruptible: true
 
-gcc-5:
-  image: fedora:23
-  variables:
-    DALTON_LAUNCHER: ""
-    OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-2xlarge-amd64
-  rules:
-    - when: always
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  script:
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
-                   -DENABLE_PDE=ON
-    - cd build
-    - make -j 32
-    - ctest -j 16 --output-on-failure -L essential -E rsp_mnf
-  interruptible: true
-
-gcc-5-int64:
-  image: fedora:23
-  variables:
-    DALTON_LAUNCHER: ""
-    OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-2xlarge-amd64
-  rules:
-    - when: always
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  script:
-    - dnf install -y -q lapack64 lapack64-devel
-    - alternatives --install /usr/bin/python python /usr/bin/python3 1
-    - python setup --int64 --blas=none --lapack=builtin --explicit-libs="-lopenblas64" --type=release
-    - cd build
-    - make -j 32
-    - ctest -j 16 --timeout 120 --output-on-failure -L essential -E rsp_mnf
-  interruptible: true
-
 gcc-6:
   image: fedora:25
   variables:
