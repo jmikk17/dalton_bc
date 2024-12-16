@@ -90,36 +90,30 @@ C
       DIMENSION C(*), XNDXCI(*), WORK(*)
 C
 C Used from common blocks:
-C  INFINP : LSYM
+C  INFINP : LSYM, ISPIN
+C  INFVAR : NCONF
 C  INFORB : MULD2H
 C
 #include "maxorb.h"
 #include "infinp.h"
 #include "inforb.h"
+#include "infvar.h"
 #include "infpri.h"
 #include "ciinfo.h"
-#include "priunit.h"
 #include "dummy.h"
 C
       integer :: xctype1, xctype2
       MAXPWF = 100
 C
-      IF ( NASHT .GT. 1 ) THEN
+      IF ( NASHT .EQ. 1 ) THEN
+         WRITE(IOUT,50)C(1)
+   50    FORMAT(/'  Configuration no. 1 out of 1, coefficient',F10.6)
+      ELSE IF ( NASHT .GT. 1 ) THEN
          IF (FLAG(27)) THEN
 C           ... use determinant expansion
             ICSF = 0
          ELSE
             ICSF = 1
-#if defined (VAR_OLDCODE)
-#include "cinfo.h"
-            WRITE (IOUT,'(/A/A)')
-     *         ' Print of vector in CSF expansion not'//
-     *         ' fully implemented yet.',
-     *         ' (No decomposition in spin-couplings)'
-            NCSF = NCSASM(LSYM)
-            CALL PRVEC(NCSF,C,1,THPWF,MAXPWF,IOUT)
-            CALL PRMGN(NCSF,C,1,12,IOUT)
-#endif
          END IF
          if(ci_program .eq. 'LUCITA   ')then
            if(icsf .ne. 0) 
@@ -161,10 +155,33 @@ C           ... use determinant expansion
          else if(ci_program .eq. 'SIRIUS-CI')then
            CALL ANACIN(C,LSYM,THPWF,MAXPWF,XNDXCI,MULD2H,IOUT,ICSF)
 C          CALL ANACIN(CIVEC,ICSYM,THRES,MAXTRM,XNDXCI,SYMPRO,IOUT,INCSFB)
-         end if
-      ELSE
-         WRITE(IOUT,50)C(1)
-   50    FORMAT(/'  Configuration no. 1 out of 1, coefficient',F10.6)
+C
+C          Warn if singlet requested, but triplet combination of determinants
+C          (In determinant basis, triplet states for M_S = 0 have coefficients with
+C           same absolute value but opposite signs when switching alpha- and beta-strings.
+C           For singlet states they have same sign.)
+C
+            IF (ISPIN .EQ. 1) THEN ! if singlet
+               XMIN = 0.0D0
+               XMAX = 0.0D0
+               DO I = 1, NCONF
+                  XMAX = MAX(XMAX, C(I))
+                  XMIN = MIN(XMIN, C(I))
+               END DO
+               IF (ABS(XMAX+XMIN) .LT. 1.D-14) THEN
+                  NWARN = NWARN + 1
+                  WRITE(IOUT,'(/A//A//A)')
+     &            '@ WARNING : This M_S=0 CI determinant vector is '//
+     &               'not a singlet state (S=0)',
+     &            '@ WARNING : It is probably a triplet state (S=1) '//
+     &               'but it might also have S=3, or S=5, or ...',
+     &            '@ WARNING : If you wanted a singlet state, '//
+     &               'then use CSFs or specify .PLUS COMBINATIONS'
+               END IF
+            END IF
+         else
+            CALL QUIT('ERROR: Unknown CI program '//ci_program)
+         end if ! LUCITA .or. SIRIUS-CI
       END IF
 C
       RETURN
@@ -179,8 +196,8 @@ C Revision 910812-hjaaj: transfer ILTSOB to ANACI2 and ANACSF
 C
 #include "implicit.h"
 C
-      DIMENSION CIVEC(*),XNDXCI(*)
-      INTEGER   SYMPRO(8,8)
+      REAL*8    CIVEC(*),THRES,XNDXCI(*)
+      INTEGER   ICSYM,SYMPRO(8,8),MAXTRM,IOUT,INCSFB
 C
 #include "mxpdim.h"
 #include "ciinfo.h"
@@ -193,7 +210,6 @@ c remco
 #include "maxorb.h"
 #include "infinp.h"
 #include "infvar.h"
-#include "priunit.h"
 c einde remco
       IF(INCSFB.EQ.0) THEN
 C. SD basis
@@ -213,7 +229,7 @@ C. SD basis
      &              NAEL+NBEL,THRES,MAXTRM,XNDXCI(KLTSOB),IOUT)
 
         if (DONEVPT) then
-           write(lupri,100)
+           write(iout,100)
            allocate(detvec(ncdets))
            allocate(cvec(ncdets))
            call dcopy(nconf,civec,1,cvec,1)
@@ -258,7 +274,7 @@ C
 #include "strnum.h"
 #include "spinfo.h"
 #include "ciinfo.h"
-      DIMENSION ICONF(*),IPROCS(*),ILTSOB(*)
+      INTEGER   ICONF(*),IPROCS(*),ILTSOB(*),IOUT
       DIMENSION CIVEC(*)
 C
       NCIVAR = NCSASM(IREFSM)
@@ -364,8 +380,10 @@ C
          ISUM = ISUM + INRANG
   200 CONTINUE
 C
-      WRITE(IOUT,*) ' Number of coefficients less than 10^-11 times ',
-     & 'norm is ',ICSF - ISUM
+      IF (ISUM .NE. ICSF) THEN
+         WRITE(IOUT,'(A,I0)') ' Number of coefficients less than '//
+     &    '10^-11 times norm is ',ICSF - ISUM
+      END IF
 C
       RETURN
       END
@@ -375,7 +393,7 @@ C  /* Deck anaci2 */
      &                 ICSM,NCIVAR,ICOMBI,IASTR,IBSTR,ILTSOB,IOUT)
 C
 C ANALYZE CI VECTOR :
-C       PRINT atmost MAXTRM DETERMINANTS OR COMBINATIONS
+C       PRINT at most MAXTRM DETERMINANTS OR COMBINATIONS
 C       with COEFFICIENTS LARGER THAN THRES.
 C
 C       NUMBER OF COEFFICIENTS OF EACH MAGNITUDE
@@ -391,7 +409,7 @@ C
 #include "maxorb.h"
 #include "infinp.h"
 #include "infpt2.h"
-      INTEGER SYMPRO(8,8)
+      INTEGER   SYMPRO(8,8), IOUT
       DIMENSION CIVEC(*)
       DIMENSION NSSOA(NOCTPA,MAXSYM),NSSOB(NOCTPB,MAXSYM)
       DIMENSION ISSOA(NOCTPA,MAXSYM),ISSOB(NOCTPB,MAXSYM)
@@ -414,35 +432,8 @@ C
       if (owrite) CALL GPOPEN(
      *   LUN98,'DETSTR','UNKNOWN',' ','UNFORMATTED',IDUMMY,.FALSE.)
 
-
       VNRM = DNRM2(NCIVAR,CIVEC,1)
-C
-C     Warn if M_S = 0 and triplet combination of determinants
-C     (In determinant basis, triplet states for M_S = 0 have coefficients with
-C      same absolute value but opposite signs when switching alpha- and beta-strings.
-C      For singlet states they have same sign.)
-C
-      IF (NAEL .EQ. NBEL .AND. ICOMBI .EQ. 0) THEN
-      IF (ABS(1.0D0-VNRM) .LT. 1.D-14) THEN ! only print for normalized CI vectors
-         XMIN = 0.0D0
-         XMAX = 0.0D0
-         DO I = 1, NCIVAR
-            XMAX = MAX(XMAX, CIVEC(I))
-            XMIN = MIN(XMIN, CIVEC(I))
-         END DO
-         IF (ABS(XMAX+XMIN) .LT. 1.D-14) THEN
-            NWARN = NWARN + 1
-            WRITE(LUPRI,'(//A/)')
-     &      '@ WARNING : This M_S=0 CI determinant vector is '//
-     &         'not a singlet state (S=0)',
-     &      '@ WARNING : It is probably a triplet state (S=1) '//
-     &         'but it might also have S=3, or S=5, or ...',
-     &      '@ WARNING : If you wanted a singlet state, '//
-     &         'then use CSFs or specify .PLUS COMBINATIONS'
-         END IF
-      END IF
-      END IF
-c
+
       ITRM = 0
       IDET = 0
       IIDET = 0
@@ -586,8 +577,10 @@ C
          ISUM = ISUM + INRANG
   200 CONTINUE
 C
-      WRITE(IOUT,*) ' Number of coefficients less than 10^-11 times ',
-     & 'norm is  ',NCIVAR - ISUM
+      IF (ISUM .NE. NCIVAR) THEN
+         WRITE(IOUT,'(A,I0)') ' Number of coefficients less than '//
+     &    '10^-11 times norm is ',ICSF - ISUM
+      END IF
 C
       IF (owrite) CALL GPCLOSE(LUN98,'KEEP')
       RETURN
