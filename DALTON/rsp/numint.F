@@ -459,7 +459,7 @@
 ! defined in here
 ! TODO: some should be allocated with memget instead
 ! 10 used as max l, but currently only imp. for 3 in zeffini
-      integer   npoint,lmax(max_atm),ipt
+      integer   npoint,lmax(max_atm),ipt,tmp2
       real*8    zan(max_atm),qatm(max_atm),qtmp(max_atm),
      &          zeff(10,max_atm),zstmp(10,max_atm),
      &          qshell(10,max_atm),qstmp(10,max_atm),
@@ -511,7 +511,7 @@
 11       continue
          ! could make a block list here, storing nr of points in each block
          ! which could be used to check for blocking later
-         read(luddump) npoint, tmp ! number of ao products
+         read(luddump) npoint, tmp2 ! number of ao products
          if (npoint.gt.0) then
             read(luddump) tmp ! gao index array
             end_pnt = end_pnt + npoint
@@ -1067,7 +1067,7 @@ c     end kitter loop
          if (b_points .eq. 0) cycle
 !        call read_block2(luwdump,gso_prod(1:b_points,1:b_gsoprod),
 !    &                    mbis_weight(1:b_points,1:natmlbl),
-         call read_block2(luwdump,gso_prod,mbis_weight,
+         call read_block(luwdump,gso_prod,mbis_weight,
      &                    points_read,b_gsoprod,b_points,
      &                    cor_idx,atm_idx,natmlbl)
 !        do i = 1,b_points
@@ -1118,7 +1118,7 @@ c     end kitter loop
       return
       end
 
-      subroutine read_block2(luwdump,gso_prod,mbis_weight,points_read,
+      subroutine read_block(luwdump,gso_prod,mbis_weight,points_read,
      &      b_gsoprod,b_points,cor_idx,atm_idx,natmlbl)
 #include "implicit.h"
 #include "mxcent.h"
@@ -1175,79 +1175,10 @@ c     end kitter loop
       return
       end
 
-
-
-      subroutine read_block(luddump,luwdump,gso_prod,int_weight,
-     &      mbis_weight,max_block,points_read,npoints,block_size,
-     &      cor_idx,atm_idx,natmlbl)
-#include "implicit.h"
-#include "mxcent.h"
-#include "nuclei.h"
-#include "inforb.h"
-#include "priunit.h"
-! incoming      
-      integer luddump, luwdump, max_block, points, block_size,
-     &         points_read, cor_idx(natmlbl), atm_idx(natmlbl),
-     &         natmlbl
-      real*8   int_weight(max_block),
-     &         mbis_weight(max_block,natmlbl), 
-     &         gso_prod(nnbasx,max_block)
-! in here
-      integer points_remaining, i, j
-      real*8 tmp, tmp_weight(nucdep), cor(3)
-
-      points_remaining = npoints - points_read
-      max_read = min(points_remaining, max_block)
-
-! 0 initilization important for the final read, which does not fill entire matrix
-      mbis_weight = 0.0d0
-      gso_prod = 0.0d0
-
-      if (maxval(cor_idx) .eq. 0) then
-         if (nucdep .eq. natmlbl) then
-            do i=1,max_read
-               read(luddump) cor(1), cor(2), cor(3),int_weight(i),
-     &         tmp, (gso_prod(j,i), j=1,nnbasx) ! tmp for rho
-               read(luwdump) (mbis_weight(i,j), j=1,nucdep)
-            enddo
-         else
-            do i=1,max_read
-               read(luddump) cor(1), cor(2), cor(3),int_weight(i),
-     &         tmp, (gso_prod(j,i), j=1,nnbasx)
-               read(luwdump) (tmp_weight(j), j=1,nucdep)
-               do k=1,natmlbl
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
-               enddo
-            enddo
-         endif
-      else
-         do i=1,max_read
-            read(luddump) cor(1), cor(2), cor(3), int_weight(i),
-     &      tmp, (gso_prod(j,i), j=1,nnbasx)
-            read(luwdump) (tmp_weight(j), j=1,nucdep)
-            do k=1,natmlbl
-               if (cor_idx(k) .eq. 0) then
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
-               else
-                  dist = cor(cor_idx(k)) - cord(cor_idx(k),atm_idx(k))
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k)) * dist
-               endif
-            enddo
-         enddo
-      endif
-
-      points_read = points_read + max_read
-      ! block_size always = max_block except in the last read
-      block_size = max_read
-      write(*,*) 'block size:', block_size
-
-      return
-      end
-
       SUBROUTINE dgemm_test(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,
      +         BETA,C,LDC)
 *
-*  !!! COPY OF BLAS ROUTINE !!! USED FOR PROFILING PURPOSES !!!
+*  !!! COPY OF BLAS ROUTINE !!! USED FOR PROFILING PURPOSES ONLY !!!
 *  -- Reference BLAS level3 routine --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
