@@ -18,9 +18,10 @@
 #include "inftap.h"
 #include "inflr.h"
 #include "priunit.h"
+#include "dftbuf.h"
 ! Used from include:
 ! implicit.h:     bad coding practice
-! dftcom.h:       dftgrid_done_old
+! dftcom.h:       dftgrid_done_old, mxbllen
 ! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht (ccorb.h for cc?)
 ! dummy.h:        idummy
 ! mxcent.h:       MXCENT, needed for nuclei.h
@@ -43,9 +44,12 @@
       logical cc_flag
       dimension work(lwork), ao_density(n2basx)
 ! defined here:
-      integer luddump, luwdump, kfrsav, kfree, lfree, nbuf
+      integer luwdump, kfrsav, kfree, lfree, nbuf
       logical save_mem
       character(len=8) label
+      real*8 ele
+
+      external evaluate_blocked_grid
 
 ! option for old or new num_aoint
       save_mem = .false.
@@ -69,40 +73,56 @@
       call gpopen(luprop,'AOPROPER','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
 
-! set up dft orbital common block 
-      call setupsos(0,.false.,idum1,idum2)
+      if (save_mem) then
+         ! set up dft orbital common block 
+         call setupsos(0,.false.,idum1,idum2)
+         ! make dftgrid if first run
+         if (.not. dftgrid_done_old) then
+            call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
+            dftgrid_done_old = .true.
+         end if
+         ! allocate for proccesing of grid data
+         ! make_dftgrid hardcodes limit of points per atom to 1.0d6
+         ! however, can never be more than total grid
+         nbuf = min(1 000 000,ntot_dftgrid)
 
-! make dftgrid if first run
-      if (.not. dftgrid_done_old) then
-         call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
-         dftgrid_done_old = .true.
+         call memget('REAL',kx,nbuf,work,kfree,lfree)
+         call memget('REAL',ky,nbuf,work,kfree,lfree)
+         call memget('REAL',kz,nbuf,work,kfree,lfree)
+         call memget('REAL',kw,nbuf,work,kfree,lfree)
+
+         call memget('REAL',kgso,nbast,work,kfree,lfree)
+         call memget('REAL',kgso_prod,nnbasx,work,kfree,lfree)
+         call memget('INT4',kcnt,nbast,work,kfree,lfree) 
+         call memget('REAL',kdga,nbast,work,kfree,lfree) 
+
+         ! evaluate orbitals and density in grid points 
+         call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
+     &      work(kgso),work(kgso_prod),work(kcnt),work(kdga),ao_density,
+     &      nbuf,work,lwork,cc_flag,save_mem,ntot_screened)
+
+         call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
+         ntot_dftgrid = ntot_screened
+! new blocked grid test
+      else
+         ntot_dftgrid = 0
+         call memget('REAL',kprod,mxbllen*nnbasx,work,kfree,lfree)
+         write(*,*) 'dogga:', dogga
+         if (dogga) then !dogga isnt set properly, so this doesnt work
+            call dftint(ao_density,1,-1,.false.,work(kfree),lfree,
+     &               evaluate_blocked_grid,work(kprod),ele)
+         else
+            call dftint(ao_density,1,0,.false.,work(kfree),lfree,
+     &               evaluate_blocked_grid,work(kprod),ele)
+         endif
+         write(luddump) -1, -1
+         call memrel('dftint',work,kfrsav,kfrsav,kfree,lfree)
       end if
 
-! allocate for proccesing of grid data
-! make_dftgrid hardcodes limit of points per atom to 1.0d6
-! however, can never be more than total grid
-      nbuf = min(1 000 000,ntot_dftgrid)
-
-      call memget('REAL',kx,nbuf,work,kfree,lfree)
-      call memget('REAL',ky,nbuf,work,kfree,lfree)
-      call memget('REAL',kz,nbuf,work,kfree,lfree)
-      call memget('REAL',kw,nbuf,work,kfree,lfree)
-
-      call memget('REAL',kgso,nbast,work,kfree,lfree)
-      call memget('REAL',kgso_prod,nnbasx,work,kfree,lfree)
-      call memget('INT4',kcnt,nbast,work,kfree,lfree) 
-      call memget('REAL',kdga,nbast,work,kfree,lfree) 
-
-! evaluate orbitals and density in grid points 
-      call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
-     &   work(kgso),work(kgso_prod),work(kcnt),work(kdga),ao_density,
-     &   luddump,nbuf,work,lwork,cc_flag,save_mem,ntot_screened)
-
-      call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
-
 ! allocate for MBIS populations routine 
-      ! maybe move these to a common block? or remove all together?
-      max_pnt = min(1 000 000,ntot_screened)
+      ! need a npoints common block thing to allocate properly here
+      !max_pnt = min(1 000 000,ntot_screened)
+      max_pnt = min(1 000 000,ntot_dftgrid)
       max_atm = min(50,nucdep)
          
       write(*,*) 'lfree before mbis', lfree
@@ -122,7 +142,7 @@
 ! evaluate MBIS pop. weights in each point
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
-     &   max_pnt,max_atm,luddump,luwdump)
+     &   max_pnt,max_atm,luwdump,save_mem)
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 ! allocate for and calculate ao integrals, memory saving version
@@ -171,13 +191,12 @@
             enddo
          end if
          call memget('REAL',kint,nnbasx*natmlbl,work,kfree,lfree)
-         call memget('REAL',kgso_prod,nnbasx*nbuf2,work,kfree,lfree)
-         call memget('REAL',kw,nbuf2,work,kfree,lfree)
-         call memget('REAL',kw_mbis,natmlbl*nbuf2,work,kfree,lfree)
+         call memget('REAL',kint2,nnbasx*natmlbl,work,kfree,lfree)
+         call memget('REAL',kgso_prod,nnbasx*mxbllen,work,kfree,lfree)
+         call memget('REAL',kw_mbis,natmlbl*mxbllen,work,kfree,lfree)
 
-         call num_aoint_opt(work(kint),work(kgso_prod),
-     &                  work(kw),work(kw_mbis),
-     &                  luddump,luwdump,cc_flag,nbuf2,natmlbl)
+         call num_aoint_opt(work(kint),work(kint2),work(kgso_prod),
+     &                  work(kw_mbis),luwdump,cc_flag,nbuf2,natmlbl)
 
       end if
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
@@ -192,9 +211,95 @@
       return
       end
 
+      subroutine evaluate_blocked_grid(nblen,nblcnt,nblocks,ldaib,gao,
+     &                                 rhoa,grada,dst,vfa,xcpot,
+     &                                 coord,wght,gao_prod)
+#include "implicit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "maxorb.h"
+#include "maxaqn.h"
+#include "inforb.h"
+
+#include "dftinf.h"
+#include "energy.h"
+#include "symmet.h"
+#include "shells.h"
+#include "dftcom.h"
+
+#include "inftap.h"
+      DIMENSION GAO(NBLEN,NBAST,*), COORD(3,NBLEN),WGHT(NBLEN),
+     &          RHOA(NBLEN), GRADA(3,NBLEN),
+     &          NBLCNT(8),NBLOCKS(2,LDAIB,8),
+     &          DST(NATOMS), VFA(NBLEN),XCPOT(NBLEN)
+      LOGICAL ACTIVE(0:NBAST)
+      dimension gao_prod(mxbllen,nnbasx)
+      integer full_idx(nnbasx),idx
+
+      if (maxrep .ne. 0) 
+     &   call quit("no symmetry in evaluate_blocked_grid")
+
+      ntot_dftgrid = ntot_dftgrid + nblen
+
+      do i = 0,nbast ! no clue why from 0?
+         active(i) = .false.
+      enddo
+      do isym = 1,nsym
+         do ibla = 1,nblcnt(isym)
+            do i = nblocks(1,ibla,isym),nblocks(2,ibla,isym)
+               active(i) = .true.
+            enddo
+         enddo
+      enddo
+
+      idx = 0
+      do i=1,nbast
+         if (active(i)) then
+            do j=1,i
+               if (active(j)) then
+                  idx = idx + 1
+                  full_idx(idx) = ((i*i-i)/2)+j
+               endif
+            enddo
+         endif
+      enddo
+
+      write(luddump) nblen, idx ! number of grid points, and number of ao products
+      write(luddump) (full_idx(i),i=1,idx)
+
+      gao_prod = 0.0d0
+      do k=1,nblen
+         idx = 0
+         do i=1,nbast
+            if (active(i)) then
+               do j=1,i
+                  if (active(j)) then
+                     idx = idx+1
+                     gao_prod(k,idx) = gao(k,i,1)*gao(k,j,1)*wght(k)  
+                  endif
+               enddo
+            endif
+         enddo
+      enddo
+
+      write(luddump) coord(1,:), coord(2,:), coord(3,:), 
+     &               wght, rhoa, (gao_prod(1:nblen,i),i=1,idx)
+!     write(*,*) 'test1:', nblen, idx
+!     write(*,*) 'test1:', (gao_prod(1:nblen,i),i=1,idx)
+
+!     write(*,*) 'wght and rhoa'
+!     write(*,*) (wght(j),j=1,nblen)
+!     write(*,*) (rhoa(j),j=1,nblen)
+
+      ! print:
+      ! npnts, t/f list or maybe index of the ones that are true?
+      ! corxyz, w, rho, gso_prod
+      
+      return
+      end
 
       subroutine evaluate_grid(corx,cory,corz,int_weight,
-     &   gso,gso_prod,ncnt,dmatgao,ao_density,luddump,nbuf,
+     &   gso,gso_prod,ncnt,dmatgao,ao_density,nbuf,
      &   work,lwork,cc_flag,save_mem,ntot_screened)
 #include "implicit.h"
 #include "dftcom.h"
@@ -203,6 +308,7 @@
 #include "rspprp.h"
 #include "inflr.h"
 #include "priunit.h"
+#include "inftap.h"
 ! Used from include:
 ! implicit.h:     
 ! dftcom.h        dftels, dfthri, dfthr0
@@ -218,7 +324,7 @@
       real*8    corx(nbuf),cory(nbuf),corz(nbuf),int_weight(nbuf),
      &          gso(nbast),ncnt(nbast),dmatgao(nbast),
      &          ao_density(nbast,nbast),work(lwork), gso_prod(nnbasx)
-      integer   luddump,nbuf
+      integer   nbuf
       logical   cc_flag, save_mem
 
 ! defined within routine
@@ -288,19 +394,8 @@
             if (rho .lt. dfthr0) cycle 
             nelctrn = nelctrn + weight*rho
 
-            if (save_mem) then
-               write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
-     &               int_weight(ipnt),rho,(gso(j),j=1,nbast)
-            else
-               do i = 1,nbast
-                  idx = (i*i-i)/2
-                  do j = 1,i
-                     gso_prod(idx+j) = gso(i)*gso(j)*int_weight(ipnt)
-                  enddo
-               enddo
-               write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
-     &               int_weight(ipnt),rho,(gso_prod(j),j=1,nnbasx)
-            endif
+            write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
+     &            int_weight(ipnt),rho,(gso(j),j=1,nbast)
 
 !           write(*,*) ipnt, rho, weight !debug
 
@@ -344,13 +439,14 @@
 
 ! Based on the MBIS article by Verstraelen et.al - doi.org/10.1021/acs.jctc.6b00456
       subroutine mbis_pop(corx,cory,corz,int_weight,rho,
-     &                 mbis_weight,max_pnt,max_atm,luddump,luwdump)
+     &                 mbis_weight,max_pnt,max_atm,luwdump,save_mem)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
 #include "priunit.h"
 #include "infrsp.h"
 #include "inforb.h"
+#include "inftap.h"
 
       parameter (d0 = 0.0d0, pi=acos(-1.0d0), epi=8.0d0*pi,
      &           qconv=1.0d-9, eps=1.0d-14, dencut=1.0d-10)
@@ -358,7 +454,8 @@
       real*8    corx(max_pnt),cory(max_pnt),corz(max_pnt),
      &          int_weight(max_pnt),rho(max_pnt),
      &          mbis_weight(max_atm)
-      integer   max_pnt,max_atm,luddump
+      integer   max_pnt,max_atm
+      logical   save_mem
 ! defined in here
 ! TODO: some should be allocated with memget instead
 ! 10 used as max l, but currently only imp. for 3 in zeffini
@@ -394,21 +491,48 @@
       rewind(luddump)
       rewind(luwdump)
 
-      suma = d0
       ipt=1
-      start=1
-10    continue
-      read(luddump,end=100) corx(ipt),cory(ipt),corz(ipt),
+      start_pnt=1
+      end_pnt=0
+      suma = d0
+      if (save_mem) then
+10       continue
+         read(luddump,end=100) corx(ipt),cory(ipt),corz(ipt),
      &                      int_weight(ipt),rho(ipt)
-      suma = suma + int_weight(ipt) * rho(ipt)
-      ipt = ipt + 1
-      if (ipt-1.gt.kpt) then
-         write(lupri,*) 'MBIS: too many points',ipt,kpt
-         call quit('MBIS: too many points')
-      endif
-      goto 10
+         suma = suma + int_weight(ipt) * rho(ipt)
+         ipt = ipt + 1
+         if (ipt-1.gt.kpt) then
+            write(lupri,*) 'MBIS: too many points',ipt,kpt
+            call quit('MBIS: too many points')
+         endif
+         goto 10
+100      continue
+      else
+11       continue
+         ! could make a block list here, storing nr of points in each block
+         ! which could be used to check for blocking later
+         read(luddump) npoint, tmp ! number of ao products
+         if (npoint.gt.0) then
+            read(luddump) tmp ! gao index array
+            end_pnt = end_pnt + npoint
+            read(luddump) corx(start_pnt:end_pnt), 
+     &                    cory(start_pnt:end_pnt),
+     &                    corz(start_pnt:end_pnt),
+     &                    int_weight(start_pnt:end_pnt),
+     &                    rho(start_pnt:end_pnt)
+            do i = 1,npoint
+               suma = suma + int_weight(start_pnt+i-1) 
+     &            * rho(start_pnt+i-1)
+            enddo
+            start_pnt = end_pnt + 1
+            go to 11
+         else if (npoint.eq.0) then
+            go to 11
+         end if
+110      continue
+         ipt = end_pnt + 1
+      end if
 
-100   continue
 
 ! tot grid points = ipt-1 due to the way the reading is constructed
       ipt=ipt-1
@@ -848,9 +972,8 @@ c     end kitter loop
       return
       end
 
-      subroutine num_aoint_opt(ao_int, gso_prod,
-     &           int_weight, mbis_weight,
-     &           luddump, luwdump, cc_flag, nbuf2, natmlbl)
+      subroutine num_aoint_opt(ao_int, ao_tmp, gso_prod,
+     &           mbis_weight,luwdump, cc_flag, nbuf2, natmlbl)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -859,17 +982,21 @@ c     end kitter loop
 #include "rspprp.h"
 #include "inflr.h"
 #include "ccrspprp.h"
+#include "inftap.h"
+#include "dftcom.h"
       parameter (d0 = 0.0d0)
 !incoming
-      integer     luddump,luwdump,nbuf2,natmlbl
-      real*8      ao_int(nnbasx,natmlbl),gso_prod(nnbasx,nbuf2),
-     &            int_weight(nbuf2),mbis_weight(nbuf2,natmlbl)
+      integer     luwdump,nbuf2,natmlbl
+      real*8      ao_int(nnbasx,natmlbl),gso_prod(mxbllen,nnbasx),
+     &            ao_tmp(nnbasx,natmlbl),
+     &            mbis_weight(mxbllen,natmlbl)
       logical     cc_flag
 !in here
       character*8 label, rtnlbl(2), prplbl_atm(natmlbl)
       integer     npoints, lbl_idx, block_size, points_read, footer, 
+     &            b_points, b_gsoprod,
      &            atm_idx(natmlbl), atm_chg(natmlbl), cor_idx(natmlbl),
-     &            i,j,k,n,idx,offset
+     &            i,j,k,n,idx,offset, gso_prod_idx(nnbasx)
       real*8      dist,scal,val, ao_test(nnbasx)
 
 ! parse all labels in here, so we can calculate all integrals with minimal file i/o
@@ -923,71 +1050,48 @@ c     end kitter loop
 
       ao_int = d0
       
-! luwdump is file for MBIS weights
-!  first line is npoints
-!  then npoints lines with nucdep MBIS weights
-!  final line footer is -1
       rewind(luwdump)
       read(luwdump) npoints
-! luddump is file for grid 
-!  npoints lines with coords, int. weight, density, orbitals
-!  no header or footer, so reading is controlled through luwdump
       rewind(luddump)
 
       points_read = 0
       block_size = 0
 
+      write(*,*) 'tot pnts', npoints, ntot_dftgrid
+
+      ao_test = d0
+
       do while (points_read .lt. npoints)
-         call read_block(luddump,luwdump,gso_prod,int_weight,
-     &            mbis_weight,nbuf2,points_read,npoints,block_size,
-     &            cor_idx,atm_idx,natmlbl)
+         read(luddump) b_points, b_gsoprod 
+         read(luddump) (gso_prod_idx(k),k=1,b_gsoprod)
+         if (b_points .eq. 0) cycle
+!        call read_block2(luwdump,gso_prod(1:b_points,1:b_gsoprod),
+!    &                    mbis_weight(1:b_points,1:natmlbl),
+         call read_block2(luwdump,gso_prod,mbis_weight,
+     &                    points_read,b_gsoprod,b_points,
+     &                    cor_idx,atm_idx,natmlbl)
+!        do i = 1,b_points
+!           ao_test = ao_test + gso_prod(i,:)
+!        enddo
 
+         ao_tmp = d0
 !        call dgemm('N', 'N', nnbasx, natmlbl, block_size,
-         call dgemm_test('N', 'N', nnbasx, natmlbl, nbuf2,
-     &     1.0d0, gso_prod, nnbasx,
-!    &     mbis_weight, block_size,
-     &     mbis_weight, nbuf2,
-     &     1.0d0, ao_int, nnbasx)
-      enddo
-!        do k=1,natmlbl
-!        ! we first try for only cor_idx = 0
-!        ! from changes to grid routine we now print gso_prod*int_weight(nnbasx,r)
-!        ! so we can multiply with mbis_weight(r,nucdep) to get a (nnbasx,nucdep)
-!           call dgemm('N', 'N', nnbasx, 1, block_size,
-!    &         1.0d0, gso_prod, nnbasx,
-!    &         mbis_weight(1,atm_idx(k)), nbuf2,
-!    &         1.0d0, ao_int(1,k), nnbasx)
-!           
-!        enddo
-!     enddo
+         call dgemm_test('T', 'N', b_gsoprod, natmlbl, b_points,
+     &     1.0d0, gso_prod, mxbllen,!b_gsoprod,
+     &     mbis_weight, mxbllen,
+     &     1.0d0, ao_tmp, nnbasx)
 
-!        do k=1,natmlbl
-!           if (cor_idx(k) .eq. 0) then
-!              do n=1,block_size
-!                 offset = 1 + (n-1)*nbast
-!                 scal = mbis_weight(atm_idx(k),n)*int_weight(n)
-!                 call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
-!                 call dscal(nbast,scal,gso_scaled(offset),1)
-!              enddo
-!           else
-!              do n=1,block_size
-!                 offset = 1 + (n-1)*nbast
-!                 dist = cor(cor_idx(k),n) - cord(cor_idx(k),atm_idx(k))
-!                 scal = mbis_weight(atm_idx(k),n)*int_weight(n)*dist
-!                 call dcopy(nbast,gso(offset),1,gso_scaled(offset),1)
-!                 call dscal(nbast,scal,gso_scaled(offset),1)
-!              enddo
-!           end if
-!           do i=1,nbast
-!              do j=1,i 
-!                 idx = (i*(i-1))/2 + j
-!                 val = ddot_opt(block_size,gso_scaled(i),nbast,
-!    &                       gso(j),nbast) ! takes to long, need to redo mem. layout
-!                 ao_int(idx,k) = ao_int(idx,k) + val
-!              enddo
-!           enddo
-!        enddo
-!     end do
+         points_read = points_read + b_points
+
+         do i=1,b_gsoprod
+            idx = gso_prod_idx(i)
+            do j=1,natmlbl
+               ao_int(idx,j) = ao_int(idx,j) + ao_tmp(i,j)
+            enddo
+         enddo         
+      enddo
+
+!     write(*,*) 'aotest', ao_test
 
       read(luwdump) footer
       if (footer .ne. -1) then
@@ -1003,16 +1107,75 @@ c     end kitter loop
          ao_test = ao_int(1:nnbasx,k)
          call wrtpro(ao_test,nnbasx,prplbl_atm(k),rtnlbl,iprlr)
 !        call wrtpro(ao_int(1,k),nnbasx,prplbl_atm(k),rtnlbl,iprlr)
-         write(*,*) 'ao int test'
-         do i = 1,nnbasx
-            write(*,*) ao_int(i,k)
-         end do
+!        write(*,*) 'ao int test'
+!        do i = 1,nnbasx
+!           write(*,*) ao_int(i,k)
+!        end do
       enddo
 
 !     call newtimer('num_aoint_opt')
 
       return
       end
+
+      subroutine read_block2(luwdump,gso_prod,mbis_weight,points_read,
+     &      b_gsoprod,b_points,cor_idx,atm_idx,natmlbl)
+#include "implicit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "inforb.h"
+#include "priunit.h"
+#include "inftap.h"
+#include "dftcom.h"
+! incoming      
+      integer  luwdump, cor_idx(natmlbl), atm_idx(natmlbl),
+     &         natmlbl, points_read, b_gsoprod, b_points
+      real*8   mbis_weight(mxbllen,natmlbl), 
+     &         gso_prod(mxbllen,nnbasx)
+! in here
+      integer  i, j, k, npoint, gso_prod_idx(nnbasx)
+      real*8   tmp(b_points), tmp_weight(nucdep), cor(3,b_points)
+
+
+      gso_prod = 0.0d0
+      mbis_weight = 0.0d0
+      if (maxval(cor_idx) .eq. 0) then
+         read(luddump) tmp, tmp, tmp, tmp, tmp, 
+     &            (gso_prod(1:b_points,i),i=1,b_gsoprod)
+         if (nucdep .eq. natmlbl) then
+            do i=1,b_points
+               read(luwdump) (mbis_weight(i,j), j=1,nucdep)
+            enddo
+         else
+            do i=1,b_points
+               read(luwdump) (tmp_weight(j), j=1,nucdep)
+               do k=1,natmlbl
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+               enddo
+            enddo
+         endif
+      else
+         ! TODO
+         read(luddump) cor(1,:), cor(2,:), cor(3,:), tmp, tmp, 
+     &            (gso_prod(1:b_points,i),i=1,b_gsoprod)
+         do i=1,b_points
+            read(luwdump) (tmp_weight(j), j=1,nucdep)
+            do k=1,natmlbl
+               if (cor_idx(k) .eq. 0) then
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+               else
+                  dist = cor(cor_idx(k),i) 
+     &                     - cord(cor_idx(k),atm_idx(k))
+                  mbis_weight(i,k) = tmp_weight(atm_idx(k)) * dist
+               endif
+            enddo
+         enddo
+      endif
+
+      return
+      end
+
+
 
       subroutine read_block(luddump,luwdump,gso_prod,int_weight,
      &      mbis_weight,max_block,points_read,npoints,block_size,
@@ -1084,6 +1247,7 @@ c     end kitter loop
       SUBROUTINE dgemm_test(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,
      +         BETA,C,LDC)
 *
+*  !!! COPY OF BLAS ROUTINE !!! USED FOR PROFILING PURPOSES !!!
 *  -- Reference BLAS level3 routine --
 *  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
 *  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
