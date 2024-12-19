@@ -233,8 +233,8 @@
      &          NBLCNT(8),NBLOCKS(2,LDAIB,8),
      &          DST(NATOMS), VFA(NBLEN),XCPOT(NBLEN)
       LOGICAL ACTIVE(0:NBAST)
-      dimension gao_prod(mxbllen,nnbasx)
-      integer full_idx(nnbasx),idx
+      dimension gao_prod(mxbllen*nnbasx)
+      integer full_idx(nnbasx),idx,joint_idx,idx_tot
 
       if (maxrep .ne. 0) 
      &   call quit("no symmetry in evaluate_blocked_grid")
@@ -264,8 +264,10 @@
          endif
       enddo
 
-      write(luddump) nblen, idx ! number of grid points, and number of ao products
-      write(luddump) (full_idx(i),i=1,idx)
+      idx_tot = idx
+
+      write(luddump) nblen, idx_tot ! number of grid points, and number of ao products
+      write(luddump) (full_idx(i),i=1,idx_tot)
 
       gao_prod = 0.0d0
       do k=1,nblen
@@ -275,7 +277,9 @@
                do j=1,i
                   if (active(j)) then
                      idx = idx+1
-                     gao_prod(k,idx) = gao(k,i,1)*gao(k,j,1)*wght(k)  
+                     !joint_idx = k + idx*(nblen-1)
+                     joint_idx = idx + (k-1)*idx_tot
+                     gao_prod(joint_idx) = gao(k,i,1)*gao(k,j,1)*wght(k)
                   endif
                enddo
             endif
@@ -283,7 +287,8 @@
       enddo
 
       write(luddump) coord(1,:), coord(2,:), coord(3,:), 
-     &               wght, rhoa, (gao_prod(1:nblen,i),i=1,idx)
+!    &               wght, rhoa, (gao_prod(1:nblen,i),i=1,idx)
+     &               wght, rhoa, (gao_prod(i),i=1,nblen*idx)
 !     write(*,*) 'test1:', nblen, idx
 !     write(*,*) 'test1:', (gao_prod(1:nblen,i),i=1,idx)
 
@@ -987,9 +992,9 @@ c     end kitter loop
       parameter (d0 = 0.0d0)
 !incoming
       integer     luwdump,nbuf2,natmlbl
-      real*8      ao_int(nnbasx,natmlbl),gso_prod(mxbllen,nnbasx),
+      real*8      ao_int(nnbasx,natmlbl),gso_prod(mxbllen*nnbasx),
      &            ao_tmp(nnbasx,natmlbl),
-     &            mbis_weight(mxbllen,natmlbl)
+     &            mbis_weight(mxbllen*natmlbl)
       logical     cc_flag
 !in here
       character*8 label, rtnlbl(2), prplbl_atm(natmlbl)
@@ -1064,6 +1069,8 @@ c     end kitter loop
       do while (points_read .lt. npoints)
          read(luddump) b_points, b_gsoprod 
          read(luddump) (gso_prod_idx(k),k=1,b_gsoprod)
+         write(*,*) 'gso products:', b_gsoprod, 'out of', nnbasx
+         write(*,*) 'points:', b_points, 'out of', mxbllen
          if (b_points .eq. 0) cycle
 !        call read_block2(luwdump,gso_prod(1:b_points,1:b_gsoprod),
 !    &                    mbis_weight(1:b_points,1:natmlbl),
@@ -1076,9 +1083,9 @@ c     end kitter loop
 
          ao_tmp = d0
 !        call dgemm('N', 'N', nnbasx, natmlbl, block_size,
-         call dgemm_test('T', 'N', b_gsoprod, natmlbl, b_points,
-     &     1.0d0, gso_prod, mxbllen,!b_gsoprod,
-     &     mbis_weight, mxbllen,
+         call dgemm_test('N', 'N', b_gsoprod, natmlbl, b_points,
+     &     1.0d0, gso_prod, b_gsoprod,!b_points,!mxbllen,
+     &     mbis_weight, b_points,
      &     1.0d0, ao_tmp, nnbasx)
 
          points_read = points_read + b_points
@@ -1130,10 +1137,10 @@ c     end kitter loop
 ! incoming      
       integer  luwdump, cor_idx(natmlbl), atm_idx(natmlbl),
      &         natmlbl, points_read, b_gsoprod, b_points
-      real*8   mbis_weight(mxbllen,natmlbl), 
-     &         gso_prod(mxbllen,nnbasx)
+      real*8   mbis_weight(mxbllen*natmlbl), 
+     &         gso_prod(mxbllen*nnbasx)
 ! in here
-      integer  i, j, k, npoint, gso_prod_idx(nnbasx)
+      integer  i, j, k, npoint, gso_prod_idx(nnbasx), joint_idx
       real*8   tmp(b_points), tmp_weight(nucdep), cor(3,b_points)
 
 
@@ -1141,32 +1148,33 @@ c     end kitter loop
       mbis_weight = 0.0d0
       if (maxval(cor_idx) .eq. 0) then
          read(luddump) tmp, tmp, tmp, tmp, tmp, 
-     &            (gso_prod(1:b_points,i),i=1,b_gsoprod)
+     &            (gso_prod(i),i=1,b_gsoprod*b_points)
          if (nucdep .eq. natmlbl) then
             do i=1,b_points
-               read(luwdump) (mbis_weight(i,j), j=1,nucdep)
+               read(luwdump) (mbis_weight(i+(j-1)*b_points), j=1,nucdep)
             enddo
          else
             do i=1,b_points
                read(luwdump) (tmp_weight(j), j=1,nucdep)
                do k=1,natmlbl
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+                  mbis_weight(i+(k-1)*b_points) = tmp_weight(atm_idx(k))
                enddo
             enddo
          endif
       else
          ! TODO
          read(luddump) cor(1,:), cor(2,:), cor(3,:), tmp, tmp, 
-     &            (gso_prod(1:b_points,i),i=1,b_gsoprod)
+     &            (gso_prod(i),i=1,b_gsoprod*b_points)
          do i=1,b_points
             read(luwdump) (tmp_weight(j), j=1,nucdep)
             do k=1,natmlbl
                if (cor_idx(k) .eq. 0) then
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k))
+                  mbis_weight(i+(k-1)*b_points) = tmp_weight(atm_idx(k))
                else
                   dist = cor(cor_idx(k),i) 
      &                     - cord(cor_idx(k),atm_idx(k))
-                  mbis_weight(i,k) = tmp_weight(atm_idx(k)) * dist
+                  mbis_weight(i+(k-1)*b_points) = 
+     &                     tmp_weight(atm_idx(k)) * dist
                endif
             enddo
          enddo
