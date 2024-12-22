@@ -53,6 +53,12 @@ C     Modified: Feb. 2016 E. Hedegaard add spin gradient
 C*****************************************************************************
       implicit none
 #include "priunit.h"
+
+#ifdef VAR_MPI
+#include "mpif.h"
+      integer(mpi_integer_kind) :: ierr_mpi
+#endif
+
 #include "mxcent.h"
 #include "dummy.h"
 ! infpar.h : MYNUM, MASTER, NODTOT
@@ -90,7 +96,7 @@ C*****************************************************************************
       integer :: LWORK, i, IPNT, IPNT_END,
      &           IPNT_ST, IPRINT, IPRINT_x, JDXSAO, JDXTAO, LDUMMY,
      &           LUQUAD, my_first_point, my_last_point, N_RS_GT_RT,
-     &           NORDER, NPNT1, NPNTS, NPNTS_PER_NODE, NPOINT, NSKIP1,
+     &           NORDER, NPNT1, NPNTS, NPNTS_PER_NODE, NSKIP1,
      &           KSO1_gx, KSO1_gy, KSO1_gz
       real*8 :: DELCTRN, EcInt, ELCTRN, ELCTRSKIP, ExInt,
      &          SPINDEN, THRELCTRN, THRINT, WGHT, WGHTC, WGHTX,
@@ -229,57 +235,40 @@ C     Counter for how many times RHO(2) > RHO(1)
       N_RS_GT_RT = 0
 
 C     For quadrature integration
-C
-C     Make quadname: Can take 9999 procs
-C
-      QUADNAME = 'DALTON.QUAD'
-      open(newunit=LUQUAD,file=QUADNAME,status='OLD',
+
+      IF (MYNUM .EQ. MASTER) THEN ! this is nor a parallel run
+         QUADNAME = 'DALTON.QUAD'
+         open(newunit=LUQUAD,file=QUADNAME,status='OLD',
      &   access='SEQUENTIAL',form='UNFORMATTED',READONLY)
-C
-      IF (MYNUM .EQ. MASTER) THEN
-         NPNTS_PER_NODE = NTOT_DFTGRID
+         CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NBUF)
+         close(LUQUAD)
          my_first_point = 1
          my_last_point  = NTOT_DFTGRID
-      ELSE
+      ELSE ! the worker recieves grid points from master
+#ifdef VAR_MPI
+         CALL MPI_BCAST(XYZW,4*NTOT_DFTGRID,MPI_DOUBLE_PRECISION,
+     &       MASTER,MPI_COMM_WORLD,ierr_mpi)
+#endif
          NPNTS_PER_NODE = (NTOT_DFTGRID-1)/NODTOT + 1
          my_first_point = NPNTS_PER_NODE*(MYNUM-1) + 1
          my_last_point  = MIN(NPNTS_PER_NODE*MYNUM, NTOT_DFTGRID)
       END IF
       if (iprint .ge. 5) then
          write(lupri,*)
-     &      'MYNUM,NPNTS_PER_NODE,my_first_point,my_last_point',
-     &       MYNUM,NPNTS_PER_NODE,my_first_point,my_last_point
+     &      'MYNUM,my_first_point,my_last_point',
+     &       MYNUM,my_first_point,my_last_point
          flush(lupri)
       end if
-      NPNTS = 0
-  200 CONTINUE
-      READ(LUQUAD) NPOINT
-      if (iprint .ge. 5) then
-         write(lupri,*) 'MYNUM, NPOINT from LUQUAD',MYNUM,NPOINT
-      end if
 
-      IF (NPOINT.GT.0) THEN
-         NPNT1 = NPNTS + 1       ! first integration point from this record
-         NPNTS = NPNTS + NPOINT  ! last  integration point from this record
-         IPNT_ST  = max(NPNT1,my_first_point) + 1 - NPNT1
-         IPNT_END = min(NPNTS,my_last_point)  + 1 - NPNT1
-         if (iprint .ge. 5) then
-            write(lupri,*)
-     &      'MYNUM,IPNT_ST,IPNT_END', MYNUM,IPNT_ST,IPNT_END
-            flush(lupri)
-         end if
-         IF (IPNT_ST .GT. IPNT_END) THEN
-            if (iprint .ge. 5) write(lupri,*) 'Skipping this record'
-            READ (LUQUAD) ! skip this record
-            GO TO 200
-         END IF
-         CALL REAQUA_srdft(XYZW(1,1),XYZW(1,2),XYZW(1,3),XYZW(1,4),
-     &      LUQUAD,NPOINT)
-!        CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+      IF (ntot_dftgrid.LE.0) THEN
+         CALL QUIT('ERROR: not DFT integration points found')
+      END IF
 
-C   Loop over grid points -----------------------------------------------
+C   ***************************
+C   * Loop over grid points     -----------------------------------------------
+C   ***************************
 
-      DO 300 IPNT = IPNT_ST, IPNT_END
+      DO IPNT = my_first_point, my_last_point
 
 C     Quadrature weight
       WGHT  = WEIGHT(IPNT)
@@ -332,7 +321,7 @@ C     Screening
          NSKIP1 = NSKIP1 + 1
          ELCTRSKIP = ELCTRSKIP + DELCTRN
          THRELCTRN = (THRELCTOT-ELCTRSKIP)/100
-         GO TO 300
+         cycle
 C        ... skip this point, go to next grid point
       END IF
 
@@ -565,14 +554,9 @@ C        Three cases:
        end do
 #endif
 
-  300 CONTINUE
+      END DO !IPNT = my_first_point, my_last_point
 C End of loop over grid points ------------------------------------------------
 C
-         GO TO 200
-      ELSE IF (NPOINT .EQ.0 ) THEN
-         GO TO 200
-      END IF  !NPOINT.GT.0
-
 C Termination --------------------------------------------------------------
 
 #if SRDFT_DEBUG > 21
@@ -588,7 +572,6 @@ C Termination --------------------------------------------------------------
          end do
        end do
 #endif
-      close(LUQUAD)
 
       RESULTS(1) = ELCTRN
       RESULTS(2) = ELCTRSKIP

@@ -903,9 +903,15 @@ C
 C*****************************************************************************
 #include "implicit.h"
 #include "priunit.h"
+
+#ifdef VAR_MPI
+#include "mpif.h"
+      integer(mpi_integer_kind) :: ierr_mpi
+#endif
+
 #include "mxcent.h"
 #include "dummy.h"
-! infpar.h : MYNUM, NODTOT
+! infpar.h : MYNUM, MASTER, NODTOT
 #include "maxorb.h"
 #include "gnrinf.h"
 #include "infpar.h"
@@ -1035,16 +1041,19 @@ C     HJAaJ: skip eval. of neighbour points with same RHO
       NSKIP1 = 0
       NSKIP2 = 0
 
-C     Make quadname: Can take 9999 procs
-
-      QUADNAME = 'DALTON.QUAD'
-      open(newunit=LUQUAD,file=QUADNAME,status='OLD',
-     &   access='SEQUENTIAL',form='UNFORMATTED',READONLY)
-
-      IF (MYNUM .EQ. 0) THEN
+      IF (MYNUM .EQ. MASTER) THEN ! this is not a parallel run
+         QUADNAME = 'DALTON.QUAD'
+         open(newunit=LUQUAD,file=QUADNAME,status='OLD',
+     &      access='SEQUENTIAL',form='UNFORMATTED',READONLY)
+         CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NBUF)
+         close(LUQUAD)
          my_first_point = 1
          my_last_point  = NTOT_DFTGRID
-      ELSE
+      ELSE ! recieve grid points from master
+#ifdef VAR_MPI
+         CALL MPI_BCAST(XYZW,4*NTOT_DFTGRID,MPI_DOUBLE_PRECISION,
+     &     MASTER,MPI_COMM_WORLD,ierr_mpi)
+#endif
          NPNTS_PER_NODE = (NTOT_DFTGRID-1)/NODTOT + 1
          my_first_point = NPNTS_PER_NODE*(MYNUM-1) + 1
          my_last_point  = MIN(NPNTS_PER_NODE*MYNUM, NTOT_DFTGRID)
@@ -1053,26 +1062,16 @@ C     Make quadname: Can take 9999 procs
      &       MYNUM,NPNTS_PER_NODE,my_first_point,my_last_point
       END IF
       NPNTS = 0
-  200 CONTINUE
-      READ(LUQUAD) NPOINT
-CDBG  kpoint = npoint/10
+CDBG  kpoint = ntot_dftgrid/10
 
-      IF (NPOINT.GT.0) THEN
-         NPNT1 = NPNTS + 1       ! first integration point from this record
-         NPNTS = NPNTS + NPOINT  ! last  integration point from this record
-         IPNT_ST  = max(NPNT1,my_first_point) + 1 - NPNT1
-         IPNT_END = min(NPNTS,my_last_point) + 1 - NPNT1
-         if (iprint .gt. 5) write(lupri,*)
-     &      'MYNUM,IPNT_ST,IPNT_END', MYNUM,IPNT_ST,IPNT_END
-         IF (IPNT_ST .GT. IPNT_END) THEN
-            READ (LUQUAD) ! skip this record
-            GO TO 200
-         END IF
-         CALL REAQUA_srdft(XYZW(1,1),XYZW(1,2),XYZW(1,3),XYZW(1,4),
-     &      LUQUAD,NPOINT)
-!        CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
-C   Loop over grid points -----------------------------------------------
-         DO 300 IPNT = IPNT_ST, IPNT_END
+      IF (ntot_dftgrid.LE.0) THEN
+         CALL QUIT('ERROR: not DFT integration points found')
+      END IF
+
+C   ***************************
+C   * Loop over grid points     -----------------------------------------------
+C   ***************************
+         DO IPNT = my_first_point, my_last_point
             IF (IPRINT .GT. 100) THEN
 C              Print grid information
                WRITE (LUPRI,'(I8,4F12.6)')
@@ -1284,16 +1283,8 @@ C                    matrix 2 is DXTAO
                END IF
             ENDIF
 
-  300    CONTINUE
-C End of loop over points ------------------------------------------------
-C
-         GO TO 200
-      ELSE IF (NPOINT .EQ.0 ) THEN
-         GO TO 200
-      END IF
-
- 1000 CONTINUE
-      close(LUQUAD)
+         END DO !IPNT = my_first_point, my_last_point
+C End of loop over grid points ------------------------------------------------
 
       RESULTS(1) = ELCTRN
       RESULTS(2) = ELCTRSKIP
