@@ -55,7 +55,7 @@ C*****************************************************************************
 #include "priunit.h"
 #include "mxcent.h"
 #include "dummy.h"
-! infpar.h : MYNUM, NODTOT
+! infpar.h : MYNUM, MASTER, NODTOT
 #include "maxorb.h"
 #include "gnrinf.h"
 #include "infpar.h"
@@ -87,8 +87,6 @@ C*****************************************************************************
      &          COR(3), RESULTS(11), WORK(LWORK)
 
       character(len=17) :: QUADNAME
-
-      integer, save :: NTOT_DFTGRID_save = -1
 
       integer :: LWORK, i, IPNT, IPNT_END,
      &           IPNT_ST, IPRINT, IPRINT_x, JDXSAO, JDXTAO, LDUMMY,
@@ -204,18 +202,7 @@ C     Initializations -------------------------------------------------------
       ExInt  = D0
       EcInt  = D0
 
-C     DFT grid (NTOT_DFTGRID is the total number of grid points)
-      IF (.NOT.DFTGRID_DONE_OLD .OR. NTOT_DFTGRID_save .LE. 0) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
-         CALL CONDFT
-         NTOT_DFTGRID_save = NTOT_DFTGRID
-         DFTGRID_DONE_OLD = .TRUE.
-      ELSE
-         NTOT_DFTGRID = NTOT_DFTGRID_save
-         ! because wrong NTOT_DFTGRID has been transferred from master in SRDFT_PAR_NODE
-      END IF
-
-C     Electron number
+C     Number of electrons from DFT integration
       ELCTRN = D0
 
 C     Integrated spin density
@@ -240,20 +227,11 @@ C     For quadrature integration
 C
 C     Make quadname: Can take 9999 procs
 C
-      IF (MYNUM .EQ. 0) THEN
-         QUADNAME = 'DALTON.QUAD'
-      ELSE
-         QUADNAME = 'DALTON.QUAD.n'//chrnos(mynum/1000)
-     &     //chrnos((mynum-(mynum/1000)*1000)/100)
-     &     //chrnos((mynum-(mynum/100)*100)/10)
-     &     //chrnos(mynum-(mynum/10)*10)
-      END IF
+      QUADNAME = 'DALTON.QUAD'
+      open(newunit=LUQUAD,file=QUADNAME,status='OLD',
+     &   access='SEQUENTIAL',form='UNFORMATTED',READONLY)
 C
-      LUQUAD = -1
-      CALL GPOPEN(LUQUAD,QUADNAME,'OLD','SEQUENTIAL',
-     &     'UNFORMATTED',IDUMMY,LDUMMY)
-C
-      IF (MYNUM .EQ. 0) THEN
+      IF (MYNUM .EQ. MASTER) THEN
          NPNTS_PER_NODE = NTOT_DFTGRID
          my_first_point = 1
          my_last_point  = NTOT_DFTGRID
@@ -603,7 +581,8 @@ C Termination --------------------------------------------------------------
          end do
        end do
 #endif
-      CALL GPCLOSE(LUQUAD,'KEEP')
+!     CALL GPCLOSE(LUQUAD,'KEEP')
+      close(LUQUAD)
 
       RESULTS(1) = ELCTRN
       RESULTS(2) = ELCTRSKIP

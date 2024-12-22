@@ -759,11 +759,8 @@ C    *              MOISNO,INDXCI,WRK,KFRSAV,LFRSAV,LUPRI,IPRINT)
   900 CONTINUE
       END IF
 C
-C     Generate density and dump to file.
+C Save CI info on SIRIFIC for post-programs
 C
-C      CALL MCRHO(CMO,INDXCI,WRK(KW2),LW2,IPRSIR)
-C
-
       IF (FLAG(4) .AND. FLAG(25)) THEN
 C        ... if (cicalc and save for response) then
          IF (DOCISRDFT) THEN

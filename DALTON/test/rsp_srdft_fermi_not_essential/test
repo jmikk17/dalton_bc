@@ -10,7 +10,7 @@ test = TestRun(__file__, sys.argv)
 
 mc = Filter()
 mc.add(string = 'Final MC-SRDFT energy',
-      rel_tolerance = 1.0e-7)
+      abs_tolerance = 1.0e-6)
 mc.add(string = '-<< FC H 001 ; FC H 001 >>',
       rel_tolerance = 2.0e-4)
 mc.add(string = '-<< FC H 001 ; FC H 002 >>',
@@ -19,7 +19,7 @@ mc.add(string = '-<< FC H 002 ; FC H 002 >>',
       rel_tolerance = 2.0e-4)
 hf = Filter()
 hf.add(string = 'Final HF-SRDFT energy',
-      rel_tolerance = 1.0e-7)
+      abs_tolerance = 1.0e-6)
 hf.add(string = '-<< FC H 001 ; FC H 001 >>',
       rel_tolerance = 2.0e-4)
 hf.add(string = '-<< FC H 001 ; FC H 002 >>',

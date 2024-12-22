@@ -598,6 +598,18 @@ C*****************************************************************************
         CALL OUTPUT(EXCMAT(1,1,2),1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
       END IF
 #endif
+
+C     =============================
+C     Calculate srDFT grid, if not already done
+C     (NTOT_DFTGRID is the total number of grid points)
+C     (only on master, if MPI copy to slaves)
+C     =============================
+      IF (MYNUM .EQ. MASTER .AND. .NOT.DFTGRID_DONE_OLD) THEN
+         CALL MAKE_srDFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
+         CALL CONDFT ! define constants for LYP
+         DFTGRID_DONE_OLD = .TRUE.
+      END IF
+
 !     Shall we go in MPI parallel mode for srdft ?
 
 #ifdef VAR_MPI
@@ -920,8 +932,6 @@ C*****************************************************************************
 
       CHARACTER*17 QUADNAME
 
-      INTEGER, SAVE :: NTOT_DFTGRID_save = -1
-
 #if SRDFT_DEBUG > 0
       write(lupri,*) 'Entered SRDFT1, SRDFT_DEBUG defined =',SRDFT_DEBUG
       WRITE(LUPRI,*) 'SRDFT1: ND_SIM =',ND_SIM
@@ -963,20 +973,6 @@ C*****************************************************************************
 C     IPNTend   = 10210
       IPNTend   = SRDFT_DEBUG
 #endif
-C     =============================
-C     Calculate DFT grid
-C     (NTOT_DFTGRID is the total number of grid points)
-C     =============================
-
-      IF (.NOT.DFTGRID_DONE_OLD .OR. NTOT_DFTGRID_save .LE. 0) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
-         CALL CONDFT
-         NTOT_DFTGRID_save = NTOT_DFTGRID
-         DFTGRID_DONE_OLD = .TRUE.
-      ELSE
-         NTOT_DFTGRID = NTOT_DFTGRID_save
-         ! because wrong NTOT_DFTGRID has been transferred from master in SRDFT_PAR_NODE
-      END IF
 
       LDOGGA = DOGGA .OR. LSRHYBR
 
@@ -1030,18 +1026,9 @@ C     HJAaJ: skip eval. of neighbour points with same RHO
 
 C     Make quadname: Can take 9999 procs
 
-      IF (MYNUM .EQ. 0) THEN
-         QUADNAME = 'DALTON.QUAD'
-      ELSE
-         QUADNAME = 'DALTON.QUAD.n'//chrnos(mynum/1000)
-     &     //chrnos((mynum-(mynum/1000)*1000)/100)
-     &     //chrnos((mynum-(mynum/100)*100)/10)
-     &     //chrnos(mynum-(mynum/10)*10)
-      END IF
-
-      LUQUAD = -1
-      CALL GPOPEN(LUQUAD,QUADNAME,'OLD','SEQUENTIAL',
-     &     'UNFORMATTED',IDUMMY,LDUMMY)
+      QUADNAME = 'DALTON.QUAD'
+      open(newunit=LUQUAD,file=QUADNAME,status='OLD',
+     &   access='SEQUENTIAL',form='UNFORMATTED',READONLY)
 
       IF (MYNUM .EQ. 0) THEN
          my_first_point = 1
@@ -1292,7 +1279,9 @@ C
          GO TO 200
       END IF
 
- 1000 CALL GPCLOSE(LUQUAD,'KEEP')
+ 1000 CONTINUE
+!     CALL GPCLOSE(LUQUAD,'KEEP')
+      close(LUQUAD)
 
       RESULTS(1) = ELCTRN
       RESULTS(2) = ELCTRSKIP

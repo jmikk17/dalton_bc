@@ -18,7 +18,7 @@
 
 
 C*****************************************************************************
-      SUBROUTINE MAKE_DFTGRID(WORK,LWORK,NTOTAL,IPRINT,TEST)
+      SUBROUTINE MAKE_srDFTGRID(WORK,LWORK,NTOTAL,IPRINT,TEST)
 C*****************************************************************************
 C                                                                      
 C     Interface routine for grid points                                
@@ -121,12 +121,9 @@ C..added for the MOLCAS scheme:
 C
 C     Open unit LUQUAD
 C     ================
-C     (When MPI parallel, then GPOPEN adds a node number
-C      as e.g. DALTON.QUAD.n0001 for mynum=1)
 C
-      LUQUAD = -1
-      CALL GPOPEN(LUQUAD,'DALTON.QUAD',
-     &     'UNKNOWN','SEQUENTIAL','UNFORMATTED',IDUMMY,.FALSE.)
+      open(newunit=LUQUAD,file='DALTON.QUAD',
+     &     status='UNKNOWN',access='SEQUENTIAL',form='UNFORMATTED')
       REWIND LUQUAD
 C     
 C
@@ -144,11 +141,11 @@ C
 C     Close unit LUQUAD
 C     =================
 C
-      CALL GPCLOSE(LUQUAD,'KEEP')
+      CLOSE(LUQUAD,status='KEEP')
 
-      CALL TIMER('MAKE_DFTGRID',TIMSTR,TIMEND)
+      CALL TIMER('MAKE_srDFTGRID',TIMSTR,TIMEND)
 
-      CALL MEMREL('MAKE_DFTGRID',WORK,1,1,KFREE,LFREE)
+      CALL MEMREL('MAKE_srDFTGRID',WORK,1,1,KFREE,LFREE)
 
       RETURN
       END
