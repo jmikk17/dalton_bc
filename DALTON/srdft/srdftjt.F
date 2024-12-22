@@ -239,7 +239,7 @@ C     For quadrature integration
       IF (MYNUM .EQ. MASTER) THEN ! this is nor a parallel run
          QUADNAME = 'DALTON.QUAD'
          open(newunit=LUQUAD,file=QUADNAME,status='OLD',
-     &   access='SEQUENTIAL',form='UNFORMATTED',READONLY)
+     &   access='SEQUENTIAL',form='UNFORMATTED')
          CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NBUF)
          close(LUQUAD)
          my_first_point = 1
