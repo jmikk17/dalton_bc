@@ -19,8 +19,8 @@
 
 
 C*****************************************************************************
-      SUBROUTINE SRDFT1JT(ND_SIM,EXCMAT,DMAT,DOLND,CORX,CORY,CORZ,
-     &                  WEIGHT,NBUF,GSO,NCNT,DMATGAOSR,DOGGA,DOERG,
+      SUBROUTINE SRDFT1JT(ND_SIM,EXCMAT,DMAT,DOLND,XYZW,
+     &                  NBUF,GSO,DMATGAOSR,DOGGA,DOERG,
      &                  DO_MOLGRAD,DOATR,TRIPLET,do_metagga,RESULTS,
      &                  WORK,LWORK,IPRINT_in)
 C*****************************************************************************
@@ -81,8 +81,7 @@ C*****************************************************************************
 
       logical :: FROMVX
       real*8 :: EXCMAT(NBAST,NBAST,*), DMAT(N2BASX,*),
-     &          CORX(NBUF), CORY(NBUF), CORZ(NBUF), WEIGHT(NBUF),
-     &          GSO(NBAST*NTYPSO), NCNT(NBAST),
+     &          XYZW(NBUF,4), GSO(NBAST*NTYPSO),
      &          DMATGAOSR(NBAST,2),
      &          COR(3), RESULTS(11), WORK(LWORK)
 
@@ -125,9 +124,15 @@ C     ... GRD2(6) = grdab = RHG(:,3) . RHG(:,4)
 
 #if SRDFT_DEBUG > 10
       integer :: j, k
-      real*8 :: print_thr
-      print_thr = 0.0d0
+      real*8 :: print_thr = 0.0d0
 #endif
+
+!     statement functions (because the four vectors now are in one array XYZW )
+      REAL*8 CORX, CORY, CORZ, WEIGHT
+      CORX(i)   = XYZW(i,1)
+      CORY(i)   = XYZW(i,2)
+      CORZ(i)   = XYZW(i,3)
+      WEIGHT(i) = XYZW(i,4)
 
       IPRINT = MAX(IPRINT_in,SRDFT_DEBUG)
 !     Debug
@@ -268,7 +273,9 @@ C
             READ (LUQUAD) ! skip this record
             GO TO 200
          END IF
-         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
+         CALL REAQUA_srdft(XYZW(1,1),XYZW(1,2),XYZW(1,3),XYZW(1,4),
+     &      LUQUAD,NPOINT)
+!        CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
 
 C   Loop over grid points -----------------------------------------------
 
@@ -297,7 +304,7 @@ C       Is this a bug or feature?
       END IF
       END IF
 
-      CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,NBAST,DOLND,DOGGA,
+      CALL GETSOS(GSO,COR,WORK,LWORK,NBAST,DOLND,DOGGA,
      &            THRINT,IPRINT_x)
 
 C     Density
@@ -581,7 +588,6 @@ C Termination --------------------------------------------------------------
          end do
        end do
 #endif
-!     CALL GPCLOSE(LUQUAD,'KEEP')
       close(LUQUAD)
 
       RESULTS(1) = ELCTRN

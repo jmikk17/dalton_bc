@@ -406,7 +406,7 @@ C
       NEWPRP = .TRUE.
       NEWMAT = .TRUE.
       DFTGRID_DONE = .FALSE.
-      DFTGRID_DONE_OLD = .FALSE.
+      srDFTGRID_done = .FALSE.
 C     ... we need new grid for numerical integrations when new geometry
 C
 C     ***************************************************************

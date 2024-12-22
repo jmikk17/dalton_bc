@@ -902,11 +902,11 @@ if(ENABLE_SRDFT)
         DALTON/srdft/dftdrv_srdft.F
         DALTON/srdft/dftfunjt.F
         DALTON/srdft/dftfun_srdft.F
-        DALTON/srdft/dftgrd_srdft.F
         DALTON/srdft/sirmp2_srdft.F
         DALTON/srdft/sir_srdft.F
         DALTON/srdft/srdft.F
         DALTON/srdft/srdftjt.F
+        DALTON/srdft/srdft_grid.F
         DALTON/srdft/srdft_molgrad.F
         DALTON/srdft/srdft_par.F
         DALTON/srdft/srdftfun.F

@@ -2556,10 +2556,8 @@ C     CALL CLEAR_INCOREMEM()
       END IF
 Cef end
 C ach 
-      IF (DFTRUN .OR. SRDFTRUN) THEN
-         DFTGRID_DONE = .FALSE.
-         DFTGRID_DONE_OLD = .FALSE.
-      END IF
+      DFTGRID_DONE = .FALSE.   ! new grid needed if DFT
+      srDFTGRID_DONE = .FALSE. ! new grid needed if srDFT
       IF (.NOT. EXSIR) THEN
 C
 C        *** For numerical derivatives we might need to  ***

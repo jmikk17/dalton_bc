@@ -62,9 +62,9 @@ C
 C
 C     Calculate grid
 C
-      IF (.NOT.DFTGRID_DONE_OLD) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,1,.FALSE.)
-         DFTGRID_DONE_OLD = .TRUE.
+      IF (.NOT.srDFTGRID_DONE) THEN
+         CALL MAKE_srDFTGRID(WORK,LWORK,1,.FALSE.)
+         srDFTGRID_DONE = .TRUE.
       END IF
 C
       NC0  = 0
@@ -203,7 +203,7 @@ C
             COR(1) = CORX(IPNT)
             COR(2) = CORY(IPNT)
             COR(3) = CORZ(IPNT)
-            CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
+            CALL GETSOS(GSO,COR,WORK,LWORK,
      &                  NBAST,DOLND,DOGGA,THRINT,IPRINT)
 C
 C           Density
@@ -978,7 +978,7 @@ C
       IF (NPOINT.GT.0) THEN
          CALL REAQUA_OLD(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
          DO 300 IPNT = 1, NPOINT
-            CALL DFTAOS(GAO,GAO1,NCNT,CORX(IPNT),CORY(IPNT),CORZ(IPNT),
+            CALL DFTAOS(GAO,GAO1,CORX(IPNT),CORY(IPNT),CORZ(IPNT),
      &                  NBAST,DOLND,IPRINT)
             DO 400 I = 1, NBAST
             DO 400 J = 1, NBAST

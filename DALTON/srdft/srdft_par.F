@@ -235,13 +235,6 @@ C     variables for SRCPBERI
       call getbytespan(HFXFAC, DFTCOMlast, bytesize_mpi)
       call mpi_bcast(HFXFAC, bytesize_mpi, mpi_byte,
      &   MASTER, mpi_comm_world, ierr_mpi)
-      ! master does not know if the grid file
-      ! DALTON.QUAD has been generated for this node or not
-      if (first_call .or. NEWGEO .or. NEWBAS) then
-         DFTGRID_DONE_OLD = .FALSE.
-      else
-         DFTGRID_DONE_OLD = .TRUE.
-      end if
 
 !     4) Make sure /LOGINP/ in infinp.h is known to nodes
 !        (need at least DOHFSRDFT and SRHYBR)
