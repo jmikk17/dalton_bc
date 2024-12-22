@@ -149,7 +149,7 @@ C     variables for SRCPBERI
 
 !     7) finally, transfer the srDFT integration grid
       open(newunit=LUQUAD,file='DALTON.QUAD',status='OLD',
-     &     access='SEQUENTIAL',form='UNFORMATTED',READONLY)
+     &     access='SEQUENTIAL',form='UNFORMATTED')
       CALL GET_srDFTGRID_XYZW_old(WORK,LUQUAD,NTOT_DFTGRID)
 !     CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NTOT_DFTGRID)
       close(LUQUAD)
