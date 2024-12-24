@@ -175,10 +175,10 @@ C
 C
 C     Calculate grid
 C
-      IF (.NOT.DFTGRID_DONE_OLD) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
+      IF (.NOT.srDFTGRID_done) THEN
+         CALL MAKE_srDFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
          CALL CONDFT 
-         DFTGRID_DONE_OLD = .TRUE.
+         srDFTGRID_done = .TRUE.
       END IF
 C
       IF (IPRINT .GT. 100) THEN
@@ -258,7 +258,7 @@ C
             COR(1) = CORX(IPNT)
             COR(2) = CORY(IPNT)
             COR(3) = CORZ(IPNT)
-            CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
+            CALL GETSOS(GSO,COR,WORK,LWORK,
      &                  NBAST,DOLND,DOGGA,THRINT,IPRINT)
 C
 C           Density

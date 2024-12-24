@@ -15,7 +15,7 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-      SUBROUTINE GETSOS(GSO,NCNT,COR,WORK,LWORK,NBAST,
+      SUBROUTINE GETSOS(GSO,COR,WORK,LWORK,NBAST,
      &                  DOLND,DOGGA,DFTHRI,IPRINT)
 C
 C     T. Helgaker feb 01
@@ -27,7 +27,7 @@ C
 #include "mxcent.h"
 C
       LOGICAL DOLND, DOGGA
-      DIMENSION GSO(NBAST*NTYPSO), WORK(LWORK), NCNT(NBAST),COR(3)
+      DIMENSION GSO(NBAST*NTYPSO), WORK(LWORK), COR(3)
 C
 #include "dftinf.h"
 #include "symmet.h"
@@ -36,22 +36,22 @@ C
 C
       IF (MAXREP.EQ.0) THEN
          CALL DFTAOS(GSO(KSO0),GSO(KSO1),GSO(KSO2),GSO(KSOB),GSO(KSOB1),
-     &               NCNT,COR(1),COR(2),COR(3),NBAST,
+     &               COR(1),COR(2),COR(3),NBAST,
      &               DOLND,DOGGA,DFTHRI,IPRINT)
       ELSE
          KGAO = 1
          KLST = KGAO + NTYPSO*NBAST
          IF (KLST.GT.LWORK) CALL STOPIT('DFTAOS','LWORK',KLST,LWORK)
          CALL DFTAOS(WORK(KSO0),WORK(KSO1),WORK(KSO2),WORK(KSOB),
-     &               WORK(KSOB1),NCNT,COR(1),COR(2),COR(3),
+     &               WORK(KSOB1),COR(1),COR(2),COR(3),
      &               NBAST,DOLND,DOGGA,DFTHRI,IPRINT)
-         CALL DFTSOS(WORK(KSO0),GSO,NBAST,NTYPSO,NCNT,IPRINT)
+         CALL DFTSOS(WORK(KSO0),GSO,NBAST,NTYPSO,IPRINT)
       END IF
 C
       RETURN
       END      
 C  /* Deck getaos */
-      SUBROUTINE DFTAOS(GAO,GAO1,GAO2,GAB1,GAB2,NCNT,CORPX,CORPY,CORPZ,
+      SUBROUTINE DFTAOS(GAO,GAO1,GAO2,GAB1,GAB2,CORPX,CORPY,CORPZ,
      &                  NBAST,DOLND,DOGGA,DFTHRI,IPRINT)
 C
 C     T. Helgaker sep 99
@@ -67,7 +67,7 @@ C
 C   
       LOGICAL DOLND, DOGGA
       DIMENSION GAO(NBAST), GAO1(NBAST,3), GAO2(NBAST,6),
-     &          GAB1(NBAST,3), GAB2(NBAST,3,3), NCNT(NBAST)
+     &          GAB1(NBAST,3), GAB2(NBAST,3,3)
 C
 #include "onecom.h"
 #include "lmns.h"
@@ -562,14 +562,14 @@ C
       RETURN
       END
 C  /* Deck dftsos */
-      SUBROUTINE DFTSOS(GAO,GSO,NBAST,NVEC,NCNT,IPRINT)
+      SUBROUTINE DFTSOS(GAO,GSO,NBAST,NVEC,IPRINT)
 C
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
 #include "maxorb.h"
 #include "mxcent.h"
-      DIMENSION GSO(NBAST,NVEC), GAO(NBAST,NVEC), NCNT(NBAST)
+      DIMENSION GSO(NBAST,NVEC), GAO(NBAST,NVEC)
 #include "shells.h"
 #include "pincom.h"
 #include "symmet.h"

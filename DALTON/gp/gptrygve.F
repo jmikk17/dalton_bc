@@ -990,6 +990,8 @@ C
          IF ((IUN .EQ. 5) .OR. (IUN .EQ. 6))
      &        GOTO 10
          IF (IUNTAB(IUN) .NE. 0) GOTO 10
+         inquire(IUN,opened=FEXST)
+         IF (FEXST) GOTO 10 ! this file number has been opened without using GPOPEN
          LUNIT = IUN
       ELSE
 C
@@ -1547,7 +1549,7 @@ C
 
 
       subroutine clear_iuntab()
-#include "implicit.h"
+         integer iuntab, i
          common /unitar/ iuntab(1:99)
          do i = 1, 99
             iuntab(i) = 0

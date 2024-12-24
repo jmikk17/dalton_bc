@@ -18,7 +18,7 @@
 
 
 C*****************************************************************************
-      SUBROUTINE MAKE_DFTGRID(WORK,LWORK,NTOTAL,IPRINT,TEST)
+      SUBROUTINE MAKE_srDFTGRID(WORK,LWORK,NTOTAL,IPRINT,TEST)
 C*****************************************************************************
 C                                                                      
 C     Interface routine for grid points                                
@@ -121,12 +121,9 @@ C..added for the MOLCAS scheme:
 C
 C     Open unit LUQUAD
 C     ================
-C     (When MPI parallel, then GPOPEN adds a node number
-C      as e.g. DALTON.QUAD.n0001 for mynum=1)
 C
-      LUQUAD = -1
-      CALL GPOPEN(LUQUAD,'DALTON.QUAD',
-     &     'UNKNOWN','SEQUENTIAL','UNFORMATTED',IDUMMY,.FALSE.)
+      open(newunit=LUQUAD,file='DALTON.QUAD',
+     &     status='UNKNOWN',access='SEQUENTIAL',form='UNFORMATTED')
       REWIND LUQUAD
 C     
 C
@@ -144,11 +141,11 @@ C
 C     Close unit LUQUAD
 C     =================
 C
-      CALL GPCLOSE(LUQUAD,'KEEP')
+      CLOSE(LUQUAD,status='KEEP')
 
-      CALL TIMER('MAKE_DFTGRID',TIMSTR,TIMEND)
+      CALL TIMER('MAKE_srDFTGRID',TIMSTR,TIMEND)
 
-      CALL MEMREL('MAKE_DFTGRID',WORK,1,1,KFREE,LFREE)
+      CALL MEMREL('MAKE_srDFTGRID',WORK,1,1,KFREE,LFREE)
 
       RETURN
       END
@@ -528,6 +525,65 @@ C*****************************************************************************
       RETURN
       END
 
+      subroutine GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NTOT_srDFTGRID)
+!     H. J. Aa. Jensen, Dec. 2024
+!     Get all the DFT grid point in XYZW(N,4), "the old way"
+
+      implicit none
+      integer :: LUQUAD, NTOT_srDFTGRID
+      real*8  :: XYZW(NTOT_srDFTGRID,4)
+      integer :: NPOINT, i1, iend
+
+      NPOINT = 0
+      iend = 0
+      REWIND LUQUAD
+  100 CONTINUE
+      READ(LUQUAD) NPOINT
+      IF (NPOINT .GT. 0) THEN
+         i1 = iend + 1
+         iend = iend + NPOINT
+         if (iend .gt. NTOT_srDFTGRID) then
+            call quit('GET_srDFTGRID_XYZW_old: iend > NTOT_srdfTGRID')
+         end if
+         READ(LUQUAD) XYZW(i1:iend,1), XYZW(i1:iend,2),
+     &                XYZW(i1:iend,3), XYZW(i1:iend,4)
+         GO TO 100
+      END IF
+      if (iend .ne. NTOT_srDFTGRID) then
+         call quit('GET_srDFTGRID_XYZW_old: iend .ne. NTOT_srdfTGRID')
+      end if
+      RETURN
+      END
+
+      subroutine GET_srDFTGRID_XYZW(XYZW,LUQUAD,NTOT_srDFTGRID)
+!     H. J. Aa. Jensen, Dec. 2024
+!     Get all the DFT grid points in XYZW(4,N)
+
+      implicit none
+      integer :: LUQUAD, NTOT_srDFTGRID
+      real*8  :: XYZW(4,NTOT_srDFTGRID)
+      integer :: NPOINT, i1, iend
+
+      NPOINT = 0
+      iend = 0
+      REWIND LUQUAD
+  100 CONTINUE
+      READ(LUQUAD) NPOINT
+      IF (NPOINT .GT. 0) THEN
+         i1 = iend + 1
+         iend = iend + NPOINT
+         if (iend .gt. NTOT_srDFTGRID) then
+            call quit('GET_srDFTGRID_XYZW: iend > NTOT_srdfTGRID')
+         end if
+         READ(LUQUAD) XYZW(1,i1:iend), XYZW(2,i1:iend),
+     &                XYZW(3,i1:iend), XYZW(4,i1:iend)
+         GO TO 100
+      END IF
+      if (iend .ne. NTOT_srDFTGRID) then
+         call quit('GET_srDFTGRID_XYZW: iend .ne. NTOT_srdfTGRID')
+      end if
+      RETURN
+      END
 
 C*****************************************************************************
       SUBROUTINE PRIQUA(X,Y,Z,WT,LUQUAD)

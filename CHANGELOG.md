@@ -1,6 +1,6 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2024.0-dev] (unreleased)
+## [2025.0-dev] (unreleased)
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
@@ -23,11 +23,13 @@
   - F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. 18, 7384-7393 (2022), https://doi.org/10.1021/acs.jctc.2c00829
 - Polarizable embedding (PE) with periodic boundary conditions (PBC)
   - S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), https://doi.org/10.26434/chemrxiv-2023-fc0gk
+- Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
-### Other new features added
+### Technical improvements
+- Rewritten srDFT integration -- now grid points are read once from file and broadcasted to any MPI workers.
+  Previously all MPI workers read the grid from their own DALTON.QUAD.nnnnn file - this change removes an I/O bottleneck if you run with many workers. (H. J. Aa. Jensen)
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
-- Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba
