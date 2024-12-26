@@ -151,7 +151,7 @@ C
      &            IPRNTB,IPRNTC,IPRNTD,RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &            WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &            DUMMY,.FALSE.,.false.)
+     &            DUMMY,.FALSE.)
 C
       IF (.NOT. NOPV)  CALL GPCLOSE(LUPAO,'DELETE')
       CALL MEMREL('ZFSDRV',WORK,1,1,KFREE,LFREE)

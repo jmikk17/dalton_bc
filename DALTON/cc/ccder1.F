@@ -816,7 +816,7 @@ C        REWIND (LU2DER)
      &            RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &            WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &            DUMMY,RELCAL,.false.)
+     &            DUMMY,RELCAL)
 
       TIM1 = SECOND()
 

@@ -831,7 +831,7 @@ C
      &                        LWRK,ITYPE,MAXDIF,IATOM,NODV,NOPV,.FALSE.,
      &                        TKTIME,RETUR,IPRINT,IPRTYP,
      &                        IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &                        DUMMY,LDUMMY)
+     &                        DUMMY)
                   HFXMU = HFXM0
                   IF (HFXMU.NE.D0) THEN
                      KFCTMP = KLAST
@@ -849,7 +849,7 @@ C
      &                    LWRK,ITYPE,MAXDIF,IATOM,NODV,NOPV,.FALSE.,
      &                    TKTIME,RETUR,IPRINT,IPRTYP,
      &                    IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &                    DUMMY,LDUMMY)
+     &                    DUMMY)
                      CALL DAXPY(NFMAT*N2BASX,1D0,WORK(KFCTMP),1,
      &                    WORK(KFMAT),1)
                      HFXFAC = HFXFC0
@@ -872,7 +872,7 @@ C                IF (.NOT.DOERIP) THEN
      &                          RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &                          WORK(KNPRIM),WORK(KNCONT),
      &                          WORK(KIORBS),IDUMMY,IDUMMY,DUMMY,
-     &                          DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                          DUMMY,DUMMY,DUMMY,.FALSE.)
                     HFXMU = HFXM0
                     IF (HFXMU.NE.D0) THEN
                        HFXFC0 = HFXFAC
@@ -885,7 +885,7 @@ C                IF (.NOT.DOERIP) THEN
      &                             RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &                             WORK(KNPRIM),WORK(KNCONT),
      &                             WORK(KIORBS),IDUMMY,IDUMMY,DUMMY,
-     &                             DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                             DUMMY,DUMMY,DUMMY,.FALSE.)
                        HFXFAC = HFXFC0
                     END IF
 C                ELSE

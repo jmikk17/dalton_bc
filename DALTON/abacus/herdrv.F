@@ -3759,7 +3759,7 @@ C
      &                     RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                     WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                     IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                     .FALSE.,.false.)
+     &                     .FALSE.)
                CALL TIMER('TWOINT',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
                CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3797,7 +3797,7 @@ C
      &                  RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             CALL TIMER('TWOINT short-range',TIMSTR,TIMEND)
             CALL FLSHFO(LUPRI)
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3830,7 +3830,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
             CALL GETTIM(SO2CPU,SO2WAL)
             SOCPU=SO2CPU-SO1CPU
@@ -3874,7 +3874,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             DO2DAR = .FALSE.
             IF (LUINTA .GT. 0) CALL GPCLOSE(LUINTA,'KEEP')
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3920,7 +3920,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             BPH2OO = .FALSE.
             IF (LUINTA .GT. 0) CALL GPCLOSE(LUINTA,'KEEP')
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)

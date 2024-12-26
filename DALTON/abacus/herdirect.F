@@ -247,8 +247,7 @@ C
      &            TKTIME,IPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,RETUR,
      &            IDUMMY,I2TYP,WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),
      &            WORK(KIORBS),
-     &            IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.,
-     &            .false.)
+     &            IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.)
       IF (IPRINT.GT.0) CALL TIMER('GETDIS/TWOINT',TIMSTR,TIMEND)
 C
 C--------------------------------------
@@ -524,7 +523,7 @@ C
      &                  WORK(KNSTAT),DUMMY,LFREE,IDUMMY,IDUMMY,IDUMMY,
      &                  LDUMMY,LDUMMY,LDUMMY,LDUMMY,LDUMMY,
      &                  IPRFCK,IPRTYP,
-     &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,LDUMMY)
+     &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY)
 
          ELSE
 #endif
@@ -734,7 +733,7 @@ C
      &               WORK(KFREE),WORK(KNSTAT),DUMMY,LFREE,ITYPE,MAXDER,
      &               IATOM,NODV,NOPV,NOCONT,TKTIME,RETUR,IPRINT,IPRTYP,
      &               ICEDIF,IFTHRS,
-     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP),LDUMMY)
+     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP))
          IF (IPRINT .GT. 0) THEN
            CALL GETTIM(CPU2,WALL2)
            WALL   = WALL2 - WALL1
@@ -771,7 +770,7 @@ c             calculation.
      &               WORK(KFREE),WORK(KNSTAT),DUMMY,LFREE,ITYPE,MAXDER,
      &               IATOM,NODV,NOPV,NOCONT,TKTIME,RETUR,IPRINT,IPRTYP,
      &               ICEDIF,IFTHRS,
-     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP),LDUMMY)
+     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP))
             IF (IPRINT .GT. 0) THEN
               CALL GETTIM(CPU1,WALL1)
               WALL   = WALL1 - WALL2
@@ -804,8 +803,7 @@ C
      &               IPRNTB,IPRNTC,IPRNTD,RETUR,IDUMMY,I2TYP,
      &               WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),
      &               WORK(KIORBS),ICEDIF,IFTHRS,
-     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP),.FALSE.,
-     &               .false.)
+     &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP),.FALSE.)
          HFXMU = HFXM0
          IF (IPRINT .GT. 0) THEN
            CALL GETTIM(CPU2,WALL2)
@@ -829,7 +827,7 @@ C
      &               WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),
      &               WORK(KIORBS),ICEDIF,IFTHRS,
      &               WORK(KGAB),WORK(KDRAO),DUMMY,WORK(KDSKP),
-     &               .FALSE.,.false.)
+     &               .FALSE.)
             IF (IPRINT .GT. 0) THEN
               CALL GETTIM(CPU1,WALL1)
               WALL   = WALL1 - WALL2
