@@ -275,7 +275,7 @@ C
      &            (NACTAO(I,IELCTR),I=1,NSELCT(IELCTR))
                END IF
             END DO
-            IF (LBFINP .NE. 600) THEN
+            IF (LBFINP .NE. LBUF_AOTWOINT_DEFAULT) THEN
                WRITE (LUPRI,'(A,I5)')
      &            ' Non-default 2-el. integral buffer length:',LBFINP
             END IF
@@ -309,6 +309,8 @@ C  /* Deck er2ini */
 #include "erisel.h"
 #include "ericom.h"
 #include "gnrinf.h"
+
+#include "lbuf_aotwoint.h"
 
       LOGICAL, SAVE :: FIRST_CALL = .TRUE.
 C
@@ -348,7 +350,7 @@ C
       GDER   = .FALSE.
       BDER   = .FALSE.
       EXPERI = .FALSE.
-      LBFINP = 600
+      LBFINP = LBUF_AOTWOINT_DEFAULT
       MAXDSD = 40
 
       MAXDST = MAXDSD

@@ -16,6 +16,30 @@
 !
 !
 
+! =============== hjaaj Dec. 2024 - explanation of TWOINT parameter list ... ======
+! Master control variable is ITYPE, interpreted in subroutine TWORUN (see TWORUN for more info)
+!  ITYPE =  0 : Undifferentiated integrals (or 2-el.Darwin) written on file
+!  ITYPE =  1 : Differentiated integrals written on file (atom JATOM)
+!  ITYPE =  2 : Expectation values of differentiated integrals (all atoms)
+!  ITYPE =  3 : Direct calculation of Fock matrices using skeleton matrix approach (AO basis)
+!  ITYPE =  4 : Integral distributions (all gabcd for fixed ab)
+!  ITYPE =  5, -5 : Derivatives with respect to magnetic fields (London orbitals); -5: DDFOCK true
+!  ITYPE =  6, -6 : Expectation values and Fock matrices of geom. deriv. integrals; -6 : DDFOCK true
+!  ITYPE =  7 : Distributions (all gabcd for fixed a)
+!  ITYPE =  8 : Derivative Fock matrix for atom JATOM
+!  ITYPE =  9 : Direct calculation of Fock matrices in SO basis - FCKOUT not in this version
+!  ITYPE = 10 : Diamagnetic two-electron spin-orbit integrals
+!  ITYPE = 11 : Zero-field electron spin-spin couplings
+!  ITYPE = 12 : FCKTRA in AO basis (new Dec. 2024, hjaaj) - 
+!  ITYPE = 12 : FCKTRA in SO basis (new Dec. 2024, hjaaj)
+!  ITYPE = -2, -20: 2-el. spin-orbit integrals
+!
+!  I2TYP : for 4c, Cholesky, and PDE - special limits on abcd in g_abcd. I2TYP = 0 : no special limits
+!
+! WORK(LWORK) : work array
+! HESSEE : 2-el integral Hessian, only used if DERTWO true
+
+
 C  /* Deck twoint */
       SUBROUTINE TWOINT(WORK,LWORK,HESSEE,FMAT,DMAT,NDMAT,IREPDM,IFCTYP,
      &                  GMAT,INDXAB,NUMDIS,MAXDIS,ITYPE,MAXDIF,JATOM,
@@ -5288,6 +5312,16 @@ C
          MAXDER = 2
          ZFS2EL = .TRUE.
          SQ12EL = .FALSE.
+C
+C     n) FCKTRA distributions all gpqcd for MOs p and q
+C     ==========================================
+C
+      ELSE IF (ITYPE .EQ. 12) THEN ! FCKTRA in AO basis
+         DIRFCK = .TRUE.
+         MAXDER = 0
+      ELSE IF (ITYPE .EQ. 13) THEN ! FCKTRA in SO basis
+         SOFOCK = .TRUE.
+         MAXDER = 0
 C
 C     x) Error
 C     ========
