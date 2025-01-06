@@ -42,7 +42,7 @@
 ! incoming:
       integer lwork
       logical cc_flag
-      dimension work(lwork), ao_density(n2basx)
+      dimension work(lwork), ao_density(nbast,nbast)
 ! defined here:
       integer luwdump, kfrsav, kfree, lfree, nbuf
       logical save_mem
@@ -52,6 +52,7 @@
       external evaluate_blocked_grid
 
 ! option for old or new num_aoint
+! save_mem = true is old imp
       save_mem = .false.
 
 ! timers and memory pointers
@@ -237,11 +238,11 @@
 #include "dftcom.h"
 
 #include "inftap.h"
-      DIMENSION GAO(NBLEN,NBAST,*), COORD(3,NBLEN),WGHT(NBLEN),
-     &          RHOA(NBLEN), GRADA(3,NBLEN),
-     &          NBLCNT(8),NBLOCKS(2,LDAIB,8),
-     &          DST(NATOMS), VFA(NBLEN),XCPOT(NBLEN)
-      LOGICAL ACTIVE(0:NBAST)
+      dimension gao(nblen,nbast,*), coord(3,nblen), wght(nblen),
+     &          rhoa(nblen), grada(3,nblen),
+     &          nblcnt(8), nblocks(2,ldaib,8),
+     &          dst(natoms), vfa(nblen), xcpot(nblen)
+      logical active(0:nbast)
       dimension gao_prod(mxbllen*nnbasx)
       integer full_idx(nnbasx),idx,joint_idx,idx_tot
 
@@ -250,7 +251,7 @@
 
       ntot_dftgrid = ntot_dftgrid + nblen
 
-      do i = 0,nbast ! no clue why from 0?
+      do i = 0,nbast ! why from 0?
          active(i) = .false.
       enddo
       do isym = 1,nsym
@@ -296,19 +297,8 @@
       enddo
 
       write(luddump) coord(1,:), coord(2,:), coord(3,:), 
-!    &               wght, rhoa, (gao_prod(1:nblen,i),i=1,idx)
      &               wght, rhoa, (gao_prod(i),i=1,nblen*idx)
-!     write(*,*) 'test1:', nblen, idx
-!     write(*,*) 'test1:', (gao_prod(1:nblen,i),i=1,idx)
 
-!     write(*,*) 'wght and rhoa'
-!     write(*,*) (wght(j),j=1,nblen)
-!     write(*,*) (rhoa(j),j=1,nblen)
-
-      ! print:
-      ! npnts, t/f list or maybe index of the ones that are true?
-      ! corxyz, w, rho, gso_prod
-      
       return
       end
 

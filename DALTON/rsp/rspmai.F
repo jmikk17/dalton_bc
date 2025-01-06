@@ -199,6 +199,7 @@ C
          if (nisht>0) then
             call memget('REAL',kcmo,ncmot,wrk,kfree,lfree)
             call memget('REAL',kdcao,n2basx,wrk,kfree,lfree) 
+            call dzero(wrk(kdcao),n2basx)
             call rd_sirifc('CMO',found,wrk(kcmo))
             if (.not.found)
      &         call quit('ATMMOM error: CMO not found on SIRIFC')
@@ -209,6 +210,7 @@ C
          if (nasht>0) then
             call memget('REAL',kdv,nnashx,wrk,kfree,lfree) 
             call memget('REAL',kdvao,n2basx,wrk,kfree,lfree) 
+            call dzero(wrk(kdvao),n2basx)
             call rd_sirifc('DV',found,wrk(kdv))
             if (.not.found)
      &         call quit('ATMMOM error: DV not found on SIRIFC')
@@ -217,7 +219,7 @@ C
             call memget('REAL',kdvao,0,wrk,kfree,lfree) 
          end if
          call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
-     &      wrk(kcmo),wrk(kdv),wrk,lwrk)
+     &      wrk(kcmo),wrk(kdv),wrk(kfree),lwrk)
          if (nisht>0 .and. nasht>0) then
             call daxpy(n2basx,1.0d0,wrk(kdvao),1,wrk(kdcao),1)
             call numint_driver(wrk(kdcao),wrk(kfree),lfree,.false.)
