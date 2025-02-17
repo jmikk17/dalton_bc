@@ -929,3 +929,28 @@ if(ENABLE_SRDFT)
         ${DALTON_FREE_FORTRAN_SOURCES}
         ${DALTON_srdft_FREE_SOURCES})
 endif()
+
+# 14.Feb.2024 hjaaj: changed qfitlib from external module to included into Dalton source files
+# The CMAKE code for ENABLE_QFITLIB is inspired by the ENABLE_SRDFT code above.
+if(ENABLE_QFITLIB)
+    message("-- Enable qfitlib module")
+    #add_definitions(-DBUILD_QFITLIB)   # already done in cmake/Definitions.cmake
+    #add_definitions(-DPRG_DALTON)      # already done in cmake/Definitions.cmake
+    set(DALTON_qfitlib_SOURCES
+        DALTON/qfitlib/src/qfit.F90
+        DALTON/qfitlib/src/connolly.F90
+        DALTON/qfitlib/src/linear_solver.F90
+        DALTON/qfitlib/src/input_readers.F90
+        DALTON/qfitlib/src/global_variables.F90
+        DALTON/qfitlib/src/precision.F90
+        DALTON/qfitlib/src/integrals.F90
+        DALTON/qfitlib/src/utilities.F90
+        DALTON/qfitlib/src/io.F90
+        DALTON/qfitlib/src/auxmat.f90
+        DALTON/qfitlib/src/pot.f90
+        DALTON/qfitlib/src/tensor.f90
+        DALTON/qfitlib/qfitlib_interface.F90) # must be last, depends on modules defined in src/
+    set(DALTON_FREE_FORTRAN_SOURCES
+        ${DALTON_FREE_FORTRAN_SOURCES}
+        ${DALTON_qfitlib_SOURCES})
+endif()
