@@ -8,6 +8,7 @@ endif()
 
 if(ENABLE_QFITLIB)
     add_definitions(-DBUILD_QFITLIB)
+    add_definitions(-DPRG_DALTON)
 endif()
 
 add_definitions(-DVAR_MFDS)

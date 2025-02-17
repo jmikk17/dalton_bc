@@ -26,7 +26,7 @@ f.add(string = 'Final HF energy',
       rel_tolerance = 1.0e-9)
 
 # Numerical walk
-f.add(string = 'Walk type: Numerical differentiation',
+f.add(string = 'Nummerical differentiation finished',
       rel_tolerance = 1.0e-2)
 f.add(string = 'Vibrational Raman intensities and optical activity',
       rel_tolerance = 1.0e-2)
