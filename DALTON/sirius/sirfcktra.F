@@ -230,7 +230,7 @@ C           and subtract from input CMO matrix
 
 !     translate sirius integral level code to FCKTRA and NEWTRA integral level code
       IF (IPRTRA .GE. 0)
-     &   WRITE(LUPRI,'(/2A)', advance="no") ' FCKTRA type ',TYPE_TEXT
+     &   WRITE(LUPRI,'(2A)', advance="no") ' FCKTRA type ',TYPE_TEXT
       call N_TRALVL(JTRSIR, NTRLVL)
       IF (.NOT. NEWTRA_USEDRC) THEN
          IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NTRLVL = NTRLVL + 1
