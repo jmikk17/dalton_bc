@@ -454,7 +454,7 @@ C     Bin Gao, Oct. 3, 2011
 !                    245        246        247		  248
      &             '.TWOBYT', '.LFDIPL', '.GZZEFG', '.LAPEFG',
 !                    249
-     &             '.LR-EFG'/
+     &             '.LR-EFG' /
 C
 C
       CALL QENTER('HERINP')
@@ -1347,18 +1347,18 @@ cs            ENDIF
 c Setting all integrals for LRESC-EFG module
             IF (MAXREP.NE.0)
      &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
-               ONEPRP = .TRUE.
-               KINENE = .TRUE. ! 133.Kinenerg
-               DARWIN = .TRUE. ! 164
-               MASSVL = .TRUE. ! 163
-               DIPVEL = .TRUE. ! 108.DipVel
-               NELFLD = .TRUE.
-               DIPLEN = .TRUE.
-               GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
-               LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
-               SPNORB = .TRUE. ! 104 Spin-Orbit
-               EFGCAR = .TRUE. ! 147 Cartesian EFG components
-         GO TO 100
+            ONEPRP = .TRUE.
+            KINENE = .TRUE. ! 133.Kinenerg
+            DARWIN = .TRUE. ! 164
+            MASSVL = .TRUE. ! 163
+            DIPVEL = .TRUE. ! 108.DipVel
+            NELFLD = .TRUE.
+            DIPLEN = .TRUE.
+            GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
+            LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
+            SPNORB = .TRUE. ! 104 Spin-Orbit
+            EFGCAR = .TRUE. ! 147 Cartesian EFG components
+            GO TO 100
       ELSE IF (PROMPT .EQ. '*') THEN
          GO TO 300
       ELSE
