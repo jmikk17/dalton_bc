@@ -4723,10 +4723,10 @@ C
 C     hjaaj: x,y,z normally only interesting for
 C            small molecules, otherwise just a lot of lines.
       IF (QMMM .OR. USE_PELIB()) IPTEST = 0
-      IF ( IPREAD .GT. IPTEST )  THEN
+!     IF ( IPREAD .GT. IPTEST )  THEN
          CALL HEADER('Cartesian Coordinates (a.u.)',1)
          WRITE (LUPRI,'(A,I5)')'  Total number of coordinates:',NCOOR
-      END IF
+!     END IF
 
 C
 C     MIDAS Interface, write out input coordinates for midas.sym analysis

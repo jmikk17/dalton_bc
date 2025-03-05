@@ -196,7 +196,9 @@ C
       if (atmmom) then
          kfree  = 1
          lfree  = lwrk
-         if (nisht>0) then
+         ! loogic removed for now, fails for minimal basis CAS
+         !if (nisht>0) then
+         if (.true.) then
             call memget('REAL',kcmo,ncmot,wrk,kfree,lfree)
             call memget('REAL',kdcao,n2basx,wrk,kfree,lfree) 
             call dzero(wrk(kdcao),n2basx)
@@ -207,7 +209,8 @@ C
             call memget('REAL',kcmo,0,wrk,kfree,lfree)
             call memget('REAL',kdcao,0,wrk,kfree,lfree) 
          end if
-         if (nasht>0) then
+         !if (nasht>0) then
+         if (.true.) then
             call memget('REAL',kdv,nnashx,wrk,kfree,lfree) 
             call memget('REAL',kdvao,n2basx,wrk,kfree,lfree) 
             call dzero(wrk(kdvao),n2basx)
@@ -218,9 +221,11 @@ C
             call memget('REAL',kdv,0,wrk,kfree,lfree) 
             call memget('REAL',kdvao,0,wrk,kfree,lfree) 
          end if
-         call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
+         !call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
+         call fckden(.true.,.true.,wrk(kdcao),wrk(kdvao),
      &      wrk(kcmo),wrk(kdv),wrk(kfree),lwrk)
-         if (nisht>0 .and. nasht>0) then
+         !if (nisht>0 .and. nasht>0) then
+         if (.true.) then
             call daxpy(n2basx,1.0d0,wrk(kdvao),1,wrk(kdcao),1)
             call numint_driver(wrk(kdcao),wrk(kfree),lfree,.false.)
          else if (nisht>0) then

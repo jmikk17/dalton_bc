@@ -18,9 +18,8 @@
 #include "inftap.h"
 #include "inflr.h"
 #include "priunit.h"
-#include "dftbuf.h"
+#include "infpar.h"
 ! Used from include:
-! implicit.h:     bad coding practice
 ! dftcom.h:       dftgrid_done_old, mxbllen
 ! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht (ccorb.h for cc?)
 ! dummy.h:        idummy
@@ -45,14 +44,15 @@
       dimension work(lwork), ao_density(nbast,nbast)
 ! defined here:
       integer luwdump, kfrsav, kfree, lfree, nbuf
-      logical save_mem
+      logical save_mem, dft_isgga, dogga
       character(len=8) label
-      real*8 ele
+      real*8 ele, ele2
 
       external evaluate_blocked_grid
+      EXTERNAL DFT_ISGGA
 
 ! option for old or new num_aoint
-! save_mem = true is old imp
+! save_mem = true is old grid
       save_mem = .false.
 
 ! timers and memory pointers
@@ -106,6 +106,7 @@
          ntot_dftgrid = ntot_screened
 ! new blocked grid test
       else
+         dogga = dft_isgga()
          ntot_dftgrid = 0
          if (cc_flag) then
             do i = 1,nbast
@@ -118,13 +119,17 @@
          end if
          call memget('REAL',kprod,mxbllen*nnbasx,work,kfree,lfree)
          write(*,*) 'dogga:', dogga
-         if (dogga) then !dogga isnt set properly, so this doesnt work
+         call newtimer('START')
+
+         if (dogga) then
             call dftint(ao_density,1,-1,.false.,work(kfree),lfree,
      &               evaluate_blocked_grid,work(kprod),ele)
          else
             call dftint(ao_density,1,0,.false.,work(kfree),lfree,
      &               evaluate_blocked_grid,work(kprod),ele)
          endif
+         call newtimer('dftint')
+
          write(luddump) -1, -1
          call memrel('dftint',work,kfrsav,kfrsav,kfree,lfree)
       end if
@@ -150,9 +155,11 @@
       write(*,*) 'lfree after mbis', lfree
 
 ! evaluate MBIS pop. weights in each point
+      call newtimer('START')
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
      &   max_pnt,max_atm,luwdump,save_mem)
+      call newtimer('mbis')
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 ! allocate for and calculate ao integrals, memory saving version
@@ -205,8 +212,10 @@
          call memget('REAL',kgso_prod,nnbasx*mxbllen,work,kfree,lfree)
          call memget('REAL',kw_mbis,natmlbl*mxbllen,work,kfree,lfree)
 
+         call newtimer('START')
          call num_aoint_opt(work(kint),work(kint2),work(kgso_prod),
      &                  work(kw_mbis),luwdump,cc_flag,nbuf2,natmlbl)
+         call newtimer('num_aoint_opt')
 
       end if
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
@@ -215,7 +224,7 @@
       call gpclose(luddump,'KEEP')
       call gpclose(luwdump,'KEEP')
 
-      call newtimer('numint_driver')
+!     call newtimer('numint_driver')
       call qexit('numint_driver')
 
       return
@@ -735,10 +744,15 @@ c     end kitter loop
 900   continue
 
       write(*,*) ' MBIS converged!'
-
       write(*,*)' '
       write(*,*)' Final converged results'
       write(*,*)' Qatom'
+
+      write(lupri,*) ' MBIS converged!'
+      write(lupri,*)' '
+      write(lupri,*)' Final converged results'
+      write(lupri,*)' Qatom'
+
       do n=1,nat
         qtmp(n)=d0
         do l=1,lmax(n)
@@ -746,6 +760,7 @@ c     end kitter loop
         enddo
         qtmp(n) = nint(zan(n)) - qtmp(n)
         write(*,20)n,qtmp(n)
+        write(lupri,20)n,qtmp(n)
       enddo
 
 ! calculate final mbis weights for print in each point
@@ -1081,8 +1096,7 @@ c     end kitter loop
 !        enddo
 
          ao_tmp = d0
-!        call dgemm('N', 'N', nnbasx, natmlbl, block_size,
-         call dgemm_test2('N', 'T', b_gsoprod, natmlbl, b_points,
+         call dgemm('N', 'T', b_gsoprod, natmlbl, b_points,
      &     1.0d0, gso_prod, b_gsoprod,!b_points,!mxbllen,
      &     mbis_weight, natmlbl, !b_points,
      &     1.0d0, ao_tmp, nnbasx)
@@ -1182,412 +1196,3 @@ c     end kitter loop
       return
       end
 
-      SUBROUTINE dgemm_test(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,
-     +         BETA,C,LDC)
-*
-*  !!! COPY OF BLAS ROUTINE !!! USED FOR PROFILING PURPOSES ONLY !!!
-*  -- Reference BLAS level3 routine --
-*  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
-*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*
-*     .. Scalar Arguments ..
-      DOUBLE PRECISION ALPHA,BETA
-      INTEGER K,LDA,LDB,LDC,M,N
-      CHARACTER TRANSA,TRANSB
-*     ..
-*     .. Array Arguments ..
-      DOUBLE PRECISION A(LDA,*),B(LDB,*),C(LDC,*)
-*     ..
-*
-*  =====================================================================
-*
-*     .. External Functions ..
-      LOGICAL LSAME
-      EXTERNAL lsame
-*     ..
-*     .. External Subroutines ..
-      EXTERNAL xerbla
-*     ..
-*     .. Intrinsic Functions ..
-      INTRINSIC max
-*     ..
-*     .. Local Scalars ..
-      DOUBLE PRECISION TEMP
-      INTEGER I,INFO,J,L,NROWA,NROWB
-      LOGICAL NOTA,NOTB
-*     ..
-*     .. Parameters ..
-      DOUBLE PRECISION ONE,ZERO
-      parameter(one=1.0d+0,zero=0.0d+0)
-*     ..
-*
-*     Set  NOTA  and  NOTB  as  true if  A  and  B  respectively are not
-*     transposed and set  NROWA and NROWB  as the number of rows of  A
-*     and  B  respectively.
-*
-      nota = lsame(transa,'N')
-      notb = lsame(transb,'N')
-      IF (nota) THEN
-          nrowa = m
-      ELSE
-          nrowa = k
-      END IF
-      IF (notb) THEN
-          nrowb = k
-      ELSE
-          nrowb = n
-      END IF
-*
-*     Test the input parameters.
-*
-      info = 0
-      IF ((.NOT.nota) .AND. (.NOT.lsame(transa,'C')) .AND.
-     +    (.NOT.lsame(transa,'T'))) THEN
-          info = 1
-      ELSE IF ((.NOT.notb) .AND. (.NOT.lsame(transb,'C')) .AND.
-     +         (.NOT.lsame(transb,'T'))) THEN
-          info = 2
-      ELSE IF (m.LT.0) THEN
-          info = 3
-      ELSE IF (n.LT.0) THEN
-          info = 4
-      ELSE IF (k.LT.0) THEN
-          info = 5
-      ELSE IF (lda.LT.max(1,nrowa)) THEN
-          info = 8
-      ELSE IF (ldb.LT.max(1,nrowb)) THEN
-          info = 10
-      ELSE IF (ldc.LT.max(1,m)) THEN
-          info = 13
-      END IF
-      IF (info.NE.0) THEN
-          CALL xerbla('DGEMM ',info)
-          RETURN
-      END IF
-*
-*     Quick return if possible.
-*
-      IF ((m.EQ.0) .OR. (n.EQ.0) .OR.
-     +    (((alpha.EQ.zero).OR. (k.EQ.0)).AND. (beta.EQ.one))) RETURN
-*
-*     And if  alpha.eq.zero.
-*
-      IF (alpha.EQ.zero) THEN
-          IF (beta.EQ.zero) THEN
-              DO 20 j = 1,n
-                  DO 10 i = 1,m
-                      c(i,j) = zero
-   10             CONTINUE
-   20         CONTINUE
-          ELSE
-              DO 40 j = 1,n
-                  DO 30 i = 1,m
-                      c(i,j) = beta*c(i,j)
-   30             CONTINUE
-   40         CONTINUE
-          END IF
-          RETURN
-      END IF
-*
-*     Start the operations.
-*
-      IF (notb) THEN
-          IF (nota) THEN
-*
-*           Form  C := alpha*A*B + beta*C.
-*
-              DO 90 j = 1,n
-                  IF (beta.EQ.zero) THEN
-                      DO 50 i = 1,m
-                          c(i,j) = zero
-   50                 CONTINUE
-                  ELSE IF (beta.NE.one) THEN
-                      DO 60 i = 1,m
-                          c(i,j) = beta*c(i,j)
-   60                 CONTINUE
-                  END IF
-                  DO 80 l = 1,k
-                      temp = alpha*b(l,j)
-                      DO 70 i = 1,m
-                          c(i,j) = c(i,j) + temp*a(i,l)
-   70                 CONTINUE
-   80             CONTINUE
-   90         CONTINUE
-          ELSE
-*
-*           Form  C := alpha*A**T*B + beta*C
-*
-              DO 120 j = 1,n
-                  DO 110 i = 1,m
-                      temp = zero
-                      DO 100 l = 1,k
-                          temp = temp + a(l,i)*b(l,j)
-  100                 CONTINUE
-                      IF (beta.EQ.zero) THEN
-                          c(i,j) = alpha*temp
-                      ELSE
-                          c(i,j) = alpha*temp + beta*c(i,j)
-                      END IF
-  110             CONTINUE
-  120         CONTINUE
-          END IF
-      ELSE
-          IF (nota) THEN
-*
-*           Form  C := alpha*A*B**T + beta*C
-*
-              DO 170 j = 1,n
-                  IF (beta.EQ.zero) THEN
-                      DO 130 i = 1,m
-                          c(i,j) = zero
-  130                 CONTINUE
-                  ELSE IF (beta.NE.one) THEN
-                      DO 140 i = 1,m
-                          c(i,j) = beta*c(i,j)
-  140                 CONTINUE
-                  END IF
-                  DO 160 l = 1,k
-                      temp = alpha*b(j,l)
-                      DO 150 i = 1,m
-                          c(i,j) = c(i,j) + temp*a(i,l)
-  150                 CONTINUE
-  160             CONTINUE
-  170         CONTINUE
-          ELSE
-*
-*           Form  C := alpha*A**T*B**T + beta*C
-*
-              DO 200 j = 1,n
-                  DO 190 i = 1,m
-                      temp = zero
-                      DO 180 l = 1,k
-                          temp = temp + a(l,i)*b(j,l)
-  180                 CONTINUE
-                      IF (beta.EQ.zero) THEN
-                          c(i,j) = alpha*temp
-                      ELSE
-                          c(i,j) = alpha*temp + beta*c(i,j)
-                      END IF
-  190             CONTINUE
-  200         CONTINUE
-          END IF
-      END IF
-*
-      RETURN
-*
-*     End of DGEMM
-*
-      END
-
-
-      SUBROUTINE DGEMM_test2(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,
-     &   BETA,C,LDC)
-*
-*  -- Reference BLAS level3 routine (version 3.4.0) --
-*  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
-*  -- Univ. of California Berkeley, Univ. of Colorado Denver and NAG Ltd..--
-*     November 2011
-*
-*     .. Scalar Arguments ..
-      DOUBLE PRECISION ALPHA,BETA
-      INTEGER K,LDA,LDB,LDC,M,N
-      CHARACTER TRANSA,TRANSB
-*     ..
-*     .. Array Arguments ..
-      DOUBLE PRECISION A(LDA,*),B(LDB,*),C(LDC,*)
-*     ..
-*
-*  =====================================================================
-*
-*     .. External Functions ..
-      LOGICAL LSAME
-      EXTERNAL LSAME
-*     ..
-*     .. External Subroutines ..
-      EXTERNAL XERBLA
-*     ..
-*     .. Intrinsic Functions ..
-      INTRINSIC MAX
-*     ..
-*     .. Local Scalars ..
-      DOUBLE PRECISION TEMP
-      INTEGER I,INFO,J,L,NCOLA,NROWA,NROWB
-      LOGICAL NOTA,NOTB
-*     ..
-*     .. Parameters ..
-      DOUBLE PRECISION ONE,ZERO
-      PARAMETER (ONE=1.0D+0,ZERO=0.0D+0)
-*     ..
-*
-*     Set  NOTA  and  NOTB  as  true if  A  and  B  respectively are not
-*     transposed and set  NROWA, NCOLA and  NROWB  as the number of rows
-*     and  columns of  A  and the  number of  rows  of  B  respectively.
-*
-      NOTA = LSAME(TRANSA,'N')
-      NOTB = LSAME(TRANSB,'N')
-      IF (NOTA) THEN
-          NROWA = M
-          NCOLA = K
-      ELSE
-          NROWA = K
-          NCOLA = M
-      END IF
-      IF (NOTB) THEN
-          NROWB = K
-      ELSE
-          NROWB = N
-      END IF
-*
-*     Test the input parameters.
-*
-      INFO = 0
-      IF ((.NOT.NOTA) .AND. (.NOT.LSAME(TRANSA,'C')) .AND.
-     +    (.NOT.LSAME(TRANSA,'T'))) THEN
-          INFO = 1
-      ELSE IF ((.NOT.NOTB) .AND. (.NOT.LSAME(TRANSB,'C')) .AND.
-     +         (.NOT.LSAME(TRANSB,'T'))) THEN
-          INFO = 2
-      ELSE IF (M.LT.0) THEN
-          INFO = 3
-      ELSE IF (N.LT.0) THEN
-          INFO = 4
-      ELSE IF (K.LT.0) THEN
-          INFO = 5
-      ELSE IF (LDA.LT.MAX(1,NROWA)) THEN
-          INFO = 8
-      ELSE IF (LDB.LT.MAX(1,NROWB)) THEN
-          INFO = 10
-      ELSE IF (LDC.LT.MAX(1,M)) THEN
-          INFO = 13
-      END IF
-      IF (INFO.NE.0) THEN
-          CALL XERBLA('DGEMM ',INFO)
-          RETURN
-      END IF
-*
-*     Quick return if possible.
-*
-      IF ((M.EQ.0) .OR. (N.EQ.0) .OR.
-     +    (((ALPHA.EQ.ZERO).OR. (K.EQ.0)).AND. (BETA.EQ.ONE))) RETURN
-*
-*     And if  alpha.eq.zero.
-*
-      IF (ALPHA.EQ.ZERO) THEN
-          IF (BETA.EQ.ZERO) THEN
-              DO 20 J = 1,N
-                  DO 10 I = 1,M
-                      C(I,J) = ZERO
-   10             CONTINUE
-   20         CONTINUE
-          ELSE
-              DO 40 J = 1,N
-                  DO 30 I = 1,M
-                      C(I,J) = BETA*C(I,J)
-   30             CONTINUE
-   40         CONTINUE
-          END IF
-          RETURN
-      END IF
-*
-*     Start the operations.
-*
-      IF (NOTB) THEN
-          IF (NOTA) THEN
-*
-*           Form  C := alpha*A*B + beta*C.
-*
-              DO 90 J = 1,N
-                  IF (BETA.EQ.ZERO) THEN
-                      DO 50 I = 1,M
-                          C(I,J) = ZERO
-   50                 CONTINUE
-                  ELSE IF (BETA.NE.ONE) THEN
-                      DO 60 I = 1,M
-                          C(I,J) = BETA*C(I,J)
-   60                 CONTINUE
-                  END IF
-                  DO 80 L = 1,K
-                      IF (B(L,J).NE.ZERO) THEN
-                          TEMP = ALPHA*B(L,J)
-                          DO 70 I = 1,M
-                              C(I,J) = C(I,J) + TEMP*A(I,L)
-   70                     CONTINUE
-                      END IF
-   80             CONTINUE
-   90         CONTINUE
-          ELSE
-*
-*           Form  C := alpha*A**T*B + beta*C
-*
-              DO 120 J = 1,N
-                  DO 110 I = 1,M
-                      TEMP = ZERO
-                      DO 100 L = 1,K
-                          TEMP = TEMP + A(L,I)*B(L,J)
-  100                 CONTINUE
-                      IF (BETA.EQ.ZERO) THEN
-                          C(I,J) = ALPHA*TEMP
-                      ELSE
-                          C(I,J) = ALPHA*TEMP + BETA*C(I,J)
-                      END IF
-  110             CONTINUE
-  120         CONTINUE
-          END IF
-      ELSE
-          IF (NOTA) THEN
-*
-*           Form  C := alpha*A*B**T + beta*C
-*
-              DO 170 J = 1,N
-                  IF (BETA.EQ.ZERO) THEN
-                      DO 130 I = 1,M
-                          C(I,J) = ZERO
-  130                 CONTINUE
-                  ELSE IF (BETA.NE.ONE) THEN
-                      DO 140 I = 1,M
-                          C(I,J) = BETA*C(I,J)
-  140                 CONTINUE
-                  END IF
-                  DO 160 L = 1,K
-                      IF (B(J,L).NE.ZERO) THEN
-                          TEMP = ALPHA*B(J,L)
-                          DO 150 I = 1,M
-                              C(I,J) = C(I,J) + TEMP*A(I,L)
-  150                     CONTINUE
-                      END IF
-  160             CONTINUE
-  170         CONTINUE
-          ELSE
-*
-*           Form  C := alpha*A**T*B**T + beta*C
-*
-              DO 200 J = 1,N
-                  DO 190 I = 1,M
-                      TEMP = ZERO
-                      DO 180 L = 1,K
-                          TEMP = TEMP + A(L,I)*B(J,L)
-  180                 CONTINUE
-                      IF (BETA.EQ.ZERO) THEN
-                          C(I,J) = ALPHA*TEMP
-                      ELSE
-                          C(I,J) = ALPHA*TEMP + BETA*C(I,J)
-                      END IF
-  190             CONTINUE
-  200         CONTINUE
-          END IF
-      END IF
-*
-      RETURN
-*
-*     End of DGEMM .
-*
-      END
-*> \brief \b DSYMM
-*
-*  =========== DOCUMENTATION ===========
-*
-* Online html documentation available at 
-*            http://www.netlib.org/lapack/explore-html/ 
-*
-*  Definition:
-*  ===========
