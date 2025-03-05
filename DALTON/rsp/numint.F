@@ -656,9 +656,17 @@ c         construct atomic weight function in the given point
          write(*,22)rmsq,qele,qtot,qxs
          if (rmsq.lt.qconv) goto 900
          do n=1,nat
-            qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
+            if (qtmp(n).gt.d0) then
+               qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
+            else
+               qatm(n) = d0 
+            endif 
             do l=1,lmax(n)
-               qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
+               if (qstmp(l,n).gt.d0) then
+                  qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
+               else
+                  qshell(l,n) = d0
+               endif
             enddo
          enddo
 
@@ -704,14 +712,13 @@ c         assign ISA fractions and partition electrons
                   wtot = wtot + wtatm(l,n) !does the abs change these?
                enddo
             enddo
-            if (abs(wtot).gt.d0 .and. abs(rhom*fwt).gt.eps) then
+            if (wtot.gt.d0 .and. abs(rhom*fwt).gt.eps) then
                do n=1,nat
                   dx = corx(i) - coor(1,n)
                   dy = cory(i) - coor(2,n)
                   dz = corz(i) - coor(3,n) 
                   dis = dx*dx + dy*dy + dz*dz
                   dis = sqrt(dis)
-                  vtmp = zan(n)/dis
                   do l=1,lmax(n)
                      zstmp(l,n) = zstmp(l,n) + 
      &                  wtatm(l,n)*rhom*dis*fwt/wtot 
