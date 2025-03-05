@@ -656,17 +656,9 @@ c         construct atomic weight function in the given point
          write(*,22)rmsq,qele,qtot,qxs
          if (rmsq.lt.qconv) goto 900
          do n=1,nat
-            if (qtmp(n).gt.d0) then
-               qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
-            else
-               qatm(n) = d0 
-            endif 
+            qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
             do l=1,lmax(n)
-               if (qstmp(l,n).gt.d0) then
-                  qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
-               else
-                  qshell(l,n) = d0
-               endif
+               qshell(l,n)=qstmp(l,n) !New N(Ai) saved for next iteration to make p0(Ai)
             enddo
          enddo
 
@@ -732,7 +724,11 @@ c        end ipt loop
 !        write(lupri,*)' Zshell'
          do n=1,nat
             do l=1,lmax(n)
-               zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
+               if (zstmp(l,n).gt.eps) then ! 10^-14
+                  zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
+               else
+                  zstmp(l,n) = (3.0d0*qshell(l,n))/eps
+               endif
                tmp = zstmp(l,n)-zeff(l,n)
                write(*,21)n,l,zeff(l,n),zstmp(l,n),tmp
 !              write(lupri,21)n,l,zeff(l,n),zstmp(l,n),tmp
