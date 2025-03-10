@@ -30,6 +30,7 @@
   Previously all MPI workers read the grid from their own DALTON.QUAD.nnnnn file - this change removes an I/O bottleneck if you run with many workers. (H. J. Aa. Jensen)
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
+- Possibility to speed-up MP2-NO by neglecting two-electron MO integrals abs value less than new threhshold \.THR2EL. (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba

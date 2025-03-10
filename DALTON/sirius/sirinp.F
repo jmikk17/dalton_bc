@@ -456,9 +456,10 @@ C
 C********** Default values section MP2INP *****
 C
       MP2_LSHIFT      = D0
-      MP2_SCALEFAC(1) =  D2 ! scale factor on (ij|ab)
-      MP2_SCALEFAC(2) = -D1 ! scale factor on <ij|ab> = (ia|jb)
+      MP2_SCALEFAC(1) =  D2 ! scale factor on (ia|jb)**2
+      MP2_SCALEFAC(2) = -D1 ! scale factor on (ia|jb)*(ib|ja)
       LAMSR           = D0
+      MP2_THRP        = -1.0d0 ! accuracy of 2-el MO integrals
       MP2_SCALED   = .FALSE.
       MP2_SCS      = .FALSE.
       MP2_SOS      = .FALSE.

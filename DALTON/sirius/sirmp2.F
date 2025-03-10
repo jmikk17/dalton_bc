@@ -43,7 +43,7 @@ C
 C 17/9 - 1990 Hans Agren, Revised Sep 2007-Nov 2009, Hans Joergen Aa. Jensen
 C
 #include "implicit.h"
-      PARAMETER (NTABLE = 13)
+      PARAMETER (NTABLE = 14)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7
       CHARACTER SR_FUNCS*80 ! needed for RSDHf calculations 
       LOGICAL ALLOPT
@@ -60,7 +60,7 @@ C
 C
       DATA TABLE /'.MP2 FR','.PRINT ','.NO OV ','.TDASOP','.SC_SRM',
      &            '.SRINTS','.SCSMP2','.SOSMP2','.MP2 SC','.LEVELS',
-     &            '.DCPT2 ','.RSDHF ','.SAVE W'/
+     &            '.DCPT2 ','.RSDHF ','.SAVE W','.THR2EL'/
 CMAERKE 900918: MP2SAV not implemented, should it be?
 C
 C     ***** PROCESS INPUT FOR MP2INP *****
@@ -74,7 +74,7 @@ C
             DO 1102 II = 1, NTABLE
                IF (TABLE(II) .EQ. WORD) THEN
                   GO TO (101,102,103,104,105,106,107,108,109,110,
-     &                   111,112,113),II
+     &                   111,112,113,114),II
                END IF
  1102       CONTINUE
             IF (WORD .EQ. '.OPTION') THEN
@@ -189,6 +189,10 @@ C *** Option 13 .SAVE WF1 : save first order wave function
   113 CONTINUE
          SAVE_MP2WF1 = .TRUE.
       GO TO 100
+C *** Option 13 .THR2EL  : accuracy of 2-el MO integrals for MP2
+  114 CONTINUE
+         READ(lucmd,*) THRP_MP2
+      GO TO 100
 C ==========================================================================
  2000 CONTINUE
       IF (SRMP2_SRINTS) IPRMP2 = MAX(IPRMP2,1) ! ensure output of energies
@@ -260,7 +264,7 @@ C     SCBRHF: NFRRHF()
 C     INFMP2: NPHSYM, MP2FRO
 C     INFINP: FLAG(25), DIRFCK
 C     INFIND: ISX, ISMO
-C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC
+C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC, THRP
 C
 #include "maxorb.h"
 #include "maxash.h"
@@ -420,9 +424,12 @@ C     JTRLVL negative: delete AO integral file after transformation.
 C
       USEDRC_save = USEDRC
       USEDRC = .FALSE. ! MP2 cannot use integrals in Dirac format (yet)
+      THRP_save = THRP
+      if (thrp_mp2 .gt. 0) THRP = thrp_mp2
       CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KFREE),LFREE)
 C     CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
       USEDRC = USEDRC_save
+      THRP = THRP_save
 C
 C
       IF (MP2FRO) THEN
