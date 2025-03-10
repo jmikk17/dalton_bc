@@ -104,7 +104,7 @@ C
       END IF
 
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,LSYM,MS2
-      MULTS = ISPIN
+      MULTS  = ISPIN
       POTNUC = EPOT
       READ (LUSIFC) MISHT,MASHT,MOCCT,MORBT,MBAST,NCONF,NWOPT,NWOPH,
      *            NCDETS,NCMOT,MNASHX,MNASHY,MNORBT,M2ORBT,
@@ -444,7 +444,7 @@ C
 #include "ccom.h"
 #include "linaba.h"
 C
-      LOGICAL :: DOREAL, DOIMAG
+      LOGICAL :: DOREAL, DOIMAG, FOUND
       CHARACTER*8 RTNLBL(2)
 C
 C PART 1 : ******* I/O buffer sizes, initialize IROW()
@@ -600,11 +600,8 @@ C        does exist. /980529-hjaaj
          KCMO  = 1
          KWTRA = KCMO + NCMOT
          LWTRA = LFREE - KWTRA
-         REWIND (LUSIFC)
-         CALL MOLLAB(LBSIFC,LUSIFC,LUERR)
-         READ (LUSIFC)
-         READ (LUSIFC)
-         CALL READT (LUSIFC,NCMOT,WORK(KCMO))
+         CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+         IF (.NOT.FOUND) CALL QUIT('CMO not found on SIRIFC')
          CALL TRACTL(KTRLVL,WORK(KCMO),WORK(KWTRA),LWTRA)
          FLAG(14) = .TRUE.
          NEWCMO   = .FALSE.

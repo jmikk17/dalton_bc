@@ -456,9 +456,10 @@ C
 C********** Default values section MP2INP *****
 C
       MP2_LSHIFT      = D0
-      MP2_SCALEFAC(1) =  D2 ! scale factor on (ij|ab)
-      MP2_SCALEFAC(2) = -D1 ! scale factor on <ij|ab> = (ia|jb)
+      MP2_SCALEFAC(1) =  D2 ! scale factor on (ia|jb)**2
+      MP2_SCALEFAC(2) = -D1 ! scale factor on (ia|jb)*(ib|ja)
       LAMSR           = D0
+      MP2_THRP        = -1.0d0 ! accuracy of 2-el MO integrals
       MP2_SCALED   = .FALSE.
       MP2_SCS      = .FALSE.
       MP2_SOS      = .FALSE.
@@ -1214,7 +1215,7 @@ C    *               ISTATE,ISPIN,NACTEL,LSYM,MS2
              IF (INIOCC .EQ. 0 .AND. MACTEL .LE. 1) THEN
 C              ... 081205 hjaaj: not for INIOCC .lt. 0, because we
 C                  may restart with old orbitals, but new charge.
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,64),
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,64),
      &            NRHF,(IDUM,I=1,24),NORB,MBAS
                IF (MACTEL .EQ. 1) THEN
                   IOPRHF = LXSYM
@@ -1223,7 +1224,7 @@ C                  may restart with old orbitals, but new charge.
                END IF
                INIOCC = 3
              ELSE
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,96),NORB,MBAS
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,96),NORB,MBAS
 C              READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,
 C    *               NWOPH,NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT,
 C    *               NSYM,MULD2H, NRHF,NFRO,

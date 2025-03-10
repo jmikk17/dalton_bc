@@ -644,6 +644,7 @@ C
       CHARACTER*8 LABINT(9*MXCENT)
       CHARACTER*8 LABEL
       CHARACTER*4 DSONUM
+      LOGICAL     FOUND
 C
 C NBAST, NNBASX, N2BASX, NBAS(8), NORB(8), NORBT, NCMOT, NOCCT, NSYM, 
 C ICMO(8) used from COMMON /INFORB/
@@ -659,8 +660,6 @@ C
 #include "spnout.h"
 #include "inflin.h"
 #include "inftap.h"
-C
-      CALL QENTER('SOODSO_1')
 C
 C==========================
 C     Get the DSO integrals
@@ -700,22 +699,10 @@ C-------------------------
 C     Read MO coefficients
 C-------------------------
 C
-CSPAS: 27/5-11: adjusting to changes in the GPOPEN routine
-C     LUSIFC = 0
-CKeinSPASmehr
-      CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ','UNFORMATTED',
-     &                               IDUMMY,.FALSE.)
-C
-      REWIND LUSIFC
-C
-      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
-C
-      READ (LUSIFC)
-      READ (LUSIFC)
-C
-      CALL READT(LUSIFC,NCMOT,WORK(KCMO))
-C
-      CALL GPCLOSE(LUSIFC,'KEEP')
+      CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+      IF (.NOT.FOUND) THEN
+         CALL QUIT('ERROR: CMO not found on SIRIFC')
+      END IF
 C     
 C=============================
 C     loop over all components
@@ -917,8 +904,6 @@ C
          END IF
 C
       END DO
-C
-      CALL QEXIT('SOODSO_1')
 C
       RETURN
 C
