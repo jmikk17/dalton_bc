@@ -65,11 +65,6 @@ pcmfil=''
 SSH=ssh
 SCP=scp
 
-# DALTON_NUM_MPI_PROCS is deprecated, print a warning if it is used
-if [ -n "$DALTON_NUM_MPI_PROCS" ]; then
-    echo "WARNING: DALTON_NUM_MPI_PROCS is deprecated and will be removed in future releases, use DALTON_LAUNCHER instead"
-fi
-
 #default values for options
 optd=0
 optD=1
@@ -147,7 +142,8 @@ usage (){
         echo '                                unless DALTON_USE_GLOBAL_SCRATCH is defined'
      fi
      if [ $mpi_enabled = "ON" ] ; then  # MPI parallel version
-        echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary (if defined, -N flag not allowed)'
+        echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary, e.g. "mpirun -np 64" (if defined, -N flag not allowed)'
+        echo '    DALTON_NUM_MPI_PROCS      : number of MPI processes. Use DALTON_LAUNCHER if you want to set more options.'
      else
         echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary'
      fi
@@ -550,9 +546,9 @@ if [ $mpi_enabled = "ON" -a $optn -gt 1 ] ; then  # MPI parallel
 fi
 
 if [ -n "$DALTON_LAUNCHER" ] ; then
+       echo "    DALTON_LAUNCHER is defined as: $DALTON_LAUNCHER"
     if [ $optn -gt 1 ] ; then
        echo; echo  "*** JOB SPECIFICATION ERROR:"
-       echo "    DALTON_LAUNCHER was defined as: $DALTON_LAUNCHER"
        echo "    Definition of DALTON_LAUNCHER is not compatible with -N/-np flag nor definition of DALTON_NUM_MPI_PROCS"
        echo "--> Include instead number of MPI processes in your definition of DALTON_LAUNCHER"; echo
        exit 1
