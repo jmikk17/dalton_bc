@@ -1215,7 +1215,7 @@ C    *               ISTATE,ISPIN,NACTEL,LSYM,MS2
              IF (INIOCC .EQ. 0 .AND. MACTEL .LE. 1) THEN
 C              ... 081205 hjaaj: not for INIOCC .lt. 0, because we
 C                  may restart with old orbitals, but new charge.
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,64),
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,64),
      &            NRHF,(IDUM,I=1,24),NORB,MBAS
                IF (MACTEL .EQ. 1) THEN
                   IOPRHF = LXSYM
@@ -1224,7 +1224,7 @@ C                  may restart with old orbitals, but new charge.
                END IF
                INIOCC = 3
              ELSE
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,96),NORB,MBAS
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,96),NORB,MBAS
 C              READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,
 C    *               NWOPH,NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT,
 C    *               NSYM,MULD2H, NRHF,NFRO,

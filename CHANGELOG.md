@@ -4,6 +4,7 @@
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+- CI response properties for \*\*PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver (Luna Zamok)
   - Added PE-AO-SOPPA/RPA (Peter Reinholdt)

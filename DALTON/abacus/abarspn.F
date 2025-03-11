@@ -241,9 +241,8 @@ C
             JTRLVL = -4
          ENDIF
 
-         IF (NEWCMO .OR. FTRCTL .OR.
-     &       (ABS(JTRLVL) .GT. ITRLVL_LAST) .OR.
-     &       (USEDRC .AND. LVLDRC_LAST .LT. 0) ) THEN
+         IF ( (ABS(JTRLVL) .GT. ITRLVL_LAST) .OR.
+     &        (USEDRC .AND. LVLDRC_LAST .LT. 0) ) THEN
             FLAGSV = DORSP
             DORSP  = .TRUE.
             CALL SIR_INTOPEN

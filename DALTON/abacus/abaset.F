@@ -104,7 +104,7 @@ C
       END IF
 
       READ (LUSIFC) EPOT,EMY,EACTIV,EMCSCF,ISTATE,ISPIN,NACTEL,LSYM,MS2
-      MULTS = ISPIN
+      MULTS  = ISPIN
       POTNUC = EPOT
       READ (LUSIFC) MISHT,MASHT,MOCCT,MORBT,MBAST,NCONF,NWOPT,NWOPH,
      *            NCDETS,NCMOT,MNASHX,MNASHY,MNORBT,M2ORBT,
@@ -444,7 +444,7 @@ C
 #include "ccom.h"
 #include "linaba.h"
 C
-      LOGICAL :: DOREAL, DOIMAG
+      LOGICAL :: DOREAL, DOIMAG, FOUND
       CHARACTER*8 RTNLBL(2)
 C
 C PART 1 : ******* I/O buffer sizes, initialize IROW()
@@ -499,10 +499,15 @@ C
       NVARMA = NCONMA + NWOPMA
       NCONDI = MAX(1,NCONF)
 C
-C     Parameters needed for /INFLIN/
+C     Parameters needed for /INFLIN/ and integral transformation
 C
-      NCONRF = NCONF
-      IF (ABAHF) NCONRF = 0
+      IF (ABAHF) THEN
+         NCONRF = 0
+         FLAG(34) = .TRUE.
+      ELSE
+         NCONRF = NCONF
+         FLAG(34) = .FALSE.
+      END IF
       LSYMRF = LSYM
 C
 C PART 4 : *** Set INFTRA
@@ -524,7 +529,15 @@ C
       USEDRC = .TRUE.
       IPRTRA = IPRNTR
 
-      IF ((NASHT.GT.1 .AND. .NOT.HSROHF) .OR. H2MO) THEN
+      IF (ABACI) THEN
+         KTRLVL = 0 ! Only MO integrals over four active orbitals needed
+         ITRLVL = KTRLVL
+         USEDRC = .FALSE.
+         FLAG(14) = .TRUE.
+         CALL SIR_INTOPEN
+C        ... SIR_INTOPEN returns FLAG(14) false if no mo integral file
+C        or if ITRLVL on file too small.
+      ELSE IF ((NASHT.GT.1 .AND. .NOT.HSROHF) .OR. H2MO) THEN
          ! hjaaj Aug 2017: next two statements copied from abaort.F(MCORL)
          DOREAL = MOLHES .OR. DIPDER .OR. QPGRAD .OR. VCD 
          DOIMAG = SHIELD .OR. MAGSUS .OR. VCD .OR. SPNSPN .OR. ECD .OR.
@@ -600,11 +613,8 @@ C        does exist. /980529-hjaaj
          KCMO  = 1
          KWTRA = KCMO + NCMOT
          LWTRA = LFREE - KWTRA
-         REWIND (LUSIFC)
-         CALL MOLLAB(LBSIFC,LUSIFC,LUERR)
-         READ (LUSIFC)
-         READ (LUSIFC)
-         CALL READT (LUSIFC,NCMOT,WORK(KCMO))
+         CALL RD_SIRIFC('CMO',FOUND,WORK(KCMO))
+         IF (.NOT.FOUND) CALL QUIT('CMO not found on SIRIFC')
          CALL TRACTL(KTRLVL,WORK(KCMO),WORK(KWTRA),LWTRA)
          FLAG(14) = .TRUE.
          NEWCMO   = .FALSE.

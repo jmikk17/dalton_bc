@@ -284,9 +284,9 @@ C
 CMAERKE-hjaaj-910730: code missing in NUMST2, NUMSTR, DETGN4, ?
          END IF
          LFREEL = LFREE
-         IF (IPRCIX .GT. 0) THEN
-            WRITE (LUPRI,'(A,I5)')
-     *         ' Print level        :',IPRCIX,
+         IF (IPRCIX .GT. 0) THEN ! print because NEWCI
+            WRITE (LUPRI,'(/A/,(A,I5))')
+     *         ' SETCI: new CI space',
      *         ' Reference symmetry :',ICSYM,
      *         ' CSF:1 or determ:0  :',ICSF,
      *         ' CSF spin multipl.  :',ISPIN,
@@ -378,6 +378,8 @@ C
      *      ' Number of determinants:  ',NCDET
             WRITE (LUPRI,'(/A,I12)')
      *      ' Number of configurations:',NCCSF
+         END IF
+         IF (IPRCIX .GT. 0 .OR. DTIM .GT. 1.0D0) THEN
             DTIM = SECOND() - DTIM
             WRITE (LUPRI,'(/A,F10.2,A)')
      *         ' Time used in SETCI :',DTIM,'s'
