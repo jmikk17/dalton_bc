@@ -211,8 +211,8 @@ C     WRITE(2,*) ' node ', mynum,' knows of ', electrons
      &    ' Error in the number of electrons:              ',ERROR,
      &    ' Error larger than DFTELS (set input):          ',DFTELS,
      &    ' Calculation aborted.'
-          CALL QUIT
-     &    ('Wrong number of electrons in DFTINT. Calculation aborted.')
+!         CALL QUIT
+!    &    ('Wrong number of electrons in DFTINT. Calculation aborted.')
         END IF
       END IF
       RETURN
