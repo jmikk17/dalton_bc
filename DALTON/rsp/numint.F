@@ -724,7 +724,7 @@ c        end ipt loop
 !        write(lupri,*)' Zshell'
          do n=1,nat
             do l=1,lmax(n)
-               if (zstmp(l,n).gt.eps) then 
+               if (zstmp(l,n).gt.eps) then ! 10^-14
                   zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
                else
                   zstmp(l,n) = (3.0d0*qshell(l,n))/eps
