@@ -241,14 +241,12 @@ C
             JTRLVL = -4
          ENDIF
 
-         IF ( (ABS(JTRLVL) .GT. ITRLVL_LAST) .OR.
-     &        (USEDRC .AND. LVLDRC_LAST .LT. 0) ) THEN
-            FLAGSV = DORSP
-            DORSP  = .TRUE.
-            CALL SIR_INTOPEN
-            DORSP  = FLAGSV
-            CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KWTRA),LWTRA)
-         END IF
+         FLAGSV = DORSP
+         DORSP  = .TRUE.
+         CALL SIR_INTOPEN
+         DORSP  = FLAGSV
+         CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KWTRA),LWTRA)
+
          NEWCMO = .FALSE.
       END IF ! IF ( (NASHT .GT. 1 .AND. .NOT.HSROHF) .OR. .NOT.DIRFCK ) THEN
       END IF ! IF (NEWCMO .OR. FTRCTL) THEN
