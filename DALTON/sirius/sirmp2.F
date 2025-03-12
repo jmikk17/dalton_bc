@@ -405,7 +405,11 @@ cmjp If response calculation then make space for the correlation coefficients.
          CALL MEMGET2('REAL','KAPPA',KKAPPA,0,WRK,KFREE,LFREE)
       END IF
 
-      IF (.NOT.NEWTRA .AND. (MP2_NO_OCCVIR .OR. SRMP2_SRINTS) ) THEN
+      IF (FCKTRA_TYPE .GT. 0 .and.  ! can we use Dirac only <ij|rs> integrals ?
+     &   .NOT. MP2_TDA .AND. MP2_NO_OCCVIR) then 
+       !JTRLVL = 15 ! special code for only Dirac integrals, no Mulliken integrals
+        JTRLVL = 5 ! WIP to implement only DIrac integrals
+      ELSE IF(.NOT.NEWTRA .AND. (MP2_NO_OCCVIR .OR. SRMP2_SRINTS) )THEN
 C        2. order integral transformation (ir/js)
 C        (but not for NEWTRA which uses Dirac format and that is
 C         not implemented in sirmp2.F module)
@@ -420,12 +424,15 @@ C
 C     PERFORM INTEGRAL TRANSFORMATION
 C     JTRLVL =  4 : code for 2. order transformation for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL =  5 : code for 3. order transformation for MP2 density matrix.
+C     JTRLVL = 15 : code for 2. order transformation with FCKTRA for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL negative: delete AO integral file after transformation.
 C
       USEDRC_save = USEDRC
       USEDRC = .FALSE. ! MP2 cannot use integrals in Dirac format (yet)
       THRP_save = THRP
       if (thrp_mp2 .gt. 0) THRP = thrp_mp2
+      if (THRP .ne. THRP_save) write(lupri,'(/A,1P,D10.2)')
+     &   ' - Neglecting MO integrals abs value less than',THRP
       CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KFREE),LFREE)
 C     CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
       USEDRC = USEDRC_save
@@ -1113,7 +1120,7 @@ C
       CPUMP2 = CPUEND - CPUMP2
       WALMP2 = WALEND - WALMP2
       WRITE (LUSTAT,1860) CPUMP2, WALMP2
-      IF (IPRMP2 .GE. 1) WRITE (LUPRI,1860) CPUMP2, WALMP2
+      IF (IPRMP2 .GE. 0) WRITE (LUPRI,1860) CPUMP2, WALMP2
  1860 FORMAT (/' Time used for MP2 natural orbitals :',F12.3,
      *        ' CPU seconds,',F12.3,' wall seconds.')
       CALL MEMREL('MP2CTL',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
@@ -1224,6 +1231,24 @@ C
  1851 FORMAT(' (supersymmetry in parenthesis)'//,(5(F12.8,' (',I2,')')))
 #endif
 C
+      OCCMAX = MAXVAL(OCCUP(1:NORBT))
+      OCCMIN = MINVAL(OCCUP(1:NORBT))
+      IF (OCCMAX .GT. 2.001d0 .OR. OCCMIN .LT. -0.01d0) THEN
+         WRITE(LUPRI,'(//A/A)')
+     &   ' ERROR: some MP2 occupation numbers are not between 0 and 2',
+     &   ' ERROR: Dalton stops because probably not good initial '//
+     &   'orbitals for MCSCF/MC-srDFT'
+         IF (THRP_MP2 .GT. THRP_save) WRITE(LUPRI,'(A,1P,D10.2,A)')
+     &   ' ERROR: probably .THR2EL ',THRP_MP2,' is too big.'
+         CALL QUIT('ERROR, occupations number are not between 0 and 2')
+      ELSE IF (OCCMAX .GT. 2.0d0 .OR. OCCMIN .LT. 0.0d0) THEN
+         NWARN = NWARN + 1
+         WRITE(LUPRI,'(//A/A)') ' WARNING: '//
+     &  'Some MP2 occupation numbers are slightly >2 or <0',
+     &  ' WARNING: but MP2 NOs are probably still OK as'//
+     &  ' initial orbitals for MCSCF/MC-srDFT'
+      END IF
+
       CALL MEMREL('MP2_NATORB',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
       CALL QEXIT('MP2_NATORB')
       RETURN
