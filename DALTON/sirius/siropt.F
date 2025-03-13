@@ -3373,11 +3373,11 @@ C
 !         2 - Alpha is complex and beta is zero
 !
 !
-! Author:    Martin Johannes Rønnekjær Jensen
+! Author:    Martin Johannes R. Jensen
 !            University of Southern Denmark
 !            Version = 18/12/20
 !
-! Project:  Calculation of ionization energy using Extended Koopmans’ Theorem (EKT)
+! Project:  Calculation of ionization energy using Extended Koopmans' Theorem (EKT)
 
 ! 20dec2020: Hans Joergen Aagaard: integrated in Sirius,added ekt_type descriptor,
 !            Dyson vectors, pole strengths, sorting of principals IPx,
@@ -3585,8 +3585,8 @@ C
      &            'Error: EKT diagonalization failed IERR: ', IERR
 
             ! Unnormalized Dyson orbitals g(i,k) for IP # k:
-            !    g(i,k) = sum(j) c∗(j,k)) gamma(j,i)
-            !           = sum(j) gamma(i,j) c(j,k) ! "c" real and "gamma" symmetric
+            !    g(i,k) = sum(j) gamma(i,j) c(j,k)
+            ! "c" real and "gamma" symmetric
 
             ! Unnormalized Dyson orbitals in UV: UV(i,k) = 0.5 sum(j) US_COPY(i,j) UZ(j,k)
             !    ( factor 0.5 because density matrix is normalized for 2 electrons)

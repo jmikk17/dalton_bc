@@ -43,7 +43,7 @@ C
 C 17/9 - 1990 Hans Agren, Revised Sep 2007-Nov 2009, Hans Joergen Aa. Jensen
 C
 #include "implicit.h"
-      PARAMETER (NTABLE = 13)
+      PARAMETER (NTABLE = 14)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7
       CHARACTER SR_FUNCS*80 ! needed for RSDHf calculations 
       LOGICAL ALLOPT
@@ -60,7 +60,7 @@ C
 C
       DATA TABLE /'.MP2 FR','.PRINT ','.NO OV ','.TDASOP','.SC_SRM',
      &            '.SRINTS','.SCSMP2','.SOSMP2','.MP2 SC','.LEVELS',
-     &            '.DCPT2 ','.RSDHF ','.SAVE W'/
+     &            '.DCPT2 ','.RSDHF ','.SAVE W','.THR2EL'/
 CMAERKE 900918: MP2SAV not implemented, should it be?
 C
 C     ***** PROCESS INPUT FOR MP2INP *****
@@ -74,7 +74,7 @@ C
             DO 1102 II = 1, NTABLE
                IF (TABLE(II) .EQ. WORD) THEN
                   GO TO (101,102,103,104,105,106,107,108,109,110,
-     &                   111,112,113),II
+     &                   111,112,113,114),II
                END IF
  1102       CONTINUE
             IF (WORD .EQ. '.OPTION') THEN
@@ -189,6 +189,10 @@ C *** Option 13 .SAVE WF1 : save first order wave function
   113 CONTINUE
          SAVE_MP2WF1 = .TRUE.
       GO TO 100
+C *** Option 13 .THR2EL  : accuracy of 2-el MO integrals for MP2
+  114 CONTINUE
+         READ(lucmd,*) THRP_MP2
+      GO TO 100
 C ==========================================================================
  2000 CONTINUE
       IF (SRMP2_SRINTS) IPRMP2 = MAX(IPRMP2,1) ! ensure output of energies
@@ -260,7 +264,7 @@ C     SCBRHF: NFRRHF()
 C     INFMP2: NPHSYM, MP2FRO
 C     INFINP: FLAG(25), DIRFCK
 C     INFIND: ISX, ISMO
-C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC
+C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC, THRP
 C
 #include "maxorb.h"
 #include "maxash.h"
@@ -401,7 +405,11 @@ cmjp If response calculation then make space for the correlation coefficients.
          CALL MEMGET2('REAL','KAPPA',KKAPPA,0,WRK,KFREE,LFREE)
       END IF
 
-      IF (.NOT.NEWTRA .AND. (MP2_NO_OCCVIR .OR. SRMP2_SRINTS) ) THEN
+      IF (FCKTRA_TYPE .GT. 0 .and.  ! can we use Dirac only <ij|rs> integrals ?
+     &   .NOT. MP2_TDA .AND. MP2_NO_OCCVIR) then 
+       !JTRLVL = 15 ! special code for only Dirac integrals, no Mulliken integrals
+        JTRLVL = 5 ! WIP to implement only DIrac integrals
+      ELSE IF(.NOT.NEWTRA .AND. (MP2_NO_OCCVIR .OR. SRMP2_SRINTS) )THEN
 C        2. order integral transformation (ir/js)
 C        (but not for NEWTRA which uses Dirac format and that is
 C         not implemented in sirmp2.F module)
@@ -416,13 +424,19 @@ C
 C     PERFORM INTEGRAL TRANSFORMATION
 C     JTRLVL =  4 : code for 2. order transformation for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL =  5 : code for 3. order transformation for MP2 density matrix.
+C     JTRLVL = 15 : code for 2. order transformation with FCKTRA for MP2 with MP2_NO_OCCVIR.
 C     JTRLVL negative: delete AO integral file after transformation.
 C
       USEDRC_save = USEDRC
       USEDRC = .FALSE. ! MP2 cannot use integrals in Dirac format (yet)
+      THRP_save = THRP
+      if (thrp_mp2 .gt. 0) THRP = thrp_mp2
+      if (THRP .ne. THRP_save) write(lupri,'(/A,1P,D10.2)')
+     &   ' - Neglecting MO integrals abs value less than',THRP
       CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KFREE),LFREE)
 C     CALL TRACTL(ITRLVL,CMO,WRK,LFREE)
       USEDRC = USEDRC_save
+      THRP = THRP_save
 C
 C
       IF (MP2FRO) THEN
@@ -1106,7 +1120,7 @@ C
       CPUMP2 = CPUEND - CPUMP2
       WALMP2 = WALEND - WALMP2
       WRITE (LUSTAT,1860) CPUMP2, WALMP2
-      IF (IPRMP2 .GE. 1) WRITE (LUPRI,1860) CPUMP2, WALMP2
+      IF (IPRMP2 .GE. 0) WRITE (LUPRI,1860) CPUMP2, WALMP2
  1860 FORMAT (/' Time used for MP2 natural orbitals :',F12.3,
      *        ' CPU seconds,',F12.3,' wall seconds.')
       CALL MEMREL('MP2CTL',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
@@ -1217,6 +1231,24 @@ C
  1851 FORMAT(' (supersymmetry in parenthesis)'//,(5(F12.8,' (',I2,')')))
 #endif
 C
+      OCCMAX = MAXVAL(OCCUP(1:NORBT))
+      OCCMIN = MINVAL(OCCUP(1:NORBT))
+      IF (OCCMAX .GT. 2.001d0 .OR. OCCMIN .LT. -0.01d0) THEN
+         WRITE(LUPRI,'(//A/A)')
+     &   ' ERROR: some MP2 occupation numbers are not between 0 and 2',
+     &   ' ERROR: Dalton stops because probably not good initial '//
+     &   'orbitals for MCSCF/MC-srDFT'
+         IF (THRP_MP2 .GT. THRP_save) WRITE(LUPRI,'(A,1P,D10.2,A)')
+     &   ' ERROR: probably .THR2EL ',THRP_MP2,' is too big.'
+         CALL QUIT('ERROR, occupations number are not between 0 and 2')
+      ELSE IF (OCCMAX .GT. 2.0d0 .OR. OCCMIN .LT. 0.0d0) THEN
+         NWARN = NWARN + 1
+         WRITE(LUPRI,'(//A/A)') ' WARNING: '//
+     &  'Some MP2 occupation numbers are slightly >2 or <0',
+     &  ' WARNING: but MP2 NOs are probably still OK as'//
+     &  ' initial orbitals for MCSCF/MC-srDFT'
+      END IF
+
       CALL MEMREL('MP2_NATORB',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
       CALL QEXIT('MP2_NATORB')
       RETURN

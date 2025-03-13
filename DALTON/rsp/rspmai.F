@@ -2889,6 +2889,7 @@ C
 #include "infcr.h"
 C
       LOGICAL FNDLAB
+      LOGICAL, SAVE :: FIRST = .TRUE.
 
       IF (.NOT.DIRFCK) DIRFCK = DIRCAL
       IF (DOHFSRDFT .OR. DOMCSRDFT) THEN
@@ -2932,15 +2933,16 @@ C
       REWIND LUSIFC
       IF (FNDLAB('CIRESPON',LUSIFC)) THEN
          RSPCI = .TRUE.
-         WRITE(LUPRI,'(/A/A)')
-     *     ' This is a configuration interaction response calculation.',
-     *     '   Note: this is equivalent to a CI sum-over-states'//
+         IF (FIRST) THEN ! else we can get many copies of this from ABARSPN calls
+            FIRST = .FALSE.
+            WRITE(LUPRI,'(/A/A)')
+     *    '@ This is a configuration interaction response calculation.',
+     *    '@ Note: this is equivalent to a CI sum-over-states'//
      *     ' calculation of response properties.'
+         END IF
       ELSE
          RSPCI = .FALSE.
       END IF
-Clilli Closing LUSIFC
-C      CALL GPCLOSE(LUSIFC,'KEEP')
 C
       NPRLBL = 0
       DO 100 I = 1,MAXLBL

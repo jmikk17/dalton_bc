@@ -503,6 +503,8 @@ cDM added to pass vectors to MAGPCMSEC
 #include "pcmdef.h"
 #include "pcm.h"
 #include "pcmlog.h"
+! linaba.h : ABACI
+#include "linaba.h"
 cDM
 C
       SIGN = 1.0D0
@@ -650,6 +652,10 @@ C
 C     Multiplies Fock matrix with second derivative of overlap integrals
 C
       IF (WORD .EQ. 'DIASUS ' .OR. WORD .EQ. 'DSUSCGO') THEN
+         IF (ABACI) THEN
+            CALL QUIT('ERROR, '//WORD//
+     &      ' not implemented for CI properties')
+         END IF
          NCOMP  = 0
          NPATOM = 0
          CALL GET1IN(DUMMY,'S2MAG  ',NCOMP,WORK(1),LWORK,LABINT,INTREP,

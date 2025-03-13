@@ -1217,7 +1217,7 @@ C
       END
 C  /* Deck cinex */
       SUBROUTINE CINEX(EVAL,EVEC,EMY,ESHIFT,CDIAG,
-     *                 NCSIM,JCONV,RESID,WRK,LFREE)
+     *                 ITCI,NCSIM,JCONV,RESID,WRK,LFREE)
 C
 C Written 21-Jun-1985 by Hans Jorgen Aa. Jensen
 C (based on NEONEX version 2)
@@ -1504,7 +1504,7 @@ C
          IF (WCRESD) THEN
             WRITE (LUW4,9012)
          ELSE
-            WRITE (LUW4,9010)
+            WRITE (LUW4,9010) ITCI
          END IF
       END IF
       JRVECS  = KRVECS
@@ -1553,7 +1553,7 @@ C
                   IF (WCRESD) THEN
                      WRITE (LUW4,9012)
                   ELSE
-                     WRITE (LUW4,9010)
+                     WRITE (LUW4,9010) ITCI
                   END IF
                   WRITE (LUW4,9030) JCROTX,ECROOT,QCNRM
                END IF
@@ -1568,7 +1568,8 @@ C
          JRVECS = JRVECS + NCONF
  1100 CONTINUE
 C
- 9010 FORMAT(/' CI root     eigenvalue        residual norm'/)
+ 9010 FORMAT(/' CI root     eigenvalue        residual norm   --',
+     & ' CI iteration number',I4/)
  9012 FORMAT(/' CI root     eigenvalue     weighted residual norm'/)
  9014 FORMAT(/' The requested root number is now converged.')
  9020 FORMAT(I5,2F20.10)
@@ -3240,7 +3241,7 @@ C           ... check symmetry of reduced CI matrix and CI overlap
          ESHIFT = D0
          NCSIM  = NCROOT
          CALL CINEX(energy_c,WRK(KEVEC),EMY,ESHIFT,WRK(KCDIAG),
-     *              NCSIM,JCONV,residual_c,WRK(KW2),LW2)
+     *              ITCI,NCSIM,JCONV,residual_c,WRK(KW2),LW2)
       IF (JCONV .GT. 0) THEN
          IF (NCSIM .EQ. 0) THEN
             GO TO 8100
@@ -3254,10 +3255,10 @@ C           ... check symmetry of reduced CI matrix and CI overlap
          IF (NCIRED+NCSIM .GE. MAXRC ) GO TO 8200
          GO TO 500
       END IF
-      WRITE (LUW4,'(//A,I3,A/)')
-     *   ' *** CI converged in',ITCI,' iterations.'
-      IF (LUPRI .NE. LUW4) WRITE (LUPRI,'(//A,I3,A/)')
-     *   ' *** CI converged in',ITCI,' iterations.'
+      WRITE (LUW4,'(//A,I0,A/)')
+     *   ' *** CI converged in ',ITCI,' iterations.'
+      IF (LUPRI .NE. LUW4) WRITE (LUPRI,'(//A,I0,A/)')
+     *   ' *** CI converged in ',ITCI,' iterations.'
       GO TO 9000
  8000 CONTINUE
       WRITE (LUPRI,'(//A,I5/I15,A)')
