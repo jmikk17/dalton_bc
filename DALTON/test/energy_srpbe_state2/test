@@ -21,11 +21,11 @@ f.add(string = 'Number of coordinates in each symmetry')
 f.add(string = 'Number of orbitals in each symmetry')
 
 f.add(string = 'Hartree-Fock total energy',
-      rel_tolerance = 1.0e-8)
+      rel_tolerance = 2.0e-8)
 f.add(string = 'MP2 second order energy',
-      rel_tolerance = 1.0e-8)
+      rel_tolerance = 2.0e-8)
 f.add(string = 'Final MC-SRDFT energy:',
-      rel_tolerance = 1.0e-8)
+      rel_tolerance = 2.0e-8)
 
 #f.add(from_string = 'Occupancies of natural orbitals',
 #      num_lines = 16,

@@ -1044,7 +1044,7 @@ C
      &   ' SIRFCK: CPU and WALL time used for srDFT terms             ',
      &      T2-T1,W2-W1
          END IF
-#if SIRFCK_DEBUG > 2
+#if SIRFCK_DEBUG > 3
        do i = 1,NDCandDV
          write(lupri,*) 'SIRFCK: Final FMAT no.',i
          call output(FMAT(1,i),1,nbast,1,nbast,nbast,nbast,-1,lupri)
@@ -1168,6 +1168,8 @@ C
 C
 C for HFXFAC:
 #include "dftcom.h"
+
+      INTEGER*8 NINTS_TOT
 
 
       CALL QENTER('SIRFCK2')

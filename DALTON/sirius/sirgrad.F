@@ -1172,7 +1172,7 @@ C
       IF (NSSHA .GT. 0) THEN
          IOFFA = IORB(ISYMA) + NOCC(ISYMA)
          DO 105 IA = IOFFA + 1, IOFFA + NSSHA
-            INDXO = KLWOP(ICW,ISW(IA)-NISHT)
+            INDXO = KLWOP(ICW,ICH(IA))
             IF (INDXO.GT.0) THEN
                ORDIAG(INDXO) = ORDIAG(INDXO) - D4*H2CD(IA,IA)
             END IF
@@ -1816,7 +1816,7 @@ C    &         ' No redundant orbital variations found.'
                   L = JWOP(2,IG)
                   JWOP(1,IGNEW) = K
                   JWOP(2,IGNEW) = L
-                  KLWOP(ISW(K),ISW(L)-NISHT) = IG
+                  KLWOP(ISW(K),ICH(L)) = IG
                   WRK(KORDIA-1+IGNEW) = WRK(KORDIA-1+IG)
                ELSE
                   ISK = ISMO(JWOP(1,IG))
@@ -2068,8 +2068,8 @@ C ** first index inactive:
          ELSE
 C ** first index active
 C    (only other possibility, inactive, is already eliminated):
-            NKW = ISW(K) - NISHT
-            TEMP = D0
+            NKW   = ICH(K)
+            TEMP  = D0
             TEMPS = D0
             NX = NISHI
             DO 100 NXW = IASHI+1,IASHI+NASHI
@@ -2093,7 +2093,7 @@ C    (only other possibility, inactive, is already eliminated):
          END IF
          IF (ITYPL .EQ. JTACT) THEN
 C ** second index active:
-            NLW = ISW(L) - NISHT
+            NLW = ICH(L)
             TEMP = D0
             TEMPS = D0
             NX = NISHI
