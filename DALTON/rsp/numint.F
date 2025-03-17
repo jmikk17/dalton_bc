@@ -480,7 +480,7 @@
      &          suma,tote,qtot,dx,dy,dz,rhom,fwt,tmp,ztmp,xtmp,rmsq,dis,
      &          coor(3,max_atm), wtot
 
-      kmax = 500
+      kmax = 1000
       kpar = max_atm
       kpt = max_pnt
 
