@@ -138,7 +138,7 @@ CTRL[4]=7
 ERROR[4]="INCORRECT WAVE FUNCTION"
 
 # SCF energy:
-CRIT1=`$GREP "Hartree-Fock total energy *: * \-76\.332196" $log | wc -l`
+CRIT1=`$GREP "Hartree-Fock.* total energy *: * \-76\.332196" $log | wc -l`
 TEST[5]=`expr $CRIT1`
 CTRL[5]=2
 ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
@@ -146,8 +146,8 @@ ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
 # MP2 energy:
 # = short-range MP2 second order energy         :           -76.3349496802
 # = short-range MP2 second order energy         :           -76.3349545671
-CRIT1=`$GREP "MP2 second order.* energy *: * \-76\.33494" $log | wc -l`
-CRIT2=`$GREP "MP2 second order.* energy *: * \-76\.33495" $log | wc -l`
+CRIT1=`$GREP "MP2.* second order.* energy *: * \-76\.33494" $log | wc -l`
+CRIT2=`$GREP "MP2.* second order.* energy *: * \-76\.33495" $log | wc -l`
 TEST[6]=`expr $CRIT1 \+ $CRIT2 `  # 1 + 1
 CTRL[6]=2
 ERROR[6]="MP2-srPBE ENERGY NOT CORRECT"

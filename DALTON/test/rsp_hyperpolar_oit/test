@@ -26,7 +26,7 @@ f.add(string='coordinates in each symmetry',
 f.add(string='orbitals in each symmetry',
       rel_tolerance = 1.0e-7)
 
-f.add(string='Hartree-Fock total', rel_tolerance = 1.0e-7)
+f.add(re='Hartree-Fock .*total', rel_tolerance = 1.0e-7)
 f.add(string='MP2 second order energy', rel_tolerance = 1.0e-7)
 f.add(string='Final MCSCF energy', rel_tolerance = 1.0e-7)
 

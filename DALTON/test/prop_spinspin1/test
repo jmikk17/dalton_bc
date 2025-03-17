@@ -33,7 +33,7 @@ f.add(string = 'Number of orbitals in each symmetry',
       rel_tolerance = 1.0e-2)
 
 # Energies
-f.add(string = 'Hartree-Fock total energy',
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-9)
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-9)
