@@ -14,16 +14,63 @@
 !  If a copy of the GNU LGPL v2.1 was not distributed with this
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
+
+! FILE: her2drv.F
 !
+!  ITYPE    2-electron integral type (see subroutine TWORUN)
+!  ------   -------------------------------------------------
+!     0   : Undifferentiated integrals written on file AOTWOINT or AOSR2INT,
+!           or 2-el.Darwin written on file
+!     1   : Differentiated integrals written on file (atom JATOM)
+!     2   : Expectation values of differentiated integrals (all atoms)
+!     3   : Direct calculation of Fock matrices in AO basis
+!           using skeleton matrix approach
+!     9   : Direct calculation of Fock matrix in SO basis
+!    -2   : Spin-orbit integrals
+!   -20   : Spin-orbit integrals, direct Fock matrix construction
+!     4   : Calculation of distributions (AB|**)
+!     5   : Magnetic field derivatives
+!    -5   : Magnetic field derivatives, direct Fock matrix construction
+!     6   : Expectation values and Fock matrices of differentiated integrals
+!    -6   : do. with direct Fock matrix construction
+!     7   : Distributions (all gabcd for fixed a)
+!     8   : Derivative Fock matrix for specified atom (JATOM)
+!    10   : Diamagnetic two-electron spin-orbit integrals
+!    11   : Zero-field electron spin-spin couplings
+
+!  ITYPE    sets variables (see subroutine TWORUN)
+!  ------   -------------------------------------------------
+!     0   : UNDIFF, MAXDER=0
+!     1   : PERTUR, MAXDER=MAXDIF, IATOM=JATOM
+!     2   : EXPECT, MAXDER=MAXDIF
+!     3   : DIRFCK, MAXDER=MAXDIF
+!     9   : SOFOCK, MAXDER=MAXDIF
+!    -2   : SPNORB, SQ12EL, MAXDER=1
+!   -20   : do. + DDFOCK
+!     4   : DISTRI, SQ12EL, MAXDER=0
+!     5   : LONDON, MAXDER=MAXDIF, if (MAXDIF==2) SUSCEP
+!    -5   : do. + DDFOCK
+!     6   : EXPECT, MAXDER=MAXDIF, DDFOCK if MAXDIF>1
+!    -6   : do. but always with DDFOCK
+!     7   : UNDIFF, ADISTR, MAXDER=0
+!     8   : PERTUR, MAXDER=MAXDIF, IATOM=JATOM, DDFOCK
+!    10   : MAXDER=2, DIA2SO, SQ12EL
+!    11   : MAXDER=2, ZFS2EL, SQ12EL
 
 C  /* Deck twoint */
-      SUBROUTINE TWOINT(WORK,LWORK,HESSEE,FMAT,DMAT,NDMAT,IREPDM,IFCTYP,
-     &                  GMAT,INDXAB,NUMDIS,MAXDIS,ITYPE,MAXDIF,JATOM,
-     &                  NODV,NOPV,NOCONT,TTIME,
-     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
-     &                  RETUR,ISHLA,I2TYP,JSTRSH,NPRIMS,NCONTS,
-     &                  IORBSH,ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,
-     &                  DINTSKP,RELCAL,GENCNT)
+      SUBROUTINE TWOINT(WORK,LWORK,                    ! scratch memory WORK(LWORK)
+     &                  HESSEE,                        ! only used for molecular Hessina, itype=2 with MAXDIF=2
+     &                  FMAT,DMAT,NDMAT,IREPDM,IFCTYP, ! only for DIRFCK, SOFOCK, DDFOCK: used for direct calculation of Fock matrices
+     &                  GMAT,INDXAB,NUMDIS,MAXDIS,     ! only for ITYPE=4: return NUMDIS distributions requested with INDXAB in GMAT(N2BASX,MAXDIS)
+     &                  ITYPE,MAXDIF,JATOM,            ! ITYPE see above, MAXDIF max differentiation order, JATOM: only for this atom
+     &                  NODV,NOPV,NOCONT,TTIME,        ! NODV, NOPV debug options; NOCONT not working; TTIME print timings on subroutine level
+     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,RETUR, ! general and 4 specific print options with exit
+     &                  ISHLA,                         ! only for ITYPE=7: specification of which shell to fix
+     &                  I2TYP,                         ! used for RELCAL to select between (LL|LL), (LL|SS) or (SS|SS) integrals; I2TYP=0 includes everything
+     &                  JSTRSH,NPRIMS,NCONTS,IORBSH,   ! shell info set in PAOVEC before call of TWOINT
+     &                  ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP, ! screening info; GABRAO = (AB|AB), used for Cauchy-Schwartz screening of undiff. Fock matrices
+     &                  RELCAL,                        ! relativistic calculation (TWOINT called by DIRAC program)
+     &                  GENCNT)                        ! seems not to be used in this version of Hermit
 C
 C     Trygve Helgaker, University of Oslo, Norway, 1984
 C
@@ -5248,8 +5295,8 @@ C
          IF (MAXDER .EQ. 2) SUSCEP = .TRUE.
          IF (ITYPE .EQ. -5) DDFOCK = .TRUE.
 C
-C     i) Expectation values and Fock matrics of differentiated integrals
-C     ==================================================================
+C     i) Expectation values and Fock matrices of differentiated integrals
+C     ===================================================================
 C
       ELSE IF (ITYPE .EQ. 6 .OR. ITYPE .EQ. -6) THEN
          EXPECT = .TRUE.
@@ -5258,7 +5305,7 @@ C
          IF (ITYPE .EQ. -6) DDFOCK = .TRUE.
 C
 C     j) Distributions (all gabcd for fixed a)
-C     ======================================
+C     ========================================
 C
       ELSE IF (ITYPE .EQ. 7) THEN
          UNDIFF = .TRUE.
