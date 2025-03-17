@@ -317,6 +317,13 @@ Specification of which wave function calculation is to be performed.
   Requires \quotekw{.HFsrDFT}
   or previously calculated canonical HF-srDFT orbitals.
 
+\item[\Key{MP2special}]
+Special option for computationally cheaper creation of MP2 initial guess orbitals for MCSCF or MC--srDFT than the standard MP2 and MP2srDFT options.
+Selects 1) the cheaper SOS-MP2; 2) neglect of two-electron MO integrals having absolute valute less than 1.e-7;
+and 3) neglect of the second-order wave function needed for the occupied-virtual block of the MP2 density matrix,
+avoiding the need for MO integrals with three general indices.
+The relatively small change in the initial guess orbitals compared to full MP2 has not been found to have any significance for the following MCSCF/MC--srDFT calculation.
+
 \item[\Key{CC}]
   \index{Coupled Cluster!CC}
   Coupled cluster calculation. Automatically activates Hartree--Fock (\quotekw{.HF}).

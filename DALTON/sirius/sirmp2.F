@@ -261,7 +261,7 @@ C     GNRINF: DOSRIN,SRINTS,CHIVAL
 C     EXEINF: FTRCTL
 C     INFORB: NORBT,NRHF,?
 C     SCBRHF: NFRRHF()
-C     INFMP2: NPHSYM, MP2FRO
+C     INFMP2: NPHSYM, MP2FRO, THRP_MP2, ...
 C     INFINP: FLAG(25), DIRFCK
 C     INFIND: ISX, ISMO
 C     INFTRA: NEWTRA, AO2INTFILE_LABEL, FCKTRA_TYPE, USEDRC, THRP
@@ -808,9 +808,13 @@ C                      SRDFT(ND_SIM,EXCMAT,DMAT,ESRDFT(1:3),DOERG,
             END IF
          ELSE IF (ADDSRI) THEN
             WRITE (LUPRI,'(/,3(/A,F25.10))')
-     &     '@   Short-range Hartree-Fock total energy        :',EMY,
+     &     '@   Hartree-Fock short-range DFT total energy    :',EMY,
      &     '@   + MP2 contribution from long-range integrals :',EMP2,
-     &     '@   = short-range MP2 second order energy        :',EMY+EMP2
+     &     '@   = MP2 short-range DFT second order energy    :',EMY+EMP2
+            IF (MP2_SCALED) WRITE(LUPRI,'(/A)')
+     &     '@   (MP2 contribution is scaled, see above)'
+            IF (DCPT2) WRITE(LUPRI,'(/A)')
+     &     '@   (MP2 contribution is using DCPT2, see above)'
          ELSE IF (.NOT.DODFT) THEN
             IF (MP2_SCALED) THEN
                WRITE (LUPRI,'(/3(/A,F25.10))')
@@ -1010,12 +1014,14 @@ C           now reset name of 2-electron integral file
 C           ... and go back and calculate the MP2 contributions from
 C               next class of range-separated integrals /hjaaj Oct 09
          ELSE IF (ADDSRI) THEN
+           IF (MP2_SCALED) WRITE (LUPRI,'(/A)') ' NOTE that the MP2'//
+     &     ' long range contribution is scaled, see above.'
            WRITE (LUPRI,'(/A/3(/A,F25.10))')
-     *     ' NOTE that the orbitals saved on disk are those obtained'//
-     *     ' with frozen orbitals (see above).',
-     *     ' Short-range Hartree-Fock total energy         :',EMY,
-     *     ' + MP2 contribution from long-range integrals  :',EMP2FL,
-     *     ' = short-range MP2 second order energy         :',EMY+EMP2FL
+     &     ' NOTE that the orbitals saved on disk are those obtained'//
+     &     ' with frozen orbitals (see above).',
+     &     ' Hartree-Fock short-range DFT total energy     :',EMY,
+     &     ' + MP2 contribution from long-range integrals  :',EMP2FL,
+     &     ' = MP2 short-range DFT second order energy     :',EMY+EMP2FL
          ELSE
             IF (MP2_SCALED) THEN
                WRITE (LUPRI,'(/A/,3(/A,F25.10))')
@@ -1879,12 +1885,12 @@ C
          I = 0
       END IF
       IF (IPRMP2 .GE. 1 .OR. I .EQ. 1) THEN
-         WRITE (LUPRI,'(2(/A,F15.8,A,I2,A)/A/A,F15.8)')
+         WRITE (LUPRI,'(2(/A,F15.8,A,I2,A)/A/A,F15.8/)')
      &      '    E(LUMO) :',ELUMO,'   (in symmetry',ISYM_LUMO,')',
      &      '  - E(HOMO) :',EHOMO,'   (in symmetry',ISYM_HOMO,')',
      &      '  --------------------------',
      &      '    gap     :',ELUMO-EHOMO
-         IF (NASHT .GT. 0) WRITE (LUPRI,'(/A/A)')
+         IF (NASHT .GT. 0) WRITE (LUPRI,'(A/A/)')
      &      ' Note that HOMO here is highest doubly occupied MO,',
      &      '      the singly occupied MOs are frozen.'
       END IF

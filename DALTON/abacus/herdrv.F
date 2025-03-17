@@ -1817,7 +1817,6 @@ C
 
       CALL SETDCH
       CALL GPCLOSE(LUCMD,'KEEP')
-      IF (THRSUP .LT. 0.0D0) THRSUP = THRS
 C
       IF (DORLM .AND. .NOT. CAVUSR)
      &   WRITE(LUPRI,'(/A,3F12.6)') ' Cavity center (center of mass):',

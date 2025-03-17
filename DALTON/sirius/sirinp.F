@@ -459,7 +459,7 @@ C
       MP2_SCALEFAC(1) =  D2 ! scale factor on (ia|jb)**2
       MP2_SCALEFAC(2) = -D1 ! scale factor on (ia|jb)*(ib|ja)
       LAMSR           = D0
-      MP2_THRP        = -1.0d0 ! accuracy of 2-el MO integrals
+      THRP_MP2        = -1.0d0 ! accuracy of 2-el MO integrals
       MP2_SCALED   = .FALSE.
       MP2_SCS      = .FALSE.
       MP2_SOS      = .FALSE.
@@ -2248,7 +2248,7 @@ C
 C 1-Oct 1987 Hans Agren
 C
 #include "implicit.h"
-      PARAMETER (NTABLE = 42)
+      PARAMETER (NTABLE = 43)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7,
      &          REWORD*20, TITLIN*80, SR_FUNCS*80
       LOGICAL ALLOPT
@@ -2263,6 +2263,7 @@ C  INFORB : NSYM
 C  INFPRI : P6FLAG,
 C  INFTAP : LUSUPM
 C  GNRINF : DOCCSD,
+C  infinp.h : options for .MP2special
 C  CBIHER : SUPMAT,
 C
 #include "maxorb.h"
@@ -2272,6 +2273,7 @@ C
 #include "infpri.h"
 #include "inftap.h"
 #include "gnrinf.h"
+#include "infmp2.h"
 #include "inftra.h"
 #include "dftcom.h"
 #include "stex.h"
@@ -2287,7 +2289,7 @@ C
      *            '.CISRDF','.HFSRDF','.MCSRDF','.SRLDA ','.SRFUN ',  ! 26:30
      *            '.SRHYBR','.COPFAC','.STEX  ','.APSG  ','.VIRTRU',  ! 31:35
      *            '.MULOFA','.DSFAC ','.PVALUE','.HFXFAC','.ERF   ',  ! 36:40
-     *            '.MP2SRD','.MINCHA'/                                ! 41:42
+     *            '.MP2SRD','.MINCHA','.MP2SPE'/                      ! 41:43
 C
       functional_line_read = .false.
 C
@@ -2309,7 +2311,7 @@ C
      &                   111,112,113,114,115,106,117,118,119,120,
      &                   121,122,123,124,125,126,127,128,129,130,
      &                   131,132,133,134,135,136,137,138,139,140,
-     &                   141,142), II
+     &                   141,142,143), II
                END IF
  1102       CONTINUE
             IF (WORD .EQ. '.OPTION' .OR. WORD .EQ. '.ALLOPT') THEN
@@ -2695,6 +2697,16 @@ C *** Option  41 >MP2SRD<  srDFT Moeller-Plesset PT2 calculation
       WRITE(LUPRI,'(/A,I0,A)')
      &   'User input .MINCHA: molecular charge down to ',MIN_MOL_CHARGE,
      &   ' allowed.'
+      GO TO 100
+  143 CONTINUE ! .MP2special - cheaper SOSMP2+no_occvir for MCSCF initial orbitals
+        NUMRUN  = NUMRUN + 1
+        DOMP2   = .TRUE.
+        FLAG(3) = .FALSE. ! do NOT call sircan for HF canonical orbitals
+        MP2_SCALEFAC(1) = 1.3d0 ! choose cheaper SOSMP2
+        MP2_SCALEFAC(2) = 0.0d0 ! corresponding to p_S = 1.3D0, p_T = 0.0d0
+        MP2_SCALED = .TRUE.
+        MP2_NO_OCCVIR = .TRUE.  !Do not add occ-virt mp2 part to density matrix
+        THRP_MP2   = 1.0D-7
       GO TO 100
 C
  8000 CONTINUE
