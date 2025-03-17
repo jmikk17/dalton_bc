@@ -306,7 +306,7 @@ C
       LFREE = LFRSAV
       CALL MEMGET2('REAL','ORBEN',KORBEN,NORBT ,WRK,KFREE,LFREE)
       CALL MEMGET2('REAL','OCCUP',KOCCUP,NORBT ,WRK,KFREE,LFREE)
-      CALL MEMGET2('REAL','DONE ',KDONE ,N2ORBX,WRK,KFREE,LFREE)
+      CALL MEMGET2('REAL','D_ONE',KDONE ,N2ORBX,WRK,KFREE,LFREE)
       CALL MEMGET2('REAL','CMO  ',KCMO  ,NCMOT ,WRK,KFREE,LFREE)
 C
 C     Read in MOs and check for canonical Hartree-Fock orbitals
@@ -517,13 +517,13 @@ C
      *               WRK(KORBEN),WRK(KH2PHD),WRK(KH2M),WRK(KH2D),
      *               WRK(KIFRRHF),EMP2,EMP2FL,WRK(KIADR1),WRK,
      *               KFREE,LFREE)
-C        CALL MP2MUL(IPLOW,IPHIGH,DONE,COEMP2,DONEFL,ORBEN,H2PHD,
+C        CALL MP2MUL(IPLOW,IPHIGH,D_ONE,COEMP2,D_ONEFL,ORBEN,H2PHD,
 C    *               H2M,H2D,IFRRHF,EMP2,EMP2FL,IADR1,WRK,KFRSAV,LFRSAV)
          IPLOW   =  IPHIGH + 1
       IF (IPLOW.LE.NP) GO TO 100
 C     ... END REPEAT
 C
-C     Modify DONE to obtain correct one electron density matrix
+C     Modify D_ONE to obtain correct one electron density matrix
 C     ( factors are defined in MP2DEN ) and add zeroth order
 C     contributions
 C
@@ -905,7 +905,7 @@ C
 C        Substract the zeroth order contribution to the density matrix
 C
          CALL ADDZEROTH(WRK(KDONE),.FALSE.)
-C             ADDZEROTH(DONE,DOADD)
+C             ADDZEROTH(D_ONE,DOADD)
 C
 C        Calculate the second order SRDFT contributions to the density
 C        matrix
@@ -1136,15 +1136,15 @@ C
       RETURN
       END
 C  /* Deck MP2_natorb */
-      SUBROUTINE MP2_NATORB(IPRNO,OCCUP,DONE,CMO,WRK,LFRSAV)
+      SUBROUTINE MP2_NATORB(IPRNO,OCCUP,D_ONE,CMO,WRK,LFRSAV)
 C
 C PURPOSE : DETERMINE NATURAL ORBITALS
 C
-C INPUT   : DONE IS TOTAL ONE ELECTRON CHARGE DENSITY MATRIX
+C INPUT   : D_ONE IS TOTAL ONE ELECTRON CHARGE DENSITY MATRIX
 C
 C
 #include "implicit.h"
-      DIMENSION OCCUP(NORBT),DONE(NORBT,NORBT),CMO(*),WRK(*)
+      DIMENSION OCCUP(NORBT),D_ONE(NORBT,NORBT),CMO(*),WRK(*)
 C
       PARAMETER ( D0 = 0.0D0 )
 C
@@ -1177,7 +1177,7 @@ C
          DO 160 I = 1,NORBI
             DO 170 J = 1,I
                IJ = IJ + 1
-               WRK(KDMAT -1+IJ) = DONE(IORBI+J,IORBI+I)
+               WRK(KDMAT -1+IJ) = D_ONE(IORBI+J,IORBI+I)
  170        CONTINUE
  160     CONTINUE
  150  CONTINUE
@@ -1261,7 +1261,7 @@ C
 C     ... end of MP2_NATORB
       END
 C  /* Deck mp2den */
-      SUBROUTINE MP2DEN(NFROZ,IFROZ,JAH,JMP,IAHMP,ISYMAM,H2PHD,DONE,
+      SUBROUTINE MP2DEN(NFROZ,IFROZ,JAH,JMP,IAHMP,ISYMAM,H2PHD,D_ONE,
      *                  COEMP2,IADR1,ORBEN,H2M,H2D,EMP2,KFRO)
 C
 C 18-Oct-1989 PJ
@@ -1299,12 +1299,12 @@ C  MULLIKEN INTEGRAL DISTRIBUTION (**,MA) = H2M(*,*)
 C  DIRAC PARTICLE HOLE INTEGRAL DISTRIBUTION H2PHD(*,*,IAHMP)
 C
 C OUTPUT:
-C  SECOND ORDER CONTRIBUTION ADDED IN DONE(*,*)
+C  SECOND ORDER CONTRIBUTION ADDED IN D_ONE(*,*)
 C
 #include "implicit.h"
 C
       DIMENSION NFROZ(8),IFROZ(NORBT),H2PHD(NP,NH,*)
-      DIMENSION DONE(NORBT,*),ORBEN(*),H2M(NORBT,*),H2D(NORBT,*)
+      DIMENSION D_ONE(NORBT,*),ORBEN(*),H2M(NORBT,*),H2D(NORBT,*)
       DIMENSION COEMP2(*)
 C
       PARAMETER ( D0 = 0.0D0 , D2 = 2.0D0 )
@@ -1351,8 +1351,8 @@ C
      *      ' Orbital energy of MP orbital  :', ORBEN(IMP),
      *      ' Orbital energy of AH orbital  :', ORBEN(IAH)
 
-         write(lupri,*) 'DONE matrix MP2MUL start:'
-         call output(done,1,NORBT,1,4,norbt, norbt,-1,lupri)
+         write(lupri,*) 'D_ONE matrix MP2MUL start:'
+         call output(d_one,1,NORBT,1,4,norbt, norbt,-1,lupri)
       END IF
       EMP2BF = EMP2
       DO 100 IH = 1,NH
@@ -1429,12 +1429,12 @@ C
 C  [*,*] = H2D(*,*)
 C  (*,*) = H2M(*,*)
 C
-C ADD CONTRIBUTION TO DONE (FACTORS ARE TAKEN CARE OF LATER)
+C ADD CONTRIBUTION TO D_ONE (FACTORS ARE TAKEN CARE OF LATER)
 C
-C   DONE(A,M) = (A,D)*[M,D]
-C   DONE(M,N) = (N,D)*[M,D]
+C   D_ONE(A,M) = (A,D)*[M,D]
+C   D_ONE(M,N) = (N,D)*[M,D]
 C
-C TODO: if (MP2_NO_OCCVIR) then occ-virt in DONE not needed in DGEMM calls below /hjaaj Apr09
+C TODO: if (MP2_NO_OCCVIR) then occ-virt in D_ONE not needed in DGEMM calls below /hjaaj Apr09
 C
       DO 1000 ISYM = 1,NSYM
 
@@ -1456,46 +1456,46 @@ C            virtual MO's in the MP2 energy /hjaaj Oct 09
 C        ... See comment above for NRHFI
          NVIRJ = NORBJ - NRHFJ
 C
-C   DONE(A,B) = (A,Q)*[Q,B]
-C   DONE(M,B) = (M,Q)*[Q,B]
+C   D_ONE(A,B) = (A,Q)*[Q,B]
+C   D_ONE(M,B) = (M,Q)*[Q,B]
 C        I,I     I,J   J,I
 C
          IF (NRHFI .GT. NFRMPI)
      &   CALL DGEMM('N','N',NORBI-NFRMPI,NRHFI-NFRMPI,NVIRJ,1.D0,
      &              H2M(IOFFI+NFRMPI,IOFFJ+NRHFJ),  NORBT,
      &              H2D(IOFFJ+NRHFJ,IOFFI+NFRMPI),  NORBT,1.D0,
-     &              DONE(IOFFI+NFRMPI,IOFFI+NFRMPI),NORBT)
+     &              D_ONE(IOFFI+NFRMPI,IOFFI+NFRMPI),NORBT)
 C
-C   DONE(A,M) = (A,D)*[M,D]
-C   DONE(N,M) = (N,D)*[M,D]
+C   D_ONE(A,M) = (A,D)*[M,D]
+C   D_ONE(N,M) = (N,D)*[M,D]
 C        I,I     I,J   I,J
 C
          IF (NRHFJ .GT. NFRMPJ)
      &   CALL DGEMM('N','T',NORBI-NFRMPI,NVIRI,NRHFJ-NFRMPJ,1.D0,
      &              H2M(IOFFI+NFRMPI,IOFFJ+NFRMPJ),NORBT,
      &              H2D(IOFFI+NRHFI,IOFFJ+NFRMPJ), NORBT,1.D0,
-     &              DONE(IOFFI+NFRMPI,IOFFI+NRHFI),NORBT)
+     &              D_ONE(IOFFI+NFRMPI,IOFFI+NRHFI),NORBT)
  1000 CONTINUE
       IF (IPRMP2 .GE. 25) THEN
          WRITE (LUPRI,'(1P,2(/A,2D11.4))')
      *   ' del(EMP2), EMP2 after this distribution :',EMP2-EMP2BF,EMP2,
      *   ' T = sum (a(MA,NB)**2) after this distr. :',TVALUE
-         write(lupri,*) 'DONE matrix MP2MUL end:'
-         call output(done,1,NORBT,1,4,norbt, norbt,-1,lupri)
+         write(lupri,*) 'D_ONE matrix MP2MUL end:'
+         call output(d_one,1,NORBT,1,4,norbt, norbt,-1,lupri)
       END IF
  8000 CALL QEXIT('MP2DEN')
       RETURN
 C     ... return from MP2DEN
       END
 C  /* Deck mp2fac */
-      SUBROUTINE MP2FAC(DONE,ORBEN)
+      SUBROUTINE MP2FAC(D_ONE,ORBEN)
 C
-C Modify DONE to obtain correct one electron density matrix
+C Modify D_ONE to obtain correct one electron density matrix
 C ( Factors are defined in MP2DEN )
 C
 #include "implicit.h"
 C
-      DIMENSION DONE(NORBT,*),ORBEN(*)
+      DIMENSION D_ONE(NORBT,*),ORBEN(*)
 C
       PARAMETER (D0 = 0.0D0 , D2 = 2.0D0 ,TOLELE = 1.0D-4 )
 C
@@ -1508,7 +1508,7 @@ C
 C
 C     Scale with factor 2 given in formulas in comments in MP2DEN
 C
-      CALL DSCAL(N2ORBX,D2,DONE,1)
+      CALL DSCAL(N2ORBX,D2,D_ONE,1)
       ELERMV = D0
       ELERCV = D0
       DO  ISYM = 1,NSYM
@@ -1519,30 +1519,32 @@ C
          NORBI = NORB(ISYM)
          DO  I = (IORBI+1),(IORBI+NRHFI)
             DO J = (IORBI+1),(IORBI+NRHFI)
-               DONE(J,I) = -DONE(J,I)
+               D_ONE(J,I) = -D_ONE(J,I)
             END DO
             IF (MP2_NO_OCCVIR) THEN
                DO J = (IORBI+1+NOCCI),(IORBI+NORBI)
-                  DONE(J,I) = D0
-                  DONE(I,J) = D0
+                  D_ONE(J,I) = D0
+                  D_ONE(I,J) = D0
                END DO
             ELSE
                DO J = (IORBI+1+NOCCI),(IORBI+NORBI)
-                  DONE(J,I) = (DONE(J,I)-DONE(I,J))/(ORBEN(I)-ORBEN(J))
-                  DONE(I,J) = DONE(J,I)
+                  D_ONE(J,I) = (D_ONE(J,I)-D_ONE(I,J))
+     &                        /(ORBEN(I)-ORBEN(J))
+                  D_ONE(I,J) = D_ONE(J,I)
                END DO
             END IF
-            ELERMV = ELERMV - DONE(I,I)
+            ELERMV = ELERMV - D_ONE(I,I)
 C
 C           Add zero'th order contribution
 C
-            DONE(I,I) = D2 + DONE(I,I)
+            D_ONE(I,I) = D2 + D_ONE(I,I)
          END DO
          DO  I = (IORBI+1+NRHFI),(IORBI+NOCCI)
-            DONE(I,I) = 1.0D0 - DONE(I,I)        ! singly occupied HSROHF orbitals
+            ELERMV = ELERMV - D_ONE(I,I)
+            D_ONE(I,I) = 1.0D0 + D_ONE(I,I)        ! singly occupied HSROHF orbitals
          END DO
          DO  I = (IORBI+1+NOCCI),(IORBI+NORBI)
-            ELERCV = ELERCV + DONE(I,I)
+            ELERCV = ELERCV + D_ONE(I,I)
          END DO
       END DO   ! ISYM = 1,NSYM
 C
@@ -1908,7 +1910,7 @@ C *** end of subroutine MP2FCK
 C
       END
 C  /* Deck MP2IFC */
-        SUBROUTINE MP2IFC(ECORR,DONE,COEMP2)
+      SUBROUTINE MP2IFC(ECORR,D_ONE,COEMP2)
 C
 C This routine prepares the SOPPA interface for RESPONSE by storing
 C the correlation coefficients and the second order one-density
@@ -1917,7 +1919,7 @@ C    MJP 181093
 C
 #include "implicit.h"
 #include "priunit.h"
-        DIMENSION DONE(*), COEMP2(*)
+      REAL*8 D_ONE(*), COEMP2(*)
 C Used from common blocks:
 C    INFORB: N2ORBT, NRHFT, NVIRT
 C    INFMP2: NPHMAX
@@ -1949,7 +1951,7 @@ C Write "MP2INFO " label
 C Write the correlation coefficients
       CALL WRITT (LUSIFC,NPHTOT(1),COEMP2)
 C Write the second'order one-electron density
-      CALL WRITT (LUSIFC,N2ORBX,DONE)
+      CALL WRITT (LUSIFC,N2ORBX,D_ONE)
 C Write the second order correlation energy E(HF) + EMP2
       WRITE(LUSIFC) ECORR,ECORR,ECORR,ECORR ! to fill 32 bytes
 C Write "End Of DATA" label
@@ -1959,7 +1961,7 @@ C Close the FNSIFC file
       RETURN
       END
 C  /* Deck mp2mul */
-      SUBROUTINE MP2MUL(IPLOW,IPHIGH,DONE,COEMP2,DONEFL,ORBEN,H2PHD,
+      SUBROUTINE MP2MUL(IPLOW,IPHIGH,D_ONE,COEMP2,D_ONEFL,ORBEN,H2PHD,
      *                  H2M,H2D,IFRRHF,EMP2,EMP2FL,IADR1,
      *                  WRK,KFRSAV,LFRSAV)
 C
@@ -1976,7 +1978,7 @@ C     WRK(kfrsav:kfrsav-1+lfrsav)
 C
 #include "implicit.h"
 C
-      DIMENSION DONEFL(NORBT,NORBT),DONE(NORBT,NORBT),ORBEN(NORBT)
+      DIMENSION D_ONEFL(NORBT,NORBT),D_ONE(NORBT,NORBT),ORBEN(NORBT)
       DIMENSION H2PHD(NP,NH,*),H2M(NORBT,NORBT),H2D(NORBT,NORBT)
       DIMENSION WRK(*), COEMP2(*), IFRRHF(*)
 C
@@ -2094,10 +2096,10 @@ C
          END IF
          IF ( IFRMP2(IC).EQ.0 .AND. IFRMP2(ID).EQ.0 ) THEN
 C        If ( IC and ID not frozen   ) then
-            CALL MP2DEN(NFRMP2,IFRMP2,ICHO,IDPA,ICHDP,ISYMCD,H2PHD,DONE,
-     &                  COEMP2,IADR1,ORBEN,H2M,H2D,EMP2,0)
-C           CALL MP2DEN(NFROZ,IFROZ,ICHO,IDPA,ICHDP,ISYMCD,H2PHD,DONE,
-C     *                 COEMP2,IADR1,ORBEN,H2M),H2D,EMP2,KFRO)
+            CALL MP2DEN(NFRMP2,IFRMP2,ICHO,IDPA,ICHDP,ISYMCD,H2PHD,
+     &                  D_ONE,COEMP2,IADR1,ORBEN,H2M,H2D,EMP2,0)
+C           CALL MP2DEN(NFROZ,IFROZ,ICHO,IDPA,ICHDP,ISYMCD,H2PHD,
+C   &                   D_ONE,COEMP2,IADR1,ORBEN,H2M),H2D,EMP2,KFRO)
          END IF
 C
 C        IF MP2FRO, that is, if some orbitals are frozen above,
@@ -2111,7 +2113,7 @@ C
          IF ( MP2FRO ) THEN
          IF ( IFRRHF(IC) .EQ. 0 .AND. IFRRHF(ID) .EQ. 0 ) THEN
             CALL MP2DEN(NFRRHF,IFRRHF,ICHO,IDPA,ICHDP,ISYMCD,H2PHD,
-     *                  DONEFL,COEMP2,IADR1,ORBEN,WRK(KH2M1),H2D,
+     *                  D_ONEFL,COEMP2,IADR1,ORBEN,WRK(KH2M1),H2D,
      *                  EMP2FL,-1)
          END IF
          END IF
