@@ -16,21 +16,15 @@
 !
 !
 C
-#ifdef REV_LOG
-========================================================================
-Revision 1.2  2001/01/31 17:51:20  vebjornb
-Parallel modifications from pdahle
-
-Revision 1.3  2000/05/04 12:26:07  hjj
-(1) merged with Dirac version:
-    -- code for 1. derivative screening by Joern Thyssen
-    -- bug fix for SUSCEP GAB matrix
-    -- bug fix for HKABCD value
-
-Revision 1.2  2000/05/04 10:19:53  hjj
-(1) LUPROP .eq. 0 tests changed to LUPROP .le. 0
-(2) open LUPROP as unknown in GABGEN
-========================================================================
+#ifdef OLD_REV_LOG
+!========================================================================
+!Revision 2001/01/31 17:51:20  vebjornb
+!Parallel modifications from pdahle
+!
+!Revision 1.3  2000/05/04 12:26:07  hjj
+!(1) merged with Dirac version:
+!    -- code for 1. derivative screening by Joern Thyssen
+!========================================================================
 #endif
 C/* Deck gabdrv */
       SUBROUTINE GABDRV(GABM,WORK,LWORK,IJOB,ITYPE,IGTYP,
@@ -1713,8 +1707,8 @@ C
       RETURN
       END
 C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-C/* Deck Gabge1 */
-      SUBROUTINE GABGE1(IJOB,GABM,ITYPE,IGTYP,
+C/* Deck Gabgen_1 */
+      SUBROUTINE GABGEN_1(IJOB,GABM,ITYPE,IGTYP,
      &                  MAXDIF,JATOM,NOCONT,WORK,LWORK,IPRINT)
 C*****************************************************************************
 C
@@ -1748,11 +1742,11 @@ C
 C
       CALL PAOVEC(WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            WORK(KJORBS),WORK(KKORBS),0,.FALSE.,IPRINT)
-      CALL MEMREL('GABGE1',WORK,KWORK,KJORBS,KFREE,LFREE)
+      CALL MEMREL('GABGEN_1',WORK,KWORK,KJORBS,KFREE,LFREE)
       CALL GABDRV(GABM,WORK(KFREE),LFREE,IJOB,ITYPE,IGTYP,
      &            WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),
      &            WORK(KIORBS),MAXDIF,JATOM,NOCONT,IPRTWO)
-      CALL MEMREL('GABGE1',WORK,KWORK,KWORK,KFREE,LFREE)
+      CALL MEMREL('GABGEN_1',WORK,KWORK,KWORK,KFREE,LFREE)
 C
       RETURN
 C
@@ -1778,7 +1772,7 @@ C/* Deck Gabgen */
 C***********************************************************************
 C
 C     This routine will generate the reduced matrix of 
-C     Cauchy-Schwarz integrals and write it to file AOPROPER
+C     Cauchy-Schwarz integrals and write it to file AOGABINT
 C
 C     Written by T.Saue Mar 19 1997
 C
@@ -1804,11 +1798,11 @@ C
 #include "memint.h"
       IF(ITYPE.EQ.0) THEN
          NGAB = 1
-         GABLAB(1) = 'GABXXXXX'
+         GABLAB(1) = 'GAB-----'
       ELSE IF (ITYPE .EQ.10) THEN
          NGAB = 3
          DO I = 1,NGAB
-            GABLAB(I) = 'GABXXX'//CHAR(MAXDIF+48)//CHRXYZ(-I)
+            GABLAB(I) = 'GAB---'//CHAR(MAXDIF+48)//CHRXYZ(-I)
          END DO
       ELSE
          WRITE(LUPRI,'(A,I12)') 'GABGEN: Invalid ITYPE =',ITYPE
@@ -1818,12 +1812,17 @@ C
          IF    (IJOB.EQ.0) THEN
             IF (SRINTS) THEN
 C           ... short range integrals
-               GABLAB(I)(4:5) = 'SR'
+               GABLAB(I)(4:7) = 'AOSR'
             ELSE
                GABLAB(I)(4:5) = 'AO'
             END IF
          ELSEIF(IJOB.EQ.1) THEN
-            GABLAB(I)(4:5) = 'SO'
+            IF (SRINTS) THEN
+C           ... short range integrals
+               GABLAB(I)(4:7) = 'SOSR'
+            ELSE
+               GABLAB(I)(4:5) = 'SO'
+            END IF
          ELSE
             WRITE(LUPRI,'(A,I12)') 'GABGEN: Invalid IJOB =',IJOB
             CALL QUIT('GABGEN: Invalid IJOB')
@@ -1831,22 +1830,21 @@ C           ... short range integrals
       END DO
       CALL GETDAT(RTNLBL(1),RTNLBL(2))     
 C
-C     Open file AOPROPER if not opened
+C     Open file AOGABINT if not opened
 C
-      IF (LUPROP .LE. 0) CALL GPOPEN(LUPROP,'AOPROPER',
+      IF (LU_GAB .LE. 0) CALL GPOPEN(LU_GAB,'AOGABINT',
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
 C
 C       Search for GAB-integrals; return if they are there
 C
       DO I = 1,NGAB
-         REWIND LUPROP
-         IF (.NOT. FNDLAB(GABLAB(I),LUPROP)) GOTO 10
+         REWIND LU_GAB
+         IF (.NOT. FNDLAB(GABLAB(I),LU_GAB)) GOTO 10
       END DO
-      GOTO 999
-C     ... GAB matrix(ces) was already on file
+      GOTO 999 ! All needed AB matrix(ces) are already on file
  10   CONTINUE
-      REWIND LUPROP
-      IF(FNDLAB('EOFLABEL',LUPROP)) BACKSPACE LUPROP
+      REWIND LU_GAB
+      IF(FNDLAB('EOFLABEL',LU_GAB)) BACKSPACE LU_GAB
 C
 C     Generate GAB-integrals
 C
@@ -1858,7 +1856,7 @@ C
       IF (NRGAB .NE. NGAB) CALL QUIT('GABGEN ERROR: NGAB .ne. NRGAB')
       NBUF = NRGAB*NBASIS*NBASIS
       CALL MEMGET('REAL',KBUF,NBUF,WORK,KFREE,LFREE)     
-      CALL GABGE1(IJOB,WORK(KBUF),ITYPE,IGTYP,
+      CALL GABGEN_1(IJOB,WORK(KBUF),ITYPE,IGTYP,
      &            MAXDIF,JATOM,NOCONT,WORK(KFREE),LFREE,IPRINT)
 C
 C
@@ -1910,13 +1908,13 @@ C
       LEN = MAX(4,N2GAB)
       IOFF = 0
       DO I = 1,NGAB
-         CALL NEWLB2(GABLAB(I),RTNLBL,LUPROP,LUPRI)
-         CALL WRITT(LUPROP,LEN,WORK(KGAB+IOFF))
+         CALL NEWLB2(GABLAB(I),RTNLBL,LU_GAB,LUPRI)
+         CALL WRITT(LU_GAB,LEN,WORK(KGAB+IOFF))
          IOFF = IOFF + N2GAB
       END DO
-      CALL NEWLB2('EOFLABEL',RTNLBL,LUPROP,LUPRI)
+      CALL NEWLB2('EOFLABEL',RTNLBL,LU_GAB,LUPRI)
 C
-      CALL GPCLOSE(LUPROP,'KEEP')
+      CALL GPCLOSE(LU_GAB,'KEEP')
       CALL MEMREL('GABGEN',WORK,KWORK,KWORK,KFREE,LFREE)
 C
  999  CONTINUE
@@ -1936,58 +1934,70 @@ C***********************************************************************
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
-      LOGICAL EXTST,FNDLAB
       CHARACTER GABLAB*8
-      DIMENSION GABM(N2GAB), WORK(*)
+      REAL*8    GABM(N2GAB), WORK(*)
+
+      LOGICAL   EXTST,FNDLAB
+      INTEGER   IJOB
 #include "inftap.h"
 C
       CALL QENTER('GETGAB')
 C
-C     Check if file AOPROPER is present
+C     Check if file AOGABINT is present
 C
-      CALL GPINQ('AOPROPER','EXIST',EXTST)
-      IF(EXTST) THEN
-C     File AOPROPER present; see if it is opened
-        IF (LUPROP .LE. 0) CALL GPOPEN(LUPROP,
-     &     'AOPROPER','OLD',' ','UNFORMATTED',IDUMMY,.FALSE.)
+      CALL GPINQ('AOGABINT','EXIST',EXTST)
+      IF (EXTST) THEN
+C     File AOGABINT present; see if it is opened
+        IF (LU_GAB .LE. 0) CALL GPOPEN(LU_GAB,
+     &     'AOGABINT','OLD',' ','UNFORMATTED',IDUMMY,.FALSE.)
       ELSE
-        CALL GPOPEN(LUPROP,
-     &     'AOPROPER','NEW',' ','UNFORMATTED',IDUMMY,.FALSE.)
+        CALL GPOPEN(LU_GAB,
+     &     'AOGABINT','NEW',' ','UNFORMATTED',IDUMMY,.FALSE.)
       ENDIF
 C
 C     Get GAB-matrix
 C
-      REWIND LUPROP
-      IF(FNDLAB(GABLAB,LUPROP)) THEN
-         READ(LUPROP,ERR=10,END=20) GABM
-      ELSE IF (GABLAB(6:8) .EQ. 'XXX') THEN
+      REWIND LU_GAB
+      IF(FNDLAB(GABLAB,LU_GAB)) THEN
+         READ(LU_GAB,ERR=10,END=20) GABM
+      ELSE IF (GABLAB(8:8) .EQ. '-') THEN
          WRITE(LUPRI,'(/A,A8,A)') '***  INFO  GETGAB: ',
-     &        GABLAB,' not found on AOPROPER. Regenerating.'
-         CALL GABGEN(0,0,0,0,0,.FALSE.,0,WORK,LWORK)
-         IF (LUPROP .LE. 0) CALL GPOPEN(LUPROP,'AOPROPER',
+     &        GABLAB,' not found on AOGABINT. Regenerating.'
+
+         IF (GABLAB(4:5) .EQ. 'AO') THEN
+            IJOB = 0
+         ELSE IF (GABLAB(4:5) .EQ. 'SO') THEN
+            IJOB = 1
+         END IF
+
+         CALL GABGEN(IJOB,0,0,0,0,.FALSE.,0,WORK,LWORK)
+!        CALL GABGEN(IJOB,ITYPE,IGTYP,MAXDIF,JATOM,NOCONT,
+!    &               IPRINT,WORK,LWORK)
+
+         IF (LU_GAB .LE. 0) CALL GPOPEN(LU_GAB,'AOGABINT',
      &      'OLD',' ','UNFORMATTED',IDUMMY,.FALSE.)
-         REWIND LUPROP
-         IF(FNDLAB(GABLAB,LUPROP)) THEN
-            READ(LUPROP,ERR=10,END=20) GABM
+         REWIND LU_GAB
+         IF(FNDLAB(GABLAB,LU_GAB)) THEN
+            READ(LU_GAB,ERR=10,END=20) GABM
          ELSE
             WRITE(LUPRI,'(/A,A8,A)')
-     &           'GETGAB: Label ',GABLAB,' not found on AOPROPER !'
-            CALL QUIT('GETGAB: No GAB on AOPROPER !')
+     &           'GETGAB: Label ',GABLAB,' not found on AOGABINT !'
+            CALL QUIT('GETGAB: No GAB on AOGABINT !')
          END IF
       ELSE
          WRITE(LUPRI,'(/A,A8,A)')
-     &   'GETGAB: Label ',GABLAB,' not found on AOPROPER !'
-         CALL QUIT('GETGAB: No derivative GAB on AOPROPER !')
+     &   'GETGAB: Label ',GABLAB,' not found on AOGABINT !'
+         CALL QUIT('GETGAB: No derivative GAB on AOGABINT !')
       ENDIF
 C
-      CALL GPCLOSE(LUPROP,'KEEP')
+      CALL GPCLOSE(LU_GAB,'KEEP')
       CALL QEXIT('GETGAB')
       RETURN
  10   CONTINUE
       WRITE(LUPRI,'(A,A8)') '* GETGAB: ERROR reading ',GABLAB
-        CALL QUIT('GETGAB: Error reading GAB from AOPROPER !')
+        CALL QUIT('GETGAB: Error reading GAB from AOGABINT !')
  20   CONTINUE
       WRITE(LUPRI,'(A,A8)') '* GETGAB: EOF   reading ',GABLAB
-        CALL QUIT('GETGAB: EOF reading GAB from AOPROPER !')
+        CALL QUIT('GETGAB: EOF reading GAB from AOGABINT !')
       END
 C -- end of her2gab.F --

@@ -3,7 +3,7 @@
 !     Most file variables used in Dalton
 !     ("TAP" for tapes here for historical reasons)
 !
-      INTEGER         LUCME,  LUMOL,  LUPROP, LUSOL,  LUINTA,           &
+      INTEGER         LUCME,  LUMOL,  LUPROP, LUSOL,  LUINTA, LU_GAB,   &
      &                LUONEL, LUSUPM, LUTLM,  LUDA1,  LUITMP,           &
      &                LU2DER, LUDASP, LURDR,  LURDI,  LUGDR,  LUGDI,    &
      &                LUGDT,  LURDT,  LUDFCK, LUSFDA, LUFDC,  LUWLK,    &
@@ -18,11 +18,11 @@
       INTEGER         LUPMOM, LUMOM,  LUEIND, LUENUC, LUESITE,LUEOBAR,  &
      &                LUVDWSE,LUENSA, LUQM3E, LUQM3P, LUOSCR, LUMMOV,   &
      &                LUOVER, LUNDPF, LUNMPF, LUC4IF
-      COMMON /INFTAP/ LUCME,  LUMOL,  LUPROP, LUSOL, LUINTA,            &
-     &                LUONEL, LUSUPM, LUTLM,  LUDA1, LUITMP,            &
-     &                LU2DER, LUDASP, LURDR,  LURDI, LUGDR, LUGDI,      &
-     &                LUGDT,  LURDT,  LUDFCK, LUSFDA,LUFDC, LUWLK,      &
-     &                LUPAO,  LUPAS,  LUNR1,  LUNR3, LUNR5,             &
+      COMMON /INFTAP/ LUCME,  LUMOL,  LUPROP, LUSOL,  LUINTA, LU_GAB,   &
+     &                LUONEL, LUSUPM, LUTLM,  LUDA1,  LUITMP,           &
+     &                LU2DER, LUDASP, LURDR,  LURDI,  LUGDR, LUGDI,     &
+     &                LUGDT,  LURDT,  LUDFCK, LUSFDA, LUFDC, LUWLK,     &
+     &                LUPAO,  LUPAS,  LUNR1,  LUNR3,  LUNR5,            &
      &                LUINTR, LUMOLDEN,       LUMOLDEN_MOS, LUR12(20),  &
      &                LUPMOM, LUMOM,  LUEIND, LUENUC, LUESITE, LUEOBAR, &
      &                LUVDWSE,LUENSA, LUQM3E, LUQM3P, LUOSCR,LUMMOV,    &
