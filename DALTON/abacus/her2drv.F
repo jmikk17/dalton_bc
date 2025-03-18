@@ -1,3 +1,4 @@
+#define HER2DRV_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) The Dalton Authors (see AUTHORS file for details).
@@ -504,6 +505,7 @@ C
 #include "inftap.h"
 #include "gtensor.h"
 #include "r12int.h"
+#include "drw2el.h"
 #include "zfs.h"
 Cef begin
 #include "incore.h"
@@ -572,6 +574,22 @@ C                         after step 2
 C           DINTSKP(2,4) - NEM times number of integrals skipped
 C
       DOSCRN = .FALSE.
+
+      IF (UNDIFF) THEN   ! screening implemented March 2025 hjaaj
+      IF (.NOT.DPTINT .AND. .NOT.FINDPT .AND. ! only screening if no DPT options set
+     &    .NOT.R12INT .AND. .NOT.U12INT .AND. ! only screening if no R12 options set
+     &    .NOT.R12EIN .AND. .NOT.U21INT) THEN
+         DOSCRN = .TRUE. ! using THRESH
+         N2GAB  = MAXSHL**2
+         GABRAO_MAX = MAXVAL(GABRAO(1:N2GAB))
+#if HER2DRV_DEBUG > 0
+        write(lupri,*) 'activating screen undiff, gabrao_max',gabrao_max
+        write(lupri,*) 'GABRAO matrix'
+        call output(gabrao,1,maxshl,1,maxshl,maxshl,maxshl,-1,lupri)
+#endif
+      END IF
+      END IF
+
       IF(DIRFCK.OR.SOFOCK)  THEN
         CALL DZERO(DINTSKP,8)
         IF(IFTHRS.LT.4) THEN
@@ -649,6 +667,7 @@ Cef end
       IPREVB = 0
       IPREVC = 0
       IPREVD = 0
+      N_skipped = 0
 
 C
 C     *****************************
@@ -688,6 +707,19 @@ C        ***** Second Shell Index *****
 C        ******************************
 C
          DO 200 ISHELB = IBSTRT,ISHELA
+
+            IF (DOSCRN .AND. UNDIFF) THEN
+               J_GAB_AB = (ISHELB-1)*MAXSHL + ISHELA
+               ULINT = GABRAO(J_GAB_AB)*GABRAO_MAX ! max possible value of (AB|CD) integral
+               IF (ULINT .LE. THRESH) THEN
+#if HER2DRV_DEBUG > 0
+      write(lupri,*) 'screen ishela, ishelb, ulint',ishela,ishelb,ulint
+                  write(lupri,*) 'Skipping, ulint <',thresh
+#endif
+                  N_skipped = N_skipped + 1
+                  GO TO 200
+               END IF
+            END IF
 C
 C           Check for basis-set identifier (WK/UniKA/04-11-2002).
             MBSAB = MBSA + MBSISH(ISHELB)
@@ -769,6 +801,19 @@ C
      &                  (ISHELA.EQ.ISHELC)) IDMAX = ISHELB
                DO 400 ISHELD = IDSTRT,IDMAX
 C
+                  IF (DOSCRN .AND. UNDIFF) THEN
+                     J_GAB_CD = (ISHELD-1)*MAXSHL + ISHELC
+                     ULINT = GABRAO(J_GAB_AB)*GABRAO(J_GAB_CD) ! max possible value of (AB|CD) integral
+                     IF (ULINT .LE. THRESH) THEN
+#if HER2DRV_DEBUG > 0
+                        write(lupri,*)
+     & 'screen ishela..d, ulint',ishela,ishelb,ishelc,isheld,ulint
+                        write(lupri,*) 'Skipping, ulint <',thresh
+#endif
+                        N_skipped = N_skipped + 1
+                        GO TO 400
+                     END IF
+                  END IF
 C                 Check for basis-set identifier (WK/UniKA/04-11-2002).
                   MBSABCD = MBSABC + MBSISH(ISHELD)
                   IF (ISHELD .NE. IDSMAX) THEN
@@ -856,6 +901,10 @@ C
   300       CONTINUE
   200    CONTINUE
   100 CONTINUE
+
+      if (N_skipped .gt. 0) then
+         write(lupri,*) '2-el. screening, shell pairs skipped',N_skipped
+      end if
       IF (DIA2SO) THEN
          IF (JPRINT .GT. 1) THEN
             CALL HEADER('Two-electron diamagnetic spin-orbit '//
@@ -3255,7 +3304,7 @@ C
      &                   SQ12EL,SOP000,NINTS,IPRINT)
             ELSE
                IX = 1
-               IF (V12INT) THEN
+               IF (V12INT) THEN ! standard 1/r12 integrals (or long- or short-range)
                   CALL SYM2(SOINT(1,IX),AOINT(1,IX),IPNTAO,IPNTOP,
      &                      ISYMR,ISYMT,ISYMTS,HKABCD,
      &                      SQ12EL,SOP000,NINTS,IPRINT)
