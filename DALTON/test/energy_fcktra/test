@@ -24,7 +24,7 @@ f.add(from_string = 'Wave function specification',
 f.add(string = 'Number of coordinates in each symmetry')
 f.add(string = 'Number of orbitals in each symmetry')
 
-f.add(string = 'Hartree-Fock total energy',
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-9)
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-9)

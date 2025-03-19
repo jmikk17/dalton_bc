@@ -93,7 +93,7 @@ C
       ELSE ! Coulomb integrals
          WRITE (LUPRI,'(A/A,1P,D10.2,A/)')
      &   '     (Precalculated AO two-electron integrals'
-     &   //' are resorted to new file.',
+     &   //' are resorted to this file.',
      &   '      Threshold for discarding integrals :',THRESH,' )'
       END IF
       LWRK2 = 0

@@ -1674,6 +1674,7 @@ C  gnrinf.h: DOSRIN
 C  INFORB  : NBAST,N2BASX
 C  INFTAP  : LUSUPM
 C  CBIHRS  : parameters for FORMSUP
+C  inftra.h: THRP
 C  frame.h : POTNUC
 C  DFTCOM  : HFXFAC
 C
@@ -1681,6 +1682,7 @@ C
 #include "inforb.h"
 #include "inftap.h"
 #include "cbihrs.h"
+#include "inftra.h"
 #include "frame.h"
 #include "dftcom.h"
 C
@@ -1689,6 +1691,7 @@ C
       LOGICAL      FNDLAB, FNSUPM_OK, F_EXIST, DOSRIN_save
       LOGICAL*4    NOSYM
       character*8  FNSUPM_local
+      REAL*8       THRSUP_save
 
       CALL QENTER('RDSUPM')
 C
@@ -1696,7 +1699,7 @@ C
 C     ... special code for AOSUPMAT not to be used
          WRITE (LUPRI,'(/A/A)')
      &      'PROGRAMMING ERROR: RDSUPM called with LUSUPM = -1',
-     &      'Please report on Dalton forum.'
+     &      'Please report to Dalton authors.'
          CALL QTRACE(LUPRI)
          CALL QUIT('Programming ERROR: RDSUPM called with LUSUPM.eq.-1')
       END IF
@@ -1705,6 +1708,8 @@ C     ... special code for AOSUPMAT not to be used
       ELSE
          HFXFACSUP = HFXFAC
       END IF
+      THRSUP_save = THRSUP
+      IF (THRSUP .LT. 0.0D0) THRSUP = THRP ! if THRSUP not set by user, use THRP
       if (HFXFACSUP .eq. 0.0D0) then
          FNSUPM_local = 'AO2_JINT'
       else if (HFXFACSUP .eq. 1.0D0) then
@@ -1713,6 +1718,8 @@ C     ... special code for AOSUPMAT not to be used
          FNSUPM_local = 'AODFTINT'
       end if
       if (LUSUPM .gt. 0) call GPCLOSE(LUSUPM,'KEEP')
+!     write(lupri,*) 'rdsupm, lusupm, only_j, fnsupm_local, thrsup',
+!    &                        lusupm, only_j, fnsupm_local, thrsup
 C
       I = 0
  100     IF (LUSUPM .LE. 0) CALL GPOPEN(LUSUPM,FNSUPM_local,
@@ -1723,13 +1730,13 @@ C
          FNSUPM_OK = FNDLAB('PXSUPMAT',LUSUPM)
          IF (FNSUPM_OK) THEN
             READ (LUSUPM) XFAC, XPOTNUC, NOSYM
-            IF (abs(XFAC-HFXFACSUP) .gt. THRSUP) THEN
+            IF (abs(XFAC-HFXFACSUP) .gt. 1.d-10) THEN
                WRITE(LUPRI,*)
                WRITE(LUPRI,*) 'Calculating ',FNSUPM_local,
      &         ' because HFXFAC changed from',XFAC,' to',HFXFACSUP
                FNSUPM_OK = .FALSE.
             END IF
-            IF (abs(XPOTNUC-POTNUC) .gt. THRSUP) THEN
+            IF (abs(XPOTNUC-POTNUC) .gt. 1.d-10) THEN
                WRITE(LUPRI,'(/3A)') 'Calculating ',FNSUPM_local,
      &         ' because geometry has changed.'
                FNSUPM_OK = .FALSE.
@@ -1786,6 +1793,7 @@ C
          CALL DUNFLD(NBAST,WORK,DMAT(JDG))
       END DO
 C
+      THRSUP = THRSUP_save
       CALL GPCLOSE(LUSUPM,'KEEP')
       CALL QEXIT('RDSUPM')
       RETURN
@@ -1944,22 +1952,23 @@ C                    note NRS = IPQ
   280       CONTINUE
          ELSE IF (ITYP .EQ. 2) THEN
             IREC2 = IREC2 + 1
-            LENP  = 3*NPQRS ! real*8 P + integer*4 INDP
+            NRS   = NPQRS ! for given IP, IQ
+            LENP  = 3*NRS ! real*8 P + integer*4 INDP
             IF (LENP .GT. LFREE) GO TO 820
             CALL READI4(LUSUPM,LENP,IWORK)
-            INDP  = 2*NPQRS ! "2" as IWORK is always integer*4
+            INDP  = 2*NRS ! "2" as IWORK is always integer*4
             IPQ   = IROW(NP1) + NQ1
             DO 380 ISIM = 1,NSIM
                DPQ = DMAT(IPQ,ISIM)
                IF (ABS(DPQ) .GT. THRZER) THEN
 ! no vector dependence in IRS loop
-                  DO 320 IRS = 1,NPQRS
+                  DO 320 IRS = 1,NRS
                      FMAT( IWORK(INDP+IRS) , ISIM ) =
      &               FMAT( IWORK(INDP+IRS) , ISIM ) + DPQ * WORK(IRS)
   320             CONTINUE
                END IF
                FPQ = D0
-               DO 340 IRS = 1,NPQRS
+               DO 340 IRS = 1,NRS
                   FPQ = FPQ + DMAT( IWORK(INDP+IRS) ,ISIM ) * WORK(IRS)
   340          CONTINUE
 C Use first line below if P(pq,pq) has been divided by two

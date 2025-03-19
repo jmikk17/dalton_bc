@@ -32,6 +32,7 @@
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
 - Possibility to speed-up MP2-NO by neglecting two-electron MO integrals abs value less than new threhshold \.THR2EL. (H. J. Aa. Jensen)
+- New option \.MP2special for cheaper, approximate MP2 initial guess orbitals for MCSCF/MCsrDFT, without compromising MCSCF convergence. (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba

@@ -323,15 +323,9 @@ C
       DPCM       = WAVTP('PCM')
       DOROSCF    = WAVTP('ROHF')
       DONEVPT    = WAVTP('NEVPT')
-#ifdef MOD_SRDFT
       DOHFSRDFT  = WAVTP('HFSRDFT')
       DOCISRDFT  = WAVTP('CISRDFT')
       DOMCSRDFT  = WAVTP('MCSRDFT')
-#else
-      DOHFSRDFT  = .FALSE.
-      DOCISRDFT  = .FALSE.
-      DOMCSRDFT  = .FALSE.
-#endif
 C
       IF (CCSDT .OR. CIS   .OR. CC1A .OR. CC1B .OR. MCC2 .OR. CCP2 .OR.
      &    CC3   .OR. CCP3  .OR. CCRT .OR. CCR3 .OR.
@@ -378,14 +372,12 @@ C
          WAVTP = HSROHF
       ELSE IF (STRING.EQ.'NEVPT') THEN
          WAVTP = DONEVPT
-#ifdef MOD_SRDFT
       ELSE IF (STRING.EQ.'HFSRDFT') THEN
          WAVTP = DOHFSRDFT
       ELSE IF (STRING.EQ.'CISRDFT') THEN
          WAVTP = DOCISRDFT
       ELSE IF (STRING.EQ.'MCSRDFT') THEN
          WAVTP = DOMCSRDFT
-#endif
       ELSE IF (STRING.EQ.'PCM') THEN
          WAVTP = PCM
       ELSE

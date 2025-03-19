@@ -85,15 +85,17 @@ C
 C     SAMEOD: ODs are the same for both electrons
 C
       SAMEOD = ODTRI1 .EQV. ODTRI2 .AND. ODALL1 .EQV. ODALL2
+#ifdef GAB_HAS_BEEN_IMPLEMENTED_IN_ERI
 C
 C     Gab integrals for Cauchy-Schwarz inequality
 C     ============================================
 C
       CALL MEMGET('REAL',KGAB,NGAB*NGAB,WORK,KFREE,LFREE)
       CALL DZERO(WORK(KGAB),NGAB*NGAB)
-      KGABWRK = KFREE
 C
 C     CALL GETGAB(WORK(KGAB),LWRK,IPRINT)
+#endif
+      KGABWRK = KFREE
 C
 C     **********************
 C     ***** Electron 1 *****

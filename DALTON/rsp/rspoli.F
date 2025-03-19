@@ -666,14 +666,12 @@ C
      &           KDXCAO,KDXVAO,KDTCAO,KDTVAO,KDTOTAO,KFREE
 #endif
 
-#ifdef MOD_SRDFT
       IF (DOHFSRDFT .OR. DOMCSRDFT) THEN
          CALL SRDFT_DENS(WRK(KDTOTAO),UDV,PVX,CMO,WRK,KFREE,LFREE)
 C        Get DtotAO, allocation for DXtotAO in SIRFCK.SRDFT can here be
 C        used temporarily for DVAO if NASHT.gt.0
 C
       END IF
-#endif
 C
 C
 C Manu about MC-srDFT: Note that for ncsim >0 and doftc
@@ -1201,7 +1199,6 @@ C            it is NOT used when normal MCSCF)
             CALL RSPORB(.FALSE.,NCSIM,FC,FVTD(1,1,NCSIM+1),FVTD,
      *                  QATD,QBTD,WRK(KDTV),EVECS)
          END IF
-#ifdef MOD_SRDFT
          IF (DOMCSRDFT) THEN
 C           ... special MCSRDFT contribution to csf sigma-vectors,
 C               stored in FTV(1,NCSIM+ICSIM) in SIRTR1 after the
@@ -1317,7 +1314,6 @@ C
                JEVECS = JEVECS + KZYVAR
             END DO ! ICSIM = 1,NCSIM
          END IF ! DOMCSRDFT
-#endif
       END IF ! NCSIM .gt. 0
       CALL MEMREL('RSPOLI.bottom',WRK,KFRSAV,KFRSAV,KFREE,LFREE)
 C

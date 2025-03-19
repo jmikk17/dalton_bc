@@ -16,14 +16,9 @@
 !
 !
 C
-#ifdef UNDEF
-===========================================================================
-961125: GTSXST: added dimension JCLSX(*) to identify as vector
-                for GTSXS2 call (found from SGI compiler message)
-        LRFEXD: added dimension SIGN(*) to identify as vector
-                for LRFEX2 call (found from SGI compiler message)
-C  /* Deck gtsxst */
-/* Comdeck comments */
+#ifdef comments
+=======================================================================
+C/* Comdeck comments */
 C CSFDIM --- CISIZE
 C        --- IWEYLF
 C
@@ -40,7 +35,7 @@ C
 C  CSDIAG
 C
 C  CSDTVC
-===========================================================================
+=======================================================================
 #endif
 C  /* Deck csdtmt */
       SUBROUTINE CSDTMT(IDFTP,ICFTP,DTOC,WORK,IPRINT)

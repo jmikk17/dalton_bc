@@ -1,3 +1,4 @@
+#define HER2DRV_DEBUG -1
 !
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) The Dalton Authors (see AUTHORS file for details).
@@ -14,16 +15,63 @@
 !  If a copy of the GNU LGPL v2.1 was not distributed with this
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
+
+! FILE: her2drv.F
 !
+!  ITYPE    2-electron integral type (see subroutine TWORUN)
+!  ------   -------------------------------------------------
+!     0   : Undifferentiated integrals written on file AOTWOINT or AOSR2INT,
+!           or 2-el.Darwin written on file
+!     1   : Differentiated integrals written on file (atom JATOM)
+!     2   : Expectation values of differentiated integrals (all atoms)
+!     3   : Direct calculation of Fock matrices in AO basis
+!           using skeleton matrix approach
+!     9   : Direct calculation of Fock matrix in SO basis
+!    -2   : Spin-orbit integrals
+!   -20   : Spin-orbit integrals, direct Fock matrix construction
+!     4   : Calculation of distributions (AB|**)
+!     5   : Magnetic field derivatives
+!    -5   : Magnetic field derivatives, direct Fock matrix construction
+!     6   : Expectation values and Fock matrices of differentiated integrals
+!    -6   : do. with direct Fock matrix construction
+!     7   : Distributions (all gabcd for fixed a)
+!     8   : Derivative Fock matrix for specified atom (JATOM)
+!    10   : Diamagnetic two-electron spin-orbit integrals
+!    11   : Zero-field electron spin-spin couplings
+
+!  ITYPE    sets variables (see subroutine TWORUN)
+!  ------   -------------------------------------------------
+!     0   : UNDIFF, MAXDER=0
+!     1   : PERTUR, MAXDER=MAXDIF, IATOM=JATOM
+!     2   : EXPECT, MAXDER=MAXDIF
+!     3   : DIRFCK, MAXDER=MAXDIF
+!     9   : SOFOCK, MAXDER=MAXDIF
+!    -2   : SPNORB, SQ12EL, MAXDER=1
+!   -20   : do. + DDFOCK
+!     4   : DISTRI, SQ12EL, MAXDER=0
+!     5   : LONDON, MAXDER=MAXDIF, if (MAXDIF==2) SUSCEP
+!    -5   : do. + DDFOCK
+!     6   : EXPECT, MAXDER=MAXDIF, DDFOCK if MAXDIF>1
+!    -6   : do. but always with DDFOCK
+!     7   : UNDIFF, ADISTR, MAXDER=0
+!     8   : PERTUR, MAXDER=MAXDIF, IATOM=JATOM, DDFOCK
+!    10   : MAXDER=2, DIA2SO, SQ12EL
+!    11   : MAXDER=2, ZFS2EL, SQ12EL
 
 C  /* Deck twoint */
-      SUBROUTINE TWOINT(WORK,LWORK,HESSEE,FMAT,DMAT,NDMAT,IREPDM,IFCTYP,
-     &                  GMAT,INDXAB,NUMDIS,MAXDIS,ITYPE,MAXDIF,JATOM,
-     &                  NODV,NOPV,NOCONT,TTIME,
-     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
-     &                  RETUR,ISHLA,I2TYP,JSTRSH,NPRIMS,NCONTS,
-     &                  IORBSH,ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,
-     &                  DINTSKP,RELCAL,GENCNT)
+      SUBROUTINE TWOINT(WORK,LWORK,                    ! scratch memory WORK(LWORK)
+     &                  HESSEE,                        ! only used for molecular Hessina, itype=2 with MAXDIF=2
+     &                  FMAT,DMAT,NDMAT,IREPDM,IFCTYP, ! only for DIRFCK, SOFOCK, DDFOCK: used for direct calculation of Fock matrices
+     &                  GMAT,INDXAB,NUMDIS,MAXDIS,     ! only for ITYPE=4: return NUMDIS distributions requested with INDXAB in GMAT(N2BASX,MAXDIS)
+     &                  ITYPE,MAXDIF,JATOM,            ! ITYPE see above, MAXDIF max differentiation order, JATOM: only for this atom
+     &                  NODV,NOPV,NOCONT,TTIME,        ! NODV, NOPV debug options; NOCONT not working; TTIME print timings on subroutine level
+     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,RETUR, ! general and 4 specific print options with exit
+     &                  ISHLA,                         ! only for ITYPE=7: specification of which shell to fix
+     &                  I2TYP,                         ! used for RELCAL to select between (LL|LL), (LL|SS) or (SS|SS) integrals; I2TYP=0 includes everything
+     &                  JSTRSH,NPRIMS,NCONTS,IORBSH,   ! shell info set in PAOVEC before call of TWOINT
+     &                  ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP, ! screening info; GABRAO = (AB|AB), used for Cauchy-Schwartz screening of undiff. Fock matrices
+     &                  RELCAL,                        ! relativistic calculation (TWOINT called by DIRAC program)
+     &                  GENCNT)                        ! seems not to be used in this version of Hermit
 C
 C     Trygve Helgaker, University of Oslo, Norway, 1984
 C
@@ -457,6 +505,7 @@ C
 #include "inftap.h"
 #include "gtensor.h"
 #include "r12int.h"
+#include "drw2el.h"
 #include "zfs.h"
 Cef begin
 #include "incore.h"
@@ -525,6 +574,22 @@ C                         after step 2
 C           DINTSKP(2,4) - NEM times number of integrals skipped
 C
       DOSCRN = .FALSE.
+
+      IF (UNDIFF) THEN   ! screening implemented March 2025 hjaaj
+      IF (.NOT.DPTINT .AND. .NOT.FINDPT .AND. ! only screening if no DPT options set
+     &    .NOT.R12INT .AND. .NOT.U12INT .AND. ! only screening if no R12 options set
+     &    .NOT.R12EIN .AND. .NOT.U21INT) THEN
+         DOSCRN = .TRUE. ! using THRESH
+         N2GAB  = MAXSHL**2
+         GABRAO_MAX = MAXVAL(GABRAO(1:N2GAB))
+#if HER2DRV_DEBUG > 0
+        write(lupri,*) 'activating screen undiff, gabrao_max',gabrao_max
+        write(lupri,*) 'GABRAO matrix'
+        call output(gabrao,1,maxshl,1,maxshl,maxshl,maxshl,-1,lupri)
+#endif
+      END IF
+      END IF
+
       IF(DIRFCK.OR.SOFOCK)  THEN
         CALL DZERO(DINTSKP,8)
         IF(IFTHRS.LT.4) THEN
@@ -602,6 +667,7 @@ Cef end
       IPREVB = 0
       IPREVC = 0
       IPREVD = 0
+      N_skipped = 0
 
 C
 C     *****************************
@@ -641,6 +707,19 @@ C        ***** Second Shell Index *****
 C        ******************************
 C
          DO 200 ISHELB = IBSTRT,ISHELA
+
+            IF (DOSCRN .AND. UNDIFF) THEN
+               J_GAB_AB = (ISHELB-1)*MAXSHL + ISHELA
+               ULINT = GABRAO(J_GAB_AB)*GABRAO_MAX ! max possible value of (AB|CD) integral
+               IF (ULINT .LE. THRESH) THEN
+#if HER2DRV_DEBUG > 0
+      write(lupri,*) 'screen ishela, ishelb, ulint',ishela,ishelb,ulint
+                  write(lupri,*) 'Skipping, ulint <',thresh
+#endif
+                  N_skipped = N_skipped + 1
+                  GO TO 200
+               END IF
+            END IF
 C
 C           Check for basis-set identifier (WK/UniKA/04-11-2002).
             MBSAB = MBSA + MBSISH(ISHELB)
@@ -722,6 +801,19 @@ C
      &                  (ISHELA.EQ.ISHELC)) IDMAX = ISHELB
                DO 400 ISHELD = IDSTRT,IDMAX
 C
+                  IF (DOSCRN .AND. UNDIFF) THEN
+                     J_GAB_CD = (ISHELD-1)*MAXSHL + ISHELC
+                     ULINT = GABRAO(J_GAB_AB)*GABRAO(J_GAB_CD) ! max possible value of (AB|CD) integral
+                     IF (ULINT .LE. THRESH) THEN
+#if HER2DRV_DEBUG > 0
+                        write(lupri,*)
+     & 'screen ishela..d, ulint',ishela,ishelb,ishelc,isheld,ulint
+                        write(lupri,*) 'Skipping, ulint <',thresh
+#endif
+                        N_skipped = N_skipped + 1
+                        GO TO 400
+                     END IF
+                  END IF
 C                 Check for basis-set identifier (WK/UniKA/04-11-2002).
                   MBSABCD = MBSABC + MBSISH(ISHELD)
                   IF (ISHELD .NE. IDSMAX) THEN
@@ -809,6 +901,10 @@ C
   300       CONTINUE
   200    CONTINUE
   100 CONTINUE
+
+      if (N_skipped .gt. 0) then
+         write(lupri,*) '2-el. screening, shell pairs skipped',N_skipped
+      end if
       IF (DIA2SO) THEN
          IF (JPRINT .GT. 1) THEN
             CALL HEADER('Two-electron diamagnetic spin-orbit '//
@@ -3208,7 +3304,7 @@ C
      &                   SQ12EL,SOP000,NINTS,IPRINT)
             ELSE
                IX = 1
-               IF (V12INT) THEN
+               IF (V12INT) THEN ! standard 1/r12 integrals (or long- or short-range)
                   CALL SYM2(SOINT(1,IX),AOINT(1,IX),IPNTAO,IPNTOP,
      &                      ISYMR,ISYMT,ISYMTS,HKABCD,
      &                      SQ12EL,SOP000,NINTS,IPRINT)
@@ -5248,8 +5344,8 @@ C
          IF (MAXDER .EQ. 2) SUSCEP = .TRUE.
          IF (ITYPE .EQ. -5) DDFOCK = .TRUE.
 C
-C     i) Expectation values and Fock matrics of differentiated integrals
-C     ==================================================================
+C     i) Expectation values and Fock matrices of differentiated integrals
+C     ===================================================================
 C
       ELSE IF (ITYPE .EQ. 6 .OR. ITYPE .EQ. -6) THEN
          EXPECT = .TRUE.
@@ -5258,7 +5354,7 @@ C
          IF (ITYPE .EQ. -6) DDFOCK = .TRUE.
 C
 C     j) Distributions (all gabcd for fixed a)
-C     ======================================
+C     ========================================
 C
       ELSE IF (ITYPE .EQ. 7) THEN
          UNDIFF = .TRUE.

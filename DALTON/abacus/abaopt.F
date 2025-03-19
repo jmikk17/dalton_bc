@@ -7238,13 +7238,14 @@ C
          CALL PNCMOL(ITRNMR,IPRINT)
          ITRNMR = ITRNMR + 1
       ELSE
-         DOPRE = .FALSE.
          WRITE(LUPRI,'(/A/A/)')
-     &      '*** WARNING! *** '//
+     &      '*** ERROR! *** '//
      &      'Preoptimization can only be done when ' //
      &        'basis set library is used.',
-     &      '*** WARNING! *** '//
+     &      '*** ERROR! *** '//
      &      'Preoptimization has been turned off!'
+         CALL QUIT(
+     &   'ERROR: .PREOPT only if BASIS in line 1 in .mol file')
       END IF
       RDINPC = .FALSE.
       RDMLIN = .FALSE.

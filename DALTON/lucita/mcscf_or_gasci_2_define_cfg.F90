@@ -203,9 +203,7 @@ contains
                                        vec_xc_parallel,          &
                                        io2io_vector_exchange)
 
-#ifdef MOD_SRDFT
   use lucita_mcscf_srdftci_cfg
-#endif
 
 #include "priunit.h"
 !   ----------------------------------------------------------------------------
@@ -286,12 +284,10 @@ contains
       if(vector_exchange_type2 > 1) & 
       vector_update_mc2lu_lu2mc((2-1)*vector_exchange_types+vector_exchange_type2) = .true.
 
-!     set restart option if MOD_SRDFT and CIsrDFT
-#ifdef MOD_SRDFT
+!     set restart option if CIsrDFT
       if(srdft_ci_with_lucita .and. srdft_restart_ci == 1)then
         lucita_cfg_restart_ci = 1
       end if
-#endif
 
   end subroutine define_lucita_cfg_dynamic
 

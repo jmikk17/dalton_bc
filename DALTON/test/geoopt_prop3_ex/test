@@ -29,7 +29,7 @@ f = [
                abs_tolerance=1.0e-8),
     get_filter(string='Number of orbitals in each symmetry',
                abs_tolerance=1.0e-8),
-    get_filter(string='@   Hartree-Fock total energy',
+    get_filter(re='@   Hartree-Fock .*total energy',
                abs_tolerance=1.0e-8),
     get_filter(string='@   = MP2 second order energy',
                abs_tolerance=1.0e-8),

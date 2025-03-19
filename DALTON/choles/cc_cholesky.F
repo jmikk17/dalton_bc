@@ -2093,9 +2093,6 @@ C
 #else
       IGB = 16
 #endif
-#if defined (VAR_CHO2)
-      IGB = 2
-#endif
 C
 C     maxlen (wrd) = N Gb * 1073741824 wrd/Gb
 C     (minus security margin, probably not needed)

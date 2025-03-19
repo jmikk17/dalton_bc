@@ -248,9 +248,7 @@
 !
 ! Master routine for CI diagonalization
 !
-#ifdef MOD_SRDFT
       use lucita_mcscf_srdftci_cfg
-#endif
 
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLXLBT, KLXLEBT, KLXI1BT, KLXIBT
@@ -495,12 +493,9 @@ C
 !     *****************************************************************
 !
       IF (DOCISRDFT) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not implemented in this version')
-#else
 
 #ifdef VAR_MPI
-         call quit('help me stefan... parallel srdft-ci')
+         call quit('help me stefan... parallel srdft-ci with lucita')
 #endif
 
          idum = 0
@@ -694,7 +689,6 @@ C        eliminate local memory
          IDUM = 0
          CALL MEMMAN(KDUM ,IDUM,'FLUSM ',2,'srdft1')
          deallocate(fsr)
-#endif
 
 !#define TEST_START_VEC_S2
 #ifdef TEST_START_VEC_S2
