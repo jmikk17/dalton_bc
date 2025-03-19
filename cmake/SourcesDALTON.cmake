@@ -894,9 +894,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES LLVMFlang)
         )
 endif()
 
-if(ENABLE_SRDFT)
-    message("-- Enable srdft module")
-    add_definitions(-DMOD_SRDFT)
+# srdft sources
     set(DALTON_srdft_SOURCES
         DALTON/srdft/dftaux_srdft.F
         DALTON/srdft/dftdrv_srdft.F
@@ -928,10 +926,8 @@ if(ENABLE_SRDFT)
     set(DALTON_FREE_FORTRAN_SOURCES
         ${DALTON_FREE_FORTRAN_SOURCES}
         ${DALTON_srdft_FREE_SOURCES})
-endif()
 
 # 14.Feb.2024 hjaaj: changed qfitlib from external module to included into Dalton source files
-# The CMAKE code for ENABLE_QFITLIB is inspired by the ENABLE_SRDFT code above.
 if(ENABLE_QFITLIB)
     message("-- Enable qfitlib module")
     #add_definitions(-DBUILD_QFITLIB)   # already done in cmake/Definitions.cmake

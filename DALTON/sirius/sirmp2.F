@@ -113,23 +113,11 @@ C *** Option 4 >TDASOP<  Diagonal 2. order 2p-2h correction in SOPPA
   104 MP2_TDA = .TRUE.
       GO TO 100
 C *** Option 5 >SC_SRMP2<  self-consistent short-range contributions included
-#ifdef MOD_SRDFT
   105 SRMP2_SELFCONSISTENT = .TRUE.
       IPRMP2 = MAX(IPRMP2,1)
-#else
-  105 CONTINUE
-      call quit(
-     &   '.SC_SRMP2 option not included in this non-srdft version')
-#endif
       GO TO 100
 C *** Option 6 >SRINTS<  calculate MP2 energy from AOSR2INT integrals
-#ifdef MOD_SRDFT
   106 SRMP2_SRINTS = .TRUE.
-#else
-  106 CONTINUE
-      call quit(
-     &   '.SRINTS  option not included in this non-srdft version')
-#endif
       GO TO 100
 C *** Option 7 >SCSMP2< Grimme's spin-component scaled MP2
 C                       p_S = 1.2, p_T = 1/3
@@ -162,7 +150,6 @@ C FH  Option 11 DCPT2 for MP2 calculation
   111 DCPT2 = .TRUE.
       GO TO 100
 C *** Option 12 >RSDHF< compute the RSDHf energy
-#ifdef MOD_SRDFT
   112 DO_RSDHF = .TRUE.
       SRMP2_SRINTS = .TRUE.   ! .RSDHF activates .SRINTS
 !     LAMSR = 1.0D0           ! original RSDHf model 
@@ -179,11 +166,6 @@ C *** Option 12 >RSDHF< compute the RSDHf energy
 !                                        functional
 !     CALL SRFUN_INPUT(SR_FUNCS)
 !
-#else
-  112 CONTINUE
-      call quit(
-     &   '.RSDHF option not included in this non-srdft version')
-#endif
       GO TO 100
 C *** Option 13 .SAVE WF1 : save first order wave function
   113 CONTINUE
@@ -882,7 +864,6 @@ C
       CALL MP2_NATORB(IPRMP2,WRK(KOCCUP),WRK(KDONE),WRK(KCMO),
      &            WRK(KFREE),LFREE)
 C
-#ifdef MOD_SRDFT
 C     ======================================================
 C     Manu June 07 : If MP2SRDFT calculation ...
 C
@@ -926,7 +907,6 @@ C
 C
       END IF
 C     END IF
-#endif /*  MOD_SRDFT  */
 C
 C     Save MP2 orbitals for MCSCF/CI
 C     (SOPPA uses SIRIFC, so this is also OK if SOPPA)
@@ -1060,9 +1040,6 @@ C
 C        Manu June 07 : If MP2SRDFT calculation ...
 C
          IF (DOHFSRDFT .AND. SRMP2_SELFCONSISTENT) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not implemented in this version')
-#else
             WRITE(LUPRI,'(4(/A))')
      &       ' *****************************************************'
      &      ,' MP2-SRDFT natural orbitals: Short-range contributions'
@@ -1096,11 +1073,8 @@ C
             CALL MP2_NATORB(IPRMP2,WRK(KOCCUP),WRK(KDONEF),WRK(KCMO1),
      &                  WRK(KFREE),LFREE)
 C
-#endif
 C
-         END IF
-C
-C     Here is the end of IF (MP2FRO .AND. .NOT.FCKFRO)
+         END IF ! (DOHFSRDFT .AND. SRMP2_SELFCONSISTENT)
 C
       ELSE IF (SRMP2_SRINTS) THEN
 C

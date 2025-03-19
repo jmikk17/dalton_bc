@@ -750,9 +750,6 @@ C
 C     ***************** ADD SR-DFT contribution if MCSCF-DFT or if HF-SRDFT
 C
       IF (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF)) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not included in this version')
-#else
 #if SIRFCK_DEBUG > 4
          if (DOATR) then
             n = ndmat+1 ! todo: find out how many extra dmat's
@@ -1050,7 +1047,6 @@ C
          call output(FMAT(1,i),1,nbast,1,nbast,nbast,nbast,-1,lupri)
        end do
 #endif
-#endif  /* MOD_SRDFT */
       END IF ! (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF))
 C
       IF (NODDYDF) THEN

@@ -2712,7 +2712,6 @@ C
  8000 CONTINUE
 
 !     if long-range WFT short-range DFT, process functional keywords :
-#ifdef MOD_SRDFT
       IF (ADDSRI) THEN
         IF (SRFUN_set) THEN
           CALL SRFUN_INPUT(SR_FUNCS)
@@ -2739,9 +2738,6 @@ C
         END IF
       END IF
 
-#else
-      IF (ADDSRI) CALL QUIT('srDFT is not available in this version')
-#endif
 
       ! here we parse the functional
       if (functional_line_read) then

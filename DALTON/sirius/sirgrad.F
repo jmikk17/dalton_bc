@@ -518,11 +518,7 @@ C     of FS and DV to FC, creating an effective FC for the local spin
 C     model.  / hjaaj Feb 2010
 C
       IF (SRDFT_LOCALSPIN .AND. SRDFT_SPINDNS) THEN
-#ifdef MOD_SRDFT
          CALL FCK_MAKE_FCEFF_LOCALSPIN(FC,FV(1,2),DV,WRK(KFREE),LFREE)
-#else
-         call quit('Sorry, srDFT local spin not in this version')
-#endif
       END IF
 C
 C     Add srdft correction to EMCMY:
@@ -1592,11 +1588,7 @@ C
 C        CALL MAKDM(CREF,DV,PV,INDXCI,WRK,LFREE)
          IF (NDV.GE.2) THEN
             IF (SRDFT_LOCALSPIN) THEN
-#ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(DV(1,1),DV(1,2),WRK(KWRKF),LWRKF)
-#else
-               CALL QUIT('Sorry! Local spin not in this version')
-#endif
             ELSE
                CALL MAKDSV(CREF,DV(1,2),INDXCI,WRK,LFREE)
             END IF

@@ -451,9 +451,7 @@ if(ENABLE_PELIB)
     add_dalton_runtest(pehf_nomb                     "dalton;pelib;runtest;short")
     add_dalton_runtest(pehf_lao                      "dalton;pelib;runtest;short;essential")
     add_dalton_runtest(pemcscf                       "dalton;serial;mcscf;pelib;runtest;short")
-if(ENABLE_SRDFT)
     add_dalton_runtest(pemcsrdft                     "dalton;serial;pelib;srdft;runtest;essential")
-endif()
     add_dalton_runtest(pemcscf_triplet               "dalton;serial;mcscf;pelib;runtest;short")
     add_dalton_runtest(pemcscf_gspol                 "dalton;mcscf;pelib;runtest;short")
     add_dalton_runtest(pesoppa_excit                 "dalton;serial;pelib;runtest;short")
@@ -658,8 +656,7 @@ endif()
 
 add_dalton_runtest(cino                          "dalton;runtest;short;essential")
 
-# Mar 2015: extra tests on hjaaj-srdft branch
-if (ENABLE_SRDFT) 
+# some srdft tests
     add_dalton_test(energy_srpbe0_mp2                       "dalton;srdft;energy;short;parallel;essential")
     add_dalton_test(energy_srpbe_mp2                        "dalton;srdft;energy;short;parallel")
     add_dalton_test(energy_srpbe_nevpt2                     "dalton;srdft;energy;medium;parallel")
@@ -682,7 +679,6 @@ if (ENABLE_SRDFT)
     # The following tests seem to be unstable
     add_dalton_runtest(rsp_srpbe_polar                      "dalton;srdft;rsp;short;parallel")
     add_dalton_runtest(energy_srpbe_state2                  "dalton;srdft;runtest;energy;medium;parallel")
-endif()
 
 # MCSCF with LUCITA is not currently working /hjaaj 20-Mar-2020; test disabled
 # add_dalton_test(energy_lucita_mc_corehole     "dalton;energy;short;multistep")
