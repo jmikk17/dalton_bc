@@ -1798,7 +1798,7 @@ C           zero off-diagonal frozen-frozen elements
                JSTA = JFC + IROW(I)
                JEND = JSTA + I - 2
                DO J = JSTA,JEND
-                  SCRA(J) = D0
+                  FC(J) = D0
                END DO
             END DO
          END IF
