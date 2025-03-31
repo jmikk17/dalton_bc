@@ -79,6 +79,7 @@ Cholesky
       LOGICAL DRPA_ISSTABILIZINGSOLUTION
 C
       CALL QENTER('CCSD_ENERGY')
+      CALL GETTIM(T00,W00)
 celena
       IF (R12PRP) INTTR = .TRUE.
 celena
@@ -575,8 +576,13 @@ C
       IF (INTTR) THEN
          CALL DZERO(WORK(KT1AM),NT1AMX)
          LHTF = .FALSE.
+         CALL GETTIM(T5,W5)
          CALL CCSD_IAJB(WORK(KT2AM),WORK(KT1AM),LHTF,
      *                       .FALSE.,.FALSE.,WORK(KEND1),LWRK1)
+         CALL GETTIM(T6,W6)
+         if (iprint .ge. 0)
+     &   WRITE(LUPRI,*)'Time for (ia|jb) - cpu wall :', T6-T5, W6-W5
+
          REWIND(LUIAJB)
          CALL WRITI(LUIAJB,IRAT*NT2AM(ISYMOP),WORK(KT2AM))
       ELSE
@@ -780,8 +786,12 @@ C
          CCSAV = CCSDT
          CCSDT = .FALSE.
       ENDIF
+      CALL GETTIM(T01,W01)
+      if (iprint .ge. 0)
+     & WRITE(LUPRI,*)'Time for start-up - cpu wall:', T01-T00,W01-W00
 C
   200 CONTINUE
+         CALL GETTIM(T0,W0)
 C
 C---------------------------------
 C        Write amplitudes to disk.
@@ -989,6 +999,9 @@ C
      &            DABS(EN2R12-EN1R12).LT. THRENR
          LCONV2 = OMNM    .LT. THRVEC
          LCONVG = LCONV1 .AND. LCONV2
+         CALL GETTIM(T1,W1)
+         if (iprint .ge. 0)
+     &     WRITE(LUPRI,*)'Time for iteration - cpu wall :', T1-T0, W1-W0
 
          ITER = ITER+1
          IF (ITER .GT. MAXITE) THEN

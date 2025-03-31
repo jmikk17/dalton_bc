@@ -1128,7 +1128,7 @@ subroutine pelib_ifc_lao_twoints(work, lwork)
 !     &                  JPRINT,IPRNTA,IPRNTB,IPRNTC,IPRINTD,
 !     &                  RETUR,ISHLA,I2TYP,JSTRSH,NPRIMS,NCONTS,
 !     &                  IORBSH,ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,
-!     &                  DINTSKP,RELCAL,GENCNT)
+!     &                  DINTSKP,RELCAL)
     ndmat = 1
     isymdm(1:ndmat) = 0
     ifctyp(1:ndmat) = 11
@@ -1164,7 +1164,7 @@ subroutine pelib_ifc_lao_twoints(work, lwork)
                 iprint,iprnta,iprntb,iprntc,iprntd,&
                 retur,idummy,i2typ,work(kjstrs),work(knprim),work(kncont), & 
                 work(kiorbs),idummy,idummy,dummy,dummy,dummy, &
-                dummy,.false.,.false.)
+                dummy,.false.)
     deallocate(full_denmat)
     allocate(london_electrostatic(3*core_nbast*(core_nbast+1)/2))
     london_electrostatic = 0.0d0

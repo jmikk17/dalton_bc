@@ -43,10 +43,9 @@ C
       INTEGER   IPNTNO(4,*), IPNTRP(3,*),
      &          NINDAB(NORBA*NORBB,2), NINDCD(NORBC*NORBD,2)
 
-
-      PARAMETER (LBUF_alloc = 12000)
-      REAL*8    BUF(LBUF_alloc)
-      INTEGER*4 IBUF4(LBUF_alloc*2)
+#include "lbuf_aotwoint.h"
+      REAL*8    BUF(LBUF_AOTWOINT_DEFAULT)
+      INTEGER*4 IBUF4(LBUF_AOTWOINT_DEFAULT*2)
       SAVE      BUF, IBUF4, ICOUNT
 
 #include "nuclei.h"
@@ -77,7 +76,7 @@ C
       END IF
 C
       CALL ERIBUF_INI
-      LBUF = LBUF_alloc
+      LBUF = LBUF_AOTWOINT_DEFAULT
 C
 C     *******************************************************
 C     ***** Initialization when subroutine first called *****
@@ -368,6 +367,7 @@ Chjaaj:     FBYTES is calculed in four lines, to avoid integer overflows.
       END IF
       RETURN
       END
+C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C  /* Deck fckout */
       SUBROUTINE FCKOUT(FMAT,DMAT,NDMAT,SO,IPNTNO,IPNTRP,IPNTLG,
      &                  FIRST,LAST,THRESH,NINDAB,NINDCD,IPRINT)

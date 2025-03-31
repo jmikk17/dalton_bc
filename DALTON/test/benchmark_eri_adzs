@@ -51,6 +51,7 @@ cat > benchmark_eri_adzs.dal <<'%EOF%'
 **DALTON INPUT
 .RUN WAVE FUNCTION
 .DIRECT
+.RUNERI
 **WAVE FUNCTION
 .CC
 *SCF INPUT

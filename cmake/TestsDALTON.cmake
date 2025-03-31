@@ -1,7 +1,7 @@
 macro(add_dalton_test _name _labels)
     add_test(
         ${_name}
-        ${CMAKE_SOURCE_DIR}/DALTON/test/TEST -dalton ${CMAKE_BINARY_DIR}/dalton -log /dev/null -result-directory ${CMAKE_BINARY_DIR}/test_${_name} ${_name}
+        ${CMAKE_SOURCE_DIR}/DALTON/test/TEST -dalton ${CMAKE_BINARY_DIR}/dalton -param "-gb 4" -log /dev/null -result-directory ${CMAKE_BINARY_DIR}/test_${_name} ${_name}
         )
     if(NOT "${_labels}" STREQUAL "")
         set_tests_properties(${_name} PROPERTIES LABELS "${_labels}")

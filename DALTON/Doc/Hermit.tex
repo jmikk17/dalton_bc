@@ -1358,8 +1358,8 @@ number \verb|IAOBCH| will be calculated.
 \verb|READ (LUCMD,*) LBFINP|
 
 This option may be used to set the buffer length for integrals written
-to disk. For compatibility with {\twoint}, the default buffer length
-is 600. Longer buffer lengths may give more efficient I/O.
+to disk. The default is defined in the source file "lbuf\_aotwoint.h".
+Longer buffer lengths may give more efficient I/O.
 
 \item[\Key{DISTRI}] Use distributions for electron 1. Must be used in
   connection with the keyword \Key{SELCT1}.

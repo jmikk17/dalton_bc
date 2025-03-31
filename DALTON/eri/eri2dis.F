@@ -146,6 +146,8 @@ C
 #include "symmet.h"
 #include "iratdef.h"
 #include "inftap.h"
+
+#include "lbuf_aotwoint.h"
 C
       CALL QENTER('ERIDI2')
       IPRINT = IPRERI
@@ -174,7 +176,7 @@ C
       MODAB  = 0
       MODCD  = 0
 C
-      IF (LBFINP .EQ. 600) LBFINP = 20 000
+      IF (LBFINP .EQ. LBUF_AOTWOINT_DEFAULT) LBFINP = 20 000
 C
 C     Open files and define NIBUF in eribuf.h
 C

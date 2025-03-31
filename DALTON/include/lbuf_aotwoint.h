@@ -1,0 +1,2 @@
+! Buffer length on AOTWOINT, AOSR2INT and more
+      INTEGER, PARAMETER :: LBUF_AOTWOINT_DEFAULT = 12 000

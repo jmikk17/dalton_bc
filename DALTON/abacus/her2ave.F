@@ -22,14 +22,14 @@ C  /* Deck intexp */
      &                  ISYMR,ISYMS,ISYMT,ICORBA,ICORBB,ICORBC,ICORBD,
      &                  THRESH,SYMFAC,
      &                  IPRINT,NOPMAT,NODV,EXPECT,LONDON,SUSCEP,DIA2SO,
-     &                  ZFS2EL,DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP,GENCTR)
+     &                  ZFS2EL,DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP)
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
 #include "priunit.h"
 #include "maxaqn.h"
       LOGICAL NOPMAT, NODV, LONDON, SUSCEP, DDFOCK, EXPECT, DIA2SO,
-     &        ZFS2EL, SPNORB, GENCTR
+     &        ZFS2EL, SPNORB
       DIMENSION PSO(*), PSA(*), DMAT(*), AOINT(NCCINT,NINTYP),
      &          ICORBA(NORBA),ICORBB(NORBB),ICORBC(NORBC),ICORBD(NORBD),
      &          WORK(LWORK), NINDAB(*), NINDCD(*), FT(*), FV(*),
@@ -82,7 +82,7 @@ Cajt six components if second derivative integrals
      &            ICORBA,ICORBB,ICORBC,ICORBD,THRESH,
      &            SYMFAC,IPRINT,NOPMAT,NODV,NUCABQ,NUCCDQ,
      &            NINDAB,NINDCD,EXPECT,LONDON,SUSCEP,DIA2SO,ZFS2EL,
-     &            DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP,GENCTR)
+     &            DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP)
       LWTOT  = LWTOT - KFREE
       CALL MEMREL('INTEXP',WORK,1,KFRSAV,KFREE,LFREE)
       RETURN
@@ -93,7 +93,7 @@ C  /* Deck intex1 */
      &                  ISYMR,ISYMS,ISYMT,ICORBA,ICORBB,ICORBC,ICORBD,
      &                  THRESH,SYMFAC,IPRINT,NOPMAT,NODV,NUCABQ,NUCCDQ,
      &                  NINDAB,NINDCD,EXPECT,LONDON,SUSCEP,DIA2SO,
-     &                  ZFS2EL,DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP,GENCTR)
+     &                  ZFS2EL,DDFOCK,SPNORB,IXPAB,IXPCD,IFCTYP)
 C
 C     Calculates expectation values and Fock matrices
 C     of differentiated integrals
@@ -110,7 +110,7 @@ C
      &           D0 = 0.0 D00, DP125 = 0.125D00, D3=3.0D0, D4=4.0D0)
       INTEGER A, B, C, D, X, Y, Z, Y2, Z2
       LOGICAL NODER, DCMPAB, DCMPCD, NOPMAT, NODV, DV, SUSCEP, DDFOCK,
-     &        EXPECT, LONDON, DIA2SO, ZFS2EL, SPNORB, GENCTR
+     &        EXPECT, LONDON, DIA2SO, ZFS2EL, SPNORB
 #include "nuclei.h"
       DIMENSION ICORBA(NORBA),ICORBB(NORBB),ICORBC(NORBC),ICORBD(NORBD),
      &          DERIV(NINTYP), PSO(*), PSA(*),
