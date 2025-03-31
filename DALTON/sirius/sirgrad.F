@@ -518,11 +518,7 @@ C     of FS and DV to FC, creating an effective FC for the local spin
 C     model.  / hjaaj Feb 2010
 C
       IF (SRDFT_LOCALSPIN .AND. SRDFT_SPINDNS) THEN
-#ifdef MOD_SRDFT
          CALL FCK_MAKE_FCEFF_LOCALSPIN(FC,FV(1,2),DV,WRK(KFREE),LFREE)
-#else
-         call quit('Sorry, srDFT local spin not in this version')
-#endif
       END IF
 C
 C     Add srdft correction to EMCMY:
@@ -1172,7 +1168,7 @@ C
       IF (NSSHA .GT. 0) THEN
          IOFFA = IORB(ISYMA) + NOCC(ISYMA)
          DO 105 IA = IOFFA + 1, IOFFA + NSSHA
-            INDXO = KLWOP(ICW,ISW(IA)-NISHT)
+            INDXO = KLWOP(ICW,ICH(IA))
             IF (INDXO.GT.0) THEN
                ORDIAG(INDXO) = ORDIAG(INDXO) - D4*H2CD(IA,IA)
             END IF
@@ -1592,11 +1588,7 @@ C
 C        CALL MAKDM(CREF,DV,PV,INDXCI,WRK,LFREE)
          IF (NDV.GE.2) THEN
             IF (SRDFT_LOCALSPIN) THEN
-#ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(DV(1,1),DV(1,2),WRK(KWRKF),LWRKF)
-#else
-               CALL QUIT('Sorry! Local spin not in this version')
-#endif
             ELSE
                CALL MAKDSV(CREF,DV(1,2),INDXCI,WRK,LFREE)
             END IF
@@ -1816,7 +1808,7 @@ C    &         ' No redundant orbital variations found.'
                   L = JWOP(2,IG)
                   JWOP(1,IGNEW) = K
                   JWOP(2,IGNEW) = L
-                  KLWOP(ISW(K),ISW(L)-NISHT) = IG
+                  KLWOP(ISW(K),ICH(L)) = IG
                   WRK(KORDIA-1+IGNEW) = WRK(KORDIA-1+IG)
                ELSE
                   ISK = ISMO(JWOP(1,IG))
@@ -2068,8 +2060,8 @@ C ** first index inactive:
          ELSE
 C ** first index active
 C    (only other possibility, inactive, is already eliminated):
-            NKW = ISW(K) - NISHT
-            TEMP = D0
+            NKW   = ICH(K)
+            TEMP  = D0
             TEMPS = D0
             NX = NISHI
             DO 100 NXW = IASHI+1,IASHI+NASHI
@@ -2093,7 +2085,7 @@ C    (only other possibility, inactive, is already eliminated):
          END IF
          IF (ITYPL .EQ. JTACT) THEN
 C ** second index active:
-            NLW = ISW(L) - NISHT
+            NLW = ICH(L)
             TEMP = D0
             TEMPS = D0
             NX = NISHI

@@ -507,18 +507,14 @@ contains
 
 !     write(lupri,*) ' check for restorage, vector_exchange_type1/2',vector_exchange_type1,vector_exchange_type2
 !     potentially restore cref after the ci task in parallel runs
-!#ifdef MOD_SRDFT
 !      if(srdft_ci_1pdens_cref_restore)then
-!#endif
         if(vector_exchange_type1 == 1 .or. vector_exchange_type2 == 1)then
           restore_cref               = .true.
           restore_cref_vector_switch = 1
           if(vector_exchange_type2 == 1) restore_cref_vector_switch = 2
 !         write(lupri,*) ' xpdens: restore_cref ==>', restore_cref
         end if
-!#ifdef MOD_SRDFT
 !      end if
-!#endif
       
 !     rhs vector (the first argument '2' refers to the direction of transfer: mcscf ==> lucita)
       call vector_exchange_driver(push_pull,vector_exchange_type1,lucita_cfg_nr_roots,lucita_cfg_csym,                &
@@ -542,7 +538,6 @@ contains
   end subroutine mcscf_pre_lucita_xpdens
 !*******************************************************************************
 
-#ifdef MOD_SRDFT
   subroutine mcscf_post_lucita_srdft(c_or_cr,print_lvl)
 !*******************************************************************************
 !
@@ -605,7 +600,6 @@ contains
 
   end subroutine mcscf_post_lucita_srdft
 !*******************************************************************************
-#endif
 
   subroutine mcscf_post_lucita_cistart(c_or_cr,print_lvl)
 !*******************************************************************************
@@ -825,9 +819,7 @@ contains
 !*******************************************************************************
 ! lucita
   use lucita_cfg
-#ifdef MOD_SRDFT
   use lucita_mcscf_srdftci_cfg
-#endif
 ! sirius
 ! nothing
 #include "priunit.h"

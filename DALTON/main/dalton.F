@@ -993,6 +993,7 @@ C
       LUNMPF = -9049
       LUMOLDEN    =-9050
       LUMOLDEN_MOS=-9051
+      LU_GAB = -9052
 C
 C     /R12INT/ (WK/UniKA/26-11-2002).
 C

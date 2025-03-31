@@ -638,9 +638,6 @@ C        V^([2c],xc-SR)
 C     is saved in FTV(1,NCSIM+ICSIM) in SIRTR1.
 C
       IF (DOMCSRDFT .AND. NCSIM .GT. 0) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not included in this version')
-#else
          CALL DSPTSI(NASHT,DV,WRK(KUDV))
          IF (SRDFT_SPINDNS) CALL DSPTSI(NASHT,DV(1,2),WRK(KUDS))
          DO ICSIM = 1,NCSIM
@@ -652,7 +649,6 @@ C
                CALL SRDFTSO(0.0D0,WRK(KUDS),FTV(JFTS_SR),SCVECS(JSCVEC))
             END IF
          END DO
-#endif
       END IF
 C
 C     *** Make microcanonical average on SVECS

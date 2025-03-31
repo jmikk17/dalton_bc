@@ -165,7 +165,7 @@ C
       IF (KLAST .GT. LWORK) CALL STOPIT('HERDI2','PAOVEC',KLAST,LWORK)
       LWRK   = LWORK - KLAST + 1
 C
-      ITYPE  = 7
+      ITYPE  = 7 ! ADISTR - all g_abcd for fixed a
       MAXDIF = 0
       JPRINT = 0
       NBUFX(0) = 0
@@ -284,7 +284,7 @@ C
       IF (KLAST .GT. LWORK) CALL STOPIT('NERDI2','PAOVEC',KLAST,LWORK)
       LWRK   = LWORK - KLAST + 1
 C
-      ITYPE  = 7
+      ITYPE  = 7 ! ADISTR - all g_abcd for fixed a
       MAXDIF = 0
       JPRINT = 0
       NBUFX(0) = 0

@@ -20,7 +20,7 @@ f.add(from_string = 'Wave function specification',
 f.add(string = 'Number of coordinates in each symmetry')
 f.add(string = 'Number of orbitals in each symmetry')
 
-f.add(string = 'Hartree-Fock total energy',
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-8)
 f.add(string = 'Final MC-SRDFT energy:',
       rel_tolerance = 1.0e-8)

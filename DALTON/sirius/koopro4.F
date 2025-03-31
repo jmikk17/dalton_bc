@@ -5106,9 +5106,6 @@ C Hamiltonian.
 C
 
       IF (DOMCSRDFT) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not implemented in this version')
-#else
 
 C        Allocation of memory for ...
 
@@ -5212,7 +5209,6 @@ C        Release memory
 C
 C************ NEVPT2-srDFT -- end ***************
 C
-#endif
       END IF
 
       CALL UTHUB(H1AO,H1MO,CMO,WRK(KFREE),NSYM,NBAS,NORB)

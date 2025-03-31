@@ -442,12 +442,8 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
          IF (SUPSYM) CALL AVEDV(WRK(KDV))
          IF (NDV .EQ. 2) THEN
             IF (SRDFT_LOCALSPIN) THEN
-#ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(WRK(KDV),WRK(KDSV),
      &            WRK(KWRK1),LWRK1)
-#else
-               CALL QUIT('Sorry! Local spin not in this version')
-#endif
             ELSE
                CALL MAKDSV(CVECS(1,ICREF),WRK(KDSV),INDXCI,
      &            WRK(KWRK1),LWRK1)

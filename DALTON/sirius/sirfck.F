@@ -750,9 +750,6 @@ C
 C     ***************** ADD SR-DFT contribution if MCSCF-DFT or if HF-SRDFT
 C
       IF (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF)) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not included in this version')
-#else
 #if SIRFCK_DEBUG > 4
          if (DOATR) then
             n = ndmat+1 ! todo: find out how many extra dmat's
@@ -1044,13 +1041,12 @@ C
      &   ' SIRFCK: CPU and WALL time used for srDFT terms             ',
      &      T2-T1,W2-W1
          END IF
-#if SIRFCK_DEBUG > 2
+#if SIRFCK_DEBUG > 3
        do i = 1,NDCandDV
          write(lupri,*) 'SIRFCK: Final FMAT no.',i
          call output(FMAT(1,i),1,nbast,1,nbast,nbast,nbast,-1,lupri)
        end do
 #endif
-#endif  /* MOD_SRDFT */
       END IF ! (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF))
 C
       IF (NODDYDF) THEN
@@ -1168,6 +1164,8 @@ C
 C
 C for HFXFAC:
 #include "dftcom.h"
+
+      INTEGER*8 NINTS_TOT
 
 
       CALL QENTER('SIRFCK2')

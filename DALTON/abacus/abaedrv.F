@@ -607,6 +607,7 @@ C
 C
       LOGICAL :: FNDLAB
 C
+      CALL QENTER('READMC')
       REWIND LUSIFC
       IF (.NOT.FNDLAB(LBSIFC,LUSIFC)) THEN
          CALL QENTER('READMC')
@@ -674,6 +675,7 @@ C
 C
 C *** End of READMC
 C
+      CALL QEXIT('READMC')
       RETURN
       END
 C  /* Deck resst */

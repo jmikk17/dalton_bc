@@ -4,6 +4,7 @@
 
 ### New features added
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+- CI response properties for \*\*PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver (Luna Zamok)
   - Added PE-AO-SOPPA/RPA (Peter Reinholdt)
@@ -30,6 +31,8 @@
   Previously all MPI workers read the grid from their own DALTON.QUAD.nnnnn file - this change removes an I/O bottleneck if you run with many workers. (H. J. Aa. Jensen)
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
+- Possibility to speed-up MP2-NO by neglecting two-electron MO integrals abs value less than new threhshold \.THR2EL. (H. J. Aa. Jensen)
+- New option \.MP2special for cheaper, approximate MP2 initial guess orbitals for MCSCF/MCsrDFT, without compromising MCSCF convergence. (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba

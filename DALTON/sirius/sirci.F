@@ -22,9 +22,7 @@ C  /* Deck cimain */
 C
 C 28-Jun-1985 hjaaj
 C
-#ifdef MOD_SRDFT
       use lucita_mcscf_srdftci_cfg
-#endif
 #include "implicit.h"
 #include "priunit.h"
       DIMENSION WORK(LWORK)
@@ -77,9 +75,6 @@ C
 C
       ADDSRI_SAVE = ADDSRI
       IF (DOCISRDFT) THEN
-#ifndef MOD_SRDFT
-         call quit('CI-srdft not implemented in this version')
-#else
 C        ... do not add SR integrals to Fock matrices for CI-DFT
 C            (will be true on entry if CI-srDFT preceded by normal RHF)
          ADDSRI = .FALSE.
@@ -91,7 +86,6 @@ C            (if the CISRDFT was specified together with a presceding
 C             HFSRDFT call, we assume the HFSRDFT is done by now!)
          DFTADD    = .FALSE.
          DOHFSRDFT = .FALSE.
-#endif
       ENDIF
 C
       IF (NASHT .GT. 1 .AND. .NOT. HSROHF)
@@ -99,9 +93,6 @@ C
       CALL READMO(WORK(KCMO),9)
 C
       if(do_sc_ensemble_dft)then
-#ifndef MOD_SRDFT
-        call quit('srdft not implemented in this version')
-#else
            CALL MEMGET('REAL',KECID,MXCIDFT,WORK,KFREE,LFREE)
            IMCITR = 0
            DO I = 1,MXCIDFT
@@ -144,7 +135,6 @@ C             ... restart CI in next macro ensemble-DFT iteration ...
               WRITE(LUPRI,'(/2X,A,F20.12/)')
      &        '@ Final variational ensemble-DFT energy: ',
      &         WORK(KECID + IMCITR -1)
-#endif
       else
 C       =================
         IF (.NOT.DOCISRDFT .OR. ISTACI .LE. 0) THEN
@@ -157,9 +147,6 @@ C       =================
 C
 C       regular CIDFT Macro-iteration control
 C
-#ifndef MOD_SRDFT
-           call quit('srdft not implemented in this version')
-#else
          CALL MEMGET('REAL',KECID,NCROOT,WORK,KFREE,LFREE)
          IMCITR = 0
          DO I = 1,MXCIDFT
@@ -185,7 +172,7 @@ C           ... restart CI in next macro CIDFT iteration ...
                GO TO 5
             ENDIF
          ENDDO
-5        CONTINUE
+ 5       CONTINUE
             WRITE(LUPRI,'(3(/2X,A))') 
      &      '---------------------------------------------------------',
      &      '       Itr.           Energy                Delta(E)',
@@ -201,7 +188,6 @@ C           ... restart CI in next macro CIDFT iteration ...
      &      '---------------------------------------------------------'
               WRITE(LUPRI,'(/2X,A,F20.12/)')
      &        '@ Final CI-srDFT energy: ',WORK(KECID + IMCITR -1)
-#endif
 C
 C       =================
         ENDIF
@@ -241,9 +227,7 @@ C
       use lucita_mcscf_ci_interface_procedures
       use mcscf_or_gasci_2_define_cfg, only :
      &    define_lucita_cfg_dynamic
-#ifdef MOD_SRDFT
       use lucita_mcscf_srdftci_cfg
-#endif
 
 #include "implicit.h"
       DIMENSION CMO(*), INDXCI(*), ECI(*), ICROOT(*), WRK(*)
@@ -1217,7 +1201,7 @@ C
       END
 C  /* Deck cinex */
       SUBROUTINE CINEX(EVAL,EVEC,EMY,ESHIFT,CDIAG,
-     *                 NCSIM,JCONV,RESID,WRK,LFREE)
+     *                 ITCI,NCSIM,JCONV,RESID,WRK,LFREE)
 C
 C Written 21-Jun-1985 by Hans Jorgen Aa. Jensen
 C (based on NEONEX version 2)
@@ -1504,7 +1488,7 @@ C
          IF (WCRESD) THEN
             WRITE (LUW4,9012)
          ELSE
-            WRITE (LUW4,9010)
+            WRITE (LUW4,9010) ITCI
          END IF
       END IF
       JRVECS  = KRVECS
@@ -1553,7 +1537,7 @@ C
                   IF (WCRESD) THEN
                      WRITE (LUW4,9012)
                   ELSE
-                     WRITE (LUW4,9010)
+                     WRITE (LUW4,9010) ITCI
                   END IF
                   WRITE (LUW4,9030) JCROTX,ECROOT,QCNRM
                END IF
@@ -1568,7 +1552,8 @@ C
          JRVECS = JRVECS + NCONF
  1100 CONTINUE
 C
- 9010 FORMAT(/' CI root     eigenvalue        residual norm'/)
+ 9010 FORMAT(/' CI root     eigenvalue        residual norm   --',
+     & ' CI iteration number',I4/)
  9012 FORMAT(/' CI root     eigenvalue     weighted residual norm'/)
  9014 FORMAT(/' The requested root number is now converged.')
  9020 FORMAT(I5,2F20.10)
@@ -3082,9 +3067,6 @@ C     CI-DFT contributions
 C     *****************************************************************
 C
       IF (DOCISRDFT) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not implemented in this version')
-#else
          KDVREF = KW2
          KFSR = KDVREF + NNASHX
          KW2A = KFSR   + NNORBT
@@ -3121,7 +3103,6 @@ C          write(lupri,*) 'esrdv... ',esrdv
          DO I = 0,NCONF-1
             WRK(KCDIAG+I) = WRK(KCDIAG+I) + EMYDFT + ESRDV
          END DO
-#endif
       ENDIF
 C    *******************************
       CINMEM = (NCSIM .LE. MAXSIM)
@@ -3240,7 +3221,7 @@ C           ... check symmetry of reduced CI matrix and CI overlap
          ESHIFT = D0
          NCSIM  = NCROOT
          CALL CINEX(energy_c,WRK(KEVEC),EMY,ESHIFT,WRK(KCDIAG),
-     *              NCSIM,JCONV,residual_c,WRK(KW2),LW2)
+     *              ITCI,NCSIM,JCONV,residual_c,WRK(KW2),LW2)
       IF (JCONV .GT. 0) THEN
          IF (NCSIM .EQ. 0) THEN
             GO TO 8100
@@ -3254,10 +3235,10 @@ C           ... check symmetry of reduced CI matrix and CI overlap
          IF (NCIRED+NCSIM .GE. MAXRC ) GO TO 8200
          GO TO 500
       END IF
-      WRITE (LUW4,'(//A,I3,A/)')
-     *   ' *** CI converged in',ITCI,' iterations.'
-      IF (LUPRI .NE. LUW4) WRITE (LUPRI,'(//A,I3,A/)')
-     *   ' *** CI converged in',ITCI,' iterations.'
+      WRITE (LUW4,'(//A,I0,A/)')
+     *   ' *** CI converged in ',ITCI,' iterations.'
+      IF (LUPRI .NE. LUW4) WRITE (LUPRI,'(//A,I0,A/)')
+     *   ' *** CI converged in ',ITCI,' iterations.'
       GO TO 9000
  8000 CONTINUE
       WRITE (LUPRI,'(//A,I5/I15,A)')

@@ -190,6 +190,9 @@ C
          IF (LUSUPM .LE. 0) CALL GPOPEN(LUSUPM,'AOSUPINT',
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          CALL GPCLOSE(LUSUPM,'DELETE')
+         IF (LU_GAB  .LE. 0) CALL GPOPEN(LU_GAB,'AOGABINT',
+     &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
+         CALL GPCLOSE(LU_GAB,'DELETE')
       END IF ! RMAOTWO
 
       ! Postpone calculation of two-electron integrals;
@@ -1817,7 +1820,6 @@ C
 
       CALL SETDCH
       CALL GPCLOSE(LUCMD,'KEEP')
-      IF (THRSUP .LT. 0.0D0) THRSUP = THRS
 C
       IF (DORLM .AND. .NOT. CAVUSR)
      &   WRITE(LUPRI,'(/A,3F12.6)') ' Cavity center (center of mass):',
@@ -2421,6 +2423,8 @@ C
 #include "efield.h"
 #include "r12int.h"
 #include "drw2el.h"
+! blocks.h : MAXSHL
+#include "blocks.h"
 #include "qm3.h"
 #include "pcmlog.h"
 C
@@ -2428,7 +2432,9 @@ C
       CHARACTER*8 LABELT(3), LABELS(6)
 C
       DIMENSION WORK(LWORK)
-#include "memint.h"
+      KWORK = 1
+      KFREE = KWORK
+      LFREE = LWORK
 C
 C     Control routine for calculation of undifferentiated one- and
 C     two-electron Hamiltonian integrals and transformation of
@@ -3701,7 +3707,7 @@ C     **********************************
 C     ***** Two-Electron Integrals *****
 C     **********************************
 C
-C     Cauchy-Scwartz integrals for screening 
+C     Cauchy-Scwarz integrals for screening 
 C
       IF(DIRCAL) THEN
         CALL TIMER('START ',TIMSTR,TIMEND)
@@ -3751,14 +3757,31 @@ C
                CALL MEMREL('HERINT.PAOVEC',WORK,KWORK,KJORBS,KFREE,
      &                     LFREE)
                CALL TIMER('START ',TIMSTR,TIMEND)
-               IRNTYP = 0
+               IRNTYP = 0 ! undifferentiated integrals to file
+
+C      *** Screening matrix for Cauchy-Schwarz screening
+
+               N2GAB = MAXSHL*MAXSHL ! GAB-matrix in SO-basis; MAXSHL calculated in PAOVEC
+               CALL MEMGET2('REAL','GABRSO',KGAB,N2GAB,WORK,KFREE,LFREE)
+               IF (.NOT.DPTINT .AND. .NOT.FINDPT .AND. ! only screening if no DPT options set
+     &             .NOT.R12INT .AND. .NOT.U12INT .AND. ! only screening if no R12 options set
+     &             .NOT.R12EIN .AND. .NOT.U21INT) THEN
+                  CALL GETGAB(WORK(KGAB),
+     &              'GABSO---',N2GAB,WORK(KFREE),LFREE)
+                  if (iprint .gt. 1) then
+                     WRITE(LUPRI,*) 'GABSO--- matrix'
+                     call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
+     &                  MAXSHL,MAXSHL,-1,LUPRI)
+                  end if
+               END IF
+
                CALL TWOINT(WORK(KFREE),LFREE,DUMMY,DUMMY,DUMMY,1,IDUMMY,
      &                     IDUMMY,DUMMY,IDUMMY,NUMDIS,1,IRNTYP,0,0,
      &                     .TRUE.,.TRUE.,.FALSE.,TKTIME,
      &                     IPRTWO,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                     RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                     WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &                     IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
+     &                     IDUMMY,IDUMMY,WORK(KGAB),DUMMY,DUMMY,DUMMY,
      &                     .FALSE.)
                CALL TIMER('TWOINT',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
@@ -3771,7 +3794,7 @@ C        *********************************************************
 C        ***** Short-range two-electron integrals (MC-srDFT) *****
 C        *********************************************************
 C
-         IF(DOSRIN) THEN
+         IF(RUNTWO .AND. DOSRIN) THEN
             IF (CHIVAL .EQ. -1.d0) 
      &      CALL QUIT('FATAL ERROR : Short-range 2e integrals '//
      &           'requested, but mu is not specified!')
@@ -3790,13 +3813,25 @@ C
      &                  LFREE)
             CALL TIMER('START ',TIMSTR,TIMEND)
             IRNTYP = 0
+
+C      *** Screening matrix for Cauchy-Schwarz screening
+
+            N2GAB = MAXSHL*MAXSHL ! GAB-matrix in SO-basis; MAXSHL calculated in PAOVEC
+            CALL MEMGET2('REAL','GABRSO',KGAB,N2GAB,WORK,KFREE,LFREE)
+            CALL GETGAB(WORK(KGAB),'GABSOSR-',N2GAB,WORK(KFREE),LFREE)
+            if (iprint .gt. 1) then
+               WRITE(LUPRI,*) 'GABSOSR- matrix'
+               call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
+     &            MAXSHL,MAXSHL,-1,LUPRI)
+            end if
+
             CALL TWOINT(WORK(KFREE),LFREE,DUMMY,DUMMY,DUMMY,1,IDUMMY,
      &                  IDUMMY,DUMMY,IDUMMY,NUMDIS,1,IRNTYP,0,0,
      &                  .TRUE.,.TRUE.,.FALSE.,TKTIME,
      &                  IPRTWO,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                  RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
+     &                  IDUMMY,IDUMMY,WORK(KGAB),DUMMY,DUMMY,DUMMY,
      &                  .FALSE.)
             CALL TIMER('TWOINT short-range',TIMSTR,TIMEND)
             CALL FLSHFO(LUPRI)
@@ -3970,7 +4005,7 @@ C
 C
 C Used from common blocks:
 C  GNRINF: DIRCAL, DOSRIN
-C  CBIHER: ONEPRP
+C  CBIHER: ONEPRP, HAMILT
 C  CBIHR1: RUNONE
 C  CBIHR2: RUNTWO
 C  INFTAP: LUINTA, LUINTA_SR
@@ -3983,6 +4018,7 @@ C  INFTAP: LUINTA, LUINTA_SR
 C
       LOGICAL AOEXIST, SREXIST
       LOGICAL DIRCAL_SAV, RUNONE_SAV, ONEPRP_SAV, RUNTWO_SAV
+      LOGICAL HAMILT_save, DOSRIN_save
 C
       CALL QENTER('MAKE_AOTWOINT')
       CALL GPINQ('AOTWOINT','EXIST',AOEXIST)
@@ -3996,10 +4032,14 @@ C
          ONEPRP_SAV = ONEPRP
          RUNTWO_SAV = RUNTWO
          DIRCAL_SAV = DIRCAL
+         HAMILT_save = HAMILT
+         DOSRIN_save = DOSRIN
          RUNONE = .FALSE.
          ONEPRP = .FALSE.
          RUNTWO = .TRUE.
          DIRCAL = .FALSE.
+         HAMILT = .NOT. AOEXIST
+         DOSRIN = .NOT. SREXIST
 C        Open LUINTA/LUINTA_SR for new integrals
          WRITE (LUPRI,'(/A)') '---> (Re)generating AOTWOINT'
          CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
@@ -4015,6 +4055,8 @@ C        Open LUINTA/LUINTA_SR for new integrals
          ONEPRP = ONEPRP_SAV
          RUNTWO = RUNTWO_SAV
          DIRCAL = DIRCAL_SAV
+         HAMILT = HAMILT_save
+         DOSRIN = DOSRIN_save
       END IF
 
       CALL QEXIT('MAKE_AOTWOINT')
@@ -4194,25 +4236,21 @@ C
 C
 C     Initialize /CBIHER/
 C
-      USE_INTSORT = .FALSE. ! in inftra.h
+      USE_INTSORT = .FALSE. ! in inftra.h, for NEWTRA
       IF(RELCAL) THEN
         HAMILT = .FALSE.
-        ONEPRP = .FALSE.
-        DIPVEL = .FALSE.
         DIRAC_HER = .TRUE.
         SUPMAT = .FALSE.
       ELSE
         HAMILT = .TRUE.
-        ONEPRP = .FALSE.
-        DIPVEL = .FALSE.
         DIRAC_HER = .FALSE.
-        SUPMAT = .NOT. DIRCAL .AND. .NOT. USE_INTSORT
+        SUPMAT = .NOT. DIRCAL
       ENDIF
       SKIP   = .FALSE.
       TSTINP = .FALSE.
       ONEPRP = .FALSE.
-      HAMILT = .TRUE.
       DIPLEN = .FALSE.
+      DIPVEL = .FALSE.
       QUADRU = .FALSE.
       SPNORB = .FALSE.
       no2so  = .false.

@@ -696,10 +696,10 @@ C
 C     Get GAB-matrix (Cauchy-Schwarz)
 C
       IF (SRINTS) THEN
-         CALL GETGAB(WORK(KGAB),'GABSRXXX',N2GAB,
+         CALL GETGAB(WORK(KGAB),'GABAOSR-',N2GAB,
      &               WORK(KFREE),LFREE)
       ELSE
-         CALL GETGAB(WORK(KGAB),'GABAOXXX',N2GAB,
+         CALL GETGAB(WORK(KGAB),'GABAO---',N2GAB,
      &               WORK(KFREE),LFREE)
       END IF
 #if HERFCK_DEBUG > 1
