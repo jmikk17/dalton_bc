@@ -16,11 +16,7 @@
 !
 !
 C
-#ifdef UNDEF
 !===========================================================================
-!Revision 1.2  2000/05/12 14:01:56  hjj
-!changed NFACTR to PTFACT to be sure integer truncation implied by NFACTR
-!will not give erroneous results (potential problem found with ftnchek).
 !
 !961004 - tsaue INTFCK has undergone major surgery:
 !               - Inner loop now over integrals, prevents cache misses
@@ -35,7 +31,6 @@ C
 ! moving common factors to SKLFC1
 !halved no. of  operations for IFCTYP=2 in INTFCK
 !===========================================================================
-#endif
 !C  /* Deck intfck */
       SUBROUTINE INTFCK(FMAT,AOINT,DMAT,NDMAT,NCCINT,NINTYP,
      &                  ICORBA,ICORBB,ICORBC,ICORBD,SYMFAC,
@@ -96,9 +91,7 @@ C
       ENDIF
       CALL MEMGET('INTE',KIND ,4*NBUF  ,WORK,KFREE,LFREE)
 C
-Cef begin
       CALL MEMGET('REAL',KAOINT,(NCCINT*NINTYP),WORK,KFREE,LFREE)
-Cef end
       if(rma_model .and. rma_win_info%nmat_max_wo_win < ndmat)then
         CALL MEMGET('REAL',kdmat_tmp  ,nbasis**2,WORK,KFREE,LFREE)
         CALL MEMGET('REAL',kfckmat_tmp,nbasis**2,WORK,KFREE,LFREE)
@@ -121,9 +114,6 @@ C
       END
 C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C  /* Deck intfc1 */
-Cef begin
-C Added argument AOINT2 to subroutine INTFC1
-Cef end
       SUBROUTINE INTFC1(FMAT,AOINT,AOINT2,DMAT,NDMAT,NCCINT,NINTYP,
      &                  ICORBA,ICORBB,ICORBC,ICORBD,FCKTOL,SYMFAC,
      &                  IPRINT,NODV,NINDAB,NINDCD,SUSCEP,IFCTYP,
@@ -231,11 +221,9 @@ C
       IF(SUSCEP) THEN
         IF(NOTEST) THEN
           DO ICOMPA = 1,KHKTA
-                        KHKTBB = KHKTB
-            DO ICOMPB = 1,KHKTBB
+            DO ICOMPB = 1,KHKTB
               DO ICOMPC = 1,KHKTC
-                            KHKTDD = KHKTD
-                DO ICOMPD = 1,KHKTDD
+                DO ICOMPD = 1,KHKTD
                   DO IORBAB = 1,NORBAB
                     IORBA = 1 + NINDAB(IORBAB,1)/KHKTA
                     IORBB = 1 + NINDAB(IORBAB,2)/KHKTB
@@ -248,9 +236,7 @@ C
                         IORBC = 1 + NINDCD(IORBCD,1)/KHKTC
                         IORBD = 1 + NINDCD(IORBCD,2)/KHKTD
                         AOMAX       = MAX(AOMAX,ABS(AINT))
-Cef begin
                         AOINT2(NBUF) = AINT
-Cef end
                         IND(NBUF,1) = A
                         IND(NBUF,2) = B
                         IND(NBUF,3) = ICORBC(IORBC) + ICOMPC
@@ -263,9 +249,7 @@ Cef end
               ENDDO
             ENDDO
           ENDDO
-Cef begin
           IF(SFAC.NE.D1) CALL DSCAL(NBUF,SFAC,AOINT2,1)
-Cef end
         ELSE
           DO ICOMPA = 1,KHKTA
                         KHKTBB = KHKTB
@@ -299,9 +283,7 @@ Cef end
                         IF (TCONCD.AND.IORBC.NE.IORBD)
      &                     FABCD = FABCD+FABCD
                         AOMAX       = MAX(AOMAX,ABS(AINT))
-Cef begin
                         AOINT2(NBUF) = FABCD*AINT
-Cef end
                         IND(NBUF,1) = A
                         IND(NBUF,2) = B
                         IND(NBUF,3) = ICORBC(IORBC) + ICOMPC
@@ -315,14 +297,12 @@ Cef end
             ENDDO
           ENDDO
         ENDIF
-      ELSE
+      ELSE ! undiff integrals (not suscep)
         IF(NOTEST) THEN
           DO ICOMPA = 1,KHKTA
-                        KHKTBB = KHKTB
-            DO ICOMPB = 1,KHKTBB
+            DO ICOMPB = 1,KHKTB
               DO ICOMPC = 1,KHKTC
-                            KHKTDD = KHKTD
-                DO ICOMPD = 1,KHKTDD
+                DO ICOMPD = 1,KHKTD
                   DO IORBAB = 1,NORBAB
                     IORBA = NINDAB(IORBAB,1)
                     IORBB = NINDAB(IORBAB,2)
@@ -335,9 +315,7 @@ Cef end
                         IORBC = NINDCD(IORBCD,1)
                         IORBD = NINDCD(IORBCD,2)
                         AOMAX       = MAX(AOMAX,ABS(AINT))
-Cef begin
                         AOINT2(NBUF) = AINT
-Cef end
                         IND(NBUF,1) = A
                         IND(NBUF,2) = B
                         IND(NBUF,3) = ICORBC(IORBC) + ICOMPC
@@ -350,9 +328,7 @@ Cef end
               ENDDO
             ENDDO
           ENDDO
-Cef end
           IF(SFAC.NE.D1) CALL DSCAL(NBUF,SFAC,AOINT2,1)
-Cef end
         ELSE
           DO ICOMPA = 1,KHKTA
                         KHKTBB = KHKTB
@@ -386,9 +362,7 @@ Cef end
                         IF (TCONCD.AND.IORBC.NE.IORBD)
      &                    FABCD = FABCD+FABCD
                         AOMAX       = MAX(AOMAX,ABS(AINT))
-Cef begin
                         AOINT2(NBUF) = FABCD*AINT
-Cef end
                         IND(NBUF,1) = A
                         IND(NBUF,2) = B
                         IND(NBUF,3) = ICORBC(IORBC) + ICOMPC
@@ -417,10 +391,9 @@ C     ***** Print section  *************
 C     **********************************
 C
       IF(IPRINT.GE.15) THEN
-        DO INT = 1,NBUF
-Cef begin
-          WRITE (LUPRI,'(1X,A,F16.12)') 'GINT,A,B,C,D',AOINT2(INT)
-Cef end
+        DO jINT = 1,NBUF
+          WRITE (LUPRI,'(A,F16.12,4I5)') ' GINT,A,B,C,D',
+     &       AOINT2(jINT),IND(jINT,1:4)
         ENDDO
       ENDIF
 C
