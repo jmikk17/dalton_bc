@@ -157,7 +157,7 @@ C
   215             CONTINUE
   205          CONTINUE
             END IF
-         ELSE
+         ELSE ! not NOTEST
             DCMPAB = IPNTLG(1,I)
             DCMPCD = IPNTLG(2,I)
             DCABAB = IPNTLG(3,I)

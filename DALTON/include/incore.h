@@ -1,6 +1,10 @@
 !  FILE : incore.h
 !
 !  Purpose : storage and control variables for "AO integrals in core" feature
+!  Author  : Eirik Fossgaard, Univ. Tromsø, Norway (2005)
+!
+!  If AOSAVE true, then use incore memory AOINTSCORE(MMWORK) for saving two-electron integrals 
+!  AOSAVE is set to true if MMWORK > 1
 !
 C     PARAMETER (MXTSK=(MXSHEL*(MXSHEL+1)/2), IEIR=0, MMWORK=0,
 C    &     MXSHL_KEEP=MAX(MXTSK,IEIR), MNSHL_KEEP=MIN(MXTSK,IEIR) )
