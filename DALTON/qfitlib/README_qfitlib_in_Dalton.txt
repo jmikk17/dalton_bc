@@ -9,3 +9,5 @@ The initial version of today is a copy of git hash e336494 from
 
 Note that the PRG_DALTON must be defined.
 ----
+Note that CMakeList.txt here is not used,
+what is compiled is determined in the ../../cmake/SourcesDALTON.cmake file.
