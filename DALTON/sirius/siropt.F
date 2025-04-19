@@ -2873,7 +2873,7 @@ C
       k_ekt_ev = kend-1 + j_ekt_ev
       k_ekt_ez = kend-1 + j_ekt_ez
 
-      CALL SIREKT(wrk(kfock),dv,wrk(k_ekt_EV),wrk(k_ekt_EZ),ipri6)
+      CALL SIREKT(wrk(kfock),dv,wrk(k_ekt_EV),wrk(k_ekt_EZ),iprsir)
       !    SIREKT(V, S, EV, EZ, IPRINT)
 
       call memrel('after SIREKT',wrk(kend),1,1,kfree,lfree)
@@ -3418,13 +3418,13 @@ C
       INTEGER, PARAMETER :: K_STEP = 5
       INTEGER :: I_ASYM, J_ASYM
       INTEGER :: V_INDEX, S_INDEX, E_INDEX, Z_INDEX
-      INTEGER :: NORBI  ! debug defs.
-      LOGICAL :: TEST
+      LOGICAL :: dyson_print
       CHARACTER*15 :: EKT_TYPE
 
       CALL QENTER('SIREKT')
 
       IPRINT  = max( SIROPT_DEBUG ,IPRINT_in)
+      dyson_print = iprint .ge. 2 .or. nocct .le. 10
 
       IF (NASHT .EQ. 0) THEN
          IF (DODFT) THEN
@@ -3709,6 +3709,7 @@ C
             DO K = 1, MATRIX_SIZE, K_STEP ! K_STEP IPs in each output block
             K_END = MIN(K+K_STEP-1, MATRIX_SIZE)
 
+            if (dyson_print) then
             ! print IPs
             WRITE(lupri,'(/1X,10A)') ('  ============',i=k,k_end)
             WRITE(lupri,'(1X,10F14.6)')
@@ -3723,16 +3724,19 @@ C
      &            POLE_STRENGTH(E_INDEX+k:E_INDEX+k_end)
             END IF
             WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+            end if ! dyson_print
 
             ! print Dyson orbital coefficients
             IF (NASHT .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
                DO I = 1, MATRIX_SIZE
-                  WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
+                  if (dyson_print)
+     &               WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
                   DO J = K, K_END
                      EZ(Z_INDEX+(J-1)*MATRIX_SIZE+I) = UZ(I,J)
                   END DO
                END DO ! I
-               WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+               if (dyson_print)
+     &            WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
             END IF
 
             END DO ! K = 1, MATRIX_SIZE, K_STEP
@@ -3766,6 +3770,11 @@ C
             WRITE(lupri,'(A)') '  No IPs in this symmetry'
          END IF
       END DO
+
+      if (nasht .gt. 0 .and. .not.dyson_print) then
+         write(lupri,'(/a)') ' Info: increase wave function '//
+     &      'print level to 2 to print Dyson coefficients.'
+      end if
 
       DEALLOCATE (POLE_STRENGTH)
       WRITE(lupri,'(/3A/A/)')
