@@ -2285,7 +2285,7 @@ C
          ISTEP = -1
       END IF
  1100 FORMAT (/' (SIRSTP) Energy difference;',
-     *        /' actual, predicted and ratio:',2F20.15,F12.6)
+     *         ' actual, predicted and ratio:',2F20.15,F12.6)
  1110 FORMAT (/' (SIRSTP) Close to convergence, ratio set to one.',
      *        /' Energy difference; actual and predicted:',1P,2D15.5)
 C
