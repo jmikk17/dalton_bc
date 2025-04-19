@@ -4228,6 +4228,7 @@ C
 C WORK SPACE ALLOCATION
 C
          IF (KZCONF.GT.0) THEN
+            IF (ispin .gt. 3) MAXPHP = 0 ! 18.apr.2025 hjaaj: segmentation fault in ciham.F for ispin=4
             CALL PHPINI(LPHPMX,KZCONF,KZWOPT,MAXPHP)
             KDIAE  = 1
             KTOT   = KDIAE  + LPHPMX
