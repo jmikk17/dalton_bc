@@ -82,6 +82,8 @@ intel-oneapi-2024.2.1:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
+    - echo "=== Available modules ==="
+    - module avail
     - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1
     - uname -a
     - lscpu
@@ -125,7 +127,9 @@ intel-oneapi-mpi:
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1 mpi
+    - echo "=== Available modules ==="
+    - module avail
+    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 oclfpga/2023.2.1 mpi
     - uname -a
     - lscpu
     - free -h
@@ -205,17 +209,20 @@ intel-classic-mpi:
                      intel-oneapi-compiler-dpcpp-cpp
                      intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
                      intel-oneapi-compiler-fortran
+                     intel-oneapi-compiler-fortran-classic
                      intel-oneapi-mkl intel-oneapi-mkl-devel
                      intel-oneapi-mpi intel-oneapi-mpi-devel
     - . /etc/profile.d/modules.sh
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
-    - module load compiler-rt/2024.2.1 compiler/2024.2.1 mpi mkl/2024.2
+    - echo "=== Available modules ==="
+    - module avail
+    - module load compiler-rt/2025.1.0 compiler/2025.1.0 mpi mkl/2025.1
     - uname -a
     - lscpu
     - free -h
-    - ix --version
+    - ifx --version
     - icx --version
     - icpx --version
     - mpirun --version
