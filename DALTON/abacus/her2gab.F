@@ -1006,8 +1006,7 @@ C
 #include "symmet.h"
 C
 
-C
-      IF (IPRINT .GT. 6) CALL HEADER('Subroutine GABPCK',-1)
+      IF (IPRINT .GT. 6) CALL HEADER('Subroutine GABGAT',-1)
       IF (IPRINT .GT. 10) THEN
          WRITE (LUPRI,'(2X,A,4I5)') 'NHKT? ', NHKTA, NHKTB, NHKTC, NHKTD
          WRITE (LUPRI,'(2X,A,4I5)') 'MUL?  ', MULA,  MULB,  MULC,  MULD
@@ -1081,7 +1080,6 @@ C*****************************************************************************
       PARAMETER(D1 = 1.0D0)
       INTEGER A,B,C,D
       LOGICAL SUSCEP
-#include "nuclei.h"
       DIMENSION ICORBA(NORBA),ICORBB(NORBB),
      &          ICORBC(NORBC),ICORBD(NORBD),
      &          AOINT(NCCINT), GABM(NBASIS,NBASIS),
@@ -1091,6 +1089,7 @@ C*****************************************************************************
 #include "twocom.h"
 #include "expcom.h"
 #include "symmet.h"
+#include "nuclei.h"
 #include "blocks.h"
 C
 
