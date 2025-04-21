@@ -2905,7 +2905,7 @@ C
                LABELT(1) = 'XDIPVEL '
                LABELT(2) = 'YDIPVEL '
                LABELT(3) = 'ZDIPVEL '
-               CALL HDBTST(WORK,LWORK,IPRINT,LABELT,NATOM,ORIGIN)
+               CALL HDBTST(WORK,LWORK,IPRONE,LABELT,NATOM,ORIGIN)
             END IF
 C
 C           ***** Test of first magnetic derivative of overlap integrals *****
@@ -3316,19 +3316,19 @@ C
 C     ***** Test of London orbital contribution to nuclear shieldings *****
 C
             IF (NSNLTS) THEN
-               CALL NS1TST(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NS1TST(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C     ***** Test of non-London orbital contribution to nuclear shieldings *****
 C
             IF (NSLTST) THEN
-               CALL NSTST2(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NSTST2(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C     ***** Test of nuclear shielding tensor integrals *****
 C
             IF (NSTTST) THEN
-               CALL NSTST3(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NSTST3(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C           ***** Cosine and sine integrals *****
@@ -3768,7 +3768,7 @@ C      *** Screening matrix for Cauchy-Schwarz screening
      &             .NOT.R12EIN .AND. .NOT.U21INT) THEN
                   CALL GETGAB(WORK(KGAB),
      &              'GABSO---',N2GAB,WORK(KFREE),LFREE)
-                  if (iprint .gt. 1) then
+                  if (IPRDEF .gt. 1) then
                      WRITE(LUPRI,*) 'GABSO--- matrix'
                      call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
      &                  MAXSHL,MAXSHL,-1,LUPRI)
@@ -3819,7 +3819,7 @@ C      *** Screening matrix for Cauchy-Schwarz screening
             N2GAB = MAXSHL*MAXSHL ! GAB-matrix in SO-basis; MAXSHL calculated in PAOVEC
             CALL MEMGET2('REAL','GABRSO',KGAB,N2GAB,WORK,KFREE,LFREE)
             CALL GETGAB(WORK(KGAB),'GABSOSR-',N2GAB,WORK(KFREE),LFREE)
-            if (iprint .gt. 1) then
+            if (IPRDEF .gt. 1) then
                WRITE(LUPRI,*) 'GABSOSR- matrix'
                call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
      &            MAXSHL,MAXSHL,-1,LUPRI)
@@ -3985,7 +3985,7 @@ C        ***** Test of two-electron part of magnetic moment *****
 C        ********************************************************
 C
          IF (MGMO2T) THEN
-            CALL MM2TST(WORK,LWORK,PRTHRS,IPRINT)
+            CALL MM2TST(WORK,LWORK,PRTHRS,IPRDEF)
          END IF
       END IF
 C
