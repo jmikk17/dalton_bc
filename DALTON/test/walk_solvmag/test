@@ -36,7 +36,7 @@ f.add(from_string = 'Molecular geometry (au)',
 #      to_string = 'ABACUS - MOLECULAR ROTATIONAL g-TENSOR',
 #      mask = [2,3,4],
 #      abs_tolerance = 1.0e-4)
-f.add(from_re = 'magnetizability tensor \(au\)',
+f.add(from_re = r'magnetizability tensor \(au\)',
       num_lines = 9,
       abs_tolerance = 2.1e-6)
 
@@ -45,12 +45,12 @@ f.add(from_re = 'magnetizability tensor \(au\)',
 #f.add(from_string = 'ABACUS - MOLECULAR ROTATIONAL g-TENSOR',
 #      to_string = 'ABACUS - CHEMICAL SHIELDINGS',
 #      abs_tolerance = 2.0e-6)
-f.add(from_re = 'Molecular rotational g\-factor',
+f.add(from_re = r'Molecular rotational g\-factor',
       num_lines = 9,
       abs_tolerance = 2.1e-6)
 
 # Chemical shielding
-f.add(from_re = 'Shielding tensors in symmetry coordinates \(ppm\)',
+f.add(from_re = r'Shielding tensors in symmetry coordinates \(ppm\)',
       num_lines = 30,
       rel_tolerance = 1.0e-4, ignore_below = 1.e-4)
 
