@@ -57,183 +57,131 @@ coverage:
     - ctest -D ExperimentalCoverage
   interruptible: true
 
-intel-oneapi-2024.2.1:
-  image: fedora:37
+intel-oneapi-serial:
+  image: fedora:40
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
   tags:
-    - saas-linux-2xlarge-amd64
+    - saas-linux-medium-amd64
   rules:
     - when: always
     - if: $CI_PIPELINE_SOURCE == 'schedules'
       when: never
   allow_failure: true
   before_script:
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
-                     python python3 python3-pip redhat-rpm-config findutils
-                     which procps-ng coreutils environment-modules
-                     intel-oneapi-compiler-dpcpp-cpp-2024.2.1-1079
-                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic-2023.2.1-16
-                     intel-oneapi-compiler-fortran-2024.2.1-1079
-                     intel-oneapi-mkl-2024.2.1-103 intel-oneapi-mkl-devel-2024.2.1-103
+    # Update system and install necessary packages
+    - dnf -y update
+    - dnf -y install git python python3 python3-pip wget pkg-config ca-certificates gnupg cmake environment-modules
+    # Download Intel GPG key
+    - wget https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Import Intel GPG key
+    - rpm --import GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Add Intel oneAPI repository
+    - echo -e "[oneAPI]\nname=Intel(R) oneAPI repository\nbaseurl=https://yum.repos.intel.com/oneapi\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" | sudo tee /etc/yum.repos.d/oneAPI.repo
+    # Install Intel oneAPI packages
+    - dnf -y update
+    - dnf -y install intel-oneapi-compiler-dpcpp-cpp intel-oneapi-compiler-fortran intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
+    # Set up environment for Intel oneAPI
     - . /etc/profile.d/modules.sh
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
     - echo "=== Available modules ==="
     - module avail
-    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1
+    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 mpi
+    # Print useful info
     - uname -a
     - lscpu
     - free -h
     - ifx --version
     - icx --version
     - icpx --version
+    - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
     - python3 --version
     - git --version
     - cmake --version
   script:
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+    - echo "Number of processors/jobs for the build step is $N_PROC"
     - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
     - cd build
-    - make -j 32
-    - ctest -j 16 --output-on-failure -L serial -LE "long|verylong"
+    - make -j $N_PROC
+    - ldd dalton.x
+    - echo "Running ctest with $N_PROC jobs"
+    - ctest -j$N_PROC --output-on-failure -L "serial|essential" -LE "long|verylong" -E cc_rsp_alpha
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+    expire_in: 3 days
   interruptible: true
 
 intel-oneapi-mpi:
-  image: fedora:37
+  image: fedora:40
   variables:
     DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   tags:
-    - saas-linux-2xlarge-amd64
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  allow_failure: true
-  before_script:
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
-                     python python3 python3-pip redhat-rpm-config findutils
-                     which procps-ng coreutils environment-modules
-                     intel-oneapi-compiler-dpcpp-cpp
-                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-                     intel-oneapi-compiler-fortran
-                     intel-oneapi-mkl intel-oneapi-mkl-devel
-                     intel-oneapi-mpi intel-oneapi-mpi-devel
-    - . /etc/profile.d/modules.sh
-    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
-    - module use ~/intel-oneapi-modulefiles
-    - module purge
-    - echo "=== Available modules ==="
-    - module avail
-    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 oclfpga/2023.2.1 mpi
-    - uname -a
-    - lscpu
-    - free -h
-    - ifx --version
-    - icx --version
-    - icpx --version
-    - mpirun --version
-    - python3 --version
-    - git --version
-    - cmake --version
-  script:
-    - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
-    - cd build
-    - make -j 32
-    - ctest -j 4 --output-on-failure -L dalton -LE "serial|long|verylong"
-  interruptible: true
-
-intel-classic-2024-2.1:
-  image: fedora:37
-  variables:
-    DALTON_LAUNCHER: ""
-    OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-2xlarge-amd64
+    - saas-linux-medium-amd64
   rules:
     - when: always
     - if: $CI_PIPELINE_SOURCE == 'schedules'
       when: never
   allow_failure: true
   before_script:
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
-                     python python3 python3-pip redhat-rpm-config findutils
-                     which procps-ng coreutils environment-modules
-                     intel-oneapi-compiler-dpcpp-cpp-2024.2.1-1079
-                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic-2023.2.1-16
-                     intel-oneapi-compiler-fortran-2024.2.1-1079
-                     intel-oneapi-mkl-2024.2.1-103 intel-oneapi-mkl-devel-2024.2.1-103
-    - . /etc/profile.d/modules.sh
-    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
-    - module use ~/intel-oneapi-modulefiles
-    - module purge
-    - module load tbb/2021.13 compiler-rt/2024.2.1 compiler/2024.2.1 mkl/2024.2 oclfpga/2023.2.1
-    - uname -a
-    - lscpu
-    - free -h
-    - ifx --version
-    - icx --version
-    - icpx --version
-    - python3 --version
-    - git --version
-    - cmake --version
-  script:
-    - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
-    - cd build
-    - make -j 32
-    - ctest -j 16 --timeout 120 --output-on-failure -L essential
-  interruptible: true
-
-intel-classic-mpi:
-  image: fedora:37
-  variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
-    OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-2xlarge-amd64
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  allow_failure: true
-  before_script:
-    - mv maintenance/oneAPI.repo /etc/yum.repos.d/oneAPI.repo
-    - dnf install -y gcc gcc-c++ gcc-gfortran git make cmake
-                     python python3 python3-pip redhat-rpm-config findutils
-                     which procps-ng coreutils environment-modules
-                     intel-oneapi-compiler-dpcpp-cpp
-                     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-                     intel-oneapi-compiler-fortran
-                     intel-oneapi-compiler-fortran-classic
-                     intel-oneapi-mkl intel-oneapi-mkl-devel
-                     intel-oneapi-mpi intel-oneapi-mpi-devel
+    # Update system and install necessary packages
+    - dnf -y update
+    - dnf -y install git python python3 python3-pip wget pkg-config ca-certificates gnupg cmake environment-modules
+    # Download Intel GPG key
+    - wget https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Import Intel GPG key
+    - rpm --import GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Add Intel oneAPI repository
+    - echo -e "[oneAPI]\nname=Intel(R) oneAPI repository\nbaseurl=https://yum.repos.intel.com/oneapi\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" | sudo tee /etc/yum.repos.d/oneAPI.repo
+    # Install Intel oneAPI packages
+    - dnf -y update
+    - dnf -y install intel-oneapi-compiler-dpcpp-cpp intel-oneapi-compiler-fortran intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
+    # Set up environment for Intel oneAPI
     - . /etc/profile.d/modules.sh
     - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
     - module use ~/intel-oneapi-modulefiles
     - module purge
     - echo "=== Available modules ==="
     - module avail
-    - module load compiler-rt/2025.1.0 compiler/2025.1.0 mpi mkl/2025.1
+    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 mpi
+    # Print useful info
     - uname -a
     - lscpu
     - free -h
-    - ifx --version
-    - icx --version
-    - icpx --version
+    - mpiifx --version
+    - mpiicx --version
+    - mpiicpx --version
     - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
     - python3 --version
     - git --version
     - cmake --version
   script:
-    - python setup --fc=mpiifort --cc=mpiicc --cxx=mpiicpc --mkl=sequential --type=release
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
+    - echo "Number of processors/jobs for the build step is $N_PROC"
+    - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential
+    - make -j $N_PROC
+    - ldd dalton.x
+    - let "M=N_PROC/4"
+    - echo "Running ctest with $M jobs"
+    - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+    expire_in: 3 days
   interruptible: true
 
 gcc-6:
