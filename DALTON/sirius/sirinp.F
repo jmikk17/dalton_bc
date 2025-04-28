@@ -1692,9 +1692,6 @@ C
       IF (QMMM .AND. DOCI) THEN
          CALL QUIT('QMMM is currently not compatible with .CI')
       END IF
-      IF (USE_PELIB() .AND. DOCI) THEN
-         CALL QUIT('.PELIB is currently not compatible with .CI')
-      END IF
       EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .OR. QMNPMM
      &            .OR. USE_PELIB()
 C
