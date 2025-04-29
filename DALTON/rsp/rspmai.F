@@ -983,6 +983,8 @@ C
     3          CONTINUE ! .SOPPA
                   IF (EMBEDDING) THEN
 cjje: change this if full solvent soppa is ever implemented
+                    write(lupri,'(/A)')
+     &              '@ INFO: .SOPPA is interpreted as .SOPRPA'
                     GO TO 24 ! go to .SOPRPA option
                   END IF
 C                  IF (DIRCAL) AOSOP = .TRUE. 
