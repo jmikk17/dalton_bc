@@ -3,10 +3,10 @@
 .PELIB
 **WAVE FUNCTIONS
 .HF
-.CI
+.CI      ! test new CI/pelib implementation (April 2025)
 .MCSCF
 *SCF INPUT
-.NODIIS
+.NODIIS  ! test 2. order SCF convergence with pelib
 *CONFIGURATION INPUT
 .SYMMETRY
  1

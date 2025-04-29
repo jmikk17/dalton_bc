@@ -228,6 +228,7 @@ C
       use mcscf_or_gasci_2_define_cfg, only :
      &    define_lucita_cfg_dynamic
       use lucita_mcscf_srdftci_cfg
+      use pelib_interface, only: use_pelib
 
 #include "implicit.h"
       DIMENSION CMO(*), INDXCI(*), ECI(*), ICROOT(*), WRK(*)
@@ -633,10 +634,20 @@ C          write(lupri,*) 'ESRDV = ', ESRDV
       J = LUW4
   815 CONTINUE
 
-      WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
+
+      if (use_pelib()) then
+         WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
+     &   '@ Final CI/PE energies and residuals in symmetry',LSYM,
+     &     ' (irrep ',REP(LSYM-1),')',
+     &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
+         write(J,'(/A)') '@ Embedding effects (*PELIB) are '//
+     &      'approximately included based on SCF density matrix.'
+      else
+         WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
      &   '@ Final CI energies and residuals in symmetry',LSYM,
      &     ' (irrep ',REP(LSYM-1),')',
      &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
+      end if
 
       IF (ISTACI .GT. 0) THEN ! if only converge one root, save info for
                               ! print final results
@@ -908,7 +919,8 @@ C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
          nish(:) = nrhf(:)
          nash(:) = nrohf(:)
          nisht  = nrhft
-         nasht  = SUM( NROHF(1:NSYM) )
+         nrohft = SUM( NROHF(1:NSYM) )
+         nasht  = nrohft
          nnashx = nasht*(nasht+1)/2
 
          kdv   = kw0
@@ -930,14 +942,11 @@ C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
          if (nasht > 0) then
             CALL DAXPY(N2BASX, 1.0D0, WRK(KDVAO), 1, WRK(KDCAO), 1)
          end if
-         KDTAO   = KDVAO ! reuse KDVAO for triangular KDTAO
+         KDTAO   = KDVAO  ! reuse KDVAO for folded DCAO+DVAO
+         CALL DGEFSP(NBAST, WRK(KDCAO), WRK(KDTAO)) ! DTAO is folded D_tot_AO = DCAO + DVAO
          KF_PEAO = KDCAO ! reuse KDCAO for triangular KFTAO; FT = FC + FV
-         CALL DGEFSP(NBAST, WRK(KDCAO), WRK(KDTAO))
          CALL PELIB_IFC_FOCK(WRK(KDTAO), WRK(KF_PEAO), ESOLT)
-         write(lupri,'(3(/A,F20.10))')
-     &   '@ Inactive energy contribution to CI energy',EMY,
-     &   '@ PE/PDE   energy contribution to CI energy',ESOLT,
-     &   '@ Total    energy contribution to CI energy',EMY+ESOLT
+         CALL DGEFSP(NBAST, WRK(KDVAO), WRK(KDTAO)) ! reuse KDTAO for folded DVAO
          KF_PE = KDTAO ! reuse memory
          CALL UTHU(WRK(KF_PEAO), WRK(KF_PE), CMO, WRK(KW1),
      &            NBAST, NORBT)
@@ -947,6 +956,28 @@ C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
          nisht  = nisht_save
          nasht  = nasht_save
          nnashx = nasht*(nasht+1)/2
+
+         E_V_pe = 0.0d0
+         do i = nisht+1,nrhft ! doubly occupied active orbitals in SCF reference determinant in CI
+            ii = (i*(i+1))/2 + (KF_PE-1)
+            E_V_pe = E_V_pe + 2.0d0*WRK(ii)
+         end do
+         do i = nrhft+1,nrhft+nrohft ! singly occupied active orbitals in SCF reference determinant in CI
+            ii = (i*(i+1))/2 + (KF_PE-1)
+            E_V_pe = E_V_pe + WRK(ii)
+         end do
+         write(lupri,'(/A/A,I0,A,I0,A)')
+     &'@ PE/PDE energy and potential is fixed to the density based on',
+     &'@ an SCF occupation with ',nrhft,' doubly occupied and ',nrohft,
+     &' singly occupied orbitals.'
+         write(lupri,'(5(/A,F20.10))')
+     &   '@ Inactive energy contribution to CI energy   ',EMY,
+     &   '@ PE/PDE a: energy contribution to CI energy  ',ESOLT,
+     &   '@ PE/PDE b: Tr(V_pe D_active) effective energy',E_V_pe,
+     &   '@ PE/PDE    CI energy correction = a - b =    ',ESOLT-E_V_pe,
+     &   '@ Final PE/PDE corrected "inactive" energy    ',
+     &      EMY+ESOLT-E_V_pe
+         ESOLT = ESOLT - E_V_pe
       else
          ESOLT = 0.0d0
       end if
