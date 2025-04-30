@@ -89,7 +89,7 @@ intel-oneapi-serial:
     - module purge
     - echo "=== Available modules ==="
     - module avail
-    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 mpi
+    - module load tbb/2022.1 compiler-rt/2025.1.1 compiler/2025.1.1 mkl/2025.1 mpi
     # Print useful info
     - uname -a
     - lscpu
@@ -152,7 +152,7 @@ intel-oneapi-mpi:
     - module purge
     - echo "=== Available modules ==="
     - module avail
-    - module load tbb/2022.1 compiler-rt/2025.1.0 compiler/2025.1.0 mkl/2025.1 mpi
+    - module load tbb/2022.1 compiler-rt/2025.1.1 compiler/2025.1.1 mkl/2025.1 mpi
     # Print useful info
     - uname -a
     - lscpu
