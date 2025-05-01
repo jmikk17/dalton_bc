@@ -778,7 +778,7 @@ Lowest 1 elements are used as separate start CI vectors.
 
 
 
-@ Final CI/PE energies and residuals in symmetry 1 (irrep A  )
+@ Final PE-CI energies and residuals in symmetry 1 (irrep A  )
 @    1     -113.281681618249081       5.40D-03
 
 @ Embedding effects (*PELIB) are approximately included based on SCF density matrix.
