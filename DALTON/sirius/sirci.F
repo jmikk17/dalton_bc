@@ -637,7 +637,7 @@ C          write(lupri,*) 'ESRDV = ', ESRDV
 
       if (use_pelib()) then
          WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
-     &   '@ Final CI/PE energies and residuals in symmetry',LSYM,
+     &   '@ Final PE-CI energies and residuals in symmetry',LSYM,
      &     ' (irrep ',REP(LSYM-1),')',
      &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
          write(J,'(/A)') '@ Embedding effects (*PELIB) are '//
