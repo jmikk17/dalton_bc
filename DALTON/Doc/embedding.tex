@@ -440,6 +440,7 @@ and are activated with the \verb|.SAVE DENSITY| option.
 **DALTON
 .RUN WAVE FUNCTION
 .DIRECT
+.PELIB
 *PELIB
 .SAVE DENSITY
 save_density.h5
@@ -533,6 +534,7 @@ The \verb|hdf5| output from the preceding monomer calculation should be provided
 **DALTON
 .RUN WAVEFUN
 .DIRECT
+.PELIB
 *PELIB
 .TWOINT
 save_density.h5
@@ -619,6 +621,7 @@ generation of the \verb|london electrostatic matrix| and
 **DALTON
 .RUN WAVEFUN
 .DIRECT
+.PELIB
 *PELIB
 .TWOINT
 save_density.h5
@@ -642,6 +645,7 @@ about 8000 environment sites. FMM can be activated with:
 **DALTON
 .RUN WAVEFUN
 .DIRECT
+.PELIB
 *PELIB
 .FMM
 **WAVE FUNCTIONS
@@ -668,6 +672,7 @@ number of particles can be changed as:
 **DALTON
 .RUN WAVEFUN
 .DIRECT
+.PELIB
 *PELIB
 .FMM
 .THETA
@@ -703,8 +708,8 @@ multipole expansion order of 8.
 **DALTON INPUT
 .RUN WAVEFUN
 .DIRECT
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .FMM
 .THETA
 0.4
@@ -734,8 +739,8 @@ radius within which solvent sites are used as grid points for the ESP fitting).
 **DALTON INPUT
 .RUN WAVEFUN
 .DIRECT
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .FMM
 .THETA
 0.4
@@ -768,8 +773,8 @@ with $\theta=0.3$ and a local expansion up to 7th order (`INT\_ORDER`).
 **DALTON INPUT
 .RUN WAVEFUN
 .DIRECT
-.PEQM
-*PEQM
+.PELIB
+*PELIB
 .FMM
 .THETA
 0.4

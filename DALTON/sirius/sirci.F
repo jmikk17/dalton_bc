@@ -228,6 +228,7 @@ C
       use mcscf_or_gasci_2_define_cfg, only :
      &    define_lucita_cfg_dynamic
       use lucita_mcscf_srdftci_cfg
+      use pelib_interface, only: use_pelib
 
 #include "implicit.h"
       DIMENSION CMO(*), INDXCI(*), ECI(*), ICROOT(*), WRK(*)
@@ -413,9 +414,10 @@ C        CALL TRACTL(ITRLVL,CMO,WRK,LWRK)
 C
 C     *** Obtain FCAC and H2AC integral matrices
 C
-      CALL CIINTS(DISKH2,CMO,
-     *            EMY_CI,WRK(KFCAC),WRK(KH2AC),WRK(KW1),LW1)
-C     CALL CIINTS(DISKH2,CMO,EMY,FCAC,H2AC,WRK,LFREE)
+      CALL CIINTS(DISKH2,CMO,EMY_CI,ESOLT,
+     *            WRK(KFCAC),WRK(KH2AC),WRK(KW1),LW1)
+C     CALL CIINTS(DISKH2,CMO,EMY,ESOLT,FCAC,H2AC,WRK,LFREE)
+      EMY_CI = EMY_CI + ESOLT ! add any solvent energy to the inactive energy
 C
 !     set keyword for saving the final vector(s) in SIRSAV (called from CISAVE)
       keywrd = 'CISAVE' 
@@ -632,10 +634,20 @@ C          write(lupri,*) 'ESRDV = ', ESRDV
       J = LUW4
   815 CONTINUE
 
-      WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
+
+      if (use_pelib()) then
+         WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
+     &   '@ Final PE-CI energies and residuals in symmetry',LSYM,
+     &     ' (irrep ',REP(LSYM-1),')',
+     &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
+         write(J,'(/A)') '@ Embedding effects (*PELIB) are '//
+     &      'approximately included based on SCF density matrix.'
+      else
+         WRITE (J,'(//A,I2,3A/,(A,I5,0P,F25.15,1P,D15.2))')
      &   '@ Final CI energies and residuals in symmetry',LSYM,
      &     ' (irrep ',REP(LSYM-1),')',
      &   ('@',I,ECI(I),residual_croot(I), I = 1,NCROOT)
+      end if
 
       IF (ISTACI .GT. 0) THEN ! if only converge one root, save info for
                               ! print final results
@@ -743,7 +755,7 @@ C    *              MOISNO,INDXCI,WRK,KFRSAV,LFRSAV,LUPRI,IPRINT)
   900 CONTINUE
       END IF
 C
-C Save CI info on SIRIFIC for post-programs
+C Save CI info on SIRIFC for post-programs
 C
       IF (FLAG(4) .AND. FLAG(25)) THEN
 C        ... if (cicalc and save for response) then
@@ -769,9 +781,9 @@ C              CALL TRACTL(ITRLVL,CMO,WRK,LWRK)
 C
 C              *** Obtain FCAC and H2AC integral matrices
 C
-               CALL CIINTS(DISKH2,CMO,
-     *                     EMY_CI,WRK(KFCAC),WRK(KH2AC),WRK(KW1),LW1)
-C              CALL CIINTS(DISKH2,CMO,EMY,FCAC,H2AC,WRK,LFREE)
+               CALL CIINTS(DISKH2,CMO,EMY_CI,ESOLT,
+     *                     WRK(KFCAC),WRK(KH2AC),WRK(KW1),LW1)
+C              CALL CIINTS(DISKH2,CMO,EMY,ESOLT,FCAC,H2AC,WRK,LFREE)
 C
 C              *** Calculate the diagonal of the CI matrix.
 C
@@ -779,7 +791,7 @@ C
      &                     WRK(KCDIAG),WRK(KW1),LW1)
 C              CALL CIDIAG(ICSYM,NOH2,FCAC,H2AC,XNDXCI,DIAGC,WRK,LFREE)
 C
-               EMY_CI = EMY_CI + POTNUC
+               EMY_CI = EMY_CI + POTNUC + ESOLT
             ELSE
 C              subtract EMY from diagonal again, as expected in CIRSPS
                DO 950 I = 0,NCONF-1
@@ -837,7 +849,7 @@ C     *****************************************************************
 C
       END
 C  /* Deck ciints */
-      SUBROUTINE CIINTS(DISKH2,CMO,EMY,FCAC,H2AC,WRK,LFREE)
+      SUBROUTINE CIINTS(DISKH2,CMO,EMY,ESOLT,FCAC,H2AC,WRK,LFREE)
 C
 C Written by Hans Joergen Jensen 13-Dec-1984
 C Revision for LUCITA Dec 2010 /HJAaJ (moved CALL CIDIAG outside)
@@ -846,6 +858,11 @@ C Purpose:
 C  CIIN*: Calculate integrals needed for CI. EMY, FCAC and H2AC
 C         are needed by calling program.
 C
+C April 2025: new paramter ESOLT, PE/PDE energy if use_pelib true
+C
+
+      use pelib_interface, only: use_pelib, pelib_ifc_fock
+
 #include "implicit.h"
 
       DIMENSION CMO(*), FCAC(*),H2AC(*),WRK(*)
@@ -863,6 +880,8 @@ C
 #include "infinp.h"
 
       LOGICAL SRHYBR_SAVE
+
+      integer :: nish_save(8), nash_save(8)
 C
       CALL QENTER('CIINTS')
 C
@@ -881,11 +900,7 @@ C
       KW0   = KFC   + NF*NNORBT
       LW0   = LFREE - KW0
 C
-      KW1   = 1
-      LW1   = LFREE - KW1
-C
-      KEND  = MAX(KW0,KW1)
-      IF (KEND.GT.LFREE) CALL ERRWRK('CIINTS',KEND,LFREE)
+      IF (KW0.GT.LFREE) CALL ERRWRK('CIINTS',KW0,LFREE)
 C
 C *** Section 1 ***
 C
@@ -895,11 +910,84 @@ C
       CALL FCKMAT(.TRUE.,DUMMY,CMO,EMY,WRK(KFC),DUMMY,
      &             WRK(KW0),LW0)
 C     CALL FCKMAT(ONLYFC,DV,CMO,EMCMY,FC,FV,WRK,LFREE)
+
+      if (use_pelib() ) then
+         nish_save(:) = nish(:)
+         nash_save(:) = nash(:)
+         nisht_save = nisht
+         nasht_save = nasht
+         nish(:) = nrhf(:)
+         nash(:) = nrohf(:)
+         nisht  = nrhft
+         nrohft = SUM( NROHF(1:NSYM) )
+         nasht  = nrohft
+         nnashx = nasht*(nasht+1)/2
+
+         kdv   = kw0
+         kdcao = kdv + nnashx
+         kdvao = kdcao + n2basx
+         kw1   = kdvao + n2basx
+         lw1   = lfree - kw0
+         if (nasht > 0) then ! make unit density matrix for open-shell RHF orbitals
+            call dzero(wrk(kdv),nnashx)
+            j = KDV
+            do i = 1,nasht
+               wrk(j) = 1.0d0
+               j = j + i + 1
+            end do
+         end if
+         CALL FCKDEN((NISHT>0), (NASHT>0), WRK(KDCAO), WRK(KDVAO),
+     &              CMO, WRK(KDV), WRK(KW1), LW1)
+         if (nisht == 0) call dzero(wrk(kdcao),n2basx)
+         if (nasht > 0) then
+            CALL DAXPY(N2BASX, 1.0D0, WRK(KDVAO), 1, WRK(KDCAO), 1)
+         end if
+         KDTAO   = KDVAO  ! reuse KDVAO for folded DCAO+DVAO
+         CALL DGEFSP(NBAST, WRK(KDCAO), WRK(KDTAO)) ! DTAO is folded D_tot_AO = DCAO + DVAO
+         KF_PEAO = KDCAO ! reuse KDCAO for triangular KFTAO; FT = FC + FV
+         CALL PELIB_IFC_FOCK(WRK(KDTAO), WRK(KF_PEAO), ESOLT)
+         CALL DGEFSP(NBAST, WRK(KDVAO), WRK(KDTAO)) ! reuse KDTAO for folded DVAO
+         KF_PE = KDTAO ! reuse memory
+         CALL UTHU(WRK(KF_PEAO), WRK(KF_PE), CMO, WRK(KW1),
+     &            NBAST, NORBT)
+         CALL DAXPY(NNORBX, 1.0D0, WRK(KF_PE), 1, WRK(KFC), 1)
+         nish(:) = nish_save(:)
+         nash(:) = nash_save(:)
+         nisht  = nisht_save
+         nasht  = nasht_save
+         nnashx = nasht*(nasht+1)/2
+
+         E_V_pe = 0.0d0
+         do i = nisht+1,nrhft ! doubly occupied active orbitals in SCF reference determinant in CI
+            ii = (i*(i+1))/2 + (KF_PE-1)
+            E_V_pe = E_V_pe + 2.0d0*WRK(ii)
+         end do
+         do i = nrhft+1,nrhft+nrohft ! singly occupied active orbitals in SCF reference determinant in CI
+            ii = (i*(i+1))/2 + (KF_PE-1)
+            E_V_pe = E_V_pe + WRK(ii)
+         end do
+         write(lupri,'(/A/A,I0,A,I0,A)')
+     &'@ PE/PDE energy and potential is fixed to the density based on',
+     &'@ an SCF occupation with ',nrhft,' doubly occupied and ',nrohft,
+     &' singly occupied orbitals.'
+         write(lupri,'(5(/A,F20.10))')
+     &   '@ Inactive energy contribution to CI energy   ',EMY,
+     &   '@ PE/PDE a: energy contribution to CI energy  ',ESOLT,
+     &   '@ PE/PDE b: Tr(V_pe D_active) effective energy',E_V_pe,
+     &   '@ PE/PDE    CI energy correction = a - b =    ',ESOLT-E_V_pe,
+     &   '@ Final PE/PDE corrected "inactive" energy    ',
+     &      EMY+ESOLT-E_V_pe
+         ESOLT = ESOLT - E_V_pe
+      else
+         ESOLT = 0.0d0
+      end if
+
       CALL GETAC(WRK(KFC),FCAC)
+C
       IF (DISKH2) THEN
-         CALL CIIN2B(H2AC,WRK(KW1),LW1)
+         CALL CIIN2B(H2AC,WRK,LFREE)
       ELSE
-         CALL CIIN2A(H2AC,WRK(KW1),LW1)
+         CALL CIIN2A(H2AC,WRK,LFREE)
       END IF
 C
 C *** End of subroutine CIINTS

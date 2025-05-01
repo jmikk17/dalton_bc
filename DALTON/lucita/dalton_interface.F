@@ -2222,8 +2222,14 @@ C
       call memget('REAL',kh2ac,nnashx**2,WORK,kfree,lfree)
 
       DISKH2 = .FALSE.
-      CALL CIINTS(DISKH2,CMO,EMY,WORK(kfcac),
+      CALL CIINTS(DISKH2,CMO,EMY,ESOLT,WORK(kfcac),
      &            WORK(kh2ac),WORK(kfree),lfree)
+      if (ESOLT .ne. 0.0d0) then
+         write(lupri,'(/3(A,F20.10))')
+     &      ' Info: PE energy is added to inactive energy',
+     &      ESOLT,' +',EMY,' =',EMY+ESOLT
+         EMY = EMY + ESOLT
+      end if
 
       IF (CLOSE_MOTWOINT) THEN
          CALL GPCLOSE(LUINTM,'KEEP')

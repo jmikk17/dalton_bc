@@ -823,7 +823,17 @@ C                      SRDFT(ND_SIM,EXCMAT,DMAT,ESRDFT(1:3),DOERG,
      &       '@   = DH-DFT/KS-PT2 energy    :',EMY+WDFTMP*EMP2
             EMP2   = WDFTMP*EMP2
          END IF
-      END IF
+
+         IF (EMBEDDING) WRITE (LUPRI,'(/A//A/A/A/A)')
+     &   '@ MP2 for embedded QM system, embedding is included in SCF'//
+     &   ' energy, SCF orbitals, and SCF orbital energies.'
+     &  ,'@ NOTE: The present MP2 model is a PTE-like solvent MP2 model'
+     &  ,'@       where the embedding operator is based on SCF density'
+     & //' and not the correlated density.'
+     &  ,'@ Please see J Comp Chem, 33 (2012) 2012-2022 for reference.'
+     &  ,'@ (PTE is defined in THEOCHEM, 230 (1991) 295-312 )'
+
+      END IF ! IF (IPRMP2 .GE. 0) THEN
 C
       ECORR = EMY + EMP2
 C
@@ -1638,10 +1648,10 @@ C
 C     Step 1 : Construct or read the inactive Fock matrix
 C
       IF (EMBEDDING) THEN ! read EMY and Fock matrix from SIRFC
-         WRITE (LUPRI,'(/A)')
+         WRITE (LUPRI,'(/A/A/A)')
      &   ' MP2 for embedded QM system, reading Fock matrix from SIRIFC'
-     &  ,'@ NOTE: The present MP2 model is a PTE-like solvent MP2 model'
-     &  ,'@ Please see JCC, 2012-2022, 33, (2012) for reference.'
+     &  ,' NOTE: The present MP2 model is a PTE-like solvent MP2 model'
+     &  ,' Please see JCC, 2012-2022, 33, (2012) for reference.'
          KCMO      = 1
          KCMO_diff = KCMO  + NCMOT
          KWRK      = KCMO_diff  + NCMOT
