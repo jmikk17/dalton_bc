@@ -3462,6 +3462,10 @@ C
       IF (NASHT.GT.0) THEN
          CALL TITLER( EKT_TYPE(1:l_wt)//
      &  ' IPs [a.u. & eV], pole strengths, and Dyson orbitals ',' ',204)
+         if (.not.dyson_print) then
+            write(lupri,'(a/)') ' Info: increase wave function '//
+     &         'print level to 2 to print Dyson coefficients.'
+         end if
       ELSE ! SCF
          CALL TITLER( EKT_TYPE(1:l_wt)//
      &  " IPs [a.u. & eV] from Koopmans' theorem",' ',204)
@@ -3709,7 +3713,6 @@ C
             DO K = 1, MATRIX_SIZE, K_STEP ! K_STEP IPs in each output block
             K_END = MIN(K+K_STEP-1, MATRIX_SIZE)
 
-            if (dyson_print) then
             ! print IPs
             WRITE(lupri,'(/1X,10A)') ('  ============',i=k,k_end)
             WRITE(lupri,'(1X,10F14.6)')
@@ -3724,7 +3727,6 @@ C
      &            POLE_STRENGTH(E_INDEX+k:E_INDEX+k_end)
             END IF
             WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
-            end if ! dyson_print
 
             ! print Dyson orbital coefficients
             IF (NASHT .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
@@ -3770,11 +3772,6 @@ C
             WRITE(lupri,'(A)') '  No IPs in this symmetry'
          END IF
       END DO
-
-      if (nasht .gt. 0 .and. .not.dyson_print) then
-         write(lupri,'(/a)') ' Info: increase wave function '//
-     &      'print level to 2 to print Dyson coefficients.'
-      end if
 
       DEALLOCATE (POLE_STRENGTH)
       WRITE(lupri,'(/3A/A/)')
