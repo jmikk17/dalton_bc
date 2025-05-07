@@ -1006,17 +1006,26 @@ C     ====================================================
 C
 C-tbp IF (.NOT. (DIPSTR .OR. ROTSTR .OR. ROTVEL)) THEN
          IF (EXCTRP) THEN
-            CALL HEADER_A('Triplet electronic excitation energies',15)
+            IF (TDA_TRIPLET) THEN
+         CALL HEADER_A('Triplet TDA electronic excitation energies',15)
+            ELSE
+         CALL HEADER_A('Triplet electronic excitation energies',15)
+            END IF
          ELSE
-            CALL HEADER_A('Singlet electronic excitation energies',15)
+            IF (TDA_SINGLET) THEN
+         CALL HEADER_A('Singlet TDA electronic excitation energies',15)
+            ELSE
+         CALL HEADER_A('Singlet electronic excitation energies',15)
+            END IF
          END IF
+         WRITE (LUPRI,'(A,1P,E9.2)') ' Convergence threshold:',THREXC
          WRITE (LUPRI,'(15X,A/15X,A/15X,A)')
      &     '========================================',
      &     '  Sym.   Mode   Frequency    Frequency',
      &     ' ex. st.  No.      (au)         (eV)'
          DO 15 ISYM = 1, NSYM
-         WRITE(LUPRI,'(15X,A)')
-     &     '----------------------------------------'
+         WRITE(LUPRI,'(15X,2A)')
+     &     '--------------------------------------- ', REP(ISYM-1)
             DO 14 IEXVAL = 1, NEXCIT(ISYM)
                WRITE (LUPRI,'(I20,I7,2F13.6)')
      &            ISYM,IEXVAL,EXENG(ISYM,IEXVAL),
