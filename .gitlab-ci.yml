@@ -1,8 +1,20 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
+      variables:
+        RUNNER_TAG: "saas-linux-2xlarge-amd64"
+    - if: $CI_PROJECT_NAMESPACE != "dalton"
+      variables:
+        RUNNER_TAG: "saas-linux-medium-amd64"
+
 variables:
   GIT_SSL_NO_VERIFY: "true"
   GIT_STRATEGY: "fetch"
   GIT_SUBMODULE_STRATEGY: "recursive"
   GET_SOURCES_ATTEMPTS: "10"
+
+include:
+  - local: .gitlab-ci-coverage.yml
 
 default:
   before_script:
@@ -29,33 +41,9 @@ default:
     - python3 --version
     - git --version
     - cmake --version
-
-coverage:
-  image: fedora:37
   tags:
-    - saas-linux-2xlarge-amd64
-  coverage: '/Percentage Coverage:\s*([^%]+)/'
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_PROJECT_NAMESPACE == 'dalton'
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
-  script:
-    - dnf install -y -q gcovr
-    - module load mpi/mpich-x86_64
-    - mpirun --version
-    - pip install -q codecov
-    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release --coverage
-                   -DENABLE_PDE=ON
-    - cd build
-    - make -j 32
-    - export DALTON_LAUNCHER="mpirun -n 4"
-    - export OMP_NUM_THREADS=1
-    - ctest -j 4 --output-on-failure -L dalton -LE "serial|long|verylong"
-    - export DALTON_LAUNCHER=""
-    - export OMP_NUM_THREADS=1
-    - ctest -j 16 --output-on-failure -L serial -LE "long|verylong"
-    - ctest -D ExperimentalCoverage
-  interruptible: true
+    - $RUNNER_TAG
+
 
 intel-oneapi-serial:
   image: fedora:40
