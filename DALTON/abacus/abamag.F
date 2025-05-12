@@ -2953,7 +2953,7 @@ C MBH+JK
      *                  0.0D0,0.0D0,0.0D0,1,0,0,0)
 C                        WRITE(LUPRI,*)'MBH: AUTOHZ VALUE: ',AUTOHZ
 C MBH+JK
-                        WRITE(LUPRI,'(9(/,2X,A,F12.7,A),/,/)')
+                        WRITE(LUPRI,'(9(/,2X,A,F12.4,A),/,/)')
      &                       'Isotropic coupling        :',AVETOT,' Hz',
      &                       'Anisotropic coupling      :',ANIS  ,' Hz',
      &                       'Asymmetry                 :',ASYMM ,'   ',
@@ -3169,7 +3169,7 @@ C
                               PSO    = AVEISO(IATIJ,3)*FACTOR
                               SD     = AVEISO(IATIJ,4)*FACTOR
                               FC     = AVEISO(IATIJ,5)*FACTOR
-                           WRITE(LUPRI,'(9(/,2X,A,F12.6,A),/,/)')
+                           WRITE(LUPRI,'(9(/,2X,A,F12.4,A),/,/)')
      &                       'Isotropic coupling        :',AVETOT,' Hz',
      &                       'Anisotropic coupling      :',ANIS  ,' Hz',
      &                       'Asymmetry                 :',ASYMM ,'   ',

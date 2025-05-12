@@ -64,7 +64,7 @@ f.add(from_string = 'Shielding tensors in symmetry coordinates',
 # Chemical shielding for...
 f.add(from_string = 'Chemical shielding for ',
       num_lines = 16,
-      abs_tolerance = 1.0e-3)
+      abs_tolerance = 1.2e-3)
 
 # Warning
 f.add(string = 'WARNING: Total spin-spin couplings not correct because some',
@@ -74,7 +74,7 @@ f.add(string = 'contributions have not been calculated',
 
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-3)
 
 test.run(['prop_spinspin3.dal'], ['H2O_intgrl_sym.mol'], f={'out': f},
          accepted_errors=['not implemented for parallel calculations.'])

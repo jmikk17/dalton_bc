@@ -31,7 +31,7 @@ f.add(string = 'Spin-spin couplings printed for atoms',
 # Coupling Constants
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.01e-4)
+      abs_tolerance = 1.01e-3)
 
 test.run(['aosoppa.dal'], ['formaldehyde.mol'], f={'out': f})
 

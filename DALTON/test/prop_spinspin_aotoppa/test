@@ -18,7 +18,7 @@ f = Filter()
 #Isotropic coupling constants
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.01e-4)
+      abs_tolerance = 1.01e-3)
 
 test.run(['aotoppa.dal'], ['formaldehyde.mol'], f={'out': f})
 
