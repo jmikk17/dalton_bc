@@ -1,0 +1,208 @@
+gcc-9-mpich-3.3:
+  image: fedora:31
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  script:
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-9-mpich-3.3-int64:
+  image: fedora:31
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  allow_failure: true
+  script:
+    - dnf install -y -q lapack64 lapack64-devel
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
+  
+gcc-11-mpich-3.4:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  script:
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-11-mpich-3.4-int64:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  allow_failure: true
+  script:
+    - dnf install -y -q lapack64
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
+
+gcc-12-mpich-4.0:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  script:
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+
+gcc-12-mpich-4.0-int64:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: "mpirun -n 4"
+    OMP_NUM_THREADS: "1"
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  allow_failure: true
+  script:
+    - dnf install -y -q lapack64
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j 32
+    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+  interruptible: true
+
+gcc-14-mpich-4.1-int64:
+  image: fedora:40
+  rules:
+  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
+    when: always
+  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+    when: manual
+  before_script:
+    - dnf install -y gcc gcc-c++ gcc-gfortran hdf5 hdf5-devel git make cmake
+                     python python3 python3-pip python3-h5py redhat-rpm-config findutils
+                     which procps-ng coreutils util-linux wget
+    - . ~/.bashrc
+    - uname -a
+    - lscpu
+    - free -h
+    - gfortran --version
+    - gcc --version
+    - g++ --version
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - cores=$(LC_ALL=C lscpu | awk '/^Core\(s\) per socket:/ {print $4}')
+    - sockets=$(LC_ALL=C lscpu | awk '/^Socket\(s\):/ {print $2}')
+    - N_PROC=$((cores * sockets))
+    - echo "The total number of physical cores for the build step is $N_PROC"
+    # Compile mpich with 64bit integers
+    - cd /
+    - wget https://www.mpich.org/static/downloads/4.1.2/mpich-4.1.2.tar.gz
+    - tar -xvzf mpich-4.1.2.tar.gz
+    - cd mpich-4.1.2
+    - ./configure CC="gcc -m64" CXX="g++ -m64" FC="gfortran" CFLAGS="-O2 -m64" CXXFLAGS="-O2 -m64" FCFLAGS="-O2 -m64 -fdefault-integer-8" --enable-fortran=all --with-device=ch3:sock --prefix=/mpich64-long > $CI_PROJECT_DIR/configure.log 2>&1
+    - make -j$N_PROC > $CI_PROJECT_DIR/make_mpich.log 2>&1
+    - make install
+    - export PATH=/mpich64-long/bin:$PATH
+    - export LD_LIBRARY_PATH=/mpich64-long/lib:$LD_LIBRARY_PATH
+    - mpirun --version
+    # Compile openblas with 64bit integers
+    - cd /
+    - git clone --branch v0.3.29 https://github.com/xianyi/OpenBLAS.git
+    - cd OpenBLAS
+    - make DYNAMIC_ARCH=1 USE_OPENMP=0 INTERFACE64=1 -j$N_PROC > $CI_PROJECT_DIR/make_openblas.log 2>&1
+    - make PREFIX=/opt/openblas64 install
+    - export LD_LIBRARY_PATH=/opt/openblas64/lib:$LD_LIBRARY_PATH
+    # Compile Dalton and run tests
+    - cd $CI_PROJECT_DIR
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-L/opt/openblas64/lib -lopenblas" --type=release
+    - cd build
+    - make -j$N_PROC
+    - ldd dalton.x    
+    - export OMP_NUM_THREADS=1
+    - |
+      if [ "$N_PROC" -lt 4 ]; then
+        M=$((N_PROC / 2))
+        export DALTON_LAUNCHER="mpirun -n 2"
+      else
+        M=$((N_PROC / 4))
+        export DALTON_LAUNCHER="mpirun -n 4"
+      fi
+      echo "DALTON_LAUNCHER=\"$DALTON_LAUNCHER\"" > var.env
+      echo "M=$M" >> var.env
+    - source var.env
+    - export DALTON_LAUNCHER=$DALTON_LAUNCHER
+    - echo "DALTON_LAUNCHER is set to $DALTON_LAUNCHER"
+    - export MPICH_NO_LOCAL=1
+    - echo "Running ctest with $M jobs"
+    - ctest -j$M --output-on-failure -L essential -LE serial --timeout 120
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+      - $CI_PROJECT_DIR/configure.log
+      - $CI_PROJECT_DIR/make_mpich.log
+      - $CI_PROJECT_DIR/make_openblas.log
+    expire_in: 3 days
+  interruptible: true
+  allow_failure: false
