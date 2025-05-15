@@ -1450,7 +1450,7 @@ C
      5       '    Number of elements per buffer       ',I6,/,
      6       '    Maximum number of P blocks in a pass',I6,//)
  2100 FORMAT('  Number of two-electron density',
-     *       ' elements sorted:',I8,/)
+     *       ' elements sorted: ',I0,/)
       END
 C  /* Deck psize */
       SUBROUTINE PSIZE(MEMMAX,NBLOCK,NSLICE,NUMP,NPASS,MXBUF,MXMAX,
