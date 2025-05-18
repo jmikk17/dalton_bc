@@ -504,7 +504,7 @@ C
                    iael = iltsob(iastr(iel,ia))
                    if (iael .le. (LEN_LINE/3) ) then
                       jael = 3*iael - 2  ! from: jael = 1 + 3*(iael-1)
-                      write(aline(jael:),'(I3)') iael
+                      write(aline(jael:jael+2),'(I3)') iael
                    else
                       write (iout,*) 'Overflow alpha orbital:', iael
                    end if
@@ -514,7 +514,7 @@ C
                    ibel = iltsob(ibstr(iel,ib))
                    if (ibel .le. (LEN_LINE/3) ) then
                       jbel = 3*ibel - 2  ! from: jbel = 1 + 3*(ibel-1)
-                      write(bline(jbel:),'(I3)') ibel
+                      write(bline(jbel:jbel+2),'(I3)') ibel
                    else
                       write (iout,*) 'Overflow  beta orbital:', ibel
                    end if
