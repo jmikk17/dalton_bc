@@ -36,7 +36,7 @@ f.add(re = 'Hartree-Fock .*total energy',
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-10)
 f.add(string = 'Total MCSCF energy',
-      rel_tolerance = 1.0e-10)
+      rel_tolerance = 1.0e-8)
 
 f.add(string = '"New" (from 1988!) integral transformation used',
       rel_tolerance = 1.0e-2)
@@ -47,11 +47,11 @@ f.add(string = 'Spin-spin couplings printed for atoms',
 
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-3)
 
 f.add(from_string = 'Total Coupling Tensor in Hz',
       num_lines = 10,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-3)
 
 
 

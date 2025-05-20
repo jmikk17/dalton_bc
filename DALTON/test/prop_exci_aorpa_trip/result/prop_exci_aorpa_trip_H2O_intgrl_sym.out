@@ -4,8 +4,11 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON 2016.alpha
+    This is output from DALTON release Dalton2025.0-dev (2025)
+         ( Web site: http://daltonprogram.org )
+
    ----------------------------------------------------------------------------
+
     NOTE:
      
     Dalton is an experimental code for the evaluation of molecular
@@ -22,15 +25,15 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       J. Cukras, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
        L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
        C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
        H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
        M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
-       P. Joergensen, M. Kaminski, J. Kauczor, S. Kirpekar,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
        T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
        J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
        O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
@@ -45,209 +48,235 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2013. (doi: 10.1002/wcms.1172)
-    
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
+     
     and
-    
-       Dalton, a Molecular Electronic Structure Program,
-       Release Dalton2016.0 (2015), see http://daltonprogram.org
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2025.0-dev (2025), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
-    Authors in alphabetical order (major contribution(s) in parenthesis):
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             UiT The Arctic U. of Norway,  Norway      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
-  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
-  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Wed Jun 15 12:50:41 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
- * Work memory size             :   128000000 =  976.56 megabytes.
+ * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/zth702/source/dalton/DALTON/test/prop_exci_aorpa_trip
-   2) /home/zth702/source/dalton/build/basis
+   1) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/test/prop_exci_aorpa_trip
+   2) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | zth702
- Host                     | sunray
- System                   | Linux-3.16.0-4-amd64
+ Who compiled             | hjj
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-6.11.0-25-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (Debian 4.9.2-10) 4.9.2
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (Debian 4.9.2-10) 4.9.2
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (Debian 4.9.2-10) 4.9.2
- BLAS                     | /usr/lib/atlas-base/libf77blas.so;/usr/lib/atlas-b
-                          | ase/libcblas.so;/usr/lib/atlas-base/libatlas.so
- LAPACK                   | /usr/lib/atlas-base/libatlas.so;/usr/lib/atlas-bas
-                          | e/atlas/liblapack.so
+ Fortran compiler         | /opt/intel/oneapi/2025.1/bin/ifx
+ Fortran compiler version | ifx (IFX) 2025.1.1 20250418
+ C compiler               | /opt/intel/oneapi/2025.1/bin/icx
+ C compiler version       | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ C++ compiler             | /opt/intel/oneapi/2025.1/bin/icpx
+ C++ compiler version     | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ BLAS                     | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_intel_
+                          | lp64.so;/opt/intel/oneapi/2025.1/lib/intel64/libmk
+                          | l_sequential.so;/opt/intel/oneapi/2025.1/lib/intel
+                          | 64/libmkl_core.so;/usr/lib/x86_64-linux-gnu/libpth
+                          | read.a;/usr/lib/x86_64-linux-gnu/libm.so
+ LAPACK                   | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_lapack
+                          | 95_lp64.a;/opt/intel/oneapi/2025.1/lib/intel64/lib
+                          | mkl_intel_lp64.so
  Static linking           | OFF
- Last Git revision        | cb7abdda095321c4717b37ec611ee179db43d096
- Git branch               | aosoppa_devel
- Configuration time       | 2016-06-15 12:37:09.819582
+ Last Git revision        | d7b65be647c556da3ad56bf6498d867e1336e077
+ Git branch               | hjaaj-mcapsg
+ Configuration time       | 2025-05-09 09:34:25.970566
+
+ * Sequential calculation.
 
 
    Content of the .dal input file
  ----------------------------------
 
-**DALTON INPUT                                    
-.RUN PROPERTIES                                   
-**WAVE FUNCTIONS                                  
-.HF                                               
-**PROPERTIES                                      
-.SOPPA                                            
-.EXCITA                                           
-.PRINT                                            
- 2                                                
-*SOPPA                                            
-.AORPA                                            
-*EXCITA                                           
-.TRIPLE                                           
-!.DIPSTR                                          
-!.ROTVEL                                          
-.NEXCITA                                          
-    4    1    4    1    0    0    0    0          
-**END OF DALTON INPUT                             
+**DALTON INPUT
+.RUN PROPERTIES
+**WAVE FUNCTIONS
+.HF
+**PROPERTIES
+.SOPPA
+.EXCITA
+.PRINT
+ 2
+*SOPPA
+.AORPA
+*EXCITA
+.TRIPLE
+!.DIPSTR
+!.ROTVEL
+.NEXCITA
+    4    1    4    1    0    0    0    0
+**END OF DALTON INPUT
 
 
    Content of the .mol file
  ----------------------------
 
-INTGRL                                                                         
-Calculation of excitation energies through ABACUS                              
-                                                                               
-c   2    2  X  Y      0.10D-14                                                 
-      8.00    1    3    6    5    1                                            
-O   0.00000             0.00000              0.1241444240                      
-F  6    1                                                                      
-31195.6 0.00021                                                                
-4669.38 0.001628                                                               
-1062.62 0.00845                                                                
-301.426 0.034191                                                               
-98.5153 0.110311                                                               
-35.4609 .269493                                                                
-F  1    1                                                                      
-13.6179 .423545                                                                
-F  1    1                                                                      
-5.38618 .283038                                                                
-F  1    1                                                                      
-1.53873 .027484                                                                
-F  1    1                                                                      
-.6055 -.005144                                                                 
-F  1    1                                                                      
-.22054 .00164                                                                  
-F  3    1                                                                      
-114.863 .002266                                                                
-26.8767 0.017192                                                               
-8.32077 0.075341                                                               
-F  1    1                                                                      
-2.97237 .212775                                                                
-F  1    1                                                                      
-1.12848 .370478                                                                
-F  1    1                                                                      
-.4236 .398523                                                                  
-F  1    1                                                                      
-.15074 .184703                                                                 
-F  2    1                                                                      
-1.21879 .357851                                                                
-.36102 .759561                                                                 
-      1.00    1    2    3    1                                                 
-H   0.00000             1.43153              -0.985265576                      
-F  3    1                                                                      
-33.865014 .006068                                                              
-5.094788 0.045316                                                              
-1.158786 0.202846                                                              
-F  1    1                                                                      
-0.32584 0.503709                                                               
-F  1    1                                                                      
-.102741 .383568                                                                
-F  1    1                                                                      
-1.16 1.0                                                                       
+INTGRL
+Calculation of excitation energies through ABACUS
+
+c   2    2  X  Y      0.10D-14
+      8.00    1    3    6    5    1
+O   0.00000             0.00000              0.1241444240
+F  6    1
+31195.6 0.00021
+4669.38 0.001628
+1062.62 0.00845
+301.426 0.034191
+98.5153 0.110311
+35.4609 .269493
+F  1    1
+13.6179 .423545
+F  1    1
+5.38618 .283038
+F  1    1
+1.53873 .027484
+F  1    1
+.6055 -.005144
+F  1    1
+.22054 .00164
+F  3    1
+114.863 .002266
+26.8767 0.017192
+8.32077 0.075341
+F  1    1
+2.97237 .212775
+F  1    1
+1.12848 .370478
+F  1    1
+.4236 .398523
+F  1    1
+.15074 .184703
+F  2    1
+1.21879 .357851
+.36102 .759561
+      1.00    1    2    3    1
+H   0.00000             1.43153              -0.985265576
+F  3    1
+33.865014 .006068
+5.094788 0.045316
+1.158786 0.202846
+F  1    1
+0.32584 0.503709
+F  1    1
+.102741 .383568
+F  1    1
+1.16 1.0
 
 
        *******************************************************************
@@ -271,19 +300,10 @@ F  1    1
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: Calculation of excitation energies through ABACUS                       
- 2:                                                                         
-    ------------------------------------------------------------------------
-
-
-
-@ WARNING - deprecated old .mol fixed format input has been detected:
-C   2    2  X  Y      0.10D-14                                                  
-@ WARNING - this input format may not be supported in future releases.
-
-
-
+    --------------------------------------------------------------------------------
+ 1: Calculation of excitation energies through ABACUS
+ 2: 
+    --------------------------------------------------------------------------------
 
   Atomic type no.    1
   --------------------
@@ -349,6 +369,7 @@ C   2    2  X  Y      0.10D-14
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000015
+ Center-of-mass coordinates (Angs):    0.000000    0.000000   -0.000008
 
 
   Atoms and basis sets
@@ -543,8 +564,6 @@ C   2    2  X  Y      0.10D-14
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
  Calculation of one- and two-electron Hamiltonian integrals.
 
  Center of mass  (bohr):      0.000000000000      0.000000000000     -0.000015049426
@@ -552,19 +571,25 @@ C   2    2  X  Y      0.10D-14
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
+Calculation of 2-electron integrals are postponed until they are needed.
+
 
      ************************************************************************
      ************************** Output from HERINT **************************
      ************************************************************************
 
 
- Threshold for neglecting two-electron integrals:  1.00D-15
- HERMIT - Number of two-electron integrals written:       75206 ( 24.7% )
- HERMIT - Megabytes written:                              0.866
 
-  Time used in TWOINT     is       0.16 seconds
-  Total CPU  time used in HERMIT:   0.19 seconds
-  Total wall time used in HERMIT:   0.19 seconds
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z     -0.97737576        -2.48424123        -8.28653678
+
+
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -598,17 +623,19 @@ C   2    2  X  Y      0.10D-14
  **********************************************************************
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-     Calculation of excitation energies through ABACUS                       
-                                                                             
+     Calculation of excitation energies through ABACUS
+     
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+
+@    Time-dependent Hartree-Fock calculation (random phase approximation).
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EHT   " input option
@@ -654,44 +681,62 @@ C   2    2  X  Y      0.10D-14
 
  Iter     Total energy    Error norm  Delta(E)    SCF occupation
  -----------------------------------------------------------------------------
-     (Precalculated two-electron integrals are transformed to P-supermatrix elements.
+
+Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+***  INFO  GETGAB: GABSO--- not found on AOGABINT. Regenerating.
+
+ Threshold for neglecting two-electron integrals:  1.00D-15
+ HERMIT - Number of two-electron integrals written:       75206 ( 24.7% )
+ HERMIT - Megabytes written:                              0.961
+
+     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
       Threshold for discarding integrals :  1.00D-15 )
+
 @  1  -75.8289971698       2.45D+00  -7.58D+01     3   1   1   0
       Virial theorem: -V/T =      1.995901
-@      MULPOP O      -0.57; H   _1  0.28; H   _2  0.28; 
+@    MULPOP   O      -0.57; H   _1  0.28; H   _2  0.28; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
 @  2  -76.0477191037       4.04D-01  -2.19D-01     3   1   1   0
       Virial theorem: -V/T =      2.001925
-@      MULPOP O      -0.76; H   _1  0.38; H   _2  0.38; 
+@    MULPOP   O      -0.76; H   _1  0.38; H   _2  0.38; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
 @  3  -76.0596167013       1.04D-01  -1.19D-02     3   1   1   0
       Virial theorem: -V/T =      2.001234
-@      MULPOP O      -0.81; H   _1  0.40; H   _2  0.40; 
+@    MULPOP   O      -0.81; H   _1  0.40; H   _2  0.40; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
 @  4  -76.0607459910       1.62D-02  -1.13D-03     3   1   1   0
       Virial theorem: -V/T =      2.000745
-@      MULPOP O      -0.83; H   _1  0.41; H   _2  0.41; 
+@    MULPOP   O      -0.83; H   _1  0.41; H   _2  0.41; 
  -----------------------------------------------------------------------------
 @  5  -76.0607821294       4.23D-03  -3.61D-05     3   1   1   0
       Virial theorem: -V/T =      2.000842
-@      MULPOP O      -0.83; H   _1  0.41; H   _2  0.41; 
+@    MULPOP   O      -0.83; H   _1  0.41; H   _2  0.41; 
  -----------------------------------------------------------------------------
 @  6  -76.0607839031       1.99D-03  -1.77D-06     3   1   1   0
       Virial theorem: -V/T =      2.000771
-@      MULPOP O      -0.83; H   _1  0.42; H   _2  0.42; 
+@    MULPOP   O      -0.83; H   _1  0.42; H   _2  0.42; 
  -----------------------------------------------------------------------------
 @  7  -76.0607842040       3.09D-04  -3.01D-07     3   1   1   0
       Virial theorem: -V/T =      2.000810
-@      MULPOP O      -0.83; H   _1  0.42; H   _2  0.42; 
+@    MULPOP   O      -0.83; H   _1  0.42; H   _2  0.42; 
  -----------------------------------------------------------------------------
 @  8  -76.0607842184       4.49D-05  -1.44D-08     3   1   1   0
       Virial theorem: -V/T =      2.000809
-@      MULPOP O      -0.83; H   _1  0.42; H   _2  0.42; 
+@    MULPOP   O      -0.83; H   _1  0.42; H   _2  0.42; 
  -----------------------------------------------------------------------------
-@  9  -76.0607842187       9.58D-06  -2.35D-10     3   1   1   0
+@  9  -76.0607842187       9.58D-06  -2.34D-10     3   1   1   0
 
 @ *** DIIS converged in   9 iterations !
 @     Converged SCF energy, gradient:    -76.060784218669    9.58D-06
@@ -702,8 +747,8 @@ C   2    2  X  Y      0.10D-14
 
  Only the 20 lowest virtual orbital energies printed in each symmetry.
 
- Number of electrons :   10
- Orbital occupations :    3    1    1    0
+ Number of electrons        :   10
+ Closed shell orbitals      :    3    1    1    0
 
  Sym       Hartree-Fock orbital energies
 
@@ -728,7 +773,50 @@ C   2    2  X  Y      0.10D-14
 
  --- Writing SIRIFC interface file
 
- CPU and wall time for SCF :       0.028       0.025
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A1 ) in point group C2v -- 3 principal poles with pole strength 1
+
+   ============  ============  ============
+      20.562382      1.350703      0.583225
+     559.530878     36.754503     15.870367
+   ============  ============  ============
+
+     HF-SCF KT symmetry 2 ( B1 ) in point group C2v -- 1 principal poles with pole strength 1
+
+   ============
+       0.507460
+      13.808700
+   ============
+
+     HF-SCF KT symmetry 3 ( B2 ) in point group C2v -- 1 principal poles with pole strength 1
+
+   ============
+       0.715968
+      19.482477
+   ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A1 ) :   559.531      36.755      15.870
+
+@ Symmetry 2 (B1 ) :    13.809
+
+@ Symmetry 3 (B2 ) :    19.482
+
+@ Symmetry 4 (A2 ) :  No IPs in this symmetry
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       0.061       0.060
 
 
                        .-----------------------------------.
@@ -747,15 +835,19 @@ C   2    2  X  Y      0.10D-14
 @    Final gradient norm:           0.000009578969
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
- INFO: Sorry, plot of MOs with Molden is only implemented for spherical GTOs
+@ INFO: Sorry, plot of MOs with Molden is only implemented for spherical GTOs
 
-File label for MO orbitals:  15Jun16   FOCKDIIS
+ ------------------------------------
+ Printout of final molecular orbitals
+ ------------------------------------
 
- (Only coefficients >0.0100 are printed.)
+ File label for these MO orbitals:   9May25   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
 
  Molecular orbitals for symmetry species 1  (A1 )
  ------------------------------------------------
@@ -806,13 +898,13 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  ------------------------------------------------
 
     Orbital         1        2        3        4        5        6        7
-   1 O   :px     0.0819  -0.0403   0.0108  -0.1313   0.0141   0.1217   1.5399
-   2 O   :px     0.1941  -0.1683   0.0187  -0.0592  -0.0257   1.6013  -2.0382
-   3 O   :px     0.3396  -0.0020   0.0667  -1.3510   0.3082  -2.3944   1.4609
-   4 O   :px     0.3822  -0.8903  -0.0370   2.0398  -0.7722   1.4421  -0.7019
-   5 O   :px     0.2591   1.3740   0.0656  -0.8684   0.0825  -0.4459   0.2130
-   6 O   :dxz   -0.0383  -0.0021   0.9472   0.0925   0.5456  -0.0083   0.0025
-   7 H   :px     0.0183   0.0056  -0.0833   0.0549   0.8327  -0.0113   0.0044
+   1 O   :px     0.0819  -0.0403   0.0108  -0.1313   0.0141   0.1217  -1.5399
+   2 O   :px     0.1941  -0.1683   0.0187  -0.0592  -0.0257   1.6013   2.0382
+   3 O   :px     0.3396  -0.0020   0.0667  -1.3510   0.3082  -2.3944  -1.4609
+   4 O   :px     0.3822  -0.8903  -0.0370   2.0398  -0.7722   1.4421   0.7019
+   5 O   :px     0.2591   1.3740   0.0656  -0.8684   0.0825  -0.4459  -0.2130
+   6 O   :dxz   -0.0383  -0.0021   0.9472   0.0925   0.5456  -0.0083  -0.0025
+   7 H   :px     0.0183   0.0056  -0.0833   0.0549   0.8327  -0.0113  -0.0044
 
  Molecular orbitals for symmetry species 3  (B2 )
  ------------------------------------------------
@@ -850,18 +942,12 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
    1 O   :dxy    0.9129   0.7003
    2 H   :px     0.1116  -0.8095
 
-  Total CPU  time used in SIRIUS : 336 hours  0 minutes  0 seconds
-  Total wall time used in SIRIUS :   0.00 seconds
+  Total CPU  time used in SIRIUS :   0.06 seconds
+  Total wall time used in SIRIUS :   0.06 seconds
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
-
- NOTE:    1 informational messages have been issued.
- Check output, result, and error files for "INFO".
-
- NOTE:    1 warnings have been issued.
- Check output, result, and error files for "WARNING".
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                      .---------------------------------------.
@@ -892,8 +978,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
       for perturbation dependent basis sets.
 
 
- Changes of defaults in SOPPA:
- -----------------------------
+ Changes of defaults in the SOPPA Module:
+ ----------------------------------------
 
  AO integral driven RPA
 
@@ -920,6 +1006,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000015
+ Center-of-mass coordinates (Angs):    0.000000    0.000000   -0.000008
 
  Center of mass dipole origin  :    0.000000    0.000000   -0.000015
 
@@ -932,8 +1019,9 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
+
 
 
                             **************************
@@ -975,19 +1063,20 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  Maximum number of trial vectors for each excitation is  3
 
 
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       1
+ p-h variables             :     128
+ -----------------------------------
+
   ******************************************************************
-                   RPA  iterations, Excitation symmetry 1
-  ******************************************************************
+                   RPA iterations, Excitation symmetry 1
+  ********************************************************************
 
   ==================================================================
              1. RPA  iteration, Excitation symmetry 1
-            NOLDTR  0
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:   2.6320061969342188     
- so_redev 1:   2.6320061969342188     
- so_lrsolv 2:  0.41566217452234300     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -999,13 +1088,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              2. RPA  iteration, Excitation symmetry 1
-            NOLDTR  4
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.41566217452234300     
- so_redev 1:  0.41566217452234300     
- so_lrsolv 2:  0.37636041641392481     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1017,13 +1101,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              3. RPA  iteration, Excitation symmetry 1
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.37636041641392481     
- so_redev 1:  0.37636041641392481     
- so_lrsolv 2:  0.37372382865992770     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1035,13 +1114,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              4. RPA  iteration, Excitation symmetry 1
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.37372382865992770     
- so_redev 1:  0.37372382865992770     
- so_lrsolv 2:  0.37367339585680281     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1053,13 +1127,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              5. RPA  iteration, Excitation symmetry 1
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.37367339585680281     
- so_redev 1:  0.37367339585680281     
- so_lrsolv 2:  0.37367251929459133     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1071,13 +1140,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              6. RPA  iteration, Excitation symmetry 1
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.37367251929459133     
- so_redev 1:  0.37367251929459133     
- so_lrsolv 2:  0.37367250317308098     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1089,13 +1153,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              7. RPA  iteration, Excitation symmetry 1
-            NOLDTR  8
-            NNEWTR  2
   ==================================================================
 
- so_lrsolv 1:  0.37367250317308098     
- so_redev 1:  0.37367250317308098     
- so_lrsolv 2:  0.37367250312823441     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1129,13 +1188,13 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   1   |   1       3     |   -0.938813  |
- |    exci. | 1   1   |   3       3     |    0.248403  |
- |    exci. | 1   1   |   4       3     |    0.108601  |
- |    exci. | 3   3   |   1       1     |    0.150696  |
+ |    exci. | 1   1   |   1       3     |    0.938813  |
+ |    exci. | 1   1   |   3       3     |   -0.248403  |
+ |    exci. | 1   1   |   4       3     |   -0.108601  |
+ |    exci. | 3   3   |   1       1     |   -0.150696  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1164,7 +1223,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |    exci. | 3   3   |   3       1     |    0.286244  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1190,7 +1249,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |    exci. | 3   3   |   3       1     |    0.261473  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1209,14 +1268,14 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   1   |   1       3     |   -0.100465  |
- |    exci. | 1   1   |   2       3     |   -0.918383  |
- |    exci. | 1   1   |   3       3     |   -0.215288  |
- |    exci. | 2   2   |   1       1     |    0.246631  |
- |    exci. | 3   3   |   1       1     |    0.151805  |
+ |    exci. | 1   1   |   1       3     |    0.100465  |
+ |    exci. | 1   1   |   2       3     |    0.918383  |
+ |    exci. | 1   1   |   3       3     |    0.215288  |
+ |    exci. | 2   2   |   1       1     |   -0.246631  |
+ |    exci. | 3   3   |   1       1     |   -0.151805  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1224,45 +1283,46 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  ===================================================================
  Exci.    1p-1h        1h-1p        Total
  -------------------------------------------------------------------
-   1     0.36922 +    0.07007 =    0.43930
+   1    -0.36922 +   -0.07007 =   -0.43930
    2     2.14712 +    0.24098 =    2.38810
    3    -1.34246 +   -0.09465 =   -1.43711
-   4    -0.06100 +   -0.03592 =   -0.09692
+   4     0.06100 +    0.03592 =    0.09692
  ===================================================================
 
  YYSECMOM RPA transition moments for excitation symmetry  1
  ===================================================================
  Exci.    1p-1h        1h-1p        Total
  -------------------------------------------------------------------
-   1     1.33385 +    0.20820 =    1.54205
+   1    -1.33385 +   -0.20820 =   -1.54205
    2     2.21514 +    0.30254 =    2.51768
    3     0.92017 +    0.07306 =    0.99323
-   4    -0.13759 +   -0.06172 =   -0.19931
+   4     0.13759 +    0.06172 =    0.19931
  ===================================================================
 
  ZZSECMOM RPA transition moments for excitation symmetry  1
  ===================================================================
  Exci.    1p-1h        1h-1p        Total
  -------------------------------------------------------------------
-   1     1.09942 +    0.17385 =    1.27327
+   1    -1.09942 +   -0.17385 =   -1.27327
    2     1.72959 +    0.24104 =    1.97063
    3    -0.03299 +    0.00611 =   -0.02688
-   4    -1.67469 +   -0.11955 =   -1.79424
+   4     1.67469 +    0.11955 =    1.79424
  ===================================================================
 
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       2
+ p-h variables             :      72
+ -----------------------------------
+
   ******************************************************************
-                   RPA  iterations, Excitation symmetry 2
-  ******************************************************************
+                   RPA iterations, Excitation symmetry 2
+  ********************************************************************
 
   ==================================================================
              1. RPA  iteration, Excitation symmetry 2
-            NOLDTR  0
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.63520602776615465     
- so_redev 1:  0.63520602776615465     
- so_lrsolv 2:  0.33741697690054945     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1271,13 +1331,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              2. RPA  iteration, Excitation symmetry 2
-            NOLDTR  1
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.33741697690054945     
- so_redev 1:  0.33741697690054945     
- so_lrsolv 2:  0.30003094506691230     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1286,13 +1341,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              3. RPA  iteration, Excitation symmetry 2
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.30003094506691230     
- so_redev 1:  0.30003094506691230     
- so_lrsolv 2:  0.29894247471750912     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1301,13 +1351,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              4. RPA  iteration, Excitation symmetry 2
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.29894247471750912     
- so_redev 1:  0.29894247471750912     
- so_lrsolv 2:  0.29885398170970157     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1316,13 +1361,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              5. RPA  iteration, Excitation symmetry 2
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.29885398170970157     
- so_redev 1:  0.29885398170970157     
- so_lrsolv 2:  0.29885054007686568     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1331,13 +1371,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              6. RPA  iteration, Excitation symmetry 2
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.29885054007686568     
- so_redev 1:  0.29885054007686568     
- so_lrsolv 2:  0.29885023049618031     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1346,13 +1381,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              7. RPA  iteration, Excitation symmetry 2
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.29885023049618031     
- so_redev 1:  0.29885023049618031     
- so_lrsolv 2:  0.29885022329870176     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1388,7 +1418,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |    exci. | 1   2   |   4       1     |    0.129432  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1399,19 +1429,20 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
    1     0.18077 +    0.02593 =    0.20669
  ===================================================================
 
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       3
+ p-h variables             :      96
+ -----------------------------------
+
   ******************************************************************
-                   RPA  iterations, Excitation symmetry 3
-  ******************************************************************
+                   RPA iterations, Excitation symmetry 3
+  ********************************************************************
 
   ==================================================================
              1. RPA  iteration, Excitation symmetry 3
-            NOLDTR  0
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  -4.2791928831339586E-003
- so_redev 1:  -4.2791928831339586E-003
- so_lrsolv 2:  0.49318785102805879     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1423,13 +1454,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              2. RPA  iteration, Excitation symmetry 3
-            NOLDTR  4
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.49318785102805879     
- so_redev 1:  0.49318785102805879     
- so_lrsolv 2:  0.43391381779266397     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1441,13 +1467,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              3. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.43391381779266397     
- so_redev 1:  0.43391381779266397     
- so_lrsolv 2:  0.43153387922853426     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1459,13 +1480,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              4. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.43153387922853426     
- so_redev 1:  0.43153387922853426     
- so_lrsolv 2:  0.43149810048301063     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1477,13 +1493,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              5. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.43149810048301063     
- so_redev 1:  0.43149810048301063     
- so_lrsolv 2:  0.43149762178907086     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1495,13 +1506,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              6. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  4
   ==================================================================
 
- so_lrsolv 1:  0.43149762178907086     
- so_redev 1:  0.43149762178907086     
- so_lrsolv 2:  0.43149761280470050     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1513,13 +1519,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              7. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  2
   ==================================================================
 
- so_lrsolv 1:  0.43149761280470050     
- so_redev 1:  0.43149761280470050     
- so_lrsolv 2:  0.43149761274134407     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1531,13 +1532,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              8. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761274134407     
- so_redev 1:  0.43149761274134407     
- so_lrsolv 2:  0.43149761273132914     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1549,13 +1545,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              9. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761273132914     
- so_redev 1:  0.43149761273132914     
- so_lrsolv 2:  0.43149761272904508     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1567,13 +1558,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
             10. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761272904508     
- so_redev 1:  0.43149761272904508     
- so_lrsolv 2:  0.43149761272405357     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1585,13 +1571,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
             11. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761272405357     
- so_redev 1:  0.43149761272405357     
- so_lrsolv 2:  0.43149761272345200     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1603,13 +1584,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
             12. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761272345200     
- so_redev 1:  0.43149761272345200     
- so_lrsolv 2:  0.43149761271955384     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1621,13 +1597,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
             13. RPA  iteration, Excitation symmetry 3
-            NOLDTR  8
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.43149761271955384     
- so_redev 1:  0.43149761271955384     
- so_lrsolv 2:  0.43149761271863774     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1661,14 +1632,14 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   3   |   1       1     |    0.411335  |
- |    exci. | 1   3   |   3       1     |   -0.172968  |
- |    exci. | 3   1   |   1       3     |   -0.811699  |
- |    exci. | 3   1   |   2       3     |    0.174975  |
- |    exci. | 3   1   |   3       3     |   -0.331523  |
+ |    exci. | 1   3   |   1       1     |   -0.411335  |
+ |    exci. | 1   3   |   3       1     |    0.172968  |
+ |    exci. | 3   1   |   1       3     |    0.811699  |
+ |    exci. | 3   1   |   2       3     |   -0.174975  |
+ |    exci. | 3   1   |   3       3     |    0.331523  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1687,14 +1658,14 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   3   |   1       1     |    0.848106  |
- |    exci. | 1   3   |   3       1     |   -0.236241  |
- |    exci. | 1   3   |   4       1     |   -0.105117  |
- |    exci. | 3   1   |   1       3     |    0.434461  |
- |    exci. | 3   1   |   3       3     |    0.125620  |
+ |    exci. | 1   3   |   1       1     |   -0.848106  |
+ |    exci. | 1   3   |   3       1     |    0.236241  |
+ |    exci. | 1   3   |   4       1     |    0.105117  |
+ |    exci. | 3   1   |   1       3     |   -0.434461  |
+ |    exci. | 3   1   |   3       3     |   -0.125620  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1713,14 +1684,14 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   3   |   1       1     |    0.106367  |
- |    exci. | 1   3   |   3       1     |    0.111776  |
- |    exci. | 3   1   |   1       3     |   -0.254932  |
- |    exci. | 3   1   |   2       3     |   -0.926651  |
- |    exci. | 3   1   |   3       3     |    0.208315  |
+ |    exci. | 1   3   |   1       1     |   -0.106367  |
+ |    exci. | 1   3   |   3       1     |   -0.111776  |
+ |    exci. | 3   1   |   1       3     |    0.254932  |
+ |    exci. | 3   1   |   2       3     |    0.926651  |
+ |    exci. | 3   1   |   3       3     |   -0.208315  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1747,7 +1718,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |    exci. | 3   1   |   3       3     |    0.451079  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1755,25 +1726,26 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  ===================================================================
  Exci.    1p-1h        1h-1p        Total
  -------------------------------------------------------------------
-   1    -1.16765 +   -0.12674 =   -1.29439
-   2    -0.43035 +   -0.05767 =   -0.48802
-   3    -0.27021 +    0.03347 =   -0.23674
+   1     1.16765 +    0.12674 =    1.29439
+   2     0.43035 +    0.05767 =    0.48802
+   3     0.27021 +   -0.03347 =    0.23674
    4     0.63961 +    0.05905 =    0.69866
  ===================================================================
 
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       4
+ p-h variables             :      44
+ -----------------------------------
+
   ******************************************************************
-                   RPA  iterations, Excitation symmetry 4
-  ******************************************************************
+                   RPA iterations, Excitation symmetry 4
+  ********************************************************************
 
   ==================================================================
              1. RPA  iteration, Excitation symmetry 4
-            NOLDTR  0
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.81759731646601086     
- so_redev 1:  0.81759731646601086     
- so_lrsolv 2:  0.42623240260830098     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1782,13 +1754,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              2. RPA  iteration, Excitation symmetry 4
-            NOLDTR  1
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.42623240260830098     
- so_redev 1:  0.42623240260830098     
- so_lrsolv 2:  0.37581389308991403     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1797,13 +1764,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              3. RPA  iteration, Excitation symmetry 4
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.37581389308991403     
- so_redev 1:  0.37581389308991403     
- so_lrsolv 2:  0.37459283036368946     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1812,13 +1774,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              4. RPA  iteration, Excitation symmetry 4
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.37459283036368946     
- so_redev 1:  0.37459283036368946     
- so_lrsolv 2:  0.37449693325206468     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1827,13 +1784,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              5. RPA  iteration, Excitation symmetry 4
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.37449693325206468     
- so_redev 1:  0.37449693325206468     
- so_lrsolv 2:  0.37449485256307119     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1842,13 +1794,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              6. RPA  iteration, Excitation symmetry 4
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.37449485256307119     
- so_redev 1:  0.37449485256307119     
- so_lrsolv 2:  0.37449479592261392     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1857,13 +1804,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
   ==================================================================
              7. RPA  iteration, Excitation symmetry 4
-            NOLDTR  2
-            NNEWTR  1
   ==================================================================
 
- so_lrsolv 1:  0.37449479592261392     
- so_redev 1:  0.37449479592261392     
- so_lrsolv 2:  0.37449479375477662     
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
@@ -1899,7 +1841,7 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |    exci. | 3   2   |   3       1     |   -0.344248  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1918,7 +1860,6 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |  START                            0           0.0   |
  |  SO_EXCIT1.1                     40           0.0   |
  |  SO_PRPINT                    13541           0.1   |
- |  SO_ERES.5                    14602           0.1   |
  |=====================================================| 
 
  |=====================================================| 
@@ -1926,58 +1867,36 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   CC_AOFOCK           0: 0: 0     42.9 %     42.9 % |
- |   CCTRBT              0: 0: 0     18.2 %     61.0 % |
- |   CCRDAO              0: 0: 0     18.2 %     79.2 % |
- |   SO_REDEV            0: 0: 0      5.2 %     84.4 % |
- |   SO_TRIAL2           0: 0: 0      2.6 %     87.0 % |
- |   SO_OPTVEC           0: 0: 0      2.6 %     89.6 % |
- |   SO_GETMO            0: 0: 0      1.3 %     90.9 % |
- |   SO_AODENS           0: 0: 0      1.3 %     92.2 % |
- |   SO_ORTH_TRN         0: 0: 0      1.3 %     93.5 % |
- |   SO_INIT             0: 0: 0      0.0 %     93.5 % |
- |   SO_MOENERGY         0: 0: 0      0.0 %     93.5 % |
- |   SO_DENS             0: 0: 0      0.0 %     93.5 % |
- |   SO_T2MP             0: 0: 0      0.0 %     93.5 % |
- |   SO_BCKTR            0: 0: 0      0.0 %     93.5 % |
- |   ERIDI1              0: 0: 0      0.0 %     93.5 % |
- |   ERIDI2              0: 0: 0      0.0 %     93.5 % |
- |   SO_T2M1             0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_A            0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_CB           0: 0: 0      0.0 %     93.5 % |
- |   SO_SIGAI            0: 0: 0      0.0 %     93.5 % |
- |   SO_SIGDA            0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_B            0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_C            0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_SYM          0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_FCK          0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_OVL          0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_OVLR         0: 0: 0      0.0 %     93.5 % |
- |   CC_FCKMO            0: 0: 0      0.0 %     93.5 % |
- |   SO_TWOFOCK          0: 0: 0      0.0 %     93.5 % |
- |   SO_ONEFOCK          0: 0: 0      0.0 %     93.5 % |
- |   SO_CHECK            0: 0: 0      0.0 %     93.5 % |
- |   SO_INCRED           0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_TCB          0: 0: 0      0.0 %     93.5 % |
- |   SO_RES_CD           0: 0: 0      0.0 %     93.5 % |
- |   SO_DIAG             0: 0: 0      0.0 %     93.5 % |
- |   SO_TRIAL1           0: 0: 0      0.0 %     93.5 % |
- |   SO_ERES             0: 0: 0      0.0 %     93.5 % |
- |   SO_ORDEIG           0: 0: 0      0.0 %     93.5 % |
- |   SO_ROPT             0: 0: 0      0.0 %     93.5 % |
- |   SO_SRES             0: 0: 0      0.0 %     93.5 % |
- |   SO_DENSAI           0: 0: 0      0.0 %     93.5 % |
- |   ???????????         0: 0: 0      0.0 %     93.5 % |
- |   ?????????           0: 0: 0      0.0 %     93.5 % |
+ |   CCRDAO              0:00:00     24.6 %     24.6 % |
+ |   SO_ERES             0:00:00     19.4 %     44.0 % |
+ |   CC_AOFOCK           0:00:00     11.3 %     55.3 % |
+ |   SO_ORTH_TRN         0:00:00      8.1 %     63.5 % |
+ |   SO_DENSAI           0:00:00      5.0 %     68.4 % |
+ |   SO_INCRED           0:00:00      4.9 %     73.3 % |
+ |   SO_TRIAL2           0:00:00      4.8 %     78.1 % |
+ |   SO_OPTVEC           0:00:00      4.2 %     82.3 % |
+ |   SO_INIT             0:00:00      3.8 %     86.2 % |
+ |   SO_REDEV            0:00:00      1.8 %     87.9 % |
+ |   SO_GETMO            0:00:00      1.4 %     89.3 % |
+ |   CC_FCKMO            0:00:00      0.8 %     90.2 % |
+ |   SO_AODENS           0:00:00      0.5 %     90.7 % |
+ |   SO_ROPT             0:00:00      0.4 %     91.1 % |
+ |   SO_BCKTR            0:00:00      0.3 %     91.4 % |
+ |   SO_TRIAL1           0:00:00      0.3 %     91.7 % |
+ |   SO_ORDEIG           0:00:00      0.2 %     91.9 % |
+ |   SO_TWOFOCK          0:00:00      0.2 %     92.1 % |
+ |   SO_ONEFOCK          0:00:00      0.1 %     92.2 % |
+ |   SO_DIAG             0:00:00      0.1 %     92.3 % |
+ |   SO_MOENERGY         0:00:00      0.0 %     92.4 % |
  |-----------------------------------------------------| 
-  |  Total CPU time      0: 0: 0                       |
+ |  Total CPU time       0:00:00                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      2.6 %            |
- |   SO_WRITE            0: 0: 0      2.6 %            |
- |   SO_OPEN             0: 0: 0      0.0 %            |
- |   SO_CLOSE            0: 0: 0      0.0 %            |
+ |   SO_READ             0: 0: 0      8.1 %            |
+ |   SO_WRITE            0: 0: 0      2.9 %            |
+ |   SO_OPEN             0: 0: 0      3.0 %            |
+ |   SO_CLOSE            0: 0: 0      1.7 %            |
  |-----------------------------------------------------| 
 
  |=====================================================| 
@@ -1985,14 +1904,14 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0: 0: 0     81.4 %     81.4 % |
- |   SO_SRES             0: 0: 0      0.0 %     81.4 % |
- |   SO_REDEV            0: 0: 0      8.5 %     89.9 % |
- |   SO_TRIAL2           0: 0: 0      1.0 %     90.9 % |
+ |   SO_ERES             0:00:00     62.3 %     62.3 % |
+ |   SO_SRES             0:00:00      0.0 %     62.3 % |
+ |   SO_REDEV            0:00:00     11.5 %     73.8 % |
+ |   SO_TRIAL2           0:00:00     14.6 %     88.5 % |
  |-----------------------------------------------------| 
  |   Total wall time     0: 0: 0                       |
  |=====================================================| 
-  Time used in EXCITA     is       0.31 seconds
+  Time used in EXCITA     is       0.13 seconds
 
 
    ***************************************************************************
@@ -2001,8 +1920,8 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                              Molecular geometry (au)
@@ -2039,22 +1958,23 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
 @               Triplet electronic excitation energies
                 --------------------------------------
 
+ Convergence threshold: 1.00E-04
                ========================================
                  Sym.   Mode   Frequency    Frequency
                 ex. st.  No.      (au)         (eV)
-               ----------------------------------------
+               --------------------------------------- A1 
                    1      1     0.373673    10.168146
                    1      2     0.515306    14.022196
                    1      3     0.563783    15.341328
                    1      4     0.635206    17.284835
-               ----------------------------------------
+               --------------------------------------- B1 
                    2      1     0.298850     8.132128
-               ----------------------------------------
+               --------------------------------------- B2 
                    3      1     0.431498    11.741647
                    3      2     0.496946    13.522587
                    3      3     0.697923    18.991463
                    3      4     0.817597    22.247955
-               ----------------------------------------
+               --------------------------------------- A2 
                    4      1     0.374495    10.190522
                ========================================
 
@@ -2129,21 +2049,6 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
     4    1    10.1905     0.502     6.866     3.146    10.514
 
 
-          Bethe sum rule                   
-          --------------
-
-  Q value      X Component    Y Component    Z Component
-  ------------------------------------------------------
- LQ=   0 QMAX= 0.000     QMIN= 0.000     QSTEP= 0.000    
-
-
-          Stopping Power                 
-          --------------
-
-  Velocity     X Component    Y Component    Z Component
-  ------------------------------------------------
-
-
    Interatomic separations (in Angstrom):
    --------------------------------------
 
@@ -2177,25 +2082,20 @@ File label for MO orbitals:  15Jun16   FOCKDIIS
   bond angle:     H   _1     O          H   _2       104.450
 
 
-
-
- CPU time statistics for ABACUS
- ------------------------------
-
-
-
-
-  Total CPU  time used in ABACUS:   0.31 seconds
-  Total wall time used in ABACUS:   0.31 seconds
+  Total CPU  time used in ABACUS:   0.13 seconds
+  Total wall time used in ABACUS:   0.13 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   0.54 seconds
-  Total wall time used in DALTON:   0.54 seconds
+  Total CPU  time used in DALTON:   0.21 seconds
+  Total wall time used in DALTON:   0.21 seconds
+
+ NOTE:    1 informational messages have been issued.
+ Check output, result, and error files for "INFO".
 
  
-     Date and time (Linux)  : Wed Jun 15 12:50:42 2016
-     Host name              : spasnode101                             
+     Date and time (Linux)  : Fri May  9 09:44:33 2025
+     Host name              : adm-110765.pc.sdu.dk                    
