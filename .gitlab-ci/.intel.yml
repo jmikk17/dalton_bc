@@ -3,12 +3,11 @@ intel-oneapi-serial:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-medium-amd64
   rules:
-    - when: always
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+      when: manual
   allow_failure: true
   before_script:
     # Update system and install necessary packages
@@ -44,10 +43,9 @@ intel-oneapi-serial:
     - git --version
     - cmake --version
   script:
+    - !reference [.define-cores, script]
     - ulimit -s unlimited
     - echo "The shell is $SHELL"
-    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
-    - echo "Number of processors/jobs for the build step is $N_PROC"
     - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
     - cd build
     - make -j $N_PROC
@@ -64,14 +62,12 @@ intel-oneapi-serial:
 intel-oneapi-mpi:
   image: fedora:40
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
-  tags:
-    - saas-linux-medium-amd64
   rules:
-    - when: always
-    - if: $CI_PIPELINE_SOURCE == 'schedules'
-      when: never
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
+      when: manual
   allow_failure: true
   before_script:
     # Update system and install necessary packages
@@ -107,15 +103,15 @@ intel-oneapi-mpi:
     - git --version
     - cmake --version
   script:
+    - !reference [.define-cores, script]
     - ulimit -s unlimited
     - echo "The shell is $SHELL"
-    - let "N_PROC=$(cat /proc/cpuinfo | grep processor | wc -l)"
-    - echo "Number of processors/jobs for the build step is $N_PROC"
     - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
     - cd build
     - make -j $N_PROC
     - ldd dalton.x
-    - let "M=N_PROC/4"
+    - export I_MPI_SHM_HEAP_VSIZE=0
+    - export I_MPI_SHM=disable
     - echo "Running ctest with $M jobs"
     - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
   artifacts:

@@ -14,6 +14,7 @@ variables:
   GET_SOURCES_ATTEMPTS: "10"
 
 include:
+  - local: /.gitlab-ci/.functions.yml
   - local: /.gitlab-ci/.serial.yml
   - local: /.gitlab-ci/.openmpi.yml
   - local: /.gitlab-ci/.mpich.yml
@@ -48,3 +49,7 @@ default:
     - cmake --version
   tags:
     - $RUNNER_TAG
+  artifacts:
+    when: on_failure
+    paths:
+      - build/test*
