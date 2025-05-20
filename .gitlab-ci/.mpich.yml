@@ -1,7 +1,6 @@
 gcc-9-mpich-3.3:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -9,20 +8,20 @@ gcc-9-mpich-3.3:
   - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
     when: manual
   script:
+    - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
                    -DENABLE_PDE=ON
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
 gcc-9-mpich-3.3-int64:
   image: fedora:31
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -31,20 +30,20 @@ gcc-9-mpich-3.3-int64:
     when: manual
   allow_failure: true
   script:
+    - !reference [.define-cores, script]
     - dnf install -y -q lapack64 lapack64-devel
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
   interruptible: true
   
 gcc-11-mpich-3.4:
   image: fedora:35
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -52,20 +51,20 @@ gcc-11-mpich-3.4:
   - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
     when: manual
   script:
+    - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
                    -DENABLE_PDE=ON
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
 gcc-11-mpich-3.4-int64:
   image: fedora:35
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -74,20 +73,20 @@ gcc-11-mpich-3.4-int64:
     when: manual
   allow_failure: true
   script:
+    - !reference [.define-cores, script]
     - dnf install -y -q lapack64
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
   interruptible: true
 
 gcc-12-mpich-4.0:
   image: fedora:37
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -95,20 +94,20 @@ gcc-12-mpich-4.0:
   - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
     when: manual
   script:
+    - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
                    -DENABLE_PDE=ON
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
 gcc-12-mpich-4.0-int64:
   image: fedora:37
   variables:
-    DALTON_LAUNCHER: "mpirun -n 4"
     OMP_NUM_THREADS: "1"
   rules:
   - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
@@ -117,14 +116,15 @@ gcc-12-mpich-4.0-int64:
     when: manual
   allow_failure: true
   script:
+    - !reference [.define-cores, script]
     - dnf install -y -q lapack64
     - module load mpi/mpich-x86_64
     - mpirun --version
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
     - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
     - cd build
-    - make -j 32
-    - ctest -j 4 --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
   interruptible: true
 
 gcc-14-mpich-4.1-int64:
@@ -149,6 +149,7 @@ gcc-14-mpich-4.1-int64:
     - git --version
     - cmake --version
   script:
+    - !reference [.define-cores, script]
     - ulimit -s unlimited
     - echo "The shell is $SHELL"
     - cores=$(LC_ALL=C lscpu | awk '/^Core\(s\) per socket:/ {print $4}')
@@ -180,19 +181,6 @@ gcc-14-mpich-4.1-int64:
     - make -j$N_PROC
     - ldd dalton.x    
     - export OMP_NUM_THREADS=1
-    - |
-      if [ "$N_PROC" -lt 4 ]; then
-        M=$((N_PROC / 2))
-        export DALTON_LAUNCHER="mpirun -n 2"
-      else
-        M=$((N_PROC / 4))
-        export DALTON_LAUNCHER="mpirun -n 4"
-      fi
-      echo "DALTON_LAUNCHER=\"$DALTON_LAUNCHER\"" > var.env
-      echo "M=$M" >> var.env
-    - source var.env
-    - export DALTON_LAUNCHER=$DALTON_LAUNCHER
-    - echo "DALTON_LAUNCHER is set to $DALTON_LAUNCHER"
     - export MPICH_NO_LOCAL=1
     - echo "Running ctest with $M jobs"
     - ctest -j$M --output-on-failure -L essential -LE serial --timeout 120
