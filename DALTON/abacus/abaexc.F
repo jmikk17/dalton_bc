@@ -1007,15 +1007,15 @@ C
 C-tbp IF (.NOT. (DIPSTR .OR. ROTSTR .OR. ROTVEL)) THEN
          IF (EXCTRP) THEN
             IF (TDA_TRIPLET) THEN
-         CALL HEADER_A('Triplet TDA electronic excitation energies',15)
+      CALL HEADER_A('Triplet electronic excitation energies (TDA)',15)
             ELSE
-         CALL HEADER_A('Triplet electronic excitation energies',15)
+      CALL HEADER_A('Triplet electronic excitation energies',15)
             END IF
          ELSE
             IF (TDA_SINGLET) THEN
-         CALL HEADER_A('Singlet TDA electronic excitation energies',15)
+      CALL HEADER_A('Singlet electronic excitation energies (TDA)',15)
             ELSE
-         CALL HEADER_A('Singlet electronic excitation energies',15)
+      CALL HEADER_A('Singlet electronic excitation energies',15)
             END IF
          END IF
          WRITE (LUPRI,'(A,1P,E9.2)') ' Convergence threshold:',THREXC

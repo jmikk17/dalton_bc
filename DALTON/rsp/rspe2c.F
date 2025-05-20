@@ -1161,7 +1161,7 @@ C
 #include "ibndxdef.h"
 C
 C Used from common blocks:
-C   INFRSP : ???,SOPPA, CISRPA, TDA$
+C   INFRSP : ???,SOPPA, CISRPA, TDA
 C
 #include "priunit.h"
 #include "wrkrsp.h"
@@ -3673,7 +3673,7 @@ C
 #include "dummy.h"
       DIMENSION CMO(*),UDV(*),PV(*),FC(*),FV(*),FCAC(*),H2AC(*)
       DIMENSION XINDX(*),WRK(*)
-      CHARACTER BLANK*8, PRI_LINE*90, LBLPP_1*1
+      CHARACTER BLANK*8, PRI_LINE*90, LBLPP_1*1, CALC_TYPE*30
 C
       PARAMETER ( MAXSIM = 15, LMXFR = 1000, BLANK = '        ' )
       PARAMETER ( TOLRTT = 1.0D-12)
@@ -4123,22 +4123,30 @@ C ---------------------------- not non-adiabatic coupling:
  550           CONTINUE ! DO 550 INUM = 1, NBX
  600        CONTINUE  ! go to 600 if non-adiabatic coupling ("HDO" in label)
          END IF
+
          PRI_LINE = ' '
          WRITE (PRI_LINE,'(3(A,I2),3A)')
      &   '@ Excit. operator sym',KSYMOP,' & ref. state sym',IREFSY,
      &   ' => excited state symmetry',KSYMST,'  ( ',REP(KSYMST-1),')'
          CALL TITLER(PRI_LINE,'*',103)
+         IF (TRPLET) THEN
+            CALC_TYPE = '- singlet excitation'
+         ELSE
+            CALC_TYPE = '- triplet excitation'
+         END IF
+         IF (TDA) THEN
+            IF (NCONF .gt. 1) THEN
+               CALC_TYPE = CALC_TYPE(1:20) // ' (gTDA)'
+            ELSE
+               CALC_TYPE = CALC_TYPE(1:20) // ' (TDA)'
+            END IF
+         END IF
+
          DO 555 INUM = 1,NBX
             PRI_LINE = ' '
-            IF (TRPLET) THEN
-               WRITE (PRI_LINE,'(A,I5,A,I2,3A)')
+            WRITE (PRI_LINE,'(A,I5,A,I2,4A)')
      &      '@ Excited state no:',(ISIM-1+INUM),' in symmetry',KSYMST,
-     &      '  ( ',REP(KSYMST-1),') - triplet excitation'
-            ELSE
-               WRITE (PRI_LINE,'(A,I5,A,I2,3A)')
-     &      '@ Excited state no:',(ISIM-1+INUM),' in symmetry',KSYMST,
-     &      '  ( ',REP(KSYMST-1),') - singlet excitation'
-            END IF
+     &      '  ( ',REP(KSYMST-1),') ',CALC_TYPE
             CALL HEADER(PRI_LINE,0)
             IF (KZCONF .GT. 1 .AND. KZWOPT .GT. 0) THEN
                EXCIT_TEST =
