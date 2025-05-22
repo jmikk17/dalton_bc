@@ -43,6 +43,7 @@
 - Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
 
 ### Fixed
+- Fixed linear response with gTDA and all solvent models, incl. PE and PCM (the Y component was not zeroed for configuration trial vectors) (H. J. Aa. Jensen)
 - Fixed error in PE-MCSCF calculation with GSPOL
 - Fixed parallel calculation of molecular gradient with CAMB3LYP
 - Abort if basis= option used in .mol file with BASIS (previously it was just ignored)

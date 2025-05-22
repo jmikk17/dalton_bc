@@ -16,19 +16,9 @@
 !
 !
 C
-#ifdef UNDEF
-===========================================================================
-/* Comdeck log */
-941116-hjaaj: removed tab characters and other formatting
-941109-pj+kvm: corrected code for triplet
-940708-hjaaj
-RSPSLV: stop if soppa
-940423-hjaaj:
-SLVINP: removed extra blank in '.IPRSLV '
----
-RSPSOL.u module written by Poul Joergensen and Kurt Mikkelsen, summer 1993
-===========================================================================
-#endif
+!===========================================================================
+!RSPSOL.u module written by Poul Joergensen and Kurt Mikkelsen, summer 1993
+!===========================================================================
 C  /* Deck slvinp */
       SUBROUTINE SLVINP(WORD)
 C
@@ -89,7 +79,7 @@ C
          GO TO 100
       END IF
   300 CONTINUE
-      WRITE(LUPRI,'(/A)')' ********* SLVINP ********'
+      WRITE(LUPRI,'(/A)')' ********* *RSPSLV input  ********'
       NAQRTO = 0
       NBQRTO = 0
       NCQRTO = 0
@@ -258,24 +248,18 @@ C
 C
 C TRIANGULAR PACKING OF ONE ELECTRON DENSITY MATRIX
 C
-      IJ = 0
-      DO 100 I = 1,NASHT
-         DO 200 J = 1,I
-            IJ = IJ + 1
-            WRK(KDV-1+IJ) = UDV(I,J)
- 200     CONTINUE
- 100  CONTINUE
+      call dsitsp(nasht,udv,wrk(kdv))
       IF (SLVANT) THEN
          KFREE1 = KFREE + NNASHX*NCSIM
          LFREE1 = LWRK - KFREE1
          DO 300 ICSIM = 1,NCSIM
             KOFDVT = (ICSIM-1)*N2ASHX
-            KOFD2T = (ICSIM-1)*NNASHX
+            KOFD2T = (ICSIM-1)*NNASHX + KFREE
             IJ = 0
             DO 400 I = 1,NASHT
                DO 500 J = 1,I
                   IJ = IJ + 1
-                  WRK(KFREE+KOFD2T+IJ-1) =
+                  WRK(KOFD2T+IJ-1) =
      *                        WRK(KDVT+KOFDVT+(I-1)*NASHT+J-1) +
      *                        WRK(KDVT+KOFDVT+(J-1)*NASHT+I-1)
  500           CONTINUE
@@ -1192,16 +1176,15 @@ C
          CALL QUIT('SLVSC ERROR, both NCSIM .gt. 0 and NOSIM .gt. 0')
       END IF
 C
-      IF (NCSIM .GT. 0) THEN
+      IF (NCSIM .GT. 0 .and.
+     &   .NOT. (USE_PELIB() .AND. TRPLET)) THEN ! no contributions if PE/PDE and triplet
          KURYAC = 1
          KURXAC = KURYAC + N2ASHX
          KW1    = KURXAC + N2ASHX
          LW1    = LWRK + 1 - KW1
          CALL DSPTSI(NASHT,RYAC,WRK(KURYAC))
 C        CALL DSCAL(N2ASHX,DM1,WRK(KURYAC),1)
-         DO 18 ICSIM = 1,NCSIM
-            ! no contributions if PE/PDE and triplet
-            IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
+         DO ICSIM = 1,NCSIM
                CALL DSPTSI(NASHT,RXAC(1,ICSIM),WRK(KURXAC))
 C              CALL DSCAL(N2ASHX,DM1,WRK(KURXAC),1)
 C rxac defined with opposite sign relative to SOLSC
@@ -1209,7 +1192,7 @@ C
                IF (IPRRSP.GT.100) THEN
                   WRITE(LUPRI,*)' Z part,RXAC MATRIX, ICSIM=', ICSIM
                   CALL OUTPUT(WRK(KURXAC),1,NASHT,1,NASHT,
-     *                                    NASHT,NASHT,1,LUPRI)
+     &                                    NASHT,NASHT,-1,LUPRI)
                END IF
 C              First SVECS(NA) = SVECS(NA) + < NA | 2*RX | CREF >
 C
@@ -1222,17 +1205,16 @@ C
      &                     .TRUE.,.FALSE.,XNDXCI,JSPIN1,JSPIN2,
      &                     WRK(KW1),LW1)
                IF (IPRRSP.GT.101) THEN
-                  WRITE(LUPRI,*)
-     *          ' TXC Z CONF  PART OF LINEAR TRANSFORMED'// 
-     *          ' CONF TRIAL VECTOR'
+                  WRITE(LUPRI,*) ' TXC Z CONF  PART OF LINEAR'//
+     &              ' TRANSFORMED CONF TRIAL VECTOR'
                   CALL OUTPUT(SVECS(1,ICSIM),1,KZCONF,1,1,
-     *                        KZCONF,1,1,LUPRI)
+     %                        KZCONF,1,1,LUPRI)
                END IF
 C              then  SVECS(NA) = SVECS(NA) + < NA | 2*RY | BCVECS > -Note: Tg is called "Ry" 
                IF (IPRRSP.GT.100) THEN
                   WRITE(LUPRI,*)' Z part,-1.0*RYAC MATRIX, ICSIM=',ICSIM
                   CALL OUTPUT(WRK(KURYAC),1,NASHT,1,NASHT,
-     *                                    NASHT,NASHT,1,LUPRI)
+     &                                    NASHT,NASHT,-1,LUPRI)
                END IF
                JSPIN1 = 0
                JSPIN2 = 0
@@ -1242,11 +1224,10 @@ C              then  SVECS(NA) = SVECS(NA) + < NA | 2*RY | BCVECS > -Note: Tg is
      &                     .TRUE.,.FALSE.,XNDXCI,JSPIN1,JSPIN2
      &                     ,WRK(KW1),LW1)
                IF (IPRRSP.GT.101) THEN
-                  WRITE(LUPRI,*)
-     *          ' TXC Z CONF  PART OF LINEAR TRANSFORMED'// 
-     *          ' CONF TRIAL VECTOR'
-                  CALL OUTPUT(SVECS(1,ICSIM),1,
-     *                        KZCONF,1,1,KZCONF,1,1,LUPRI)
+                  WRITE(LUPRI,*) ' TXC Z CONF  PART OF LINEAR'// 
+     *             ' TRANSFORMED CONF TRIAL VECTOR'
+                  CALL OUTPUT(SVECS(1,ICSIM),1,KZCONF,1,1,
+     *                        KZCONF,1,1,LUPRI)
                END IF
                DO 200 NA = 1,KZCONF
                   SVECS(NA,ICSIM) = SVECS(NA,ICSIM)
@@ -1274,7 +1255,7 @@ C    *                            - D2 * TRXAC(ICSIM) * CREF(NA)
                   END IF
                END IF
 C
-C Y PART OF LINEAR TRANSFORMATION
+C Y PART OF LINEAR TRANSFORMATION (because of non-linear solvent contribution)
 C
                CALL DGETRN(WRK(KURXAC),NASHT,NASHT)
                CALL DSCAL(N2ASHX,DM1,WRK(KURXAC),1)
@@ -1330,19 +1311,17 @@ C
 C                 FAC = - D2 * TRYAC
 C                 CALL DAXPY(KZCONF,FAC,BCVECS(1,ICSIM),1,SVECS(1,ICSIM),1)
                END IF
-            END IF
-   18    CONTINUE
+         END DO !  DO ICSIM = 1,NCSIM
       END IF
       IF (NOSIM .GT. 0) THEN
          KURXAC = 1
          KW1    = KURXAC + N2ASHX
          LW1    = LWRK + 1 - KW1
-         DO 22 IOSIM = 1,NOSIM
+         DO IOSIM = 1,NOSIM
             ! no contributions if PE/PDE and triplet
             IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
                IF (IPRRSP.GT.100) THEN
-                  WRITE(LUPRI,*)' Z PART,RXAC MATRIX,
-     *            IOSIM=', IOSIM
+                  WRITE(LUPRI,*)' Z PART,RXAC MATRIX, IOSIM=', IOSIM
                   CALL OUTPUT(RXAC(1,IOSIM),1,NASHT,1,NASHT,
      *                                 NASHT,NASHT,1,LUPRI)
                END IF
@@ -1375,7 +1354,7 @@ C              not needed because of this projection)
      *                           1,LUPRI)
                   END IF
                END IF
-            END IF
+            END IF ! (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
             IF (TRPLET) THEN
                IF (USE_PELIB()) THEN
                   TRIPLET_OFFSET = 0
@@ -1406,10 +1385,12 @@ C
                   CALL OUTPUT(SVECS(1,IOSIM),1,KZCONF,1,1,KZCONF,1,
      *                                                    1,LUPRI)
                END IF
-            END IF
+            END IF ! TRIPLET
 C
 C Y PART OF LINEAR TRANSFORMATION
 C
+            if (tda .or. cisrpa) cycle
+
             ! no contributions if PE/PDE and triplet
             IF (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
                CALL DGETRN(RXAC(1,IOSIM),NASHT,NASHT)
@@ -1449,7 +1430,7 @@ C              not needed because of this projection)
      *                           1,KZCONF,1,1,KZCONF,1,1,LUPRI)
                   END IF
                END IF
-            END IF
+            END IF ! (.NOT. (USE_PELIB() .AND. TRPLET)) THEN
             IF (TRPLET) THEN
                CALL DGETRN(RXAC(1,IOSIM+triplet_offset),NASHT,NASHT)
                CALL DSCAL(N2ASHX,DM1,RXAC(1,IOSIM+triplet_offset),1)
@@ -1474,8 +1455,8 @@ C              now SVECS(NA) = SVECS(NA) + <NA | 2*RXY | CREF >
                CALL OUTPUT(SVECS(1+KZVAR,IOSIM),1,KZCONF,1,1,
      *                     KZCONF,1,1,LUPRI)
                END IF
-            END IF
-   22    CONTINUE
+            END IF ! TRIPLET
+         END DO !  IOSIM = 1,NOSIM
       END IF
 C
 C     CALL CISIGD(ICSYM,IHCSYM,NCDET,NHCDET, C,HC, FCAC,H2AC,
