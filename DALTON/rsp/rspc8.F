@@ -345,7 +345,8 @@ C
       END IF
       IF (IPRRSP .GE. LIMPRI) THEN
          DO 800 IOP = 1,NGPC6(KSYMOP)
-            IF (LBLC6(KSYMOP,IOP)(2:4) .EQ. 'DIP') THEN
+            IF (LBLC6(KSYMOP,IOP)(2:4) .EQ. 'DIP' .OR.
+     &          LBLC6(KSYMOP,IOP)(1:2) .EQ. 'AM') THEN
                CALL C6PRPS(LDONE,LBLC6(KSYMOP,IOP),KSYMOP,
      &                     KZRED,XMOM,EIVAL)
             END IF
@@ -441,7 +442,8 @@ c
       DIMENSION GRIDSQ(0:NGRDMX),ALPHA(1:NSYMOP,1:NSYMOP,0:NGRDMX)
       DIMENSION CAUCHY(1:NSYMOP,1:NSYMOP,1:NMOMC)
       DIMENSION OLDAL(NSYMOP,0:NGRDMX)
-      DIMENSION OMEGA(0:16)
+!     DIMENSION OMEGA(0:16)
+      DIMENSION OMEGA(0:10)
       CHARACTER*8 IC,JC
       LOGICAL LDONE,END
       LOGICAL FIRST, LC6IFC
@@ -450,21 +452,27 @@ c
       DATA ITYPE /3/
       DATA THRESHW /1.D-08/
 c
+!     DATA OMEGA/0.0D0,
+!    *           0.0000011354D0,0.0000324954D0,0.0002074939D0,
+!    *           0.0007766098D0,0.0022314002D0,0.0055272185D0,
+!    *           0.0125684274D0,0.0273216537D0,0.0585616091D0,
+!    *           0.1273031181D0,0.2894765239D0,0.7170385627D0,
+!    *           2.0602366551D0,7.7110713698D0,49.2377677794D0,
+!    *           1409.1898779477D0/
       DATA OMEGA/0.0D0,
-     *           0.0000011354D0,0.0000324954D0,0.0002074939D0,
-     *           0.0007766098D0,0.0022314002D0,0.0055272185D0,
-     *           0.0125684274D0,0.0273216537D0,0.0585616091D0,
-     *           0.1273031181D0,0.2894765239D0,0.7170385627D0,
-     *           2.0602366551D0,7.7110713698D0,49.2377677794D0,
-     *           1409.1898779477D0/
+     *           0.0000437D0,0.0013086D0,0.0091102D0,0.0390632D0,
+     *           0.1372089D0,0.4555098D0,1.5999700D0,6.8604430D0,
+     *           47.7603400D0, 1430.6370000D0 /
 c -- parameters
       PARAMETER ( ZERO = 0.0D0 , D1 = 1.0D0, D2 = 2.0D0 )
 c
 c compute squared gridpoints
 c
-      IF(GSLEGN) THEN
+      !IF(GSLEGN) THEN
+      IF(.true.) THEN
 c -- use Gauss Legendre grid from old C6 module
-         NGRID=16
+         !NGRID=16
+         NGRID=10
          DO 5 I=0,NGRID
             GRIDSQ(I) = OMEGA(I)
    5     CONTINUE
@@ -802,14 +810,14 @@ C
       WRITE(LUPRI,'(/A,A/A,I4)')
      *   ' operator type:    ',OPTYPE,
      *   ' operator symmetry:',KSYMOP
-      IF (OPTYPE(2:4) .NE. 'DIP') THEN
-         NWARN = NWARN + 1
-         WRITE (LUPRI,'(//3A/A)')
-     &      ' C6PRPS WARNING: oscillator strength is not',
-     &      ' defined for ',OPTYPE,
-     &      ' WARNING: C6PRPS cannot continue.'
-         RETURN
-      END IF
+!     IF (OPTYPE(2:4) .NE. 'DIP') THEN
+!        NWARN = NWARN + 1
+!        WRITE (LUPRI,'(//3A/A)')
+!    &      ' C6PRPS WARNING: oscillator strength is not',
+!    &      ' defined for ',OPTYPE,
+!    &      ' WARNING: C6PRPS cannot continue.'
+!        RETURN
+!     END IF
       CALL DZERO(SUMOSC,NSUM)
       WRITE(LUPRI,'(/A)')
      *   ' State no:   Transition moment:'//
@@ -834,7 +842,7 @@ C(I5,1P,G26.12,G24.12,G20.12)
      *                   + D2*XTEMP*XTEMP*ETEMP**(-ISUM)
   400    CONTINUE
  500  CONTINUE
-      IF (OPTYPE(2:5) .EQ. 'DIPL') THEN
+      IF (OPTYPE(2:5) .EQ. 'DIPL' .OR. OPTYPE(1:2).EQ.'AM') THEN
          WRITE (LUPRI,'(/A)') ' Sum rules (length)'
          WRITE (LUPRI,'(/A)') '   k           S(k)'
          WRITE (LUPRI,'(I5,1P,G20.12)')
