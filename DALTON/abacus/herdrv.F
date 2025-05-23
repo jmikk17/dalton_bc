@@ -649,6 +649,12 @@ C
      &             'ERROR: Number of atoms selected:',NPATOM,
      &             'ERROR: Number of atoms allowed: ',MXCENT
                CALL QUIT('Error in '//WORD1)
+            ELSE IF (NPATOM .GT. NUCIND) THEN
+               WRITE (LUPRI,'(//2A/A,I8/A,I6)')
+     &             'ERROR: Too many atoms selected under ',WORD,
+     &             'ERROR: Number of atoms selected:',NPATOM,
+     &             'ERROR: Number of independent atoms: ',NUCIND
+               CALL QUIT('Error in '//WORD1)
             END IF
             READ (LUCMD, *) (IPATOM(I),I=1,NPATOM)
             ALLATM = .FALSE.
