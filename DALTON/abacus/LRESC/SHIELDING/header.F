@@ -51,6 +51,14 @@ c     & 'doi:10.1063/1.2244572'
       WRITE(LUPRI,'(7X,A)')'Int. J. Quantum Chem. 118, '//
      &    'e25487 (2017), doi.org/10.1002/qua.25487'
 
+      IF(PRTALL1) THEN
+         WRITE(LUPRI,'(/,4X,A)')'-  Acronyms for LRESC corrections'//
+     &                          ' taken from:'
+         WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
+     &                         'doi: 10.1063/5.0264596'
+      END IF
+
+
 c      IF (LRANISO) THEN
       WRITE(LUPRI,'(/,4X,A)') '-  Definitions according to : '
       WRITE(LUPRI,'(7X,A)') 'J. Mason, Solid state Nuc. Magn. '//
