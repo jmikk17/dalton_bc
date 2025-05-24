@@ -661,7 +661,6 @@ C     LRESC-SHIELDING results section
 
 C     Save results to array
       call create_array_oneatom(array_oneatom)
-      write(lupri,*) "JUANN",shape(array_oneatom),LRATOM
       IF (NLRATOMS.EQ.1) lresc_array(1, :, :,:) = array_oneatom
       IF (NLRATOMS.NE.1) lresc_array(LRATOM, :, :,:) = array_oneatom
 
