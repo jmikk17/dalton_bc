@@ -47,11 +47,20 @@ detailed.add(from_string = 'Diamagnetic Corrections for F',
       abs_tolerance = 1.0e-3)
       
 detailed.add(from_string = 'Total Non-relativistic Contributions for F',
-      num_lines = 58,
+      num_lines = 38,
       abs_tolerance = 1.0e-3)
 
+detailed.add(from_string = 'Total Relativistic Corrections for F',
+      num_lines = 38,
+      abs_tolerance = 1.0e-3)
 
+detailed.add(from_string = 'Total Relativistic Values for F',
+      num_lines = 38,
+      abs_tolerance = 1.0e-3)
 
+detailed.add(from_string = 'Anisotropic parameters:',
+      num_lines = 5,
+      abs_tolerance = 1.0e-3)
 
 test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': simple})
 test.run(['prop_lresc_detailed.dal'], ['HF_intgrl.mol'], f={'out': detailed})
