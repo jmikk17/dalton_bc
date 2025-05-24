@@ -797,6 +797,7 @@ C infpar.h : PARHER
 #include "infinp.h"
 #include "locinf.h"
 #include "infpar.h"
+#include "lrescinf.h"
 
       DATA TABDIR /'*END OF', 'xxxxxxx', '*NUCREP',
      &             '*ONEINT', '*TWOEXP', '*GETSGY',
@@ -1873,6 +1874,7 @@ c         IF (.NOT.NOLOND)  WRITE(LUPRI,*)
 c     &     ' Unsupported input - LONDON Orbitals not implemented' //
 c     &     ' for LRESC properties'
 c            CALL QUIT('Not supported input in ABAINP')
+         IF (.NOT.LRINTS) CALL QUIT('Ask for LR-SHI under **INTEGRALS')
 
          WRITE (LUPRI,'(5X,A)')
      &      ' Linear Response Elimination of Small Component (LRESC)'//

@@ -1285,6 +1285,7 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
 c jim-dbg : setting all integrals for LRESC module
             IF (MAXREP.NE.0)
      &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_SHIELDING')
+            LRINTS = .TRUE.
             ONEPRP = .TRUE.
             FERMI = .TRUE.  ! 115.Fermi 
             KINENE = .TRUE. ! 133.Kinenerg
