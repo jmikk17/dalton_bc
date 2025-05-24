@@ -13,7 +13,7 @@
       PARAMETER (calfa=1.0/137.036, CFCZK=1.0/3.0, CSDZK=-0.25D0,
      &            CFCBS=-0.25D0, CSDBS=-0.25D0, CPSOK=0.50D0,
      &            CLKIN=1.0D0, CDIAM=-1.0D0, CDIAD=-1.0D0,
-     &            CDIAK=10.0/137.036, CANGP=-0.5D0,
+     &            CDIAK=1/6.0, CANGP=-0.5D0,
      &            CFCAV=-1.0*7.0/16.0, CEFGDW=-1.0D0, 
      &            CEFGMV=-1.0D0, CEFGpqp=0.25D0, CEFGkin=-0.5D0,
      &		  CEFGlap=1.0/8.0)
@@ -22,8 +22,8 @@
 
     !LRESC corrections to shielding
       LOGICAL SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
-     &        SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG,
-     &        PRTALL1
+     &         SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG,
+     &         PRTALL1, LRATOM_changed
 
     !LRESC corrections to EFG and common logicals
       LOGICAL ORBCON,PQPKINLRESC,PRTALL2
@@ -34,12 +34,10 @@
      &       LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
      &       LRGAUG(3),EFGC0(100),EFGC2(100,5)
 
-      COMMON /LRESCINF/ 
-     &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,  ! real*8
-     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, LRGAUG,
-     &    EFGC0, EFGC2,
-     &    JIMPRT, LRATOM, JJAPRT,                                  ! integer
-     &    SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,                  ! logical
-     &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, 
-     &    PRTALL1, ORBCON, PQPKINLRESC, PRTALL2
+      COMMON /LRESCINF/ SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
+     &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, JIMPRT, LRATOM,
+     &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,
+     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, LRGAUG, PRTALL1,
+     &    EFGC0,EFGC2, ORBCON,PQPKINLRESC, PRTALL2, JJAPRT,
+     &    LRATOM_changed
 ! -- end of lrescinf.h --
