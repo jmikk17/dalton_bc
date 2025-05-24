@@ -73,3 +73,30 @@ C     Information about calculation of LRESC
       CALL QEXIT('PRINT_LRSHIELD_SUM')
       RETURN
       END
+
+C     /* Deck print_lrshield_TOT */
+      SUBROUTINE PRINT_LRSHIELD_TOT(phrase,tensor)
+C Purpose:
+C     Print information about LRESC-SHIELDING overall contributions
+C Author:
+C     J. J. Aucar 2022
+#include "implicit.h"
+#include "dummy.h"
+#include "priunit.h"
+#include "wrkrsp.h"
+#include "lrescinf.h"
+
+      REAL*8, intent(in)        :: tensor(3,3)
+      REAL*8                    :: iso
+      CHARACTER*14, intent(in)  :: phrase
+
+      CALL QENTER('PRINT_LRSHIELD_TOT')
+
+C     Information about calculation of LRESC
+      iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
+      WRITE (LUPRI,'(5X,A,8X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
+     &      phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
+
+      CALL QEXIT('PRINT_LRSHIELD_TOT')
+      RETURN
+      END

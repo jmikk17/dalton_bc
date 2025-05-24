@@ -28,16 +28,21 @@
     !LRESC corrections to EFG and common logicals
       LOGICAL ORBCON,PQPKINLRESC,PRTALL2
 
-      REAL*8 LRFCAV(3,3), LRDIAK(3,3), LRANGP(3,3),
-     &       LRDIAM(3,3), LRDIAD(3,3), LRLKIN(3,3),
-     &       LRPSOK(3,3), LRPSKI(3,3), LRFCZK(3,3),
-     &       LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
-     &       LRGAUG(3),EFGC0(100),EFGC2(100,5)
+      DOUBLE PRECISION LRFCAV(3,3), LRDIAK(3,3), LRANGP(3,3),
+     &                  LRDIAM(3,3), LRDIAD(3,3), LRLKIN(3,3),
+     &                  LRPSOK(3,3), LRPSKI(3,3), LRFCZK(3,3),
+     &                  LRSDZK(3,3), LRFCBS(3,3), LRSDBS(3,3),
+     &			SLRESC(3,3), SGD0S(3,3), SGD1S(3,3),
+     &                  SGP1S(3,3), SGP1T(3,3),
+     &                  QRPSOOZMV(3,3),
+     &                  LRGAUG(3),EFGC0(100),EFGC2(100,5)
 
       COMMON /LRESCINF/ SIGMAP1S, SIGMAP1T, SIGMAD1S, SIGMAD0S,
      &    SIGMAP3S, SIGMAP3T, LRESCALL, GAUCHANG, JIMPRT, LRATOM,
      &    LRFCAV, LRDIAK, LRANGP, LRDIAM, LRDIAD, LRLKIN, LRPSOK,
-     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, LRGAUG, PRTALL1,
+     &    LRPSKI, LRFCZK, LRSDZK, LRFCBS, LRSDBS, SLRESC, SGD0S,
+     &    SGD1S, SGP1S, SGP1T, QRPSOOZMV, 
+     &    LRGAUG, PRTALL1,
      &    EFGC0,EFGC2, ORBCON,PQPKINLRESC, PRTALL2, JJAPRT,
      &    LRATOM_changed
 ! -- end of lrescinf.h --

@@ -408,8 +408,6 @@ c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-C     Isotropic values
-C
       SLRESC  = 0.0
       SGD0S   = 0.0  ! sigma 0order singlet DIAM  : Fc, AngPso, DiaKin
       SGD1S   = 0.0  ! sigma 1order singlet DIAM  : DiaMv, DiaDw
@@ -431,32 +429,16 @@ C     Add constants to print all in ppm's
          LRLKIN = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN
          LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
 C
-C     Trace
-C
-      DO i=1, 3
+
 !     Diamagnetic corrections
-      !LRESC
-         SGD0S = SGD0S + LRFCAV(i,i) + LRDIAK(i,i) + LRANGP(i,i)
-         SGD1S = SGD1S + LRDIAD(i,i) + LRDIAM(i,i)
+         SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGP
+         SGD1S = SGD1S + LRDIAD + LRDIAM
 !     Paramagnetic corrections
-         SGP1S = SGP1S + LRLKIN(i,i) + LRPSOK(i,i)
-         SGP1T = SGP1T +
-     &    LRFCZK(i,i) + LRSDZK(i,i)+LRFCBS(i,i)+LRSDBS(i,i)
-      ENDDO
+         SGP1S = SGP1S + LRLKIN + LRPSOK
+         SGP1T = SGP1T + LRFCZK + LRSDZK + LRFCBS + LRSDBS
+!     Total
       SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T
 C
-C     Corrections of shielding constant are the trace of each tensor
-C
-      SLRESC = SLRESC/3.0
-!     Diamagnetic corrections
-      !LRESC
-      SGD0S = SGD0S/3.0
-      SGD1S = SGD1S/3.0
-!     Paramagnetic corrections
-      SGP1S = SGP1S/3.0
-      SGP1T = SGP1T/3.0
-C
-
 C
 C     Paramagnetic 1st singlet or triplet
 C
@@ -487,14 +469,9 @@ C
          WRITE(LUPRI,'(/,7X,A)') '---------------             xx  '//
      &         '          yy             zz          iso'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
-     &                      LRLKIN+LRPSOK)
+     &                      SGP1S)
          IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
-     &                      LRFCZK+LRSDZK+LRFCBS+LRSDBS)
-         IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL) THEN
-            WRITE (LUPRI,'(/,5X,A,9X,F17.5,A)')
-     &      'Total Paramagnetic Corrections :     ',
-     &       (SGP1S+SGP1T),' [ppm]'
-         ENDIF
+     &                      SGP1T)
       ENDIF
 C
 C     diamagnetic 0th or 1st order singlet
@@ -507,7 +484,7 @@ C
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S]'
                WRITE(LUPRI,*)'       ---------------            xx  '//
      &         '          yy             zz          iso'
-               call PRINT_LRSHIELD_CORR('FC LRESC',LRFCAV)
+               call PRINT_LRSHIELD_CORR('FC      ',LRFCAV)
                call PRINT_LRSHIELD_CORR('AngPso  ',LRANGP)
                call PRINT_LRSHIELD_CORR('DiaKin  ',LRDIAK)
 
@@ -527,23 +504,22 @@ C
          WRITE(LUPRI,'(/,A)')'       ---------------             xx  '//
      &         '          yy             zz          iso'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
-     &                                         LRFCAV+LRDIAK+LRANGP)
+     &                                         SGD0S)
          IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
-     &                                         LRDIAD+LRDIAM)         
-         IF((SIGMAD1S.AND.SIGMAD0S).OR.LRESCALL) THEN
-            WRITE (LUPRI,'(/,5X,A,9X,F17.5,A)')
-     &      'Total Diamagnetic Corrections from LRESC :      ',
-     &      (SGD0S+SGD1S),' [ppm]'
-         ENDIF
+     &                                         SGD1S)
       ENDIF
 C
 C     All of them in detail
 C
       IF (LRESCALL) THEN
-c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
          CALL HEADER('Total Relativistic Corrections :',-1)
-         WRITE (LUPRI,'(/5X,A,F17.5,A)')
-     &   'Sum of corrections of LRESC : ' ,SLRESC, ' [ppm]'
+         WRITE(LUPRI,'(A)')'                                   xx  '//
+     &         '          yy             zz          iso'
+         IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL)
+     &      call PRINT_LRSHIELD_TOT('Paramagnetic :',SGP1S+SGP1T)
+         IF((SIGMAD1S.AND.SIGMAD0S).OR.LRESCALL)
+     &      call PRINT_LRSHIELD_TOT('Diamagnetic  :',SGD0S+SGD1S)
+      call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC)
       END IF
 
       WRITE(LUPRI,*) 
