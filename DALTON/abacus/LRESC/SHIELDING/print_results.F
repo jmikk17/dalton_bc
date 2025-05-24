@@ -313,7 +313,7 @@ C
 
       IF (.NOT.LRANISO) THEN
          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)') 
-     &               'xx','yy','zz','iso','span','skew'
+     &               'xx','yy','zz','iso','anis','asym'
 
          IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
      &                     SGPNR,'iso ')
@@ -372,7 +372,7 @@ c     Total relativistic values
 
       IF (.NOT.LRANISO) THEN
         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
-     &                    'xx','yy','zz','iso','span','skew'
+     &                    'xx','yy','zz','iso','anis','asym'
 
         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
      &                       SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
@@ -515,7 +515,7 @@ C     J. J. Aucar 2022
       CALL QENTER('PRINT_LRSHIELD_TOT')
 
 C     Information about calculation of LRESC
-c     For total (NR and REL) also SPAN and SKEW are printed
+c     For total (NR and REL) also ANIS and ASMY are printed
       IF (elements == 'ist ') THEN
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
 C     Initialize parameters
@@ -523,8 +523,8 @@ C     Initialize parameters
       call shielddiag(tensor,3,parameters,principal_axes,eigenvalues)
       WRITE(LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
      &              3X,F12.4,F12.4,F12.4,X,F12.4,X,A)')
-     & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,parameters(1),
-     & parameters(2),' [ppm]'
+     & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,parameters(3),
+     & parameters(4),' [ppm]'
       END IF
 
       IF (elements == 'iso ') THEN
@@ -599,9 +599,9 @@ C     Print eigenvalues and eigenstates
          end do
 C     Print anisotropic parameters
       ELSE IF (options == 'aniso ') THEN
-         write(lupri,'(20X,A)') 'span          skew'
-         write(lupri,'(12X,F12.4,2X,F12.4)' ) parameters(1),
-     &         parameters(2)
+         write(lupri,'(20X,A)') 'anis          asym'
+         write(lupri,'(12X,F12.4,2X,F12.4)' ) parameters(3),
+     &         parameters(4)
       END IF
 
       CALL QEXIT('PRINT_TENSOR')

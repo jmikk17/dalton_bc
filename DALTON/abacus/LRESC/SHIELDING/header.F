@@ -57,27 +57,11 @@ c     & 'doi:10.1063/1.2244572'
          WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
      &                         'doi: 10.1063/5.0264596'
       END IF
-      IF(LRANISO) THEN
-         WRITE(LUPRI,'(/,4X,A)')'-  The SOS correction is not '//
-     &   'included here, and it must be for anisotropic parameters.'
 
-        WRITE(LUPRI,'(7X,A)') 'For linear molecules see :'
-        WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 134, 3 (2011), '//
-     &                         'doi: 10.1063/1.3528717'
-        WRITE(LUPRI,'(7X,A)') 'For no linear molecules see :'
-        WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
-     &                         'doi: 10.1063/5.0264596'
-      END IF
-
-
-c      IF (LRANISO) THEN
-      WRITE(LUPRI,'(/,4X,A)') '-  Definitions according to : '
-      WRITE(LUPRI,'(7X,A)') 'J. Mason, Solid state Nuc. Magn. '//
-     &                         'Res. 2 (1993), 285 '
-      WRITE(LUPRI,'(/,4X,A)') '-  Tensor treatment according to : '
-      WRITE(LUPRI,'(7X,A)') 'F. A. Anet et. alter, Concepts Magn. '//
-     &                         'Reson. (1991), 3 '
-c      END IF
+      WRITE(LUPRI,'(/,4X,A)')
+     &      '-  Tensor treatment (Haeberlen notation) :'
+      WRITE(LUPRI,'(7X,A)') 'Pure Appl.Chem. 80, 1 (2008), '//
+     &                         'doi:10.1351/pac200880010059'
 
       IF (LRESCALL) THEN
             WRITE(lupri,'(/,4X,A)')
@@ -88,11 +72,28 @@ c      END IF
          IF (PYINTS) WRITE(lupri,'(/,4X,A)') '-  FC (libcint) '//
      &            'selected for total diamagnetic contribution'
          END IF
+
+C         Info about SOS correction
+          WRITE(LUPRI,'(/,4X,A)')'-  The SOS correction is not '//
+     &    'included here, and it must be for anisotropic parameters.'
+
+           WRITE(LUPRI,'(7X,A)') 'For linear molecules see :'
+           WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 134, 3 (2011), '//
+     &                         'doi: 10.1063/1.3528717'
+           WRITE(LUPRI,'(7X,A)') 'For no linear molecules see :'
+           WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
+     &                         'doi: 10.1063/5.0264596'
+
       ELSE
             WRITE(lupri,'(/,4X,A)') 
      &   '-  Specific LRESC corrections were activated'
       ENDIF
-      WRITE(LUPRI,*)
+
+      IF (.NOT. PRTALL1) THEN
+         WRITE(LUPRI,'(/,7X,A)')'For printing LRESC corrections,'//
+     &   ' add .PRTALL in your input file under *LROPTS'
+
+      ENDIF
 
 c     For sublist of atoms (not implemented yet) this should be modified
 c      IF (LRATOM_changed) THEN
@@ -103,7 +104,7 @@ c     &   CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
 c      ELSE
 c      IF (.not.LRATOM_changed) THEN
       IF (NLRATOMS.EQ.NUCIND) THEN
-              WRITE(LUPRI,'(4X,A)') '-  All Atoms selected'
+              WRITE(LUPRI,'(/,4X,A)') '-  All Atoms selected'
       END IF
 
       IF (.NOT.LRATOM_changed) THEN
@@ -111,11 +112,6 @@ c      IF (.not.LRATOM_changed) THEN
          WRITE(LUPRI,'(7X,A)')'GAUGEO must be placed at desired '//
      &   'nucleus.'
       END IF
-      IF (.NOT. PRTALL1) THEN
-         WRITE(LUPRI,'(7X,A)')'For printing LRESC corrections,'//
-     &   ' add .PRTALL in your input file under *LROPTS'
-
-      ENDIF
 
 C ---Not Default
       IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
