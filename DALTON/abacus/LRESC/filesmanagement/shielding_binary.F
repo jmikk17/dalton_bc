@@ -19,7 +19,7 @@
 
       subroutine create_array_oneatom(lresc)
 #include "lrescinf.h"
-      real(8), intent(inout) :: lresc(3,3,25)
+      real(8), intent(out) :: lresc(3,3,25)
       lresc=0.d0
 
 
