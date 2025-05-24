@@ -57,6 +57,17 @@ c     & 'doi:10.1063/1.2244572'
          WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
      &                         'doi: 10.1063/5.0264596'
       END IF
+      IF(LRANISO) THEN
+         WRITE(LUPRI,'(/,4X,A)')'-  The SOS correction is not '//
+     &   'included here, and it must be for anisotropic parameters.'
+
+        WRITE(LUPRI,'(7X,A)') 'For linear molecules see :'
+        WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 134, 3 (2011), '//
+     &                         'doi: 10.1063/1.3528717'
+        WRITE(LUPRI,'(7X,A)') 'For no linear molecules see :'
+        WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
+     &                         'doi: 10.1063/5.0264596'
+      END IF
 
 
 c      IF (LRANISO) THEN
