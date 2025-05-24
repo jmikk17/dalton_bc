@@ -1295,6 +1295,7 @@ c jim-dbg : setting all integrals for LRESC module
             DNSKE  = .TRUE. ! 217.DiaKin
             PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
             SPNORB = .TRUE. ! 104 Spin-Orbit
+            NO2SO  = .TRUE.  ! Do not calculate 2e spin-orbit
             CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
             GO TO 100
   244    CONTINUE   ! .NORMAOtwo
@@ -1334,6 +1335,7 @@ c Setting all integrals for LRESC-EFG module
                LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
                SPNORB = .TRUE. ! 104 Spin-Orbit
                EFGCAR = .TRUE. ! 147 Cartesian EFG components
+               NO2SO  = .TRUE. ! Do not calculate 2e spin-orbit
          GO TO 100
       ELSE IF (PROMPT .EQ. '*') THEN
          GO TO 300
