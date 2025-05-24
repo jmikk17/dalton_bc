@@ -84,7 +84,7 @@ c       A is now the matrix whose columns are the eigenstates
 
 
 
-      subroutine shielddiag(matrix,n,parameters)
+      subroutine shielddiag(matrix,n,parameters,principal_axes,eigenv)
 C     Constructed according to DIRAC23: prp/pamprp.F
 C     Parameters calculated in accordance with J.Mason, Solid State
 C     Nuc.Magn.Resonance, 2 (1993), 285
@@ -95,6 +95,8 @@ C     Magnetic Resonance, 1991, vol. 3, no 4.
 #include "wrkrsp.h"
       DOUBLE PRECISION, intent(in) :: matrix(n,n)
       DOUBLE PRECISION, intent(out) :: parameters(4)
+      DOUBLE PRECISION, intent(out) :: principal_axes(3,3)
+      DOUBLE PRECISION, intent(out) :: eigenv(3)
       DOUBLE PRECISION :: ISO
       INTEGER, intent(in) :: n
 
@@ -136,6 +138,9 @@ C     Magnetic Resonance, 1991, vol. 3, no 4.
       DO I = 1, 3
          IF (I /= IZ .AND. I /= IX) IY = I
       ENDDO
+      principal_axes(:,1) = AXES(:,IX)  ! min eigenvalue axis
+      principal_axes(:,2) = AXES(:,IY)  ! medium
+      principal_axes(:,3) = AXES(:,IZ)  ! max eigenvalue axis
 
 !     Calculate parameters
       ISO  = ( PVAL(IX) + PVAL(IY) + PVAL(IZ) ) / 3
@@ -157,7 +162,7 @@ C     Magnetic Resonance, 1991, vol. 3, no 4.
       IF (ABS((PVAL(IZ) - iso)) .LT. thresh) ASYM = D1
 
 c     eigenvalues are ordered from smallest to largest (in case needed)
-c     autovalores=[PVAL(IX), PVAL(IY), PVAL(IZ)]
+      eigenv = [PVAL(IX), PVAL(IY), PVAL(IZ)]
       parameters = [SPAN, SKEW, ANIS, ASYM]
 
       end 

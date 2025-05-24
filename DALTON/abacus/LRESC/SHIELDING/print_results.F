@@ -310,6 +310,8 @@ C     Non-rel contributions
 C
          CALL HEADER('Total Non-relativistic Contributions for '
      &                //NAMN(LRATOM)//' :',-1)
+
+      IF (.NOT.LRANISO) THEN
          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)') 
      &               'xx','yy','zz','iso','span','skew'
 
@@ -318,81 +320,84 @@ C
          IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
      &                     SGDNR,'iso ')
       call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ist ')
+      END IF
 
-c     off-diagonal elements
+c     Print full (non-rel) matrices
       IF (LRANISO) THEN
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR,'ani1')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR,'ani1')
-      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ani1')
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'yx','zx','zy'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR,'ani2')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR,'ani2')
-      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ani2')
+        CALL HEADER('Diamagnetic contributions (ppm):',1)
+        CALL PRINT_TENSOR(SGDNR,'tensor')
 
+        CALL HEADER('Paramagnetic contributions (ppm):',1)
+        CALL PRINT_TENSOR(SGPNR,'tensor')
+
+        CALL HEADER('Total shielding tensor (ppm):',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'tensor')
+
+        CALL HEADER('Principal values and axes:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'eigens')
+
+        CALL HEADER('Anisotropic parameters:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'aniso ')
       END IF
 C
 C     Relativistic corrections
       CALL HEADER('Total Relativistic Corrections for '
      &                //NAMN(LRATOM)//' :',-1)
-      WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
-      IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
-      IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGD0S+SGD1S,'iso ')
-      call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'iso ')
 
-c     off-diagonal elements
+      IF (.NOT.LRANISO) THEN
+        WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
+        IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                       SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
+        IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                       SGD0S+SGD1S,'iso ')
+        call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'iso ')
+      END IF
+
+c     Print full (rel corrections) matrices
       IF (LRANISO) THEN
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGP1S+SGP1T+SGP3S+SGP3T,'ani1')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGD0S+SGD1S,'ani1')
-         call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'ani1')
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'yx','zx','zy'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGP1S+SGP1T+SGP3S+SGP3T,'ani2')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGD0S+SGD1S,'ani2')
-         call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'ani2')
+        CALL HEADER('Diamagnetic corrections (ppm):',1)
+        CALL PRINT_TENSOR(SGD0S+SGD1S,'tensor')
+
+        CALL HEADER('Paramagnetic corrections (ppm):',1)
+        CALL PRINT_TENSOR(SGP1S+SGP1T+SGP3S+SGP3T,'tensor')
+
+        CALL HEADER('Total corrections shielding tensor (ppm):',1)
+        CALL PRINT_TENSOR(SLRESC,'tensor')
       END IF
 
 C
 c     Total relativistic values
       CALL HEADER('Total Relativistic Values for '
      &                //NAMN(LRATOM)//' :',-1)
-      WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
-     &                  'xx','yy','zz','iso','span','skew'
 
-      IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
-      IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR+SGD0S+SGD1S,'iso ')
-      call PRINT_LRSHIELD_TOT('Total LRESC  :',
-     &                        SGPNR+SGDNR+SLRESC,'ist ')
+      IF (.NOT.LRANISO) THEN
+        WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
+     &                    'xx','yy','zz','iso','span','skew'
 
-c     off-diagonal elements
+        IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                       SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
+        IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                       SGDNR+SGD0S+SGD1S,'iso ')
+        call PRINT_LRSHIELD_TOT('Total LRESC  :',
+     &                          SGPNR+SGDNR+SLRESC,'ist ')
+      END IF
+
+c     Print full (relativistic) matrices
       IF (LRANISO) THEN
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'xy','xz','yz'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'ani1')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR+SGD0S+SGD1S,'ani1')
-      call PRINT_LRSHIELD_TOT('Total LRESC  :',
-     &                        SGPNR+SGDNR+SLRESC,'ani1')
-         WRITE(LUPRI,'(/,35X,A,12X,A,13X,A)') 'yx','zx','zy'
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'ani2')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR+SGD0S+SGD1S,'ani2')
-      call PRINT_LRSHIELD_TOT('Total LRESC  :',
-     &                        SGPNR+SGDNR+SLRESC,'ani2')
+        CALL HEADER('Diamagnetic contributions (ppm):',1)
+        CALL PRINT_TENSOR(SGDNR+SGD0S+SGD1S,'tensor')
 
+        CALL HEADER('Paramagnetic contributions (ppm):',1)
+        CALL PRINT_TENSOR(SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'tensor')
+
+        CALL HEADER('Total shielding tensor (ppm):',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR+SLRESC,'tensor')
+
+        CALL HEADER('Principal values and axes:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR+SLRESC,'eigens')
+
+        CALL HEADER('Anisotropic parameters:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR+SLRESC,'aniso ')
       END IF
 
       WRITE(LUPRI,*) 
@@ -504,6 +509,8 @@ C     J. J. Aucar 2022
       REAL*8                    :: iso
       CHARACTER*14, intent(in)  :: phrase
       DOUBLE PRECISION :: parameters(4)
+      DOUBLE PRECISION :: principal_axes(3,3)
+      DOUBLE PRECISION :: eigenvalues(3)
 
       CALL QENTER('PRINT_LRSHIELD_TOT')
 
@@ -513,7 +520,7 @@ c     For total (NR and REL) also SPAN and SKEW are printed
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
 C     Initialize parameters
       DATA parameters / 0.d0, 0.d0, 0.d0, 0.d0 /
-      call shielddiag(tensor,3,parameters)
+      call shielddiag(tensor,3,parameters,principal_axes,eigenvalues)
       WRITE(LUPRI,'(5X,A,8X,F12.4,2X,F12.4,
      &              3X,F12.4,F12.4,F12.4,X,F12.4,X,A)')
      & phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,parameters(1),
@@ -538,5 +545,65 @@ C     Initialize parameters
       END IF
 
       CALL QEXIT('PRINT_LRSHIELD_TOT')
+      RETURN
+      END
+
+C     /* Deck print_TENSOR */
+      SUBROUTINE PRINT_TENSOR(tensor,options)
+C Purpose:
+C     Print LRESC-SHIELDING tensors and associated quantities.
+C Author:
+C     J. J. Aucar 2025
+#include "implicit.h"
+#include "dummy.h"
+#include "priunit.h"
+#include "wrkrsp.h"
+#include "lrescinf.h"
+
+      REAL*8, intent(in)  :: tensor(3,3)
+      DOUBLE PRECISION    :: parameters(4)
+      character*1         :: coordinate(3)
+      character*6         :: options
+      DOUBLE PRECISION :: principal_axis(3,3)
+      DOUBLE PRECISION :: eigenvalues(3)
+
+      CALL QENTER('PRINT_TENSOR')
+
+      coordinate(1) = 'x'
+      coordinate(2) = 'y'
+      coordinate(3) = 'z'
+
+C     Initialize parameters
+      DATA parameters / 0.d0, 0.d0, 0.d0, 0.d0 /
+      DATA eigenvalues / 0.d0, 0.d0, 0.d0 /
+
+      call shielddiag(tensor,3,parameters,principal_axis,eigenvalues)
+
+C     Print full matrix
+      IF (options == 'tensor') THEN
+         write(lupri,'(20X,A)') 'Bx            By             Bz'
+         do i = 1,3
+           WRITE(LUPRI,'(8X,A,3X,F12.4,2X,F12.4,
+     &                   3X,F12.4)')
+     &     coordinate(i),tensor(i,1),tensor(i,2),tensor(i,3)
+         end do
+         WRITE(LUPRI,'(/,8X,A,1X,F12.4/)') 'iso',
+     &        (tensor(1,1)+tensor(2,2)+tensor(3,3)) / 3.0D0
+C     Print eigenvalues and eigenstates
+      ELSE IF (options == 'eigens') THEN
+         write(lupri,'(20X,A)') 'Ax            Ay             Az'
+         do i = 1, 3
+            write(lupri,'(F12.4,F12.4,2X,F12.4,3X,F12.4)' )
+     &       eigenvalues(i),
+     &       principal_axis(i,1),principal_axis(i,2),principal_axis(i,3)
+         end do
+C     Print anisotropic parameters
+      ELSE IF (options == 'aniso ') THEN
+         write(lupri,'(20X,A)') 'span          skew'
+         write(lupri,'(12X,F12.4,2X,F12.4)' ) parameters(1),
+     &         parameters(2)
+      END IF
+
+      CALL QEXIT('PRINT_TENSOR')
       RETURN
       END
