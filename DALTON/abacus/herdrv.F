@@ -325,6 +325,7 @@ C
 C     950602-vebjorn:
 C     Added flag HRINPC to ensure that HERMIT input processing is done only once.
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
@@ -373,7 +374,6 @@ C
 #include "denfit.h"
 #include "infpar.h"
 #include "symmet.h"
-#include "lrescinf.h"
 
 C     Keywords for R12 have been added (WK/UniKA/04-11-2002).
 cLig <> added RANGMO and RPSO
@@ -4211,12 +4211,12 @@ C
       END
 C  /* Deck lrshiinp */
       SUBROUTINE LRSHIINP(WORD)
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "nuclei.h"
 #include "orgcom.h"
-#include "lrescinf.h"
       PARAMETER (NTABLE = 4)
 C
       LOGICAL SET, NEWDEF

@@ -23,11 +23,11 @@ C Purpose:
 C     Print LRESC-SHIELDING results section
 C Author:
 C     J. J. Aucar 2022
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "nuclei.h"
 
@@ -412,11 +412,11 @@ C Purpose:
 C     Print information about LRESC-SHIELDING correction
 C Author:
 C     J. J. Aucar 2022
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 
       REAL*8, intent(in)       :: tensor(3,3)
       REAL*8                   :: iso
@@ -460,11 +460,11 @@ C Purpose:
 C     Print information about sum of LRESC-SHIELDING corrections
 C Author:
 C     J. J. Aucar 2022
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 
       REAL*8, intent(in)       :: tensor(3,3)
       REAL*8                   :: iso
@@ -498,11 +498,11 @@ C Purpose:
 C     Print information about LRESC-SHIELDING overall contributions
 C Author:
 C     J. J. Aucar 2022
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 
       CHARACTER*4, intent(in)  :: elements
       REAL*8, intent(in)        :: tensor(3,3)
@@ -554,11 +554,11 @@ C Purpose:
 C     Print LRESC-SHIELDING tensors and associated quantities.
 C Author:
 C     J. J. Aucar 2025
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 
       REAL*8, intent(in)  :: tensor(3,3)
       DOUBLE PRECISION    :: parameters(4)

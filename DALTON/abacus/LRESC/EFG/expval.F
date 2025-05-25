@@ -27,6 +27,7 @@ C           Juan J. Aucar         April 2020
 C...  Note:
 C...  This subroutine was written by Juan Ignacio Melo using
 C...  the subroutine ABACTOCD  as a model (2012)
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -66,7 +67,6 @@ C
 c#include "infsop.h"
 
 C
-#include "lrescinf.h"
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"

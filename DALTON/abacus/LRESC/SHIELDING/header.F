@@ -24,12 +24,12 @@ C Purpose:
 C     Print information about LRESC-SHIELDING module              
 C Author:
 C     J. J. Aucar 2022 (moved from workplace)
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 

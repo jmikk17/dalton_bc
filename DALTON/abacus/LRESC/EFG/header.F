@@ -24,12 +24,12 @@ C Purpose:
 C     Print information about LRESC-EFG module              
 C Author:
 C     J. J. Aucar 2024 (moved from workplace)
+      USE lrescinf_module
 c#include "implicit.h"
 c#include "dummy.h"
 c#include "mxcent.h"
 #include "priunit.h"
 c#include "wrkrsp.h"
-#include "lrescinf.h"
 c#include "inforb.h"
 c#include "nuclei.h"
 

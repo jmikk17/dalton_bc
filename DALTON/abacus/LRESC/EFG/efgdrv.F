@@ -29,10 +29,10 @@ C     This routine is called by ABAINP : abacus/abadrv.F
 C Author:
 c	Juan J. Aucar, 2021
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-#include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
       PARAMETER (NTABLE = 6, D0 = 0.0D0)
@@ -118,13 +118,13 @@ C  /* Deck lrscini */
       SUBROUTINE LRSCINI_EFG
 C
 C Purpose:
-C     Initialize the variables common LRESCINI: include/lrescinf.h.
+C     Initialize the variables: lrescinf_module
 C     This routine is call by ABAINIALL : abacus/abadrv.F
 C Author:
 C     Juan J. Aucar       April 2021 (EFG)
 C
+      USE lrescinf_module
 #include "implicit.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "cbiqr.h"
 #include "abainf.h"
@@ -169,12 +169,12 @@ C     Main routine of LRESC module.
 C     This routine is call by ABACTL : abacus/abadrv.F
 C Author:
 C     Juan J. Aucar, 2021. Revisited in 2024
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 C

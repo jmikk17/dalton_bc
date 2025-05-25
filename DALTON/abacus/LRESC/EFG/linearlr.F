@@ -27,6 +27,7 @@ C...  This subroutine was written by Juan Ignacio Melo using
 C...  the abacus/abactocd.F file  as a model (2012)
 c...  which at the same time was taken from the LNRABA subroutine
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -63,7 +64,6 @@ C
 c#include "infsop.h"
 
 C
-#include "lrescinf.h"
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"

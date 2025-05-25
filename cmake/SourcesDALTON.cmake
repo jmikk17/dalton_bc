@@ -161,6 +161,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/hertst.F
     DALTON/abacus/her_lslib.F
     DALTON/abacus/huckel.F
+    DALTON/abacus/LRESC/lrescinf_module.F
     DALTON/abacus/LRESC/EFG/expval.F
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F

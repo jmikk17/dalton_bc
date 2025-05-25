@@ -96,6 +96,7 @@ C CONTINUUM key added to activate CONTINUUM basis functs of Kaufmann - Sonia 201
 c===========================================================================
 C  /* Deck reainp */
       SUBROUTINE REAINP(WORD,RELCAL)
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
@@ -112,7 +113,6 @@ C  /* Deck reainp */
 #include "numder.h"
 #include "r12int.h"
 #include "qm3.h"
-#include "lrescinf.h"
 #include "cbiher.h"
 C
       DATA TABLE /'.PRINT ', '.CONTIN', '.MAXPRI', '.BIGVEC',
@@ -1955,6 +1955,7 @@ C
 C     Read and process data about symmetry independent centers
 C
 C*****************************************************************************
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1983,7 +1984,6 @@ C     include character ASYMB(0:NSYMB)*2 with atomic symbols
 #include "pcm.h"
 #include "qm3.h"
 #include "cbiher.h"
-#include "lrescinf.h"
 
 C
       NQ = NINT(Q)

@@ -17,6 +17,7 @@
 C  /* Deck get_lr */
       SUBROUTINE GET_LR(KEY,TRIPLETE)
 
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -24,7 +25,6 @@ C  /* Deck get_lr */
 #include "inftap.h"
 #include "infrsp.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"
@@ -549,6 +549,7 @@ c            write(lupri,*)
 C  /* Deck newlrinput_all */
       SUBROUTINE LRINPUT_ALL(LRATOMS,NNLRATOMS,TRIPLETE)
 
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -556,7 +557,6 @@ C  /* Deck newlrinput_all */
 #include "inftap.h"
 #include "infrsp.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"
@@ -771,6 +771,7 @@ c     &            ' LR_addopnames:',WALHER,LUPRI)
 
 
       subroutine get_LRvalue(LRVAL,labels_in,TRIPLETE)
+      USE lrescinf_module
       logical :: file_exists, file_open, TRIPLETE
       INTEGER :: fileID
       CHARACTER*164 STRING, TMPSTRING
@@ -782,7 +783,6 @@ c     &            ' LR_addopnames:',WALHER,LUPRI)
 c
 
 #include "priunit.h"
-#include "lrescinf.h"
 #include "chrnos.h"      
 
 C Based on get_QRvalue

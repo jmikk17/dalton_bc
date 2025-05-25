@@ -31,10 +31,10 @@ C     J. I. Melo
 C  Edited:
 C     J. J. Aucar 2021 (LRESC Structure)
 C
+      USE lrescinf_module
 c#include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-#include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
       PARAMETER (NTABLE = 16, D0 = 0.0D0)
@@ -43,7 +43,6 @@ c#include "implicit.h"
       DIMENSION IPOINT(MXCENT)
 C#include "dorps.h"
 #include "spnout.h"
-c#include "lrescinf.h"
 C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
@@ -184,15 +183,15 @@ C  /* Deck lrscini_shi */
       SUBROUTINE LRSCINI_SHI
 C
 C Purpose:
-C     Initialize the variables common LRESCINI: include/lrescinf.h.
+C     Initialize the variables: lrescinf_module.
 C     This routine is call by ABAINIALL : abacus/abadrv.F
 C Author:
 C     J. I. Melo
 C Edited:
 C     J. J. Aucar. 2021
 C
+      USE lrescinf_module
 #include "implicit.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "cbiqr.h"
 #include "abainf.h"
@@ -284,6 +283,7 @@ C Author:
 C     J. I. Melo
 C Edited:
 C     J. J. Aucar 2021
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -291,7 +291,6 @@ C     J. J. Aucar 2021
 #include "inftap.h"
 #include "infrsp.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"              

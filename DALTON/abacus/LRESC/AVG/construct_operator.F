@@ -21,6 +21,7 @@ C     Purpose:
 C     Construct operators matrices as productor of at 
 C     least two known ones.
 C     Author: Juan J. Aucar         2024
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -28,7 +29,6 @@ C     Author: Juan J. Aucar         2024
 #include "inforb.h"
 #include "nuclei.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"

@@ -18,7 +18,7 @@
 
 
       subroutine create_array_oneatom(lresc)
-#include "lrescinf.h"
+      USE lrescinf_module
       real(8), intent(out) :: lresc(3,3,25)
       lresc=0.d0
 
@@ -53,9 +53,9 @@
 
 
       subroutine binary_lresc(array)
+      USE lrescinf_module
 #include "mxcent.h"
 #include "nuclei.h"
-#include "lrescinf.h"
       real(8), intent(in) :: array(NLRATOMS,3,3,25)
       character(len=*), parameter :: archivo = "lresc-array.npy"
         

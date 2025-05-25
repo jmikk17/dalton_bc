@@ -27,6 +27,7 @@ C           Juan J. Aucar         April 2020
 C...  Note:
 C...  This subroutine was written by Juan Ignacio Melo using
 C...  the subroutine ABACTOCD  as a model (2012)
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -74,7 +75,6 @@ C
 #include "gnrinf.h"
 
 C
-#include "lrescinf.h"
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"
@@ -601,10 +601,9 @@ c
 
 C  /* Deck Regenerate_integrals */
       SUBROUTINE REGENERATE_INTEGRALS(COORDENADAS)
-
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
-#include "lrescinf.h"
 #include "chrnos.h"
 #include "chrxyz.h"
 

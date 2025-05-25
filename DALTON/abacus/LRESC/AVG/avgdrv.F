@@ -24,6 +24,7 @@ C  G. Aucar, Danian, romero, homero,bart y lisa
 
 C  Revisited and modified: J. Aucar 2020/2021
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -31,7 +32,6 @@ C
 #include "inforb.h"
 #include "nuclei.h"
 #include "inftap.h"
-#include "lrescinf.h"
 #include "chrnos.h"
 
 

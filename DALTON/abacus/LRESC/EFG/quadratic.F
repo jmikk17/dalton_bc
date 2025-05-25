@@ -1,4 +1,5 @@
       SUBROUTINE QRLREFG(KEY,WORK,LWORK)
+      USE lrescinf_module
 
 #include "implicit.h"
 #include "dummy.h"
@@ -7,7 +8,6 @@
 #include "inftap.h"
 #include "infrsp.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
 #include "nuclei.h"
 #include "chrnos.h"

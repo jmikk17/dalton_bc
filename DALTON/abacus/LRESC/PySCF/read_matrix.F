@@ -21,6 +21,7 @@ C
 C  Created by: J. Aucar 2022
 C
 C Check include files              
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -28,7 +29,6 @@ C Check include files
 #include "inforb.h"
 #include "nuclei.h"
 #include "inftap.h"
-#include "lrescinf.h"
 #include "chrnos.h"
 
       CHARACTER*8 RTNLBL(2)

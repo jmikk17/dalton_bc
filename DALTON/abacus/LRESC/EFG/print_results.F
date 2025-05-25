@@ -19,6 +19,7 @@
 C
 C     /* Deck print_lrefg */
       SUBROUTINE PRINT_LREFG
+      USE lrescinf_module
 C Purpose:
 C     Print LRESC-EFG results section
 C Author:
@@ -27,7 +28,6 @@ C     J. J. Aucar 2024
 #include "dummy.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "nuclei.h"
 

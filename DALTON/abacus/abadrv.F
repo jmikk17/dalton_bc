@@ -748,6 +748,7 @@ C soppa program) contain the same triplet variables, import the necessary
 C variables from soppinf.h through the so_info module:
       use SO_INFO, only: AORPA, AOHRP, DCRPA, DCHRP, SDCHR,
      &                   AOSOP, AOSOC, AOCC2, AOTOP
+      USE lrescinf_module
 C
 #include "implicit.h"
 #include "iratdef.h"
@@ -797,7 +798,6 @@ C infpar.h : PARHER
 #include "infinp.h"
 #include "locinf.h"
 #include "infpar.h"
-#include "lrescinf.h"
 
       DATA TABDIR /'*END OF', 'xxxxxxx', '*NUCREP',
      &             '*ONEINT', '*TWOEXP', '*GETSGY',
