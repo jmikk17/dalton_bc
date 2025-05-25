@@ -159,7 +159,7 @@ add_dalton_runtest(prop_newtramcscf              "dalton;serial;runtest;mcscf;pr
 add_dalton_runtest(prop_vibg1                    "dalton;serial;runtest;mcscf;prop;short;essential")
 add_dalton_runtest(prop_vibg2                    "dalton;serial;runtest;mcscf;prop;short;essential")
 add_dalton_runtest(prop_cpp_ecd                  "dalton;runtest;prop;short")
-add_dalton_runtest(prop_lresc                    "dalton;runtest;prop;medium")
+add_dalton_runtest(prop_lresc                    "dalton;runtest;prop;medium;essential")
 add_dalton_runtest(prop_lresc_efg                "dalton;runtest;prop;short;essential")
 add_dalton_runtest(prop_nolondon_soppacc         "dalton;serial;runtest;prop;soppa;short")
 add_dalton_runtest(prop_soppa_vibavg_twobas      "dalton;serial;runtest;prop;soppa;long")

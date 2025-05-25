@@ -2,8 +2,8 @@ ATOMBASIS
 
 
 Angstrom Atomtypes=2 Generators=0
-Charge= 9.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
+Charge= 9.0 Atoms=1 Basis=dyall.cv3z
 F      0.0000000000       0.0000000000     0.0000000000
-Charge= 1.0 Atoms=1 Basis=aug-cc-pVTZ-lresc
+Charge= 1.0 Atoms=1 Basis=dyall.cv3z
 H      0.0000000000       0.0000000000     0.9169000000
 FINISH
