@@ -1,9 +1,9 @@
 ATOMBASIS
-
+Larger basis sets should be used for production calculations.
 
 Angstrom Atomtypes=2 Generators=0
-Charge= 9.0 Atoms=1 Basis=dyall.cv3z
+Charge= 9.0 Atoms=1 Basis=dyall.cv2z
 F      0.0000000000       0.0000000000     0.0000000000
-Charge= 1.0 Atoms=1 Basis=dyall.cv3z
+Charge= 1.0 Atoms=1 Basis=dyall.cv2z
 H      0.0000000000       0.0000000000     0.9169000000
 FINISH
