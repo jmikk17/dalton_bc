@@ -29,11 +29,6 @@ intel-oneapi-serial-32:
     - ldd dalton.x
     - echo "Running ctest with $N_PROC jobs"
     - ctest -j$N_PROC --output-on-failure -L "serial|essential" -LE "long|verylong" -E cc_rsp_alpha
-  artifacts:
-    when: always
-    paths:
-      - build/test/
-    expire_in: 3 days
   interruptible: true
 
 intel-oneapi-serial-64:
@@ -106,11 +101,6 @@ intel-oneapi-mpi-32:
     - export I_MPI_SHM=disable
     - echo "Running ctest with $M jobs"
     - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
-  artifacts:
-    when: always
-    paths:
-      - build/test/
-    expire_in: 3 days
   interruptible: true
 
 
