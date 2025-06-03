@@ -42,13 +42,53 @@ C     J. J. Aucar 2022
       avg = '(avg)    '
 
       CALL QENTER('PRINT_LRSHIELD')
+
+C     Non-rel contributions
+C
+!         CALL HEADER('Non relativistic contributions for '
+!     &                //NAMN(LRATOM)//' :',-1)
+
+      IF (SIGMAPNR.OR.SIGMADNR) THEN
+
+         CALL TITLER('--- Non relativistic contributions '//
+     &  'for '//NAMN(LRATOM)//' ---',' ',200)
+
+      IF (.NOT.LRANISO) THEN
+         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
+     &               'xx','yy','zz','iso','anis','asym'
+
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
+     &                     SGPNR,'iso ')
+         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
+     &                     SGDNR,'iso ')
+      call PRINT_LRSHIELD_TOT('Total non-rel:',SGPNR+SGDNR,'ist ')
+      END IF
+
+c     Print full (non-rel) matrices
+      IF (LRANISO) THEN
+        CALL HEADER('Diamagnetic and paramagnetic '//
+     &              'contributions (ppm):',1)
+        CALL PRINT_TENSORS(SGDNR,SGPNR)
+
+        CALL HEADER('Total non relativistic shielding tensor (ppm):',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'tensor')
+
+        CALL HEADER('Principal values and axes:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'eigens')
+
+        CALL HEADER('Anisotropic parameters:',1)
+        CALL PRINT_TENSOR(SGPNR+SGDNR,'aniso ')
+      END IF
+
+      END IF
+
 C     Paramagnetic 1st singlet or triplet
 C
       IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.
      &   (SIGMAP3T)) THEN
          IF (PRTALL1) THEN
-         CALL HEADER('Paramagnetic Corrections for '
-     &                //NAMN(LRATOM)//' :',-1)
+         CALL TITLER('--- Paramagnetic LRESC corrections '//
+     &  'for '//NAMN(LRATOM)//' ---',' ',200)
          END IF
 
          IF(SIGMAP1S) THEN
@@ -211,8 +251,8 @@ C
       IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
          IF (PRTALL1) THEN
             WRITE(LUPRI,*)
-            CALL HEADER(' Diamagnetic Corrections for '
-     &                //NAMN(LRATOM)//' :',-1)
+         CALL TITLER('--- Diamagnetic LRESC corrections '//
+     &  'for '//NAMN(LRATOM)//' ---',' ',200)
          END IF
          IF(SIGMAD0S) THEN
             IF(PRTALL1) THEN
@@ -306,69 +346,34 @@ C
          END IF
       ENDIF
 
-C     Non-rel contributions
-C
-         CALL HEADER('Total Non-relativistic Contributions for '
-     &                //NAMN(LRATOM)//' :',-1)
-
-      IF (.NOT.LRANISO) THEN
-         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)') 
-     &               'xx','yy','zz','iso','anis','asym'
-
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                     SGPNR,'iso ')
-         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                     SGDNR,'iso ')
-      call PRINT_LRSHIELD_TOT('Total non-rel  :',SGPNR+SGDNR,'ist ')
-      END IF
-
-c     Print full (non-rel) matrices
-      IF (LRANISO) THEN
-        CALL HEADER('Diamagnetic contributions (ppm):',1)
-        CALL PRINT_TENSOR(SGDNR,'tensor')
-
-        CALL HEADER('Paramagnetic contributions (ppm):',1)
-        CALL PRINT_TENSOR(SGPNR,'tensor')
-
-        CALL HEADER('Total shielding tensor (ppm):',1)
-        CALL PRINT_TENSOR(SGPNR+SGDNR,'tensor')
-
-        CALL HEADER('Principal values and axes:',1)
-        CALL PRINT_TENSOR(SGPNR+SGDNR,'eigens')
-
-        CALL HEADER('Anisotropic parameters:',1)
-        CALL PRINT_TENSOR(SGPNR+SGDNR,'aniso ')
-      END IF
-C
 C     Relativistic corrections
-      CALL HEADER('Total Relativistic Corrections for '
-     &                //NAMN(LRATOM)//' :',-1)
+      CALL TITLER('--- Total LRESC corrections '//
+     &  'for '//NAMN(LRATOM)//' ---',' ',200)
 
       IF (.NOT.LRANISO) THEN
         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
-     &                       SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
+     &                    SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
-     &                       SGD0S+SGD1S,'iso ')
+     &                    SGD0S+SGD1S,'iso ')
         call PRINT_LRSHIELD_TOT('Total LRESC  :',SLRESC,'iso ')
       END IF
 
 c     Print full (rel corrections) matrices
       IF (LRANISO) THEN
-        CALL HEADER('Diamagnetic corrections (ppm):',1)
-        CALL PRINT_TENSOR(SGD0S+SGD1S,'tensor')
+        CALL HEADER('Diamagnetic and paramagnetic '//
+     &              'LRESC corrections (ppm):',1)
+        CALL PRINT_TENSORS(SGD0S+SGD1S,SGP1S+SGP1T+SGP3S+SGP3T)
 
-        CALL HEADER('Paramagnetic corrections (ppm):',1)
-        CALL PRINT_TENSOR(SGP1S+SGP1T+SGP3S+SGP3T,'tensor')
 
-        CALL HEADER('Total corrections shielding tensor (ppm):',1)
+        CALL HEADER('Total LRESC shielding tensor corrections (ppm):',1)
         CALL PRINT_TENSOR(SLRESC,'tensor')
       END IF
 
 C
 c     Total relativistic values
-      CALL HEADER('Total Relativistic Values for '
-     &                //NAMN(LRATOM)//' :',-1)
+      CALL TITLER('--- Total (NR+LRESC) results '//
+     &  'for '//NAMN(LRATOM)//' ---',' ',200)
 
       IF (.NOT.LRANISO) THEN
         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
@@ -378,17 +383,16 @@ c     Total relativistic values
      &                       SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Diamagnetic  :',
      &                       SGDNR+SGD0S+SGD1S,'iso ')
-        call PRINT_LRSHIELD_TOT('Total LRESC  :',
+        call PRINT_LRSHIELD_TOT('Total        :',
      &                          SGPNR+SGDNR+SLRESC,'ist ')
       END IF
 
 c     Print full (relativistic) matrices
       IF (LRANISO) THEN
-        CALL HEADER('Diamagnetic contributions (ppm):',1)
-        CALL PRINT_TENSOR(SGDNR+SGD0S+SGD1S,'tensor')
-
-        CALL HEADER('Paramagnetic contributions (ppm):',1)
-        CALL PRINT_TENSOR(SGPNR+SGP1S+SGP1T+SGP3S+SGP3T,'tensor')
+        CALL HEADER('Diamagnetic and paramagnetic '//
+     &              'contributions (ppm):',1)
+        CALL PRINT_TENSORS(SGDNR+SGD0S+SGD1S,
+     &                     SGPNR+SGP1S+SGP1T+SGP3S+SGP3T)
 
         CALL HEADER('Total shielding tensor (ppm):',1)
         CALL PRINT_TENSOR(SGPNR+SGDNR+SLRESC,'tensor')
@@ -605,5 +609,50 @@ C     Print anisotropic parameters
       END IF
 
       CALL QEXIT('PRINT_TENSOR')
+      RETURN
+      END
+
+
+C     /* Deck print_TENSORS */
+      SUBROUTINE PRINT_TENSORS(tensordia,tensorpara)
+C Purpose:
+C     Print LRESC-SHIELDING dia and para tensors.
+C Author:
+C     J. J. Aucar 2025
+      USE lrescinf_module
+#include "implicit.h"
+#include "dummy.h"
+#include "priunit.h"
+#include "wrkrsp.h"
+
+      REAL*8, intent(in)  :: tensordia(3,3)
+      REAL*8, intent(in)  :: tensorpara(3,3)
+      REAL*8              :: isodia, isopara
+      character*1         :: coordinate(3)
+
+      CALL QENTER('PRINT_TENSORS')
+
+      coordinate(1) = 'x'
+      coordinate(2) = 'y'
+      coordinate(3) = 'z'
+
+      isodia = (tensordia(1,1)+tensordia(2,2)+tensordia(3,3)) / 3.0D0
+      isopara = (tensorpara(1,1)+tensorpara(2,2)+tensorpara(3,3)) / 3.0D0
+
+C     Print full diamagnetic and paramagnetic matrices
+      write(lupri,'(20X,A)') 'Bx            By             Bz '//
+     &            '            Bx            By             Bz'
+      do i = 1,3
+        WRITE(LUPRI,'(8X,A,3X,F12.4,2X,F12.4,
+     &                3X,F12.4,3X,F12.4,2X,F12.4,3X,F12.4)')
+     &  coordinate(i),tensordia(i,1),tensordia(i,2),tensordia(i,3),
+     &  tensorpara(i,1),tensorpara(i,2),tensorpara(i,3)
+      end do
+      write(lupri,'(/,8X,A,F12.4)')
+     &  'Diamagnetic contribution to shielding constant: ', isodia
+      write(lupri,'(8X,A,F12.4)')
+     &  'Paramagnetic contribution to shielding constant:', isopara
+
+      CALL QEXIT('PRINT_TENSORS')
       RETURN
       END

@@ -4244,6 +4244,7 @@ C     Initialize /LRSHIINP/
 C
 C
       NEWDEF = WORD .EQ. '*LR-SHI'
+      GAUCHANG = .FALSE.
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
@@ -4289,10 +4290,12 @@ c Leavint this here in case we return to calculate shielding in all atoms by def
                  WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
                  CALL QUIT('Error in reading (GAGORG(I),I=1,3) LR-SHI!')
               ENDIF
+              GAUCHANG = .TRUE.
               GO TO 100
 
     3         CONTINUE !LRCMG
               CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
+              GAUCHANG = .TRUE.
               GO TO 100
 
     4          CONTINUE !.LRGATM
@@ -4306,6 +4309,7 @@ c Leavint this here in case we return to calculate shielding in all atoms by def
               DO i=1, 3
                  GAGORG(i) = CORD(i,LRATMG)
               END DO
+              GAUCHANG = .TRUE.
                GO TO 100
 
            ELSE IF (PROMPT .EQ. '*') THEN

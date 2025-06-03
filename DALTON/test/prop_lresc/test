@@ -23,8 +23,8 @@ simple.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-simple.add(from_string = 'Total Non-relativistic Contributions for F',
-      num_lines = 26,
+simple.add(from_string = 'Non relativistic contributions for F',
+      num_lines = 27,
       abs_tolerance = 1.0e-3)
 
 
@@ -38,28 +38,24 @@ detailed.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-detailed.add(from_string = 'Paramagnetic Corrections for F',
-      num_lines = 75,
+detailed.add(from_string = 'Paramagnetic LRESC corrections for F',
+      num_lines = 70,
       abs_tolerance = 1.0e-3)
       
-detailed.add(from_string = 'Diamagnetic Corrections for F',
-      num_lines = 43,
+detailed.add(from_string = 'Diamagnetic LRESC corrections for F',
+      num_lines = 42,
       abs_tolerance = 1.0e-3)
       
-detailed.add(from_string = 'Total Non-relativistic Contributions for F',
-      num_lines = 38,
+detailed.add(from_string = 'Non relativistic contributions for F',
+      num_lines = 44,
       abs_tolerance = 1.0e-3)
 
-detailed.add(from_string = 'Total Relativistic Corrections for F',
-      num_lines = 38,
+detailed.add(from_string = 'Total LRESC corrections for F',
+      num_lines = 28,
       abs_tolerance = 1.0e-3)
 
-detailed.add(from_string = 'Total Relativistic Values for F',
-      num_lines = 38,
-      abs_tolerance = 1.0e-3)
-
-detailed.add(from_string = 'Anisotropic parameters:',
-      num_lines = 5,
+detailed.add(from_string = 'Total (NR+LRESC) results for F',
+      num_lines = 46,
       abs_tolerance = 1.0e-3)
 
 test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': simple})

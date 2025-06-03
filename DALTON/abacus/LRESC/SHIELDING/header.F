@@ -32,6 +32,7 @@ C     J. J. Aucar 2022 (moved from workplace)
 #include "wrkrsp.h"
 #include "inforb.h"
 #include "nuclei.h"
+#include "orgcom.h"
 
       CALL QENTER('LRSCDRV_SHI')
 C
@@ -63,31 +64,17 @@ c     & 'doi:10.1063/1.2244572'
       WRITE(LUPRI,'(7X,A)') 'Pure Appl.Chem. 80, 1 (2008), '//
      &                         'doi:10.1351/pac200880010059'
 
-      IF (LRESCALL) THEN
-            WRITE(lupri,'(/,4X,A)')
-     &   '-  All LRESC corrections were activated'
-         IF(EXTRAINFO) THEN
-          WRITE(lupri,'(/,4X,A)') '-  Pso-Kin (avg) and AngPso '//
-     &               '(avg) selected for total contributions'
-         IF (PYINTS) WRITE(lupri,'(/,4X,A)') '-  FC (libcint) '//
-     &            'selected for total diamagnetic contribution'
-         END IF
-
 C         Info about SOS correction
           WRITE(LUPRI,'(/,4X,A)')'-  The SOS correction is not '//
      &    'included here, and it must be for anisotropic parameters.'
 
-           WRITE(LUPRI,'(7X,A)') 'For linear molecules see :'
+           WRITE(LUPRI,'(7X,A)') 'For linear molecules see '//
+     &                           'Eqs. 23 and 30 from Ref. :'
            WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 134, 3 (2011), '//
      &                         'doi: 10.1063/1.3528717'
            WRITE(LUPRI,'(7X,A)') 'For no linear molecules see :'
            WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
      &                         'doi: 10.1063/5.0264596'
-
-      ELSE
-            WRITE(lupri,'(/,4X,A)') 
-     &   '-  Specific LRESC corrections were activated'
-      ENDIF
 
       IF (.NOT. PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A)')'For printing LRESC corrections,'//
@@ -114,17 +101,40 @@ c      IF (.not.LRATOM_changed) THEN
       END IF
 
 C ---Not Default
-      IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
+      IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.
+     & (.NOT.LRESCALL).OR.(PRTALL1).OR.(LRANISO))
      & CALL HEADER('Changes of defaults for LRESC :',3)
 
       IF (JIMPRT.NE.0) THEN
          WRITE (LUPRI,'(A,I5)')
-     &      '--- Print level : ', JIMPRT
+     &      '- (.PRINT) Print level : ', JIMPRT
       END IF
+
+      IF (GAUCHANG) THEN
+         WRITE(LUPRI,'(4X,A)') '- Gauge origin was changed from '//
+     &    'default (so that its not placed at the nucleus position)'
+      END IF
+
+
+
+      IF (LRANISO) WRITE(LUPRI,'(4X,A)')
+     &  '- (.ANISO) Off-diagonal elements and anisotropic '//
+     &  'parameters are also printed'
+
+      IF (PRTALL1) THEN
+            WRITE(lupri,'(4X,A)')
+     &   '- (.PRTALL) All LRESC corrections are printed'
+         IF(EXTRAINFO) THEN
+          WRITE(lupri,'(4X,A)') '- (.EXTRAINFO) PSOK (avg) and '//
+     &    'PSO-OZ (avg) selected for total contributions'
+         IF (PYINTS) WRITE(lupri,'(4X,A)') '- (.PYINTS) FC (libcint) '//
+     &               'selected for total diamagnetic contribution'
+         END IF
+      ENDIF
 
       IF (.NOT. LRESCALL) THEN
          WRITE (LUPRI,'(4X,A)')
-     &      '-  Not all corrections were activated. ' //
+     &      '-  Specific LRESC corrections were activated. ' //
      &      'Only the following will be done : '
          IF (SIGMADNR) WRITE (LUPRI,'(7X,A)')
      &   'Non-relativistic diamagnetic contributions'

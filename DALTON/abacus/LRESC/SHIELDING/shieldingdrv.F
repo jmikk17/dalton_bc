@@ -79,14 +79,9 @@ C
                CALL QUIT('Input keywords in LRESC Input, LRSCINP')
 C              Redefining Gauge Origin
  1             CONTINUE
-                  READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
-                  DO ICENT = 1, NUCIND
-                     WRITE (LUPRI,'(2X,A,3X," : ",3(A1,2X,A,F15.10))')
-     &                  NAMEX(3*ICENT)(1:4), '1' , 'x' , CORD(1,ICENT),
-     &                  '2' , 'y' , CORD(2,ICENT),
-     &                  '3' , 'z' , CORD(3,ICENT)
-                  ENDDO
-                  GAUCHANG =.TRUE.
+               CALL QUIT('(.GAUGEO) was deprecated.')
+C                  READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
+c                  GAUCHANG =.TRUE.
                   ICHANG = ICHANG + 1
                   GOTO 100
 C              SET PRINT LEVEL for LRESC-SHIELDING
@@ -205,7 +200,7 @@ C
       LRGAUG(2) = D0
       LRGAUG(3) = D0
 
-      GAUCHANG = .FALSE.
+C      GAUCHANG = .FALSE.
 
       SIGMAPNR = .FALSE.
       SIGMADNR = .FALSE.

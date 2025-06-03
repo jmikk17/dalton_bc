@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/juanjoaucar/Documentos/dalton-new/build/test/prop_lresc
-   2) /home/juanjoaucar/Documentos/dalton-new/build/basis
+   1) /home/juanjoaucar/Documentos/dalton_LRESC2025/build/test/prop_lresc
+   2) /home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis
 
 
 Compilation information
@@ -197,9 +197,9 @@ Compilation information
                           | el/oneapi/mkl/2023.2.0/lib/intel64/libmkl_gf_lp64.
                           | so
  Static linking           | OFF
- Last Git revision        | 852bb4c1a0eec10c1597e5588f67ac23e7000fa2
+ Last Git revision        | 1933ba0cbc6101d08a947c18aac89c1dd2b737b9
  Git branch               | lresc_withPySCF
- Configuration time       | 2025-05-25 17:16:38.459336
+ Configuration time       | 2025-06-02 21:51:41.510707
 
  * Sequential calculation.
 
@@ -228,7 +228,7 @@ Compilation information
  ----------------------------
 
 ATOMBASIS
-
+Larger basis sets should be used for production calculations.
 
 Angstrom Atomtypes=2 Generators=0
 Charge= 9.0 Atoms=1 Basis=dyall.cv2z
@@ -260,7 +260,7 @@ FINISH
 
     The two title cards from your ".mol" input:
     --------------------------------------------------------------------------------
- 1: 
+ 1: Larger basis sets should be used for production calculations.
  2: 
     --------------------------------------------------------------------------------
 
@@ -274,7 +274,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   9 :
-     "/home/juanjoaucar/Documentos/dalton-new/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis/dyall.cv2z"
 
   Atomic type no.    2
   --------------------
@@ -283,7 +283,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juanjoaucar/Documentos/dalton-new/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis/dyall.cv2z"
 
 
                          SYMGRP: Point group information
@@ -447,8 +447,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Total CPU  time used in HERMIT:   0.07 seconds
-  Total wall time used in HERMIT:   0.07 seconds
+  Total CPU  time used in HERMIT:   0.06 seconds
+  Total wall time used in HERMIT:   0.06 seconds
 
 
                         .----------------------------------.
@@ -481,11 +481,11 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
  Title lines from ".mol" input file:
-     
+     Larger basis sets should be used for production calculations.
      
 
  Print level on unit LUPRI =   2 is   0
@@ -667,10 +667,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000003570448
 
  
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
-File label for MO orbitals:  25May25   FOCKDIIS
+File label for MO orbitals:   2Jun25   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -768,7 +768,7 @@ File label for MO orbitals:  25May25   FOCKDIIS
   Total wall time used in SIRIUS :   0.03 seconds
 
  
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
 
@@ -804,7 +804,7 @@ File label for MO orbitals:  25May25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
 
@@ -814,7 +814,7 @@ File label for MO orbitals:  25May25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Sun May 25 18:18:20 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
      Host name              : Yo-Nitro                                
 
 
@@ -919,18 +919,70 @@ File label for MO orbitals:  25May25   FOCKDIIS
     -  Tensor treatment (Haeberlen notation) :
        Pure Appl.Chem. 80, 1 (2008), doi:10.1351/pac200880010059
 
-    -  All LRESC corrections were activated
-
     -  The SOS correction is not included here, and it must be for anisotropic parameters.
-       For linear molecules see :
+       For linear molecules see Eqs. 23 and 30 from Ref. :
        J. Chem. Phys. 134, 3 (2011), doi: 10.1063/1.3528717
        For no linear molecules see :
        J. Chem. Phys. 162, 19 (2025), doi: 10.1063/5.0264596
+
+
+    Changes of defaults for LRESC :
+    -------------------------------
+
+    - (.ANISO) Off-diagonal elements and anisotropic parameters are also printed
+    - (.PRTALL) All LRESC corrections are printed
   
 
 
-                       Paramagnetic Corrections for F    :
-                       -----------------------------------
+                .-------------------------------------------------.
+                | --- Non relativistic contributions for F    --- |
+                `-------------------------------------------------'
+
+
+
+  Diamagnetic and paramagnetic contributions (ppm):
+  -------------------------------------------------
+
+                    Bx            By             Bz             Bx            By             Bz
+        x       482.4203        0.0000         0.0000      -116.2230        0.0001        -0.0000
+        y         0.0000      482.4203         0.0000        -0.0001     -116.2230        -0.0000
+        z         0.0000        0.0000       482.0675         0.0000        0.0000         0.0000
+
+        Diamagnetic contribution to shielding constant:     482.3027
+        Paramagnetic contribution to shielding constant:    -77.4820
+
+
+  Total non relativistic shielding tensor (ppm):
+  ----------------------------------------------
+
+                    Bx            By             Bz
+        x       366.1974        0.0001        -0.0000
+        y        -0.0001      366.1974        -0.0000
+        z         0.0000        0.0000       482.0675
+
+        iso     404.8207
+
+
+
+  Principal values and axes:
+  --------------------------
+
+                    Ax            Ay             Az
+    366.1974      0.7068        0.7074         0.0000
+    366.1974      0.7074       -0.7068        -0.0000
+    482.0675      0.0000       -0.0000         1.0000
+
+
+  Anisotropic parameters:
+  -----------------------
+
+                    anis          asym
+                115.8702        0.0000
+
+
+                .-------------------------------------------------.
+                | --- Paramagnetic LRESC corrections for F    --- |
+                `-------------------------------------------------'
 
 
        Detailed info : [.PARA1S]
@@ -1001,8 +1053,9 @@ File label for MO orbitals:  25May25   FOCKDIIS
 
 
 
-                        Diamagnetic Corrections for F    :
-                       -----------------------------------
+                 .------------------------------------------------.
+                 | --- Diamagnetic LRESC corrections for F    --- |
+                 `------------------------------------------------'
 
 
        Detailed info : [.DIAM0S]
@@ -1044,94 +1097,26 @@ File label for MO orbitals:  25May25   FOCKDIIS
     2nd Order Singlets:              0.0000        0.0000         0.0000             [ppm]
 
 
-                 Total Non-relativistic Contributions for F    :
-                 -----------------------------------------------
+                    .------------------------------------------.
+                    | --- Total LRESC corrections for F    --- |
+                    `------------------------------------------'
 
 
 
-  Diamagnetic contributions (ppm):
-  --------------------------------
+  Diamagnetic and paramagnetic LRESC corrections (ppm):
+  -----------------------------------------------------
 
-                    Bx            By             Bz
-        x       482.4203        0.0000         0.0000
-        y         0.0000      482.4203         0.0000
-        z         0.0000        0.0000       482.0675
+                    Bx            By             Bz             Bx            By             Bz
+        x        -5.1364        0.0000         0.0000         8.5762        0.0000         0.0000
+        y        -0.0000       -5.1364         0.0000        -0.0000        8.5762         0.0000
+        z         0.0000        0.0000        -5.1286        -0.0000       -0.0000         9.4414
 
-        iso     482.3027
-
-
-
-  Paramagnetic contributions (ppm):
-  ---------------------------------
-
-                    Bx            By             Bz
-        x      -116.2230        0.0001        -0.0000
-        y        -0.0001     -116.2230        -0.0000
-        z         0.0000        0.0000         0.0000
-
-        iso     -77.4820
+        Diamagnetic contribution to shielding constant:      -5.1338
+        Paramagnetic contribution to shielding constant:      8.8646
 
 
-
-  Total shielding tensor (ppm):
-  -----------------------------
-
-                    Bx            By             Bz
-        x       366.1974        0.0001        -0.0000
-        y        -0.0001      366.1974        -0.0000
-        z         0.0000        0.0000       482.0675
-
-        iso     404.8207
-
-
-
-  Principal values and axes:
-  --------------------------
-
-                    Ax            Ay             Az
-    366.1974      0.7068        0.7074         0.0000
-    366.1974      0.7074       -0.7068        -0.0000
-    482.0675      0.0000       -0.0000         1.0000
-
-
-  Anisotropic parameters:
-  -----------------------
-
-                    anis          asym
-                115.8702        0.0000
-
-
-                    Total Relativistic Corrections for F    :
-                    -----------------------------------------
-
-
-
-  Diamagnetic corrections (ppm):
-  ------------------------------
-
-                    Bx            By             Bz
-        x        -5.1364        0.0000         0.0000
-        y        -0.0000       -5.1364         0.0000
-        z         0.0000        0.0000        -5.1286
-
-        iso      -5.1338
-
-
-
-  Paramagnetic corrections (ppm):
-  -------------------------------
-
-                    Bx            By             Bz
-        x         8.5762        0.0000         0.0000
-        y        -0.0000        8.5762         0.0000
-        z        -0.0000       -0.0000         9.4414
-
-        iso       8.8646
-
-
-
-  Total corrections shielding tensor (ppm):
-  -----------------------------------------
+  Total LRESC shielding tensor corrections (ppm):
+  -----------------------------------------------
 
                     Bx            By             Bz
         x         3.4398        0.0000         0.0000
@@ -1142,33 +1127,22 @@ File label for MO orbitals:  25May25   FOCKDIIS
 
 
 
-                       Total Relativistic Values for F    :
-                       ------------------------------------
+                   .-------------------------------------------.
+                   | --- Total (NR+LRESC) results for F    --- |
+                   `-------------------------------------------'
 
 
 
-  Diamagnetic contributions (ppm):
-  --------------------------------
+  Diamagnetic and paramagnetic contributions (ppm):
+  -------------------------------------------------
 
-                    Bx            By             Bz
-        x       477.2839        0.0000         0.0000
-        y         0.0000      477.2839         0.0000
-        z         0.0000        0.0000       476.9389
+                    Bx            By             Bz             Bx            By             Bz
+        x       477.2839        0.0000         0.0000      -107.6468        0.0001        -0.0000
+        y         0.0000      477.2839         0.0000        -0.0001     -107.6468        -0.0000
+        z         0.0000        0.0000       476.9389         0.0000        0.0000         9.4414
 
-        iso     477.1689
-
-
-
-  Paramagnetic contributions (ppm):
-  ---------------------------------
-
-                    Bx            By             Bz
-        x      -107.6468        0.0001        -0.0000
-        y        -0.0001     -107.6468        -0.0000
-        z         0.0000        0.0000         9.4414
-
-        iso     -68.6174
-
+        Diamagnetic contribution to shielding constant:     477.1689
+        Paramagnetic contribution to shielding constant:    -68.6174
 
 
   Total shielding tensor (ppm):
@@ -1207,20 +1181,20 @@ File label for MO orbitals:  25May25   FOCKDIIS
  TOTAL      00:00:01     100 %
 
 
-  Total CPU  time used in ABACUS:   1.20 seconds
-  Total wall time used in ABACUS:   1.20 seconds
+  Total CPU  time used in ABACUS:   1.24 seconds
+  Total wall time used in ABACUS:   1.24 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   1.31 seconds
-  Total wall time used in DALTON:   1.31 seconds
+  Total CPU  time used in DALTON:   1.34 seconds
+  Total wall time used in DALTON:   1.34 seconds
 
  NOTE:   55 informational messages have been issued.
  Check output, result, and error files for "INFO".
 
  
-     Date and time (Linux)  : Sun May 25 18:18:21 2025
+     Date and time (Linux)  : Mon Jun  2 22:06:47 2025
      Host name              : Yo-Nitro                                
