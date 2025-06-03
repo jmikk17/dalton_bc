@@ -82,10 +82,10 @@ c     Print full (non-rel) matrices
 
       END IF
 
-C     Paramagnetic 1st singlet or triplet
+C     Paramagnetic 1st and 2nd singlets and triplets
 C
-      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP3S).OR.
-     &   (SIGMAP3T)) THEN
+      IF ((SIGMAP1S).OR.(SIGMAP1T).OR.(SIGMAP2S).OR.
+     &   (SIGMAP2T)) THEN
          IF (PRTALL1) THEN
          CALL TITLER('--- Paramagnetic LRESC corrections '//
      &  'for '//NAMN(LRATOM)//' ---',' ',200)
@@ -170,7 +170,7 @@ C
             ENDIF
          ENDIF
 
-         IF (SIGMAP3S) THEN
+         IF (SIGMAP2S) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3S]'
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
@@ -190,7 +190,7 @@ C
             ENDIF
          ENDIF
 
-         IF (SIGMAP3T) THEN
+         IF (SIGMAP2T) THEN
             IF(PRTALL1) THEN
                WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3T]'
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
@@ -213,40 +213,40 @@ C
          IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
-         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                      SGP1S,'iso ')
-         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
+         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('1st Order Triplets:  ',
      &                      SGP1T,'iso ')
-         IF (SIGMAP3S) call PRINT_LRSHIELD_SUM('3nd Order Singlets:  ',
+         IF (SIGMAP2S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP3S,'iso ')
-         IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
+         IF (SIGMAP2T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
      &                      SGP3T,'iso ')
          IF (LRANISO) THEN
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
-         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                      SGP1S,'ani1')
-         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
+         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('1st Order Triplets:  ',
      &                      SGP1T,'ani1')
-         IF (SIGMAP3S) call PRINT_LRSHIELD_SUM('3nd Order Singlets:  ',
+         IF (SIGMAP2S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP3S,'ani1')
-         IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
+         IF (SIGMAP2T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
      &                      SGP3T,'ani1')
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'yx','zx','zy'
-         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                      SGP1S,'ani2')
-         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
+         IF (SIGMAP1T) call PRINT_LRSHIELD_SUM('1st Order Triplets:  ',
      &                      SGP1T,'ani2')
-         IF (SIGMAP3S) call PRINT_LRSHIELD_SUM('3nd Order Singlets:  ',
+         IF (SIGMAP2S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
      &                      SGP3S,'ani2')
-         IF (SIGMAP3T) call PRINT_LRSHIELD_SUM('3nd Order Triplets:  ',
+         IF (SIGMAP2T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
      &                      SGP3T,'ani2')
          END IF
          END IF
       ENDIF
 C
-C     diamagnetic 0th or 1st order singlet
+C     diamagnetic 0th and 1st order singlets
 C
       IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
          IF (PRTALL1) THEN
@@ -325,22 +325,22 @@ C
          IF (PRTALL1) THEN
          WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
      &    slash,'xx','yy','zz','iso'
-         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
+         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('0th Order Singlets:  ',
      &                                         SGD0S,'iso ')
-         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD1S,'iso ')
          IF (LRANISO) THEN
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
-         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
+         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('0th Order Singlets:  ',
      &                                         SGD0S,'ani1')
-         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD1S,'ani1')
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'yx','zx','zy'
-         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
+         IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('0th Order Singlets:  ',
      &                                         SGD0S,'ani2')
-         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('2nd Order Singlets:  ',
+         IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD1S,'ani2')
          END IF
          END IF

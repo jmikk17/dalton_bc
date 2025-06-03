@@ -118,12 +118,12 @@ c                 Free option
                   ICHANG = ICHANG + 1
                   GOTO 100
  8             CONTINUE
-                  SIGMAP3S = .TRUE.
+                  SIGMAP2S = .TRUE.
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
  9             CONTINUE
-                  SIGMAP3T = .TRUE.
+                  SIGMAP2T = .TRUE.
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
@@ -208,8 +208,8 @@ C      GAUCHANG = .FALSE.
       SIGMAP1T = .FALSE.
       SIGMAD1S = .FALSE.
       SIGMAD0S = .FALSE.
-      SIGMAP3S = .FALSE.
-      SIGMAP3T = .FALSE.
+      SIGMAP2S = .FALSE.
+      SIGMAP2T = .FALSE.
 
       LRESCALL = .TRUE.
 
@@ -311,8 +311,8 @@ C ----------------------------
          SIGMAD1S = .TRUE.
          SIGMAP1S = .TRUE.
          SIGMAP1T = .TRUE.
-         SIGMAP3S = .TRUE.
-         SIGMAP3T = .TRUE.
+         SIGMAP2S = .TRUE.
+         SIGMAP2T = .TRUE.
       ENDIF
 
 C     Print information about LRESC metodology
@@ -536,7 +536,7 @@ c     Paramagnetic corrections to Shielding:
 c     Third Order
 
 c     Singlets
-      IF (SIGMAP3S) THEN
+      IF (SIGMAP2S) THEN
          IF (JIMPRT.GE.1) THEN
          WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
      &                     ' are under calculation'
@@ -546,7 +546,7 @@ c     Singlets
       END IF
 
 c     Triplets
-      IF (SIGMAP3T) THEN
+      IF (SIGMAP2T) THEN
          IF (JIMPRT.GE.1) THEN
          WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
      &                     ' are under calculation'
@@ -564,7 +564,7 @@ c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da ce
 c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
 
 C     Check for Warnings
-      if ( (sigmap3s).or.(sigmap3t) ) then
+      if ( (SIGMAP2S).or.(SIGMAP2T) ) then
          open(unit=6232, file=trim('LRESC-QR'), status='old')
          call SearchWord(6232, 'WARNING', warning_found)
          if (warning_found) WARNQR = .true.
@@ -667,7 +667,7 @@ C     Export results to binary file
 
 c     SIRIFC has to remain open after all
       IF (SIGMAD1S.OR.SIGMAPNR.OR.SIGMAP1S.OR.SIGMAP1T) THEN
-      IF ((.NOT.SIGMAP3S).OR.(.NOT. SIGMAP3T)) THEN
+      IF ((.NOT.SIGMAP2S).OR.(.NOT. SIGMAP2T)) THEN
          CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
      &                     .FALSE.)
       END IF

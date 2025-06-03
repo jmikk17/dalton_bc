@@ -141,17 +141,17 @@ C ---Not Default
          IF (SIGMAPNR) WRITE (LUPRI,'(7X,A)')
      &   'Non-relativistic paramagnetic contributions'
          IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
-     &   'Diamagnetic zero order singlet corrections'
+     &   'Diamagnetic zeroth order singlet corrections'
          IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
      &   'Diamagnetic first order singlet corrections'
          IF (SIGMAP1S)  WRITE (LUPRI,'(7X,A)')
      &   'Paramagnetic first order singlet corrections'
          IF (SIGMAP1T) WRITE (LUPRI,'(7X,A)')
      &   'Paramagnetic first order triplet corrections'
-         IF (SIGMAP3S) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic third order singlet corrections'
-         IF (SIGMAP3T) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic third order triplet corrections'
+         IF (SIGMAP2S) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic second order singlet corrections'
+         IF (SIGMAP2T) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic second order triplet corrections'
       ENDIF
       WRITE(LUPRI,*)' '
 

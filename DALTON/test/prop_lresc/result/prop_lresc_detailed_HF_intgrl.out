@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/juanjoaucar/Documentos/dalton_LRESC2025/build/test/prop_lresc
-   2) /home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis
+   1) /home/juanjoaucar/Documentos/dalton-MINE/build/test/prop_lresc
+   2) /home/juanjoaucar/Documentos/dalton-MINE/build/basis
 
 
 Compilation information
@@ -197,9 +197,9 @@ Compilation information
                           | el/oneapi/mkl/2023.2.0/lib/intel64/libmkl_gf_lp64.
                           | so
  Static linking           | OFF
- Last Git revision        | 1933ba0cbc6101d08a947c18aac89c1dd2b737b9
+ Last Git revision        | e6429e1d76570a3dfda223769859c719d1017695
  Git branch               | lresc_withPySCF
- Configuration time       | 2025-06-02 21:51:41.510707
+ Configuration time       | 2025-06-03 12:29:31.972361
 
  * Sequential calculation.
 
@@ -274,7 +274,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   9 :
-     "/home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton-MINE/build/basis/dyall.cv2z"
 
   Atomic type no.    2
   --------------------
@@ -283,7 +283,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juanjoaucar/Documentos/dalton_LRESC2025/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton-MINE/build/basis/dyall.cv2z"
 
 
                          SYMGRP: Point group information
@@ -447,8 +447,8 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Total CPU  time used in HERMIT:   0.06 seconds
-  Total wall time used in HERMIT:   0.06 seconds
+  Total CPU  time used in HERMIT:   0.07 seconds
+  Total wall time used in HERMIT:   0.07 seconds
 
 
                         .----------------------------------.
@@ -481,7 +481,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
  Title lines from ".mol" input file:
@@ -648,7 +648,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.027       0.027
+ CPU and wall time for SCF :       0.032       0.032
 
 
                        .-----------------------------------.
@@ -667,10 +667,10 @@ Calculating AOSUPINT
 @    Final gradient norm:           0.000003570448
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
-File label for MO orbitals:   2Jun25   FOCKDIIS
+File label for MO orbitals:   3Jun25   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -764,11 +764,11 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
   39 H   :1s     0.3062
   42 H   :2pz    2.5867
 
-  Total CPU  time used in SIRIUS :   0.03 seconds
-  Total wall time used in SIRIUS :   0.03 seconds
+  Total CPU  time used in SIRIUS :   0.04 seconds
+  Total wall time used in SIRIUS :   0.04 seconds
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
 
@@ -804,7 +804,7 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
 
@@ -814,7 +814,7 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:46 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
      Host name              : Yo-Nitro                                
 
 
@@ -1036,20 +1036,20 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
          SO(Sd)               :     -0.0000       -0.0000        -0.0000             [ppm]
 
        ---------------                 xx            yy             zz          iso
-    2nd Order Singlets:              0.5106        0.5106         0.2771      0.4327 [ppm]
-    2nd Order Triplets:              8.4045        8.4045         8.3843      8.3977 [ppm]
-    3nd Order Singlets:             -0.9512       -0.9512        -0.0000     -0.6341 [ppm]
-    3nd Order Triplets:              0.6124        0.6124         0.7799      0.6682 [ppm]
+    1st Order Singlets:              0.5106        0.5106         0.2771      0.4327 [ppm]
+    1st Order Triplets:              8.4045        8.4045         8.3843      8.3977 [ppm]
+    2nd Order Singlets:             -0.9512       -0.9512        -0.0000     -0.6341 [ppm]
+    2nd Order Triplets:              0.6124        0.6124         0.7799      0.6682 [ppm]
        ---------------                 xy            xz             yz
-    2nd Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
-    2nd Order Triplets:             -0.0000        0.0000         0.0000             [ppm]
-    3nd Order Singlets:              0.0000       -0.0000        -0.0000             [ppm]
-    3nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
-       ---------------                 yx            zx             zy
+    1st Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
+    1st Order Triplets:             -0.0000        0.0000         0.0000             [ppm]
     2nd Order Singlets:              0.0000       -0.0000        -0.0000             [ppm]
-    2nd Order Triplets:              0.0000        0.0000         0.0000             [ppm]
-    3nd Order Singlets:             -0.0000       -0.0000        -0.0000             [ppm]
-    3nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
+    2nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
+       ---------------                 yx            zx             zy
+    1st Order Singlets:              0.0000       -0.0000        -0.0000             [ppm]
+    1st Order Triplets:              0.0000        0.0000         0.0000             [ppm]
+    2nd Order Singlets:             -0.0000       -0.0000        -0.0000             [ppm]
+    2nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
 
 
 
@@ -1087,14 +1087,14 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
          Dw/d                 :      0.0000        0.0000         0.0000             [ppm]
 
        ---------------                 xx            yy             zz          iso
-    1st Order Singlets:             -6.5186       -6.5186        -6.5212     -6.5194 [ppm]
-    2nd Order Singlets:              1.3822        1.3822         1.3925      1.3856 [ppm]
+    0th Order Singlets:             -6.5186       -6.5186        -6.5212     -6.5194 [ppm]
+    1st Order Singlets:              1.3822        1.3822         1.3925      1.3856 [ppm]
        ---------------                 xy            xz             yz
+    0th Order Singlets:              0.0000        0.0000         0.0000             [ppm]
     1st Order Singlets:              0.0000        0.0000         0.0000             [ppm]
-    2nd Order Singlets:              0.0000        0.0000         0.0000             [ppm]
        ---------------                 yx            zx             zy
-    1st Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
-    2nd Order Singlets:              0.0000        0.0000         0.0000             [ppm]
+    0th Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
+    1st Order Singlets:              0.0000        0.0000         0.0000             [ppm]
 
 
                     .------------------------------------------.
@@ -1178,23 +1178,23 @@ File label for MO orbitals:   2Jun25   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:01     100 %
+ TOTAL      00:00:02     100 %
 
 
-  Total CPU  time used in ABACUS:   1.24 seconds
-  Total wall time used in ABACUS:   1.24 seconds
+  Total CPU  time used in ABACUS:   1.51 seconds
+  Total wall time used in ABACUS:   1.51 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   1.34 seconds
-  Total wall time used in DALTON:   1.34 seconds
+  Total CPU  time used in DALTON:   1.62 seconds
+  Total wall time used in DALTON:   1.62 seconds
 
  NOTE:   55 informational messages have been issued.
  Check output, result, and error files for "INFO".
 
  
-     Date and time (Linux)  : Mon Jun  2 22:06:47 2025
+     Date and time (Linux)  : Tue Jun  3 12:30:30 2025
      Host name              : Yo-Nitro                                
