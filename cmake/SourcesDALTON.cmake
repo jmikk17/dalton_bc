@@ -169,7 +169,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/EFG/quadratic.F
     DALTON/abacus/LRESC/EFG/print_results.F
     DALTON/abacus/LRESC/SHIELDING/expval.F
-    DALTON/abacus/LRESC/SHIELDING/angkin.F
+    #DALTON/abacus/LRESC/SHIELDING/angkin.F
     DALTON/abacus/LRESC/SHIELDING/linearlr.F
     DALTON/abacus/LRESC/SHIELDING/quadratic.F
     DALTON/abacus/LRESC/SHIELDING/shieldingdrv.F
