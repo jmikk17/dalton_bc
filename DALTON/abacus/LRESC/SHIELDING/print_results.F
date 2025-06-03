@@ -636,8 +636,8 @@ C     J. J. Aucar 2025
       coordinate(2) = 'y'
       coordinate(3) = 'z'
 
-      isodia = (tensordia(1,1)+tensordia(2,2)+tensordia(3,3)) / 3.0D0
-      isopara = (tensorpara(1,1)+tensorpara(2,2)+tensorpara(3,3)) / 3.0D0
+      isodia=(tensordia(1,1)+tensordia(2,2)+tensordia(3,3))/3.0D0
+      isopara=(tensorpara(1,1)+tensorpara(2,2)+tensorpara(3,3))/3.0D0
 
 C     Print full diamagnetic and paramagnetic matrices
       write(lupri,'(20X,A)') 'Bx            By             Bz '//
