@@ -640,7 +640,7 @@ C
   119    CONTINUE
             READ (LUCMD,*) NPQUAD
             GO TO 100
-  120    CONTINUE
+  120    CONTINUE ! .SELECT
             READ (LUCMD, *) NPATOM
             IF (NPATOM .GT. MXCENT) THEN
                WRITE (LUPRI,'(//2A/A,I8/A,I6)')
@@ -803,11 +803,11 @@ C
             S1MAGR = .TRUE.
             ONEPRP = .TRUE.
             GOTO 100
-  155    CONTINUE
+  155    CONTINUE ! .NUCPOT
             NUCPOT = .TRUE.
             ONEPRP = .TRUE.
             GOTO 100
-  156    CONTINUE
+  156    CONTINUE ! .NPOTST
             NUCPOT = .TRUE.
             HAMILT = .TRUE.
             NPOTST = .TRUE.
@@ -1571,7 +1571,7 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
          IF (NSTTST) WRITE (LUPRI,'(10X,A)')
      &     '- Test of nuclear shielding tensor integrals'
          IF (EFGCAR) WRITE (LUPRI,'(10X,A)')
-     &            '- Cartesien electric field gradient integrals'
+     &            '- Cartesian electric field gradient integrals'
          IF (EFGSPH) WRITE (LUPRI,'(10X,A)')
      &            '- Spherical electric field gradient integrals'
          IF (S1MAGL) WRITE (LUPRI,'(10X,A)')
@@ -1589,9 +1589,9 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
          IF (HDOBRT) WRITE (LUPRI,'(10X,A)')
      &        '- Test of ket-diff. hdo-integrals with respect to B'
          IF (SQHDOL) WRITE (LUPRI,'(10X,A)')
-     &      '- Bra differentiated half-derivative overlap matrix'
+     &        '- Bra differentiated half-derivative overlap matrix'
          IF (SQHDOR) WRITE (LUPRI,'(10X,A)')
-     &      '- Ket differentiated half-derivative overlap matrix'
+     &        '- Ket differentiated half-derivative overlap matrix'
          IF (SQHD2O) WRITE (LUPRI,'(10X,A)')
      &      '- Ket second differentiated half-derivative overlap matrix'
          IF (NUCPOT) WRITE (LUPRI,'(10X,A)')

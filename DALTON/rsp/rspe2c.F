@@ -1224,8 +1224,8 @@ C
   51     CONTINUE
          IF (JZDIM .LT. KZDIM) THEN
             WRITE (LUPRI,'(/A/A,I5,A,I5/A)')
-     *      ' --- Restart in LRST ---',
-     *      ' Half-dimnsion of reduced space reduced from',KZDIM,
+     *      ' --- INFO: Restart in LRST ---',
+     *      ' Half-dimension of reduced space reduced from',KZDIM,
      *      ' to',JZDIM,
      *      ' because that was the number of sigma vectors on LURSP5'
          END IF
