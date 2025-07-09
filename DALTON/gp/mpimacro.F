@@ -31,6 +31,7 @@ C
 C  /* Deck mpixinit */
       SUBROUTINE MPIXINIT
 C
+#include "mpi_mod.h"
       implicit none
 #include "priunit.h"
 #include "maxorb.h"
@@ -43,7 +44,7 @@ C
       MASTER = 0
       NODTOT = 0
 #else
-      INCLUDE 'mpif.h'
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, value_mpi
 C
 #ifndef VAR_CHEMSHELL
@@ -87,8 +88,9 @@ C  /* Deck mpifinalize */
 C
 #ifndef VAR_CHEMSHELL
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       implicit none
-      INCLUDE 'mpif.h'
+#include "mpi_header.h"
 C
       integer(kind=MPI_INTEGER_KIND) ierr_mpi
       CALL MPI_FINALIZE(ierr_mpi)
@@ -102,11 +104,12 @@ C  /* Deck mpixbcast */
       SUBROUTINE MPIXBCAST(BUFFER,BUF_COUNT,TYPE_in,ROOT)
 C
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
       CHARACTER*6 TYPE_in
       INTEGER BUF_COUNT,  ROOT
       INTEGER BUFFER(*) ! does not matter if wrong type here
@@ -142,11 +145,12 @@ C  /* Deck mpixrecv */
       SUBROUTINE MPIXRECV(BUFFER,BUF_COUNT,TYPE_in,SOURCE,TAG)
 C
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
       CHARACTER*6 TYPE_in
       INTEGER BUF_COUNT, SOURCE, TAG
       REAL*8  BUFFER(*)
@@ -194,11 +198,12 @@ C  /* Deck mpixsend */
       SUBROUTINE MPIXSEND(BUFFER,BUF_COUNT,TYPE_in,DEST,TAG)
 C
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       integer none
+#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
       CHARACTER*6 TYPE_in
       INTEGER BUF_COUNT, DEST, TAG
       REAL*8  BUFFER(*)
@@ -236,14 +241,15 @@ C
       SUBROUTINE MPIX_ISEND(BUFFER,BUF_COUNT,BUF_TYPE,DEST,REQUEST,TAG)
 C
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
       INTEGER     BUFFER(*) ! does not matter if wrong type here
       INTEGER     BUF_COUNT, DEST, REQUEST, TAG
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
       INTEGER(kind=MPI_INTEGER_KIND) :: buf_count_MPI
       INTEGER(kind=MPI_INTEGER_KIND) :: dest_MPI, request_MPI, tag_MPI
       INTEGER(kind=MPI_INTEGER_KIND) :: DATATYPE, ierr_mpi
@@ -280,14 +286,15 @@ C
      &                      SOURCE,REQUEST,TAG)
 C
 #if defined (VAR_MPI)
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
       INTEGER     BUFFER(*) ! does not matter if wrong type here
       INTEGER     BUF_COUNT, SOURCE, REQUEST, TAG
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
       INTEGER(kind=MPI_INTEGER_KIND) :: buf_count_MPI
       INTEGER(kind=MPI_INTEGER_KIND) :: source_MPI, request_MPI, tag_MPI
       INTEGER(kind=MPI_INTEGER_KIND) :: DATATYPE, ierr_mpi
@@ -323,10 +330,11 @@ C
       subroutine mpixprocname(process_name,process_name_length)
 C
 #ifdef VAR_MPI
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
       character*(*) process_name
       integer       process_name_length
-      include 'mpif.h'
       integer(kind=MPI_INTEGER_KIND) name_length_mpi, ierr_mpi
 C
       call mpi_get_processor_name(process_name,name_length_mpi,ierr_mpi)
@@ -339,9 +347,10 @@ C  /* Deck mpi_myfail */
       SUBROUTINE MPI_MYFAIL(IERR)
 ! only called from other routines in mpimacro.F
 C
+#include "mpi_mod.h"
       implicit none
+#include "mpi_header.h"
 #include "priunit.h"
-      INCLUDE 'mpif.h'
 
       integer(kind=MPI_INTEGER_KIND) ierr,ierrcl,ierr2
       CHARACTER ERRBUF*40

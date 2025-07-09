@@ -24,7 +24,7 @@ C  CBN+JK, Nov. 05
 C
 C  Purpose:  Calculate SCF/DFT E^2 contribution from a surrounding
 C            polarizable MM medium to an orbital trial vector.
-C  
+C
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -61,7 +61,7 @@ C
       PARAMETER ( D0=0.0D0, D1=1.0D0 )
 
       LOGICAL FILE_EXIST
-c      LOGICAL FIRST 
+c      LOGICAL FIRST
 c      SAVE    FIRST
 c      DATA    FIRST /.TRUE./
 
@@ -84,7 +84,7 @@ C         1) The MM_TO_PCM file
             CALL GPOPEN(LFILE,'MYFPCM','OLD',' ','FORMATTED',IDUMMY,
      &                  .FALSE.)
             CALL GPCLOSE(LFILE,'DELETE')
-          ENDIF 
+          ENDIF
 C         2) do the same for the PCM_TO_MM file
           INQUIRE(FILE='QFQM3',EXIST=FILE_EXIST)
           IF (FILE_EXIST) THEN
@@ -107,7 +107,7 @@ C         3)  and to the file holding the electronic transformed moments (MM)
             CALL GPOPEN(MFILE,'QM3TMR','NEW',' ','FORMATTED',IDUMMY,
      &                  .FALSE.)
           ENDIF
-        ELSE 
+        ELSE
 C         open the file for PCM_TO_MM data
           KFILE = -1
           CALL GPOPEN(KFILE,'QFQM3','OLD',' ','FORMATTED',IDUMMY,
@@ -153,11 +153,11 @@ C         open the file for PCM_TO_MM data
         KYPCM   = KXPCM   + NTS*NOSIM
         KZPCM   = KYPCM   + NTS*NOSIM
         KQEX    = KZPCM   + NTS*NOSIM
-        KXEDIP  = KQEX    + NTS*NOSIM 
+        KXEDIP  = KQEX    + NTS*NOSIM
         KYEDIP  = KXEDIP  + NCOMS*NOSIM
         KZEDIP  = KYEDIP  + NCOMS*NOSIM
         KWRK    = KZEDIP  + NCOMS*NOSIM
-        LWRK1   = LWRK    - KWRK 
+        LWRK1   = LWRK    - KWRK
       ELSE
         KWRK    = KUTRX   + N2ORBX
         LWRK1   = LWRK    - KWRK
@@ -203,7 +203,7 @@ C         open the file for PCM_TO_MM data
      *               1,1,LUPRI)
       END IF
       IF (MMPCM .AND. (.NOT.FIRST1)) THEN
-C        Read in the PCM coordinates and charges.  
+C        Read in the PCM coordinates and charges.
          READ(KFILE,*) NOSIMPCM, NTSPCM
          IF (NOSIMPCM.NE.NOSIM) THEN
             CALL QUIT('Error in no. of sim. response vectors in mm/pcm')
@@ -214,7 +214,7 @@ C        Read in the PCM coordinates and charges.
          KL = 0
          DO 150 IOSIM = 1,NOSIM
             DO 151 L = 1,NTS
-               READ(KFILE,'(4(E25.15,2x))') 
+               READ(KFILE,'(4(E25.15,2x))')
      &              WRK(KXPCM+KL*NTS+L-1),
      &              WRK(KYPCM+KL*NTS+L-1),
      &              WRK(KZPCM+KL*NTS+L-1),
@@ -222,7 +222,7 @@ C        Read in the PCM coordinates and charges.
  151        CONTINUE
             KL=KL+1
  150     CONTINUE
-C     Do the same for the electronic components of the transformed MM induced moments   
+C     Do the same for the electronic components of the transformed MM induced moments
          KL = 0
          DO 148 IOSIM = 1,NOSIM
             DO 149 L = 1,NCOMS
@@ -245,10 +245,10 @@ C     Do the same for the electronic components of the transformed MM induced mo
       END IF
 
 C--------------------------------------------------------
-C 1. Construct one-index transformed T^g. 
+C 1. Construct one-index transformed T^g.
 C    First read qm/mm mo fock matrix from interface file.
-C    This includes N_s contribution if OLDTG = .TRUE.. 
-C    If OLDTG = .FALSE. N_s is included in one-electron 
+C    This includes N_s contribution if OLDTG = .TRUE..
+C    If OLDTG = .FALSE. N_s is included in one-electron
 C    part of vacuum Hamiltonian
 C--------------------------------------------------------
 
@@ -263,7 +263,7 @@ C--------------------------------------------------------
      &               IDUMMY,.FALSE.)
          LOPEN = .TRUE.
       END IF
-     
+
       REWIND(LUSIFC)
 
       MMORBT = MAX(4,NNORBT)
@@ -396,10 +396,10 @@ C x-component
                               FACx = FAC*SLVQLM(UDV,WRK(KURXAC),
      &                                      WRK(KUTRX),TAC)
                            ENDIF
-                           IF (MMPCM) THEN 
+                           IF (MMPCM) THEN
                              WRK(KXEDIP+(IOSIM-1)*NCOMS+LM-1) = FACx
                            ENDIF
-                        ELSE 
+                        ELSE
                            FACx = WRK(KXEDIP+(IOSIM-1)*NCOMS+LM-1)
                         ENDIF
                         IF ( (MMPCM) .AND. (.NOT.FIRST1) ) THEN
@@ -414,7 +414,7 @@ C x-component
      &                             + (CORD(3,IATNOW)-ZPCMNOW)**2
                               DIST1 = SQRT(DIST2)
                               DISTM3 = 1.0/(DIST1**3)
-                              TEMP = TEMP 
+                              TEMP = TEMP
      &                        + QPCMNOW*(CORD(1,IATNOW)-XPCMNOW)*DISTM3
  523                       CONTINUE
                            FACx = FACx + FAC*TEMP
@@ -431,7 +431,7 @@ C x-component
                            WRK(KYCOOR+LM-1) = CORD(2,IATNOW)
                            WRK(KZCOOR+LM-1) = CORD(3,IATNOW)
                            WRK(KXDIP+LM-1)  = -FACx
-                        ENDIF 
+                        ENDIF
                      ELSE
                         CALL READT(LUCCEF,NNBASX,WRK(KRRAOx))
                         CALL UTHU(WRK(KRRAOx),WRK(KTRMO),WRK(KUCMO),
@@ -467,7 +467,7 @@ C y-component
                         CALL UTHU(WRK(KRRAOx),WRK(KTRMO),WRK(KUCMO),
      &                            WRK(KWRK),NBAST,NORBT)
                      ENDIF
-                     CALL DSPTSI(NORBT,WRK(KTRMO),WRK(KUTR)) 
+                     CALL DSPTSI(NORBT,WRK(KTRMO),WRK(KUTR))
                      IF (FIRST1) THEN
                         CALL ONEXH1(WRK(JUBO),WRK(KUTR),WRK(KUTRX))
                         IF (NASHT .GT. 0) CALL GETACQ(WRK(KUTRX),
@@ -497,10 +497,10 @@ C y-component
      &                          + (CORD(3,IATNOW)-ZPCMNOW)**2
                            DIST1 = SQRT(DIST2)
                            DISTM3 = 1.0/(DIST1**3)
-                           TEMP = TEMP 
+                           TEMP = TEMP
      &                      + QPCMNOW*(CORD(2,IATNOW)-YPCMNOW)*DISTM3
  524                    CONTINUE
-                        FACy = FACy + FAC*TEMP      
+                        FACy = FACy + FAC*TEMP
                      ENDIF
                      IF (TRPLET) THEN
                         CALL DAXPY(N2ORBX,FACy,WRK(KUTR),1,
@@ -517,7 +517,7 @@ C z-component
                      CALL DZERO(WRK(KUTR),N2ORBX)
                      CALL DZERO(WRK(KUTRX),N2ORBX)
                      CALL DZERO(WRK(KURXAC),N2ASHX)
-                     
+
                      IF (INTDIR) THEN
                         CALL UTHU(WRK(KMAT+2*NNBASX),WRK(KTRMO),
      &                         WRK(KUCMO),WRK(KLAST),NBAST,NORBT)
@@ -543,7 +543,7 @@ C z-component
                         ENDIF
                      ELSE
                         FACz = WRK(KZEDIP+(IOSIM-1)*NCOMS+LM-1)
-                     ENDIF 
+                     ENDIF
                      IF ( (MMPCM) .AND. (.NOT.FIRST1) ) THEN
                         TEMP = 0.0D0
                         DO 525 IPCM = 1, NTS
@@ -576,7 +576,7 @@ C z-component
 C
          IF (.NOT. INTDIR) CALL GPCLOSE(LUCCEF,'KEEP')
 
- 300     CONTINUE 
+ 300     CONTINUE
          IF (MMPCM) THEN
             DO 820 L = 1,NCOMS
                WRITE(LFILE,'(6(E25.15,2x))') WRK(KXCOOR+L-1),
@@ -614,20 +614,20 @@ C
       IF (MMPCM) THEN
          DIPDOT = 0.0D0
          DO 821 L = 1,NCOMS
-            DIPDOT = DIPDOT + 
+            DIPDOT = DIPDOT +
      &             WRK(KXDIP+L-1)*WRK(KXDIP+L-1) +
      &             WRK(KYDIP+L-1)*WRK(KYDIP+L-1) +
-     &             WRK(KZDIP+L-1)*WRK(KZDIP+L-1)         
+     &             WRK(KZDIP+L-1)*WRK(KZDIP+L-1)
  821     CONTINUE
 
-         IF (ABS((DIPDOT - DMMSAVE)) .LT. THRSMP) THEN 
+         IF (ABS((DIPDOT - DMMSAVE)) .LT. THRSMP) THEN
             LADDMM = .TRUE.
          ELSE
             LADDMM = .FALSE.
             DMMSAVE = DIPDOT
          ENDIF
       ENDIF
- 
+
 C--------------------------------------------
 C 3.  Add effective operators to response
 C--------------------------------------------
@@ -659,13 +659,13 @@ c         FIRST = .FALSE.
 c      END IF
       CALL QEXIT('QM3LNO')
       RETURN
-      END 
+      END
 C
 #if defined(VAR_MPI)
 C-----------------------------------------------------------------------
       SUBROUTINE QM3LNO_P(NOSIM,BOVECS,CREF,CMO,XINDX,UDV,DV,UDVTR,
      &               EVECS,WRK,LWRK)
-C                        
+C
 C  Arnfinn, Aug. -08: The parallel version of QM3LNO
 C
 C  Purpose:  Calculate SCF/DFT E^2 contribution from a surrounding
@@ -818,7 +818,7 @@ C--------------------------------------------------------
 C        Since only hf/dft closed shell no contribution can arrise from
 C        the one-index transformed electric field if triplet.
 C        Also, if LGSPOL neglect the time-dependece of the expectation value
-C        contained in the interaction operator, i.e. keep the ground state 
+C        contained in the interaction operator, i.e. keep the ground state
 C        polarization only.
 C
 
@@ -882,7 +882,7 @@ C--------------------------------------------
       CALL QEXIT('QM3LNO_P')
       RETURN
       END
-C 
+C
 C
 C---------------------------------------------------------------------
       SUBROUTINE QM3LNO_M(RRAOx,TRMO,UTR,UTRX,IATNOW,NOSIM,WRK,LWRK,
@@ -890,6 +890,7 @@ C---------------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The master routine for QM3LNO_P
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -911,10 +912,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       CHARACTER*8 LABINT(9*MXCENT)
@@ -1002,6 +1003,7 @@ C---------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The slave routine for QM3LNO_P
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "gnrinf.h"
@@ -1024,7 +1026,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 
 #include "cbiher.h"
@@ -1219,7 +1221,7 @@ C
       KTRMO   = KRRAOx  + NNBASX
       KUTR    = KTRMO   + NNORBX
       KWRK    = KUTR    + N2ORBX
-      LWRK1   = LWRK    - KWRK 
+      LWRK1   = LWRK    - KWRK
 
       IF (LWRK1 .LT. 0) CALL ERRWRK('QM3QRO',-KWRK,LWRK1)
 
@@ -1236,7 +1238,7 @@ C
 
       NSIM = 1
 
-C We assume no symmetry in the DFT/MM calculations although we have kept 
+C We assume no symmetry in the DFT/MM calculations although we have kept
 C some symmetry options below ...
 
       ISYMT = 1
@@ -1300,8 +1302,8 @@ C     TRES = Tg(k1,k2) + A1(k2) + A12
           CALL DAXPY(N2ORBX,0.5D0,WRK(KTLMB),1,WRK(KTRES),1)
       END IF
 
-C     If LGSPOL neglect the time-dependece of the expectation value 
-C     contained in the interaction operator, i.e. keep the ground state polarization only. 
+C     If LGSPOL neglect the time-dependece of the expectation value
+C     contained in the interaction operator, i.e. keep the ground state polarization only.
 
       IF (LGSPOL) GOTO 600
 
@@ -1322,7 +1324,7 @@ C     ---------------------------------------------
         OBKPX = DIPORG(1)
         OBKPY = DIPORG(2)
         OBKPZ = DIPORG(3)
-      ENDIF 
+      ENDIF
 
 
       DO 520 I = 1, ISYTP
@@ -1382,7 +1384,7 @@ C x-component
                 CALL READT(LUCCEF,NNBASX,WRK(KRRAOx))
                 CALL UTHU(WRK(KRRAOx),WRK(KTRMO),WRK(KUCMO),WRK(KWRK),
      &                    NBAST,NORBT)
-              ENDIF 
+              ENDIF
 
               CALL DSPTSI(NORBT,WRK(KTRMO),WRK(KUTR))
 
@@ -1467,7 +1469,7 @@ C z-component
                 CALL READT(LUCCEF,NNBASX,WRK(KRRAOx))
                 CALL UTHU(WRK(KRRAOx),WRK(KTRMO),WRK(KUCMO),WRK(KWRK),
      &                    NBAST,NORBT)
-              ENDIF 
+              ENDIF
 
               CALL DSPTSI(NORBT,WRK(KTRMO),WRK(KUTR))
 
@@ -1481,7 +1483,7 @@ C z-component
                  CALL DZERO(WRK(KTLMA),N2ORBX)
                  CALL OITH1(ISYMV2,ZYM2,WRK(KUTR),WRK(KTLMA),ISYMT)
 
-                 CALL DAXPY(N2ORBX,F1,WRK(KTLMA),1,WRK(KTRES),1)   
+                 CALL DAXPY(N2ORBX,F1,WRK(KTLMA),1,WRK(KTRES),1)
               END IF
 
               IF (ISYMT.EQ.MULD2H(ISYMV1,ISYMV2)) THEN
@@ -1591,7 +1593,7 @@ C
       END IF
 
       LOPEN = .FALSE.
-  
+
       IF (TRPLET) CALL QUIT('TRIPLET NOT IMPLEMENTED FOR QR-QM/MM YET')
 
       KCREF   = 1
@@ -1605,7 +1607,7 @@ C
       KTRMO   = KRRAOx  + NNBASX
       KUTR    = KTRMO   + NNORBX
       KWRK    = KUTR    + N2ORBX
-      LWRK1   = LWRK    - KWRK 
+      LWRK1   = LWRK    - KWRK
 
       IF (LWRK1 .LT. 0) CALL ERRWRK('QM3QRO_P',-KWRK,LWRK1)
 
@@ -1622,7 +1624,7 @@ C
 
       NSIM = 1
 
-C We assume no symmetry in the DFT/MM calculations although we have kept 
+C We assume no symmetry in the DFT/MM calculations although we have kept
 C some symmetry options below ...
 
       ISYMT = 1
@@ -1686,8 +1688,8 @@ C     TRES = Tg(k1,k2) + A1(k2) + A12
           CALL DAXPY(N2ORBX,0.5D0,WRK(KTLMB),1,WRK(KTRES),1)
       END IF
 
-C     If LGSPOL neglect the time-dependece of the expectation value 
-C     contained in the interaction operator, i.e. keep the ground state polarization only. 
+C     If LGSPOL neglect the time-dependece of the expectation value
+C     contained in the interaction operator, i.e. keep the ground state polarization only.
 
       IF (LGSPOL) GOTO 600
 
@@ -1708,7 +1710,7 @@ C     ---------------------------------------------
         OBKPX = DIPORG(1)
         OBKPY = DIPORG(2)
         OBKPZ = DIPORG(3)
-      ENDIF 
+      ENDIF
 
       DO 520 I = 1, ISYTP
          IF (MDLWRD(I)(1:5) .EQ. 'SPC_E') THEN
@@ -1757,7 +1759,7 @@ C
       CALL QEXIT('QM3QRO_P')
       RETURN
       END
-C 
+C
 C
 C---------------------------------------------------------------------
       SUBROUTINE QM3QRO_M(TRES,IATNOW,NOSIM,WRK,LWRK,INUM,ISYMT,
@@ -1767,6 +1769,7 @@ C
 C  Arnfinn Aug. -08
 C  The master routine for QM3QRO_P
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1790,9 +1793,9 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       PARAMETER ( D0=0.0D0, D1=1.0D0 )
@@ -1890,6 +1893,7 @@ C
 C  Arnfinn Aug. -08
 C  The slave routine for QM3QRO
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1915,7 +1919,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 
       PARAMETER ( D0=0.0D0, D1=1.0D0 )
@@ -1998,7 +2002,7 @@ C x-component
          KLAST = KMAT + 3*NNBASX
          LWRK2 = LWRK - KLAST + 1
          IATNOW = NUCIND + L + LM
-         
+
          KPATOM = 0
          NOSIMI = 3
          TOFILE = .FALSE.
@@ -2100,7 +2104,7 @@ C z-component
             CALL DZERO(WRK(KTLMA),N2ORBX)
             CALL OITH1(ISYMV2,WRK(KZYM2),WRK(KUTR),WRK(KTLMA),ISYMT)
 
-            CALL DAXPY(N2ORBX,F1,WRK(KTLMA),1,WRK(KTRES),1)   
+            CALL DAXPY(N2ORBX,F1,WRK(KTLMA),1,WRK(KTRES),1)
          END IF
 
          IF (ISYMT.EQ.MULD2H(ISYMV1,ISYMV2)) THEN

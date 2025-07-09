@@ -35,6 +35,7 @@ C=========================================================================
 C
       use parallel_models_mpi
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "dummy.h"
 #include "mtags.h"
@@ -48,7 +49,7 @@ C
 #include "incore.h"
 
 #if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
+#include "mpi_header.h"
       LOGICAL(kind=MPI_INTEGER_KIND) :: FINISH
       INTEGER(kind=MPI_INTEGER_KIND) :: ierr_mpi
 #endif
@@ -57,7 +58,7 @@ C
 #endif
       integer   :: LMWORK
       CHARACTER LABEL1*8, STHELP*10
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
 !     this is to echo input files to the output
@@ -112,7 +113,7 @@ C
       XMBYTES = (LMWORK+2) * 8.D0
       XMBYTES = XMBYTES / (1.024D3**2)
       GBYTES  = XMBYTES / 1.024D3
-      
+
       IF (MYNUM .LE. 1) THEN
          IF (GBYTES .GE. 1.D0) THEN
             WRITE(*,'(/A,I12,A,F7.3,A,I4)')
@@ -128,19 +129,19 @@ C
      &        ' Same work memory size for all ',NODTOT,' slaves.'
          END IF
       END IF
- 
+
 Cef begin
 C If AOSAVE .eq. .TRUE. then run the incore-version of Dalton where integrals
 C are stored in memory on each slave for reuse. Take a look at the header
-C file DALTON_SOURCE_DIR/include/incore.h  and the variables: MMWORK and IEIR. 
-C MMWORK (we used MMWORK=80000000 when testing ) determines the size of 
-C the chunk of array WORK which is reserved for incore-calculations. 
-C The variable IEIR in incore.h must also be set to a large enough positive 
+C file DALTON_SOURCE_DIR/include/incore.h  and the variables: MMWORK and IEIR.
+C MMWORK (we used MMWORK=80000000 when testing ) determines the size of
+C the chunk of array WORK which is reserved for incore-calculations.
+C The variable IEIR in incore.h must also be set to a large enough positive
 C integer (we used IEIR=3000000).
 
       JSCORE    = 1
       ISCORE    = JSCORE
-      LMCORE    = MMWORK 
+      LMCORE    = MMWORK
       MMCORE    = LMCORE
       N_SHL     = 1
       AOSAVE    = (MMWORK.GT.1)
@@ -199,7 +200,7 @@ C
       CALL MEMINI(LUPRI,LUERR)
 C
       IF (MYNUM .EQ. MASTER) THEN
-C         
+C
          CALL GPOPEN(LUCME,'DALTON.CM','NEW',' ','FORMATTED',
      &            IDUMMY,.FALSE.)
 C
@@ -909,7 +910,7 @@ C
       IF(SLAVE)THEN
         if(rma_allocation)then
 !         node/NUMA master get the same memory as the master only real slaves get less
-          if(communication_info_mpi%my_shmem_node_id /= 0)then 
+          if(communication_info_mpi%my_shmem_node_id /= 0)then
             LMWORK = LMWORK_NODES
           end if
         else

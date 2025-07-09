@@ -1,10 +1,10 @@
 module memory_parallel
 
+#include "mpi_mod.h"
   implicit none
+#include "mpi_header.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
-
   public memallocmpi
   public memfreempi
 

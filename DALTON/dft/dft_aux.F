@@ -358,8 +358,9 @@ c
       END
 #ifdef VAR_MPI
       SUBROUTINE DFTLRSYNC
+#include "mpi_mod.h"
 #include "implicit.h"
-#include "mpif.h"
+#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
 #include "inforb.h"

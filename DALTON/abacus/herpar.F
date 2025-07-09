@@ -238,13 +238,9 @@ C
       use rma_windows
 
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+#include "mpi_mod.h"
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #else
 #include "implicit.h"
 #endif
@@ -567,13 +563,9 @@ C  /* Deck her_sdinit */
       use rma_windows
 
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+#include "mpi_mod.h"
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #else
 #include "implicit.h"
 #endif
@@ -824,13 +816,9 @@ C  /* Deck her_sendreceive_molinfo */
 !
 
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+#include "mpi_mod.h"
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #else
 #include "implicit.h"
 #endif
@@ -970,9 +958,7 @@ C  /* Deck her_rvres */
 #ifdef VAR_MPI
       use parallel_communication_models_mpi
       use one_sided_communication_wrappers
-#ifdef USE_MPI_MOD_F90
-      use mpi
-#endif
+#include "mpi_mod.h"
 #endif
 C
 #include "implicit.h"
@@ -1003,9 +989,7 @@ C
 #include "gnrinf.h"
 
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
       integer(kind=mpi_offset_kind)  :: offset_mat
       integer(kind=MPI_INTEGER_KIND) :: i_MPI, j_MPI, k_MPI, l_MPI, ierr
 #endif
@@ -1241,9 +1225,7 @@ C
       use parallel_communication_models_mpi
       use rma_windows
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
-#endif
+#include "mpi_mod.h"
 #endif
 
 #include "implicit.h"
@@ -1277,9 +1259,7 @@ C
 #include "gnrinf.h"
 C
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
       integer, parameter             :: dummy_buff = 2
       integer(kind=MPI_ADDRESS_KIND) :: nelement
       integer(kind=MPI_OFFSET_KIND)  :: displacement
@@ -1571,13 +1551,9 @@ C
       use rma_windows
 
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+#include "mpi_mod.h"
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #else
 #include "implicit.h"
 #endif
@@ -2445,9 +2421,7 @@ C  /* Deck her_sdres */
 #ifdef VAR_MPI
       use parallel_communication_models_mpi
       use one_sided_communication_wrappers
-#ifdef USE_MPI_MOD_F90
-      use mpi
-#endif
+#include "mpi_mod.h"
 #endif
 !
 #include "implicit.h"
@@ -2473,9 +2447,7 @@ C
 #include "infpar.h"
 #include "expopt.h"
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
       integer(kind=mpi_offset_kind)  :: offset_mat
       integer(kind=MPI_INTEGER_KIND) :: i_MPI, j_MPI, k_MPI, l_MPI, ierr
 #endif
@@ -2811,6 +2783,7 @@ C
 C     Master routine for distributing tesseraes to slaves
 C     K.Ruud, June 10 2005, Pisa
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -2823,7 +2796,7 @@ C
       DIMENSION EXPVAL(NTS,NOSIM)
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       IF (TOFILE) CALL QUIT('Parallel calculations do not allow for '//
      &     'storing PCM-integrals on disk')
@@ -2887,6 +2860,7 @@ C
 C
 C /* Deck JINTS */
       SUBROUTINE J1INTS(WORK,LWORK,IPRTYP,IPRTMP)
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxaqn.h"
@@ -2904,7 +2878,7 @@ C
 #include "infpar.h"
 #include "pcm.h"
 #include "mtags.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       IPRPCM = IPRTMP
       CALL MPIXBCAST(KSYMP,1,'INTEGER',MASTER)
@@ -3026,6 +3000,7 @@ C     Master routine for distributing tesseraes to slaves for
 C     calculating one-index transformed potentials
 C     K.Ruud, June 10 2005, Pisa
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -3044,7 +3019,7 @@ C
 #include "mtags.h"
 #include "infpar.h"
 #include "wrkrsp.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -3118,6 +3093,7 @@ C
 C     Parallell construction of one-index transformed potentials
 C     K.Ruud, Pisa June 2005
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -3139,7 +3115,7 @@ C
 #include "infind.h"
 #include "pcm.h"
 #include "mtags.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       IPRPCM = IPRTMP
       CALL MPIXBCAST(NTSIRR,1,'INTEGER',MASTER)
@@ -3314,6 +3290,7 @@ C
 C     Master routine for calculating multiple one-index transformations
 C     of PCM potentials, K.Ruud, Tromso June 2005
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -3328,7 +3305,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #include "pcm.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -3384,6 +3361,7 @@ C
 C     Slave routine for calculating multiple one-index transformations
 C     of PCM potentials, K.Ruud, Tromso June 2005
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "dummy.h"
 #include "iratdef.h"
@@ -3403,7 +3381,7 @@ C
 #include "mtags.h"
 #include "pcm.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       CALL MPIXBCAST(IKLVL,1,'INTEGER',MASTER)
       CALL MPIXBCAST(NASHDI,1,'INTEGER',MASTER)

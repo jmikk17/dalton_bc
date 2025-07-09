@@ -46,10 +46,11 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*)
@@ -114,7 +115,7 @@ C
 C
         IOFFSET_IN_LUIN1 = MY_IOFF_LUIN1 + IOFFSET_SCRATCH +
      &                   ( IROOT - 1 )    * MY_VEC1_IOFF
-        IOFFSET_INT_IN1  = 1 + NUM_BLK   + 
+        IOFFSET_INT_IN1  = 1 + NUM_BLK   +
      &                   ( IROOT - 1 )    * MY_ACT_BLK1
 C
 CSK     WRITE(LUWRT,*) 'This is my OFFSET for LUIN1',
@@ -131,7 +132,7 @@ CSK     WRITE(LUWRT,*) 'initial VEC2 on LUIN1'
 CSK     CALL WRTMATMN(VEC2,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),
 CSK  &                LUWRT)
 C
-C       VEC2 == VEC2 + VEC1 * FACTOR 
+C       VEC2 == VEC2 + VEC1 * FACTOR
 C
         CALL DAXPY(LEBATCH(ISBATCH),FACTOR,VEC1,1,VEC2,1)
 C
@@ -186,7 +187,7 @@ C
 C
 C     check for convergence
 C
-      IF(RNORM .lt. TEST)then ! .OR. ( ITER .gt. 2 .and. 
+      IF(RNORM .lt. TEST)then ! .OR. ( ITER .gt. 2 .and.
 !    &  ABS(EIG(ITER-2,IROOT)-EIG(ITER-1,IROOT)).LT.E_CONV)) THEN
 C
         RTCNV(IROOT) = 0
@@ -225,10 +226,11 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*)
@@ -447,7 +449,7 @@ C
       IF(IOLSAC .EQ. 1 ) THEN
 C
 CSK     WRITE(LUWRT,*) ' Olsen correction active'
-        DELTA = 0.0D0 
+        DELTA = 0.0D0
 C
 C       continue with DELTA ...
 C
@@ -548,7 +550,7 @@ C
           CALL DAXPY(LEBATCH(ISBATCH),FACTOR,VEC1,1,VEC2,1)
 C
 C         write VEC2 on LUOUT3
-C      
+C
           IOFFSET_LUOUT3     = MY_IOFF_LUOUT3  + IOFFSET_SCRATCH
           IOFFSET_INT_LUOUT3 = 1 + NUM_BLK
 C
@@ -601,10 +603,11 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -649,7 +652,7 @@ C
       CALL DZERO(SCRRED,NVEC+IADD)
       CALL DZERO(SUBSPH,NVEC+IADD)
 CSK   WRITE(LUWRT,*) ' NVEC + IADD - 1',  NVEC + IADD - 1
-CSK   WRITE(LUWRT,*) ' LUIN1,LUIN2,LUOUT,LUOUT2', 
+CSK   WRITE(LUWRT,*) ' LUIN1,LUIN2,LUOUT,LUOUT2',
 CSK  &                 LUIN1,LUIN2,LUOUT,LUOUT2
 C
       DO ISBATCH = 1, NBATCH
@@ -663,7 +666,7 @@ C
 C       position in file is at the end of vector IVEC - 1
 C
         IOFFSET_IN_LUIN2 = MY_IOFF_LUIN2 + IOFFSET_SCRATCH
-        IOFFSET_INT_IN2  = 1 + NUM_BLK 
+        IOFFSET_INT_IN2  = 1 + NUM_BLK
 C
 C
 CSK     WRITE(LUWRT,*) 'This is my OFFSET for LUIN2 in P1..._3 100',
@@ -694,7 +697,7 @@ C
 C
 CSK       WRITE(LUWRT,*) 'This is my OFFSET for LUIN1 in P1..._3 100',
 CSK  &                   IOFFSET_IN_LUIN1
-CSK       WRITE(LUWRT,*) 'This is my INT_OFFSET for LUIN1 in 
+CSK       WRITE(LUWRT,*) 'This is my INT_OFFSET for LUIN1 in
 CSK  &                    P1..._3 100',IOFFSET_INT_IN1
 CSK       WRITE(LUWRT,*) 'THIS IS MY LU1LIST inside P1_B_PAR_RL_3 100'
 CSK       CALL IWRTMAMN(LUIN1LIST,1,IALL_LU1,1,IALL_LU1,LUWRT)
@@ -795,7 +798,7 @@ C
 C
 C         VEC2 == VEC2 + VEC1 * FACTOR
 C
-          CALL DAXPY(LEBATCH(ISBATCH), FACTOR, VEC1, 1, VEC2, 1) 
+          CALL DAXPY(LEBATCH(ISBATCH), FACTOR, VEC1, 1, VEC2, 1)
 C
   200   CONTINUE
 C
@@ -855,7 +858,7 @@ C
 C          position in file is at the end of vector IVEC - 1
 C
            IOFFSET_IN_LUIN2 = MY_IOFF_LUIN2 + IOFFSET_SCRATCH
-           IOFFSET_INT_IN2  = 1 + NUM_BLK 
+           IOFFSET_INT_IN2  = 1 + NUM_BLK
 C
 C
 CSK        WRITE(LUWRT,*) 'This is my OFFSET for LUIN2 in P1..._3 100',
@@ -886,7 +889,7 @@ C
 C
 CSK          WRITE(LUWRT,*) 'This is my OFFSET for LUOUT in P1..._3 100',
 CSK  &                       IOFFSET_IN_LUOUT
-CSK          WRITE(LUWRT,*) 'This is my INT_OFFSET for LUOUT in 
+CSK          WRITE(LUWRT,*) 'This is my INT_OFFSET for LUOUT in
 CSK  &                       P1..._3 100',IOFFSET_INT_LUOUT
 C
              CALL RDVEC_BATCH_DRV4(LUOUT,VEC1,LBATCH(ISBATCH),
@@ -975,7 +978,7 @@ C
 C
 C           VEC2 == VEC2 + VEC1 * FACTOR
 C
-            CALL DAXPY(LEBATCH(ISBATCH), FACTOR, VEC1, 1, VEC2, 1) 
+            CALL DAXPY(LEBATCH(ISBATCH), FACTOR, VEC1, 1, VEC2, 1)
 C
   400     CONTINUE
 C
@@ -1007,7 +1010,7 @@ C
       SCALEVEC = 0.0D0
 C
 C     communicate REDSCRVAR to get full scale factor
-C       
+C
       CALL REDVEC_REL(REDSCRVAR,SCALEVEC,1,2,MPI_SUM,MPI_COMM_WORLD,-1)
 C
 C     1.4 normalizing the new vector
@@ -1144,10 +1147,11 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -1204,7 +1208,7 @@ C
 C
            IOFFSET_IN_LUIN2 = MY_IOFF_LUIN2 + IOFFSET_SCRATCH +
      &                        ( JVEC - 1 )  * MY_VEC1_IOFF
-           IOFFSET_INT_IN2  = 1 + NUM_BLK  + 
+           IOFFSET_INT_IN2  = 1 + NUM_BLK  +
      &                        ( JVEC - 1 ) * MY_ACT_BLK1
 C
 CSK        WRITE(LUWRT,*) 'This is my OFFSET for LUIN2',
@@ -1229,7 +1233,7 @@ C
            IJ = (IVEC+NVEC)*(IVEC+NVEC-1)/2 + JVEC
 csk        WRITE(LUWRT,*) ' IJ in loop 1', IJ
 C
-           SUBSPH(IJ) = SUBSPH(IJ) + 
+           SUBSPH(IJ) = SUBSPH(IJ) +
      &                  DDOT(LEBATCH(ISBATCH),VEC1,1,VEC2,1)
 C
 C          keep track of memory offset and the 'reduction' counter
@@ -1254,7 +1258,7 @@ C
 C
            IOFFSET_IN_LUIN3 = MY_IOFF_LUIN3 + IOFFSET_SCRATCH +
      &                        ( JJVEC - 1 )  * MY_VEC1_IOFF
-           IOFFSET_INT_IN3  = 1 + NUM_BLK  + 
+           IOFFSET_INT_IN3  = 1 + NUM_BLK  +
      &                        ( JJVEC - 1 )  * MY_ACT_BLK1
 C
 csk        WRITE(LUWRT,*) 'This is my OFFSET for LUIN3',
@@ -1279,7 +1283,7 @@ C
            IJ = (IVEC+NVEC)*(IVEC+NVEC-1)/2 + JVEC
 csk        WRITE(LUWRT,*) ' IJ in loop 2', IJ
 C
-           SUBSPH(IJ) = SUBSPH(IJ) + 
+           SUBSPH(IJ) = SUBSPH(IJ) +
      &                  DDOT(LEBATCH(ISBATCH),VEC1,1,VEC2,1)
 C
 C          keep track of the 'reduction' counter
@@ -1327,10 +1331,11 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -1469,7 +1474,7 @@ CSK  &                LUWRT)
 C
 C       new offset for writing on LUOUT
 C
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC1_IOFF
 C
         IOFFSET_INT_LUOUT  = 1 + NUM_BLK    +
@@ -1497,27 +1502,28 @@ C
      &                            NPARBLOCK,IBLOCKL,IGROUPLIST,
      &                            IPROCLIST,IRILP,BLOCKTIME)
 C
-C     make an update of of grouplist for c-vector file based on 
+C     make an update of of grouplist for c-vector file based on
 C     different list gathered from MPI_COMM_WORLD
 C
 C
-C     Written by  S. Knecht         - March 08 2008 
+C     Written by  S. Knecht         - March 08 2008
 C
 C     OUTPUT: ISCLFAC_GROUP and updated file ILUC
 C
 C**********************************************************************
+#include "mpi_mod.h"
 #include "implicit.h"
       INTEGER*8 KSCALLOC2, KSCALLOC3
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: mynew_comm_mpi
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
 #include "wrkspc.inc"
-      DIMENSION ISCLFAC_GROUP(*), LUCLIST(*) 
+      DIMENSION ISCLFAC_GROUP(*), LUCLIST(*)
       DIMENSION CB(*)
       DIMENSION NPARBLOCK(*), IBLOCKL(*)
       DIMENSION IGROUPLIST(*), IPROCLIST(*)
@@ -1641,12 +1647,13 @@ C
 ***********************************************************************
       SUBROUTINE BLOCK_DISTR_DRV(NBLOCK,IBLOCKL,NBLOCKD,IBLOCKS_FNODE,
      &                           SCALFAC,NVAR,IPROCLIST)
+#include "mpi_mod.h"
 #include "implicit.h"
       INTEGER*8 KICCTOS, KCWEIGHT, KCWEIGHTF, KBLCKWT, KIBTOTW
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 #include "parluci.h"
 #include "wrkspc.inc"
 ! from cands.inc: icsm
@@ -1693,7 +1700,7 @@ C     eliminate local memory
       IDUM = 0
       CALL MEMMAN(KDUM ,IDUM,'FLUSM ',IDUM,'BLKDRV')
 C
-      END 
+      END
 ***********************************************************************
 *                                                                     *
 * LUCITA, by Jeppe Olsen, DIRAC adaption by Timo Fleig                *
@@ -1708,6 +1715,7 @@ C
 *  in BLK_A
 *  parallel version
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
 *. Output
       DIMENSION BLK_A(*)
@@ -1715,7 +1723,7 @@ C
       DIMENSION SEGMNT(*)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION IBLOCKD(NBLOCK)
@@ -1725,7 +1733,7 @@ C
       NBLK_A = 0
 *. Loop over blocks
       DO 500 IBLK = 1, NBLOCK
-*        
+*
         IF(LUCI_MYPROC.NE.IBLOCKD(IBLK))THEN
           BLK_A(IBLK) = 0.0D0
           GOTO 300
@@ -1784,17 +1792,18 @@ C
 *        ELEMENT I
 *SUBVAL: VALUE OF SORTED ELEMENTS
 
+#include "mpi_mod.h"
       IMPLICIT REAL*8           ( A-H,O-Z)
       INTEGER*8 KGATHERA, KGATHERB, KGATHERC, KGATHERD
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
 #include "wrkspc.inc"
-      
+
       DIMENSION SEGMNT(*), ISCAT(*),SUBVAL(*),SCR(*),ISCR(*)
       DIMENSION IBLOCKL(NBLOCK), IBLOCKD(NBLOCK)
       INTEGER(KIND=MPI_OFFSET_KIND) IOFF_SCR
@@ -1809,10 +1818,10 @@ C
       IBASE = 1
       LSUB = 0
 *     loop over blocks
-      DO 1000 II = 1, NBLOCK    
+      DO 1000 II = 1, NBLOCK
 *
         IF( IBLOCKD(II) .eq. LUCI_MYPROC )THEN
-          LBL = IBLOCKL(II) 
+          LBL = IBLOCKL(II)
         ELSE
 *         useful to set all other blocks to 0?
           LBL = 0
@@ -1828,7 +1837,7 @@ C
           ELSE
             KBLK = -1
           END IF
-          IF( IBLOCKD(II) .eq. LUCI_MYPROC )THEN 
+          IF( IBLOCKD(II) .eq. LUCI_MYPROC )THEN
              CALL MPI_FILE_READ_AT(IDIA,IOFF_SCR,SEGMNT,LBL,
      &                             my_MPI_REAL8,my_STATUS,ierr_mpi)
           ENDIF
@@ -1896,7 +1905,7 @@ C
       CALL MEMMAN(KGATHERB,LUCI_NMPROC*NSUBMX,'ADDL  ',2,'PARRA2')
       CALL MEMMAN(KGATHERC,LUCI_NMPROC*NSUBMX,'ADDL  ',1,'PARIA1')
       CALL MEMMAN(KGATHERD,LUCI_NMPROC*NSUBMX,'ADDL  ',1,'PARIA2')
-*. We gather all lowest values from each node 
+*. We gather all lowest values from each node
 *. and build up a combined list of those
       CALL GATHER_LOW_PAR(NSUB,NSUBMX,SUBVAL,ISCAT,
      &                    WORK(KGATHERA),WORK(KGATHERB),
@@ -1905,14 +1914,14 @@ C
 *     update SCR1 and ISCR1
       CALL DCOPY(NSUBMX,SUBVAL,1,SCR,1)
       CALL ICOPVE(ISCAT,ISCR,NSUBMX)
-     
+
       IF(NTEST.GE.20)THEN
         WRITE(LUWRT,*)'after search: SUBVAL and ISCAT'
         CALL WRTMATMN(SUBVAL,1,NSUBMX,1,NSUBMX,LUWRT)
         CALL IWRTMAMN(ISCAT,1,NSUBMX,1,NSUBMX,LUWRT)
       END IF
 CSK      NTEST = 0
-           
+
       IF(NSUB.NE.NSUBMX.AND.NTEST.GE.20)THEN
         WRITE(LUWRT,*)'Warning! NSUB is lower than NSUBMX'
         WRITE(LUWRT,*)'NSUB is set to be equal to NSUBMX'
@@ -1928,6 +1937,6 @@ CSK      NTEST = 0
 #else   /* VAR_MPI */
 * dummy routine for non-mpi compilation
        SUBROUTINE par_lucita
-!        write(6,*) 'let us do nothing',nothing  
-       END 
+!        write(6,*) 'let us do nothing',nothing
+       END
 #endif    /* VAR_MPI */

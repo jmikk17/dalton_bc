@@ -23,7 +23,8 @@ contains
 #include "priunit.h"
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_mod.h"
+#include "mpi_header.h"
 
    ! Passed variables
    integer(8) :: nr_points, nr_points_irr
@@ -109,7 +110,8 @@ contains
 #include "symmet.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpif.h"
+#include "mpi_mod.h"
+#include "mpi_header.h"
 
       ! Passed variables
       integer :: lwork, iprtyp, iprtmp

@@ -26,11 +26,12 @@
       SUBROUTINE FIND_IMAT_SC(IBLINF,SCALFAC,ICCTOS,ICWEIGHT,IBTOTW,
      &                        ICWEIGHTF,NBLOCK,IABSOLUTE_WEIGHT)
 *
-* Compute the connection matrix ICCTOS between the sigma and c vector 
+* Compute the connection matrix ICCTOS between the sigma and c vector
 * Store the contribution of one c-block to sigma-blocks in ICWEIGHT.
 *
 * written by S. Knecht  - Feb. 2007
 *
+#include "mpi_mod.h"
 #include "implicit.h"
       INTEGER*8 KSIOIO, KSBLTP, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT,
      &          KCONSPA, KCONSPB, KCBLTP, KCIOIO, KLLBT, KLLEBT, KLI1BT,
@@ -38,7 +39,7 @@
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION IBLINF(NBLOCK),SCALFAC(NBLOCK),ICCTOS(NBLOCK,NBLOCK)
@@ -156,7 +157,7 @@
      &               ISMOST(1,ICSM),NCBATCH,
      &               WORK(KLLBT),WORK(KLLEBT),WORK(KLI1BT),WORK(KLIBT),
      &               0,ITTSS_ORD)
-                      
+
 *
 *. start the search for the INTERACT-MATRIX...
       CALL FIND_INTERACT_MAT(NBLOCK,IBLINF,ICCTOS,ICWEIGHT,ICWEIGHTF,
@@ -177,7 +178,7 @@
 *. Eliminate local memory
       IDUM = 0
       CALL MEMMAN(IDUM ,IDUM,'FLUSM ',2,'IMAT_S')
-            
+
       END
 ***********************************************************************
 *                                                                     *
@@ -193,11 +194,12 @@
 *
 * written by S. Knecht  - Feb. 2007
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8           (A-H,O-Z)
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION ICCTOS(NBLOCK,NBLOCK)
@@ -251,7 +253,7 @@ C           loop over Sigma blocks in batch
 #ifdef LUCI_DEBUG
         write(lupri,*) 'NIA, NIB, prod... ',NIA,NIB, NIA*NIB,MXEXC
 #endif
-                IF(NIA*NIB.NE.0) THEN        
+                IF(NIA*NIB.NE.0) THEN
 
 C                 are the two blocks connected by allowed excitation?
                   IF(MXEXC.EQ.1) THEN
@@ -286,7 +288,7 @@ C         ^loop over nperm
         END IF
 #ifdef LUCI_DEBUG
         IF(JJJ.GT.0.AND.NTEST.GE.100)THEN
-          WRITE(lupri,'(A,1X,I5,1X,A,1X,I5,1X,A)') 
+          WRITE(lupri,'(A,1X,I5,1X,A,1X,I5,1X,A)')
      & 'C BLOCK',JBLOCK,'IS CONNECTING TO',JJJ,'S-BLOCKS:'
           CALL IWRTMAMN(ICWEIGHT,1,JJJ,1,JJJ,lupri)
         END IF
@@ -294,7 +296,7 @@ C         ^loop over nperm
 #endif
         icweightf(JBLOCK) = jjj
         IABSOLUTE_WEIGHT  = IABSOLUTE_WEIGHT + jjj*active_block(JBLOCK)
-      END DO 
+      END DO
 C     ^loop over c-blocks
 C
       END
@@ -308,10 +310,11 @@ C
      &                          RECVARRAY,TESTARR,
      &                          IRECVARRAY,ITESTARRAY,NTESTG)
 *
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_luci_master
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
@@ -375,7 +378,7 @@ C
       WRITE(luwrt,*)'before search: test print done'
       call flshfo(luwrt)
 #endif
-                    
+
 *. we need the NSUBMX lowest elements from all over the world - sorted
       ISEARCH = 0
       VMINLAST = VMIN
@@ -384,89 +387,89 @@ C
       VMINTMP = VMAX
       IMINRANK = 0
       IMINPLACE = NSUBMX + 1
-      
+
       DO 300 II = 1,NSUBMX*LUCI_NMPROC
 *
          TEMPMIN   = RECVARRAY(II)
          ITEMPMIN  = IRECVARRAY(II)
-         ITEMPRANK = ITESTARRAY(II) 
+         ITEMPRANK = ITESTARRAY(II)
          ITEMPN    = II
 *
          IF(ITEMPMIN.GT.0)THEN
            IF(TEMPMIN.LE.VMINTMP.AND.TEMPMIN.NE.VMAX)THEN
              IF(ITEMPRANK.EQ.1.AND.IMINRANK.EQ.1)THEN
                IF(TEMPMIN.LT.VMINTMP)THEN
-*               
+*
                  IMINPLACE = ITEMPMIN
                  VMINTMP   = TEMPMIN
                  IMINNUMB  = ITEMPN
                  IMINRANK  = ITEMPRANK
-*                 
+*
                ELSE IF(TEMPMIN.EQ.VMINTMP)THEN
                  IF(ITEMPMIN.LT.IMINPLACE)THEN
-*                 
+*
                  IMINPLACE = ITEMPMIN
                  VMINTMP   = TEMPMIN
                  IMINNUMB  = ITEMPN
                  IMINRANK  = ITEMPRANK
-*                 
+*
                  END IF
-               ELSE 
+               ELSE
                  GOTO 300
                END IF
              ELSE IF(ITEMPRANK.EQ.1.AND.IMINRANK.NE.1)THEN
-*                 
+*
                IMINPLACE = ITEMPMIN
                VMINTMP   = TEMPMIN
                IMINNUMB  = ITEMPN
                IMINRANK  = ITEMPRANK
-*                 
+*
              ELSE IF(ITEMPRANK.NE.1.AND.IMINRANK.EQ.1)THEN
                IF(TEMPMIN.LT.VMINTMP) THEN
-*                 
+*
                  IMINPLACE = ITEMPMIN
                  VMINTMP   = TEMPMIN
                  IMINNUMB  = ITEMPN
                  IMINRANK  = ITEMPRANK
-*                 
+*
                END IF
              ELSE IF(ITEMPRANK.NE.1.AND.IMINRANK.NE.1)THEN
                IF(ITEMPRANK.EQ.IMINRANK) THEN
                  IF(TEMPMIN.LT.VMINTMP) THEN
-*                 
+*
                    IMINPLACE = ITEMPMIN
                    VMINTMP   = TEMPMIN
                    IMINNUMB  = ITEMPN
                    IMINRANK  = ITEMPRANK
-*                 
+*
                  ELSE IF(TEMPMIN.EQ.VMINTMP)THEN
                    IF(ITEMPMIN.GT.IMINPLACE)THEN
-*                 
+*
                    IMINPLACE = ITEMPMIN
                    VMINTMP   = TEMPMIN
                    IMINNUMB  = ITEMPN
                    IMINRANK  = ITEMPRANK
-*                 
+*
                    END IF
                  ENDIF
                ELSE IF(ITEMPRANK.LT.IMINRANK) THEN
                  IF(TEMPMIN.LE.VMINTMP) THEN
-*                 
+*
                    IMINPLACE = ITEMPMIN
                    VMINTMP   = TEMPMIN
                    IMINNUMB  = ITEMPN
                    IMINRANK  = ITEMPRANK
-*                 
+*
                  END IF
                ELSE IF(ITEMPRANK.GT.IMINRANK) THEN
                  IF(TEMPMIN.LT.VMINTMP) THEN
-*                 
+*
                    IMINPLACE = ITEMPMIN
                    VMINTMP   = TEMPMIN
                    IMINNUMB  = ITEMPN
                    IMINRANK  = ITEMPRANK
-*                 
-                 END IF                 
+*
+                 END IF
                END IF
              END IF
            END IF
@@ -476,7 +479,7 @@ C
  300  CONTINUE
 *
       ISEARCH = ISEARCH + 1
-*.    VMINTMP should be the lowest value w.r.t. ISEARCH 
+*.    VMINTMP should be the lowest value w.r.t. ISEARCH
       VMINLAST = VMINTMP
 #ifdef LUCI_DEBUG
 *. test writing
@@ -494,7 +497,7 @@ C
 *. end of test writing
 *. put the result to permanent storage in memory
       SUBVAL(ISEARCH)      = VMINTMP
-      ISCAT(ISEARCH)       = IMINPLACE 
+      ISCAT(ISEARCH)       = IMINPLACE
       RECVARRAY(IMINNUMB)  = VMAX
       IRECVARRAY(IMINNUMB) = 0
       ITESTARRAY(IMINNUMB) = -1
@@ -526,11 +529,11 @@ C
 *
 * Multiroot version
 *
-* From MICDV6 
+* From MICDV6
 *
-* parallel adaption, Stefan Knecht and Hans Joergen Aa. Jensen, 
-* winter 2007 and improved (!) in March 2008. 
-* main revision for parallel MPI file I/O 
+* parallel adaption, Stefan Knecht and Hans Joergen Aa. Jensen,
+* winter 2007 and improved (!) in March 2008.
+* main revision for parallel MPI file I/O
 *                          - SK (working in Odense) March 2008
 *
 * Input :
@@ -561,10 +564,11 @@ C
 *
       use dalton_mpi
       use par_mcci_io
+#include "mpi_mod.h"
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) :: mynew_comm_mpi, icomm_mpi
@@ -603,7 +607,7 @@ C
       integer, intent(in)  :: c_state_of_interest
 
       LOGICAL CONVER
-      REAL*8 INPRDD, INPROD 
+      REAL*8 INPRDD, INPROD
       DOUBLE PRECISION tottime,endtime,starttime
       CHARACTER SECTID*12, CPUTID*12, WALLTID*12
 *     characters used for timing
@@ -615,7 +619,7 @@ C
       DIMENSION IBLOCKL(*),NBLOCKDN(*), IPROCLIST(LUCI_NMPROC)
       INTEGER(KIND=MPI_OFFSET_KIND) IOFFSET
       character (len=13)   :: convergence
- 
+
 !     allocate scratch space
       allocate(tmp_space0(maxvec*(maxvec+1)/2))
       allocate(tmp_space1(maxvec**2))
@@ -634,11 +638,11 @@ C     of MAXIT
         ICHPARAM    = 6
       END IF
 
-      WRITE(luwrt,'(/7X,A)') 
+      WRITE(luwrt,'(/7X,A)')
      &'  ***************************************************'
-      WRITE(luwrt,'(7X,A)') 
+      WRITE(luwrt,'(7X,A)')
      &'     entering MICDV6_par (parallel solver routine)   '
-      WRITE(luwrt,'(7X,A)') 
+      WRITE(luwrt,'(7X,A)')
      &'  ***************************************************'
 *
 C
@@ -649,7 +653,7 @@ C
       IPICO = 0
       IPRT  = 0000
 !     IPRT  = 9999 ! debug
-       
+
       IOLSTM = 1
       IF(IPRT.GT.1.AND.IOLSTM.NE.0)
      &WRITE(luwrt,*) ' Inverse iteration modified Davidson '
@@ -672,7 +676,7 @@ C
       KFREE  = KAPROJ+ MAXVEC*(MAXVEC+1)/2
       CONVER = .FALSE.
 !     set convergence thresholds
-!     norm   
+!     norm
       THRQC  = THRES_E
 !     energy change
 !     THRQE  = THRES_E * 1.0d-08
@@ -764,7 +768,7 @@ csk     CALL IWRTMAMN(LU1LIST,1,IALL_LU1,1,IALL_LU1,luwrt)
       WALLITR2 = MPI_WTIME()
       WALLTID = SECTID(WALLITR2-WALLITR1)
       WRITE(luwrt,9888) WALLTID
- 
+
 !     synchronize MPI_COMM_WORLD
       iredl = ninvec*(ninvec-1)/2 + ninvec
       call mpi_allreduce(mpi_in_place,aproj,iredl,my_mpi_real8,
@@ -794,7 +798,7 @@ C
         WRITE(luwrt,'(5F18.13)')
      &  ( EIG(1,IROOT),IROOT=1,NROOT)
       END IF
-C      
+C
 C     transform vectors: C and sigma
 C
       CALL IZERO(LU3LIST,IALL_LU3)
@@ -877,7 +881,7 @@ C
 *
         if(c_state_of_interest /= 0)then
           if(root_converged(abs(c_state_of_interest)) == 0)then ! desired root converged - we are done!
-            conver = .true. 
+            conver = .true.
           end if
         end if
         !> do not converge any undesired root
@@ -976,7 +980,7 @@ csk       CSCREEN = .FALSE.
 
       IMUSTRED = 0
       ISTRED   = 0
-*      
+*
       DO 150 IVEC = 1, IADD
 *
 *       copy c-vector to working-file ILUC
@@ -1029,7 +1033,7 @@ csk     CALL IWRTMAMN(LU3LIST,1,IALL_LU3,1,IALL_LU3,LUWRT)
 *       end of timing
         sigmatime2 = MPI_WTIME()
         WALLTID = SECTID(sigmatime2-sigmatime)
-        if(ivec.eq.1) then 
+        if(ivec.eq.1) then
           WRITE(LUWRT,9400) WALLTID
         else
           WRITE(LUWRT,9401) WALLTID
@@ -1053,7 +1057,7 @@ csk     CALL IWRTMAMN(LU3LIST,1,IALL_LU3,1,IALL_LU3,LUWRT)
       call mpi_allreduce(tmp_space0(istred),aproj(istred),imustred,
      &                   my_mpi_real8,mpi_sum,mpi_comm_world,ierr)
       xixidletime = xixidletime - xidletime + MPI_WTIME()
- 
+
 #ifdef LUCI_DEBUG
       write(luwrt,*)'APROJ is (MAXVEC*(MAXVEC+1)/2)',
      &                         MAXVEC*(MAXVEC+1)/2
@@ -1072,9 +1076,9 @@ csk     CALL IWRTMAMN(LU3LIST,1,IALL_LU3,1,IALL_LU3,LUWRT)
       tottime      = 0.0D0
       tottime_save = 0.0D0
       tottime      = endtime - starttime
-C     TIMING FOR PARTS 2.1 - 2.2 
+C     TIMING FOR PARTS 2.1 - 2.2
       tottime_save = tottime
-      WALLTID      = SECTID(tottime) 
+      WALLTID      = SECTID(tottime)
       WRITE(LUWRT,9350) WALLTID
 C
       IF( TIMING_par )THEN
@@ -1085,10 +1089,10 @@ C
 C
 C       print idle time
 C
-        WRITE(LUWRT,'(/A,1X,A)') 
+        WRITE(LUWRT,'(/A,1X,A)')
      &  ' accumulated idle time in part 2                 :',WALLTID
         xpercent = (xixidletime_save/tottime_save) * 100
-        WRITE(LUWRT,'(A,F14.9,A/)') 
+        WRITE(LUWRT,'(A,F14.9,A/)')
      &  ' ratio (idle time)/(time part 2) =',xpercent,' %'
 C
       END IF
@@ -1339,7 +1343,7 @@ C
 *     new elements for subspace Hamiltonian                =
 *                                                          =
 *===========================================================
-*    
+*
       ISTRED     = 0
       IMUSTRED   = 0
       ILOOP      = 0
@@ -1418,7 +1422,7 @@ C
         TOTAL_TIME = MPI_Wtime() - TIME1
  1004  CONTINUE
 C
-       IF( IPRT .gt. 100) 
+       IF( IPRT .gt. 100)
      &   WRITE(luwrt,*) 'SYNC. PROCESS HAS USED', TOTAL_TIME, 'SEC.'
 C
       IF( .NOT. CONVER ) THEN
@@ -1439,7 +1443,7 @@ C
         write(luwrt,'( 1x,a,i6)') 'root number =',IROOT
         write(luwrt,'(1x,a/)')    '-------------------'
         do i = 1, iter
-          write(luwrt,'( 1x,a9,i4,f20.10,4x,1p,e10.3)') 
+          write(luwrt,'( 1x,a9,i4,f20.10,4x,1p,e10.3)')
      & 'iteration',i,eig(i,iroot)+eigshf,rnrm(i,iroot)
         end do
       end do
@@ -1505,5 +1509,5 @@ C
 ***********************************************************************
       SUBROUTINE PAR_DUMMY
 C     dummy routine for non-mpi compilation.
-      END 
+      END
 #endif /* defined VAR_MPI*/

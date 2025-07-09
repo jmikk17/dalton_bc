@@ -20,7 +20,7 @@ C*******************************************************************
 C/* deck qmmmfirst */
       SUBROUTINE QMMMFIRST(VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
-c This routine adds the MM environmental contribution 
+c This routine adds the MM environmental contribution
 c to the 1st order (NCOMP=3) magnetic field perturbation due to the use of
 c London orbitals
 c Lund, Nov. 2008, J. Kongsted
@@ -60,12 +60,12 @@ C     polarizabilities but only one combined loop.
 
       LCOMB = .FALSE.
       IF ( (IPOLTP .GT. 0) .AND. (NMULT .GE. 1) ) LCOMB = .TRUE.
-C     SPLNMR overrules these settings   
+C     SPLNMR overrules these settings
       IF (SPLNMR) LCOMB = .FALSE.
 
-C     We don't have these integrals yet !     
+C     We don't have these integrals yet !
       IF (NMULT .GE. 2) THEN
-        CALL QUIT('Quadrupole contr. not implemented in QMMMFIRST')     
+        CALL QUIT('Quadrupole contr. not implemented in QMMMFIRST')
       ENDIF
 
       OBKPX = DIPORG(1)
@@ -131,7 +131,7 @@ C     1. Construct the charge contribution for all MM centers
   100   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !( NMULT .GE. 0)
 
@@ -232,7 +232,7 @@ C     2. Construct the permanent dipole contribution for all MM centers
   200   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !( NMULT .GE. 1)
 
@@ -250,7 +250,7 @@ C        London orbital contribution. See the LCOMB option below.
         KMAT    = 1
         KINDMOM = KMAT    + 9*N2BASX ! INDMOM contains the ind. dips.
         KLAST   = KINDMOM + 3*NNZAL
-        LWRK    = LWORK   - KLAST + 1 
+        LWRK    = LWORK   - KLAST + 1
 
         IF (LWRK .LT. 0) CALL ERRWRK('QMMMFIRST',-KLAST,LWORK)
 
@@ -261,7 +261,7 @@ C        London orbital contribution. See the LCOMB option below.
            WRITE(LUPRI,*)
            WRITE(LUPRI,*) 'Ind. dips read from file in QMMMFIRST'
            WRITE(LUPRI,*)
-        ENDIF 
+        ENDIF
 
         CALL GET_FROM_FILE_1('INDUCED_DIPOLES',NNZAL,WORK(KINDMOM))
 
@@ -348,11 +348,11 @@ C        London orbital contribution. See the LCOMB option below.
   300   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !(IPOLTP .GT. 0)
 
-C     3a. If both permanent dipoles AND polarizabilities construct TOTAL 
+C     3a. If both permanent dipoles AND polarizabilities construct TOTAL
 C         dipole contribution for all MM centers
 
       IF (LCOMB)  THEN
@@ -377,7 +377,7 @@ C         dipole contribution for all MM centers
            WRITE(LUPRI,*)
            WRITE(LUPRI,*) 'Ind. dips read from file in QMMMFIRST'
            WRITE(LUPRI,*)
-        ENDIF 
+        ENDIF
 
         CALL GET_FROM_FILE_1('INDUCED_DIPOLES',NNZAL,WORK(KINDMOM))
 
@@ -388,7 +388,7 @@ C         dipole contribution for all MM centers
             WORK(KTOTMOM+IL+0) = MUL1MM(1,I)
             WORK(KTOTMOM+IL+1) = MUL1MM(2,I)
             WORK(KTOTMOM+IL+2) = MUL1MM(3,I)
-          ELSE IF (ZEROAL(I) .EQ. 1) THEN 
+          ELSE IF (ZEROAL(I) .EQ. 1) THEN
             WORK(KTOTMOM+IL+0) = MUL1MM(1,I) + WORK(KINDMOM+IJ+0)
             WORK(KTOTMOM+IL+1) = MUL1MM(2,I) + WORK(KINDMOM+IJ+1)
             WORK(KTOTMOM+IL+2) = MUL1MM(3,I) + WORK(KINDMOM+IJ+2)
@@ -487,7 +487,7 @@ Cahs          IL = IL+3
   500   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !(LCOMB)
 
@@ -522,7 +522,7 @@ C*****************************************************************************
 C/* deck qmmmb2 */
       SUBROUTINE QMMMB2(EXPVAL,DENMAT,WORK,LWORK,IPRINT)
 C
-c This routine adds the /MM contribution 
+c This routine adds the /MM contribution
 c to the 2nd-order magnetic field perturbation due to the use of
 c London orbitals. Works in combination with new QMMM code.
 c Lund, Nov. 2008, J. Kongsted, based on QM3B3 by K. Ruud.
@@ -562,10 +562,10 @@ C     polarizabilities but only one combined loop.
       LCOMB = .FALSE.
       IF ( (IPOLTP .GT. 0) .AND. (NMULT .GE. 1) ) LCOMB = .TRUE.
 
-C     SPLNMR overrules these settings   
+C     SPLNMR overrules these settings
       IF (SPLNMR) LCOMB = .FALSE.
 
-C     We don't have these integrals yet !     
+C     We don't have these integrals yet !
       IF (NMULT .GE. 2) THEN
         CALL QUIT('Quadrupole contr. not implemented in QMMMB2')
       ENDIF
@@ -625,7 +625,7 @@ C     1. Construct the charge contribution for all MM centers
   100   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !( NMULT .GE. 0)
 
@@ -693,7 +693,7 @@ C     2. Construct the permanent dipole contribution for all MM centers
   200   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !( NMULT .GE. 1)
 
@@ -776,11 +776,11 @@ C        London orbital contribution. See the LCOMB option below.
   300   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !(IPOLTP .GT. 0)
 
-C     3a. If both permanent dipoles AND polarizabilities construct TOTAL 
+C     3a. If both permanent dipoles AND polarizabilities construct TOTAL
 C         dipole contribution for all MM centers
 
       IF (LCOMB)  THEN
@@ -880,7 +880,7 @@ Cahs          IL = IL+3
   500   CONTINUE
 
 #if defined(VAR_MPI)
-        ENDIF ! (NODTOT.GE.1) ... ELSE 
+        ENDIF ! (NODTOT.GE.1) ... ELSE
 #endif
       ENDIF !(LCOMB)
 
@@ -905,6 +905,7 @@ C****************************************************************************
 C/* deck qmmmfirst_m1 */
       SUBROUTINE QMMMFIRST_M1(VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -920,10 +921,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(*),VEC2(*)
@@ -1004,6 +1005,7 @@ C****************************************************************************
 C/* deck qmmmfirst_s1 */
       SUBROUTINE QMMMFIRST_S1(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1019,7 +1021,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -1129,6 +1131,7 @@ C
 C/* deck qmmmfirst_m2 */
       SUBROUTINE QMMMFIRST_M2(VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1144,10 +1147,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(*),VEC2(*)
@@ -1228,6 +1231,7 @@ C****************************************************************************
 C/* deck qmmmfirst_S2 */
       SUBROUTINE QMMMFIRST_S2(WORK,LWORK,INTPRI)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1243,7 +1247,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -1384,6 +1388,7 @@ C
 C/* deck qmmmfirst_m3 */
       SUBROUTINE QMMMFIRST_M3(AINDMOM,VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1399,10 +1404,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(*),VEC2(*),AINDMOM(3*NNZAL)
@@ -1491,6 +1496,7 @@ C****************************************************************************
 C/* deck qmmmfirst_s3 */
       SUBROUTINE QMMMFIRST_S3(WORK,LWORK,INTPRI)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1506,7 +1512,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -1648,6 +1654,7 @@ C
 C/* deck qmmmfirst_m4 */
       SUBROUTINE QMMMFIRST_M4(TOTMOM,VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1663,10 +1670,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(LWORK),VEC2(3*N2BASX),TOTMOM(3*MMCENT)
@@ -1749,13 +1756,14 @@ C****************************************************************************
 C/* deck qmmmfirst_s4 */
       SUBROUTINE QMMMFIRST_S4(WORK,LWORK,INTPRI)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "maxorb.h"
 #include "orgcom.h"
-C nuclei.h: NCTOT, CORD, CHARGE, NUCIND, NUCDEP, 
+C nuclei.h: NCTOT, CORD, CHARGE, NUCIND, NUCDEP,
 #include "nuclei.h"
 C qm3.h: QMCOM, FORQM3, ISYTP
 #include "qm3.h"
@@ -1769,7 +1777,7 @@ C inftap.h: LUPROP
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 C cbiher.h: NPATOM, IPATOM
 #include "cbiher.h"
@@ -1918,6 +1926,7 @@ C****************************************************************************
 C/* deck qmmmb2_m1 */
       SUBROUTINE QMMMB2_M1(EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1933,10 +1942,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(LWORK),EXPVAL(6), DENMAT(NNBASX)
@@ -2019,6 +2028,7 @@ C****************************************************************************
 C/* deck qmmmb2_s1 */
       SUBROUTINE QMMMB2_S1(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2034,7 +2044,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -2135,6 +2145,7 @@ C****************************************************************************
 C/* deck qmmmb2_m2 */
       SUBROUTINE QMMMB2_M2(EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2150,10 +2161,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(*),EXPVAL(6), DENMAT(NNBASX)
@@ -2235,6 +2246,7 @@ C****************************************************************************
 C/* deck qmmmb2_S2 */
       SUBROUTINE QMMMB2_S2(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2250,7 +2262,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -2344,9 +2356,9 @@ C
           FACZ = -1.0D0*MUL1MM(3,I)
 
           DO I2 = 1,6
-             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) + 
+             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) +
      &                            WORK(KTMP+I2-1)*FACX +
-     &                            WORK(KTMP+I2+5)*FACY + 
+     &                            WORK(KTMP+I2+5)*FACY +
      &                            WORK(KTMP+I2+11)*FACZ
           END DO
 
@@ -2363,6 +2375,7 @@ C****************************************************************************
 C/* deck qmmmb2_m3 */
       SUBROUTINE QMMMB2_M3(AINDMOM,EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2378,10 +2391,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(*),EXPVAL(6),AINDMOM(3*NNZAL), DENMAT(NNBASX)
@@ -2470,6 +2483,7 @@ C****************************************************************************
 C/* deck qmmmb2_s3 */
       SUBROUTINE QMMMB2_S3(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2485,7 +2499,7 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 
@@ -2578,9 +2592,9 @@ C
           FACZ = -1.0D0*WORK(KINDMOM+IL+2)
 
           DO I2 = 1,6
-             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) + 
+             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) +
      &                            WORK(KTMP+I2-1)*FACX +
-     &                            WORK(KTMP+I2+5)*FACY + 
+     &                            WORK(KTMP+I2+5)*FACY +
      &                            WORK(KTMP+I2+11)*FACZ
           END DO
 
@@ -2597,6 +2611,7 @@ C****************************************************************************
 C/* deck qmmmb2_m4 */
       SUBROUTINE QMMMB2_M4(TOTMOM,EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2612,10 +2627,10 @@ C
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WORK(LWORK),EXPVAL(6),TOTMOM(3*MMCENT), DENMAT(NNBASX)
@@ -2698,13 +2713,14 @@ C****************************************************************************
 C/* deck qmmmb2_s4 */
       SUBROUTINE QMMMB2_S4(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "maxorb.h"
 #include "orgcom.h"
-C nuclei.h: NCTOT, CORD, CHARGE, NUCIND, NUCDEP, 
+C nuclei.h: NCTOT, CORD, CHARGE, NUCIND, NUCDEP,
 #include "nuclei.h"
 C qm3.h: QMCOM, FORQM3, ISYTP
 #include "qm3.h"
@@ -2718,7 +2734,7 @@ C inftap.h: LUPROP
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 C cbiher.h: NPATOM, IPATOM
 #include "cbiher.h"
@@ -2818,9 +2834,9 @@ C         See if the total dipole moment at this site is zero
           FACZ = -1.0D0*WORK(KTOTMOM+IL+2)
 
           DO I2 = 1,6
-             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) + 
+             WORK(KEXPVAL+I2-1) = WORK(KEXPVAL+I2-1) +
      &                            WORK(KTMP+I2-1)*FACX +
-     &                            WORK(KTMP+I2+5)*FACY + 
+     &                            WORK(KTMP+I2+5)*FACY +
      &                            WORK(KTMP+I2+11)*FACZ
           END DO
 

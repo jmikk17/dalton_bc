@@ -508,13 +508,14 @@ c     evaluation module.
 c
       SUBROUTINE KICK_KSM_SLAVES_ALIVE(NBAST,DMAT,IPRINT)
 c     do nothing when running serial code.
+#include "mpi_mod.h"
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST)
 C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
       IF(MYNUM.EQ.MASTER) THEN
@@ -553,8 +554,9 @@ c
       END
 c
       SUBROUTINE KSMSYNC(DMAT)
+#include "mpi_mod.h"
 #include "implicit.h"
-#include "mpif.h"
+#include "mpi_header.h"
 #include "priunit.h"
 #include "inforb.h"
 #include "mxcent.h"
@@ -567,11 +569,12 @@ c
 #endif
       SUBROUTINE KSMCOLLECT(FMAT,ENERGY,WRK,LFREE)
 c
+#include "mpi_mod.h"
 #include "implicit.h"
       DIMENSION FMAT(*), WRK(LFREE)
 #ifdef VAR_MPI
 c
-#include "mpif.h"
+#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
 #include "inforb.h"

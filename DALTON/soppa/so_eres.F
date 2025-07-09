@@ -36,9 +36,7 @@ C
 #ifdef VAR_MPI
       use so_parutils, only: soppa_comm_active, soppa_num_active,
      &                       soppa_nint, my_mpi_integer, sop_master
-#ifdef USE_MPI_MOD_F90
-      use mpi
-#endif
+#include "mpi_mod.h"
 #endif
       use pelib_interface, only: use_pelib, pelib_ifc_response
 #ifdef VAR_MPI
@@ -48,9 +46,7 @@ C
 #include "implicit.h"
 
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #endif
 
 #include "priunit.h"
@@ -563,7 +559,7 @@ C
                 ! fold density matrix for pelib
                 call dgefsp(nbas(1), work(kdens), work(kpedenmat))
                 ! get induction operator from the density
-#ifdef VAR_MPI  
+#ifdef VAR_MPI
                 if (mynum == master) then
                     call pelib_ifc_response(work(kpedenmat),
      &                                      work(kpefockmat), 1)
@@ -574,13 +570,13 @@ C
                     call pelib_ifc_slave(iprint)
                 end if
 #else
-                call pelib_ifc_response(work(kpedenmat), 
+                call pelib_ifc_response(work(kpedenmat),
      &                                  work(kpefockmat), 1)
 #endif
                 ! unpack and add to the Fock matrix
                 call dsptsi(nbas(1), work(kpefockmat),
      &                      work(kpefockmatfull))
-                call daxpy(lfock, 2.0d0, work(kpefockmatfull), 1, 
+                call daxpy(lfock, 2.0d0, work(kpefockmatfull), 1,
      &                     work(kfock), 1)
             end if
         end if
@@ -2032,8 +2028,9 @@ C F.Beyer Oct. 2014.
 
       use so_info, only: sop_dp
 
+#include "mpi_mod.h"
       implicit none
-#include "mpif.h"
+#include "mpi_header.h"
 #include "maxorb.h"
 #include "distcl.h"
 #include "priunit.h"
@@ -2127,10 +2124,11 @@ C     F.Beyer Oct. 2014.
       use so_parutils, only: soppa_comm_active, soppa_nint, sop_master,
      &                       soppa_num_active, my_mpi_integer
 
+#include "mpi_mod.h"
       implicit none
 C#include "implicit.h"
 #include "priunit.h"
-#include "mpif.h"
+#include "mpi_header.h"
 #include "maxorb.h"
 #include "iratdef.h"
 C fetch HERDIR
@@ -2257,8 +2255,9 @@ C     F.Beyer Oct. 2014
       use so_parutils, only: my_mpi_logical
 #endif
 
+#include "mpi_mod.h"
 #include "implicit.h"
-#include "mpif.h"
+#include "mpi_header.h"
 
       integer, dimension(MPI_STATUS_SIZE) :: mpistatus
       integer, intent(in)                 :: pollinginterval !in milliseconds
@@ -2343,8 +2342,9 @@ C the right amount of storage by the master when it starts pre-sorting
 C the integrals for the parallel calculation of the E matrix.
 C
 
+#include "mpi_mod.h"
 #include "implicit.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer,                     intent(in)  :: ntot
       integer, dimension(2, ntot), intent(in)  :: originalsort
       integer,                     intent(out) :: maxnumjobs
@@ -2410,8 +2410,9 @@ C even distribution of total work for all processes when performing two-electron
 C integrals in parallel for AOSOPPA and AORPA.
 C
       !use mpi
+#include "mpi_mod.h"
       implicit none
-#include "mpif.h"
+#include "mpi_header.h"
 
       integer,                        intent(in)    :: ntot, rows, cols
       integer, dimension(2, ntot),    intent(inout) :: presortedarray

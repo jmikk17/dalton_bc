@@ -17,9 +17,10 @@ C
 #ifdef VAR_MPI
       use so_parutils, only: parsoppa_do_eres, my_mpi_integer
 #endif
+#include "mpi_mod.h"
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
 C  We need MXCALL and IRAT in order to assign space for load-balancing
 C
 #include "maxorb.h"
@@ -223,7 +224,7 @@ C Pack INFO_ARRAY variables and send them off
          CALL GETTIM (DUMMY,WTIMES)
          DTIME      = SECOND()
          CALL SO_ERES(MODEL,0, 1, DENSIJ, LDENSIJ, DENSAB, LDENSAB,
-     &               DENS3IJ, DENS3AB, T2AM, LT2AM, T2SAM, LT2SAM, 
+     &               DENS3IJ, DENS3AB, T2AM, LT2AM, T2SAM, LT2SAM,
      &               FOCKD, LFOCKD, DENSAI, LDENSAI, ICOL, ISYMTR,
      &               0,
 #ifdef VAR_MPI

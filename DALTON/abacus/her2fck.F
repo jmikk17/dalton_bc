@@ -136,13 +136,9 @@ C*****************************************************************************
         use parallel_communication_models_mpi
         use one_sided_communication_wrappers
 
-#ifdef USE_MPI_MOD_F90
-        use mpi
+#include "mpi_mod.h"
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #else
 #include "implicit.h"
 #endif

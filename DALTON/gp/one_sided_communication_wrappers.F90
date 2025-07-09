@@ -15,13 +15,9 @@
 #ifdef VAR_MPI
 module one_sided_communication_wrappers
 
-#ifdef USE_MPI_MOD_F90
-  use mpi
+#include "mpi_mod.h"
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 
 
   public mpixget
@@ -58,11 +54,11 @@ contains
 !     Communicate a scalar/vector/matrix via a remote memory access (RMA).
 !     Data are put from the target memory to the origin.
 !
-!     output: 
+!     output:
 !            rbuf:      updated origin buffer with jcount elements.
-!     input: 
+!     input:
 !            my_win:    memory window on itarget (must be initialized!)
-!                       accessed at displacement idispl with jcount_t 
+!                       accessed at displacement idispl with jcount_t
 !                       elements.
 !*******************************************************************************
   real(8), intent(inout)                     :: rbuf(*)
@@ -87,9 +83,9 @@ contains
 
 !     print *, 'my_win, itarget, myid, jcount,idispl,jcount_t,datatype_in',&
 !               my_win, itarget, myid, jcount,idispl,jcount_t,datatype_in
-        
+
 !
-!     transfer data     
+!     transfer data
       call mpi_get(rbuf,jcount_mpi,datatype_out,itarget_mpi,idispl,jcount_t_mpi,datatype_in,my_win_mpi,ierr)
 !
 !     unlock
@@ -109,12 +105,12 @@ contains
                        lock_active)
 !*******************************************************************************
 !
-!     accumulate a scalar/vector/matrix via a remote memory access (RMA) 
+!     accumulate a scalar/vector/matrix via a remote memory access (RMA)
 !     routine. Data are put from the origin memory to the target memory.
 !
-!     output: 
+!     output:
 !            my_win:   updated target memory window with jcount_t elements.
-!     input: 
+!     input:
 !            rbuf  :   memory buffer on origin with JCOUNT elements.
 !
 !     allowed OPERATION: mpi_sum
@@ -148,7 +144,7 @@ contains
 !     accumulate data
       call mpi_accumulate(rbuf,        &
                           jcount_mpi,  &
-                          datatype_in, & 
+                          datatype_in, &
                           itarget_mpi, &
                           idispl,      &
                           jcount_t_mpi,&
@@ -224,7 +220,7 @@ contains
 !
 !     close memory window used in one-sided MPI communication
 !
-!     INPUT: 
+!     INPUT:
 !            memory window handle my_win shared by all processes in
 !            a communication group.
 !

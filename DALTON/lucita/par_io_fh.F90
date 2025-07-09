@@ -7,18 +7,14 @@
 module file_io_model
 
 ! stefan: - this module provides all necessary functionality
-!           to setup a file i/o model in parallel mcscf/ci 
+!           to setup a file i/o model in parallel mcscf/ci
 !           calculations.
 !
 !           written by sknecht, may 2007 for DIRAC MCSCF/KR-CI/LUCITA
 !           adapted for DALTON by sknecht, november 2010.
-#ifdef USE_MPI_MOD_F90
-  use mpi
+#include "mpi_mod.h"
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 
   public setup_file_io_model
   public close_file_io_model
@@ -33,8 +29,8 @@ module file_io_model
   integer(kind=MPI_INTEGER_KIND)         :: ierr_mpi
   integer, parameter                     :: flabel_length = 14
 
-contains 
- 
+contains
+
   subroutine setup_file_io_model(communicator_io_group,          &
                                  nr_files,                       &
                                  fh_array,                       &
@@ -46,10 +42,10 @@ contains
 !******************************************************************************
 !
 !    purpose:  return valid fh for parallel MPI-I/O in CI/MCSCF runs:
-!                - provides: 
+!                - provides:
 !                           a. file handles
 !                           b. opened files ready for reading and writing
-!                - requires: 
+!                - requires:
 !                           a. global (group) communication handle
 !                           a. file identification string
 !
@@ -85,7 +81,7 @@ contains
       displacement = 0
 
 !     group id appended to each file
-      call int2char_converter(group_id,gstring) 
+      call int2char_converter(group_id,gstring)
 
 !     file info object - provide hints to the MPI implementation
       call mpi_info_create(file_info_obj,ierr_mpi)
@@ -98,7 +94,7 @@ contains
 !     2. extra information on IBMs GPFS to enhance I/O performance
       call mpi_info_set(file_info_obj,"IBM_largeblock_io","true",ierr_mpi)
 #endif
- 
+
       do i = 1, nr_files
 
         i_relative = i + fh_offset
@@ -108,7 +104,7 @@ contains
 
 !       step b. determine full file name
         write(flabel,'(a5,a4,a1,a4)') file_identification,fstring,'.',gstring
-      
+
 !       step c. open the file
         comm_iogrp_mpi = communicator_io_group
         call mpi_file_open(comm_iogrp_mpi,flabel(1:flabel_length),                     &
@@ -128,7 +124,7 @@ contains
 
   subroutine close_file_io_model(number_of_files,         &
                                  fh_offset,               &
-                                 fh_array)                 
+                                 fh_array)
 !*******************************************************************************
 !
 !    purpose: close MPI-I/O files and "nullify" file handles.
@@ -146,7 +142,7 @@ contains
         fh_array_mpi = fh_array(i+fh_offset)
         call mpi_file_close(fh_array_mpi,ierr_mpi)
       end do
-     
+
   end subroutine close_file_io_model
 !*******************************************************************************
 
@@ -168,7 +164,7 @@ contains
                                 block_list)
 !*******************************************************************************
 !
-!    purpose: set absolute offset for each process in MPI-I/O files and 
+!    purpose: set absolute offset for each process in MPI-I/O files and
 !             provide general offset parameters.
 !
 !*******************************************************************************
@@ -219,10 +215,10 @@ contains
                                      par_dist_block_list,      &
                                      block_list)
       do i = 1, nr_files
-        file_offset_array(i+file_offset_off) =                 & 
+        file_offset_array(i+file_offset_off) =                 &
         save_vec_offset * mult_fac_gvec_offset * file_offset_fac(i+file_offset_off)
       end do
-     
+
   end subroutine set_file_io_offset
 !*******************************************************************************
 
@@ -286,7 +282,7 @@ contains
       tmp_gvec_offset_2 = 0
 
       do current_proc = 1, intra_node_size
- 
+
         process_id = group_list(current_proc)
 
         do current_block = 1, nr_gvec_ttss_blocks
@@ -303,30 +299,30 @@ contains
         end do !nr_gvec_ttss_blocks
 
         if(my_process_id == process_id)then
-         
+
           gvec_ablock_real = tmp_active_blocks
           gvec_ablock_cplx = mult_fac_gvec_blocks * tmp_active_blocks
           gvec_offset_cplx = mult_fac_gvec_offset * gvec_offset_cplx
 
           save_vec_offset  = tmp_gvec_offset_2
-          
+
         end if
 
 !       keep track of vector and block offsets
         tmp_active_blocks = 0
         tmp_gvec_offset_2 = tmp_gvec_offset
       end do ! intra_node_size
-     
+
   end subroutine calc_general_offset_param
 !*******************************************************************************
-  
+
   subroutine int2char_converter(int_number,string_rep)
 !*******************************************************************************
-!     
+!
 !  purpose: convert positive integer number int_number (< 10 000)
 !           into the 4-byte string string_rep.
-!     
-!           based on the routine num2str originally written 
+!
+!           based on the routine num2str originally written
 !           by C.V. Larsen in Dirac.
 !
 !*******************************************************************************
@@ -353,13 +349,13 @@ contains
 
         if(num1 < 1) exit
       end do
- 
+
       string_rep=tmp_str(1)//tmp_str(2)//tmp_str(3)//tmp_str(4)
- 
+
   end subroutine int2char_converter
 
 end module
-#else 
+#else
 subroutine fhio_model
 ! dummy routine for non-mpi compilation
 end

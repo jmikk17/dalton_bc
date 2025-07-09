@@ -7,20 +7,16 @@
 module communication_model
 
 ! stefan: - this module provides all necessary functionality
-!           to setup a communication model in parallel mcscf/ci 
+!           to setup a communication model in parallel mcscf/ci
 !           calculations.
 !
 !           written by sknecht, may 2007 for DIRAC MCSCF/KR-CI/LUCITA
 !           adapted for DALTON by sknecht, november 2010.
 !
   use communicator_type_module
-#ifdef USE_MPI_MOD_F90
-  use mpi
+#include "mpi_mod.h"
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8
@@ -38,8 +34,8 @@ module communication_model
   integer(kind=MPI_INTEGER_KIND)           :: ierr_mpi
   integer(kind=MPI_INTEGER_KIND),parameter :: one_mpi = 1
 
-contains 
- 
+contains
+
   subroutine setup_communication_model(nr_file_groups,                 &
                                        io_mode,                        &
                                        shared_memory_mode,             &
@@ -61,7 +57,7 @@ contains
                                        inter_node_comm,                &
                                        shmem_ijkl_comm,                &
                                        shmem_cvec_comm,                &
-                                       intra_node_group_id,            &                
+                                       intra_node_group_id,            &
                                        intra_node_master,              &
                                        shmem_master_ijkl,              &
                                        shmem_master_cvec,              &
@@ -69,10 +65,10 @@ contains
 !******************************************************************************
 !
 !    purpose:  initialize communication model for parallel CI/MCSCF runs:
-!                - provides: 
+!                - provides:
 !                           a. communication handles and process-ids in each group
 !                           b. arrays with group listings
-!                - requires: 
+!                - requires:
 !                           a. global (starting) communication handle
 !                           a. number of processors
 !                           b. information concerning shared-memory mode(s)
@@ -123,10 +119,10 @@ contains
       nr_file_groups              =  0
 !     parallel i/o mode in general (1 = MPI-I/O)
       io_mode                     =  1
-!     set default values (to be consistent with Dirac/KR-CI where these values are dynamic.) 
+!     set default values (to be consistent with Dirac/KR-CI where these values are dynamic.)
       shared_memory_lvl_ijkl      = -1
       shared_memory_lvl_cvec      = -1
-      process_list_shared_mem_glb =  1 
+      process_list_shared_mem_glb =  1
       shared_memory_mode          = .false.
 
 !     1. determine # process groups and store group-IDs in process_list_glb
@@ -164,7 +160,7 @@ contains
                                     inter_node_comm,                           &
                                     shmem_ijkl_comm,                           &
                                     shmem_cvec_comm,                           &
-                                    intra_node_group_id)                      
+                                    intra_node_group_id)
 
       call communicator_switch_lucipar(communicator_info,        &
                                        intra_node_comm,          &
@@ -183,17 +179,17 @@ contains
                              print_unit)
 !*******************************************************************************
      integer, intent(out)   :: process_list_glb(nr_of_process_glb)
-     integer, intent(out)   :: nr_file_groups  
+     integer, intent(out)   :: nr_file_groups
      integer, intent(in )   :: nr_of_process_glb
      integer, intent(in )   :: my_process_id_glb
      integer, intent(in )   :: communicator_glb
      integer, intent(in )   :: print_unit
 !-------------------------------------------------------------------------------
-     integer                          :: process_name_length  
-     integer                          :: local_counter_file_groups  
-     integer                          :: current_process_id  
-     integer                          :: proc_id  
-     integer                          :: finished_loop  
+     integer                          :: process_name_length
+     integer                          :: local_counter_file_groups
+     integer                          :: current_process_id
+     integer                          :: proc_id
+     integer                          :: finished_loop
      character (len=255)              :: process_name
      character (len=255)              :: scr_process_name
      integer,             allocatable :: scr_arr_name_length(:)
@@ -201,7 +197,7 @@ contains
 !-------------------------------------------------------------------------------
      integer(kind=MPI_INTEGER_KIND)   :: proc_id_mpi, comm_glb_mpi, len_process_name_mpi
 !-------------------------------------------------------------------------------
-                                               
+
       process_list_glb = -1
 
 !     set this flag for parallel global filesystems - e.g. on IBM clusters
@@ -209,7 +205,7 @@ contains
       nr_file_groups   =  1
       process_list_glb =  1
 #else
-                                               
+
 !     find system-dependent unique process name
       call mpixprocname(process_name,process_name_length)
 
@@ -244,8 +240,8 @@ contains
 
       end do
 
- 
-!     3. find all processors on the same deck and reorder (if necessary) 
+
+!     3. find all processors on the same deck and reorder (if necessary)
 !     to get the processors as close as possible, starting with the master (id == 0)
 !     NOTE: reordering is currently NOT done
       current_process_id        = 1
@@ -258,17 +254,17 @@ contains
         local_counter_file_groups = local_counter_file_groups + 1
         process_name = scr_arr_process_name(current_process_id)         &
                        (1:scr_arr_name_length(current_process_id))
- 
+
         do proc_id = 1, nr_of_process_glb
- 
+
           scr_process_name(1:scr_arr_name_length(proc_id)) =            &
           scr_arr_process_name(proc_id)                                 &
           (1:scr_arr_name_length(proc_id))
- 
+
           if(scr_process_name(1:scr_arr_name_length(proc_id)) ==        &
              process_name(1:scr_arr_name_length(current_process_id)))   &
              process_list_glb(proc_id) = current_process_id
- 
+
         end do
 !
 !       check if we are done and set finished_loop: done = 1, else 0
@@ -276,7 +272,7 @@ contains
 !       which is current_process_id
 !
         do proc_id = 1, nr_of_process_glb
-          if(finished_loop /= 0 .and. process_list_glb(proc_id) == -1)then 
+          if(finished_loop /= 0 .and. process_list_glb(proc_id) == -1)then
             finished_loop = 0
             current_process_id = proc_id
           end if
@@ -284,10 +280,10 @@ contains
         if(finished_loop == 1) exit
 
       end do
- 
+
 
       nr_file_groups = local_counter_file_groups
- 
+
 !     final consistency check
       if(nr_file_groups == 1) process_list_glb = 1
 
@@ -327,9 +323,9 @@ contains
                                       inter_node_comm,                         &
                                       shmem_ijkl_comm,                         &
                                       shmem_cvec_comm,                         &
-                                      intra_node_group_id)                      
+                                      intra_node_group_id)
 !********************************************************************************
-!     purpose: setup communicators and process-id for the various               
+!     purpose: setup communicators and process-id for the various
 !              communication levels:
 !                a. intra-node
 !                b. inter-node
@@ -366,7 +362,7 @@ contains
 !-------------------------------------------------------------------------------
 
 !     a. intra-node communicator (primarly used as I/O communicator)
- 
+
       key   = my_process_id_glb
       color = process_list_glb(my_process_id_glb+1)
 
@@ -394,7 +390,7 @@ contains
       key   = process_list_glb(my_process_id_glb+1)
       color = 2
       if(my_intra_node_id /= 0) color = 3
- 
+
       call build_new_communicator_group(communicator_glb,        &
                                         inter_node_comm,         &
                                         inter_node_size,         &
@@ -404,11 +400,11 @@ contains
 !     c. shared memory communicator
 
 !     c.1. ijkl communicator
- 
+
       key   = my_process_id_glb
       color = process_list_shared_mem_glb(my_process_id_glb+1)
       if(shared_memory_lvl_ijkl == 1) color = 1
- 
+
       call build_new_communicator_group(communicator_glb,        &
                                         shmem_ijkl_comm,         &
                                         shmem_ijkl_size,         &
@@ -417,11 +413,11 @@ contains
                                         key)
 
 !     c.2. cvec communicator
- 
+
       key   = my_process_id_glb
       color = process_list_shared_mem_glb(my_process_id_glb+1)
       if(shared_memory_lvl_cvec == 1) color = 1
- 
+
       call build_new_communicator_group(communicator_glb,        &
                                         shmem_cvec_comm,         &
                                         shmem_cvec_size,         &
@@ -445,9 +441,9 @@ contains
                                           color,                 &
                                           key)
 !*******************************************************************************
-!     purpose: split old communicator group into new sub-groups 
-!              using key and color. 
-!              the new communicator along with the process-ids in the new group 
+!     purpose: split old communicator group into new sub-groups
+!              using key and color.
+!              the new communicator along with the process-ids in the new group
 !              and the group size are returned.
 !*******************************************************************************
      integer, intent(in )   :: old_communicator
@@ -466,7 +462,7 @@ contains
       key_mpi      = key
       call mpi_comm_split(old_comm_mpi,color_mpi,key_mpi,new_comm_mpi,ierr_mpi)
       new_communicator = new_comm_mpi
- 
+
 !     collect required information about each group:
 !       - group size
 !       - process id in the group
@@ -479,7 +475,7 @@ contains
 !*******************************************************************************
 
 end module
-#else 
+#else
   ! VAR_MPI not defined
   subroutine comm_model
   ! dummy routine for non-mpi compilation

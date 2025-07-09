@@ -7,18 +7,14 @@
 module par_mcci_io
 
 ! stefan: - this module provides all necessary functionality
-!           to perform disk i/o operations in parallel mcscf/ci 
+!           to perform disk i/o operations in parallel mcscf/ci
 !           calculations.
 !
 !           written by sknecht, may 2007 for DIRAC MCSCF/KR-CI/LUCITA
 !           adapted for DALTON by sknecht, november 2010.
-#ifdef USE_MPI_MOD_F90
-  use mpi
+#include "mpi_mod.h"
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 
   public mcci_cp_vcd_batch
   public mcci_cp_vcd_mpi_2_seq_io_interface
@@ -31,7 +27,7 @@ module par_mcci_io
   integer(kind=MPI_INTEGER_KIND)         :: istat(MPI_STATUS_SIZE)
   integer(kind=MPI_INTEGER_KIND)         :: ierr
 
-contains 
+contains
 
 !******************************************************************************
 
@@ -55,7 +51,7 @@ contains
 !
 !    purpose:  copy c/sigma-vector from file LUIN to LUOUT batchwise:
 !                - update the file lists
-!                - active blocks on the MPI-files are flagged 
+!                - active blocks on the MPI-files are flagged
 !                  by a nonzero length
 !
 !              note: joff = (ivec resp. iroot) - 1
@@ -80,7 +76,7 @@ contains
      integer(kind=MPI_OFFSET_KIND), intent(in)  :: cs_fullvector_off
      integer                      , intent(in)  :: cs_fullactblk_off
 !------------------------------------------------------------------------------
-     integer(kind=MPI_OFFSET_KIND)  :: ioffset_in  
+     integer(kind=MPI_OFFSET_KIND)  :: ioffset_in
      integer(kind=MPI_OFFSET_KIND)  :: ioffset_out
      integer(kind=MPI_OFFSET_KIND)  :: ioffset_scratch
      integer(kind=MPI_OFFSET_KIND)  :: my_ioffset_scratch
@@ -115,11 +111,11 @@ contains
 !       set offset for data read operation
         ioffset_in     = my_ioff_luin + (cs_fullvector_off * joff) + my_ioffset_scratch
         ioffset_int_in = (cs_fullactblk_off * joff) + num_blk_cnt + 1
- 
+
         num_blk_cnt_act  = 0
         ioffset_int_out  = num_blk + 1
 
-!       read batch 
+!       read batch
         call read_batch_pario(xmat,                              &
                               luin,                              &
                               luinlist,                          &
@@ -130,12 +126,12 @@ contains
                               ioffset_int_in,                    &
                               ioffset_int_out,                   &
                               num_blk_cnt_act)
- 
+
 !       set offset for data write operation
         ioffset_out = my_ioff_luout + ioffset_scratch
-     
+
         iscratch_special = 0
- 
+
         call write_batch_pario(xmat,                             &
                                luout,                            &
                                luoutlist,                        &
@@ -144,8 +140,8 @@ contains
                                block_info,                       &
                                ioffset_out,                      &
                                ioffset_int_out,                  &
-                               iscratch_special)                  
- 
+                               iscratch_special)
+
 !       keep track of correct offset
 !       a. output
         ioffset_scratch    = ioffset_scratch + iscratch_special
@@ -153,7 +149,7 @@ contains
 !       b. input
         num_blk_cnt        = num_blk_cnt + num_blk_cnt_act
         my_ioffset_scratch = my_ioffset_scratch + lebatch(isbatch)
- 
+
       end do
 
   end subroutine mcci_cp_vcd_batch
@@ -173,7 +169,7 @@ contains
 !
 !    purpose:  read batch of c/sigma-vector from file LUIN:
 !                - update the file lists
-!                - active blocks on the MPI-files are flagged 
+!                - active blocks on the MPI-files are flagged
 !                  by a nonzero length
 !
 !******************************************************************************
@@ -229,7 +225,7 @@ contains
             write(lupri,*) 'printing read at (mem_off)',ioff_luin, mem_off
             call wrtmatmn(xmat(mem_off),1,blk_len,1,blk_len,lupri)
 #endif
- 
+
           end if ! block is non-zero on input file
         end if ! block has non-zero length in general
 
@@ -254,7 +250,7 @@ contains
 !
 !    purpose:  write batch of c/sigma-vector to file luout:
 !                - update the file lists
-!                - active blocks on the MPI-files are flagged 
+!                - active blocks on the MPI-files are flagged
 !                  by a nonzero length
 !
 !******************************************************************************
@@ -302,7 +298,7 @@ contains
             write(lupri,*) 'printing write at',ioff_luout
             call wrtmatmn(xmat(mem_off),1,blk_len,1,blk_len,lupri)
 #endif
- 
+
         end if ! block has non-zero length in general
 
 !       keep track of offset
@@ -329,10 +325,10 @@ contains
                                                  io_direction_switch)
 !******************************************************************************
 !
-!    purpose:  interface to two i/o routines: 
-!              a. copy vector residing on disc from sequential i/o format to 
+!    purpose:  interface to two i/o routines:
+!              a. copy vector residing on disc from sequential i/o format to
 !                 mpi i/o format
-!              b. copy vector residing on disc from mpi i/o format to 
+!              b. copy vector residing on disc from mpi i/o format to
 !                 sequential i/o format
 !
 !******************************************************************************

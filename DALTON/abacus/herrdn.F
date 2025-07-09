@@ -3365,6 +3365,7 @@ C     Process basis data
 C
 C******************************************************************************
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "pi.h"
@@ -3374,7 +3375,7 @@ C******************************************************************************
 #include "maxaqn.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
 #include "infpar.h"
 #endif
 

@@ -42,13 +42,9 @@
 *
 #ifdef VAR_MPI
       use par_mcci_io
-#ifdef USE_MPI_MOD_F90
-      use mpi
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
-#else
-      IMPLICIT REAL*8(A-H,O-Z)
-#include "mpif.h"
-#endif
+#include "mpi_header.h"
 #endif
 #include "parluci.h"
 #include "mxpdim.inc"
@@ -163,7 +159,7 @@
 
           call mcci_cp_vcd_batch(lucin,BVC_fh,vec1,
      &                           nbatch,blocks_per_batch,
-     &                           batch_length,  
+     &                           batch_length,
      &                           block_offset_batch,
      &                           block_info_batch,
      &                           block_list,
@@ -196,12 +192,12 @@
      &                 par_dist_block_list,rcctos,grouplist,proclist
 #endif
      &                 )
-        
+
 #ifdef VAR_MPI
         if(luci_nmproc .gt. 1)then
 
           CALL VECSUM_PP_B_RL(VEC1,VEC2,
-     &                        LU_scrlst,  
+     &                        LU_scrlst,
      &                        LU_inoutlst,
      &                        NBATCH,blocks_per_batch,
      &                        batch_length,
@@ -390,7 +386,7 @@
 *
       CALL DZERO(H,NTOOB**2)
 
-!     KSM  = ISMFSO(k)        
+!     KSM  = ISMFSO(k)
       KSM  = ISMFSO(ireots(k))
       KOFF = IBSO(KSM)
 !     KREL = K - KOFF + 1
@@ -511,7 +507,7 @@
       CALL MEMMAN(KLBSTR,MXNSTR*NBEL,'ADDL  ',1,'KLBSTR')
       CALL MEMMAN(KLKAOC,MXNSTR,     'ADDL  ',1,'KLKAOC')
       CALL MEMMAN(KLKBOC,MXNSTR,     'ADDL  ',1,'KLKBOC')
-      
+
 !     orbital K in type ordering - stefan jan 2012 (in paris on the wy
 !     to chile): not true any longer. SOT-mat entries are resorted to
 !     sirius order (type order) therefore no reordering here needed.
@@ -565,8 +561,9 @@
 !     use mpi
 !     IMPLICIT REAL*8(A-H,O-Z)
 !else
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpif.h"
+#include "mpi_header.h"
 !endif
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi
@@ -616,7 +613,7 @@
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
         WRITE(lupri,*) ' IATP IBTP IASM IBSM ', IATP,IBTP,IASM,IBSM
-        WRITE(lupri,*) ' IBLTP(IASM)         ', IBLTP(IASM) 
+        WRITE(lupri,*) ' IBLTP(IASM)         ', IBLTP(IASM)
         call flshfo(lupri)
 #undef LUCI_DEBUG
 #endif

@@ -3835,6 +3835,7 @@ C  /* Deck parqmmm_m */
       SUBROUTINE PARQMMM_M(DCAO,TAO,ESOLT,LOCDEB,WRK,LWRK,
      &                         IPRINT)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 !  mxcoor in nuclei.h
 #include "mxcent.h"
@@ -3859,7 +3860,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 C#include "cbiher.h"
 C defined parallel calculation types
@@ -3986,6 +3987,7 @@ C******************************************************************************
 C  /* Deck parqmmm_s */
       SUBROUTINE PARQMMM_S(WRK,LWRK,IPRTMP)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 !  mxcoor in nuclei.h
 #include "mxcent.h"
@@ -4009,7 +4011,7 @@ C  /* Deck parqmmm_s */
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 ! qmmm
 #include "gnrinf.h"
@@ -4154,6 +4156,7 @@ C******************************************************************************
 C  /* Deck mm_field_m1 */
       SUBROUTINE MM_FIELD_M1(DCAO,ELF,POLDIM,WRK,LWRK,IPRINT)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4178,7 +4181,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4288,6 +4291,7 @@ C******************************************************************************
 C  /* Deck mm_field_s1 */
       SUBROUTINE MM_FIELD_S1(WRK,LWRK,IPRTMP)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4312,7 +4316,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4417,6 +4421,7 @@ C******************************************************************************
 C  /* Deck mm_field_m2 */
       SUBROUTINE MM_FIELD_M2(DCAO,ELF,POLDIM,WRK,LWRK,IPRINT)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4441,7 +4446,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4530,6 +4535,7 @@ C******************************************************************************
 C  /* Deck mm_field_s2 */
       SUBROUTINE MM_FIELD_S2(WRK,LWRK,IPRTMP)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4554,7 +4560,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4638,6 +4644,7 @@ C******************************************************************************
 C  /* Deck mm_polar_contr_m */
       SUBROUTINE MM_POLAR_CONTR_M(DCAO,TAO,CINDMOM,WRK,LWRK,IPRINT)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4662,7 +4669,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4784,6 +4791,7 @@ C******************************************************************************
 C  /* Deck mm_polar_contr_s */
       SUBROUTINE MM_POLAR_CONTR_S(WRK,LWRK,IPRTMP)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -4808,7 +4816,7 @@ C ----
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 #include "cbiher.h"
 #include "gnrinf.h"
@@ -4925,6 +4933,7 @@ C  /* Deck mmiter_inddip_m */
       SUBROUTINE MMITER_INDDIP_M(POLDIM,INDP1,INDMOM,VEC,INDDIA,
      *                    WRK,LWRK,LOCDEB,DIPCON,LM)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 C      IMPLICIT NONE
 
@@ -4935,7 +4944,7 @@ C      IMPLICIT NONE
 #include "infpar.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -5072,6 +5081,7 @@ C******************************************************************************
 C  /* Deck mmiter_inddip_s */
       SUBROUTINE MMITER_INDDIP_S(WRK,LWRK,IPRINT)
 
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -5079,7 +5089,7 @@ C  /* Deck mmiter_inddip_s */
 #include "qmmm.h"
 #include "mtags.h"
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #endif
 
       INTEGER POLDIM, POLARRAY

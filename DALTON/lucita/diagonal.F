@@ -280,7 +280,7 @@ C     END IF
         WRITE(6,*) ' JPERT,IPART,J12,IPERTOP',JPERT,IPART,J12,IPERTOP
       END IF
 *. A bit of scracth
-  
+
       CALL MEMMAN(KLJ   ,NTOOB**2,'ADDL  ',2,'KLJ   ')
       CALL MEMMAN(KLK   ,NTOOB**2,'ADDL  ',2,'KLK   ')
       CALL MEMMAN(KLXA  ,NACOB,   'ADDL  ',2,'KLXA  ')
@@ -739,11 +739,12 @@ C?    WRITE(6,*) ' Mission DIATERMS finished '
 * Parallel adaption in January 2007, Stefan Knecht
 * last parallel revision: March 2008
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8           (A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: IDIA_OFFSET
@@ -793,7 +794,7 @@ C     REAL * 8  INPROD
         END DO
 *
         WRITE(luwrt,*) ' I12 = ',I12
-        if(LUCI_NMPROC .gt. 1)then 
+        if(LUCI_NMPROC .gt. 1)then
           WRITE(LUWRT,*) ' NPARBLOCK:'
           CALL IWRTMA(NPARBLOCK,1,NBLOCK,1,NBLOCK)
         end if
@@ -956,6 +957,7 @@ C     REAL * 8  INPROD
 *
 * parallel adaption by S. Knecht - March 2008
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLJ, KLK, KLXA, KLXB, KLSCR, KLH1D, KLASTR,
      &          KLBSTR, KLRJKA
@@ -982,7 +984,7 @@ C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"

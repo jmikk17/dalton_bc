@@ -3,7 +3,7 @@
 !
 !dalton_copyright_end
 
-! RMA windows object (used for MPI-one-sided communication) and driver routines to 
+! RMA windows object (used for MPI-one-sided communication) and driver routines to
 ! open and close memory windows.
 !
 ! written by sknecht - linkoeping jan 2014
@@ -17,17 +17,9 @@ module rma_windows
       mpixwinfree
 #endif
 
-#ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-  use mpi
+#include "mpi_mod.h"
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
-#else
-  implicit none
-#endif
+#include "mpi_header.h"
 
 #ifdef VAR_MPI
   public set_rma_window
@@ -140,7 +132,7 @@ contains
 !
 !     close memory window used in one-sided MPI communication
 !
-!     INPUT: 
+!     INPUT:
 !            memory window handle my_win shared by all processes in
 !            a communication group.
 !
@@ -154,7 +146,7 @@ contains
       call mpixwinfree(my_win,myid)
 !
 !
-  end subroutine free_rma_window 
+  end subroutine free_rma_window
 #endif
 !*******************************************************************************
 

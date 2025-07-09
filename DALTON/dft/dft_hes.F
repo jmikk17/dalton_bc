@@ -1278,6 +1278,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_HESSTAT(NBAST,DMAT,V1MAT,NUCDEP,IPRINT)
+#include "mpi_mod.h"
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST), V1MAT(3*NBAST*NBAST*NUCDEP)
 C
@@ -1285,7 +1286,7 @@ C
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -1311,6 +1312,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_HESSTAT_SLAVE(WORK,LWORK,IPRINT)
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1322,7 +1324,7 @@ C
 C
       DIMENSION WORK(LWORK)
 #include "dftcom.h"
-#include "mpif.h"
+#include "mpi_header.h"
       LOGICAL  DFT_ISGGA
       EXTERNAL DFT_ISGGA, DFTSTATHES
 C
@@ -1352,12 +1354,13 @@ C
 #endif
 C
       SUBROUTINE DFT_HESSTAT_COLLECT(DFTHES,WORK,LWORK)
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
       DIMENSION DFTHES(MXCOOR,MXCOOR), WORK(LWORK)
 C
 #if defined (VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 C
       CALL DCOPY(MXCOOR*MXCOOR,DFTHES,1,WORK,1)
       CALL MPI_REDUCE(WORK,DFTHES,MXCOOR*MXCOOR,MPI_DOUBLE_PRECISION,
@@ -1367,6 +1370,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_HED(IATOM,NBAST,DMAT,V1MAT,IPRINT)
+#include "mpi_mod.h"
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST), V1MAT(3*NBAST*NBAST)
 C
@@ -1374,7 +1378,7 @@ C
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -1401,6 +1405,7 @@ C
 C /* Deck dfthed */
       SUBROUTINE DFTHED_SLAVE(WORK,LWORK,IPRINT)
 C
+#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxaqn.h"
@@ -1416,7 +1421,7 @@ C
 #include "dftcom.h"
 #include "infpar.h"
 #include "dftmolhes.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       EXTERNAL DFTKSD
       LOGICAL DFT_ISGGA
@@ -1450,13 +1455,14 @@ C
 #endif
 C
       SUBROUTINE DFT_HED_COLLECT(FCD,DFTFD,N2BASX,WORK,LWORK)
+#include "mpi_mod.h"
 #include "implicit.h"
       DIMENSION FCD(3*N2BASX), DFTFD(3*N2BASX), WORK(LWORK)
 C
 #if defined (VAR_MPI)
 #include "mxcent.h"
 #include "maxorb.h"
-#include "mpif.h"
+#include "mpi_header.h"
 C
       CALL DCOPY(3*N2BASX,FCD,1,WORK,1)
       CALL MPI_REDUCE(WORK,FCD,3*N2BASX,MPI_DOUBLE_PRECISION,

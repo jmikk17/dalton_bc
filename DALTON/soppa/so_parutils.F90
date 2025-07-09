@@ -2,6 +2,7 @@
 module so_parutils
 !
    use so_info, only: sop_dp
+#include "mpi_mod.h"
 ! SOPPA parallel/mpi utilities
 !
 ! This module defines some parameters and some subroutines, which are
@@ -11,7 +12,7 @@ module so_parutils
 #include "implicit.h"
 !
 ! Various other common-blocks that set occasionally used parameters
-#include "mpif.h"
+#include "mpi_header.h"
 #include "maxorb.h"
 #include "maxash.h"
 #include "mxcent.h"
@@ -123,7 +124,7 @@ contains
 #include "ccpack.h"
 #include "ccinftap.h"
 
-      integer(mpi_integer_kind) :: bytesize, ierr, count_mpi 
+      integer(mpi_integer_kind) :: bytesize, ierr, count_mpi
          !
          !The infinite list of getbytespan -- mpi_bcast starts here
          !
@@ -312,7 +313,7 @@ contains
       integer :: lt2am, lt2sam, lfockd, ldensij, ldensab, ldensai, &
                  lworkf, LAssignedIndices
 ! Pointers to arrays
-      integer :: kt2am, kt2sam, kfockd, kdensij, kdensab, kdensai, & 
+      integer :: kt2am, kt2sam, kfockd, kdensij, kdensab, kdensai, &
                  kdens3ij, kdens3ab, kend, kAssignedIndices
 ! Other integers
       character(len=5) :: model
@@ -523,7 +524,7 @@ contains
      &                      mpi_comm_world, ierr )
             !
 
-         case (parsoppa_update_s_amplitudes) 
+         case (parsoppa_update_s_amplitudes)
             !
             ! update second order amplitudes
             !
@@ -728,8 +729,9 @@ subroutine getbytespan(firstvar, lastvar, bytespan)
 !      call getbytespan(lbuf, eribufLAST, bytesize)
 !      call mpi_bcast(lbuf, bytesize, mpi_byte, 0, mpi_comm_world, ierr)
 
+#include "mpi_mod.h"
       implicit none
-#include "mpif.h"
+#include "mpi_header.h"
 #include "priunit.h"
 
       integer(mpi_integer_kind), intent(out) :: bytespan

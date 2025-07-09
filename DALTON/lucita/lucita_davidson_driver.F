@@ -34,6 +34,7 @@
 #endif
       use file_type_module
       use lucita_energy_types
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
 #include "mxpdim.inc"
 #include "wrkspc.inc"
@@ -45,7 +46,7 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND) ITEST_OFF
 #endif
@@ -75,7 +76,7 @@
         return
       end if
 
-      write(luwrt,'(a,i14)') 
+      write(luwrt,'(a,i14)')
      &'  @@ Number of determinants/combinations: ',l_combi
 
       lblk                 = -1
@@ -133,7 +134,7 @@
      &            file_info%iluxlist(1,9), file_info%ilublist
 #endif
      &            )
- 
+
 #ifdef VAR_MPI
 !     check for restart without CI
       IF(MAXIT .lt. 0) goto 777
@@ -227,7 +228,7 @@
         open(unit=LUSC3,file="LUSC3.0",status='UNKNOWN',
      &       form='UNFORMATTED')
       end if
- 
+
       END
 ***********************************************************************
 
@@ -250,6 +251,7 @@
 !
       use lucita_mcscf_srdftci_cfg
 
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLXLBT, KLXLEBT, KLXI1BT, KLXIBT
       INTEGER*8 current_free_mem, ksrdftdal_interface
@@ -258,7 +260,7 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
       DIMENSION LU1LIST(*), LU2LIST(*), LU3LIST(*)
       DIMENSION LU4LIST(*), LU5LIST(*), LUCLIST(*)
@@ -331,8 +333,8 @@ C
 
           ninvec = min(NFINDM,4*nrootsl+6)
 !!!! DEBUG
-!         NFINDM = 12; ninvec = 12 
-!         print *, 'ninvec, nfindm, nrootsl, ndim, maxvec ...', 
+!         NFINDM = 12; ninvec = 12
+!         print *, 'ninvec, nfindm, nrootsl, ndim, maxvec ...',
 !    &              ninvec, nfindm, nrootsl, ndim, maxvec
 !!!! DEBUG
           if(ninvec > maxvec) ninvec = maxvec
@@ -381,7 +383,7 @@ C
 
             IF (INIDEG.EQ.0.AND.NDEG.GT.1) THEN
 !             WRITE(luwrt,*) ' NOTE! degenerate initial vectors for CI'
-!             WRITE(luwrt,*) ' degree of degeneracy: ',NDEG 
+!             WRITE(luwrt,*) ' degree of degeneracy: ',NDEG
               NDEG = 1
             END IF
 
@@ -421,10 +423,10 @@ C
 
 #else
             IF (INIDEG.EQ.0.AND.NDEG.GT.1) THEN
-!             WRITE(luwrt,'(a,i3,a,i4,a)') 
+!             WRITE(luwrt,'(a,i3,a,i4,a)')
 !    &        ' degenerate initial vector for CI:'//
 !    &        ' vector ',irootsi,' out of ',ninvec,' start vectors'
-!             WRITE(luwrt,*) ' degree of degeneracy: ',NDEG 
+!             WRITE(luwrt,*) ' degree of degeneracy: ',NDEG
 !             print *, 'plus_combi... ',plus_combi
               if(.not.plus_combi) NDEG = 1
             END IF
@@ -462,7 +464,7 @@ C
 
             ninvec_local = ninvec_local + 1
             ibase        = ibase   + ndeg
-            irootsi      = irootsi + ndeg 
+            irootsi      = irootsi + ndeg
           end do
         ELSE
 * =====================================
@@ -504,10 +506,10 @@ C
          nnorbt_internal = 0
          norbt_internal  = 0
          do i = 1, nirrep
-           nnorbt_internal = nnorbt_internal + 
+           nnorbt_internal = nnorbt_internal +
      &                       (nmos_env(i)*(nmos_env(i)+1))/2
            norbt_internal  = norbt_internal + nmos_env(i)
-         end do 
+         end do
          nnashx = (ntoob*(ntoob+1))/2
 
          allocate(fsr(max(ntoob**2,nnorbt_internal)))
@@ -533,7 +535,7 @@ C
 ! Manu feb. 2014: weights(1) set to 1.0 when one single root is computed
 !                 like in GS CI-srDFT calculations for example
 
-         if(nrootsl ==1)then 
+         if(nrootsl ==1)then
          weights(1) = 1.0d0
          end if
          !write(luwrt,*) 'weights(1:nroots)',weights(1:nrootsl)
@@ -630,15 +632,15 @@ C
          LSCR_local = current_free_mem - 1000
          call memman(ksrdftdal_interface,lscr_local,'ADDL  ',2,'srdft2')
 
-         
+
          CALL SRFMAT(FSR,srdft_cmo_lucita,work(KRHO1_ens),
      &               EJCSR_mc2lu,EJVSR_mc2lu,EDSR_mc2lu,EDFT_mc2lu,
      &               emydftaux_mc2lu,UEJCVSR,
      &               work(ksrdftdal_interface),lscr_local,0)
-         
+
          if(luci_myproc == luci_master)then
 !          ... Correct EMY/eigshf and CI diagonal
-           EMYDFT_mc2lu = 
+           EMYDFT_mc2lu =
      &            EJCSR_mc2lu + EJVSR_mc2lu + EDSR_mc2lu + EDFT_mc2lu(1)
 
 !          write(luwrt,*) 'eigshf before',eigshf
@@ -660,7 +662,7 @@ C
      &                                work(kint1))
 
 !          call wrtmatmn(work(kint1),1,3,1,3,luwrt)
-!          ... fold SRAC for 
+!          ... fold SRAC for
 !          -----------------
 !           1) Adding it to CI-diagonal to get better pre-conditioning
 !           2) Later printing of CIDFT specific energy contributions
@@ -673,14 +675,14 @@ C
          end if
 
 #ifdef VAR_MPI
-         if(luci_nmproc > 1)then 
+         if(luci_nmproc > 1)then
            call mpi_bcast(eigshf,1,mpi_real8,0,mpi_comm_world,irr)
            call mpi_bcast(emydft_mc2lu,1,mpi_real8,0,mpi_comm_world,irr)
            call mpi_bcast(esrdv,1,mpi_real8,0,mpi_comm_world,ierr)
          end if
 #endif
 
-!        adding esrdv to H diagonal 
+!        adding esrdv to H diagonal
 !        ----------------------------
          call manipulate_vcd(ludia,lu5,EMYDFT_mc2lu+ESRDV,
      &                       vec1,-1,-1)
@@ -829,7 +831,7 @@ C     Hamiltonian is totally symmetric)
      &                                   WORK(KLXI1BT),WORK(KLXIBT),
      &                                   nbatch_par,nblock_par,
      &                                   IBLKDSTND)
- 
+
        CALL MICDV6_PAR(VEC1,VEC2,C2,SCR1(KRNRM),SCR1(KEIG),nfinal_vec,
      &                 EROOT,root_converged,root_residual,
      &                 MXCIIT,NDIM,NROOTSL,
@@ -862,7 +864,7 @@ C     Hamiltonian is totally symmetric)
 !!! Manu july 2014: for ensemble CI-srDFT, wavefunctions will be
 !converged for a given trial ensemble density. The latter should then be
 !updated in the srDFT potential (call SRFMAT ...), and MICDV6 called again until
-!convergence is reached.   
+!convergence is reached.
 !
 #else
 #ifndef blubb2

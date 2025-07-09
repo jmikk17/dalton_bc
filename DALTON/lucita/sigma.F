@@ -32,10 +32,10 @@
 *
 * For ITERM = 1 :
 *           LADVICE = 1 : Business as usual, no transpose of matrix
-*                         (resolution on alpha strings, direct exc 
+*                         (resolution on alpha strings, direct exc
 *                         on beta)
 *           LADVICE = 2 = Transpose matrices
-*                         (resolution on beta strings, direct exc on 
+*                         (resolution on beta strings, direct exc on
 *                         alpha)
 *
 * Jeppe Olsen, Tirstrup Airport, Jan 12, 98
@@ -4199,14 +4199,14 @@ C     CALL QEXIT('SKICK')
 * If the twobody density matrix is calculated, then also the
 * expectation value of the spin is evalueated.
 * The latter is realixed as
-* S**2 
+* S**2
 *      = S+S- + Sz(Sz-1)
 *      = -Sum(ij) a+i alpha a+j beta a i beta a j alpha + Nalpha +
 *        1/2(N alpha - N beta))(1/2(N alpha - Nbeta) - 1)
 *
 * If IDOSRHO12 = 1, spin density is also calculated
 *
-* if IDOSRHO12 = 2, then the spin-components of the 
+* if IDOSRHO12 = 2, then the spin-components of the
 * two-body density are also calculated
 *
 * RHO2AA(i,j,k,l) = <0!a+_ialpha a+_jalpha a_kalpha a_lalpha!0>
@@ -4216,12 +4216,13 @@ C     CALL QEXIT('SKICK')
 * RHO2AB(i,j,k,l) = <0!a+_ialpha a+_jbeta a_kbeta a_lalpha!0>
 *                   No restrictions on i,j,k,l
 *
-* Call tree for densities : 
+* Call tree for densities :
 * =========================
 *                    GSDNBB2 - GSBBD1
 *                            - GSBBD2A
 *                            - GSBBD2B
 
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
      &          KISCLFAC, KSCALLOC
@@ -4229,7 +4230,7 @@ C     CALL QEXIT('SKICK')
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -4273,8 +4274,8 @@ C
       DIMENSION C2(*)
 *. To prepare for version allowing complete C and HC in core
       DIMENSION CV(*), HCV(*)
-     
-      
+
+
       CALL QENTER('SIGDEN_CI')
       IDUM = 0
       CALL MEMMAN(IDUM,IDUM,'MARK  ',IDUM,'SIDE  ')
@@ -4315,7 +4316,7 @@ C
 *     arrays for additional symmetry operation
       IF(IDC.EQ.3.OR.IDC.EQ.4) THEN
         CALL MEMMAN(KSVST,NSMST,'ADDL  ',2,'SVST  ')
-         
+
         CALL SIGVST(WORK(KSVST),NSMST)
       ELSE
          KSVST = 1
@@ -4382,7 +4383,7 @@ C
         if(idoh2 .eq. 1)then
           CALL dzero(WORK(KRHO2),LRHO2)
 !         initialize s**2 on master
-          if(LUCI_MYPROC == 0)then 
+          if(LUCI_MYPROC == 0)then
 !           write(luwrt,*) 'NAEL, NBEL',NAEL, NBEL
             exps2 = NAEL +
      &              0.5*(NAEL-NBEL)*(0.5*(NAEL-NBEL)-1)
@@ -4403,13 +4404,13 @@ C
 !       write(luwrt,*) ' print spindens',idosrho1,idosrho2
       end if
 *
-      IF(IDOSRHO1.EQ.1) THEN  
+      IF(IDOSRHO1.EQ.1) THEN
         CALL DZERO(work(kSRHO1), ntoob ** 2)
         CALL DZERO(work(kSRHO1a),ntoob ** 2)
         CALL DZERO(work(kSRHO1b),ntoob ** 2)
       END IF
 *
-      IF(IDOSRHO2.EQ.1) THEN 
+      IF(IDOSRHO2.EQ.1) THEN
         LEN_RHO2AA = (ntoob*(ntoob+1)/2)**2
         LEN_RHO2AB = ntoob ** 4
         CALL dzero(work(kRHO2AA),LEN_RHO2AA)
@@ -4417,7 +4418,7 @@ C
         CALL dzero(work(kRHO2AB),LEN_RHO2AB)
       END IF
 
-      
+
       IF(ICISTR.EQ.1) THEN
         WRITE(6,*) 'ICISTR = 1 route currently not active'
         call quit('SIGDEN_CI : ICISTR = 1 route currently not active')
@@ -4426,7 +4427,7 @@ C
      &       NBATCH,WORK(KLSLBT),WORK(KLSLEBT),
      &       WORK(KLSI1BT),WORK(KLSIBT),LLUC,LLUHC,
      &       WORK(KISCLFAC),WORK(KSCALLOC),rhotype,exps2,
-     &       idosrho1,idosrho2 
+     &       idosrho1,idosrho2
 #ifdef VAR_MPI
      &               ,LUCLIST,LUHCLIST,IBLOCKL,NPARBLOCK,RCCTOS,
      &                IGROUPLIST,IPROCLIST
@@ -4490,7 +4491,7 @@ C             TEST_RHO2S(RHO2,RHO2AA,RHO2AB,RHO2BB,NORB)
       SUBROUTINE SIGDEN2_CI(CB,SB,C2,CV,SV,ISIGDEN,
      &                  NBATS,LBATS,LEBATS,I1BATS,IBATS,
      &                  LUC,LUHC,SSCLFAC,ISCLFAC_GROUP,rhotype,exps2,
-     &                  idosrho1,idosrho2 
+     &                  idosrho1,idosrho2
 #ifdef VAR_MPI
      &                  ,LUCLIST,LUHCLIST,IBLOCKL,NPARBLOCK,RCCTOS,
      &                   IGROUPLIST,IPROCLIST
@@ -4505,11 +4506,12 @@ C             TEST_RHO2S(RHO2,RHO2AA,RHO2AB,RHO2BB,NORB)
 * Input
 * =====
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: IOFFSET
@@ -4606,7 +4608,7 @@ C     block list offset
 C
 C?    WRITE(luwrt,*) 'INT_IOFF1 in RASSG3',INT_IOFF1
 C
-C     include in C-vector batches only C-blocks which are 
+C     include in C-vector batches only C-blocks which are
 C     needed to compute a s-block for a given CPU
 C
       CALL UPDATE_GEN_LIST(ISCLFAC_GROUP,RCCTOS,NUM_BLOCKS2)
@@ -4738,7 +4740,7 @@ C
 #endif
      &                )
       IF(ISIGDEN.EQ.1) THEN
-C  
+C
 C       transfer S block to permanent storage
 #ifdef VAR_MPI
         IF (LUCI_NMPROC .GT. 1) THEN
@@ -4901,19 +4903,20 @@ C
 * Cbatches ICBAT_INI to ICBAT_END are stored on  LUC
 *
 *
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
-     &          KISCLFAC, KSCALLOC, KLLBT, KLLEBT, KLI1BT, KLIBT, 
+     &          KISCLFAC, KSCALLOC, KLLBT, KLLEBT, KLI1BT, KLIBT,
      &          KLSCLFAC, KI1, KXI1S, KI2, KXI2S, KI3, KXI3S, KI4,KXI4S,
      &          KCJRES, KSIRES, KSSCR, KCSCR, KCJPA, KSIPA, KSOMEH,
-     &          KSOMESCR, KCONSPA, KCONSPB, KSTSTS, KSTSTD, KINSCR, 
+     &          KSOMESCR, KCONSPA, KCONSPB, KSTSTS, KSTSTD, KINSCR,
      &          KCIOIO, KCBLTP, KRHO1S
       INTEGER*8 KLOCSTR, KLREO, KLZ, KLZSCR, KLH0SPC
 !               for addressing of WORK
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -4966,7 +4969,7 @@ C
       NTEST = 0
 *
 *     set local mark memory
-* 
+*
       IDUM = 0
       CALL MEMMAN(KDUM,IDUM,'MARK  ',IDUM,'SIDE3 ')
 *
@@ -5153,7 +5156,7 @@ C
 C
 C     space for four blocks of string occupations and arrays of
 C     reordering arrays
-C     
+C
       LZSCR = (MAX(NAEL,NBEL)+3)*(NOCOB+1) + 2 * NOCOB
       LZ    = (MAX(NAEL,NBEL)+2) * NOCOB
       DO I1234 = 1, 1
@@ -5189,7 +5192,7 @@ C
 !     ---------------------
 !
 !     note for isigden == 2 (density/transition density run):
-!     KCJPA and KSIPA are used as transpose/scatter scratch space in order to avoid 
+!     KCJPA and KSIPA are used as transpose/scatter scratch space in order to avoid
 !     overwriting of C2. sk - nov 2011
 !
       S2_TERM1 = 0.0d0
@@ -5332,11 +5335,12 @@ C
 * If IRESTRICT.NE. 0 THEN we are after :
 * sigma(iblk) = summa(jblk.le.iblk) (2-delta(iblk,jblk))/2
 *                                                 * <Iblk!H!Jblk>C(Jblk)
+#include "mpi_mod.h"
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
+#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #endif
@@ -5525,7 +5529,7 @@ csk       WRITE(luwrt,*) ' active C block found',ICBLK
             DO JSBLOCK = 1, NSBLOCK
             IDENT = 0
 C
-C           parallel CI: ISBLOCK(1,JSBLOCK) == 0 for 
+C           parallel CI: ISBLOCK(1,JSBLOCK) == 0 for
 C           blocks which are not assigned to a given CPU
 C
             IF( ISBLOCK(1,JSBLOCK) .gt. 0 ) THEN
@@ -5666,8 +5670,8 @@ C           start with transposed block
               LLBTP = LBTP(IPERM)
               NLLA = NSSOA(LLASM,LLATP)
               NLLB = NSSOB(LLBSM,LLBTP)
-C             the routines assumes on input that the blocks are transposed, 
-C             so, initial tour, IPERM = 1 corresponds always to no transpose, 
+C             the routines assumes on input that the blocks are transposed,
+C             so, initial tour, IPERM = 1 corresponds always to no transpose,
 C             so transpose!
 *. transpose is done for sigma, not density so
               ipermdia_off = -1
@@ -5696,12 +5700,12 @@ CTF                  CALL SCALVE(CB(ICOFF),-1.0D0,LROW*LCOL)
                  END IF
                END IF! IPERM.EQ.1 switch
               END IF !  ISIGDEN switch
-            
+
 C
 C             loop over sigma blocks in this batch
 C
-C             NOTE: in parallel execution ISBLOCK(1,ISBLK) is 
-C                   set to 0 if block is not included in block 
+C             NOTE: in parallel execution ISBLOCK(1,ISBLK) is
+C                   set to 0 if block is not included in block
 C                   distribution list NPARBLOCK for a given CPU.
 C
               DO 10000 ISBLK = 1, NSBLOCK
@@ -5835,18 +5839,18 @@ C                   not exact Hamiltonian in use
      &                                 IDOH2.EQ.1
                     END IF
 
-!                   sk + jeppe - july 2012 at Sostrup summer school: take care of the transpose procedure: 
-!                   note: the following applies only to sequential runs - in a parallel run CB and SB are 
+!                   sk + jeppe - july 2012 at Sostrup summer school: take care of the transpose procedure:
+!                   note: the following applies only to sequential runs - in a parallel run CB and SB are
 !                         always located in different parts of the physical memory
-!                      a. regular DM run       (rhotype == 1): CB and SB ARE IDENTICAL memory arrays!!! 
-!                      b. TDMs in MCSCF        (rhotype == 3): CB and SB ARE DIFFERENT memory arrays!!! 
-!                      c. regular DM run in CI (rhotype == 0): CB and SB ARE DIFFERENT memory arrays!!! 
+!                      a. regular DM run       (rhotype == 1): CB and SB ARE IDENTICAL memory arrays!!!
+!                      b. TDMs in MCSCF        (rhotype == 3): CB and SB ARE DIFFERENT memory arrays!!!
+!                      c. regular DM run in CI (rhotype == 0): CB and SB ARE DIFFERENT memory arrays!!!
 
                     itrsp_once = 0
 
 #ifndef VAR_MPI
-                    if(luci_myproc == 0 .and. rhotype == 1)then 
-                      if(iasm == jasm .and. iatp == jatp .and. 
+                    if(luci_myproc == 0 .and. rhotype == 1)then
+                      if(iasm == jasm .and. iatp == jatp .and.
      &                   ibsm == jbsm .and. ibtp == jbtp)then
                         itrsp_once = 1
                       end if
@@ -5858,7 +5862,7 @@ C                   not exact Hamiltonian in use
      &                           JASM,JATP,JBSM,JBTP,NGAS,
      &                           NELFSPGP(1,IATP+IOCTPA-1),
      &                           NELFSPGP(1,IBTP+IOCTPB-1),
-     &                           NELFSPGP(1,JATP+IOCTPA-1), 
+     &                           NELFSPGP(1,JATP+IOCTPA-1),
      &                           NELFSPGP(1,JBTP+IOCTPB-1),
      &                           NAEL,NBEL,IAGRP,IBGRP,
      &                           SB(ISOFF),CB(ICOFF),C2,
@@ -5926,7 +5930,7 @@ C
           IF(ICJKAIB.NE.0) THEN
 !            write(luwrt,*) ' sigma transpose business'
 C
-C            tranposed sigma block was obtained, 
+C            tranposed sigma block was obtained,
 C            transpose to obtain correct block
 C            ----------------------------------
 C
@@ -5975,8 +5979,8 @@ C
 #ifdef LUCI_DEBUG
       NTEST = 00
       IF ( NTEST .NE. 0 ) THEN
-      WRITE(6,*) ' Initial A, B and C MATRIX FROM MATML7 ' 
-      WRITE(6,*)      ' NCROW NCCOL NAROW NACOL NBROW NBCOL ' 
+      WRITE(6,*) ' Initial A, B and C MATRIX FROM MATML7 '
+      WRITE(6,*)      ' NCROW NCCOL NAROW NACOL NBROW NBCOL '
       WRITE(6,'(6I6)')  NCROW,NCCOL,NAROW,NACOL,NBROW,NBCOL
       WRITE(6,*) ' ITRNSP : ', ITRNSP
         IF (NCROW .lt. 0 .or. NCCOL .lt. 0 .or. NAROW .lt. 0 .or.
@@ -6010,7 +6014,7 @@ C     output
 C
 #ifdef LUCI_DEBUG
       IF ( NTEST .NE. 0 ) THEN
-      WRITE(6,*) ' Final C MATRIX FROM MATML7 ' 
+      WRITE(6,*) ' Final C MATRIX FROM MATML7 '
       CALL WRTMT_LU(C,NCROW,NCCOL,NCROW,NCCOL)
       END IF
 #endif
