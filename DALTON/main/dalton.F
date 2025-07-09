@@ -51,7 +51,7 @@ C
 #if defined (VAR_MPI)
 #include "mpi_header.h"
       LOGICAL(kind=MPI_INTEGER_KIND) :: FINISH
-      INTEGER(kind=MPI_INTEGER_KIND) :: ierr_mpi
+      INTEGER(kind=MPI_INTEGER_KIND) :: count_mpi, err_mpi
 #endif
 #ifdef VAR_OMP
       INTEGER omp_get_num_procs
