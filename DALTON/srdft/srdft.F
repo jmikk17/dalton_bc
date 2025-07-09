@@ -902,11 +902,14 @@ C     Purpose : Calculate DFT-energy and potential contribution for
 C               SR-DFT hybrid methods.
 C
 C*****************************************************************************
+#ifdef VAR_MPI
+#include "mpi_mod.h"
+#endif
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
       integer(mpi_integer_kind) :: ierr_mpi
 #endif
 
