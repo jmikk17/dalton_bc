@@ -8,7 +8,7 @@ module mpi_interface
 #elif defined(USE_MPI_MOD_F90)
   use mpi
 #else
-  #include "mpif.h"
+#include "mpif.h"
 #endif
 #endif
 end module mpi_interface
