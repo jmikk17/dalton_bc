@@ -2453,11 +2453,9 @@ C
 !     Sep 2011 : driver for sorting the 1-/2-particle density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-#ifdef VAR_MPI
 #include "mpi_mod.h"
 #include "implicit.h"
 #include "mpi_header.h"
-#endif
 #include "parluci.h"
 
       real(8), intent(in)    :: rho1lu(*)
@@ -2567,11 +2565,9 @@ C
 !     Aug 2012 : driver for sorting the 1-particle spin-density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-#ifdef VAR_MPI
 #include "mpi_mod.h"
 #include "implicit.h"
 #include "mpi_header.h"
-#endif
 #include "parluci.h"
 
       real(8), intent(in)    :: rho1slu(*)

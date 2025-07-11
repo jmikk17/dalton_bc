@@ -3859,9 +3859,7 @@ C ----
 ! MXSHEL
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 C#include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -4010,9 +4008,7 @@ C  /* Deck parqmmm_s */
 ! MXSHEL
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 ! qmmm
 #include "gnrinf.h"
 ! diporg
@@ -4180,9 +4176,7 @@ C  /* Deck mm_field_m1 */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 C defined parallel calculation types
@@ -4315,9 +4309,7 @@ C  /* Deck mm_field_s1 */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 
@@ -4445,9 +4437,7 @@ C  /* Deck mm_field_m2 */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 C defined parallel calculation types
@@ -4559,9 +4549,7 @@ C  /* Deck mm_field_s2 */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 
@@ -4668,9 +4656,7 @@ C  /* Deck mm_polar_contr_m */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 C defined parallel calculation types
@@ -4815,9 +4801,7 @@ C  /* Deck mm_polar_contr_s */
 C ----
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 
@@ -4943,9 +4927,7 @@ C      IMPLICIT NONE
 #include "maxorb.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 C defined parallel calculation types
 #include "iprtyp.h"
 
@@ -5088,9 +5070,7 @@ C  /* Deck mmiter_inddip_s */
 #include "mxcent.h"
 #include "qmmm.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 
       INTEGER POLDIM, POLARRAY
       DIMENSION WRK(LWRK), POLARRAY(:)

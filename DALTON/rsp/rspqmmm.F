@@ -567,9 +567,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -1011,9 +1009,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, FOUR = 4.0D0)
@@ -1651,9 +1647,7 @@ C  /* Deck mmlno_iter1 */
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -1845,9 +1839,7 @@ C  /* Deck mmlno_iter2 */
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -2008,9 +2000,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -2233,9 +2223,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, FOUR = 4.0D0)
@@ -2415,9 +2403,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -2704,9 +2690,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 
       DIMENSION WRK(LWRK), EIND1(3), EIND2(3), EIND3(3)
@@ -2933,9 +2917,7 @@ C
 #include "infpar.h"
 #include "gnrinf.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3039,9 +3021,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3139,9 +3119,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3223,9 +3201,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3300,9 +3276,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3410,9 +3384,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3512,9 +3484,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -3603,9 +3573,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3690,9 +3658,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3808,9 +3774,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3921,9 +3885,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -4030,9 +3992,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"

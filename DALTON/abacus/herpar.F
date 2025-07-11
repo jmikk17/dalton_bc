@@ -2421,8 +2421,8 @@ C  /* Deck her_sdres */
 #ifdef VAR_MPI
       use parallel_communication_models_mpi
       use one_sided_communication_wrappers
-#include "mpi_mod.h"
 #endif
+#include "mpi_mod.h"
 !
 #include "implicit.h"
 #include "priunit.h"

@@ -29,9 +29,7 @@ C     T. Helgaker sep 99
 C
 #include "mpi_mod.h"
 #include "implicit.h"
-#if defined (VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -147,9 +145,7 @@ C     Takes info from master and allocate memory.
 C
 #include "mpi_mod.h"
 #include "implicit.h"
-#if defined (VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "maxorb.h"
 #include "infpar.h"
 #include "priunit.h"
@@ -571,9 +567,7 @@ C     Updates the different energies and the exchange mat:
 C
 #include "mpi_mod.h"
 #include "implicit.h"
-#if defined (VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "maxorb.h"
 #include "infpar.h"
 Ca
@@ -619,9 +613,7 @@ C     Ach
 C
 #include "mpi_mod.h"
 #include "implicit.h"
-#if defined (VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "maxorb.h"
 #include "mxcent.h"
 #include "nuclei.h"

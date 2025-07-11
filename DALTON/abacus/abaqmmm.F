@@ -2261,9 +2261,7 @@ C
 #include "gnrinf.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 
       DIMENSION WORK(LWORK)
@@ -2390,9 +2388,7 @@ C
 #include "magone.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -2498,9 +2494,7 @@ C
 #include "gnrinf.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 
       DIMENSION WORK(LWORK)
@@ -2626,9 +2620,7 @@ C
 #include "magone.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -2733,9 +2725,7 @@ C inftap.h: LUPROP
 #include "gnrinf.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 C cbiher.h: NPATOM, IPATOM
 #include "cbiher.h"
 

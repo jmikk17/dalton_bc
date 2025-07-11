@@ -12,9 +12,7 @@
 !
 module parallel_communication_models_mpi
 
-#ifdef VAR_MPI
 #include "mpi_mod.h"
-#endif
 
   implicit none
 

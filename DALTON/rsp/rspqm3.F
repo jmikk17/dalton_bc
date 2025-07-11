@@ -911,9 +911,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -1025,9 +1023,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 
 #include "cbiher.h"
 
@@ -1792,9 +1788,7 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 C defined parallel calculation types
 #include "iprtyp.h"
 
@@ -1918,9 +1912,7 @@ C
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
 #include "mpi_header.h"
-#endif
 
       PARAMETER ( D0=0.0D0, D1=1.0D0 )
       CHARACTER*8 LABINT(9*MXCENT)
