@@ -3,11 +3,7 @@ gcc-9:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -23,11 +19,7 @@ gcc-9-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - dnf install -y -q lapack64 lapack64-devel
@@ -43,11 +35,7 @@ gcc-10:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -63,11 +51,7 @@ gcc-10-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - dnf install -y -q lapack64 lapack64-devel
@@ -83,11 +67,7 @@ gcc-11:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -103,11 +83,7 @@ gcc-11-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - dnf install -y -q lapack64
@@ -123,11 +99,7 @@ gcc-12:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -143,11 +115,7 @@ gcc-12-debug:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export FFLAGS="-I/usr/lib64/gfortran/modules"
@@ -163,11 +131,7 @@ gcc-12-int64:
   variables:
     DALTON_LAUNCHER: ""
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - dnf install -y -q lapack64

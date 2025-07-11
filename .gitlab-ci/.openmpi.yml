@@ -2,11 +2,7 @@ gcc-9-ompi-4.0:
   image: fedora:31
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
@@ -25,11 +21,7 @@ gcc-9-ompi-4.0-int64:
   image: fedora:31
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
@@ -48,11 +40,7 @@ gcc-12-ompi-4.1:
   image: fedora:37
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
@@ -71,11 +59,7 @@ gcc-12-ompi-4.1-int64:
   image: fedora:37
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"

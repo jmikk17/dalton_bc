@@ -2,11 +2,7 @@ coverage:
   image: fedora:37
   coverage: '/Percentage Coverage:\s*([^%]+)/'
   timeout: 3h
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: always
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-      when: manual
+  rules: !reference [.define-build-rules, rules]
   before_script:
     - dnf install -y gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
                      mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
