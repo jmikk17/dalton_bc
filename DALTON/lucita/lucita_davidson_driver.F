@@ -34,7 +34,7 @@
 #endif
       use file_type_module
       use lucita_energy_types
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "mxpdim.inc"
 #include "wrkspc.inc"
@@ -46,7 +46,6 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND) ITEST_OFF
 #endif
@@ -251,7 +250,7 @@
 !
       use lucita_mcscf_srdftci_cfg
 
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLXLBT, KLXLEBT, KLXI1BT, KLXIBT
       INTEGER*8 current_free_mem, ksrdftdal_interface
@@ -260,7 +259,6 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
       DIMENSION LU1LIST(*), LU2LIST(*), LU3LIST(*)
       DIMENSION LU4LIST(*), LU5LIST(*), LUCLIST(*)

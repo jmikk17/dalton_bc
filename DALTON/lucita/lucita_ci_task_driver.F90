@@ -41,7 +41,7 @@
 !     parallel lucita
 #ifdef VAR_MPI
       use sync_coworkers
-#include "mpi_mod.h"
+      use mpi_interface
 #endif
       implicit none
 
@@ -66,7 +66,6 @@
 !
 
 #ifdef VAR_MPI
-#include "mpi_header.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "maxorb.h"

@@ -36,8 +36,8 @@ C
 #ifdef VAR_MPI
       use so_parutils, only: soppa_comm_active, soppa_num_active,
      &                       soppa_nint, my_mpi_integer, sop_master
-#include "mpi_mod.h"
 #endif
+      use mpi_interface
       use pelib_interface, only: use_pelib, pelib_ifc_response
 #ifdef VAR_MPI
       use pelib_interface, only: pelib_ifc_slave
@@ -45,9 +45,6 @@ C
 
 #include "implicit.h"
 
-#ifdef VAR_MPI
-#include "mpi_header.h"
-#endif
 
 #include "priunit.h"
 #include "maxorb.h"
@@ -2028,9 +2025,8 @@ C F.Beyer Oct. 2014.
 
       use so_info, only: sop_dp
 
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "distcl.h"
 #include "priunit.h"
@@ -2124,11 +2120,10 @@ C     F.Beyer Oct. 2014.
       use so_parutils, only: soppa_comm_active, soppa_nint, sop_master,
      &                       soppa_num_active, my_mpi_integer
 
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
 C#include "implicit.h"
 #include "priunit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "iratdef.h"
 C fetch HERDIR
@@ -2255,9 +2250,8 @@ C     F.Beyer Oct. 2014
       use so_parutils, only: my_mpi_logical
 #endif
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 
       integer, dimension(MPI_STATUS_SIZE) :: mpistatus
       integer, intent(in)                 :: pollinginterval !in milliseconds
@@ -2342,9 +2336,8 @@ C the right amount of storage by the master when it starts pre-sorting
 C the integrals for the parallel calculation of the E matrix.
 C
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
       integer,                     intent(in)  :: ntot
       integer, dimension(2, ntot), intent(in)  :: originalsort
       integer,                     intent(out) :: maxnumjobs
@@ -2410,9 +2403,8 @@ C even distribution of total work for all processes when performing two-electron
 C integrals in parallel for AOSOPPA and AORPA.
 C
       !use mpi
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
-#include "mpi_header.h"
 
       integer,                        intent(in)    :: ntot, rows, cols
       integer, dimension(2, ntot),    intent(inout) :: presortedarray

@@ -75,7 +75,7 @@ C
 #endif
       use parallel_models_mpi, only: lucita_models_enabled
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 
 #include "priunit.h"
@@ -85,7 +85,6 @@ C infpar.h: MASTER,MYNUM, PARHER
 #include "infpar.h"
 C iprtyp.h: define parallel calculation types
 #include "iprtyp.h"
-#include "mpi_header.h"
 
 C gnrinf.h : PARCAL, DIRCAL
 #include "gnrinf.h"
@@ -323,14 +322,13 @@ C
 C ITASK .gt. 0: wake slaves and get hold of them for task ITASK
 C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
       integer :: itask, iprint
 C
 #if defined (VAR_MPI)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
 #include "mtags.h"
 
       integer :: NODE

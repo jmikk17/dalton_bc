@@ -476,7 +476,7 @@ C
 C     Driver routine for numerical differentiation
 C
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -484,10 +484,6 @@ C
 #include "maxorb.h"
 #include "infpar.h"
 C
-c#if defined (VAR_MPI)
-#include "mpi_header.h"
-c      LOGICAL FINISH
-c#endif
 #include "cbirea.h"
 #include "cbiwlk.h"
 #include "cbinum.h"

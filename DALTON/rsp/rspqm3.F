@@ -890,7 +890,7 @@ C---------------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The master routine for QM3LNO_P
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -911,7 +911,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -1001,7 +1000,7 @@ C---------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The slave routine for QM3LNO_P
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "gnrinf.h"
@@ -1023,7 +1022,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 
 #include "cbiher.h"
 
@@ -1765,7 +1763,7 @@ C
 C  Arnfinn Aug. -08
 C  The master routine for QM3QRO_P
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1788,7 +1786,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 
@@ -1887,7 +1884,7 @@ C
 C  Arnfinn Aug. -08
 C  The slave routine for QM3QRO
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1912,7 +1909,6 @@ C
 
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 
       PARAMETER ( D0=0.0D0, D1=1.0D0 )
       CHARACTER*8 LABINT(9*MXCENT)

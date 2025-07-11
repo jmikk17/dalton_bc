@@ -4222,7 +4222,7 @@ C     CALL QEXIT('SKICK')
 *                            - GSBBD2A
 *                            - GSBBD2B
 
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
      &          KISCLFAC, KSCALLOC
@@ -4230,7 +4230,6 @@ C     CALL QEXIT('SKICK')
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -4506,12 +4505,11 @@ C             TEST_RHO2S(RHO2,RHO2AA,RHO2AB,RHO2BB,NORB)
 * Input
 * =====
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: IOFFSET
@@ -4903,7 +4901,7 @@ C
 * Cbatches ICBAT_INI to ICBAT_END are stored on  LUC
 *
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
      &          KISCLFAC, KSCALLOC, KLLBT, KLLEBT, KLI1BT, KLIBT,
@@ -4916,7 +4914,6 @@ C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -5335,12 +5332,11 @@ C
 * If IRESTRICT.NE. 0 THEN we are after :
 * sigma(iblk) = summa(jblk.le.iblk) (2-delta(iblk,jblk))/2
 *                                                 * <Iblk!H!Jblk>C(Jblk)
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #endif

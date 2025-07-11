@@ -739,12 +739,11 @@ C?    WRITE(6,*) ' Mission DIATERMS finished '
 * Parallel adaption in January 2007, Stefan Knecht
 * last parallel revision: March 2008
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8           (A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: IDIA_OFFSET
@@ -957,7 +956,7 @@ C     REAL * 8  INPROD
 *
 * parallel adaption by S. Knecht - March 2008
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLJ, KLK, KLXA, KLXB, KLSCR, KLH1D, KLASTR,
      &          KLBSTR, KLRJKA
@@ -984,7 +983,6 @@ C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"

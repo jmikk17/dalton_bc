@@ -22,10 +22,9 @@ C
 C
       use so_info, only: so_full_name, sop_excita, so_has_doubles,
      &                   so_model_number
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
 C
 C MXCALL has been replaced by SOPPA_NINT for hermite compatibility
 !#include "maxorb.h"

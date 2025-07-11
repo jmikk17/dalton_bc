@@ -518,13 +518,11 @@ C    Created: Jesper Kielberg Pedersen, Mar. 2003
 C    Modified: 17-08-09, J. Toulouse, add spin density matrix
 C*****************************************************************************
       use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-!  mpif.h   : for MPI
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_SUM   = MPI_SUM
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, len_mpi
@@ -902,12 +900,11 @@ C     Purpose : Calculate DFT-energy and potential contribution for
 C               SR-DFT hybrid methods.
 C
 C*****************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-#include "mpi_header.h"
       integer(mpi_integer_kind) :: ierr_mpi
 #endif
 

@@ -42,9 +42,8 @@
 *
 #ifdef VAR_MPI
       use par_mcci_io
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #endif
 #include "parluci.h"
 #include "mxpdim.inc"
@@ -561,9 +560,8 @@
 !     use mpi
 !     IMPLICIT REAL*8(A-H,O-Z)
 !else
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 !endif
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi

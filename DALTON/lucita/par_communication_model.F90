@@ -14,9 +14,8 @@ module communication_model
 !           adapted for DALTON by sknecht, november 2010.
 !
   use communicator_type_module
-#include "mpi_mod.h"
+  use mpi_interface
   implicit none
-#include "mpi_header.h"
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8

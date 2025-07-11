@@ -46,11 +46,10 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*)
@@ -226,11 +225,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*)
@@ -603,11 +601,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -1147,11 +1144,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -1331,11 +1327,10 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*), SUBSPH(*)
@@ -1511,13 +1506,12 @@ C
 C     OUTPUT: ISCLFAC_GROUP and updated file ILUC
 C
 C**********************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
       INTEGER*8 KSCALLOC2, KSCALLOC3
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: mynew_comm_mpi
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
@@ -1647,13 +1641,12 @@ C
 ***********************************************************************
       SUBROUTINE BLOCK_DISTR_DRV(NBLOCK,IBLOCKL,NBLOCKD,IBLOCKS_FNODE,
      &                           SCALFAC,NVAR,IPROCLIST)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
       INTEGER*8 KICCTOS, KCWEIGHT, KCWEIGHTF, KBLCKWT, KIBTOTW
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
 #include "parluci.h"
 #include "wrkspc.inc"
 ! from cands.inc: icsm
@@ -1715,7 +1708,7 @@ C
 *  in BLK_A
 *  parallel version
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 *. Output
       DIMENSION BLK_A(*)
@@ -1723,7 +1716,6 @@ C
       DIMENSION SEGMNT(*)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION IBLOCKD(NBLOCK)
@@ -1792,13 +1784,12 @@ C
 *        ELEMENT I
 *SUBVAL: VALUE OF SORTED ELEMENTS
 
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
       INTEGER*8 KGATHERA, KGATHERB, KGATHERC, KGATHERD
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"

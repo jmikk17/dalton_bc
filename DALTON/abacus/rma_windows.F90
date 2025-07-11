@@ -17,9 +17,7 @@ module rma_windows
       mpixwinfree
 #endif
 
-#include "mpi_mod.h"
-  implicit none
-#include "mpi_header.h"
+      use mpi_interface
 
 #ifdef VAR_MPI
   public set_rma_window

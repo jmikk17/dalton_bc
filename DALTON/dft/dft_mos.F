@@ -156,12 +156,11 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_MOMO(NBAST,NORBT,DMAT,CMOS,IPRINT)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -185,7 +184,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_MOMO_SLAVE(WORK,LWORK,IPRINT)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -194,7 +193,6 @@ C
 C
       DIMENSION WORK(LWORK)
 #include "dftcom.h"
-#include "mpi_header.h"
       EXTERNAL DFTMO2
       LOGICAL DFT_ISGGA
       EXTERNAL DFT_ISGGA
@@ -219,11 +217,10 @@ C
 #endif
 C
       SUBROUTINE DFT_MOMO_COLLECT(CMO2,IDIM,WORK,LWORK)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpi_header.h"
       DIMENSION CMO2(IDIM,2), WORK(LWORK)
       CALL DCOPY(2*IDIM,CMO2,1,WORK,1)
       CALL MPI_REDUCE(WORK,CMO2,2*IDIM,MPI_DOUBLE_PRECISION,

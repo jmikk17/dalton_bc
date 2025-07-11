@@ -11,8 +11,7 @@
 !                                    - hermit
 !
 module parallel_communication_models_mpi
-
-#include "mpi_mod.h"
+  use mpi_interface
 
   implicit none
 
@@ -55,7 +54,6 @@ module parallel_communication_models_mpi
   private
 
 #ifdef VAR_MPI
-#include "mpi_header.h"
   integer(kind=MPI_INTEGER_KIND)         :: ierr_mpi
   integer(kind=MPI_INTEGER_KIND)         :: istat(MPI_STATUS_SIZE)
 #endif

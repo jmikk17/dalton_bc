@@ -690,7 +690,7 @@ C
      &                           pelib_ifc_do_mep_noqm,
      &                           pelib_ifc_mep_noqm, pelib_ifc_do_lf
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
@@ -702,9 +702,6 @@ C
 #include "nuclei.h"
 #include "infinp.h"
 #include "inftap.h"
-#if defined (VAR_MPI)
-#include "mpi_header.h"
-#endif
 #include "infpar.h"
 #include "inftra.h"
 #include "abainf.h"
@@ -2027,9 +2024,8 @@ C
 C     Master routine for checking whether we will do parallell I/O by
 C     parallelizing over nuclear geometries
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -2135,7 +2131,7 @@ C
 C     Slave routine for learning whether we are going to do parallell I/O
 C     by parallelizing over nuclear geometries
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -2145,7 +2141,6 @@ C
 #include "molinp.h"
 #include "infpar.h"
 #include "pario.h"
-#include "mpi_header.h"
 
 C
 C     We start by waiting for the master to tell us whether we will do

@@ -638,7 +638,7 @@ C
 C*********************************************************************
       SUBROUTINE QM3_NSPM(IPRTYP,DCAO,DFTNS,WRK,LWRK,IPRINT,
      &                     EXP1VL,TOFILE,ENSEL,FAC1,LNUM,INUM)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -657,7 +657,6 @@ C*********************************************************************
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 
 #include "cbiher.h"
 
@@ -734,7 +733,7 @@ C     Collect data from all slaves
 C*********************************************************************
 
       SUBROUTINE QM3_NSPS(WRK,LWRK,IPRTMP)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -754,7 +753,6 @@ C*********************************************************************
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#include "mpi_header.h"
 
 #include "cbiher.h"
 

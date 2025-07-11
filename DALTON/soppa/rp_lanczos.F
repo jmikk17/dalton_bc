@@ -48,11 +48,10 @@ C
      &                   sop_lanc_chain_len, sop_lanc_conv_check,
      &                   sop_lanc_conv_nr
 C
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT NONE
 C#include "implicit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
 C  IRAT in order to assign space for load-balancing
 #include "iratdef.h"
 #endif

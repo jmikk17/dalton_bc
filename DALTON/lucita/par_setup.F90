@@ -18,9 +18,7 @@ module parallel_setup
   use communication_model
   use file_io_model
 
-#include "mpi_mod.h"
-  implicit none
-#include "mpi_header.h"
+  use mpi_interface
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8

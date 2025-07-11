@@ -17,10 +17,9 @@ C
 #ifdef VAR_MPI
       use so_parutils, only: parsoppa_do_eres, my_mpi_integer
 #endif
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
 C  We need MXCALL and IRAT in order to assign space for load-balancing
 C
 #include "maxorb.h"

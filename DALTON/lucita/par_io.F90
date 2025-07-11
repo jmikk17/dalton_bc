@@ -12,9 +12,8 @@ module par_mcci_io
 !
 !           written by sknecht, may 2007 for DIRAC MCSCF/KR-CI/LUCITA
 !           adapted for DALTON by sknecht, november 2010.
-#include "mpi_mod.h"
+  use mpi_interface
   implicit none
-#include "mpi_header.h"
 
   public mcci_cp_vcd_batch
   public mcci_cp_vcd_mpi_2_seq_io_interface

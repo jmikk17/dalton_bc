@@ -351,13 +351,12 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_GRAD(NBAST,NDMAT,DMAT,IPRINT)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "priunit.h"
 #include "infpar.h"
-#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -378,7 +377,7 @@ C
       END
 #if defined (VAR_MPI)
       SUBROUTINE DFT_GRAD_SLAVE(WORK,LWORK,IPRINT)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -387,7 +386,6 @@ C
 #include "inforb.h"
 #include "dftmolgrad.h"
 #include "energy.h"
-#include "mpi_header.h"
       DIMENSION WORK(LWORK)
       EXTERNAL DFTMOLGRD
       EXTERNAL DFTMOLGRDAB
@@ -416,11 +414,10 @@ C
       END
 #endif
       SUBROUTINE GRADSLAVE_COLLECT(GRADMOL,WORK,LWORK)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpi_header.h"
       DIMENSION GRADMOL(MXCOOR), WORK(LWORK)
       CALL DCOPY(MXCOOR,GRADMOL,1,WORK(1),1)
       CALL MPI_Reduce(WORK,GRADMOL,MXCOOR,MPI_DOUBLE_PRECISION,

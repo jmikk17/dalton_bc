@@ -31,7 +31,7 @@
 *
 * written by S. Knecht  - Feb. 2007
 *
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
       INTEGER*8 KSIOIO, KSBLTP, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT,
      &          KCONSPA, KCONSPB, KCBLTP, KCIOIO, KLLBT, KLLEBT, KLI1BT,
@@ -39,7 +39,6 @@
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION IBLINF(NBLOCK),SCALFAC(NBLOCK),ICCTOS(NBLOCK,NBLOCK)
@@ -194,12 +193,11 @@
 *
 * written by S. Knecht  - Feb. 2007
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8           (A-H,O-Z)
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION ICCTOS(NBLOCK,NBLOCK)
@@ -310,11 +308,10 @@ C
      &                          RECVARRAY,TESTARR,
      &                          IRECVARRAY,ITESTARRAY,NTESTG)
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_luci_master
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
@@ -564,11 +561,10 @@ C
 *
       use dalton_mpi
       use par_mcci_io
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) :: mynew_comm_mpi, icomm_mpi

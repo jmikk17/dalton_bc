@@ -572,13 +572,12 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_BRHS(NGEODRV,DOVB,NBAST,DMAT,IPRINT)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -604,7 +603,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_BRHS_SLAVE(WORK,LWORK,IPRINT)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -615,7 +614,6 @@ C
 C
       DIMENSION WORK(LWORK)
 #include "dftcom.h"
-#include "mpi_header.h"
       EXTERNAL DFTBRHS1
       LOGICAL DFT_ISGGA
       EXTERNAL DFT_ISGGA
@@ -639,11 +637,10 @@ C
 #endif
 C
       SUBROUTINE DFT_BRHS_COLLECT(FMAT,N2BASX,WORK,LWORK)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpi_header.h"
       DIMENSION FMAT(3*N2BASX), WORK(LWORK)
       CALL DCOPY(3*N2BASX,FMAT,1,WORK,1)
       CALL MPI_REDUCE(WORK,FMAT,3*N2BASX,MPI_DOUBLE_PRECISION,
@@ -653,12 +650,11 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_SUSCEP(N2BASX,DMAT,IPRINT)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -704,10 +700,9 @@ C
 #endif
 C
       SUBROUTINE DFT_SUSCEP_COLLECT(SUSCEP,WORK,LWORK)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
-#include "mpi_header.h"
       DIMENSION SUSCEP(3,3), WORK(LWORK)
       CALL DCOPY(9,SUSCEP,1,WORK,1)
       CALL MPI_REDUCE(WORK,SUSCEP,9,MPI_DOUBLE_PRECISION,MPI_SUM,0,

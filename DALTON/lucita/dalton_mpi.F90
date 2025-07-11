@@ -12,9 +12,7 @@ module dalton_mpi
 !           written by radovan bast, for DIRAC.
 !           adapted and extended for DALTON by sknecht, december 2010.
 
-#include "mpi_mod.h"
-  implicit none
-#include "mpi_header.h"
+  use mpi_interface
 
   public dalton_mpi_bcast
   public dalton_mpi_reduce

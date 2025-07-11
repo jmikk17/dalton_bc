@@ -1374,7 +1374,7 @@ C
 
 C  /* Deck optmin */
       SUBROUTINE OPTMIN(WORK,LWORK,WRKDLM)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1382,9 +1382,6 @@ C  /* Deck optmin */
 #include "infpar.h"
 #include "inftap.h"
 #include "nuclei.h"
-#if defined (VAR_MPI)
-#include "mpi_header.h"
-#endif
 #include "gnrinf.h"
 #include "cbirea.h"
 #include "optinf.h"
@@ -8216,7 +8213,7 @@ C     analytical implementations, K.Ruud, Feb.-6 1997
 C
 C     Modified in august of 2000 to use the new numerical derivative routines
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
@@ -8234,9 +8231,6 @@ C
 #include "numder.h"
 #include "symmet.h"
 #include "infpar.h"
-#if defined (VAR_MPI)
-#include "mpi_header.h"
-#endif
 #include "nuclei.h"
 #include "pgroup.h"
 #include "fcsym.h"

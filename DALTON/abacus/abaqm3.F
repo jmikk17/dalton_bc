@@ -334,7 +334,7 @@ C-----------------------------------------------------
 C
       SUBROUTINE QM3FIRST_M1(VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -347,9 +347,6 @@ C
 #include "magone.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpi_header.h"
-#endif
 C defined parallel calculation types
 #include "iprtyp.h"
 C
@@ -427,7 +424,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S1(WRK,LWRK,IPRTMP)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -441,9 +438,6 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpi_header.h"
-#endif
 
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL EXP1VL, TRIMAT
@@ -534,7 +528,7 @@ C-----------------------------------------------------
       SUBROUTINE QM3FIRST_M2(RAX,RAY,RAZ,ENSAX,ENSAY,ENSAZ,LM,
      &                       VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -548,9 +542,6 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpi_header.h"
-#endif
 C defined parallel calculation types
 #include "iprtyp.h"
       CHARACTER*8 LABINT(9*MXCENT)
@@ -640,7 +631,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S2(WRK,LWRK,IPRTMP)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -654,9 +645,6 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpi_header.h"
-#endif
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL EXP1VL, TRIMAT
       DIMENSION INTREP(9*MXCENT), INTADR(9*MXCENT)

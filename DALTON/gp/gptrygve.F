@@ -256,9 +256,8 @@ C  /* Deck stopit */
       END
 C  /* Deck quit */
       SUBROUTINE QUIT(TEXT)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 C INFPAR: MYNUM
@@ -323,9 +322,8 @@ C
 C exit with error code of zero
 C (QUIT exits with error code of 100)
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 C INFPAR: MYNUM

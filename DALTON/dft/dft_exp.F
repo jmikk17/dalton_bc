@@ -61,13 +61,12 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KLAST),LWRK)
       END
 C
       SUBROUTINE KICK_SLAVES_EXPG(NBAST,NDMAT,DMAT,IPRINT)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "maxorb.h"
 #include "priunit.h"
 #include "infpar.h"
-#include "mpi_header.h"
 C
       DIMENSION DMAT(NBAST,NBAST,NDMAT)
       IF (MYNUM .EQ. MASTER) THEN
@@ -88,7 +87,7 @@ cfrj: define new IPRTYP for expgrad
 c
 #if defined (VAR_MPI)
       SUBROUTINE DFT_EXPG_SLAVE(WORK,LWORK,IPRINT)
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -97,7 +96,6 @@ c
 #include "inforb.h"
 #include "dftmolgrad.h"
 #include "energy.h"
-#include "mpi_header.h"
 #include "expopt.h"
       DIMENSION WORK(LWORK)
       EXTERNAL DEXPGC
@@ -122,11 +120,10 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KFREE),LFREE)
 #endif
 c
       SUBROUTINE EXPGSLAVE_COLLECT(GRADMOL,WORK,LWORK)
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpi_header.h"
 #include "maxorb.h"
       DIMENSION GRADMOL(MXPRIM), WORK(LWORK)
       CALL DCOPY(MXPRIM,GRADMOL,1,WORK(1),1)

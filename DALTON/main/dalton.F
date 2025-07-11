@@ -35,7 +35,7 @@ C=========================================================================
 C
       use parallel_models_mpi
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mtags.h"
@@ -49,7 +49,6 @@ C
 #include "incore.h"
 
 #if defined (VAR_MPI)
-#include "mpi_header.h"
       LOGICAL(kind=MPI_INTEGER_KIND) :: FINISH
       INTEGER(kind=MPI_INTEGER_KIND) :: count_mpi, err_mpi
 #endif

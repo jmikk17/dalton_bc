@@ -15,10 +15,7 @@
 #ifdef VAR_MPI
 module one_sided_communication_wrappers
 
-#include "mpi_mod.h"
-  implicit none
-#include "mpi_header.h"
-
+  use mpi_interface
 
   public mpixget
   public mpixaccum

@@ -323,9 +323,8 @@ C     /* Deck dopar */
 Cef begin
       SUBROUTINE DOPAR(INDEX,MXBTCH,NBATCH,NSTAT,IPRINT)
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "priunit.h"
 #include "mtags.h"
 #include "incore.h"

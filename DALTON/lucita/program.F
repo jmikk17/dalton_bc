@@ -32,7 +32,7 @@
 #ifdef VAR_MPI
       use file_io_model
 #endif
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLCLBT, KLCLEBT, KLCI1BT, KLCIBT, KLC2B, KLCIOIO,
      &          KLCBLTP, KLCI1BTSCR, KBSCLFC, KBLCKIF, KBLCKPD,
@@ -68,7 +68,6 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: ITEST_OFF
@@ -902,12 +901,11 @@ C
 !     parallel lucita
 #ifdef VAR_MPI
       use sync_coworkers
-#include "mpi_mod.h"
 #endif
+      use mpi_interface
 
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "maxorb.h"
@@ -984,8 +982,8 @@ C
       use communication_model
       use file_io_model
       use sync_coworkers
-#include "mpi_mod.h"
 #endif
+      use mpi_interface
 
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 k_offset, KADD, KPROCLIST, KGROUPLIST,
@@ -994,7 +992,6 @@ C
 #include "maxorb.h"
 #include "infpar.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -1455,7 +1452,7 @@ C
 *
 * Jeppe Olsen,Spring of 1991
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 *
       PARAMETER(MXPLNC = 72 )
@@ -1507,7 +1504,6 @@ C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -5403,9 +5399,8 @@ C
 !     LUCITA version by Stefan Knecht, Feb. 06
 !
 !***********************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) my_MPI_ANY_SOURCE
       integer(kind=MPI_INTEGER_KIND) ierr_mpi, IREQ_mpi
@@ -5439,12 +5434,11 @@ C
       use sync_coworkers
       use lucita_mcscf_ci_task
       use lucita_orbital_spaces, only: define_lucita_orb_spaces
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) my_luci_master
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"

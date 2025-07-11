@@ -886,7 +886,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
       character*4 TYPE_TEXT
       integer ICDTRA(NNORBX), IFTHRS, LWORK
@@ -894,7 +894,6 @@ C --- start of executable code
 
 #include "priunit.h"
 
-#include "mpi_header.h"
 
 ! Used from include files:
 !  gnrinf.h : CHIVAL
@@ -1018,7 +1017,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
       integer LWORK, IPRINT
       real*8  WORK(LWORK)
@@ -1048,8 +1047,6 @@ C --- start of executable code
 #include "inftap.h"
 #include "cbihr2.h"
 
-!  mpif.h   : for MPI
-#include "mpi_header.h"
 
 !     First make sure basis set information is known to this node
 

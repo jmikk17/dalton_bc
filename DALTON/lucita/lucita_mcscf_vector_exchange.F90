@@ -9,8 +9,8 @@ module lucita_mcscf_vector_exchange
    use ttss_block_module
    use file_type_module, only : file_info, file_type
    use vector_xc_file_type
+   use mpi_interface
 #ifdef VAR_MPI
-#include "mpi_mod.h"
    use parallel_task_distribution_type_module
    use sync_coworkers
    use lucita_cfg
@@ -19,7 +19,6 @@ module lucita_mcscf_vector_exchange
    implicit none
 
 #ifdef VAR_MPI
-#include "mpi_header.h"
    public vector_exchange_interface_cw
 #endif
    public vector_exchange_driver

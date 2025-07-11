@@ -27,9 +27,8 @@ C
 C
 C     T. Helgaker sep 99
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -143,9 +142,8 @@ C
 C     ACH
 C     Takes info from master and allocate memory.
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
 #include "priunit.h"
@@ -313,10 +311,9 @@ C
 C     Moves everything that is needed. Something that is not needed is also
 C     moved, but what ?
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #if defined (VAR_MPI)
-#include "mpi_header.h"
 #include "priunit.h"
 #include "aovec.h"
 #include "maxorb.h"
@@ -565,9 +562,8 @@ C
 C     Ach
 C     Updates the different energies and the exchange mat:
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
 Ca
@@ -611,9 +607,8 @@ C
 C     Update gradient
 C     Ach
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "mxcent.h"
 #include "nuclei.h"

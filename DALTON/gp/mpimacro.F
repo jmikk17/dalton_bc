@@ -31,7 +31,7 @@ C
 C  /* Deck mpixinit */
       SUBROUTINE MPIXINIT
 C
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
 #include "priunit.h"
 #include "maxorb.h"
@@ -44,7 +44,6 @@ C
       MASTER = 0
       NODTOT = 0
 #else
-#include "mpi_header.h"
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, value_mpi
 C
 #ifndef VAR_CHEMSHELL
@@ -87,10 +86,8 @@ C  /* Deck mpifinalize */
       SUBROUTINE MPIXFINALIZE
 C
 #ifndef VAR_CHEMSHELL
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      implicit none
-#include "mpi_header.h"
 C
       integer(kind=MPI_INTEGER_KIND) ierr_mpi
       CALL MPI_FINALIZE(ierr_mpi)
@@ -103,10 +100,8 @@ C
 C  /* Deck mpixbcast */
       SUBROUTINE MPIXBCAST(BUFFER,BUF_COUNT,TYPE_in,ROOT)
 C
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      implicit none
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -144,10 +139,8 @@ C
 C  /* Deck mpixrecv */
       SUBROUTINE MPIXRECV(BUFFER,BUF_COUNT,TYPE_in,SOURCE,TAG)
 C
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      implicit none
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -197,10 +190,8 @@ C
 C  /* Deck mpixsend */
       SUBROUTINE MPIXSEND(BUFFER,BUF_COUNT,TYPE_in,DEST,TAG)
 C
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      integer none
-#include "mpi_header.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -240,10 +231,8 @@ C
 
       SUBROUTINE MPIX_ISEND(BUFFER,BUF_COUNT,BUF_TYPE,DEST,REQUEST,TAG)
 C
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      implicit none
-#include "mpi_header.h"
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
       INTEGER     BUFFER(*) ! does not matter if wrong type here
@@ -285,10 +274,8 @@ C
       SUBROUTINE MPIX_IRECV(BUFFER,BUF_COUNT,BUF_TYPE,
      &                      SOURCE,REQUEST,TAG)
 C
+      use mpi_interface
 #if defined (VAR_MPI)
-#include "mpi_mod.h"
-      implicit none
-#include "mpi_header.h"
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
       INTEGER     BUFFER(*) ! does not matter if wrong type here
@@ -329,10 +316,9 @@ C
 
       subroutine mpixprocname(process_name,process_name_length)
 C
+      use mpi_interface
 #ifdef VAR_MPI
-#include "mpi_mod.h"
       implicit none
-#include "mpi_header.h"
       character*(*) process_name
       integer       process_name_length
       integer(kind=MPI_INTEGER_KIND) name_length_mpi, ierr_mpi
@@ -347,9 +333,8 @@ C  /* Deck mpi_myfail */
       SUBROUTINE MPI_MYFAIL(IERR)
 ! only called from other routines in mpimacro.F
 C
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
-#include "mpi_header.h"
 #include "priunit.h"
 
       integer(kind=MPI_INTEGER_KIND) ierr,ierrcl,ierr2

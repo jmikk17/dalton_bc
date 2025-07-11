@@ -208,9 +208,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -590,9 +589,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -900,9 +898,8 @@ C
 C     Last revision:     S. Knecht       - Jan 2012
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
@@ -1079,9 +1076,8 @@ C
 C     Written by  S. Knecht         - May 23 2007
 C
 C**********************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -1383,9 +1379,8 @@ C
 C      LUOUT       LUDIA        LUIN
 C
 C**********************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -1540,9 +1535,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -1659,9 +1653,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -1739,9 +1732,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -1805,9 +1797,8 @@ C
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -2207,9 +2198,8 @@ CSK   END IF
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -2468,9 +2458,8 @@ C
 *. Each cpu stores the information in ISCALFAC_LOCAL.
 *. Connection is marked by 1.
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -2573,9 +2562,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -2770,9 +2758,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -2864,9 +2851,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3026,9 +3012,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3092,9 +3077,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3152,9 +3136,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3217,9 +3200,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3282,9 +3264,8 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3340,9 +3321,8 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3396,9 +3376,8 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3532,9 +3511,8 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3730,9 +3708,8 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -3998,9 +3975,8 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4177,9 +4153,8 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4373,9 +4348,8 @@ C
 C     Last revision:     S. Knecht       - March  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4544,9 +4518,8 @@ C
      &           I1BATC,IBATC,ICCTOS,ICWEIGHT,NBLOCK,IBTOTW,ICWEIGHTF,
      &           IABSOLUTE_WEIGHT)
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4636,9 +4609,8 @@ C THE LOWER HALF OF THE MATRIX IS SUPPOSED TO BE IN VECTOR A.
 *. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4685,9 +4657,8 @@ CSK        DATATYPE = MPI_REAL8
 *. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4794,9 +4765,8 @@ C
 * IXROOT is the current root to place a 1.0D0.
 * LU1LIST is the MPI file list.
 *
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -4924,9 +4894,8 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
@@ -5034,9 +5003,8 @@ C
 C     active blocks on the MPI-files are flagged by a nonzero list entry
 !
 ************************************************************************
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       DIMENSION my_STATUS(MPI_STATUS_SIZE)

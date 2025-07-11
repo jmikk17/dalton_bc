@@ -2,7 +2,7 @@
 module so_parutils
 !
    use so_info, only: sop_dp
-#include "mpi_mod.h"
+   use mpi_interface
 ! SOPPA parallel/mpi utilities
 !
 ! This module defines some parameters and some subroutines, which are
@@ -12,7 +12,6 @@ module so_parutils
 #include "implicit.h"
 !
 ! Various other common-blocks that set occasionally used parameters
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "maxash.h"
 #include "mxcent.h"
@@ -729,9 +728,8 @@ subroutine getbytespan(firstvar, lastvar, bytespan)
 !      call getbytespan(lbuf, eribufLAST, bytesize)
 !      call mpi_bcast(lbuf, bytesize, mpi_byte, 0, mpi_comm_world, ierr)
 
-#include "mpi_mod.h"
+      use mpi_interface
       implicit none
-#include "mpi_header.h"
 #include "priunit.h"
 
       integer(mpi_integer_kind), intent(out) :: bytespan

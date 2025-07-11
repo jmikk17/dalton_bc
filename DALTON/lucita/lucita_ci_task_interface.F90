@@ -7,9 +7,8 @@ module lucita_ci_task_interface
 
   use lucita_integral_density_interface
 
-#include "mpi_mod.h"
+  use mpi_interface
   implicit none
-#include "mpi_header.h"
 
   public CI_task_list_interface
   public create_CI_task_list

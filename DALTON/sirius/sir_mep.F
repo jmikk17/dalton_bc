@@ -24,7 +24,7 @@ C  /* Deck calc_mep */
 !                 in (x,y,z) points listed on MEP.INP file;
 !                 values are written to MEP.OUT file.
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -46,7 +46,6 @@ C  /* Deck calc_mep */
 #include "gnrinf.h"
 #ifdef VAR_MPI
 #include "infpar.h"
-#include "mpi_header.h"
 #endif
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -232,7 +231,7 @@ C*******************************************************************************
 C  /* Deck MEP_SLAVE */
       SUBROUTINE MEP_SLAVE(WRK,LWRK)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -255,7 +254,6 @@ C  /* Deck MEP_SLAVE */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpi_header.h"
 #endif
 
       DIMENSION WRK(LWRK)
@@ -321,7 +319,7 @@ C  /* Deck MEP_LOOP */
       SUBROUTINE MEP_LOOP(XMEP,YMEP,ZMEP,NCENTERS,DENS,
      &                      WRK,LWRK,MEP,MEFX,MEFY,MEFZ)
 
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -344,7 +342,6 @@ C  /* Deck MEP_LOOP */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpi_header.h"
 #endif
 
       CHARACTER*8 LABINT(9*MXCENT)

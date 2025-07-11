@@ -460,11 +460,10 @@ C    &     I_BLK_TO_CLS(IBLK)
 *       ELEMENT I
 *       SUBVAL : VALUE OF SORTED ELEMENTS
 
-#include "mpi_mod.h"
+      use mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
 #include "priunit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
 #include "maxorb.h"
 #include "infpar.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)

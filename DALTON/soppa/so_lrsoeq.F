@@ -42,10 +42,9 @@ C
      &                   so_model_number,
      &                   sop_mp2ai_done
 C
-#include "mpi_mod.h"
+      use mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpi_header.h"
 C  IRAT in order to assign space for load-balancing
 #include "iratdef.h"
 #endif
