@@ -24,11 +24,12 @@ module parallel_models_mpi
   use parallel_models_lucita
 ! use parallel_file_io_models_mpi
 
-  implicit none
 #ifdef VAR_MPI
 #include "mpi_mod.h"
+  implicit none
 #include "mpi_header.h"
 #else
+  implicit none
   integer, parameter :: mpi_comm_world = -1
 #endif
 
