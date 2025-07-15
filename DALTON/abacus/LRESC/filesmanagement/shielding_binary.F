@@ -23,7 +23,8 @@
       lresc=0.d0
 
 
-      
+C     Acronyms according to https://doi.org/10.1063/5.0264596
+C      
       lresc(:,:,1)=SGPNR                         ! nr-para
       lresc(:,:,2)=SGDNR                         ! nr-dia
       lresc(:,:,3)=SGPNR+SGDNR                   ! nr-total
@@ -33,22 +34,22 @@
       lresc(:,:,7)=SGPNR+SGP1S+SGP1T+SGP3S+SGP3T ! rel-para
       lresc(:,:,8)=SGDNR+SGD0S+SGD1S             ! rel-dia
       lresc(:,:,9)=SGPNR+SGDNR+SLRESC            ! rel-total
-      lresc(:,:,10)=LROZK                        ! L-kin
-      lresc(:,:,11)=LRPSOK                       ! Pso-kin
-      lresc(:,:,12)=LRFCZK+LRFCDE                ! FC
-      lresc(:,:,13)=LRSDK+LRSDD                  ! SD
-      lresc(:,:,14)=LRFCBS                       ! FC-Bso
-      lresc(:,:,15)=LRSDBS                       ! SD-Bso
-      lresc(:,:,16)=QRPSOOZMV                    ! PSO-L-Mv
-      lresc(:,:,17)=QRPSOOZDW                    ! PSO-L-Dw
-      lresc(:,:,18)=QROZFCSO                     ! FC-L-So
-      lresc(:,:,19)=QROZSDSO                     ! SD-L-So
-      lresc(:,:,20)=LRFCAV                       ! FC
-      lresc(:,:,21)=LRANGP                       ! AngPso
-      lresc(:,:,22)=LRDIAK                       ! Diakin
-      lresc(:,:,23)=LRSDAV                       ! SD
-      lresc(:,:,24)=LRDIAM                       ! DiaMv
-      lresc(:,:,25)=LRDIAD                       ! DiaDw
+      lresc(:,:,10)=LROZK                        ! OZK
+      lresc(:,:,11)=LRPSOK                       ! PSOK
+      lresc(:,:,12)=LRFCZK+LRFCDE                ! SZK(Fc)
+      lresc(:,:,13)=LRSDK+LRSDD                  ! SZK(SD)
+      lresc(:,:,14)=LRFCBS                       ! Bso(FC)
+      lresc(:,:,15)=LRSDBS                       ! BSO(SD)
+      lresc(:,:,16)=QRPSOOZMV                    ! Mv/p
+      lresc(:,:,17)=QRPSOOZDW                    ! Dw/p
+      lresc(:,:,18)=QROZFCSO                     ! SO(FC)
+      lresc(:,:,19)=QROZSDSO                     ! SO(SD)
+      lresc(:,:,20)=LRFCAV                       ! FC/d
+      lresc(:,:,21)=LRANGP                       ! PSO-OZ
+      lresc(:,:,22)=LRDIAK                       ! DIAK
+      lresc(:,:,23)=LRSDAV                       ! SD/d
+      lresc(:,:,24)=LRDIAM                       ! Mv/d
+      lresc(:,:,25)=LRDIAD                       ! Dw/d
       end
 
 
@@ -57,7 +58,16 @@
 #include "mxcent.h"
 #include "nuclei.h"
       real(8), intent(in) :: array(NLRATOMS,3,3,25)
-      character(len=*), parameter :: archivo = "lresc-array.npy"
+      character(len=*), parameter :: archivo = "lresc-shield-array.npy"
+      character(len=10), dimension(25) :: labels
+      data labels / 'nr_para  ', 'nr_dia   ', 'nr_total ', 'lr_para  ',
+     &         'lr_dia   ', 'lr_total ', 'rel_para ', 'rel_dia  ',
+     &         'rel_total', 'OZK      ', 'PSOK     ', 'SZK-FC   ',
+     &         'SZK-SD   ', 'BSO-FC   ', 'BSO-SD   ', 'Mv/p     ',
+     &         'Dw/p     ', 'SO-FC    ', 'SO-SD    ', 'FC/d     ',
+     &         'PSO-OZ   ', 'DIAK     ', 'SD/d     ', 'Mv/d     ',
+     &         'Dw/d     ' /
+
         
       ! Open binary file in stream mode
       open(newunit=iu, file=archivo, action="write", 
@@ -73,6 +83,10 @@
 
       ! Write data
       write(iu) array
+
+      ! Write labels
+      write(iu) labels
+
 
       close(iu)
 

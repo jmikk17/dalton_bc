@@ -53,7 +53,7 @@ C
          CALL TITLER('--- Non relativistic contributions '//
      &  'for '//NAMN(LRATOM)//' ---',' ',200)
 
-      IF (.NOT.LRANISO) THEN
+      IF (.NOT.PRTTEN) THEN
          WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
      &               'xx','yy','zz','iso','anis','asym'
 
@@ -65,7 +65,7 @@ C
       END IF
 
 c     Print full (non-rel) matrices
-      IF (LRANISO) THEN
+      IF (PRTTEN) THEN
         CALL HEADER('Diamagnetic and paramagnetic '//
      &              'contributions (ppm):',1)
         CALL PRINT_TENSORS(SGDNR,SGPNR)
@@ -100,7 +100,7 @@ C
                call PRINT_LRSHIELD_CORR('PSOK    ',avg,LRPSOK,'iso ')
                IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
      &            ('PSOK    ',aba,LRPSOKaba,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                   WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &                  slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('OZK     ',aba,LROZK,'ani1')
@@ -135,7 +135,7 @@ C
                END IF
                call PRINT_LRSHIELD_CORR('BSO(Fc) ',aba,LRFCBS,'iso ')
                call PRINT_LRSHIELD_CORR('BSO(Sd) ',aba,LRSDBS,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                   WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &                  slash,'xy','xz','yz'
                IF (EXTRAINFO) THEN
@@ -172,12 +172,12 @@ C
 
          IF (SIGMAP2S) THEN
             IF(PRTALL1) THEN
-               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3S]'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2S]'
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
                call PRINT_LRSHIELD_CORR('Mv/p    ',aba,QRPSOOZMV,'iso ')
                call PRINT_LRSHIELD_CORR('Dw/p    ',aba,QRPSOOZDW,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('Mv/p    ',aba,QRPSOOZMV,'ani1')
@@ -192,12 +192,12 @@ C
 
          IF (SIGMAP2T) THEN
             IF(PRTALL1) THEN
-               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA3T]'
+               WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2T]'
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
      &               slash,'xx','yy','zz','iso'
                call PRINT_LRSHIELD_CORR('SO(Fc)  ',aba,QROZFCSO,'iso ')
                call PRINT_LRSHIELD_CORR('SO(Sd)  ',aba,QROZSDSO,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('SO(Fc)  ',aba,QROZFCSO,'ani1')
@@ -221,7 +221,7 @@ C
      &                      SGP3S,'iso ')
          IF (SIGMAP2T) call PRINT_LRSHIELD_SUM('2nd Order Triplets:  ',
      &                      SGP3T,'iso ')
-         IF (LRANISO) THEN
+         IF (PRTTEN) THEN
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
          IF (SIGMAP1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
@@ -271,7 +271,7 @@ C
                   call PRINT_LRSHIELD_CORR('PSO-OZ  ',aba,LRANGP,'iso ')
                end if
                call PRINT_LRSHIELD_CORR('DIAK    ',aba,LRDIAK,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('FC/d    ',aba,LRFCAV,'ani1')
@@ -309,7 +309,7 @@ C
      &               slash,'xx','yy','zz','iso'
                call PRINT_LRSHIELD_CORR('Mv/d    ',aba,LRDIAM,'iso ')
                call PRINT_LRSHIELD_CORR('Dw/d    ',aba,LRDIAD,'iso ')
-               IF (LRANISO) THEN
+               IF (PRTTEN) THEN
                WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A)')
      &               slash,'xy','xz','yz'
                call PRINT_LRSHIELD_CORR('Mv/d    ',aba,LRDIAM,'ani1')
@@ -329,7 +329,7 @@ C
      &                                         SGD0S,'iso ')
          IF (SIGMAD1S) call PRINT_LRSHIELD_SUM('1st Order Singlets:  ',
      &                                         SGD1S,'iso ')
-         IF (LRANISO) THEN
+         IF (PRTTEN) THEN
          WRITE(LUPRI,'(7X,A,17X,A,12X,A,13X,A)') 
      &    slash,'xy','xz','yz'
          IF (SIGMAD0S) call PRINT_LRSHIELD_SUM('0th Order Singlets:  ',
@@ -350,7 +350,7 @@ C     Relativistic corrections
       CALL TITLER('--- Total LRESC corrections '//
      &  'for '//NAMN(LRATOM)//' ---',' ',200)
 
-      IF (.NOT.LRANISO) THEN
+      IF (.NOT.PRTTEN) THEN
         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A)') 'xx','yy','zz','iso'
         IF(LRESCALL) call PRINT_LRSHIELD_TOT('Paramagnetic :',
      &                    SGP1S+SGP1T+SGP3S+SGP3T,'iso ')
@@ -360,7 +360,7 @@ C     Relativistic corrections
       END IF
 
 c     Print full (rel corrections) matrices
-      IF (LRANISO) THEN
+      IF (PRTTEN) THEN
         CALL HEADER('Diamagnetic and paramagnetic '//
      &              'LRESC corrections (ppm):',1)
         CALL PRINT_TENSORS(SGD0S+SGD1S,SGP1S+SGP1T+SGP3S+SGP3T)
@@ -375,7 +375,7 @@ c     Total relativistic values
       CALL TITLER('--- Total (NR+LRESC) results '//
      &  'for '//NAMN(LRATOM)//' ---',' ',200)
 
-      IF (.NOT.LRANISO) THEN
+      IF (.NOT.PRTTEN) THEN
         WRITE(LUPRI,'(35X,A,12X,A,13X,A,10X,A,9X,A,9X,A)')
      &                    'xx','yy','zz','iso','anis','asym'
 
@@ -388,7 +388,7 @@ c     Total relativistic values
       END IF
 
 c     Print full (relativistic) matrices
-      IF (LRANISO) THEN
+      IF (PRTTEN) THEN
         CALL HEADER('Diamagnetic and paramagnetic '//
      &              'contributions (ppm):',1)
         CALL PRINT_TENSORS(SGDNR+SGD0S+SGD1S,

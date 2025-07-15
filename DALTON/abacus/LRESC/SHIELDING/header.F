@@ -102,7 +102,7 @@ c      IF (.not.LRATOM_changed) THEN
 
 C ---Not Default
       IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.
-     & (.NOT.LRESCALL).OR.(PRTALL1).OR.(LRANISO))
+     & (.NOT.LRESCALL).OR.(PRTALL1).OR.(PRTTEN))
      & CALL HEADER('Changes of defaults for LRESC :',3)
 
       IF (JIMPRT.NE.0) THEN
@@ -117,8 +117,8 @@ C ---Not Default
 
 
 
-      IF (LRANISO) WRITE(LUPRI,'(4X,A)')
-     &  '- (.ANISO) Off-diagonal elements and anisotropic '//
+      IF (PRTTEN) WRITE(LUPRI,'(4X,A)')
+     &  '- (.PRTTEN) Off-diagonal elements and anisotropic '//
      &  'parameters are also printed'
 
       IF (PRTALL1) THEN

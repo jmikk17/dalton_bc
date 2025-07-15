@@ -46,9 +46,9 @@ C#include "dorps.h"
 C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
-     &            '.PARA1S','.PARA1T','.PARA3S','.PARA3T','.DIAM0S',
+     &            '.PARA1S','.PARA1T','.PARA2S','.PARA2T','.DIAM0S',
 C                      11       12        13       14         15
-     &            '.DIAM1S','.ANISO ','.PARANR','.DIANR ','.PYINTS',
+     &            '.DIAM1S','.PRTTEN','.PARANR','.DIANR ','.PYINTS',
 C                      16
      &            '.EXTRAI'/
 C
@@ -138,7 +138,7 @@ c                 Free option
                   ICHANG = ICHANG + 1
                   GOTO 100
  12            CONTINUE
-                  LRANISO = .TRUE.
+                  PRTTEN = .TRUE.
                   GOTO 100
  13            CONTINUE
                   SIGMAPNR = .TRUE.
