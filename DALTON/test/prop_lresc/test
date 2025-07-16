@@ -47,15 +47,15 @@ detailed.add(from_string = 'Diamagnetic LRESC corrections for F',
       abs_tolerance = 1.0e-3)
       
 detailed.add(from_string = 'Non relativistic contributions for F',
-      num_lines = 35,
+      num_lines = 27,
       abs_tolerance = 1.0e-3)
 
 detailed.add(from_string = 'Total LRESC corrections for F',
-      num_lines = 35,
+      num_lines = 28,
       abs_tolerance = 1.0e-3)
 
 detailed.add(from_string = 'Total (NR+LRESC) results for F',
-      num_lines = 35,
+      num_lines = 28,
       abs_tolerance = 1.0e-3)
 
 detailed.add(from_string = 'Anisotropic parameters:',
