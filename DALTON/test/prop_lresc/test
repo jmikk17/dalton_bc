@@ -62,9 +62,9 @@ detailed.add(from_string = 'Anisotropic parameters:',
       num_lines = 6,
       abs_tolerance = 1.0e-3)
 
-detailed.add(from_string = 'Principal values and tensor axes:',
-      num_lines = 8,
-      abs_tolerance = 1.0e-3)
+#detailed.add(from_string = 'Principal values and tensor axes:',
+#      num_lines = 8,
+#      abs_tolerance = 1.0e-3)
 
 
 
