@@ -157,14 +157,14 @@
   Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:56 2025
      Host name              : Yo-Nitro                                
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/juanjoaucar/Documentos/dalton-MINE/build/test/prop_lresc
-   2) /home/juanjoaucar/Documentos/dalton-MINE/build/basis
+   1) /home/juanjoaucar/Documentos/dalton-lresc/build-serial/test/prop_lresc
+   2) /home/juanjoaucar/Documentos/dalton-lresc/build-serial/basis
 
 
 Compilation information
@@ -172,34 +172,23 @@ Compilation information
 
  Who compiled             | juanjoaucar
  Host                     | Yo-Nitro
- System                   | Linux-6.8.0-57-generic
+ System                   | Linux-6.8.0-60-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
- MPI                      | ON
- Fortran compiler         | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
-                          | pif90
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
  Fortran compiler version | GNU Fortran (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
- C compiler               | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
-                          | picc
+ C compiler               | /usr/bin/gcc
  C compiler version       | gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
- C++ compiler             | /home/juanjoaucar/intel/oneapi/mpi/2021.10.0/bin/m
-                          | picxx
- C++ compiler version     | unknown
- BLAS                     | /home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/in
-                          | tel64/libmkl_gf_lp64.so;/home/juanjoaucar/intel/on
-                          | eapi/mkl/2023.2.0/lib/intel64/libmkl_sequential.so
-                          | ;/home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/i
-                          | ntel64/libmkl_core.so;/usr/lib/x86_64-linux-gnu/li
-                          | bpthread.a;/usr/lib/x86_64-linux-gnu/libm.so
- LAPACK                   | /home/juanjoaucar/intel/oneapi/mkl/2023.2.0/lib/in
-                          | tel64/libmkl_lapack95_lp64.a;/home/juanjoaucar/int
-                          | el/oneapi/mkl/2023.2.0/lib/intel64/libmkl_gf_lp64.
-                          | so
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+ BLAS                     | /usr/lib/x86_64-linux-gnu/libopenblas.so
+ LAPACK                   | /usr/lib/x86_64-linux-gnu/liblapack.so
  Static linking           | OFF
- Last Git revision        | e6429e1d76570a3dfda223769859c719d1017695
+ Last Git revision        | 700ff54c4b41215d8a04e729bb81d9bba32cf803
  Git branch               | lresc_withPySCF
- Configuration time       | 2025-06-03 12:29:31.972361
+ Configuration time       | 2025-07-15 22:20:50.442185
 
  * Sequential calculation.
 
@@ -216,11 +205,14 @@ Compilation information
 .LR-SHI
 **WAVE FUNCTIONS
 .HF
+*SCF INPUT
+.THRESH
+5.0D-11
 **PROPERTIES
 .RELSHI
 *LROPTS
 .PRTALL
-.ANISO
+.PRTTEN
 *END OF
 
 
@@ -274,7 +266,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   9 :
-     "/home/juanjoaucar/Documentos/dalton-MINE/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton-lresc/build-serial/basis/dyall.cv2z"
 
   Atomic type no.    2
   --------------------
@@ -283,7 +275,7 @@ FINISH
   Number of basis sets to read;    2
   The basis set is "dyall.cv2z" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/juanjoaucar/Documentos/dalton-MINE/build/basis/dyall.cv2z"
+     "/home/juanjoaucar/Documentos/dalton-lresc/build-serial/basis/dyall.cv2z"
 
 
                          SYMGRP: Point group information
@@ -447,8 +439,10 @@ Calculation of 2-electron integrals are postponed until they are needed.
       z      1.73268988         4.40405812        14.69035660
 
 
-  Total CPU  time used in HERMIT:   0.07 seconds
-  Total wall time used in HERMIT:   0.07 seconds
+  Time used in DNSKE      is       0.12 seconds
+  Time used in PSO-OZ     is       0.17 seconds
+  Total CPU  time used in HERMIT:   0.80 seconds
+  Total wall time used in HERMIT:   0.10 seconds
 
 
                         .----------------------------------.
@@ -481,7 +475,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
  **********************************************************************
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:57 2025
      Host name              : Yo-Nitro                                
 
  Title lines from ".mol" input file:
@@ -529,7 +523,7 @@ Calculation of 2-electron integrals are postponed until they are needed.
      Maximum number of Fock   iterations      0
      Maximum number of DIIS   iterations     60
      Maximum number of QC-SCF iterations     60
-     Threshold for SCF convergence     1.00D-05
+     Threshold for SCF convergence     5.00D-11
 
 
  ***********************************************
@@ -565,41 +559,65 @@ Calculating AOSUPINT
 @    MULPOP   F      -0.50; H       0.50; 
    1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-@  2    -100.054258589        3.48077D-01   -1.04D-01    2
-      Virial theorem: -V/T =      2.003860
+@  2    -100.054257625        3.48176D-01   -1.04D-01    2
+      Virial theorem: -V/T =      2.003862
 @    MULPOP   F      -0.30; H       0.30; 
    2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-@  3    -100.059189730        1.30879D-01   -4.93D-03    3
-      Virial theorem: -V/T =      1.998347
+@  3    -100.059189352        1.30949D-01   -4.93D-03    3
+      Virial theorem: -V/T =      1.998345
 @    MULPOP   F      -0.31; H       0.31; 
    3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-@  4    -100.059843686        4.53448D-02   -6.54D-04    4
+@  4    -100.059843694        4.53419D-02   -6.54D-04    4
       Virial theorem: -V/T =      2.000887
 @    MULPOP   F      -0.30; H       0.30; 
    4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-@  5    -100.059957612        7.07532D-03   -1.14D-04    5
+@  5    -100.059957613        7.07479D-03   -1.14D-04    5
       Virial theorem: -V/T =      2.000223
 @    MULPOP   F      -0.31; H       0.31; 
  -----------------------------------------------------------------------------
-@  6    -100.059964821        1.44053D-03   -7.21D-06    6
+@  6    -100.059964821        1.44020D-03   -7.21D-06    6
       Virial theorem: -V/T =      2.000253
 @    MULPOP   F      -0.31; H       0.31; 
  -----------------------------------------------------------------------------
-@  7    -100.059965069        2.56816D-04   -2.49D-07    7
+@  7    -100.059965069        2.56885D-04   -2.48D-07    7
       Virial theorem: -V/T =      2.000258
 @    MULPOP   F      -0.31; H       0.31; 
  -----------------------------------------------------------------------------
-@  8    -100.059965076        2.95822D-05   -6.67D-09    8
+@  8    -100.059965076        2.95858D-05   -6.68D-09    8
       Virial theorem: -V/T =      2.000259
 @    MULPOP   F      -0.31; H       0.31; 
  -----------------------------------------------------------------------------
-@  9    -100.059965076        3.57045D-06   -5.75D-11    8
+@  9    -100.059965076        3.17355D-06   -5.75D-11    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 10    -100.059965076        4.27447D-07   -6.54D-13    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 11    -100.059965076        3.19465D-08   -2.84D-14    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 12    -100.059965076        3.55867D-09   -5.68D-14    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 13    -100.059965076        7.49349D-10    8.53D-14    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 14    -100.059965076        6.44544D-11    8.53D-14    8
+      Virial theorem: -V/T =      2.000260
+@    MULPOP   F      -0.31; H       0.31; 
+ -----------------------------------------------------------------------------
+@ 15    -100.059965076        1.21722D-11    0.00D+00    8
 
-@ *** DIIS converged in   9 iterations !
-@     Converged SCF energy, gradient:   -100.059965075920    3.57D-06
+@ *** DIIS converged in  15 iterations !
+@     Converged SCF energy, gradient:   -100.059965075921    1.22D-11
     - total time used in SIRFCK :              0.00 seconds
 
 
@@ -612,16 +630,16 @@ Calculating AOSUPINT
 
  Sym       Hartree-Fock orbital energies
 
-1 A     -26.28993352    -1.59874455    -0.76545209    -0.64668757    -0.64668757
-          0.12221035     0.48028432     0.69498614     0.69498614     0.70284791
-          1.13321268     1.13321268     1.26548327     1.48191910     1.85434584
-          3.25745769     3.25745769     3.37214541     3.94108208     3.94108208
-          4.16064439     4.16064439     4.86994119     5.86154209     6.27401194
+1 A     -26.28993334    -1.59874458    -0.76545210    -0.64668748    -0.64668748
+          0.12221035     0.48028432     0.69498617     0.69498617     0.70284787
+          1.13321267     1.13321267     1.26548325     1.48191909     1.85434583
+          3.25745776     3.25745776     3.37214543     3.94108213     3.94108213
+          4.16064443     4.16064443     4.86994123     5.86154204     6.27401195
 
     E(LUMO) :     0.12221035 au (symmetry 1)
-  - E(HOMO) :    -0.64668757 au (symmetry 1)
+  - E(HOMO) :    -0.64668748 au (symmetry 1)
   ------------------------------------------
-    gap     :     0.76889792 au
+    gap     :     0.76889783 au
 
  --- Writing SIRIFC interface file
 
@@ -636,8 +654,8 @@ Calculating AOSUPINT
      HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles with pole strength 1
 
    ============  ============  ============  ============  ============
-      26.289934      1.598745      0.765452      0.646688      0.646688
-     715.385482     43.504052     20.829011     17.597264     17.597264
+      26.289933      1.598745      0.765452      0.646687      0.646687
+     715.385477     43.504053     20.829011     17.597261     17.597261
    ============  ============  ============  ============  ============
 
 @ Summary of HF-SCF KT ionization potentials [eV]:
@@ -648,7 +666,7 @@ Calculating AOSUPINT
 --------------------------------------------------------------------------------
 
 
- CPU and wall time for SCF :       0.032       0.032
+ CPU and wall time for SCF :       0.036       0.036
 
 
                        .-----------------------------------.
@@ -660,17 +678,17 @@ Calculating AOSUPINT
 @    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
-@    Final HF energy:            -100.059965075920                 
+@    Final HF energy:            -100.059965075921                 
 @    Nuclear repulsion:             5.194235900534
 @    Electronic energy:          -105.254200976455
 
-@    Final gradient norm:           0.000003570448
+@    Final gradient norm:           0.000000000012
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:57 2025
      Host name              : Yo-Nitro                                
 
-File label for MO orbitals:   3Jun25   FOCKDIIS
+File label for MO orbitals:  15Jul25   FOCKDIIS
 
  (Only coefficients > 0.0100 are printed.)
 
@@ -686,67 +704,67 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
    8 F   :1s    -0.0454  -0.1442  -0.0545  -0.0000  -0.0000   0.0829   0.0588
    9 F   :1s     0.0088  -0.5769  -0.1213  -0.0000  -0.0000  -0.0118   0.0252
   10 F   :1s    -0.0032  -0.3188  -0.2503  -0.0000  -0.0000   0.5419   0.9146
-  14 F   :2px   -0.0000   0.0000   0.0000  -0.0424  -0.0014  -0.0000   0.0000
-  15 F   :2py   -0.0000   0.0000   0.0000   0.0014  -0.0424  -0.0000   0.0000
+  14 F   :2px   -0.0000   0.0000   0.0000  -0.0423   0.0026  -0.0000   0.0000
+  15 F   :2py   -0.0000   0.0000   0.0000  -0.0026  -0.0423  -0.0000   0.0000
   16 F   :2pz   -0.0005  -0.0042   0.0363   0.0000   0.0000   0.0103   0.0169
-  17 F   :2px   -0.0000   0.0000   0.0000  -0.1610  -0.0052  -0.0000   0.0000
-  18 F   :2py   -0.0000   0.0000   0.0000   0.0052  -0.1610  -0.0000   0.0000
+  17 F   :2px   -0.0000   0.0000   0.0000  -0.1608   0.0100  -0.0000   0.0000
+  18 F   :2py   -0.0000   0.0000   0.0000  -0.0100  -0.1608  -0.0000   0.0000
   19 F   :2pz   -0.0006  -0.0132   0.1338   0.0000   0.0000   0.0378   0.0704
-  20 F   :2px   -0.0000   0.0000   0.0000  -0.3460  -0.0112  -0.0000   0.0000
-  21 F   :2py   -0.0000   0.0000   0.0000   0.0112  -0.3460  -0.0000   0.0000
+  20 F   :2px   -0.0000   0.0000   0.0000  -0.3455   0.0215  -0.0000   0.0000
+  21 F   :2py   -0.0000   0.0000   0.0000  -0.0215  -0.3455  -0.0000   0.0000
   22 F   :2pz   -0.0002  -0.0361   0.2986   0.0000   0.0000   0.0848   0.1345
-  23 F   :2px   -0.0000   0.0000   0.0000  -0.4276  -0.0138  -0.0000   0.0000
-  24 F   :2py   -0.0000   0.0000   0.0000   0.0138  -0.4276  -0.0000   0.0000
+  23 F   :2px   -0.0000   0.0000   0.0000  -0.4270   0.0266  -0.0000   0.0000
+  24 F   :2py   -0.0000   0.0000   0.0000  -0.0266  -0.4270  -0.0000   0.0000
   25 F   :2pz    0.0004  -0.0457   0.3437   0.0000   0.0000   0.1096   0.2446
-  26 F   :2px   -0.0000   0.0000   0.0000  -0.2652  -0.0086  -0.0000   0.0000
-  27 F   :2py   -0.0000   0.0000   0.0000   0.0086  -0.2652  -0.0000   0.0000
+  26 F   :2px   -0.0000   0.0000   0.0000  -0.2648   0.0165  -0.0000   0.0000
+  27 F   :2py   -0.0000   0.0000   0.0000  -0.0165  -0.2648  -0.0000   0.0000
   28 F   :2pz   -0.0005   0.0061   0.1467   0.0000   0.0000   0.1071   0.9794
-  30 F   :3d1-  -0.0000   0.0000   0.0000   0.0004  -0.0125  -0.0000   0.0000
+  30 F   :3d1-  -0.0000   0.0000   0.0000  -0.0008  -0.0125  -0.0000   0.0000
   31 F   :3d0    0.0001  -0.0116   0.0229   0.0000   0.0000   0.0079  -0.0215
-  32 F   :3d1+  -0.0000   0.0000   0.0000  -0.0125  -0.0004  -0.0000   0.0000
+  32 F   :3d1+  -0.0000   0.0000   0.0000  -0.0125   0.0008  -0.0000   0.0000
   35 H   :1s     0.0000  -0.0057   0.0105   0.0000   0.0000  -0.0049  -0.0028
   36 H   :1s    -0.0001  -0.0307   0.0527   0.0000   0.0000   0.0125  -0.1119
   37 H   :1s    -0.0003  -0.0755   0.1726   0.0000   0.0000  -0.1463   0.1326
   38 H   :1s     0.0004  -0.0532   0.2182   0.0000   0.0000   0.3195  -2.8454
   39 H   :1s     0.0003  -0.0050  -0.0038   0.0000   0.0000  -1.4211   1.3222
-  40 H   :2px    0.0000  -0.0000  -0.0000  -0.0414  -0.0013   0.0000  -0.0000
-  41 H   :2py    0.0000  -0.0000  -0.0000   0.0013  -0.0414   0.0000  -0.0000
+  40 H   :2px    0.0000  -0.0000  -0.0000  -0.0413   0.0026   0.0000  -0.0000
+  41 H   :2py    0.0000  -0.0000  -0.0000  -0.0026  -0.0413   0.0000  -0.0000
   42 H   :2pz    0.0003   0.0247  -0.0442   0.0000   0.0000  -0.0347   0.0249
 
     Orbital         8        9       10       11       12       13       14
-   4 F   :1s    -0.0000   0.0000   0.0030   0.0000   0.0000   0.0141   0.0038
-   5 F   :1s    -0.0000   0.0000   0.0085   0.0000   0.0000   0.0243   0.0087
-   6 F   :1s    -0.0000   0.0000   0.0239   0.0000   0.0000   0.1293   0.0326
-   7 F   :1s    -0.0000   0.0000   0.0232   0.0000   0.0000  -0.0022   0.0143
-   8 F   :1s     0.0000  -0.0000  -0.0093  -0.0000  -0.0000   0.4053   0.0590
-   9 F   :1s     0.0000  -0.0000  -0.1438  -0.0000  -0.0000  -2.3170  -0.4327
-  10 F   :1s     0.0000  -0.0000  -0.6990  -0.0000  -0.0000   3.2658   1.4372
-  14 F   :2px    0.0202  -0.0000  -0.0000  -0.0034  -0.0000   0.0000  -0.0000
-  15 F   :2py   -0.0000  -0.0202  -0.0000   0.0000  -0.0034   0.0000  -0.0000
-  16 F   :2pz   -0.0000   0.0000   0.0177   0.0000   0.0000  -0.0038  -0.0175
-  17 F   :2px    0.1367  -0.0000  -0.0000  -0.0181  -0.0000   0.0000  -0.0000
-  18 F   :2py   -0.0000  -0.1367  -0.0000   0.0000  -0.0181   0.0000  -0.0000
-  19 F   :2pz   -0.0000   0.0000   0.1151   0.0000   0.0000   0.0076  -0.0596
-  20 F   :2px    0.0874  -0.0000  -0.0000  -0.0218  -0.0000   0.0000  -0.0000
-  21 F   :2py   -0.0000  -0.0874  -0.0000   0.0000  -0.0218   0.0000  -0.0000
-  22 F   :2pz   -0.0000   0.0000   0.0847   0.0000   0.0000  -0.0705  -0.1536
-  23 F   :2px    0.7849  -0.0000  -0.0000  -0.0955  -0.0000   0.0000  -0.0000
-  24 F   :2py   -0.0000  -0.7849  -0.0000   0.0000  -0.0955   0.0000  -0.0000
-  25 F   :2pz   -0.0000   0.0000   0.5959   0.0000   0.0000   0.1865  -0.1299
-  26 F   :2px   -1.2763   0.0000  -0.0000  -0.5420  -0.0000   0.0000  -0.0000
-  27 F   :2py    0.0000   1.2763  -0.0000   0.0000  -0.5420   0.0000  -0.0000
-  28 F   :2pz   -0.0000   0.0000  -1.7863   0.0000   0.0000   0.8771   0.9012
-  30 F   :3d1-  -0.0000  -0.0050  -0.0000  -0.0000   0.0410   0.0000  -0.0000
-  31 F   :3d0   -0.0000   0.0000   0.0006   0.0000   0.0000  -0.0150   0.0472
-  32 F   :3d1+   0.0050  -0.0000  -0.0000   0.0410   0.0000   0.0000  -0.0000
-  35 H   :1s    -0.0000   0.0000   0.0042   0.0000   0.0000  -0.0064   0.0497
-  36 H   :1s    -0.0000   0.0000  -0.0217   0.0000   0.0000   0.0308  -0.0892
-  37 H   :1s    -0.0000   0.0000   0.1132   0.0000   0.0000  -0.4050   2.0390
-  38 H   :1s    -0.0000   0.0000   1.0166   0.0000   0.0000  -0.9217  -3.7769
-  39 H   :1s    -0.0000   0.0000   0.1083   0.0000   0.0000  -0.5415   1.0331
-  40 H   :2px   -0.0115  -0.0000   0.0000   1.1545   0.0001  -0.0000   0.0000
-  41 H   :2py   -0.0000   0.0115   0.0000  -0.0001   1.1545  -0.0000   0.0000
-  42 H   :2pz   -0.0000   0.0000  -0.2743   0.0000   0.0000   0.3214   0.3444
+   4 F   :1s     0.0000  -0.0000   0.0030   0.0000   0.0000   0.0141   0.0038
+   5 F   :1s     0.0000  -0.0000   0.0085   0.0000   0.0000   0.0243   0.0087
+   6 F   :1s     0.0000  -0.0000   0.0239   0.0000   0.0000   0.1293   0.0326
+   7 F   :1s     0.0000  -0.0000   0.0232   0.0000   0.0000  -0.0022   0.0143
+   8 F   :1s    -0.0000   0.0000  -0.0093  -0.0000  -0.0000   0.4053   0.0590
+   9 F   :1s    -0.0000   0.0000  -0.1438  -0.0000  -0.0000  -2.3170  -0.4327
+  10 F   :1s    -0.0000   0.0000  -0.6990  -0.0000  -0.0000   3.2658   1.4372
+  14 F   :2px    0.0000   0.0202  -0.0000   0.0000  -0.0034   0.0000  -0.0000
+  15 F   :2py   -0.0202   0.0000  -0.0000  -0.0034  -0.0000   0.0000  -0.0000
+  16 F   :2pz    0.0000  -0.0000   0.0177   0.0000   0.0000  -0.0038  -0.0175
+  17 F   :2px    0.0000   0.1367  -0.0000   0.0000  -0.0181   0.0000  -0.0000
+  18 F   :2py   -0.1367   0.0000  -0.0000  -0.0181  -0.0000   0.0000  -0.0000
+  19 F   :2pz    0.0000  -0.0000   0.1151   0.0000   0.0000   0.0076  -0.0596
+  20 F   :2px    0.0000   0.0874  -0.0000   0.0000  -0.0218   0.0000  -0.0000
+  21 F   :2py   -0.0874   0.0000  -0.0000  -0.0218  -0.0000   0.0000  -0.0000
+  22 F   :2pz    0.0000  -0.0000   0.0847   0.0000   0.0000  -0.0705  -0.1536
+  23 F   :2px    0.0000   0.7849  -0.0000   0.0000  -0.0955   0.0000  -0.0000
+  24 F   :2py   -0.7849   0.0000  -0.0000  -0.0955  -0.0000   0.0000  -0.0000
+  25 F   :2pz    0.0000  -0.0000   0.5959   0.0000   0.0000   0.1865  -0.1299
+  26 F   :2px   -0.0000  -1.2763  -0.0000   0.0001  -0.5420   0.0000  -0.0000
+  27 F   :2py    1.2763  -0.0000  -0.0000  -0.5420  -0.0001   0.0000  -0.0000
+  28 F   :2pz    0.0000  -0.0000  -1.7863   0.0000   0.0000   0.8771   0.9012
+  30 F   :3d1-  -0.0050   0.0000  -0.0000   0.0410   0.0000   0.0000  -0.0000
+  31 F   :3d0    0.0000  -0.0000   0.0006   0.0000   0.0000  -0.0150   0.0472
+  32 F   :3d1+   0.0000   0.0050  -0.0000  -0.0000   0.0410   0.0000  -0.0000
+  35 H   :1s     0.0000  -0.0000   0.0042   0.0000   0.0000  -0.0064   0.0497
+  36 H   :1s     0.0000  -0.0000  -0.0217   0.0000   0.0000   0.0308  -0.0892
+  37 H   :1s     0.0000  -0.0000   0.1132   0.0000   0.0000  -0.4050   2.0390
+  38 H   :1s     0.0000  -0.0000   1.0166   0.0000   0.0000  -0.9217  -3.7769
+  39 H   :1s     0.0000  -0.0000   0.1083   0.0000   0.0000  -0.5415   1.0331
+  40 H   :2px   -0.0000  -0.0115   0.0000  -0.0001   1.1545  -0.0000   0.0000
+  41 H   :2py    0.0115  -0.0000   0.0000   1.1545   0.0001  -0.0000   0.0000
+  42 H   :2pz    0.0000  -0.0000  -0.2743   0.0000   0.0000   0.3214   0.3444
 
     Orbital        15
    6 F   :1s    -0.0280
@@ -768,7 +786,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   Total wall time used in SIRIUS :   0.04 seconds
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:57 2025
      Host name              : Yo-Nitro                                
 
 
@@ -804,7 +822,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:57 2025
      Host name              : Yo-Nitro                                
 
 
@@ -814,7 +832,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
 
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:28 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:57 2025
      Host name              : Yo-Nitro                                
 
 
@@ -846,11 +864,11 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
                    Scalar Breit-Pauli relativistic corrections
                    -------------------------------------------
 
-     Darwin correction:                          0.3248770999 au
-     Mass-velocity correction:                  -0.4114050656 au
+     Darwin correction:                          0.3248771104 au
+     Mass-velocity correction:                  -0.4114050804 au
 
-     Total relativistic correction:             -0.0865279657 au ( 0.0865%)
-     Non-relativistic + relativistic energy:  -100.1464930416 au
+     Total relativistic correction:             -0.0865279700 au ( 0.0865%)
+     Non-relativistic + relativistic energy:  -100.1464930459 au
 
 
 
@@ -861,7 +879,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
                                   -------------
 
                  au               Debye          C m (/(10**-30)
-              0.783624           1.991773           6.643840
+              0.783623           1.991772           6.643836
 
 
                              Dipole moment components
@@ -871,7 +889,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
 
       x      0.00000000         0.00000000         0.00000000
       y      0.00000000         0.00000000         0.00000000
-      z      0.78362383         1.99177298         6.64383953
+      z      0.78362341         1.99177191         6.64383593
 
 
    Units:   1 a.u. =   2.54175 Debye 
@@ -929,7 +947,7 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
     Changes of defaults for LRESC :
     -------------------------------
 
-    - (.ANISO) Off-diagonal elements and anisotropic parameters are also printed
+    - (.PRTTEN) Off-diagonal elements and anisotropic parameters are also printed
     - (.PRTALL) All LRESC corrections are printed
   
 
@@ -944,9 +962,9 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   -------------------------------------------------
 
                     Bx            By             Bz             Bx            By             Bz
-        x       482.4203        0.0000         0.0000      -116.2230        0.0001        -0.0000
-        y         0.0000      482.4203         0.0000        -0.0001     -116.2230        -0.0000
-        z         0.0000        0.0000       482.0675         0.0000        0.0000         0.0000
+        x       482.4203        0.0000         0.0000      -116.2230        0.0000        -0.0000
+        y         0.0000      482.4203         0.0000        -0.0000     -116.2230        -0.0000
+        z         0.0000        0.0000       482.0675         0.0000        0.0000        -0.0000
 
         Diamagnetic contribution to shielding constant:     482.3027
         Paramagnetic contribution to shielding constant:    -77.4820
@@ -956,28 +974,28 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   ----------------------------------------------
 
                     Bx            By             Bz
-        x       366.1974        0.0001        -0.0000
-        y        -0.0001      366.1974        -0.0000
+        x       366.1974        0.0000        -0.0000
+        y        -0.0000      366.1974        -0.0000
         z         0.0000        0.0000       482.0675
 
-        iso     404.8207
+        Isotropic shielding constant:        404.8208
 
 
 
-  Principal values and axes:
-  --------------------------
+  Principal values and tensor axes:
+  ---------------------------------
 
                     Ax            Ay             Az
-    366.1974      0.7068        0.7074         0.0000
-    366.1974      0.7074       -0.7068        -0.0000
-    482.0675      0.0000       -0.0000         1.0000
+    366.1974      0.7071       -0.7071         0.0000
+    366.1974      0.7071        0.7071         0.0000
+    482.0675     -0.0000        0.0000         1.0000
 
 
   Anisotropic parameters:
   -----------------------
 
-                    anis          asym
-                115.8702        0.0000
+    Anisotropy:        115.8702
+    Asymmetry :          0.0000
 
 
                 .-------------------------------------------------.
@@ -986,70 +1004,84 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
 
 
        Detailed info : [.PARA1S]
-        ---------------                xx            yy             zz          iso
-         OZK                  :      0.2990        0.2990         0.2771      0.2917 [ppm]
-         PSOK                 :      0.2116        0.2116        -0.0000      0.1411 [ppm]
-        ---------------                xy            xz             yz
-         OZK                  :     -0.0000        0.0000         0.0000             [ppm]
-         PSOK                 :     -0.0000        0.0000         0.0000             [ppm]
-        ---------------                yx            zx             zy
-         OZK                  :      0.0000        0.0000         0.0000             [ppm]
-         PSOK                 :      0.0000       -0.0000        -0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         OZK              : x         0.2990       -0.0000         0.0000      0.2917 [ppm]
+                          : y         0.0000        0.2990         0.0000             [ppm]
+                          : z         0.0000        0.0000         0.2771             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         PSOK             : x         0.2116       -0.0000         0.0000      0.1411 [ppm]
+                          : y         0.0000        0.2116         0.0000             [ppm]
+                          : z        -0.0000       -0.0000         0.0000             [ppm]
+
 
        Detailed info : [.PARA1T]
-        ---------------                xx            yy             zz          iso
-         SZK(Fc)              :     11.4266       11.4266        11.4326     11.4286 [ppm]
-         SZK(Sd)              :     -0.0300       -0.0300        -0.0332     -0.0310 [ppm]
-         BSO(Fc)              :     -3.0535       -3.0535        -3.0800     -3.0623 [ppm]
-         BSO(Sd)              :      0.0613        0.0613         0.0649      0.0625 [ppm]
-        ---------------                xy            xz             yz
-         SZK(Fc)              :     -0.0000       -0.0000        -0.0000             [ppm]
-         SZK(Sd)              :      0.0000        0.0000         0.0000             [ppm]
-         BSO(Fc)              :      0.0000        0.0000         0.0000             [ppm]
-         BSO(Sd)              :     -0.0000       -0.0000        -0.0000             [ppm]
-        ---------------                yx            zx             zy
-         SZK(Fc)              :     -0.0000       -0.0000        -0.0000             [ppm]
-         SZK(Sd)              :     -0.0000        0.0000         0.0000             [ppm]
-         BSO(Fc)              :      0.0000        0.0000         0.0000             [ppm]
-         BSO(Sd)              :      0.0000        0.0000        -0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         SZK(Fc)          : x        11.4266       -0.0000        -0.0000     11.4286 [ppm]
+                          : y        -0.0000       11.4266        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        11.4326             [ppm]
 
-       Detailed info : [.PARA3S]
-        ---------------                xx            yy             zz          iso
-         Mv/p                 :     -1.9417       -1.9417        -0.0000     -1.2945 [ppm]
-         Dw/p                 :      0.9905        0.9905        -0.0000      0.6603 [ppm]
-        ---------------                xy            xz             yz
-         Mv/p                 :      0.0000       -0.0000        -0.0000             [ppm]
-         Dw/p                 :     -0.0000       -0.0000        -0.0000             [ppm]
-        ---------------                yx            zx             zy
-         Mv/p                 :     -0.0000       -0.0000        -0.0000             [ppm]
-         Dw/p                 :     -0.0000       -0.0000        -0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         SZK(Sd)          : x        -0.0300        0.0000         0.0000     -0.0310 [ppm]
+                          : y        -0.0000       -0.0300         0.0000             [ppm]
+                          : z        -0.0000        0.0000        -0.0332             [ppm]
 
-       Detailed info : [.PARA3T]
-        ---------------                xx            yy             zz          iso
-         SO(Fc)               :      0.6934        0.6934        -0.0000      0.4623 [ppm]
-         SO(Sd)               :     -0.0810       -0.0810         0.7799      0.2060 [ppm]
-        ---------------                xy            xz             yz
-         SO(Fc)               :     -0.0000       -0.0000        -0.0000             [ppm]
-         SO(Sd)               :     -0.0000       -0.0000        -0.0000             [ppm]
-        ---------------                yx            zx             zy
-         SO(Fc)               :     -0.0000       -0.0000        -0.0000             [ppm]
-         SO(Sd)               :     -0.0000       -0.0000        -0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         BSO(Fc)          : x        -3.0535        0.0000         0.0000     -3.0623 [ppm]
+                          : y         0.0000       -3.0535         0.0000             [ppm]
+                          : z         0.0000        0.0000        -3.0800             [ppm]
 
-       ---------------                 xx            yy             zz          iso
-    1st Order Singlets:              0.5106        0.5106         0.2771      0.4327 [ppm]
-    1st Order Triplets:              8.4045        8.4045         8.3843      8.3977 [ppm]
-    2nd Order Singlets:             -0.9512       -0.9512        -0.0000     -0.6341 [ppm]
-    2nd Order Triplets:              0.6124        0.6124         0.7799      0.6682 [ppm]
-       ---------------                 xy            xz             yz
-    1st Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
-    1st Order Triplets:             -0.0000        0.0000         0.0000             [ppm]
-    2nd Order Singlets:              0.0000       -0.0000        -0.0000             [ppm]
-    2nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
-       ---------------                 yx            zx             zy
-    1st Order Singlets:              0.0000       -0.0000        -0.0000             [ppm]
-    1st Order Triplets:              0.0000        0.0000         0.0000             [ppm]
-    2nd Order Singlets:             -0.0000       -0.0000        -0.0000             [ppm]
-    2nd Order Triplets:             -0.0000       -0.0000        -0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         BSO(Sd)          : x         0.0613       -0.0000        -0.0000      0.0625 [ppm]
+                          : y         0.0000        0.0613        -0.0000             [ppm]
+                          : z         0.0000        0.0000         0.0649             [ppm]
+
+
+       Detailed info : [.PARA2S]
+       ---------------                  Bx            By             Bz          iso
+         Mv/p             : x        -1.9417       -0.0000        -0.0000     -1.2945 [ppm]
+                          : y        -0.0000       -1.9417        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        -0.0000             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         Dw/p             : x         0.9905       -0.0000        -0.0000      0.6604 [ppm]
+                          : y        -0.0000        0.9905        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        -0.0000             [ppm]
+
+
+       Detailed info : [.PARA2T]
+       ---------------                  Bx            By             Bz          iso
+         SO(Fc)           : x         0.6934       -0.0000        -0.0000      0.4623 [ppm]
+                          : y        -0.0000        0.6934        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        -0.0000             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         SO(Sd)           : x        -0.0810       -0.0000        -0.0000      0.2060 [ppm]
+                          : y        -0.0000       -0.0810        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000         0.7799             [ppm]
+
+
+       Response order
+       ---------------                  Bx            By             Bz          iso
+    1st Order Singlets    : x         0.5106       -0.0000         0.0000      0.4327 [ppm]
+                          : y         0.0000        0.5106         0.0000             [ppm]
+                          : z        -0.0000       -0.0000         0.2771             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+    1st Order Triplets    : x         8.4045       -0.0000         0.0000      8.3977 [ppm]
+                          : y         0.0000        8.4045         0.0000             [ppm]
+                          : z         0.0000        0.0000         8.3843             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+    2nd Order Singlets    : x        -0.9512       -0.0000        -0.0000     -0.6341 [ppm]
+                          : y        -0.0000       -0.9512        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        -0.0000             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+    2nd Order Triplets    : x         0.6124       -0.0000        -0.0000      0.6682 [ppm]
+                          : y        -0.0000        0.6124        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000         0.7799             [ppm]
+
 
 
 
@@ -1059,42 +1091,50 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
 
 
        Detailed info : [.DIAM0S]
-        ---------------                xx            yy             zz          iso
-         FC/d                 :     -4.4900       -4.4900        -4.4900     -4.4900 [ppm]
-         SD/d                 :     -0.0014       -0.0014         0.0027     -0.0000 [ppm]
-         PSO-OZ               :     -0.0349       -0.0349        -0.0396     -0.0365 [ppm]
-         DIAK                 :     -1.9923       -1.9923        -1.9943     -1.9930 [ppm]
-        ---------------                xy            xz             yz
-         FC/d                 :     -0.0000       -0.0000        -0.0000             [ppm]
-         SD/d                 :      0.0000       -0.0000        -0.0000             [ppm]
-         PSO-OZ               :      0.0000        0.0000         0.0000             [ppm]
-         DIAK                 :     -0.0000        0.0000         0.0000             [ppm]
-        ---------------                yx            zx             zy
-         FC/d                 :     -0.0000       -0.0000        -0.0000             [ppm]
-         SD/d                 :      0.0000       -0.0000        -0.0000             [ppm]
-         PSO-OZ               :     -0.0000        0.0000         0.0000             [ppm]
-         DIAK                 :     -0.0000        0.0000         0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         FC/d             : x        -4.4900       -0.0000        -0.0000     -4.4900 [ppm]
+                          : y        -0.0000       -4.4900        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000        -4.4900             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         SD/d             : x        -0.0014        0.0000        -0.0000     -0.0000 [ppm]
+                          : y         0.0000       -0.0014        -0.0000             [ppm]
+                          : z        -0.0000       -0.0000         0.0027             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         PSO-OZ           : x        -0.0349       -0.0000         0.0000     -0.0365 [ppm]
+                          : y        -0.0000       -0.0349         0.0000             [ppm]
+                          : z         0.0000        0.0000        -0.0396             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+         DIAK             : x        -1.9923       -0.0000         0.0000     -1.9930 [ppm]
+                          : y        -0.0000       -1.9923         0.0000             [ppm]
+                          : z         0.0000        0.0000        -1.9943             [ppm]
+
 
        Detailed info : [.DIAM1S]
-        ---------------                xx            yy             zz          iso
-         Mv/d                 :      3.3442        3.3442         3.3662      3.3515 [ppm]
-         Dw/d                 :     -1.9621       -1.9621        -1.9736     -1.9659 [ppm]
-        ---------------                xy            xz             yz
-         Mv/d                 :      0.0000        0.0000        -0.0000             [ppm]
-         Dw/d                 :      0.0000        0.0000         0.0000             [ppm]
-        ---------------                yx            zx             zy
-         Mv/d                 :      0.0000        0.0000        -0.0000             [ppm]
-         Dw/d                 :      0.0000        0.0000         0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         Mv/d             : x         3.3442        0.0000         0.0000      3.3515 [ppm]
+                          : y         0.0000        3.3442         0.0000             [ppm]
+                          : z         0.0000        0.0000         3.3662             [ppm]
 
-       ---------------                 xx            yy             zz          iso
-    0th Order Singlets:             -6.5186       -6.5186        -6.5212     -6.5194 [ppm]
-    1st Order Singlets:              1.3822        1.3822         1.3925      1.3856 [ppm]
-       ---------------                 xy            xz             yz
-    0th Order Singlets:              0.0000        0.0000         0.0000             [ppm]
-    1st Order Singlets:              0.0000        0.0000         0.0000             [ppm]
-       ---------------                 yx            zx             zy
-    0th Order Singlets:             -0.0000        0.0000         0.0000             [ppm]
-    1st Order Singlets:              0.0000        0.0000         0.0000             [ppm]
+       ---------------                  Bx            By             Bz          iso
+         Dw/d             : x        -1.9621       -0.0000         0.0000     -1.9659 [ppm]
+                          : y        -0.0000       -1.9621         0.0000             [ppm]
+                          : z         0.0000        0.0000        -1.9736             [ppm]
+
+
+       Response order
+       ---------------                  Bx            By             Bz          iso
+    0th Order Singlets    : x        -6.5186       -0.0000         0.0000     -6.5194 [ppm]
+                          : y        -0.0000       -6.5186         0.0000             [ppm]
+                          : z         0.0000        0.0000        -6.5212             [ppm]
+
+       ---------------                  Bx            By             Bz          iso
+    1st Order Singlets    : x         1.3822        0.0000         0.0000      1.3856 [ppm]
+                          : y         0.0000        1.3822         0.0000             [ppm]
+                          : z         0.0000        0.0000         1.3925             [ppm]
+
 
 
                     .------------------------------------------.
@@ -1107,8 +1147,8 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   -----------------------------------------------------
 
                     Bx            By             Bz             Bx            By             Bz
-        x        -5.1364        0.0000         0.0000         8.5762        0.0000         0.0000
-        y        -0.0000       -5.1364         0.0000        -0.0000        8.5762         0.0000
+        x        -5.1364        0.0000         0.0000         8.5762       -0.0000         0.0000
+        y         0.0000       -5.1364         0.0000         0.0000        8.5762         0.0000
         z         0.0000        0.0000        -5.1286        -0.0000       -0.0000         9.4414
 
         Diamagnetic contribution to shielding constant:      -5.1338
@@ -1119,11 +1159,11 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   -----------------------------------------------
 
                     Bx            By             Bz
-        x         3.4398        0.0000         0.0000
-        y        -0.0000        3.4398         0.0000
+        x         3.4398       -0.0000         0.0000
+        y         0.0000        3.4398         0.0000
         z        -0.0000       -0.0000         4.3127
 
-        iso       3.7308
+        Isotropic shielding constant:          3.7308
 
 
 
@@ -1137,8 +1177,8 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   -------------------------------------------------
 
                     Bx            By             Bz             Bx            By             Bz
-        x       477.2839        0.0000         0.0000      -107.6468        0.0001        -0.0000
-        y         0.0000      477.2839         0.0000        -0.0001     -107.6468        -0.0000
+        x       477.2839        0.0000         0.0000      -107.6468        0.0000        -0.0000
+        y         0.0000      477.2839         0.0000        -0.0000     -107.6468        -0.0000
         z         0.0000        0.0000       476.9389         0.0000        0.0000         9.4414
 
         Diamagnetic contribution to shielding constant:     477.1689
@@ -1149,28 +1189,28 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
   -----------------------------
 
                     Bx            By             Bz
-        x       369.6372        0.0001        -0.0000
-        y        -0.0001      369.6372        -0.0000
+        x       369.6372        0.0000        -0.0000
+        y        -0.0000      369.6372        -0.0000
         z         0.0000        0.0000       486.3803
 
-        iso     408.5515
+        Isotropic shielding constant:        408.5515
 
 
 
-  Principal values and axes:
-  --------------------------
+  Principal values and tensor axes:
+  ---------------------------------
 
                     Ax            Ay             Az
-    369.6372      0.7067        0.7075         0.0000
-    369.6372      0.7075       -0.7067        -0.0000
-    486.3803      0.0000       -0.0000         1.0000
+    369.6372      0.7071       -0.7071         0.0000
+    369.6372      0.7071        0.7071         0.0000
+    486.3803     -0.0000        0.0000         1.0000
 
 
   Anisotropic parameters:
   -----------------------
 
-                    anis          asym
-                116.7431        0.0000
+    Anisotropy:        116.7431
+    Asymmetry :          0.0000
 
 
 
@@ -1178,23 +1218,23 @@ File label for MO orbitals:   3Jun25   FOCKDIIS
  ------------------------------
 
 
- TOTAL      00:00:02     100 %
+ TOTAL      00:00:01     100 %
 
 
-  Total CPU  time used in ABACUS:   1.51 seconds
-  Total wall time used in ABACUS:   1.51 seconds
+  Total CPU  time used in ABACUS:   1.31 seconds
+  Total wall time used in ABACUS:   1.31 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
-  Total CPU  time used in DALTON:   1.62 seconds
-  Total wall time used in DALTON:   1.62 seconds
+  Total CPU  time used in DALTON:   2.20 seconds
+  Total wall time used in DALTON:   1.46 seconds
 
  NOTE:   55 informational messages have been issued.
  Check output, result, and error files for "INFO".
 
  
-     Date and time (Linux)  : Tue Jun  3 12:30:30 2025
+     Date and time (Linux)  : Tue Jul 15 22:20:58 2025
      Host name              : Yo-Nitro                                
