@@ -317,10 +317,11 @@ LRESC module computes singlet and triplet corrections to nuclear magnetic shield
 **END OF DALTON INPUT
 \end{verbatim}
 
-where \textit{1} refers to the number of nuclei and \textit{ATOM} should be replaced for the atom number under study. In the current implementation, by default the gauge origin is placed in its position. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The complete list of control keywords for \Sec{LR-SHI} in the \Sec{**INTEGRALS} section is:
+where \textit{1} is the number of nuclei to be studied and \textit{ATOM} must be replaced by the atom number under study, according to the list in MOLECULE.INP.
+In the current implementation, by default the gauge origin is placed in its position. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The complete list of control keywords for \Sec{LR-SHI} in the \Sec{**INTEGRALS} section is:
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
-\item[\Key{LRGAUGEO}] Define the gauge origin coordinates for the LRESC-shielding module (for debugging purposes). By default, the gauge origin is placed at the nucleus center.
-\item[\Key{LRCMG}] Define the gauge origin for the LRESC-shielding module at the mass-center (for debugging purposes). By default, the gauge origin is placed at the nucleus center.
+\item[\Key{LRGAUGEO}] Define the gauge origin coordinates for the LRESC-shielding module (for debugging purposes). By default, the gauge origin is placed at the selected nucleus position.
+\item[\Key{LRCMG}] Define the gauge origin for the LRESC-shielding module at the mass-center (for debugging purposes). By default, the gauge origin is placed at the selected nucleus position.
 \end{list}
 
 There are a few keywords to get more control over the calculation and the output. Under the \Sec{**PROPERTIES} section there is a list of options available by calling to \Sec{LROPTS}:
@@ -328,7 +329,7 @@ There are a few keywords to get more control over the calculation and the output
 \item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. By default, they are all calculated but not printed in detail.
 \item[\Key{PRTTENSOR}] Off-diagonal elements will be printed.
 \item[\Key{EXTRAINFO}] Prints extra-info (for developers).
-\item[\Key{PYINTS}] Import atomic integrals generated previously by PySCF (for developers). The subroutine \textit{import\_matrix} is called. The file SHIELDING.py contains a template to generate the integrals in PySCF.
+\item[\Key{PYINTS}] Import atomic integrals generated previously by PySCF (for developers). The subroutine \textit{import\_matrix} is called. The file \textit{SHIELDING.py} within the \textit{LRESC} folder contains a template to generate the integrals in PySCF.
 \item[\Key{PARANR}] Request the paramagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
 \item[\Key{DIANR}] Request the diamagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
 \item[\Key{PARA1S}] Request the Paramagnetic Singlet First order corrections and disable the full corrections calculation that is set by default.
@@ -352,8 +353,8 @@ There are some important issues to keep in mind:
 %\item Uncontracted basis set is recommended. !Too old
 \item Molecular symmetry is not yet implemented.
 \item Only Hartree-Fock and DFT schemes are supported.
-\item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA2S, PARA2T, DIAM0S and DIAM1S described above). %Revisar
-\item In the scratch directory, files related to LRESC linear and quadratic responses are available (LRESC-LR-S, LRESC-LR-T, LRESC-QR).
+\item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA2S, PARA2T, DIAM0S and DIAM1S described above).
+\item As LRESC demands many linear and quadratic response calculations, all the related output text is redirected to specific files in the scratch directory (\textit{LRESC-LR-S}, \textit{LRESC-LR-T}, \textit{LRESC-QR}).
 \end{itemize}
 \end{center}
 

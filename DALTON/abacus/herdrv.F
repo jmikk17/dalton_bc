@@ -1312,11 +1312,12 @@ c jim-dbg : setting all integrals for LRESC module
                CALL DCOPY(3,CORD(:,LRATOM),1,GAGORG,1) !GAUGE in the nucleus position
                LRATOM_changed = .TRUE.
             ELSE IF (NPATOM.EQ.0) THEN
-               CALL QUIT('Select a nucleus under INTEGRALS, HERINP')
+               CALL QUIT('RELSHI: select a nucleus under **INTEGRALS.')
                LRATOM_changed = .FALSE.
                NLRATOMS = NUCIND
             ELSE
-               CALL QUIT('Select a nucleus under INTEGRALS, HERINP')
+               CALL QUIT
+     &         ('RELSHI: select only one nucleus under **INTEGRALS.')
                CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
                NLRATOMS = NPATOM
                LRATOM_changed = .TRUE.
