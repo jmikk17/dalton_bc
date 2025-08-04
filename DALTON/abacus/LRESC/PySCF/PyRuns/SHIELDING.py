@@ -1,9 +1,27 @@
+# ######################################################
+#
+# Writen by Juan J. Aucar. August 2025.
+#
+# Generalization of the FC mechanism. See Eq. 25 at
+# https://doi.org/10.1063/5.0264596
+#
+# Feel free to contact me at juanaucar@gmail.com
+#
+# ######################################################
 import pyscf
 from pyscf import gto,scf
 import numpy
 
-# (r_i . nabla_j) / (r^3)
 def _get_DIFC_I(mol, atm_id, cartesian = False ):
+    """Calculate (r_i . nabla_j) / (r^3) integrals.
+
+    :param mol: The molecular object.
+    :type mol: pyscf.gto.Mole
+    :param atm_id: The atom index.
+    :type atm_id: int
+    :param cartesian: Whether to use Cartesian gaussians, defaults to False
+    :type cartesian: bool, optional
+    """
     nao_sph = mol.intor('int1e_ovlp_sph').shape[0]
     nao_cart = mol.intor('int1e_ovlp_cart').shape[0]
 
@@ -22,13 +40,33 @@ def _get_DIFC_I(mol, atm_id, cartesian = False ):
     integrals=iprinvip+rinvipip #ipiprinv
     return integrals
 
-# (r . nabla) / (r^3)
 def _get_DIFC_0(mol, atm_id, cartesian = False ):
+    """Calculate (r . nabla) / (r^3) integrals.
+
+    :param mol: The molecular object.
+    :type mol: pyscf.gto.Mole
+    :param atm_id: The atom index.
+    :type atm_id: int
+    :param cartesian: Whether to use Cartesian gaussians, defaults to False
+    :type cartesian: bool, optional
+    :return: The (r . nabla) / (r^3) integrals.
+    :rtype: numpy.ndarray
+    """
     DIFC_I = _get_DIFC_I(mol, atm_id, cartesian)
     return DIFC_I[0,0,:,:]+DIFC_I[1,1,:,:]+DIFC_I[2,2,:,:]
 
-# (r_i r_j)/(r^5) r . nabla
 def _get_DIFC_II(mol, atm_id, cartesian = False ):
+    """Calculate (r_i r_j)/(r^5) r . nabla integrals.
+
+    :param mol: The molecular object.
+    :type mol: pyscf.gto.Mole
+    :param atm_id: The atom index.
+    :type atm_id: int
+    :param cartesian: Whether to use Cartesian gaussians, defaults to False
+    :type cartesian: bool, optional
+    :return: The (r_i r_j)/(r^5) r . nabla integrals.
+    :rtype: numpy.ndarray
+    """
     nao_sph = mol.intor('int1e_ovlp_sph').shape[0]
     nao_cart = mol.intor('int1e_ovlp_cart').shape[0]
 
@@ -63,6 +101,9 @@ def _get_DIFC_II(mol, atm_id, cartesian = False ):
     return integrals/3
 
 
+# ######################################################
+# Main code starts here
+# ######################################################
 
 
 base = "dyall_cv4z"
@@ -75,7 +116,8 @@ nao_cart = mol_h2o.intor('int1e_ovlp_cart').shape[0]
 nro_operadores=numpy.array([19*mol_h2o.natm])
 print("naos_cart:",nao_cart)
 print("naos_sph:",naos_sph)
-print("nro de operadores a grabar: ",nro_operadores)
+print("Number of operators: ",nro_operadores)
+
 cartesian = False
 if (cartesian):
    print("Cartesian basis set used at PySCF")
@@ -91,7 +133,7 @@ with open("shi.bin", "wb") as file:
        numpy.array(naos_sph, dtype=numpy.int32).tofile(file)
 
 
-
+# Iterate over atoms to obtain the integrals
 for i in range(mol_h2o.natm):
     DIFC_0=_get_DIFC_0(mol_h2o, atm_id = i, cartesian = cartesian)
     titulos1=['FC1  '+"{:03.0f}".format(i+1)]

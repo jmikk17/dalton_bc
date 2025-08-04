@@ -1,15 +1,20 @@
-#import os 
+# ######################################################
+#
+# Writen by Juan J. Aucar. August 2025.
+#
+# Generalization of the FC mechanism. See Eq. 25 at
+# https://doi.org/10.1063/5.0264596
+#
+# This file contains some tests that may be of interest
+# to the user.
+#
+# Feel free to contact me at juanaucar@gmail.com
+#
+# ######################################################
 
-#Ejecutar en la terminal o en la plantilla sh:
-#os.system("module purge")
-#os.system("module load cmake gnu10/10.3 hdf5/1.10.7")
-#os.system("source /home/jaucar/intel/oneapi/setvars.sh")
-#os.system("export PYTHONPATH=/home/jaucar/libcint-implementacion/pyscf:$PYTHONPATH")
 import pyscf
 from pyscf import gto,scf
 import numpy
-#import pyscf.prop.efg.rhf as efg
-#from pyscf.prop.efg import rhf as efg
 
 def _get_DIFC_I(mol, atm_id, cartesian = False ):
     nao_sph = mol.intor('int1e_ovlp_sph').shape[0]
@@ -74,20 +79,17 @@ orbitales = numpy.array([mol_h2o.nao])
 naos_sph = mol_h2o.intor('int1e_ovlp_sph').shape[0]
 nao_cart = mol_h2o.intor('int1e_ovlp_cart').shape[0]
 nro_operadores=numpy.array([3*mol_h2o.natm])
-#print("nro de operadores a grabar: ",nro_operadores)
 
 
 with mol_h2o.with_rinv_origin(mol_h2o.atom_coord(0)):
-#	Integrales ya implementadas, que me sirven:
 	iprinvip_cart = mol_h2o.intor('int1e_iprinvip_cart', 9).reshape(3,3,nao_cart,nao_cart)
-	ipiprinv_cart = mol_h2o.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)  #Necesito el que iría al ket en realidad. Lo hago sacando el traspuesto conjugado
+	ipiprinv_cart = mol_h2o.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)
 
-#	Nuevas integrals implementadas:
 	iprinviprip_cart = mol_h2o.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
 	rinvipiprip_cart = mol_h2o.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
 	ipiprinvrip_cart = mol_h2o.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
 
-	print("Integrals en cartesianas:") #1º coord, 2º coord, bra, ket
+	print("Cartesian integrals:") #1º coord, 2º coord, bra, ket
 	print(iprinvip_cart[0,0,0,0])
 	print(ipiprinv_cart[0,1,0,0])
 
@@ -100,15 +102,13 @@ with mol_h2o.with_rinv_origin(mol_h2o.atom_coord(0)):
 	print(ipiprinvrip_cart[0,0,1,0,0,0])
 
 
-
-#MOL+atom_id
 DIFC_I=_get_DIFC_I(mol_h2o, atm_id = 0, cartesian=True)
 DIFC_II=_get_DIFC_II(mol_h2o, atm_id = 0, cartesian=True)
 
 print(numpy.shape(DIFC_I))
-print("1er término")
+print("1st term")
 print(-4/3*(DIFC_I[0,0,:,:]+DIFC_I[1,1,:,:]+DIFC_I[2,2,:,:]).diagonal())  #Da igual que los terminos diagonales que FC-DALTON!
-print("2do término")
+print("2nd term")
 print(-4/3*(DIFC_II[0,0,:,:]+DIFC_II[1,1,:,:]+DIFC_II[2,2,:,:]).diagonal())  #Da igual que los terminos diagonales que FC-DALTON!
 print("DIFC_II xx ss:")
 print(DIFC_II[0,0,0,0])
@@ -117,7 +117,6 @@ print(DIFC_II[0,0,0,0])
 
 
 for i in range(mol_h2o.natm):
-#    titulos=['newopx'+"{:02.0f}".format(i+1), 'newopy'+"{:02.0f}".format(i+1), 'newopz'+"{:02.0f}".format(i+1)]
     DIFC_I=_get_DIFC_I(mol_h2o, atm_id = 0, cartesian=True)
     titulos1_row1=['FC01xx'+"{:02.0f}".format(i+1), 'FC01xy'+"{:02.0f}".format(i+1), 'FC01xz'+"{:02.0f}".format(i+1)]
     titulos1_row2=['FC01yx'+"{:02.0f}".format(i+1), 'FC01yy'+"{:02.0f}".format(i+1), 'FC01yz'+"{:02.0f}".format(i+1)]
@@ -128,7 +127,7 @@ for i in range(mol_h2o.natm):
     titulos2_row2=['FC02yx'+"{:02.0f}".format(i+1), 'FC02yy'+"{:02.0f}".format(i+1), 'FC02yz'+"{:02.0f}".format(i+1)]
     titulos2_row3=['FC02zx'+"{:02.0f}".format(i+1), 'FC02zy'+"{:02.0f}".format(i+1), 'FC02zz'+"{:02.0f}".format(i+1)]
 
-
+    # Test how the integrals are written to the file
     with open("lresc_shielding.bin", "ab") as file:
         file.write(titulos1_row1[0].encode('ascii'))
         numpy.array(DIFC_I[0,0,:,:], dtype=numpy.float64).transpose(1,0).tofile(file)
@@ -167,11 +166,3 @@ for i in range(mol_h2o.natm):
         numpy.array(DIFC_II[2,1,:,:], dtype=numpy.float64).transpose(1,0).tofile(file)
         file.write(titulos2_row3[2].encode('ascii'))
         numpy.array(DIFC_II[2,2,:,:], dtype=numpy.float64).transpose(1,0).tofile(file)
-
-
-
-
-
-
-
-
