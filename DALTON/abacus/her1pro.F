@@ -2078,6 +2078,7 @@ C
          SQUARE = .TRUE.
       GOTO 200
 C
+C     NPETES
 C     Potential energy at the tesseraes
 C     ---------------------------------
 C
@@ -2738,7 +2739,7 @@ C
   600     CONTINUE
        ELSE IF (FORQM3) THEN
           IF ( (INTTYP .NE. 29) .AND.
-     &         (INTTYP .NE. 35) ) THEN 
+     &         (INTTYP .NE. 35) ) THEN !NUCPOT
              IADR = KSOINT
              DO 721 I = 1, NOPTYP
                 IF (PROPRI .OR. IPRINT .GT. 4) THEN
@@ -2816,7 +2817,7 @@ C               ... specific QM3 code
                 END IF
   721         CONTINUE
             ELSE IF ( (INTTYP .EQ. 29)
-     &           .or. (INTTYP .EQ. 35) ) THEN
+     &           .or. (INTTYP .EQ. 35) ) THEN !NUCPOT
               LM3TMP = NOPTYP/NCTOT
               IF (INTTYP .EQ. 29) THEN
                 NCOMS = 0
@@ -2849,7 +2850,7 @@ C               ... specific QM3 code
      &                                RTNLBL,IPRINT)
                         ELSE IF ( (ISUBSY(K) .NE. 0) .AND.
      &                          (ISUBSI(K) .LE. NSISY(I))
-     &                         .AND. (INTTYP .EQ. 35) .AND.
+     &                         .AND. (INTTYP .EQ. 35) .AND. !NUCPOT
      &                          (MDLWRD(I)(1:3) .EQ. 'SPC') 
      &                         .AND.(.NOT.INTDIR)) THEN
                           NUSITE = NUSITE + 1
@@ -3140,7 +3141,7 @@ Ckr   SPIN is anyway only a local variable
 !          should we also include MM centers ?
            IF (INTTYP .EQ. 29) QM3_special = .TRUE.
            IF (INTTYP .EQ. 30) QM3_special = .TRUE.
-           IF (INTTYP .EQ. 35) QM3_special = .TRUE.
+           IF (INTTYP .EQ. 35) QM3_special = .TRUE. !NUCPOT
       END IF
       IF (QM3_special) THEN
          NATOM = NCTOT
@@ -3189,7 +3190,7 @@ C
  121      CONTINUE
  120    CONTINUE
       END IF
-      IF (INTTYP .EQ. 35) THEN
+      IF (INTTYP .EQ. 35) THEN !NUCPOT
         DO 114 I=0,ISYTP
           DO 115 J = NSYSBG(I), NSYSED(I)
             DO 116 K = 1, NCTOT

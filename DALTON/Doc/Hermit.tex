@@ -718,9 +718,9 @@ of the symmetry-adapted nuclear magnetic moment coordinate, and
 diamagnetic  nuclear shielding\index{diamagnetic nuclear shielding}
 tensor using London atomic orbitals\index{London orbitals}.
 
-\item[\Key{NUCPOT}] Calculate the nuclear potential energy.
+\item[\Key{NUCPOT}] Calculate the potential energy from each individual nucleus.
 Currently this keyword can only be used in calculations not employing
-symmetry.\index{potential energy!at nucleus}
+symmetry.\index{potential energy!individual nuclei}
 
 \begin{list}{}{}
 \item Integral:
@@ -729,7 +729,9 @@ where $K$ is the nucleus of interest.
 \item Property labels: \verb|POT.E ab|, where \verb|ab| are the two
 first letters in the name of this nucleus. Thus note that in order
 to distinguish between integrals, the first two letters in an
-atom's name must be unique.
+atom's label must be unique.
+Note that the atom labels in .mol input are \em{not} used to identify the atom type,
+you can therefore use anything you like, e.g. 'aa', 'ab', 'ac', ...
 \end{list}
 
 
