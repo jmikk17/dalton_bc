@@ -41,7 +41,7 @@
 !     parallel lucita
 #ifdef VAR_MPI
       use sync_coworkers
-      use mpi_interface
+      use dalton_mpi_interface
 #endif
       implicit none
 

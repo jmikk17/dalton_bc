@@ -7,7 +7,7 @@ module lucita_ci_task_interface
 
   use lucita_integral_density_interface
 
-  use mpi_interface
+  use dalton_mpi_interface
   implicit none
 
   public CI_task_list_interface

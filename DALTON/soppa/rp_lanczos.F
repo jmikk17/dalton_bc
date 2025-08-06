@@ -48,7 +48,7 @@ C
      &                   sop_lanc_chain_len, sop_lanc_conv_check,
      &                   sop_lanc_conv_nr
 C
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT NONE
 C#include "implicit.h"
 #ifdef VAR_MPI

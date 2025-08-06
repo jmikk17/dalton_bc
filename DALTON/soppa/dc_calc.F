@@ -19,7 +19,7 @@ C
 #endif
       use so_info, only: sop_excita, so_full_name, so_model_number
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
 C  IRAT in order to assign space for load-balancing

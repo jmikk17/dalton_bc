@@ -601,7 +601,7 @@ C            PRHONE(H,NFUNC,IHSM,NSM,IPACK)
 *
 #ifdef VAR_MPI
       use dalton_mpi
-      use mpi_interface
+      use dalton_mpi_interface
 #endif
 #include "implicit.h"
 #include "priunit.h"
@@ -2452,7 +2452,7 @@ C
 !     Sep 2011 : driver for sorting the 1-/2-particle density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "parluci.h"
 
@@ -2563,7 +2563,7 @@ C
 !     Aug 2012 : driver for sorting the 1-particle spin-density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "parluci.h"
 

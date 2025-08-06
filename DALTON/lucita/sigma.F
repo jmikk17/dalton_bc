@@ -4222,7 +4222,7 @@ C     CALL QEXIT('SKICK')
 *                            - GSBBD2A
 *                            - GSBBD2B
 
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
      &          KISCLFAC, KSCALLOC
@@ -4505,7 +4505,7 @@ C             TEST_RHO2S(RHO2,RHO2AA,RHO2AB,RHO2BB,NORB)
 * Input
 * =====
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
@@ -4901,7 +4901,7 @@ C
 * Cbatches ICBAT_INI to ICBAT_END are stored on  LUC
 *
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KSIOIO, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT, KSBLTP,
      &          KISCLFAC, KSCALLOC, KLLBT, KLLEBT, KLI1BT, KLIBT,
@@ -5332,7 +5332,7 @@ C
 * If IRESTRICT.NE. 0 THEN we are after :
 * sigma(iblk) = summa(jblk.le.iblk) (2-delta(iblk,jblk))/2
 *                                                 * <Iblk!H!Jblk>C(Jblk)
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"

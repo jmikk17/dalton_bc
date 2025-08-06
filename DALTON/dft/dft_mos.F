@@ -156,7 +156,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_MOMO(NBAST,NORBT,DMAT,CMOS,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
@@ -184,7 +184,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_MOMO_SLAVE(WORK,LWORK,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -217,7 +217,7 @@ C
 #endif
 C
       SUBROUTINE DFT_MOMO_COLLECT(CMO2,IDIM,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"

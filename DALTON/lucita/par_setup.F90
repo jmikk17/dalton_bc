@@ -18,7 +18,7 @@ module parallel_setup
   use communication_model
   use file_io_model
 
-  use mpi_interface
+  use dalton_mpi_interface
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8

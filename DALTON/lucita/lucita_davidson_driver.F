@@ -34,7 +34,7 @@
 #endif
       use file_type_module
       use lucita_energy_types
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "mxpdim.inc"
 #include "wrkspc.inc"
@@ -250,7 +250,7 @@
 !
       use lucita_mcscf_srdftci_cfg
 
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLXLBT, KLXLEBT, KLXI1BT, KLXIBT
       INTEGER*8 current_free_mem, ksrdftdal_interface

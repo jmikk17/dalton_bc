@@ -12,7 +12,7 @@ module dalton_mpi
 !           written by radovan bast, for DIRAC.
 !           adapted and extended for DALTON by sknecht, december 2010.
 
-  use mpi_interface
+  use dalton_mpi_interface
 
   public dalton_mpi_bcast
   public dalton_mpi_reduce

@@ -3365,7 +3365,7 @@ C     Process basis data
 C
 C******************************************************************************
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "pi.h"

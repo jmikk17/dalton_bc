@@ -351,7 +351,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_GRAD(NBAST,NDMAT,DMAT,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
@@ -377,7 +377,7 @@ C
       END
 #if defined (VAR_MPI)
       SUBROUTINE DFT_GRAD_SLAVE(WORK,LWORK,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -414,7 +414,7 @@ C
       END
 #endif
       SUBROUTINE GRADSLAVE_COLLECT(GRADMOL,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"

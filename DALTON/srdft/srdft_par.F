@@ -36,7 +36,7 @@ C  Parameter list same as for subroutine SRDFT,
 C  see SRDFT for an explanation of the parameters.
 C
 C*****************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
       logical :: DOERG,DO_MOLGRAD,DOATR,TRIPLET
       integer :: ND_SIM, LWORK, IPRINT_in
@@ -176,7 +176,7 @@ C
 C  Node (slave) driver for parallel integration over srdft functional.
 C
 C*****************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
       integer :: LWORK, IPRINT_in
       real*8 :: WORK(LWORK)

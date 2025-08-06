@@ -73,7 +73,7 @@ C
 C
 C     P. Salek and T. Helgaker, October 2003
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 C
@@ -274,7 +274,7 @@ c     as early as possible so that slaves can take right decisions
 c     regarding which functionals to run etc.
 c
 c     NORBT, N2ORBX,NOCCT, NVIRT are needed for....?
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "aovec.h"
@@ -414,7 +414,7 @@ c
       END
 c
       SUBROUTINE DFTINTCOLLECT(ELECTRONS)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
 c

@@ -136,7 +136,7 @@ C*****************************************************************************
         use parallel_communication_models_mpi
         use one_sided_communication_wrappers
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 
 #include "maxaqn.h"

@@ -9,7 +9,7 @@ module lucita_mcscf_vector_exchange
    use ttss_block_module
    use file_type_module, only : file_info, file_type
    use vector_xc_file_type
-   use mpi_interface
+   use dalton_mpi_interface
 #ifdef VAR_MPI
    use parallel_task_distribution_type_module
    use sync_coworkers

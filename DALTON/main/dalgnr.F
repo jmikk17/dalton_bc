@@ -690,7 +690,7 @@ C
      &                           pelib_ifc_do_mep_noqm,
      &                           pelib_ifc_mep_noqm, pelib_ifc_do_lf
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
@@ -2024,7 +2024,7 @@ C
 C     Master routine for checking whether we will do parallell I/O by
 C     parallelizing over nuclear geometries
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -2131,7 +2131,7 @@ C
 C     Slave routine for learning whether we are going to do parallell I/O
 C     by parallelizing over nuclear geometries
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"

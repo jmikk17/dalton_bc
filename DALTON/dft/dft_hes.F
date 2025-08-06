@@ -1278,7 +1278,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_HESSTAT(NBAST,DMAT,V1MAT,NUCDEP,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST), V1MAT(3*NBAST*NBAST*NUCDEP)
 C
@@ -1311,7 +1311,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_HESSTAT_SLAVE(WORK,LWORK,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1352,7 +1352,7 @@ C
 #endif
 C
       SUBROUTINE DFT_HESSTAT_COLLECT(DFTHES,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
       DIMENSION DFTHES(MXCOOR,MXCOOR), WORK(LWORK)
@@ -1367,7 +1367,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_HED(IATOM,NBAST,DMAT,V1MAT,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST), V1MAT(3*NBAST*NBAST)
 C
@@ -1401,7 +1401,7 @@ C
 C /* Deck dfthed */
       SUBROUTINE DFTHED_SLAVE(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxaqn.h"
@@ -1450,7 +1450,7 @@ C
 #endif
 C
       SUBROUTINE DFT_HED_COLLECT(FCD,DFTFD,N2BASX,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       DIMENSION FCD(3*N2BASX), DFTFD(3*N2BASX), WORK(LWORK)
 C

@@ -31,7 +31,7 @@ C
 C  /* Deck mpixinit */
       SUBROUTINE MPIXINIT
 C
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 #include "priunit.h"
 #include "maxorb.h"
@@ -86,7 +86,7 @@ C  /* Deck mpifinalize */
       SUBROUTINE MPIXFINALIZE
 C
 #ifndef VAR_CHEMSHELL
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 C
       integer(kind=MPI_INTEGER_KIND) ierr_mpi
@@ -100,7 +100,7 @@ C
 C  /* Deck mpixbcast */
       SUBROUTINE MPIXBCAST(BUFFER,BUF_COUNT,TYPE_in,ROOT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "priunit.h"
 #include "maxorb.h"
@@ -139,7 +139,7 @@ C
 C  /* Deck mpixrecv */
       SUBROUTINE MPIXRECV(BUFFER,BUF_COUNT,TYPE_in,SOURCE,TAG)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "priunit.h"
 #include "maxorb.h"
@@ -190,7 +190,7 @@ C
 C  /* Deck mpixsend */
       SUBROUTINE MPIXSEND(BUFFER,BUF_COUNT,TYPE_in,DEST,TAG)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "priunit.h"
 #include "maxorb.h"
@@ -231,7 +231,7 @@ C
 
       SUBROUTINE MPIX_ISEND(BUFFER,BUF_COUNT,BUF_TYPE,DEST,REQUEST,TAG)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
@@ -274,7 +274,7 @@ C
       SUBROUTINE MPIX_IRECV(BUFFER,BUF_COUNT,BUF_TYPE,
      &                      SOURCE,REQUEST,TAG)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "priunit.h"
       CHARACTER*6 BUF_TYPE
@@ -316,7 +316,7 @@ C
 
       subroutine mpixprocname(process_name,process_name_length)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #ifdef VAR_MPI
       implicit none
       character*(*) process_name
@@ -333,7 +333,7 @@ C  /* Deck mpi_myfail */
       SUBROUTINE MPI_MYFAIL(IERR)
 ! only called from other routines in mpimacro.F
 C
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 #include "priunit.h"
 

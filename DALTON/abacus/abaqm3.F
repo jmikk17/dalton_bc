@@ -334,7 +334,7 @@ C-----------------------------------------------------
 C
       SUBROUTINE QM3FIRST_M1(VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -424,7 +424,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S1(WRK,LWRK,IPRTMP)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -528,7 +528,7 @@ C-----------------------------------------------------
       SUBROUTINE QM3FIRST_M2(RAX,RAY,RAZ,ENSAX,ENSAY,ENSAZ,LM,
      &                       VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -631,7 +631,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S2(WRK,LWRK,IPRTMP)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"

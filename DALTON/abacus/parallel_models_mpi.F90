@@ -24,7 +24,7 @@ module parallel_models_mpi
   use parallel_models_lucita
 ! use parallel_file_io_models_mpi
 
-  use mpi_interface
+  use dalton_mpi_interface
 #ifndef VAR_MPI
   integer, parameter :: mpi_comm_world = -1
 #endif

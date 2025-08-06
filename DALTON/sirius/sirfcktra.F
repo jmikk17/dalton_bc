@@ -886,7 +886,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
       character*4 TYPE_TEXT
       integer ICDTRA(NNORBX), IFTHRS, LWORK
@@ -1017,7 +1017,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
       integer LWORK, IPRINT
       real*8  WORK(LWORK)

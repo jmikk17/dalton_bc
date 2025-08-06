@@ -37,7 +37,7 @@ C
       use so_parutils, only: soppa_comm_active, soppa_num_active,
      &                       soppa_nint, my_mpi_integer, sop_master
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
       use pelib_interface, only: use_pelib, pelib_ifc_response
 #ifdef VAR_MPI
       use pelib_interface, only: pelib_ifc_slave
@@ -2025,7 +2025,7 @@ C F.Beyer Oct. 2014.
 
       use so_info, only: sop_dp
 
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 #include "maxorb.h"
 #include "distcl.h"
@@ -2120,7 +2120,7 @@ C     F.Beyer Oct. 2014.
       use so_parutils, only: soppa_comm_active, soppa_nint, sop_master,
      &                       soppa_num_active, my_mpi_integer
 
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 C#include "implicit.h"
 #include "priunit.h"
@@ -2250,7 +2250,7 @@ C     F.Beyer Oct. 2014
       use so_parutils, only: my_mpi_logical
 #endif
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 
       integer, dimension(MPI_STATUS_SIZE) :: mpistatus
@@ -2336,7 +2336,7 @@ C the right amount of storage by the master when it starts pre-sorting
 C the integrals for the parallel calculation of the E matrix.
 C
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       integer,                     intent(in)  :: ntot
       integer, dimension(2, ntot), intent(in)  :: originalsort
@@ -2403,7 +2403,7 @@ C even distribution of total work for all processes when performing two-electron
 C integrals in parallel for AOSOPPA and AORPA.
 C
       !use mpi
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 
       integer,                        intent(in)    :: ntot, rows, cols

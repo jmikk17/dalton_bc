@@ -739,7 +739,7 @@ C?    WRITE(6,*) ' Mission DIATERMS finished '
 * Parallel adaption in January 2007, Stefan Knecht
 * last parallel revision: March 2008
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8           (A-H,O-Z)
 #ifdef VAR_MPI
 #include "maxorb.h"
@@ -956,7 +956,7 @@ C     REAL * 8  INPROD
 *
 * parallel adaption by S. Knecht - March 2008
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLJ, KLK, KLXA, KLXB, KLSCR, KLH1D, KLASTR,
      &          KLBSTR, KLRJKA

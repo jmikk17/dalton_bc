@@ -476,7 +476,7 @@ C
 C     Driver routine for numerical differentiation
 C
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"

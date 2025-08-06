@@ -256,7 +256,7 @@ C  /* Deck stopit */
       END
 C  /* Deck quit */
       SUBROUTINE QUIT(TEXT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
@@ -322,7 +322,7 @@ C
 C exit with error code of zero
 C (QUIT exits with error code of 100)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"

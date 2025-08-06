@@ -890,7 +890,7 @@ C---------------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The master routine for QM3LNO_P
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -1000,7 +1000,7 @@ C---------------------------------------------------------------
 C
 C  Arnfinn, Aug.-08: The slave routine for QM3LNO_P
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "gnrinf.h"
@@ -1763,7 +1763,7 @@ C
 C  Arnfinn Aug. -08
 C  The master routine for QM3QRO_P
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1884,7 +1884,7 @@ C
 C  Arnfinn Aug. -08
 C  The slave routine for QM3QRO
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"

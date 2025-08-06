@@ -22,7 +22,7 @@ C
 C
       use so_info, only: so_full_name, sop_excita, so_has_doubles,
      &                   so_model_number
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
 C

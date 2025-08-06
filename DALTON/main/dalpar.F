@@ -75,7 +75,7 @@ C
 #endif
       use parallel_models_mpi, only: lucita_models_enabled
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 
 #include "priunit.h"
@@ -322,7 +322,7 @@ C
 C ITASK .gt. 0: wake slaves and get hold of them for task ITASK
 C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
       integer :: itask, iprint
 C

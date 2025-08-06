@@ -358,7 +358,7 @@ c
       END
 #ifdef VAR_MPI
       SUBROUTINE DFTLRSYNC
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"

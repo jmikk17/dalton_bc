@@ -2,7 +2,7 @@
 module so_parutils
 !
    use so_info, only: sop_dp
-   use mpi_interface
+   use dalton_mpi_interface
 ! SOPPA parallel/mpi utilities
 !
 ! This module defines some parameters and some subroutines, which are
@@ -728,7 +728,7 @@ subroutine getbytespan(firstvar, lastvar, bytespan)
 !      call getbytespan(lbuf, eribufLAST, bytesize)
 !      call mpi_bcast(lbuf, bytesize, mpi_byte, 0, mpi_comm_world, ierr)
 
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 #include "priunit.h"
 

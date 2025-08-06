@@ -1,7 +1,7 @@
 ! This module can not be used in gen1int, as it is compiled after gen1int.
 ! In that case, the include mpi_header and mpi_mod files are used.
 
-module mpi_interface
+module dalton_mpi_interface
 #if defined(VAR_MPI)
 #ifdef USE_MPI_MOD_F08 
   use mpi_f08
@@ -11,4 +11,4 @@ module mpi_interface
 #include "mpif.h"
 #endif
 #endif
-end module mpi_interface
+end module dalton_mpi_interface

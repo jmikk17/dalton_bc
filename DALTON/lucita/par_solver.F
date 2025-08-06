@@ -31,7 +31,7 @@
 *
 * written by S. Knecht  - Feb. 2007
 *
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       INTEGER*8 KSIOIO, KSBLTP, KSVST, KLSLBT, KLSLEBT, KLSI1BT, KLSIBT,
      &          KCONSPA, KCONSPB, KCBLTP, KCIOIO, KLLBT, KLLEBT, KLI1BT,
@@ -193,7 +193,7 @@
 *
 * written by S. Knecht  - Feb. 2007
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8           (A-H,O-Z)
 #include "priunit.h"
 #include "maxorb.h"
@@ -308,7 +308,7 @@ C
      &                          RECVARRAY,TESTARR,
      &                          IRECVARRAY,ITESTARRAY,NTESTG)
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -561,7 +561,7 @@ C
 *
       use dalton_mpi
       use par_mcci_io
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"

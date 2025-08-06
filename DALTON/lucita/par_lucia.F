@@ -46,7 +46,7 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -225,7 +225,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -601,7 +601,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1144,7 +1144,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1327,7 +1327,7 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT DOUBLE PRECISION ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1506,7 +1506,7 @@ C
 C     OUTPUT: ISCLFAC_GROUP and updated file ILUC
 C
 C**********************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       INTEGER*8 KSCALLOC2, KSCALLOC3
 !               for addressing of WORK
@@ -1641,7 +1641,7 @@ C
 ***********************************************************************
       SUBROUTINE BLOCK_DISTR_DRV(NBLOCK,IBLOCKL,NBLOCKD,IBLOCKS_FNODE,
      &                           SCALFAC,NVAR,IPROCLIST)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       INTEGER*8 KICCTOS, KCWEIGHT, KCWEIGHTF, KBLCKWT, KIBTOTW
 !               for addressing of WORK
@@ -1708,7 +1708,7 @@ C
 *  in BLK_A
 *  parallel version
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 *. Output
       DIMENSION BLK_A(*)
@@ -1784,7 +1784,7 @@ C
 *        ELEMENT I
 *SUBVAL: VALUE OF SORTED ELEMENTS
 
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
       INTEGER*8 KGATHERA, KGATHERB, KGATHERC, KGATHERD
 !               for addressing of WORK

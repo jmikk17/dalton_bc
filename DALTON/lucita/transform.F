@@ -42,7 +42,7 @@
 *
 #ifdef VAR_MPI
       use par_mcci_io
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #endif
 #include "parluci.h"
@@ -560,7 +560,7 @@
 !     use mpi
 !     IMPLICIT REAL*8(A-H,O-Z)
 !else
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 !endif
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8

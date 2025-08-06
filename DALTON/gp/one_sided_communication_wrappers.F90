@@ -15,7 +15,7 @@
 #ifdef VAR_MPI
 module one_sided_communication_wrappers
 
-  use mpi_interface
+  use dalton_mpi_interface
 
   public mpixget
   public mpixaccum

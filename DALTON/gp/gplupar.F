@@ -208,7 +208,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -589,7 +589,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -898,7 +898,7 @@ C
 C     Last revision:     S. Knecht       - Jan 2012
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       implicit none
 #include "maxorb.h"
 #include "infpar.h"
@@ -1076,7 +1076,7 @@ C
 C     Written by  S. Knecht         - May 23 2007
 C
 C**********************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1379,7 +1379,7 @@ C
 C      LUOUT       LUDIA        LUIN
 C
 C**********************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -1535,7 +1535,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1653,7 +1653,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1732,7 +1732,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -1797,7 +1797,7 @@ C
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -2198,7 +2198,7 @@ CSK   END IF
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -2458,7 +2458,7 @@ C
 *. Each cpu stores the information in ISCALFAC_LOCAL.
 *. Connection is marked by 1.
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -2562,7 +2562,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -2758,7 +2758,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -2851,7 +2851,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3012,7 +3012,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3077,7 +3077,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3136,7 +3136,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3200,7 +3200,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3264,7 +3264,7 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3321,7 +3321,7 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3376,7 +3376,7 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3511,7 +3511,7 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3708,7 +3708,7 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -3975,7 +3975,7 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4153,7 +4153,7 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4348,7 +4348,7 @@ C
 C     Last revision:     S. Knecht       - March  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4518,7 +4518,7 @@ C
      &           I1BATC,IBATC,ICCTOS,ICWEIGHT,NBLOCK,IBTOTW,ICWEIGHTF,
      &           IABSOLUTE_WEIGHT)
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4609,7 +4609,7 @@ C THE LOWER HALF OF THE MATRIX IS SUPPOSED TO BE IN VECTOR A.
 *. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4657,7 +4657,7 @@ CSK        DATATYPE = MPI_REAL8
 *. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4765,7 +4765,7 @@ C
 * IXROOT is the current root to place a 1.0D0.
 * LU1LIST is the MPI file list.
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -4894,7 +4894,7 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
@@ -5003,7 +5003,7 @@ C
 C     active blocks on the MPI-files are flagged by a nonzero list entry
 !
 ************************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"

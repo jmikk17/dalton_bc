@@ -12,7 +12,7 @@ module file_io_model
 !
 !           written by sknecht, may 2007 for DIRAC MCSCF/KR-CI/LUCITA
 !           adapted for DALTON by sknecht, november 2010.
-  use mpi_interface
+  use dalton_mpi_interface
   implicit none
 
   public setup_file_io_model

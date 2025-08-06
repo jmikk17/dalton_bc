@@ -572,7 +572,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_BRHS(NGEODRV,DOVB,NBAST,DMAT,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "priunit.h"
@@ -603,7 +603,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_BRHS_SLAVE(WORK,LWORK,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -637,7 +637,7 @@ C
 #endif
 C
       SUBROUTINE DFT_BRHS_COLLECT(FMAT,N2BASX,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"
@@ -650,7 +650,7 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_SUSCEP(N2BASX,DMAT,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
@@ -700,7 +700,7 @@ C
 #endif
 C
       SUBROUTINE DFT_SUSCEP_COLLECT(SUSCEP,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
       DIMENSION SUSCEP(3,3), WORK(LWORK)

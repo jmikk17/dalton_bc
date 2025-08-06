@@ -236,7 +236,7 @@ C
       use memory_parallel
       use parallel_communication_models_mpi
       use rma_windows
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
@@ -555,7 +555,7 @@ C  /* Deck her_sdinit */
 !     module dependencies
       use parallel_communication_models_mpi
       use rma_windows
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 C
 #include "priunit.h"
@@ -803,7 +803,7 @@ C  /* Deck her_sendreceive_molinfo */
 !     molecule information from master to slaves.
 !
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 C
       INTEGER IPRINT, KFREE, LFREE
@@ -942,7 +942,7 @@ C  /* Deck her_rvres */
       use parallel_communication_models_mpi
       use one_sided_communication_wrappers
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -1206,7 +1206,7 @@ C
       use memory_parallel
       use parallel_communication_models_mpi
       use rma_windows
-      use mpi_interface
+      use dalton_mpi_interface
 
 #include "implicit.h"
 #include "priunit.h"
@@ -1528,7 +1528,7 @@ C
 !     module dependencies
       use parallel_communication_models_mpi
       use rma_windows
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 
 #include "priunit.h"
@@ -2395,7 +2395,7 @@ C  /* Deck her_sdres */
       use parallel_communication_models_mpi
       use one_sided_communication_wrappers
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
 !
 #include "implicit.h"
 #include "priunit.h"
@@ -2755,7 +2755,7 @@ C
 C     Master routine for distributing tesseraes to slaves
 C     K.Ruud, June 10 2005, Pisa
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -2831,7 +2831,7 @@ C
 C
 C /* Deck JINTS */
       SUBROUTINE J1INTS(WORK,LWORK,IPRTYP,IPRTMP)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxaqn.h"
@@ -2970,7 +2970,7 @@ C     Master routine for distributing tesseraes to slaves for
 C     calculating one-index transformed potentials
 C     K.Ruud, June 10 2005, Pisa
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -3062,7 +3062,7 @@ C
 C     Parallell construction of one-index transformed potentials
 C     K.Ruud, Pisa June 2005
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -3258,7 +3258,7 @@ C
 C     Master routine for calculating multiple one-index transformations
 C     of PCM potentials, K.Ruud, Tromso June 2005
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -3328,7 +3328,7 @@ C
 C     Slave routine for calculating multiple one-index transformations
 C     of PCM potentials, K.Ruud, Tromso June 2005
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "iratdef.h"

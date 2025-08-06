@@ -42,7 +42,7 @@ C
      &                   so_model_number,
      &                   sop_mp2ai_done
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
 C  IRAT in order to assign space for load-balancing

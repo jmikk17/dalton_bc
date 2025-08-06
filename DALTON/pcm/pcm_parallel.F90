@@ -23,7 +23,7 @@ contains
 #include "priunit.h"
 #include "mtags.h"
 #include "infpar.h"
-      use mpi_interface
+      use dalton_mpi_interface
 
    ! Passed variables
    integer(8) :: nr_points, nr_points_irr
@@ -109,7 +109,7 @@ contains
 #include "symmet.h"
 #include "infpar.h"
 #include "mtags.h"
-      use mpi_interface
+      use dalton_mpi_interface
 
       ! Passed variables
       integer :: lwork, iprtyp, iprtmp

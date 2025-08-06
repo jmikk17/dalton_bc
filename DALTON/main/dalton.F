@@ -35,7 +35,7 @@ C=========================================================================
 C
       use parallel_models_mpi
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mtags.h"

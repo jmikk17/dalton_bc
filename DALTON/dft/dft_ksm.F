@@ -508,7 +508,7 @@ c     evaluation module.
 c
       SUBROUTINE KICK_KSM_SLAVES_ALIVE(NBAST,DMAT,IPRINT)
 c     do nothing when running serial code.
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       DIMENSION DMAT(NBAST,NBAST)
 C
@@ -553,7 +553,7 @@ c
       END
 c
       SUBROUTINE KSMSYNC(DMAT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "inforb.h"
@@ -567,7 +567,7 @@ c
 #endif
       SUBROUTINE KSMCOLLECT(FMAT,ENERGY,WRK,LFREE)
 c
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       DIMENSION FMAT(*), WRK(LFREE)
 #ifdef VAR_MPI

@@ -460,7 +460,7 @@ C    &     I_BLK_TO_CLS(IBLK)
 *       ELEMENT I
 *       SUBVAL : VALUE OF SORTED ELEMENTS
 
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
 #include "priunit.h"
 #ifdef VAR_MPI

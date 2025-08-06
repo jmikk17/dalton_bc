@@ -11,7 +11,7 @@
 !                                    - hermit
 !
 module parallel_communication_models_mpi
-  use mpi_interface
+  use dalton_mpi_interface
 
   implicit none
 

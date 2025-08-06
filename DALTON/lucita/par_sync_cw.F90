@@ -16,7 +16,7 @@ module sync_coworkers
   use lucita_mcscf_ci_cfg
   use vector_xc_file_type
   use file_type_module, only : file_type, file_info
-  use mpi_interface
+  use dalton_mpi_interface
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8

@@ -14,7 +14,7 @@ module communication_model
 !           adapted for DALTON by sknecht, november 2010.
 !
   use communicator_type_module
-  use mpi_interface
+  use dalton_mpi_interface
   implicit none
 
 #if defined (VAR_INT64)

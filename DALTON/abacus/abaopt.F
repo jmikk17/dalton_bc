@@ -1374,7 +1374,7 @@ C
 
 C  /* Deck optmin */
       SUBROUTINE OPTMIN(WORK,LWORK,WRKDLM)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -8213,7 +8213,7 @@ C     analytical implementations, K.Ruud, Feb.-6 1997
 C
 C     Modified in august of 2000 to use the new numerical derivative routines
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"

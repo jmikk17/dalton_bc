@@ -61,7 +61,7 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KLAST),LWRK)
       END
 C
       SUBROUTINE KICK_SLAVES_EXPG(NBAST,NDMAT,DMAT,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
@@ -87,7 +87,7 @@ cfrj: define new IPRTYP for expgrad
 c
 #if defined (VAR_MPI)
       SUBROUTINE DFT_EXPG_SLAVE(WORK,LWORK,IPRINT)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -120,7 +120,7 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KFREE),LFREE)
 #endif
 c
       SUBROUTINE EXPGSLAVE_COLLECT(GRADMOL,WORK,LWORK)
-      use mpi_interface
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"

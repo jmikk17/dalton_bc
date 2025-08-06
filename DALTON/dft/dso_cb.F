@@ -114,7 +114,7 @@ c      CALL OUTPUT(SPNDSO,1,NUCIND*3,1,NUCIND*3,MXCOOR,MXCOOR,1,2)
       END
 #ifdef VAR_MPI
       SUBROUTINE dsosyncslaves(dmat,nind,work,lwork)
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "codata.h"
 #include "mxcent.h"

@@ -1,6 +1,6 @@
 module memory_parallel
 
-  use mpi_interface
+  use dalton_mpi_interface
   implicit none
 
 #ifdef VAR_MPI

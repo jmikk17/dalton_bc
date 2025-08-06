@@ -32,7 +32,7 @@
 #ifdef VAR_MPI
       use file_io_model
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLCLBT, KLCLEBT, KLCI1BT, KLCIBT, KLC2B, KLCIOIO,
      &          KLCBLTP, KLCI1BTSCR, KBSCLFC, KBLCKIF, KBLCKPD,
@@ -902,7 +902,7 @@ C
 #ifdef VAR_MPI
       use sync_coworkers
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
 
 #include "implicit.h"
 #ifdef VAR_MPI
@@ -983,7 +983,7 @@ C
       use file_io_model
       use sync_coworkers
 #endif
-      use mpi_interface
+      use dalton_mpi_interface
 
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 k_offset, KADD, KPROCLIST, KGROUPLIST,
@@ -1452,7 +1452,7 @@ C
 *
 * Jeppe Olsen,Spring of 1991
 *
-      use mpi_interface
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 *
       PARAMETER(MXPLNC = 72 )
@@ -5399,7 +5399,7 @@ C
 !     LUCITA version by Stefan Knecht, Feb. 06
 !
 !***********************************************************************
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) my_MPI_ANY_SOURCE
@@ -5434,7 +5434,7 @@ C
       use sync_coworkers
       use lucita_mcscf_ci_task
       use lucita_orbital_spaces, only: define_lucita_orb_spaces
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"

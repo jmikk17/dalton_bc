@@ -17,7 +17,7 @@ module rma_windows
       mpixwinfree
 #endif
 
-      use mpi_interface
+      use dalton_mpi_interface
 
 #ifdef VAR_MPI
   public set_rma_window

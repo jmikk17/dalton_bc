@@ -24,7 +24,7 @@ C  /* Deck calc_mep */
 !                 in (x,y,z) points listed on MEP.INP file;
 !                 values are written to MEP.OUT file.
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -231,7 +231,7 @@ C*******************************************************************************
 C  /* Deck MEP_SLAVE */
       SUBROUTINE MEP_SLAVE(WRK,LWRK)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -319,7 +319,7 @@ C  /* Deck MEP_LOOP */
       SUBROUTINE MEP_LOOP(XMEP,YMEP,ZMEP,NCENTERS,DENS,
      &                      WRK,LWRK,MEP,MEFX,MEFY,MEFZ)
 
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"

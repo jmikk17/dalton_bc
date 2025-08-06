@@ -905,7 +905,7 @@ C****************************************************************************
 C/* deck qmmmfirst_m1 */
       SUBROUTINE QMMMFIRST_M1(VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1002,7 +1002,7 @@ C****************************************************************************
 C/* deck qmmmfirst_s1 */
       SUBROUTINE QMMMFIRST_S1(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1125,7 +1125,7 @@ C
 C/* deck qmmmfirst_m2 */
       SUBROUTINE QMMMFIRST_M2(VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1222,7 +1222,7 @@ C****************************************************************************
 C/* deck qmmmfirst_S2 */
       SUBROUTINE QMMMFIRST_S2(WORK,LWORK,INTPRI)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1376,7 +1376,7 @@ C
 C/* deck qmmmfirst_m3 */
       SUBROUTINE QMMMFIRST_M3(AINDMOM,VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1481,7 +1481,7 @@ C****************************************************************************
 C/* deck qmmmfirst_s3 */
       SUBROUTINE QMMMFIRST_S3(WORK,LWORK,INTPRI)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1636,7 +1636,7 @@ C
 C/* deck qmmmfirst_m4 */
       SUBROUTINE QMMMFIRST_M4(TOTMOM,VEC2,IPRINT,INTPRI,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1735,7 +1735,7 @@ C****************************************************************************
 C/* deck qmmmfirst_s4 */
       SUBROUTINE QMMMFIRST_S4(WORK,LWORK,INTPRI)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -1902,7 +1902,7 @@ C****************************************************************************
 C/* deck qmmmb2_m1 */
       SUBROUTINE QMMMB2_M1(EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2001,7 +2001,7 @@ C****************************************************************************
 C/* deck qmmmb2_s1 */
       SUBROUTINE QMMMB2_S1(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2115,7 +2115,7 @@ C****************************************************************************
 C/* deck qmmmb2_m2 */
       SUBROUTINE QMMMB2_M2(EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2213,7 +2213,7 @@ C****************************************************************************
 C/* deck qmmmb2_S2 */
       SUBROUTINE QMMMB2_S2(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2339,7 +2339,7 @@ C****************************************************************************
 C/* deck qmmmb2_m3 */
       SUBROUTINE QMMMB2_M3(AINDMOM,EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2444,7 +2444,7 @@ C****************************************************************************
 C/* deck qmmmb2_s3 */
       SUBROUTINE QMMMB2_S3(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2569,7 +2569,7 @@ C****************************************************************************
 C/* deck qmmmb2_m4 */
       SUBROUTINE QMMMB2_M4(TOTMOM,EXPVAL,IPRINT,DENMAT,WORK,LWORK)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -2668,7 +2668,7 @@ C****************************************************************************
 C/* deck qmmmb2_s4 */
       SUBROUTINE QMMMB2_S4(WORK,LWORK,IPRINT)
 C
-      use mpi_interface
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
