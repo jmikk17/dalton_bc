@@ -49,7 +49,7 @@ PDFOUT="-halt-on-error -output-directory $PDFDIR"
 
 cp $DOC_DIRECTORY/*.bib $PDFDIR # needed for bibtex
 
-(pdflatex $PDFOUT Master; (cd $PDFDIR; bibtex Master); pdflatex $PDFOUT Master; pdflatex $PDFOUT Master; makeindex $PDFOUT Master; pdflatex $PDFOUT Master) \
+(pdflatex $PDFOUT Master; (cd $PDFDIR; bibtex Master); pdflatex $PDFOUT Master; pdflatex $PDFOUT Master; (cd $PDFDIR; makeindex Master); pdflatex $PDFOUT Master) \
 >& $PDFDIR/dalton_pdfmanual.log
 
 if [ $? -ne 0 ]; then

@@ -1988,9 +1988,6 @@ C
 #include "inftap.h"
 #include "priunit.h"
 C
-C      INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
-C
-C
 C-------------
 C     ccorb.h
 C-------------
@@ -2133,10 +2130,10 @@ C
 C
          CALL AROUND('Information from CHO_INDEX')
 C
-	 WRITE(LUPRI,1) 'NBAST  :',NBAST
-	 WRITE(LUPRI,1) 'N2BAST :',N2BAST
-	 WRITE(LUPRI,1) 'N2BASX :',N2BASX
-	 WRITE(LUPRI,1) 'NNBASX :',NNBASX
+         WRITE(LUPRI,1) 'NBAST  :',NBAST
+         WRITE(LUPRI,1) 'N2BAST :',N2BAST
+         WRITE(LUPRI,1) 'N2BASX :',N2BASX
+         WRITE(LUPRI,1) 'NNBASX :',NNBASX
 C
          WRITE(LUPRI,*)
          WRITE(LUPRI,1) 'NBAS   :',(NBAS(I),   I=1,NSYM)

@@ -59,6 +59,12 @@ closer control is needed) in \Sec{CC INP}.
         of the two-electron integral matrix $(\alpha \beta \mid \gamma \delta)$.
         (Default: screen the diagonal).
 %
+\item[\Key{PRINT}] \verb| |\newline
+\verb|READ (LUCMD,*) IPRCHO|\newline
+        Print level in Cholesky routines.
+        Default is max(1, \verb|IPRUSR|), the general print level
+        set in the general input section of \dalton.
+%
 \item[\Key{REDUCE}] 
         Use the reduced set to store the Cholesky vectors in disk, that is, keep
         only the elements corresponding to those not screened in the initial
