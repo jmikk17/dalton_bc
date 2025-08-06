@@ -161,7 +161,6 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/hertst.F
     DALTON/abacus/her_lslib.F
     DALTON/abacus/huckel.F
-    DALTON/abacus/mpi_interface.F90
     DALTON/abacus/LRESC/EFG/expval.F
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F
@@ -502,6 +501,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/gp/mpimacro.F
     DALTON/gp/qpack.F
     DALTON/gp/vcraypack.F
+    DALTON/include/dalton_mpi_interface.F90
     DALTON/lucita/ciinfo.F
     DALTON/lucita/dalton_interface.F
     DALTON/lucita/density.F
