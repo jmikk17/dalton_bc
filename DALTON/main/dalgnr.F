@@ -690,6 +690,7 @@ C
      &                           pelib_ifc_do_mep_noqm,
      &                           pelib_ifc_mep_noqm, pelib_ifc_do_lf
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
@@ -701,9 +702,6 @@ C
 #include "nuclei.h"
 #include "infinp.h"
 #include "inftap.h"
-#if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
-#endif
 #include "infpar.h"
 #include "inftra.h"
 #include "abainf.h"
@@ -1681,7 +1679,7 @@ C
             CALL QUIT('ERROR for .QFIT: QFITLIB not enabled.')
 #endif
          GOTO 100
- 135     CONTINUE ! .LSLIB 
+ 135     CONTINUE ! .LSLIB
 #if defined (BUILD_LSLIB)
             USE_LSLIB  = .TRUE.
 #else
@@ -2026,8 +2024,8 @@ C
 C     Master routine for checking whether we will do parallell I/O by
 C     parallelizing over nuclear geometries
 C
+      use dalton_mpi_interface
 #include "implicit.h"
-      INCLUDE 'mpif.h'
 #include "dummy.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -2133,6 +2131,7 @@ C
 C     Slave routine for learning whether we are going to do parallell I/O
 C     by parallelizing over nuclear geometries
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -2143,7 +2142,6 @@ C
 #include "infpar.h"
 #include "pario.h"
 
-      INCLUDE 'mpif.h'
 C
 C     We start by waiting for the master to tell us whether we will do
 C     parallel I/O or not

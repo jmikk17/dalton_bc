@@ -5,18 +5,13 @@
 !
 ! stefan jan 2014: this module contains the type definition for the
 !                  MPI communication handles to be potentially used in modules.
-!                  currently in use in Dalton: 
+!                  currently in use in Dalton:
 !                                    - lucita (after merge with hjaa-srdft)
 !                                    - mcscf  (after merge with hjaa-srdft)
 !                                    - hermit
 !
 module parallel_communication_models_mpi
-
-#ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-  use mpi
-#endif
-#endif
+  use dalton_mpi_interface
 
   implicit none
 
@@ -59,9 +54,6 @@ module parallel_communication_models_mpi
   private
 
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
   integer(kind=MPI_INTEGER_KIND)         :: ierr_mpi
   integer(kind=MPI_INTEGER_KIND)         :: istat(MPI_STATUS_SIZE)
 #endif
@@ -72,19 +64,19 @@ module parallel_communication_models_mpi
 #define my_MPI_INTEGER MPI_INTEGER4
 #endif
 
-contains 
+contains
 
 !*******************************************************************************
-  subroutine communication_init_mpi(A,                     & 
+  subroutine communication_init_mpi(A,                     &
                                     my_process_id_glb,     &
                                     nr_of_process_glb,     &
                                     communicator_glb)
 
 !   ----------------------------------------------------------------------------
-!                - provides: 
+!                - provides:
 !                           a. communication handles and process-ids in each group
 !                           b. arrays with group listings
-!                - requires: 
+!                - requires:
 !                           a. global (starting) communication handle
 !                           b. number of processors
 !
@@ -154,7 +146,7 @@ contains
                                     A%communication_internode,                 &
                                     A%communication_shmemnode,                 &
                                     A%communication_glb_world,                 &
-                                    A%intra_node_group_id)                      
+                                    A%intra_node_group_id)
 #endif
     end if
 
@@ -205,10 +197,10 @@ contains
      integer, intent(in )             :: my_process_id_glb
      integer, intent(in )             :: communicator_glb
 !-------------------------------------------------------------------------------
-     integer                          :: process_name_length  
-     integer                          :: local_counter_file_groups  
-     integer                          :: current_process_id  
-     integer                          :: finished_loop  
+     integer                          :: process_name_length
+     integer                          :: local_counter_file_groups
+     integer                          :: current_process_id
+     integer                          :: finished_loop
      character (len=255)              :: process_name
      character (len=255)              :: scr_process_name
      character (len=255), allocatable :: scr_arr_process_name(:)
@@ -248,8 +240,8 @@ contains
          end if
 
       end do
- 
-!     3. find all processors on the same deck and reorder (if necessary) 
+
+!     3. find all processors on the same deck and reorder (if necessary)
 !     to get the processors as close as possible, starting with the master (id == 0)
 !     NOTE: reordering is currently NOT done
       current_process_id        = 1
@@ -262,17 +254,17 @@ contains
         local_counter_file_groups = local_counter_file_groups + 1
         process_name = scr_arr_process_name(current_process_id)         &
                        (1:scr_arr_name_length(current_process_id))
- 
+
         do proc_id = 1, nr_of_process_glb
- 
+
           scr_process_name(1:scr_arr_name_length(proc_id)) =            &
           scr_arr_process_name(proc_id)                                 &
           (1:scr_arr_name_length(proc_id))
- 
+
           if(scr_process_name(1:scr_arr_name_length(proc_id)) ==        &
              process_name(1:scr_arr_name_length(current_process_id)))   &
              process_list_glb(proc_id) = current_process_id
- 
+
         end do
 !
 !       check if we are done and set finished_loop: done = 1, else 0
@@ -280,7 +272,7 @@ contains
 !       which is current_process_id
 !
         do proc_id = 1, nr_of_process_glb
-          if(finished_loop /= 0 .and. process_list_glb(proc_id) == -1)then 
+          if(finished_loop /= 0 .and. process_list_glb(proc_id) == -1)then
             finished_loop = 0
             current_process_id = proc_id
           end if
@@ -288,7 +280,7 @@ contains
         if(finished_loop == 1) exit
 
       end do
- 
+
       deallocate(scr_arr_process_name)
       deallocate(scr_arr_name_length)
 
@@ -324,9 +316,9 @@ contains
                                       inter_node_comm,                         &
                                       shmem_ijkl_comm,                         &
                                       total_area_comm,                         &
-                                      intra_node_group_id)                      
+                                      intra_node_group_id)
 !********************************************************************************
-!     purpose: setup communicators and process-id for the various               
+!     purpose: setup communicators and process-id for the various
 !              communication levels:
 !                a. intra-node
 !                b. inter-node
@@ -369,7 +361,7 @@ contains
       total_area_comm = communicator_glb
 
 !     a. intra-node communicator
- 
+
       key   = my_process_id_glb
       color = process_list_glb(my_process_id_glb+1)
 
@@ -394,7 +386,7 @@ contains
 
 !     b. shared memory communicator
       allocate(tmp_array(nr_of_process_glb))
-      tmp_array(1:nr_of_process_glb) = process_list_glb(1:nr_of_process_glb) 
+      tmp_array(1:nr_of_process_glb) = process_list_glb(1:nr_of_process_glb)
       key                            = my_process_id_glb
       color                          = tmp_array(my_process_id_glb+1)
 
@@ -421,7 +413,7 @@ contains
 
       if( numa_procs > 0)then
 
-!       OpenMPIs --bysocket --bind-to-socket policy: round-robin fashion between the X sockets (often socket == NUMA node) 
+!       OpenMPIs --bysocket --bind-to-socket policy: round-robin fashion between the X sockets (often socket == NUMA node)
 !       thus, we will follow this strategy here...
         numa_nodes = intra_node_size/numa_procs
         if(mod(intra_node_size,numa_procs) /= 0 ) write(*,*) ' ** Warning: asymmetric NUMA node allocation'
@@ -459,7 +451,7 @@ contains
       key   = process_list_glb(my_process_id_glb+1)
       color = 2
       if(my_shmem_node_id /= 0) color = 3
- 
+
       call build_new_communication_group(communicator_glb,        &
                                          inter_node_comm,         &
                                          inter_node_size,         &
@@ -480,9 +472,9 @@ contains
                                            color,                 &
                                            key)
 !*******************************************************************************
-!     purpose: split old communication group into new sub-groups 
-!              using key and color. 
-!              the new communication along with the process-ids in the new group 
+!     purpose: split old communication group into new sub-groups
+!              using key and color.
+!              the new communication along with the process-ids in the new group
 !              and the group size are returned.
 !*******************************************************************************
      integer, intent(in )   :: old_communication
@@ -505,7 +497,7 @@ contains
       key_mpi      = key
 
       call mpi_comm_split(old_comm_mpi,color_mpi,key_mpi,new_comm_mpi,ierr_mpi)
- 
+
 !     collect required information about each group:
 !       - group size
 !       - process id in the group

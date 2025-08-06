@@ -2,11 +2,7 @@ gcc-9-mpich-3.3:
   image: fedora:31
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
@@ -23,11 +19,7 @@ gcc-9-mpich-3.3-int64:
   image: fedora:31
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   allow_failure: true
   script:
     - !reference [.define-cores, script]
@@ -45,11 +37,7 @@ gcc-11-mpich-3.4:
   image: fedora:35
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
@@ -66,11 +54,7 @@ gcc-11-mpich-3.4-int64:
   image: fedora:35
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   allow_failure: true
   script:
     - !reference [.define-cores, script]
@@ -88,11 +72,7 @@ gcc-12-mpich-4.0:
   image: fedora:37
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   script:
     - !reference [.define-cores, script]
     - module load mpi/mpich-x86_64
@@ -109,11 +89,7 @@ gcc-12-mpich-4.0-int64:
   image: fedora:37
   variables:
     OMP_NUM_THREADS: "1"
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   allow_failure: true
   script:
     - !reference [.define-cores, script]
@@ -129,11 +105,7 @@ gcc-12-mpich-4.0-int64:
 
 gcc-14-mpich-4.1-int64:
   image: fedora:40
-  rules:
-  - if: $CI_PIPELINE_SOURCE == 'merge_request_event' 
-    when: always
-  - if: $CI_PIPELINE_SOURCE != 'merge_request_event' && $CI_PIPELINE_SOURCE != 'schedules'
-    when: manual
+  rules: !reference [.define-build-rules, rules]
   before_script:
     - dnf install -y gcc gcc-c++ gcc-gfortran hdf5 hdf5-devel git make cmake
                      python python3 python3-pip python3-h5py redhat-rpm-config findutils

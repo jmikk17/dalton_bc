@@ -135,17 +135,9 @@ C*****************************************************************************
 #ifdef VAR_MPI
         use parallel_communication_models_mpi
         use one_sided_communication_wrappers
-
-#ifdef USE_MPI_MOD_F90
-        use mpi
-#include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
 #endif
-#else
+      use dalton_mpi_interface
 #include "implicit.h"
-#endif
 
 #include "maxaqn.h"
 #include "aovec.h"

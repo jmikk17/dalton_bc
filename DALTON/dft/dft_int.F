@@ -73,6 +73,7 @@ C
 C
 C     P. Salek and T. Helgaker, October 2003
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 C
@@ -86,9 +87,6 @@ C
 #include "abainf.h"
 #include "nuclei.h"
 #include "infpar.h"
-#ifdef VAR_MPI
-#include "mpif.h"
-#endif
 C     choose reasonably large. Exceeding this limit means that boxes are
 C     too large.
       PARAMETER(NBUFLEN=99000)
@@ -276,6 +274,7 @@ c     as early as possible so that slaves can take right decisions
 c     regarding which functionals to run etc.
 c
 c     NORBT, N2ORBX,NOCCT, NVIRT are needed for....?
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "aovec.h"
@@ -283,7 +282,6 @@ c     NORBT, N2ORBX,NOCCT, NVIRT are needed for....?
 #include "maxmom.h"
 #include "maxorb.h"
 #include "mxcent.h"
-#include "mpif.h"
 c
 #include "infpar.h"
 #include "inforb.h"
@@ -416,10 +414,10 @@ c
       END
 c
       SUBROUTINE DFTINTCOLLECT(ELECTRONS)
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
 c
-#include "mpif.h"
 #include "maxorb.h"
 #include "infpar.h"
       A = ELECTRONS

@@ -9,10 +9,8 @@ module lucita_mcscf_vector_exchange
    use ttss_block_module
    use file_type_module, only : file_info, file_type
    use vector_xc_file_type
+   use dalton_mpi_interface
 #ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-   use mpi
-#endif
    use parallel_task_distribution_type_module
    use sync_coworkers
    use lucita_cfg
@@ -21,9 +19,6 @@ module lucita_mcscf_vector_exchange
    implicit none
 
 #ifdef VAR_MPI
-#ifndef USE_MPI_MOD_F90
-#include "mpif.h"
-#endif
    public vector_exchange_interface_cw
 #endif
    public vector_exchange_driver
@@ -53,10 +48,10 @@ contains
                                      parallel_vector_xc,         &
                                      xmat,                       &
                                      ymat)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: driver for vector exchange (I/O) based between the MCSCF and LUCITA 
+!  purpose: driver for vector exchange (I/O) based between the MCSCF and LUCITA
 !           programs.
 !
 !           exchange_type == 1: copy vector from LUCITA to MCSCF
@@ -71,7 +66,7 @@ contains
       real(8), intent(inout)              :: xmat(*)
       real(8), intent(inout), optional    :: ymat(*)            ! prepare for core-mem 2 core-mem + core-mem 2 i/o exchange in one shot...
       integer, intent(inout)              :: exchange_type      ! inout because of MPI calling structure
-      integer, intent(inout)              :: vector_type        ! inout because of MPI calling structure 
+      integer, intent(inout)              :: vector_type        ! inout because of MPI calling structure
       integer, intent(inout)              :: nr_vectors         ! inout because of MPI calling structure
       integer, intent(inout)              :: vector_symmetry    ! inout because of MPI calling structure
       logical, intent(inout)              :: io2io_exchange     ! inout because of MPI calling structure
@@ -145,10 +140,10 @@ contains
                                            do_vector_exchange,         &
                                            xmat,                       &
                                            ymat)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: co-workers driver for vector exchange (I/O) based between the MCSCF and LUCITA 
+!  purpose: co-workers driver for vector exchange (I/O) based between the MCSCF and LUCITA
 !           programs.
 !
 !           active_xc_vector_type == 1: reference vector / right-hand side vector
@@ -203,21 +198,21 @@ contains
                                                parallel_vector_xc,&
                                                A,                 &
                                                B)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: vector exchange driver [(I/O) - memory or (I/O) - (I/O) based] between 
-!           the MCSCF and LUCITA programs - push-pull version. 
+!  purpose: vector exchange driver [(I/O) - memory or (I/O) - (I/O) based] between
+!           the MCSCF and LUCITA programs - push-pull version.
 !
 !           pull: transfer vector(s) from LUCITA i/o files to MCSCF core-memory / i/o
-!           push: transfer vector(s) from MCSCF core-memory / i/o to LUCITA i/o files 
+!           push: transfer vector(s) from MCSCF core-memory / i/o to LUCITA i/o files
 !
 !-------------------------------------------------------------------------------
       real(8), intent(inout)     :: xmat(*)
       integer, intent(in)        :: nr_vectors
       logical, intent(in)        :: parallel_vector_xc
-      type(exchange_files)       :: A     
-      type(ttss_block_structure) :: B     
+      type(exchange_files)       :: A
+      type(ttss_block_structure) :: B
 !-------------------------------------------------------------------------------
       integer                    :: ioff
       integer                    :: current_vector
@@ -298,11 +293,11 @@ contains
                                                current_offset,   &
                                                A,                &
                                                B)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: vector exchange (I/O) - memory based between the MCSCF and LUCITA 
-!           programs - push-pull version. 
+!  purpose: vector exchange (I/O) - memory based between the MCSCF and LUCITA
+!           programs - push-pull version.
 !
 !           pull: transfer vector(s) from LUCITA i/o files to MCSCF core-memory
 !           push: transfer vector(s) from MCSCF core-memory to LUCITA i/o files
@@ -311,8 +306,8 @@ contains
       real(8), intent(inout)     :: xmat(*)
       integer, intent(in)        :: current_vector
       integer, intent(in)        :: current_offset
-      type(exchange_files)       :: A     
-      type(ttss_block_structure) :: B     
+      type(exchange_files)       :: A
+      type(ttss_block_structure) :: B
 !-------------------------------------------------------------------------------
       integer                    :: ioff
       integer                    :: current_block
@@ -327,19 +322,19 @@ contains
 !------------------------------------------------------------------------------
 
       ioff          = 1 + current_offset
-      current_block = 0 
+      current_block = 0
 
       do ! loop over blocks
 
-        current_block  = current_block + 1 
+        current_block  = current_block + 1
         if(current_block > B%total_present_ttss) exit
 
         select case(A%push_pull_switch)
-          case(1) 
+          case(1)
 !           pull block from file to core memory
             call ifrmds(block_length_rw,1,-1,A%present_fh_lu)
             call frmdsc2(xmat(ioff),block_length_rw,-1,A%present_fh_lu,is0,packing,no_zeroing)
-          case(2) 
+          case(2)
 !           push block from core memory to file
             call itods(B%ttss_block_length(current_block,B%present_sym_irrep,B%present_ci_space),                 &
                        1,-1,A%present_fh_lu)
@@ -360,10 +355,10 @@ contains
       end do
 
       select case(A%push_pull_switch)
-        case(1) 
+        case(1)
 !         skip end-of-vector marker on file A%present_fh_lu
           call ifrmds(block_length_rw,1,-1,A%present_fh_lu)
-        case(2) 
+        case(2)
 !         set end-of-vector marker on file A%present_fh_lu
           call itods(-1,1,-1,A%present_fh_lu)
       end select
@@ -380,11 +375,11 @@ contains
                                                         B,                &
                                                         C,                &
                                                         D)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: vector exchange (I/O) - memory based between the MCSCF and LUCITA 
-!           programs - push-pull version. 
+!  purpose: vector exchange (I/O) - memory based between the MCSCF and LUCITA
+!           programs - push-pull version.
 !
 !           pull: transfer vector(s) from LUCITA i/o files to MCSCF core-memory
 !           push: transfer vector(s) from MCSCF core-memory to LUCITA i/o files
@@ -411,9 +406,9 @@ contains
 !------------------------------------------------------------------------------
 
       select case(A%push_pull_switch)
-        case(1) 
+        case(1)
           call dzero(xmat(1+current_offset),B%total_present_vec)
-        case(2) 
+        case(2)
           len_mpi = B%total_present_vec
           call mpi_bcast(xmat(1+current_offset),len_mpi,my_MPI_REAL8,         &
                          root_mpi,mpi_comm_world,ierr_mpi)
@@ -427,7 +422,7 @@ contains
 !
 !     initialize
       ioff             = 1 + current_offset
-      current_block    = 0 
+      current_block    = 0
       ioffset          = 0
       ioffset_int      = 0
 
@@ -437,7 +432,7 @@ contains
 
       do ! loop over blocks
 
-        current_block   = current_block + 1 
+        current_block   = current_block + 1
         if(current_block > B%total_present_ttss) exit
 
         block_length_rw = B%ttss_block_length(current_block,B%present_sym_irrep,B%present_ci_space)
@@ -483,7 +478,7 @@ contains
       end do
 
       select case(A%push_pull_switch)
-        case(1) 
+        case(1)
           if(A%my_process_id > 0)then
 !           write(lupri,*) 'A%my_process_id ',A%my_process_id, B%total_present_vec, current_offset
             len_mpi = B%total_present_vec
@@ -497,7 +492,7 @@ contains
             call mpi_reduce(mpi_in_place,xmat(1+current_offset),len_mpi,my_MPI_REAL8,      &
                             my_mpi_sum,root_mpi,mpi_comm_world,ierr_mpi)
           end if
-        case(2) 
+        case(2)
           ! nothing to do
       end select
 !
@@ -509,20 +504,20 @@ contains
                                               current_vector,    &
                                               A,                 &
                                               B)
-                                     
+
 !-------------------------------------------------------------------------------
 !
-!  purpose: vector exchange (I/O) - (I/O) based between the MCSCF and LUCITA 
-!           programs - push-pull version. 
+!  purpose: vector exchange (I/O) - (I/O) based between the MCSCF and LUCITA
+!           programs - push-pull version.
 !
-!           pull: transfer vector(s) from LUCITA i/o files to MCSCF i/o files   
+!           pull: transfer vector(s) from LUCITA i/o files to MCSCF i/o files
 !           push: transfer vector(s) from MCSCF i/o files to LUCITA i/o files
 !
 !-------------------------------------------------------------------------------
       real(8), intent(inout)     :: xmat(*)
       integer, intent(in)        :: current_vector
-      type(exchange_files)       :: A     
-      type(ttss_block_structure) :: B     
+      type(exchange_files)       :: A
+      type(ttss_block_structure) :: B
 !-------------------------------------------------------------------------------
       integer                    :: ioff
       integer                    :: current_block
@@ -533,11 +528,11 @@ contains
 !------------------------------------------------------------------------------
 
       ioff          = 1
-      current_block = 0 
+      current_block = 0
 
       select case(A%push_pull_switch)
-        case(1) 
-!         nothing to do... 
+        case(1)
+!         nothing to do...
         case(2)
 !         read current vector from mc file
           call readt(A%present_fh_mc,B%total_present_vec,xmat)
@@ -545,15 +540,15 @@ contains
 
       do ! loop over blocks
 
-        current_block  = current_block + 1 
+        current_block  = current_block + 1
         if(current_block > B%total_present_ttss) exit
 
         select case(A%push_pull_switch)
-          case(1) 
+          case(1)
 !           pull block from lucita file to mc core memory
             call ifrmds(block_length_rw,1,-1,A%present_fh_lu)
             call frmdsc2(xmat(ioff),block_length_rw,-1,A%present_fh_lu,is0,packing,no_zeroing)
-          case(2) 
+          case(2)
 !           push block from mc core memory to lucita file
             call itods(B%ttss_block_length(current_block,B%present_sym_irrep,B%present_ci_space),                 &
                        1,-1,A%present_fh_lu)
@@ -567,12 +562,12 @@ contains
       end do
 
       select case(A%push_pull_switch)
-        case(1) 
+        case(1)
 !         write current vector to mc file
           call writt(A%present_fh_mc,max(4,B%total_present_vec),xmat)
 !         skip end-of-vector marker on file A%present_fh_lu
           call ifrmds(block_length_rw,1,-1,A%present_fh_lu)
-        case(2) 
+        case(2)
 !         set end-of-vector marker on file A%present_fh_lu
           call itods(-1,1,-1,A%present_fh_lu)
       end select
@@ -681,9 +676,9 @@ contains
                                                               A%exchange_files_f_extension(A%present_sym_irrep)
 
 !     write(lupri,*) ' file name set for sym ==> ',A%present_sym_irrep,A%exchange_files_generic(vector_type)
-  
+
       inquire(opened=A%exchange_file_open(1),file=A%exchange_files_generic(vector_type),number=A%present_fh_lu)
-  
+
 !     write(lupri,*) ' file found and status ==> ',A%present_fh_lu,A%exchange_file_open(1)
 
       if(.not. A%exchange_file_open(1))then
@@ -697,11 +692,11 @@ contains
       else
          B%current_file_fh_seqf(2) = A%present_fh_lu
       end if
-    
+
 !     step 2: MCSCF file
       if(A%exchange_file_io2io)then
 
-        inquire(opened=A%exchange_file_open(2),file=A%exchange_files_generic(vector_type+mc_offset), & 
+        inquire(opened=A%exchange_file_open(2),file=A%exchange_files_generic(vector_type+mc_offset), &
                 number=A%present_fh_mc)
 
 !       write(lupri,*) ' file found and status ==> ',A%present_fh_mc,A%exchange_file_open(2)

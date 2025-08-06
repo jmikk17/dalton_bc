@@ -1,10 +1,9 @@
 module memory_parallel
 
+  use dalton_mpi_interface
   implicit none
 
 #ifdef VAR_MPI
-#include "mpif.h"
-
   public memallocmpi
   public memfreempi
 

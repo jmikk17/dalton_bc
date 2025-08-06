@@ -23,3 +23,33 @@
     - export DALTON_LAUNCHER=$DALTON_LAUNCHER
     - echo "The total number of physical cores is $N_PROC"
     - echo "DALTON_LAUNCHER was set to $DALTON_LAUNCHER"
+
+.define-build-rules:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_PIPELINE_SOURCE != "schedules"'
+      when: manual
+
+.intel-install:
+  before_script:
+    # Update system and install necessary packages
+    - dnf -y update
+    - dnf -y install git python python3 python3-pip wget pkg-config ca-certificates gnupg cmake environment-modules
+    # Download Intel GPG key
+    - wget https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Import Intel GPG key
+    - rpm --import GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    # Add Intel oneAPI repository
+    - echo -e "[oneAPI]\nname=Intel(R) oneAPI repository\nbaseurl=https://yum.repos.intel.com/oneapi\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" | sudo tee /etc/yum.repos.d/oneAPI.repo
+    # Install Intel oneAPI packages
+    - dnf -y update
+    - dnf -y install intel-oneapi-compiler-dpcpp-cpp intel-oneapi-compiler-fortran intel-oneapi-mkl intel-oneapi-mpi intel-oneapi-mpi-devel
+    # Set up environment for Intel oneAPI
+    - . /etc/profile.d/modules.sh
+    - /opt/intel/oneapi/modulefiles-setup.sh --ignore-latest --output-dir=~/intel-oneapi-modulefiles --force
+    - module use ~/intel-oneapi-modulefiles
+    - module purge
+    - echo "=== Available modules ==="
+    - module avail
+    - module load tbb/2022.2 compiler-rt/2025.2.0 compiler/2025.2.0 mkl/2025.2 mpi/2021.16

@@ -544,6 +544,7 @@ C  Purpose:  Calculate MCSCF or SCF/DFT E^2 contribution from a surrounding
 C            polarizable MM medium to an orbital trial vector. New QMMM
 C            code.
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -566,9 +567,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -985,6 +983,7 @@ C  Purpose:  Calculate SCF/DFT E^3 contribution from a surrounding
 C            polarizable MM medium to an orbital trial vector. New
 C            QMMM code
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "maxorb.h"
@@ -1009,9 +1008,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, FOUR = 4.0D0)
@@ -1627,6 +1623,7 @@ C-------------------------------------------------------------------------------
 C  /* Deck mmlno_iter1 */
       SUBROUTINE MMLNO_ITER1(J,EEX,EEY,EEZ,UDV,UDVTR,UCMO,UBO,
      *                       WRK,LWRK,IPRTMP)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -1648,9 +1645,6 @@ C  /* Deck mmlno_iter1 */
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -1820,6 +1814,7 @@ C-------------------------------------------------------------------------------
 C  /* Deck mmlno_iter2 */
       SUBROUTINE MMLNO_ITER2(J,XIND,YIND,ZIND,UCMO,RXYO,
      *                       WRK,LWRK,IPRTMP)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -1841,9 +1836,6 @@ C  /* Deck mmlno_iter2 */
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -1982,6 +1974,7 @@ C  /* Deck mmqro_iter1 */
       SUBROUTINE MMQRO_ITER1(J,EF1,EF2,UDV,UCMO,ISYMT,ISYMV1,ISYMV2,
      &                       ZYM1,ZYM2,WRK,LWRK,IPRTMP)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -2003,9 +1996,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -2206,6 +2196,7 @@ C  /* Deck mmqro_iter2 */
       SUBROUTINE MMQRO_ITER2(J,EIND1,EIND2,TRES,UCMO,
      &                      ISYMT,ISYMV2,ZYM2,WRK,LWRK,IPRTMP)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -2227,9 +2218,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 
       PARAMETER(ZERO = 0.0D0, ONE = 1.0D0, FOUR = 4.0D0)
@@ -2387,6 +2375,7 @@ C  /* Deck mmcro_iter1 */
      &                       ISYMT,ISYMV1,ISYMV2,ISYMV3,ZYM1,ZYM2,ZYM3,
      &                       WRK,LWRK,IPRTMP)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -2408,9 +2397,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 
@@ -2675,6 +2661,7 @@ C  /* Deck mmcro_iter2 */
      &                      ISYMT,ISYMV1,ISYMV2,ISYMV3,ZYM2,ZYM3,
      &                      WRK,LWRK,IPRTMP)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -2696,9 +2683,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 
       DIMENSION WRK(LWRK), EIND1(3), EIND2(3), EIND3(3)
@@ -2902,6 +2886,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -2924,9 +2909,6 @@ C
 #include "infpar.h"
 #include "gnrinf.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3008,6 +2990,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3029,9 +3012,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3107,6 +3087,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3128,9 +3109,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3190,6 +3168,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3211,9 +3190,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3266,6 +3242,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3287,9 +3264,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3375,6 +3349,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3396,9 +3371,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3476,6 +3448,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3497,9 +3470,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -3566,6 +3536,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3587,9 +3558,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3652,6 +3620,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3673,9 +3642,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "infdim.h"
 C defined parallel calculation types
@@ -3769,6 +3735,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3790,9 +3757,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"
@@ -3881,6 +3845,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -3902,9 +3867,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 C defined parallel calculation types
 #include "iprtyp.h"
@@ -3989,6 +3951,7 @@ C
 C  JK, Nov.08
 C  Parallel version. AHS Nov.09
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "inflin.h"
@@ -4010,9 +3973,6 @@ C
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 #include "cbiher.h"
 #include "gnrinf.h"
 #include "infdim.h"

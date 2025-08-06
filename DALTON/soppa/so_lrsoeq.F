@@ -42,9 +42,9 @@ C
      &                   so_model_number,
      &                   sop_mp2ai_done
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpif.h"
 C  IRAT in order to assign space for load-balancing
 #include "iratdef.h"
 #endif
@@ -249,7 +249,7 @@ C
 #ifdef VAR_MPI
 C In parallel, send slaves to so_eres
 C
-         call mpi_bcast( parsoppa_do_eres, one_mpi, my_mpi_integer, 
+         call mpi_bcast( parsoppa_do_eres, one_mpi, my_mpi_integer,
      &                   sop_master,
      &                   mpi_comm_world, ierr_mpi )
 C ISYMTR is a non-local parameter, we need to copy it to the info-array

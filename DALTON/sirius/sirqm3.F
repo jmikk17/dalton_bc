@@ -55,7 +55,7 @@ C  /* Deck qm3fck */
       IF (LWRK1 .LT. 0) CALL ERRWRK('QM3FCK',-KEND,LWRK)
 
 
-C     Get total density      
+C     Get total density
       IF (NASHT .EQ. 0) THEN
             CALL PKSYM1(WRK(KDTAO),DCAO,NBAS,NSYM,-1)
       ELSE
@@ -74,7 +74,7 @@ C     From COMMON
       EPOQM3 = 0.0D0
 
 C     Calculate RRa, Obar and ENSA and write these to file
-      CALL QM3_RRA(WRK(KDTAO),WRK(KEND),LWRK1,IPRINT) 
+      CALL QM3_RRA(WRK(KDTAO),WRK(KEND),LWRK1,IPRINT)
 
 C     Calculate Ns and keep in memory (DFTNS).
 C     (Run QM3_NSP instead of QM3_NS if #nodes > 1, Arnfinn nov. -08)
@@ -88,7 +88,7 @@ C     (Run QM3_NSP instead of QM3_NS if #nodes > 1, Arnfinn nov. -08)
       END IF
 #endif
 
-C     Modify the fock operator. Modification returned in FSOL. 
+C     Modify the fock operator. Modification returned in FSOL.
       CALL QM3_FMO(FSOL,WRK(KEND),LWRK1,IPRINT)
 
 C     Calculate the QM3 contribution to the energy (returned in EQM3T)
@@ -129,13 +129,13 @@ C  /* Deck qm3_rra */
       LOGICAL TOFILE, TRIMAT, EXP1VL
       DIMENSION INTREP(9*MXCENT), INTADR(9*MXCENT)
 
-C From here. 
-C This is NOT good. In fact very bad. Needs to be fixed. 
+C From here.
+C This is NOT good. In fact very bad. Needs to be fixed.
 C Neede for f.ex. spin-spin couplings since nucdep is used here for allocation.
-C Can only be done AFTER coordinates for charges and polarizabilities have been defined 
+C Can only be done AFTER coordinates for charges and polarizabilities have been defined
 C since nudep defines no. of coordinates !! Only active when requsted by the user.
 
-      IF (REDCNT) NUCDEP=NUCIND 
+      IF (REDCNT) NUCDEP=NUCIND
 
 C To here
 
@@ -232,7 +232,7 @@ C To here
                 WRK(KRAy+LM-1) = DDOT(NNBASX,WRK(KMAT+NNBASX),1,DCAO,1)
                 WRK(KRAz+LM-1) = DDOT(NNBASX,WRK(KMAT+2*NNBASX),
      *                                1,DCAO,1)
-              ELSE   
+              ELSE
 
                 CALL READT(LUQM3E,NNBASX,WRK(KRRAOx))
                 WRK(KRAx+LM-1) = DDOT(NNBASX,WRK(KRRAOx),1,DCAO,1)
@@ -240,7 +240,7 @@ C To here
                 IF (IPRINT.GT.15) THEN
                   CALL AROUND('Rra_ao_x matrix:')
                   CALL OUTPAK(WRK(KRRAOx),NBAST,1,LUPRI)
-                END IF 
+                END IF
 
                 CALL READT(LUQM3E,NNBASX,WRK(KRRAOy))
                 WRK(KRAy+LM-1) = DDOT(NNBASX,WRK(KRRAOy),1,DCAO,1)
@@ -364,19 +364,19 @@ C  /* Deck qm3_ns */
 #include "nuclei.h"
 
 
-      DIMENSION WRK(LWRK) 
+      DIMENSION WRK(LWRK)
       DIMENSION DFTNS(*), DCAO(NNBASX)
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL TOFILE, TRIMAT, EXP1VL
       DIMENSION INTREP(9*MXCENT), INTADR(9*MXCENT)
 
-      
+
       CALL QENTER('QM3_NS')
 
-C From here. 
-C This is NOT good. In fact very bad. Needs to be fixed. 
+C From here.
+C This is NOT good. In fact very bad. Needs to be fixed.
 C Neede for f.ex. spin-spin couplings since nucdep is used here for allocation.
-C Can only be done AFTER coordinates for charges and polarizabilities have been defined 
+C Can only be done AFTER coordinates for charges and polarizabilities have been defined
 C since nudep defines no. of coordinates !! Only active when requsted by the user.
 
       IF (REDCNT) NUCDEP=NUCIND
@@ -422,7 +422,7 @@ C To here
                      KMAT = KWRK1
                      KLAST = KMAT + NNBASX
                      LWRK2 = LWRK - KLAST + 1
-                     IATNOW = NUCIND + L 
+                     IATNOW = NUCIND + L
 
                      KPATOM = 0
                      NOSIMI = 1
@@ -449,7 +449,7 @@ C To here
                      IF (IPRINT.GT.15) THEN
                         WRITE (LUPRI,'(/A)') 'NUCPOT matrix'
                         CALL OUTPAK(WRK(KMAT),NBAST,1,LUPRI)
-                     ENDIF 
+                     ENDIF
 
                      DFTNS(L) = DDOT(NNBASX,DCAO,1,WRK(KMAT),1)
 C                 MM/PCM interface. Coordinates and charges are fixed
@@ -461,7 +461,7 @@ C                 for now.
                         ZMMQ(L) = CORD(3,IATNOW)
                         MMQ(L)  = CHARGE(IATNOW)
                         IF (L.GT.MXQ) THEN
-                           CALL QUIT('Too many charges in MM.'// 
+                           CALL QUIT('Too many charges in MM.'//
      &                               ' Increase MXQ')
                         ENDIF
                      ENDIF
@@ -471,15 +471,15 @@ C                 for now.
                         WRITE (LUPRI,'(/A,I3,A)')
      *                       ' N(',L,')_ao matrix: '
                         CALL OUTPAK(WRK(KNSAO),NBAST,1,LUPRI)
-                     ENDIF 
+                     ENDIF
 
                      DFTNS(L) = DDOT(NNBASX,DCAO,1,WRK(KNSAO),1)
-                     ENSEL     = ENSEL - DFTNS(L) 
+                     ENSEL     = ENSEL - DFTNS(L)
                   ENDIF
  527           CONTINUE
  526        CONTINUE
          END IF
- 525  CONTINUE       
+ 525  CONTINUE
 
       IF (INTDIR) THEN
          DIPORG(1) = OBKPX
@@ -548,23 +548,23 @@ C
 #include "mtags.h"
 #include "infpar.h"
 
-      DIMENSION WRK(LWRK) 
+      DIMENSION WRK(LWRK)
       DIMENSION DFTNS(MXQM3), DCAO(NNBASX)
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL TOFILE, TRIMAT, EXP1VL
       DIMENSION INTREP(9*MXCENT), INTADR(9*MXCENT)
 
 
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
       IPRTYP = QM3_NSP_WORK
-      
+
       CALL QENTER('QM3_NSP')
 
 C From here.  TODO TODO TODO
-C This is NOT good. In fact very bad. Needs to be fixed. 
+C This is NOT good. In fact very bad. Needs to be fixed.
 C Needed for f.ex. spin-spin couplings since nucdep is used here for allocation.
-C Can only be done AFTER coordinates for charges and polarizabilities have been defined 
+C Can only be done AFTER coordinates for charges and polarizabilities have been defined
 C since nudep defines no. of coordinates !! Only active when requsted by the user.
 
       IF (REDCNT) NUCDEP=NUCIND
@@ -598,7 +598,7 @@ CHJAaJ-e
      &                    LWRK1,IPRINT,EXP1VL,.FALSE.,ENSEL,FAC1,L,I)
 
          END IF
- 525  CONTINUE       
+ 525  CONTINUE
 
       DIPORG(1) = OBKPX
       DIPORG(2) = OBKPY
@@ -615,12 +615,12 @@ C
      *        ' +======================+'
 
          LS = 0
-         
+
          DO 215 I = 1, ISYTP
             IF (MDLWRD(I)(1:3) .EQ. 'SPC') THEN
                DO 216 J = NSYSBG(I), NSYSED(I)
                   DO 217 K = 1, NSISY(I)
-                     
+
                      LS = LS + 1
 
                      WRITE(LUPRI,'(A,I3,A,F16.10,A/A)')
@@ -638,6 +638,7 @@ C
 C*********************************************************************
       SUBROUTINE QM3_NSPM(IPRTYP,DCAO,DFTNS,WRK,LWRK,IPRINT,
      &                     EXP1VL,TOFILE,ENSEL,FAC1,LNUM,INUM)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -656,9 +657,6 @@ C*********************************************************************
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 
 #include "cbiher.h"
 
@@ -719,7 +717,7 @@ C     Send end message to all slaves
          CALL MPIXSEND(LEND ,1,'INTEGER',NWHO,MPTAG2)
       END DO
 
-C     Collect data from all slaves      
+C     Collect data from all slaves
       CALL DZERO(WRK(KDFTNS1),MXQM3)
       CALL DZERO(WRK(KDFTNS2),MXQM3)
       CALL MPI_REDUCE(WRK(KDFTNS1),WRK(KDFTNS2),MXQM3,
@@ -735,6 +733,7 @@ C     Collect data from all slaves
 C*********************************************************************
 
       SUBROUTINE QM3_NSPS(WRK,LWRK,IPRTMP)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -754,9 +753,6 @@ C*********************************************************************
 #include "nuclei.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 
 #include "cbiher.h"
 
@@ -839,9 +835,9 @@ C     No more Ns to calculate
       RETURN
       END
 #endif
-C*********************************************************************  
+C*********************************************************************
 C  /* Deck qm3_fmo */
-      SUBROUTINE QM3_FMO(FSOL,WRK,LWRK,IPRINT)   
+      SUBROUTINE QM3_FMO(FSOL,WRK,LWRK,IPRINT)
 
 #include "implicit.h"
 #include "priunit.h"
@@ -892,7 +888,7 @@ C  /* Deck qm3_fmo */
       CALL DZERO(WRK(KRAx),6*NCOMS)
       CALL DZERO(WRK(KTAO),NNBASX)
 
-      IF (.NOT. LOSPC) THEN  
+      IF (.NOT. LOSPC) THEN
 
         CALL CC_GET31('CC_RA',NCOMS,
      *                 WRK(KRAx),WRK(KRAy),WRK(KRAz))
@@ -1009,7 +1005,7 @@ C  /* Deck qm3_fmo */
                 ENDIF
 
                 IF (MDLWRD(I) .EQ. 'SPC_E01') THEN
- 
+
                   FACx =  - ALPIMM(I,K) * (WRK(KRAx + LM - 1)
      &                  + 0.5D0 * WRK(KENSAx + LM - 1))
                   FACy =  - ALPIMM(I,K) * (WRK(KRAy + LM - 1)
@@ -1063,7 +1059,7 @@ C       We use RRAOx in this case for the pot.energy integrals
           OBKPX = DIPORG(1)
           OBKPY = DIPORG(2)
           OBKPZ = DIPORG(3)
-        ENDIF 
+        ENDIF
 
         DO 525 I = 1, ISYTP
           IF (MDLWRD(I)(1:3) .EQ. 'SPC') THEN
@@ -1109,7 +1105,7 @@ C       We use RRAOx in this case for the pot.energy integrals
                   CALL DAXPY(NNBASX,FAC1,WRK(KMAT),
      *                       1,WRK(KTAO),1)
 
-                ELSE   
+                ELSE
 
                   CALL READT(LUQM3P,NNBASX,WRK(KRRAOx))
 
@@ -1117,7 +1113,7 @@ C       We use RRAOx in this case for the pot.energy integrals
                     WRITE (LUPRI,'(/A,I3,A)')
      *                 ' N(',L,')_ao matrix: '
                     CALL OUTPAK(WRK(KRRAOx),NBAST,1,LUPRI)
-                  ENDIF  
+                  ENDIF
 
                   CALL DAXPY(NNBASX,FAC1,WRK(KRRAOx),
      *                       1,WRK(KTAO),1)
@@ -1358,7 +1354,7 @@ C     coefficients.
 
       CALL DGEFSP(NBAST,WRK(KDV),WRK(KDVS))
       CALL PKSYM1(WRK(KDVS),WRK(KDENS),NBAS,NSYM,1)
-    
+
 
       CALL DZERO(WRK(KDIASH),NVAR)
       CALL DZERO(WRK(KGRDLM),NVARH)
@@ -1374,8 +1370,8 @@ C     Make effective solvent operator and transform to mo basis
       CALL UPKCMO(CMO,WRK(KUCMO))
       CALL UTHU(WRK(KFSOLAO),WRK(KFSOLMO),WRK(KUCMO),WRK(KWRK),
      &             NBAST,NORBT)
- 
-      IF (.NOT. OLDTG) EQM3T = EQM3T - EELEL 
+
+      IF (.NOT. OLDTG) EQM3T = EQM3T - EELEL
 
 C     Calculate gradients
       IF (NWOPT .GT. 0) THEN
@@ -1665,7 +1661,7 @@ C                Calculate one-index transformed Rra.x integrals
                    FACx = FACx + 2.0D0*WRK(KTRX -1 + IROW(IG+1))
   523            CONTINUE
                  FACx = FACx * FAC
-  
+
                  CALL DAXPY(NNORBX,FACx,WRK(KTRMO),1,WRK(JRXYO),1)
 
 C                Calculate one-index transformed Rra.y integrals
@@ -1752,7 +1748,7 @@ C
   600    CONTINUE
       END IF
 
-C     2. Add effective operators Tgxo and RRayo contribution to SVEC(NSVEC,NOSIM) 
+C     2. Add effective operators Tgxo and RRayo contribution to SVEC(NSVEC,NOSIM)
 C     Tell SOLGO only to use the NWOPPT first JWOP entries
       DO 800 IOSIM = 1,NOSIM
          JRXYO  = KRXYO  + (IOSIM-1)*NNORBX

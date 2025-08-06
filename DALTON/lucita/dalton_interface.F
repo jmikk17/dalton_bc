@@ -15,7 +15,7 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-C 
+C
 ***********************************************************************
 *                                                                     *
 * LUCITA, by Jeppe Olsen, DIRAC adaptation by Timo Fleig, 2001        *
@@ -601,13 +601,13 @@ C            PRHONE(H,NFUNC,IHSM,NSM,IPACK)
 *
 #ifdef VAR_MPI
       use dalton_mpi
+      use dalton_mpi_interface
 #endif
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "mxpdim.inc"
@@ -777,7 +777,7 @@ C?    WRITE(lupri,*) ' GET_PROP : NELMNT= ', NELMNT
 *
 * The orbital symmetries  are used to obtain the total
 * symmetry of the one-electron integrals.
-* It is therefore assumed that ISM, JSM represents 
+* It is therefore assumed that ISM, JSM represents
 *   a correct symmetry block
 * of the integrals
 *
@@ -1650,7 +1650,7 @@ C    &            NOCSF,IDIAG
 #include "priunit.h"
       Character*8   Fmt
       Character*70  Line,StLine
-      integer    :: lpaper = 120 
+      integer    :: lpaper = 120
 *----------------------------------------------------------------------*
 *     Start and define the paper width                                 *
 *     Initialize blank and header lines                                *
@@ -1914,9 +1914,9 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
 
 !
 !     load one-electron integrals and two-electron integrals
-      if(citask_id.eq.'return CIdia' .or. 
-     &   citask_id.eq.'perform Davi' .or. 
-     &   citask_id.eq.'ijkl resort ' .or. 
+      if(citask_id.eq.'return CIdia' .or.
+     &   citask_id.eq.'perform Davi' .or.
+     &   citask_id.eq.'ijkl resort ' .or.
      &   citask_id.eq.'return sigma' )then
 
         IF(INCORE.EQ.1)THEN
@@ -1932,7 +1932,7 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
 !
 !         check for existing file with reordered integrals -
 !         if available read from it...
-          if(citask_id.eq.'perform Davi' .or. 
+          if(citask_id.eq.'perform Davi' .or.
      &       citask_id.eq.'ijkl resort ')then
             if(luci_myproc .eq. luci_master)then
               inquire(file=file_name,exist=integral_available)
@@ -1975,13 +1975,13 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
                 CALL MOLLAB('LUCIIJKL',LUINT_LUCITA,LUPRI)
                 READ (LUINT_LUCITA) nint1, nint2, ecore, ecore_orig ,
      &                              einact_mc2lu
-                read(LUINT_LUCITA) 
+                read(LUINT_LUCITA)
      &          ((ngsh_lucita_tmp(i,j),i=1,max_number_of_gas_spaces),
      &                                 j=1,max_number_of_ptg_irreps)
                 CALL READT(LUINT_LUCITA, nint1, work(kint1))
                 if(is_2e_int_active .gt. 1)
      &          CALL READT(LUINT_LUCITA, nint2, work(kint2))
-!               check consistency in active spaces for integral run 
+!               check consistency in active spaces for integral run
 !               and actual run
                 do i = 1, max_number_of_gas_spaces
                   do j = 1, max_number_of_ptg_irreps
@@ -1998,15 +1998,15 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
               end if
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
-              write(lupri,*) 
+              write(lupri,*)
      &        '*** master   ',luci_myproc,'reports 1-ints:',
      &                        nint1
               call wrtmatmn(work(kint1),1,nint1,1,nint1,lupri)
-              write(lupri,*) 
+              write(lupri,*)
      &        '*** master   ',luci_myproc,'reports 2-ints:',
      &                        nint2
               call wrtmatmn(work(kint2),1,nint2,1,nint2,lupri)
-              write(lupri,*) 
+              write(lupri,*)
      &        '*** master   ',luci_myproc,'reports ecore  ',
      &                        ecore, ecore_orig, einact_mc2lu
 #undef LUCI_DEBUG
@@ -2032,14 +2032,14 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
 #endif
             end if
 #endif
-            
+
             if(.not.orbital_trial_vector.and..not.ci_trial_vector)then
 !             put 1e- and 2e-integrals to file
 !             --------------------------------
               WRITE (LUINT_LUCITA) ('********',I=1,3), 'LUCIIJKL'
               WRITE(LUINT_LUCITA) nint1, nint2, ecore, ecore_orig ,
      &                            einact_mc2lu
-              write(LUINT_LUCITA) 
+              write(LUINT_LUCITA)
      &        ((ngsh_lucita(i,j),i=1,max_number_of_gas_spaces),
      &                           j=1,max_number_of_ptg_irreps)
               CALL WRITT(LUINT_LUCITA, nint1, work(kint1))
@@ -2054,7 +2054,7 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
                 CALL MOLLAB('LUCIIJKL',LUINT_LUCITA,LUPRI)
                 READ (LUINT_LUCITA) nint1, nint2, ecore, ecore_orig ,
      &                              einact_mc2lu
-                read(LUINT_LUCITA) 
+                read(LUINT_LUCITA)
      &          ((ngsh_lucita_tmp(i,j),i=1,max_number_of_gas_spaces),
      &                                 j=1,max_number_of_ptg_irreps)
                 CALL READT(LUINT_LUCITA, nint1, work(kint2))
@@ -2067,7 +2067,7 @@ C?    print *,' ijPairs,klPairs',ijPairs,klPairs
             CALL MOLLAB('LUCIIJKL',LUINT_LUCITA,LUPRI)
             READ (LUINT_LUCITA) nint1, nint2, ecore, ecore_orig ,
      &                          einact_mc2lu
-            read(LUINT_LUCITA) 
+            read(LUINT_LUCITA)
      &      ((ngsh_lucita_tmp(i,j),i=1,max_number_of_gas_spaces),
      &                             j=1,max_number_of_ptg_irreps)
             CALL READT(LUINT_LUCITA, nint1, work(kint1))
@@ -2189,7 +2189,7 @@ C
 #include "infinp.h"
 
       DIMENSION CMO(*), WORK(LWORK)
- 
+
 C Used from include files:
 C  priunit: LUPRI
 C  inforb: NCMOT, nsym
@@ -2245,7 +2245,7 @@ C
 #endif
 
 !     Write one- and two-electron integrals to file FCIDUMP
- 
+
       if (lucita_cfg_fci_dump)
      &   call write_fcidump_file(work(kfcac),NASHT,work(kh2ac),EMY)
 
@@ -2281,7 +2281,7 @@ C
       real(8), intent(inout) :: int2_mcscf(*)
       integer, intent(in)    :: iintden
       logical, intent(in)    :: mcscf_provides_integrals
- 
+
 C Used from include files:
 C  priunit: LUPRI
 C  inforb: NCMOT, nsym
@@ -2315,7 +2315,7 @@ C
 !     set multiplication table
       mult_ptg = 0
       call set_ptg_multiplication_table(mult_ptg,nsym)
-      
+
       is2e_active = i12
 
       KFRSAV = 1
@@ -2348,11 +2348,11 @@ C
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
         WRITE(LUPRI,'(//A)') 'LUCITA_GETINT_DALTON: FCAC matrix'
-        WRITE(LUPRI,'(A,2i8)') 
+        WRITE(LUPRI,'(A,2i8)')
      &              'dimension: NASHT,NASHT * NASHT',NASHT,NASHT**2
         CALL OUTPAK(tmp_dal_work(kfcac),NASHT,-1,LUPRI)
         WRITE(LUPRI,'(//A)') 'LUCITA_GETINT_DALTON: H2AC matrix'
-        WRITE(LUPRI,'(A,2i8)') 
+        WRITE(LUPRI,'(A,2i8)')
      &              'dimension: NNASHX, NNASHX**2',NNASHX,NNASHX**2
         CALL OUTPUT(tmp_dal_work(kh2ac),1,NNASHX,1,NNASHX,NNASHX,
      &              NNASHX,-1,LUPRI)
@@ -2391,7 +2391,7 @@ C
       real(8), intent(inout) :: x1int(*)
       real(8), intent(inout) :: x1int_scr(*)
       real(8), intent(inout) :: int1_mcscf(*)
- 
+
 C Used from include files:
 C  priunit: LUPRI
 C  inforb: NCMOT, nsym
@@ -2424,13 +2424,13 @@ C
 !     set multiplication table
       mult_ptg = 0
       call set_ptg_multiplication_table(mult_ptg,nsym)
-      
+
       is2e_active = 1 ! no 2-electron integrals
 
 !-----------------------------------------------------------------
 !     transfer 1e- srDFT contributions from Dalton to LUCITA order
 !-----------------------------------------------------------------
-      call sirint2luint(x1int,dummy,              
+      call sirint2luint(x1int,dummy,
      &                  dummy,x1int_scr,dummy,mult_ptg,
      &                  adsxa,nasht,nnashx,
      &                  ntoobs,nsym,mxpobs,nint1,nxxxx,ireost,ireots,
@@ -2449,18 +2449,11 @@ C
      &                                  isrho2_active,iintden,rhotype,
      &                                  state_id)
 !
-!     Sep 2011 : driver for sorting the 1-/2-particle density matrices from 
+!     Sep 2011 : driver for sorting the 1-/2-particle density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-#ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+      use dalton_mpi_interface
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
-#endif
 #include "parluci.h"
 
       real(8), intent(in)    :: rho1lu(*)
@@ -2472,7 +2465,7 @@ C
       integer, intent(in)    :: isrho2_active
       integer, intent(in)    :: rhotype
       integer, intent(in)    :: state_id
- 
+
 ! Used from include files:
 !  priunit: LUPRI
 !  inforb: NCMOT, nsym
@@ -2524,7 +2517,7 @@ C
 !     put 1e- and 2e-density matrices to file
 !     ---------------------------------------
 
-      write(file_name,'(a17,i3,a1,i4)') 
+      write(file_name,'(a17,i3,a1,i4)')
      &      'DENSITIES_LUCITA-',state_id,'.',luci_myproc
       do i = 18, 20
         if(file_name(i:i).eq. ' ') file_name(i:i) = '0'
@@ -2538,21 +2531,21 @@ C
      &                'UNFORMATTED',IDUMMY,.FALSE.)
       WRITE (LUINT_LUCITA) ('********',I=1,3), 'LUCIDENS'
         CALL WRITT(LUINT_LUCITA, NNASHX, rho1gen)
-      if(isrho2_active .gt. 1) 
+      if(isrho2_active .gt. 1)
      &CALL WRITT(LUINT_LUCITA, NNASHX*NNASHX, rho2gen)
       WRITE (LUINT_LUCITA) ('********',I=1,3), 'EODATA  '
       CALL GPCLOSE(LUINT_LUCITA, 'KEEP')
 
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
-      WRITE(LUPRI,'(//A)') 
+      WRITE(LUPRI,'(//A)')
      & 'lucita_putdens_generic: 1-particle density matrix'
-      WRITE(LUPRI,'(A,2i8)') 
+      WRITE(LUPRI,'(A,2i8)')
      &            'dimension: NASHT,NASHT * NASHT',NASHT,NASHT**2
       CALL OUTPAK(rho1gen,NASHT,-1,LUPRI)
-      WRITE(LUPRI,'(//A)') 
+      WRITE(LUPRI,'(//A)')
      & 'lucita_putdens_generic: 2-particle density matrix'
-      WRITE(LUPRI,'(A,2i8)') 
+      WRITE(LUPRI,'(A,2i8)')
      &            'dimension: NNASHX, NNASHX**2',NNASHX,NNASHX**2
       CALL OUTPUT(rho2gen,1,NNASHX,1,NNASHX,NNASHX,
      &            NNASHX,-1,LUPRI)
@@ -2567,18 +2560,11 @@ C
      &                                 isrho2_active,iintden,rhotype,
      &                                 state_id,iab)
 !
-!     Aug 2012 : driver for sorting the 1-particle spin-density matrices from 
+!     Aug 2012 : driver for sorting the 1-particle spin-density matrices from
 !                LUCITA to a generic format (here: SIRIUS)
 !
-#ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-      use mpi
+      use dalton_mpi_interface
 #include "implicit.h"
-#else
-#include "implicit.h"
-#include "mpif.h"
-#endif
-#endif
 #include "parluci.h"
 
       real(8), intent(in)    :: rho1slu(*)
@@ -2591,7 +2577,7 @@ C
       integer, intent(in)    :: rhotype
       integer, intent(in)    :: state_id
       integer, intent(in)    :: iab
- 
+
 ! Used from include files:
 !  priunit: LUPRI
 !  inforb: NCMOT, nsym
@@ -2645,10 +2631,10 @@ C
 
       select case(iab)
         case(1) ! alpha spin
-          write(file_name,'(a17,i3,a1,i4)') 
+          write(file_name,'(a17,i3,a1,i4)')
      &       'SPINDENSITY-A-1p-',state_id,'.',luci_myproc
         case(2) ! beta  spin
-          write(file_name,'(a17,i3,a1,i4)') 
+          write(file_name,'(a17,i3,a1,i4)')
      &        'SPINDENSITY-B-1p-',state_id,'.',luci_myproc
         case default ! ??? ask einstein or dirac
           stop ' wrong program/hamiltonian - spin is a good quantum num'
@@ -2671,9 +2657,9 @@ C
 
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
-      WRITE(LUPRI,'(//A,i2)') 
+      WRITE(LUPRI,'(//A,i2)')
      & 'lucita_putdens_generic: 1-particle spin density matrix :',iab
-      WRITE(LUPRI,'(A,2i8)') 
+      WRITE(LUPRI,'(A,2i8)')
      &            'dimension: NASHT, triangular packed',NASHT
       CALL OUTPAK(rho1gen,NASHT,-1,LUPRI)
 #undef LUCI_DEBUG
@@ -2687,7 +2673,7 @@ C
 #include "implicit.h"
 
       real(8), intent(in)    :: rho1_ensemble(*)
- 
+
 ! Used from include files:
 !  priunit: LUPRI
 !  inforb: NCMOT, nsym
@@ -2716,7 +2702,7 @@ C
 !     -----------------------------
 
       LUINT_LUCITA = 99
-      write(file_name,'(a16)') 
+      write(file_name,'(a16)')
      &      'ENSEMBLE-DENSITY'
 
          open(file=file_name(1:16),unit=luint_lucita,status='replace',
@@ -2742,7 +2728,7 @@ C
 !                            lucita format.
 !                            1-electron integrals: on output symmetry-reduced list
 !                            2-electron integrals: on output symmetry-reduced list
-!              iintden == 2: reorder particle-density matrices from to internal lucita format to 
+!              iintden == 2: reorder particle-density matrices from to internal lucita format to
 !                            dalton-sirius format.
 !                            rhotype controls the format:
 !                            ==> 1: rho2(ij,kl) density matrix
@@ -2797,7 +2783,7 @@ C
       call sir1int2lu1int(h1_in,h1_out,return_sym_of_jorb,nnashx,
      &                    nr_orb_per_sym,nr_sym,max_orb_per_sym,
      &                    nr_1int,nr_actorb_tot,ireost,iintden,rhotype)
-      
+
 !     2-electron integrals/density matrix
 !     -----------------------------------
       if(is2e_active .gt. 1)then
@@ -2851,9 +2837,9 @@ C
 !
 !              1-electron integrals: on output symmetry-reduced list
 !
-!              note from stefan: i am not sure whether my code actually 
+!              note from stefan: i am not sure whether my code actually
 !              works for non-totally symmetric 1-electron operators as
-!              well, i.e. if we do property calculations. 
+!              well, i.e. if we do property calculations.
 !              this should be checked with due care.
 !
 !     -----------------------------------------------------------------
@@ -2936,12 +2922,12 @@ C
 !             calculate offset on dalton 1e-array (lower triangular matrix)
               i_index   =  (orb_tmp+isorb)
               j_index   = ((orb_tmp+jsorb)*(orb_tmp+jsorb-1)/2)
-!             no triangular packing if rhotype > 1              
+!             no triangular packing if rhotype > 1
               if(rhotype > 0) j_index   = ((orb_tmp+jsorb-1))
 !    &                                  * ( orb_tmp+jsorb  ))
      &                                  * nr_actorb_tot
               offset_ij = i_index + j_index
-  
+
               if(iintden .eq. 1)then ! 1e integral
                 h1_out(offset_internal) = h1_in(offset_ij)
               else ! 1p density matrix element
@@ -2949,16 +2935,16 @@ C
 !               LUCITA: type-symmetry ordering <==> SIRIUS (or other programs) symmetry-type
 !                       array ireost takes care ot that...
 !
-                offset_internal  = 
-     &          (ireost(isorb+orb_tmp)-1) * nr_actorb_tot + 
-     &           ireost(jsorb+orb_tmp) 
-                if(rhotype > 1) offset_internal = 
-     &          (ireost(jsorb+orb_tmp)-1) * nr_actorb_tot + 
-     &           ireost(isorb+orb_tmp) 
-     
+                offset_internal  =
+     &          (ireost(isorb+orb_tmp)-1) * nr_actorb_tot +
+     &           ireost(jsorb+orb_tmp)
+                if(rhotype > 1) offset_internal =
+     &          (ireost(jsorb+orb_tmp)-1) * nr_actorb_tot +
+     &           ireost(isorb+orb_tmp)
+
                 h1_in(offset_ij) = h1_out(offset_internal)
               end if
-  
+
 #ifdef LUCI_DEBUG
        write(lupri,*)'offset_ij, offset_int,jsorb,isorb,h1,switch',
      & offset_ij, offset_internal,jsorb,isorb,
@@ -3113,7 +3099,7 @@ C
                 else
                   kl_res = 0
                 end if
- 
+
 !               particle symmetry
                 if(isym.eq.ksym.and.jsym.eq.lsym)then
                   ijkl_res = 1
@@ -3260,7 +3246,7 @@ C
         do j = 1, nasht
           do k = 1, nasht
             do l = 1, nasht
-              write(lupri,'(a,i2,a1,i2,a1,i2,a1,i2,a,f16.10)') 
+              write(lupri,'(a,i2,a1,i2,a1,i2,a1,i2,a,f16.10)')
      &                       ' pv(',i,',',j,',',k,',',l,') = ',
      &                         pv_full_scratch(i,j,k,l)
             end do
@@ -3308,7 +3294,7 @@ C
 
       subroutine set_ptg_multiplication_table(mult_ptg,nr_ptg_irreps)
 !
-!     purpose: set point-group multiplication table for 
+!     purpose: set point-group multiplication table for
 !              dalton -> lucita integral transfer.
 !
 !     -----------------------------------------------------------------
@@ -3329,15 +3315,15 @@ C
 
       subroutine write_fcidump_file(AMATRIX,nrow,BMATRIX,corenergy)
 !     -----------------------------------------------------------------
-!     Written by Katharina Boguslawski and Pawel Tecmer  
+!     Written by Katharina Boguslawski and Pawel Tecmer
 !     ETH Zurich, March 2013
 !
 !     purpose: write one- and two-electron integrals for a given active
 !              space to disk
-!     
+!
 !     filename: FCIDUMP
 !     -----------------------------------------------------------------
-  
+
       use lucita_cfg
 
 #include "implicit.h"
@@ -3348,7 +3334,7 @@ C
 #include "inftap.h"
 #include "clunit.inc"
 !#include "orbinp.inc"
-      
+
       character(len=30) :: form1
       character(len=30) :: form2
       character(len=30) :: form3
@@ -3366,7 +3352,7 @@ C
 !     -----------------------------------------------------------------
 
       COMMON/CECORE/ECORE,ECORE_ORIG,ECORE_H,ECORE_HEX
-             
+
 !     allocate memory for multiplication table to write only
 !     symmetry-allowed integrals
       allocate(mult_ptg(NSYM,NSYM))
@@ -3382,11 +3368,11 @@ C
 
 
 !     FCIDUMP info
-      write(lupri,*) 
+      write(lupri,*)
       write(lupri,*)" FCIDUMP file details "
-      write(lupri,*)"======================" 
-      write(lupri,*) 
-         
+      write(lupri,*)"======================"
+      write(lupri,*)
+
 
 !     calculate number of active electrons
       norbtot = 0
@@ -3401,10 +3387,10 @@ C
       CALL GPOPEN(LUFCID,'FCIDUMP','new',' ',
      &                'FORMATTED',IDUMMY,.false.)
       end if
-      write(LUFCID,form2) ' &FCI NORB=', norbtot , 
+      write(LUFCID,form2) ' &FCI NORB=', norbtot ,
      & ',NELEC=', lucita_cfg_nr_active_e, ',MS2=',
      &  lucita_cfg_is_spin_multiplett-1, ','
-      write(LUFCID,"(A)",advance='no') '  ORBSYM=' 
+      write(LUFCID,"(A)",advance='no') '  ORBSYM='
       do ISYM=1,NSYM,1
          if (nactiveorb(ISYM).ne.0) then
             do i=1,nactiveorb(ISYM),1
@@ -3414,12 +3400,12 @@ C
       end do
 
 
-      write(lupri,form2) ' &FCI NORB=', norbtot , 
+      write(lupri,form2) ' &FCI NORB=', norbtot ,
      & ',NELEC=', lucita_cfg_nr_active_e, ',MS2=',
      &  lucita_cfg_is_spin_multiplett-1, ','
 
 
-      write(LUFCID,*) 
+      write(LUFCID,*)
       write(LUFCID,"(A7,I1)") '  ISYM=',lucita_cfg_ptg_symmetry
       write(LUFCID,"(A5)") ' &END'
 
@@ -3467,7 +3453,7 @@ C
                            noccendi = nactiveorb(ISYM)
                         end if
                         do i=1,noccendi,1
-!     orbital offset J                        
+!     orbital offset J
                         offsetj = 0
 !     double counting problem: irrep of J must be smaller or equal to
 !     irrep of I
@@ -3484,7 +3470,7 @@ C
                  ijsym   = mult_ptg(ISYM,KSYM)
                  ksyml   = mult_ptg(JSYM,syml)
                  ijksyml = mult_ptg(ijsym,ksyml)
-            
+
               end if
 
               if(ijksyml .eq. 1) then
@@ -3519,7 +3505,7 @@ C
                      if (k.eq.i.and.l.eq.i.and.j.lt.i) then
 
                      else if (k.eq.i.and.j.lt.l) then
-                      
+
                      else
                          write(LUFCID,form1) BMATRIX(IELE),
      &                        i+offseti, j+offsetj, k+offsetk, l+offsetl
@@ -3560,7 +3546,7 @@ C
 !     number of dummy indices to be ignored in one-electron
 !     integrals because of symmetry ISYM < actual ISYM
       NDUMMY = 0
-      
+
       do ISYM=1,NSYM,1
          if (nactiveorb(ISYM).ne.0) then
             IELE = IELE + NDUMMY
@@ -3581,11 +3567,11 @@ C
       end do
 
       write(LUFCID,form3) POTNUC + corenergy, 0,0 ,0,0
- 
+
       call GPCLOSE(LUFCID,'KEEP')
- 
+
       deallocate(mult_ptg)
 
-      return     
- 
-      end 
+      return
+
+      end

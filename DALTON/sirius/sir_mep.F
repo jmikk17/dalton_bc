@@ -24,6 +24,7 @@ C  /* Deck calc_mep */
 !                 in (x,y,z) points listed on MEP.INP file;
 !                 values are written to MEP.OUT file.
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -45,9 +46,8 @@ C  /* Deck calc_mep */
 #include "gnrinf.h"
 #ifdef VAR_MPI
 #include "infpar.h"
-#include "mpif.h"
 #endif
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WRK(LFRSAV)
@@ -64,7 +64,7 @@ C defined parallel calculation types
 
       CALL QENTER('CALC_MEP')
 
-C     Only scf for the moment 
+C     Only scf for the moment
 
       KFREE  = KFRSAV
       LFREE  = LFRSAV
@@ -86,7 +86,7 @@ C     Only scf for the moment
       ELSE
          CALL QUIT('Unknown units in POTENTIAL.INP')
       ENDIF
-   
+
       CALL MEMGET('REAL',KDV   ,NNASHX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KDENC ,N2BASX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KDENV ,N2BASX,WRK,KFREE,LFREE)
@@ -231,6 +231,7 @@ C*******************************************************************************
 C  /* Deck MEP_SLAVE */
       SUBROUTINE MEP_SLAVE(WRK,LWRK)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -253,7 +254,6 @@ C  /* Deck MEP_SLAVE */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
 #endif
 
       DIMENSION WRK(LWRK)
@@ -319,6 +319,7 @@ C  /* Deck MEP_LOOP */
       SUBROUTINE MEP_LOOP(XMEP,YMEP,ZMEP,NCENTERS,DENS,
      &                      WRK,LWRK,MEP,MEFX,MEFY,MEFZ)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -341,7 +342,6 @@ C  /* Deck MEP_LOOP */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
 #endif
 
       CHARACTER*8 LABINT(9*MXCENT)

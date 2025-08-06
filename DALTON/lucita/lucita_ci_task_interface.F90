@@ -7,17 +7,8 @@ module lucita_ci_task_interface
 
   use lucita_integral_density_interface
 
-#ifdef VAR_MPI
-#ifdef USE_MPI_MOD_F90
-  use mpi
+  use dalton_mpi_interface
   implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
-#else
-  implicit none
-#endif
 
   public CI_task_list_interface
   public create_CI_task_list
@@ -38,7 +29,7 @@ contains
                                     hc,                              &
                                     resolution_mat,                  &
                                     int1_or_rho1,                    &
-                                    int2_or_rho2,                    & 
+                                    int2_or_rho2,                    &
                                     block_list,                      &
                                     par_dist_block_list,             &
                                     proclist,                        &
@@ -50,7 +41,7 @@ contains
                                     print_lvl)
 !-------------------------------------------------------------------------------
 !
-! purpose: interface routine to all individual CI tasks defined in a proper order 
+! purpose: interface routine to all individual CI tasks defined in a proper order
 !          in the list "ci_task_list".
 !
 !-------------------------------------------------------------------------------
@@ -96,18 +87,18 @@ contains
                                               print_lvl)
 
         case default ! 'report CIspc', 'report CIana'
-          
+
 !         print *, ' skipped integral pointer construction and vector block allocation'
 
       end select
 
-!          
+!
       do ! infinte loop over CI task tickets
 
         ci_task_ticket = ci_task_ticket + 1
 
         select case(ci_task_list(ci_task_ticket))
-          
+
 
           case ('report CIspc')
             exit ! return because there is nothing else to do
@@ -147,7 +138,7 @@ contains
                                  max_ci_tasks)
 !-------------------------------------------------------------------------------
 !
-! purpose: translate external (MCSCF) CI run ID's in LUCITA internal 
+! purpose: translate external (MCSCF) CI run ID's in LUCITA internal
 !          CI tasks. add additional CI tasks as requested by input
 !          parameters.
 !
@@ -288,7 +279,7 @@ contains
         call isetvc(file_info%iluxlist(1,file_info%current_file_nr_diag),1,         &
                     file_info%max_list_length)
 
-!       collect H diagonal 
+!       collect H diagonal
         call mcci_cp_vcd_mpi_2_seq_io_interface(cref,ludia,                         &
                                                 file_info%fh_lu(file_info%          &
                                                 current_file_nr_diag),              &
@@ -355,7 +346,7 @@ contains
         if(file_info%current_file_fh_seqf(1) > 0) luc_vector_file = file_info%current_file_fh_seqf(1)
 
         call rewino(luc_vector_file)
-        
+
         do eigen_state_id = 1, nroot
 
           if(icistr == 1)then
@@ -382,7 +373,7 @@ contains
   end subroutine report_CI_vector_analysis
 !**********************************************************************
 
-  subroutine return_Xp_density_matrix(print_lvl,                    &      
+  subroutine return_Xp_density_matrix(print_lvl,                    &
                                       nbatch,                       &
                                       block_list,                   &
                                       par_dist_block_list,          &
@@ -490,7 +481,7 @@ contains
       my_luci_master = luci_master
       if(luci_nmproc > 1)then
 
-        if(icsm /= issm) & 
+        if(icsm /= issm) &
         call quit('*** return_Xp_density_matrix: property/response density matrix not parallelized yet. ***')
 
 !       sequential --> MPI I/O
@@ -522,7 +513,7 @@ contains
           call memman(k_scratchsbatch,nbatch_par_max,'ADDL  ',2,'SBATCH')
           call dzero(work(k_scratchsbatch),nbatch_par_max)
         end if
-         
+
 
         if(.not.file_info%file_type_mc)then ! not within MCSCF
 
@@ -644,7 +635,7 @@ contains
           call mpi_barrier(mynew_comm_mpi,ierr_mpi) ! probably not needed if collection of densities is in action
           call izero(file_info%ilublist,file_info%max_list_length_bvec)
 
-          call mcci_cp_vcd_batch(file_info%fh_lu(file_info%current_file_nr_active1),       &    
+          call mcci_cp_vcd_batch(file_info%fh_lu(file_info%current_file_nr_active1),       &
                                  file_info%fh_lu(file_info%current_file_nr_bvec),          &
                                  cref,nbatch_par,blocks_per_batch,                         &
                                  batch_length,block_offset_batch,block_info_batch,         &
@@ -838,7 +829,7 @@ contains
   end subroutine return_Xp_density_matrix
 !**********************************************************************
 
-  subroutine return_sigma_vector(print_lvl,                    &      
+  subroutine return_sigma_vector(print_lvl,                    &
                                  nbatch,                       &
                                  block_list,                   &
                                  par_dist_block_list,          &
@@ -913,7 +904,7 @@ contains
 #ifdef VAR_MPI
       if(luci_nmproc > 1)then
 
-        if(icsm /= issm) & 
+        if(icsm /= issm) &
         call quit('*** return_sigma_vector: property/response E2b calculation not parallelized yet. ***')
 
 !       sequential --> MPI I/O
@@ -994,10 +985,10 @@ contains
 !         MPI I/O --> MPI I/O node-master collection file
 !         -----------------------------------------------
           mynew_comm_mpi = mynew_comm
-          call mpi_barrier(mynew_comm_mpi,ierr_mpi) 
+          call mpi_barrier(mynew_comm_mpi,ierr_mpi)
           call izero(file_info%ilublist,file_info%max_list_length_bvec)
 
-          call mcci_cp_vcd_batch(file_info%fh_lu(file_info%current_file_nr_active1),       &    
+          call mcci_cp_vcd_batch(file_info%fh_lu(file_info%current_file_nr_active1),       &
                                  file_info%fh_lu(file_info%current_file_nr_bvec),          &
                                  hc,nbatch_par,blocks_per_batch,                           &
                                  batch_length,block_offset_batch,block_info_batch,         &
@@ -1038,7 +1029,7 @@ contains
 !         collect e2b vector(s)
 !         --------------------
           call rewino(luhc_internal)
-  
+
 !         the lhs vector
           call mcci_cp_vcd_mpi_2_seq_io_interface(hc,luhc_internal,luhc_vector_file,   &
                                                   file_info%file_offsets(              &

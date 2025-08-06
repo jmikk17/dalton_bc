@@ -32,14 +32,15 @@
 #ifdef VAR_MPI
       use file_io_model
 #endif
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
       INTEGER*8 KLCLBT, KLCLEBT, KLCI1BT, KLCIBT, KLC2B, KLCIOIO,
      &          KLCBLTP, KLCI1BTSCR, KBSCLFC, KBLCKIF, KBLCKPD,
-     &          KSCRREDSP, KSCRREDSP2, KRCCTOS, 
-     &          KILUCLIST, KILU1LIST, KILU2LIST, KILU3LIST, KILU4LIST, 
+     &          KSCRREDSP, KSCRREDSP2, KRCCTOS,
+     &          KILUCLIST, KILU1LIST, KILU2LIST, KILU3LIST, KILU4LIST,
      &          KILU5LIST, KILU6LIST, KILU7LIST, KLBASSPC,
-     &          KLEBASC, KLCBASC, KLSPSPCL, KLBLKCLS, KLCLSL, KLCLSC, 
-     &          KLCLSE, KLCLSCT, KLCLSET, KLCLSA, KLCLSA2, KLBLKA, 
+     &          KLEBASC, KLCBASC, KLSPSPCL, KLBLKCLS, KLCLSL, KLCLSC,
+     &          KLCLSE, KLCLSCT, KLCLSET, KLCLSA, KLCLSA2, KLBLKA,
      &          KLCLSD, KLCLSDT, KVEC1, KVEC2
 !               for addressing of WORK
 
@@ -67,7 +68,6 @@
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
       integer(kind=MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       INTEGER(KIND=MPI_OFFSET_KIND)  :: ITEST_OFF
@@ -152,7 +152,7 @@ C     COMMON/COMJEP/MXACJ,MXACIJ,MXAADST
 *
       NDET = XISPSM(ISM,ISPC)
       NEL = NELCI(ISPC)
-      WRITE(LUWRT,'(/a,i14)') 
+      WRITE(LUWRT,'(/a,i14)')
      &     '  @@ Number of determinants/combinations: ',NDET
       IF(NDET.EQ.0) THEN
        WRITE(LUWRT,*) 'The number of determinants/combinations is zero.'
@@ -217,7 +217,7 @@ C     check for size of L2BLOCK
 *     ... set LBLOCK value
 *
       LBLOCK  = MAX(L0BLOCK,L2BLOCK)
-CtestBATCHES      
+CtestBATCHES
 csk   LBLOCK  = MIN(L0BLOCK,L2BLOCK)
 C     store on common block in parluci.h
       LBLOCK_LUCI = LBLOCK
@@ -270,7 +270,7 @@ C     transfer to common block in parluci.h
       NUM_BLOCKS  = NBLOCK
       NUM_BLOCKS2 = NUM_BLOCKS
 
-      WRITE(LUWRT,'(a,i22)') 
+      WRITE(LUWRT,'(a,i22)')
      &     '  @@ total number of TTSS-blocks: ',NBLOCK
       CALL MEMMAN(KLCI1BTSCR,NTTS  ,'ADDL  ',1,'CI1BTS')
       CALL ICOPY(NTTS,WORK(KLCI1BT),1,WORK(KLCI1BTSCR),1)
@@ -283,7 +283,7 @@ C
 !     CALL ICOPY(NBLOCK,WORK(KLCI1BT),1,WORK(KBLCKIF),1)
 
 C     array for block distribution among cpu's (parallel run),
-C     some more scratch arrays needed for communication in the 
+C     some more scratch arrays needed for communication in the
 C     diagonalizer
 !     IMIN2 = -2
 !     CALL MEMMAN(KBLCKPD,NBLOCK,'ADDS  ',1,'IBLCKP')
@@ -323,7 +323,7 @@ csk   WRITE(LUCIWT,*) ' RCCTOS output'
 csk   CALL IWRTMAMN(WORK(KRCCTOS),1,NBLOCK,1,NBLOCK,LUCIWT)
 C
 !     ----------------------------------------------------------
-!     organize MPI file I/O offsets with the following ordering: 
+!     organize MPI file I/O offsets with the following ordering:
 !     idia, iluc, ilu[2-7], ilu1
 !     ----------------------------------------------------------
       allocate(file_offset_fac_i4(nr_files))
@@ -352,7 +352,7 @@ C
       file_offset_fac(7) = file_offset_fac_i4(7)
       file_offset_fac(8) = file_offset_fac_i4(8)
       file_offset_fac(9) = file_offset_fac_i4(9)
-      
+
       call set_file_io_offset(nr_files,
      &                        file_offset_off,
      &                        file_offset_array,
@@ -731,10 +731,10 @@ C       new default: print always NO occ. numbers (IDENSI = 1)
 C                    which are useful for detailed analysis
 C
         IF( IDENSI .gt. 0 )THEN
-          IF( IPRDEN .le. 0 )IPRDEN = 1 
+          IF( IPRDEN .le. 0 )IPRDEN = 1
         ELSE
           IDENSI = 1
-          IF( IPRDEN .le. 0 )IPRDEN = 1 
+          IF( IPRDEN .le. 0 )IPRDEN = 1
         END IF
 C
       DO JROOT = 1, NROOT
@@ -812,12 +812,12 @@ C
 C
 Cold   regenerate densities for reference root
 C
-C      density matrices -- natural orbital occupation numbers 
-C               one- and two-body density matrix 
+C      density matrices -- natural orbital occupation numbers
+C               one- and two-body density matrix
 C               --------------------------------
 C
        IF( LUCI_MYPROC .eq. LUCI_MASTER ) THEN
-         IF( IPRDEN .gt. 0 )IPRDEN = 0 
+         IF( IPRDEN .gt. 0 )IPRDEN = 0
          IF(IH0ROOT.NE.NROOT) THEN
 *          position vectors
            CALL REWINO(LUC)
@@ -841,7 +841,7 @@ C
            END IF
          END IF
        END IF
-C      ^ END IF LUCI_MYPROC .eq. LUCI_MASTER 
+C      ^ END IF LUCI_MYPROC .eq. LUCI_MASTER
 C
 *
 *. Note : DOES RESPONS for lowest state on LUC !
@@ -890,11 +890,11 @@ C                     GAS GAS GAS GAS GAS GAS
 C
 C Written by Jeppe Olsen , winter of 1991
 C                          GAS version in action summer of 95
-C 
+C
 C Parallel version: Stefan Knecht in spring - summer of 2006
 C
 C This routine is originally called from dalton sirius.
-C In the case of a parallel run, the relevant nodes will be 
+C In the case of a parallel run, the relevant nodes will be
 C waken up and sent to sleep.
 C
       use lucita_mcscf_ci_task
@@ -902,10 +902,10 @@ C
 #ifdef VAR_MPI
       use sync_coworkers
 #endif
+      use dalton_mpi_interface
 
 #include "implicit.h"
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "maxorb.h"
@@ -929,7 +929,7 @@ C
 C     summon the co-workers, who are waiting in the general menu routine
 C     ------------------------------------------------------------------
 #ifdef VAR_MPI
-      IF (LUCI_NMPROC .GT. 1) then 
+      IF (LUCI_NMPROC .GT. 1) then
         call lucita_start_cw
 !       synchronize ci-task id with co-workers
         call sync_coworkers_cfg(6)
@@ -943,7 +943,7 @@ C     ------------------------------------------------------------------
       END IF
 #endif
 C
-C     Enter the generic LUCITA routine (master becomes 
+C     Enter the generic LUCITA routine (master becomes
 C     now somewhat like primus inter pares -- "first among equals")
 C     -------------------------------------------------------------
       CALL LUCITA_DRIVER(WRK_DALTON,LWRK_DALTON,IN,IW)
@@ -970,7 +970,7 @@ C
 * Written by Jeppe Olsen , winter of 1991
 *                          GAS version in action summer of 95
 *
-* Modifications wrt to an MPI implementation by Stefan Knecht, Feb. 06 
+* Modifications wrt to an MPI implementation by Stefan Knecht, Feb. 06
 *
 !     dependencies on F90 modules
 !     common modules
@@ -983,15 +983,15 @@ C
       use file_io_model
       use sync_coworkers
 #endif
+      use dalton_mpi_interface
 
       IMPLICIT REAL*8(A-H,O-Z)
-      INTEGER*8 k_offset, KADD, KPROCLIST, KGROUPLIST, 
+      INTEGER*8 k_offset, KADD, KPROCLIST, KGROUPLIST,
      &          KGROUPLIST2, KPROCLENGTH, KVEC1, ktestme
 !               for addressing of WORK
 #include "maxorb.h"
 #include "infpar.h"
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -1049,7 +1049,7 @@ C     character line
       LUCIWT    = LUOUT
       LUWRT     = LUOUT
 
-      write(luwrt,'(/a/a,a12,a/a/)') 
+      write(luwrt,'(/a/a,a12,a/a/)')
      & '   ---------------------------------------------------',
      & '   LUCITA module started with task-id = "',lucita_citask_id,'"',
      & '   ---------------------------------------------------'
@@ -1065,9 +1065,9 @@ C     character line
 
         allocate(grouplist_shared_mem(luci_nmproc))
         grouplist_shared_mem = -1
-      
+
 !       setup the communication model.
-!       all important variables (input parameters to module) 
+!       all important variables (input parameters to module)
 !       are stored on common block /LUPARGROUP/
 
         call setup_communication_model(nflgrps,
@@ -1108,7 +1108,7 @@ C     character line
      &                            newcomm_proc,
      &                            'parci',
      &                            luwrt)
-  
+
 !       transfer file handles to common block /LUCIAPFILE/ (in parluci.h)
 !       ILU1 has to be the last in the row because it is supposed to be
 !       closed after we have copied the final solution vector back to
@@ -1123,7 +1123,7 @@ C     character line
         ILU3 = fh_array(7)
         ILU2 = fh_array(8)
         ILU1 = fh_array(9)
-  
+
 !       free currently unused shared-memory group list
         deallocate(grouplist_shared_mem)
 
@@ -1160,11 +1160,11 @@ C     Compute offset from WRK_DALTON to WORK
          CALL QUIT('FATAL ERROR in LUCITA: offset is too big for i*4')
       END IF
 #endif
-! 
+!
 !     subtract dynamically allocated memory
       max_num_ttss_blocks = 20 000
       max_subspace_dim    = 300
-!     the above values are based on an educated guess from my experience 
+!     the above values are based on an educated guess from my experience
 !     - sk nov 2010
       KADD   = LFREE
      &       - 2 * luci_nmproc - nr_files - 2 * max_num_ttss_blocks
@@ -1177,12 +1177,12 @@ C     Compute offset from WRK_DALTON to WORK
 
       WRITE(luwrt,'(10X,A,I18)')
      &  'Dimension of R*8 workspace : ', KADD
- 
+
 C     LUCITA is used in real calculations: no complex part
       irc_save = 1
 
-!     input conversion (internal lucia input file will be written) and 
-!     file handles will be set for all relevant input/output management 
+!     input conversion (internal lucia input file will be written) and
+!     file handles will be set for all relevant input/output management
 !     of (temporary) data
       call dalton_lucita_input_interface
 C
@@ -1413,10 +1413,10 @@ C
       call memrel('lucita.done',wrk_dalton,kfrsav,kfrsav,kfree,lfree)
       deallocate(grouplist)
       deallocate(proclist)
-     
+
 !     do i = 1, 100
-!       WRK_DALTON(i)  = i  
-!       WoRK(i) = i  
+!       WRK_DALTON(i)  = i
+!       WoRK(i) = i
 !     end do
 
       write(luwrt,'(/a,a12,a)') ' LUCITA run, task-id = "',
@@ -1452,6 +1452,7 @@ C
 *
 * Jeppe Olsen,Spring of 1991
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 *
       PARAMETER(MXPLNC = 72 )
@@ -1503,7 +1504,6 @@ C
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "parluci.h"
@@ -2474,10 +2474,10 @@ CTF
            WRITE(luwrt,*) ' Dear user '
            WRITE(luwrt,*)
            WRITE(luwrt,*)' SEQUEN flag has been specified before CMBSPC'
-           WRITE(luwrt,*)' This confuses me and makes me wonder 
+           WRITE(luwrt,*)' This confuses me and makes me wonder
      & what the'
            WRITE(luwrt,*)' meaning of everything is. '
-           WRITE(luwrt,*)' Please ensure that CMPSPC is given 
+           WRITE(luwrt,*)' Please ensure that CMPSPC is given
      &before SEQUEN'
            WRITE(luwrt,*)
            WRITE(luwrt,*)'                                  Lucita  '
@@ -3394,9 +3394,9 @@ C?   &     RESP_OP(1,IRESP) , RESP_OP(2,IRESP)
         WRITE(luwrt,'(A,I9)')
      &  ' Number of input errors detected in READIN ', NERROR
 *
-        WRITE(luwrt,*) 
+        WRITE(luwrt,*)
      &  ' The following keywords were correctly identified'
-        WRITE(luwrt,*) 
+        WRITE(luwrt,*)
      &  ' ================================================'
         DO  IENTRY = 1, MXPKW
           IF(ISETKW(IENTRY).EQ.+1)
@@ -4819,16 +4819,16 @@ C       WRITE(6,'(A)')   '  =============================='
         WRITE(luwrt,*)
      &  ' Notice : This madness starts  in second calculation'
         ELSE
-         WRITE(luwrt,*) 
+         WRITE(luwrt,*)
      & ' You have specified a calculation with modified '
          WRITE(luwrt,*) ' Hamiltonian (the LAMBDA option) and RESTART '
          WRITE(luwrt,*) ' so this is what I will do '
          WRITE(luwrt,*)
-         WRITE(luwrt,*) 
+         WRITE(luwrt,*)
      & '   1:) Perform CI in space 1 to obtain Hamiltonian'
          WRITE(luwrt,*) '       (no RESTART in this space )'
          WRITE(luwrt,*) '   2:) CI calculation in space 2  with '
-         WRITE(luwrt,*) 
+         WRITE(luwrt,*)
      & '       modified Hamiltonian and RESTART from LU21'
          WRITE(luwrt,*) ' Space 2 should therefore correspond to the'
          WRITE(luwrt,*) ' restarted calculation '
@@ -5177,7 +5177,7 @@ C        WRITE(6,'(5X,A)') ' No extended Koopmans'' calculations '
        ELSE IF(IEXTKOP.NE.0) THEN
          WRITE(luwrt,'(5X,A)') ' Extended Koopmans'' calculations '
        ELSE IF(IPTEKT.NE.0) THEN
-         WRITE(luwrt,'(5X,A)') 
+         WRITE(luwrt,'(5X,A)')
      & ' Perturbation expansion of EKT equations'
        END IF
 *
@@ -5358,7 +5358,7 @@ C       WRITE(6,'(5X,A)')  ' No transformation of CI vectors'
 *
       IF(IDMPIN.EQ.1) THEN
         WRITE(luwrt,'(3X ,A)')
-        WRITE(luwrt,*) 
+        WRITE(luwrt,*)
      & '      Integrals written in formatted form (E22.15)'
         WRITE(luwrt,*) '      on file 90 '
       END IF
@@ -5374,7 +5374,7 @@ C       WRITE(6,'(5X,A)')  ' No transformation of CI vectors'
 #include "parluci.h"
 #include "maxorb.h"
 #include "infpar.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 C
 C     LUCITA_WORK for parallel LUCITA
@@ -5399,8 +5399,8 @@ C
 !     LUCITA version by Stefan Knecht, Feb. 06
 !
 !***********************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) my_MPI_ANY_SOURCE
       integer(kind=MPI_INTEGER_KIND) ierr_mpi, IREQ_mpi
@@ -5418,7 +5418,7 @@ C
          CALL MPI_SEND(NTEST,1,my_MPI_INTEGER,NODE,30,
      &                  MPI_COMM_WORLD,ierr_mpi)
       ENDDO
- 
+
       END
 !***********************************************************************
 
@@ -5434,11 +5434,11 @@ C
       use sync_coworkers
       use lucita_mcscf_ci_task
       use lucita_orbital_spaces, only: define_lucita_orb_spaces
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_luci_master
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
@@ -5507,7 +5507,7 @@ C
      &                              lucita_cfg_nr_gas_spaces,
      &                              lucita_cfg_init_input_type,
      &                              lucita_cfg_init_wave_f_type)
- 
+
 *     call the driver routine - joining with the master
       call lucita_driver(work_dalton,lwork_dalton,lucmd,outfile_node)
 

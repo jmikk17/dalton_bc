@@ -51,11 +51,11 @@ C     Created : 15-02-05, J. Toulouse
 C     Modified: 17-08-09, J. Toulouse, add spin density
 C     Modified: Feb. 2016 E. Hedegaard add spin gradient
 C*****************************************************************************
+      use dalton_mpi_interface
       implicit none
 #include "priunit.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(mpi_integer_kind) :: ierr_mpi
 #endif
 

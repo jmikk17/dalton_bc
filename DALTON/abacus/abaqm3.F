@@ -20,7 +20,7 @@ C*******************************************************************
 C/* deck qm3first */
       SUBROUTINE QM3FIRST(VEC2,NCOMP,IPRINT,INTPRI,WORK,LWORK)
 C
-c This routine adds the MM solvent contribution 
+c This routine adds the MM solvent contribution
 c to the 1st order (NCOMP=3) magnetic field perturbation due to the use of
 c London orbitals
 c Copenhagen, January 2006, K.Ruud
@@ -88,7 +88,7 @@ C
                      CALL OUTPUT(WORK(KMAT+2*N2BASX),1,NBAST,1,NBAST,
      &                           NBAST,NBAST,1,LUPRI)
                   END IF
-C  
+C
                   FAC1 = -1.0D0*CHARGE(IATNOW)
                   CALL DAXPY(3*N2BASX,FAC1,WORK(KMAT),1,VEC2,1)
                END DO
@@ -99,7 +99,7 @@ C
 C     Calculate MM corrections for all distributed polarizabilities
 C
 C     Remember that the first coordinate for the polarizability is the COM for the QM system.
-C     Therefor we increase L with 1. If however we have distributed polarizability for the QM 
+C     Therefor we increase L with 1. If however we have distributed polarizability for the QM
 C     system we need to skip the first NUALIS(0) points
 
       L = L + NUALIS(0)
@@ -228,7 +228,7 @@ C/* deck qm3first_p */
 C
 C The parallel version of QM3FIRST, Tromso Oct 08, Arnfinn
 C
-c This routine adds the MM solvent contribution 
+c This routine adds the MM solvent contribution
 c to the 1st order (NCOMP=3) magnetic field perturbation due to the use of
 c London orbitals
 c Copenhagen, January 2006, K.Ruud
@@ -236,6 +236,7 @@ c
 c VEC2 (OUTPUT)  : contribution to be added to perturbed Fock matrix
 c NCOMP (INPUT)  : number of independent perturbation (3)
 
+C#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -248,7 +249,7 @@ c NCOMP (INPUT)  : number of independent perturbation (3)
 Cahs#include "infpar.h"
 Cahs#include "mtags.h"
 Cahs#if defined(VAR_MPI)
-Cahs#include "mpif.h"
+C#include "mpi_header.h"
 Cahs#endif
 C#include "infpri.h"
 C#include "infvar.h"
@@ -277,7 +278,7 @@ C
 C     Calculate MM corrections for all distributed polarizabilities
 C
 C     Remember that the first coordinate for the polarizability is the COM for the QM system.
-C     Therefor we increase L with 1. If however we have distributed polarizability for the QM 
+C     Therefor we increase L with 1. If however we have distributed polarizability for the QM
 C     system we need to skip the first NUALIS(0) points
 C
       L = L + NUALIS(0)
@@ -333,6 +334,7 @@ C-----------------------------------------------------
 C
       SUBROUTINE QM3FIRST_M1(VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -345,10 +347,7 @@ C
 #include "magone.h"
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
-C defined parallel calculation types 
+C defined parallel calculation types
 #include "iprtyp.h"
 C
       CHARACTER*8 LABINT(9*MXCENT)
@@ -425,6 +424,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S1(WRK,LWRK,IPRTMP)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -438,9 +438,6 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
 
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL EXP1VL, TRIMAT
@@ -511,7 +508,7 @@ C
             CALL OUTPUT(WRK(KMAT+2*N2BASX),1,NBAST,1,NBAST,
      &           NBAST,NBAST,1,LUPRI)
          END IF
-C  
+C
          FAC1 = -1.0D0*CHARGE(IATNOW)
          CALL DAXPY(3*N2BASX,FAC1,WRK(KMAT),1,WRK(KVEC2),1)
          GO TO 187
@@ -531,6 +528,7 @@ C-----------------------------------------------------
       SUBROUTINE QM3FIRST_M2(RAX,RAY,RAZ,ENSAX,ENSAY,ENSAZ,LM,
      &                       VEC2,IATNOW,NOSIM,INUM,LNUM,WORK,LWORK)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -544,10 +542,7 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
-C defined parallel calculation types 
+C defined parallel calculation types
 #include "iprtyp.h"
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL EXP1VL, TRIMAT
@@ -636,6 +631,7 @@ C     Collect data from all slaves
 C-----------------------------------------------------
       SUBROUTINE QM3FIRST_S2(WRK,LWRK,IPRTMP)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -649,9 +645,6 @@ C-----------------------------------------------------
 
 #include "infpar.h"
 #include "mtags.h"
-#if defined(VAR_MPI)
-#include "mpif.h"
-#endif
       CHARACTER*8 LABINT(9*MXCENT)
       LOGICAL EXP1VL, TRIMAT
       DIMENSION INTREP(9*MXCENT), INTADR(9*MXCENT)
@@ -790,7 +783,7 @@ C     No more integrals to calculate
 C/* deck qm3b2 */
       SUBROUTINE QM3B2(EXPVAL,DENMAT,WORK,LWORK)
 C
-c This routine adds the MM solvent contribution 
+c This routine adds the MM solvent contribution
 c to the 2nd-order magnetic field perturbation due to the use of
 c London orbitals
 c Copenhagen, January 2006, K.Ruud
@@ -846,7 +839,7 @@ C
      *                    ' N(',L,') correction matrix '
                      CALL OUTPAK(WORK(KTMP),3,1,LUPRI)
                   END IF
-C  
+C
                   FAC1 = -1.0D0*CHARGE(IATNOW)
                   CALL DAXPY(6,FAC1,WORK(KTMP),1,EXPVAL,1)
                END DO

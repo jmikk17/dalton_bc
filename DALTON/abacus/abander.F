@@ -476,6 +476,7 @@ C
 C     Driver routine for numerical differentiation
 C
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -483,10 +484,6 @@ C
 #include "maxorb.h"
 #include "infpar.h"
 C
-c#if defined (VAR_MPI)
-c      INCLUDE 'mpif.h'
-c      LOGICAL FINISH
-c#endif
 #include "cbirea.h"
 #include "cbiwlk.h"
 #include "cbinum.h"
@@ -1295,13 +1292,14 @@ c     &                 FTVAL,SYMDET,RSTDON)
 c#else
      &                 SYMDET,RSTDON)
 c#endif
+c#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "maxorb.h"
       PARAMETER (D1 = 1.0D0, DM1 = -1.0D0, D0 = 0.0D0, DMAX=1.0D-15)
 c#if defined (VAR_MPI)
-c      INCLUDE 'mpif.h'
+c#include "mpi_header.h"
 c      DIMENSION my_STATUS(MPI_STATUS_SIZE)
 c      DIMENSION FTVAL(NINTIN,NDIME)
 c#endif
@@ -1791,13 +1789,14 @@ c#endif
 C
 C     Purpose: Get next geometry point for mumerical differentiation
 C
+c#include "mpi_mod.h"
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "mxcent.h"
       PARAMETER (D0=0.0D0)
 c#if defined (VAR_MPI)
-c      INCLUDE 'mpif.h'
+c#include "mpi_header.h"
 c      DIMENSION FTVAL(NINTIN,NDIME)
 c#endif
 c#if defined (VAR_MPI2)

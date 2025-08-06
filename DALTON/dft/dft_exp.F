@@ -41,7 +41,7 @@ cfrj-end
          CALL QUIT('ERROR: .EXPGRA not implemented for open-shell DFT')
       END IF
       DOGGA = DFT_ISGGA()
-C      
+C
 c     CALL DZERO(tmpvec,MXPRIM)
 c
       NDMAT = 1
@@ -61,12 +61,12 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KLAST),LWRK)
       END
 C
       SUBROUTINE KICK_SLAVES_EXPG(NBAST,NDMAT,DMAT,IPRINT)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
 #include "priunit.h"
 #include "infpar.h"
-#include "mpif.h"
 C
       DIMENSION DMAT(NBAST,NBAST,NDMAT)
       IF (MYNUM .EQ. MASTER) THEN
@@ -79,7 +79,7 @@ cfrj: define new IPRTYP for expgrad
          CALL DFTINTBCAST
          CALL MPI_BCAST(NDMAT,1,my_MPI_INTEGER,0,MPI_COMM_WORLD,IERR)
          CALL MPI_BCAST(DMAT,NDMAT*NBAST*NBAST,MPI_DOUBLE_PRECISION,0,
-     &                  MPI_COMM_WORLD,IERR)        
+     &                  MPI_COMM_WORLD,IERR)
       END IF
       RETURN
 #endif
@@ -87,6 +87,7 @@ cfrj: define new IPRTYP for expgrad
 c
 #if defined (VAR_MPI)
       SUBROUTINE DFT_EXPG_SLAVE(WORK,LWORK,IPRINT)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -95,7 +96,6 @@ c
 #include "inforb.h"
 #include "dftmolgrad.h"
 #include "energy.h"
-#include "mpif.h"
 #include "expopt.h"
       DIMENSION WORK(LWORK)
       EXTERNAL DEXPGC
@@ -110,7 +110,7 @@ C
       CALL DFTINTBCAST
       CALL MPI_BCAST(NDMAT,1,my_MPI_INTEGER,0,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WORK(KDMAT),NDMAT*NBAST*NBAST,MPI_DOUBLE_PRECISION,
-     &               0,MPI_COMM_WORLD,IERR)       
+     &               0,MPI_COMM_WORLD,IERR)
 c     CALL DZERO(tmpvec,MXPRIM)
       CALL DFTINT(WORK(KDMAT),NDMAT,0,.FALSE.,WORK(KFREE),LFREE,
      &               DEXPGC,WORK(KDMAT),ELE)
@@ -120,10 +120,10 @@ c     CALL EXPGSLAVE_COLLECT(tmpvec,WORK(KFREE),LFREE)
 #endif
 c
       SUBROUTINE EXPGSLAVE_COLLECT(GRADMOL,WORK,LWORK)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpif.h"
 #include "maxorb.h"
       DIMENSION GRADMOL(MXPRIM), WORK(LWORK)
       CALL DCOPY(MXPRIM,GRADMOL,1,WORK(1),1)
@@ -149,9 +149,9 @@ C /* Deck dftexp */
       LOGICAL DFT_ISGGA,DOGGA
       EXTERNAL DFT_ISGGA
       DIMENSION VX(5), VXC(NBLEN), VXB(NBLEN)
-C     
+C
       DOGGA = DFT_ISGGA()
-C     
+C
       IF (DOGGA) THEN
          DO I = 1, NBLEN
             GRDNRM = SQRT(GRADA(1,I)**2 + GRADA(2,I)**2 + GRADA(3,I)**2)
@@ -180,7 +180,7 @@ C
 C
 C     Exchange-correlation contribution to orbital-exponent gradient
 C
-C     T. Helgaker dec 02 
+C     T. Helgaker dec 02
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -193,11 +193,11 @@ C
 C
 #include "inforb.h"
 C
-      LOGICAL DOGGA 
-      DIMENSION DMAT(NBAST,NBAST), 
+      LOGICAL DOGGA
+      DIMENSION DMAT(NBAST,NBAST),
      &          GAO(NBLEN,NBAST), GAO1(NBLEN,NBAST,3),
      &          NBLCNT(8),NBLOCKS(2,LDAIB,8)
-      DIMENSION GA10(MXAQN), GB00VC(MXAQN), 
+      DIMENSION GA10(MXAQN), GB00VC(MXAQN),
      &          GA11(MXAQN), GB00VB(MXAQN), GB01VB(MXAQN)
 C
 #include "energy.h"
@@ -234,21 +234,21 @@ C
 C
 C              GB00VC, GB00VB, and GB01VB
 C
-               DO ICOMPA = 1, KHKTA 
+               DO ICOMPA = 1, KHKTA
                   FAC = PT(IAND(ISYMOP,
      &                     IEOR(IREPA,ISYMAO(NHKTA,ICOMPA))))
                   IA = IPTSYM(IORBA+ICOMPA,IREPA)
-                  GD = D0 
-                  DO IB = ISTR, IEND 
+                  GD = D0
+                  DO IB = ISTR, IEND
                      GD = GD + GAO(1,IB)*DMAT(IB,IA)
                   END DO
                   GB00VC(ICOMPA) = D2*FAC*VXC*GD
                   IF (DOGGA) THEN
-                     G0 = D0 
-                     G1 = D0 
-                     DO IB = ISTR, IEND 
+                     G0 = D0
+                     G1 = D0
+                     DO IB = ISTR, IEND
                         G0 = G0 + DMAT(IB,IA)*GAO(1,IB)
-                        G1 = G1 + DMAT(IB,IA)*(RHX*GAO1(1,IB,1) 
+                        G1 = G1 + DMAT(IB,IA)*(RHX*GAO1(1,IB,1)
      &                                       + RHY*GAO1(1,IB,2)
      &                                       + RHZ*GAO1(1,IB,3))
                      END DO
@@ -278,15 +278,15 @@ C
                      C1 = (D2*(L+M+N) + D3)/(D4*ALPHA) - PA2
                      CI = (PAX**L)*(PAY**M)*(PAZ**N)*C1*GA
                      IF (SPHRA) THEN
-                        IOFF = ISPADR(NHKTA) + (ICOMPA-1)*KHKTA - 1 
+                        IOFF = ISPADR(NHKTA) + (ICOMPA-1)*KHKTA - 1
                         DO K = 1, KHKTA
                            GA10(K) = GA10(K) + CSP(IOFF+K)*CI
                         END DO
                      ELSE
-                        GA10(ICOMPA) = CI 
+                        GA10(ICOMPA) = CI
                      END IF
                   END DO
-                  DO ICOMPA = 1, KHKTA 
+                  DO ICOMPA = 1, KHKTA
                      ALPGRD(I) = ALPGRD(I) + GA10(ICOMPA)*GB00VC(ICOMPA)
                   END DO
 C
@@ -318,15 +318,15 @@ C
                         END IF
                         CI = RHX*TX + RHY*TY + RHZ*TZ
                         IF (SPHRA) THEN
-                           IOFF = ISPADR(NHKTA) + (ICOMPA-1)*KHKTA - 1 
+                           IOFF = ISPADR(NHKTA) + (ICOMPA-1)*KHKTA - 1
                            DO K = 1, KHKTA
                               GA11(K) = GA11(K) + CSP(IOFF+K)*CI
                            END DO
                         ELSE
-                           GA11(ICOMPA) = CI 
+                           GA11(ICOMPA) = CI
                         END IF
                      END DO
-                     DO ICOMPA = 1, KHKTA 
+                     DO ICOMPA = 1, KHKTA
                         ALPGRD(I)=ALPGRD(I)+GA11(ICOMPA)*GB00VB(ICOMPA)
      &                                     +GA10(ICOMPA)*GB01VB(ICOMPA)
                      END DO

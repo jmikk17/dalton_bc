@@ -29,11 +29,11 @@
 !
 !     Written by Jeppe Olsen , winter of 1991
 !                          GAS version in action summer of 95
-! 
+!
 !     General restructuring and parallel version: Stefan Knecht spring 2007 - ???
 !
 !     This routine is originally called from dalton sirius.
-!     In the case of a parallel run, the relevant nodes will be 
+!     In the case of a parallel run, the relevant nodes will be
 !     woken up and sent to sleep.
 !
       use lucita_mcscf_ci_cfg
@@ -41,6 +41,7 @@
 !     parallel lucita
 #ifdef VAR_MPI
       use sync_coworkers
+      use dalton_mpi_interface
 #endif
       implicit none
 
@@ -55,17 +56,16 @@
       real(8),           intent(inout) :: int2_or_rho2(*)
 !------------- end of optional input depending on MCSCF/CI run -----------------
 !
-!     stefan: 'optional' is meant such that all parameters have to appear in the 
-!             calling list to LUCITA (since we call it from outside a .F90 file) 
-!             but it is not guaranteed that these are actually allocated 
-!             (memory taken from the Dalton WORK array; if it had been for f90 allocation 
+!     stefan: 'optional' is meant such that all parameters have to appear in the
+!             calling list to LUCITA (since we call it from outside a .F90 file)
+!             but it is not guaranteed that these are actually allocated
+!             (memory taken from the Dalton WORK array; if it had been for f90 allocation
 !             in Dalton i could have placed all the stuff in a module... ;))
 !             Odense, July 2011.
-!             
+!
 !
 
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(MPI_INTEGER_KIND):: my_STATUS(MPI_STATUS_SIZE)
 #endif
 #include "maxorb.h"
@@ -88,10 +88,10 @@
 
 !     set the ci-task id
       lucita_ci_run_id = run_id
- 
+
 #ifdef VAR_MPI
 
-      IF (LUCI_NMPROC .GT. 1) then 
+      IF (LUCI_NMPROC .GT. 1) then
 !       summon the co-workers, who are waiting in the general menu routine
         call lucita_start_cw(-1)
 
@@ -108,8 +108,8 @@
         call sync_coworkers_cfg()
       end if
 #endif
- 
-!     set marker on incoming work space 
+
+!     set marker on incoming work space
       call memget('REAL',k1,1,wrk_dalton,kfree,lfree)
 !     allocate resolution matrix (may have length 0 depending on the lucita_ci_run_id)
       call memget('REAL',k_resolution_mat,len_resolution_mat_mc2lu,     &
@@ -127,10 +127,10 @@
 
 !     release marker on incoming work space
       call memrel('lucita.done',wrk_dalton,kfrsav,kfrsav,kfree,lfree)
-      
+
       end
 !**********************************************************************
- 
+
       SUBROUTINE LUCITA_DRIVER(WRK_DALTON,                              &
                                LWRK_DALTON,                             &
                                cref,                                    &
@@ -221,7 +221,7 @@
       if(lucita_ci_run_id == 'standard ci ') call hello_dalton_lucita
 
 
-!     set LUCITA internal orbital and string common block information 
+!     set LUCITA internal orbital and string common block information
 !     ---------------------------------------------------------------
       call setup_lucita_orbital_string_cb(lucita_cfg_initialize_cb,     &
                                           iprorb)
@@ -234,8 +234,8 @@
                                               luci_nmproc,              &
                                               mx_nr_files_lucipar,      &
                                               luwrt)
- 
-!     set LUCITA internal work space pointers 
+
+!     set LUCITA internal work space pointers
 !     ---------------------------------------
 !     part 1 - generate string and integral pointers on work space + possibly read in integrals.
       call setup_lucita_pointer_strings_work_space(icspc,icsm,iprorb)
@@ -319,7 +319,7 @@
                                          ptask_distribution%active_csym)&
                                          ,nblock,1,1,.false.,.true.)
       end if
-     
+
 !#define LUCI_DEBUG
 #ifdef LUCI_DEBUG
       write(lupri,'(/a)')                                               &
@@ -381,7 +381,7 @@
       character(len=24)      :: lucifiln
       integer                :: outfile_node
       integer                :: k1, kymat,kfree, kfrsav, lfree
-      integer                :: kcref, khc, kresolution_mat 
+      integer                :: kcref, khc, kresolution_mat
       integer                :: kint1_or_rho1, kint2_or_rho2
       integer                :: lupri_save, lufil, print_lvl
       integer                :: active_xc_vector_type
@@ -410,7 +410,7 @@
 !     shared file systems. Otherwise all the output gets mingled in one
 !     file. You don't really want to do this.
       if(.not.file_open)then
-        
+
         lucitabasf   = "lucita-coworkers.out"
         lupri_save   = lupri
         outfile_node = 6
@@ -459,7 +459,7 @@
 !     start synchronization process
       call sync_coworkers_cfg()
 
-!     set marker on incoming work space 
+!     set marker on incoming work space
       call memget('REAL',k1,1,work_dalton,kfree,lfree)
 
       print_lvl = 0
@@ -485,7 +485,7 @@
           if(lucita_cfg_initialize_cb)then
            call parallel_task_distribution_free_lucipar(                &
                 ptask_distribution)
-          end if     
+          end if
 !         enter the LUCITA driver -- joining the master
 !         ---------------------------------------------
           call lucita_driver(work_dalton(kfree),lfree,                  &
@@ -499,7 +499,7 @@
 !         ------------------------------------------------------------------
           active_xc_vector_type   = vector_exchange_type1
           type2                   = .false.
-          if(active_xc_vector_type < 0)then 
+          if(active_xc_vector_type < 0)then
             active_xc_vector_type = vector_exchange_type2
             type2                 = .true.
           end if

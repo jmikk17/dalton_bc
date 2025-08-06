@@ -132,13 +132,13 @@ C Cut string SRFTMP
             SRDFT_SPINDNS   = .TRUE.
             write (lupri,*) 'SRDFT_LOCALSPIN activated! ',SRLOCALSPIN
             ! Do not quit if field 3 not used here.
-            ! field 3 might be mu_0 for SRCPBERI below 
+            ! field 3 might be mu_0 for SRCPBERI below
             ! 160523-hjaaj
          ELSE IF (SRLOCALSPIN .EQ. 'NO_SPINDENSITY') THEN
             SRDFT_SPINDNS = .FALSE.
          END IF
       END IF
-      
+
       DO I = 1, NXCTABLE
         IF (XCTABLE(I) .EQ. SRXCFUN) THEN
           GO TO (301, 302, 303, 304, 305, 306, 307),I
@@ -246,7 +246,7 @@ C  based on DOSRX_LDA_S of JT for mu=0
 115   DOLAX_LDAS = .TRUE.
       ISJT    = .TRUE.
       GO TO 15
-C  based on standard dalton DOSRX_LDA for mu=0 (KS 2011) 
+C  based on standard dalton DOSRX_LDA for mu=0 (KS 2011)
 116   DOLAX_LDA = .TRUE.
       GO TO 15
 C  Complement exchange PBE functional (KS 08-08-11)
@@ -283,11 +283,11 @@ C Short-range wPBE exchange functional (erk 27 feb. 19)
       GO TO 20
 
 C     No correlation functional
-201   ISJT      = .TRUE. 
+201   ISJT      = .TRUE.
       GO TO 20 ! NULL
 C     No description
 202   DOSRC_LDA = .TRUE.
-      ISJT      = .TRUE. 
+      ISJT      = .TRUE.
       GO TO 20
 C     No description
 203   DOSRC_GGA = .TRUE.
@@ -326,7 +326,7 @@ C     Short-range correlation PBE TCS J functional
 C     Rational interpolation
 212   DOSRC_PBERI = .TRUE.
       ISJT    = .TRUE.
-      IF (nfld .ge. 3 .AND. .NOT.SRDFT_LOCALSPIN .AND. 
+      IF (nfld .ge. 3 .AND. .NOT.SRDFT_LOCALSPIN .AND.
      &   (.NOT. SRLOCALSPIN .EQ. 'NO_SPINDENSITY')) THEN
          read (fields(3),*) MU_0
          mu_0_m4 = mu_0 ** (-4)
@@ -346,16 +346,16 @@ C     Weighted interpolation
       GO TO 20
 C Short-range correlation PBE function of GWS (JT 11-08-09)
 215   DOSRC_PBEGWS = .TRUE.
-      ISJT         = .TRUE. 
+      ISJT         = .TRUE.
       GO TO 20
 C Short-range spin-dependent correlation LDA function (JT 18-08-09)
 216   DOSRC_LDA = .TRUE.
-      ISJT    = .TRUE. 
+      ISJT    = .TRUE.
       GO TO 20
 C     SRCMULO_B :
 C Short-range LDA type correlation functional with lokal mu value
 C of mu=2*sqrt(alpha/pi)/sqrt(r_s)
-217   DOSRC_MULOCAL(0) = .TRUE.   
+217   DOSRC_MULOCAL(0) = .TRUE.
       DOSRC_MULOCAL(2) = .TRUE.
       GO TO 20
 C     SRCMULO_C :
@@ -374,7 +374,7 @@ C Extension of the SRCMULO_A functional: XMULFAC depends on grd/rho
       ISJT = .TRUE.
       GO TO 20
 C Short-range correlation LDA function with multideterminant reference (for OEP) (JT 26-08-11)
-C ... or for RSDHf calculations (Manu 06-12-2012) 
+C ... or for RSDHf calculations (Manu 06-12-2012)
 221   DOSRC_MD_LDA = .TRUE.
 !     IF(DOSRX_OEP) THEN
 !      DOSRXC_NOLRSYS=.TRUE.
@@ -405,7 +405,7 @@ C Non-scaled Complement correlation LYP functional (KS 08-08-11)
 C Scaled complement correlation LYP functional (KS 08-08-11)
 228   DOLASC_GGALYP = .TRUE.
       GO TO 20
-C Rational interpolation LYP functional                             
+C Rational interpolation LYP functional
 229   DOSRC_LYPRI = .TRUE.
       ISJT    = .TRUE.
       GO TO 20
@@ -518,14 +518,13 @@ C    Created: Jesper Kielberg Pedersen, Mar. 2003
 C    Modified: 17-08-09, J. Toulouse, add spin density matrix
 C*****************************************************************************
       use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-!  mpif.h   : for MPI
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
-      integer(kind=MPI_INTEGER_KIND) :: my_MPI_SUM   = MPI_SUM  
+      integer(kind=MPI_INTEGER_KIND) :: my_MPI_SUM   = MPI_SUM
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, len_mpi
 #endif
 
@@ -901,11 +900,11 @@ C     Purpose : Calculate DFT-energy and potential contribution for
 C               SR-DFT hybrid methods.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
       integer(mpi_integer_kind) :: ierr_mpi
 #endif
 
@@ -1348,7 +1347,7 @@ C     -------------------------------------------------------
       IF (DOSRX_GGA) THEN
           CALL VXSRGGA(XKSR,RHO,RHO13,RHOGRD,RHOLAP,RHOGHG,
      &                 CHIVAL,ERFEXP)
-      END IF 
+      END IF
 
       IF (DOLAX_GGABCK) THEN
           CALL VLAXBEK(XKSR,RHO,RHO13,RHOGRD,RHOLAP,RHOGHG,
@@ -1431,7 +1430,7 @@ C  NON-SCALED
           CALL VNCLALYP(ZKSR,RHO,RHO13,RHOGRD,RHOLAP,VLAMBDA)
       END IF
 
-C SCALED 
+C SCALED
 
       IF (DOLASC_GGALYP) THEN
           CALL VSCLALYP(ZKSR,RHO,RHO13,RHOGRD,RHOLAP,VLAMBDA)
@@ -1442,7 +1441,7 @@ C SCALED
           CALL VLYP(ZKSR(2,1),RHO,RHO13,RHOGRD,RHOLAP)
           IF (IWINT.EQ.1) THEN
              CALL VCSRLDA(ZMU,RHO,RHO13,CHIVAL,DOSRC_MULOCAL,1,ERFEXP)
-  
+
              CALL WVWN(VLDA,RHO,RHO13,ELDA,.TRUE.,.TRUE.)
              ZKSR(1,1) = ZKSR(1,1) - ELDA*RHO
              ZKSR(2,1) = ZKSR(2,1) - VLDA
@@ -1475,7 +1474,7 @@ C SCALED
           ZKSR(1,2) = EL
           ZKSR(2,2) = VL
       ENDIF
-      
+
       RETURN
       END
 
@@ -1831,16 +1830,16 @@ C
 C     EJCSR =  0.5 * Tr (D^c . J^sr . D^c)
 C     EJVSR = -0.5 * Tr (D^{v,ref} . J^sr . D^{v,ref})
 C     EDSR  = -1.0 * Tr (V^{sr,ref}_{xc} . D^{v,ref})
-C     ESRDFT  = E^{sr}_{xc} [D^c+D^{v,ref}] 
+C     ESRDFT  = E^{sr}_{xc} [D^c+D^{v,ref}]
 C
-C     23-Aug-2012 modified by Manu 
-C   
+C     23-Aug-2012 modified by Manu
+C
 C     * added a new argument, EMYDFTAUX, that contains the inactive
 C       short-range contributions to auxiliary energy:
 C
 C       EMYDFTAUX = 1.0 * Tr (D^c . J^sr . D^c)
 C                  +1.0 * Tr (D^{v,ref} . J^sr . D^c)
-C                  +1.0 * Tr (V^{sr,ref}_{xc} . D^c) 
+C                  +1.0 * Tr (V^{sr,ref}_{xc} . D^c)
 C       UEJCVSR   = 1.0 * Tr (D^{v,updated} . J^sr . D^c)
 C
 C     * Note that for ensemble CI-srDFT, D^{v,ref} should be, here, equal to the
@@ -1910,11 +1909,11 @@ C        only Coulomb (Hartree) term
       EJCSR   =  DP5*DDOT(N2BASX,WRK(KDCAO),1,WRK(KFCAO),1)
       EJVSR   = -DP5*DDOT(N2BASX,WRK(KDVAO),1,WRK(KFVAO),1)
       UEJCVSR =      DDOT(N2BASX,WRK(KDCAO),1,WRK(KFVAO),1)
-     
+
 C Manu: compute first and second terms in EMYDFTAUX
 
-      EMYDFTAUX = 2.0D0*EJCSR 
-      EMYDFTAUX = EMYDFTAUX 
+      EMYDFTAUX = 2.0D0*EJCSR
+      EMYDFTAUX = EMYDFTAUX
      &         +DDOT(N2BASX,WRK(KDCAO),1,WRK(KFVAO),1)
 
       IF (IPRINT.GT.9) THEN
@@ -2009,7 +2008,7 @@ C*****************************************************************************
 C
 C     !> brief: calculate various terms needed to make a variational ensemble energy
 C     !> author: S. Knecht and E. Fromager based on the routine by J. K. Pedersen
-C     
+C
 C     EJCSR =  0.5 * Tr (D^c . J^sr . D^c)
 C     EJVSR = -0.5 * Tr (D^{v,ref} . J^sr . D^{v,ref})
 C     EDSR  = -1.0 * Tr (V^{sr,ref}_{xc} . D^{v,ref})
@@ -2018,7 +2017,7 @@ C     uEDFT(2:3) = exchange and correlation contributions, respectively
 C
 C     !> input: ensemble density matrices D^{v,ref}, D^{v,upd} and D^{v,diff} = D^{v,upd}-D^{v,ref}
 C*****************************************************************************
- 
+
 #include "implicit.h"
       REAL*8    FMAT(*),CMO(*),UDVREF(*),DVREF(*),DIFFDVREF(*),WRK(*)
       REAL*8    uEDFT(3)

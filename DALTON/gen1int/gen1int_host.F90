@@ -46,6 +46,7 @@
                                num_prim, num_contr, KPRIM, exponents,        &
                                ucontr_coefs)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
     integer, intent(in) :: num_comp
     integer, intent(in) :: num_atom_type
@@ -63,7 +64,7 @@
     real(REALK), intent(in) :: ucontr_coefs(KPRIM,KPRIM,KBLOCK,num_comp)
     logical :: mpi_sync = .true.
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #include "iprtyp.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
@@ -97,8 +98,9 @@
   !> \date 2012-05-13
   subroutine gen1int_worker_init
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
     ! initializes API of Gen1Int by information from manager processor
@@ -175,6 +177,7 @@
                                   active_component_pairs,         &
                                   io_viewer, level_print)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
     integer,       intent(in)    :: gto_type
     character*(*), intent(in)    :: prop_name
@@ -215,7 +218,7 @@
     type(nary_tree_t) nary_tree_ket    !N-ary tree for partial geometric derivatives on ket center
     type(nary_tree_t) nary_tree_total  !N-ary tree for total geometric derivatives
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #include "iprtyp.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
@@ -292,7 +295,9 @@
   !> \param level_print is the level of print
   subroutine gen1int_worker_get_int(len_work, wrk_space, io_viewer, level_print)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
+#include "mpi_header.h"
     integer, intent(in) :: len_work
     real(REALK), intent(inout) :: wrk_space(len_work)
     integer, intent(in) :: io_viewer
@@ -305,7 +310,6 @@
     type(nary_tree_t) nary_tree_bra    !N-ary tree for partial geometric derivatives on bra center
     type(nary_tree_t) nary_tree_ket    !N-ary tree for partial geometric derivatives on ket center
     type(nary_tree_t) nary_tree_total  !N-ary tree for total geometric derivatives
-#include "mpif.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi
     integer(kind=MPI_INTEGER_KIND) :: ierr_mpi !MPI error information
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
@@ -368,6 +372,7 @@
                                    active_component_pairs,         &
                                    io_viewer, level_print)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
     integer,       intent(in)    :: gto_type
     character*(*), intent(in)    :: prop_name
@@ -411,7 +416,7 @@
     type(nary_tree_t) nary_tree_total  !N-ary tree for total geometric derivatives
     integer idens                      !incremental recorder over AO density matrices
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #include "iprtyp.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi
     integer(kind=MPI_INTEGER_KIND) :: ierr_mpi !MPI error information
@@ -496,7 +501,9 @@
   !> \param level_print is the level of print
   subroutine gen1int_worker_get_expt(len_work, wrk_space, io_viewer, level_print)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
+#include "mpi_header.h"
     integer, intent(in) :: len_work
     real(REALK), intent(inout) :: wrk_space(len_work)
     integer, intent(in) :: io_viewer
@@ -510,7 +517,6 @@
     type(nary_tree_t) nary_tree_bra          !N-ary tree for partial geometric derivatives on bra center
     type(nary_tree_t) nary_tree_ket          !N-ary tree for partial geometric derivatives on ket center
     type(nary_tree_t) nary_tree_total        !N-ary tree for total geometric derivatives
-#include "mpif.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
@@ -699,6 +705,7 @@
     use gen1int_matrix
     use gen1int_api
     use gen1int_cube
+#include "mpi_mod.h"
     implicit none
     integer, intent(in) :: len_work
     real(REALK), intent(inout) :: wrk_space(len_work)
@@ -733,7 +740,7 @@
     integer imo                                       !incremental recorder over MOs
     integer use_MPI_save
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
 #include "iprtyp.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
@@ -856,7 +863,7 @@
       ! reads the molecular orbital coefficients
       wrk_space(1:NCMOT) = 0.0_8
 #ifdef PRG_DIRAC
-      print *, 
+      print *,
       call quit('error: RD_SIRIFC not available in DIRAC')
 #else
       call RD_SIRIFC("CMO", found, wrk_space(1))
@@ -903,7 +910,7 @@
         end_ao = start_ao+NBAST
         start_ao = start_ao+1
         imo = imo+1
-        call MatSetValues(mo_coef, 1, NBAST, imo, imo, & 
+        call MatSetValues(mo_coef, 1, NBAST, imo, imo, &
                           values=wrk_space(start_ao:end_ao), trans=.false.)
       end if
       ! evaluates MOs at points in cube file
@@ -1028,12 +1035,13 @@
     use gen1int_matrix
     use gen1int_api
     use gen1int_cube
+#include "mpi_mod.h"
     implicit none
+#include "mpi_header.h"
     integer, intent(in) :: len_work
     real(REALK), intent(inout) :: wrk_space(len_work)
     integer, intent(in) :: io_viewer
     integer, intent(in) :: level_print
-#include "mpif.h"
     return
   end subroutine gen1int_worker_get_cube
 #endif
@@ -1283,10 +1291,10 @@
 !FIXME: the last argument is symmetric AO density matrix
         if (HERM_PROP(itest)(1:7)=="CM1    ") then
           FIELD1 = 'X-FIELD'
-          call PR1IN1(wrk_space(end_herm_int+1:), base_free, len_free, int_rep, & 
-                      int_adr, lb_int, HERM_PROP(itest)(1:7), ORDER_MOM(itest), & 
-                      NUM_PQUAD, TRIANG(itest), PROP_PRINT, level_print,        & 
-                      wrk_space, NCOMP, TOFILE, MTFORM, DOINT,                  & 
+          call PR1IN1(wrk_space(end_herm_int+1:), base_free, len_free, int_rep, &
+                      int_adr, lb_int, HERM_PROP(itest)(1:7), ORDER_MOM(itest), &
+                      NUM_PQUAD, TRIANG(itest), PROP_PRINT, level_print,        &
+                      wrk_space, NCOMP, TOFILE, MTFORM, DOINT,                  &
                       wrk_space(end_herm_int+1:), GET_EXPT, wrk_space(end_herm_int+1:))
           FIELD1 = 'Y-FIELD'
           call PR1IN1(wrk_space(end_herm_int+1:), base_free, len_free, int_rep,  &
@@ -1420,6 +1428,7 @@
                                       active_component_pairs,         &
                                       prop_comp)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
     integer,           intent(in)    :: gto_type
     character*(*),     intent(in)    :: prop_name
@@ -1441,7 +1450,7 @@
     type(prop_comp_t), intent(inout) :: prop_comp
     integer len_name  !length of property name
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
@@ -1501,7 +1510,9 @@
   !> \return prop_comp is the operator of property integrals with non-zero components
   subroutine gen1int_worker_prop_create(io_viewer, level_print, prop_comp)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
+#include "mpi_header.h"
     integer,           intent(in)    :: io_viewer
     integer,           intent(in)    :: level_print
     type(prop_comp_t), intent(inout) :: prop_comp
@@ -1523,7 +1534,6 @@
     logical add_london
     integer len_name  !length of property name
     integer ierr      !error information
-#include "mpif.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
@@ -1593,6 +1603,7 @@
                                       io_viewer, level_print,        &
                                       nary_tree_bra, nary_tree_ket, nary_tree_total)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
     integer,           intent(in)    :: max_ncent_bra
     integer,           intent(in)    :: order_geo_bra
@@ -1612,7 +1623,7 @@
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #if defined(VAR_MPI)
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
@@ -1679,7 +1690,9 @@
   !> \return nary_tree_total is the N-ary tree for total geometric derivatives
   subroutine gen1int_worker_geom_create(io_viewer, level_print, nary_tree_bra, nary_tree_ket, nary_tree_total)
     use gen1int_api
+#include "mpi_mod.h"
     implicit none
+#include "mpi_header.h"
     integer,           intent(in)    :: io_viewer
     integer,           intent(in)    :: level_print
     type(nary_tree_t), intent(inout) :: nary_tree_bra
@@ -1699,7 +1712,6 @@
     integer num_geo_atoms
     integer, allocatable :: idx_geo_atoms(:)
     integer ierr  !error information
-#include "mpif.h"
     integer(kind=MPI_INTEGER_KIND) :: count_mpi, ierr_mpi
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
     integer(kind=MPI_INTEGER_KIND), parameter :: my_MPI_COMM_WORLD = MPI_COMM_WORLD
@@ -1722,7 +1734,7 @@
     call MPI_Bcast(num_atoms_ket, count_mpi, MPI_INTEGERK, manager_mpi, my_MPI_COMM_WORLD, ierr_mpi)
     if (num_atoms_ket>0) then
       allocate(idx_atoms_ket(num_atoms_ket), stat=ierr)
-      if (ierr/=0) then          
+      if (ierr/=0) then
         call quit("gen1int_worker_geom_create>> failed to allocate idx_atoms_ket!")
       end if
       count_mpi = num_atoms_ket
@@ -1828,7 +1840,7 @@
     if (get_dv) then
       wrk_space(start_dv_mo:start_dv_mo+NNASHX-1) = 0.0_8
 #ifdef PRG_DIRAC
-      print *,'error: RD_SIRIFC not available in DIRAC' 
+      print *,'error: RD_SIRIFC not available in DIRAC'
       call quit('error: RD_SIRIFC not available in DIRAC')
 #else
       call RD_SIRIFC("DV", found, wrk_space(start_dv_mo))

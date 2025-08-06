@@ -18,14 +18,7 @@ module parallel_setup
   use communication_model
   use file_io_model
 
-#ifdef USE_MPI_MOD_F90
-  use mpi
-  implicit none
-#else
-  implicit none
-#include "mpif.h"
-
-#endif
+  use dalton_mpi_interface
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8
@@ -51,7 +44,7 @@ contains
                                          rcctos,nblock,mxciv,nroot)
 !******************************************************************************
 !
-!    purpose:  
+!    purpose:
 !
 !*******************************************************************************
 #include "parluci.h"
@@ -68,12 +61,12 @@ contains
      integer,                      allocatable :: grouplist_shared_mem(:)
      real(8),                      allocatable :: tmp_block_scaling_fac(:)
 !-------------------------------------------------------------------------------
- 
+
       allocate(grouplist_shared_mem(luci_nmproc))
       grouplist_shared_mem = -1
 
-      
-!     all important variables (input parameters to module) 
+
+!     all important variables (input parameters to module)
 !     are stored on common block /LUPARGROUP/
 
 !     step 1: setup the communication model
@@ -105,8 +98,8 @@ contains
                                      n_master_sm,                     &
                                      n_master_sm_c,                   &
                                      lupri)
-     
-  
+
+
 !     free currently unused shared-memory group list
       deallocate(grouplist_shared_mem)
 
@@ -125,14 +118,14 @@ contains
         deallocate(tmp_block_scaling_fac)
       end if
 
-!     step 3: organize MPI file I/O offsets with the following ordering: 
+!     step 3: organize MPI file I/O offsets with the following ordering:
 !     ------------------------------------------------------------------
 !     iref, ilu1, ilu2, idia, iluc, ilu[3-7]
 
       if(.not.file_info%file_type_init)then
         call file_init_lucipar(file_info, mxciv, nroot)
         file_info%file_type_init = .true.
-      else 
+      else
         return
       end if
 
@@ -180,7 +173,7 @@ contains
                                newcomm_proc,                         &
                                'parci',                              &
                                lupri)
-  
+
 !     transfer file handles to common block /LUCIAPFILE/ (in parluci.h)
       ILUR = file_info%fh_lu( 1)
       ILU1 = file_info%fh_lu( 2)

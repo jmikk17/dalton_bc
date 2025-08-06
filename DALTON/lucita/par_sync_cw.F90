@@ -7,7 +7,7 @@
 module sync_coworkers
 
 ! stefan: - this module provides all necessary functionality
-!           to synchronize the co-workers in parallel mcscf/ci 
+!           to synchronize the co-workers in parallel mcscf/ci
 !           calculations.
 !
 !           written by sknecht for DALTON, december 2010.
@@ -16,13 +16,7 @@ module sync_coworkers
   use lucita_mcscf_ci_cfg
   use vector_xc_file_type
   use file_type_module, only : file_type, file_info
-#ifdef USE_MPI_MOD_F90
-  use mpi
-  implicit none
-#else
-  implicit none
-#include "mpif.h"
-#endif
+  use dalton_mpi_interface
 
 #if defined (VAR_INT64)
 #define my_MPI_INTEGER MPI_INTEGER8
@@ -49,8 +43,8 @@ module sync_coworkers
 #include "dgroup.h"
 #endif
 
-contains 
- 
+contains
+
   subroutine sync_coworkers_cfg(xarray1,xarray2)
 !******************************************************************************
 !
@@ -63,7 +57,7 @@ contains
     integer                          :: select_sync
 !-------------------------------------------------------------------------------
 
-      select_sync = 0     
+      select_sync = 0
 
       do ! loop over synchronization processes
 
@@ -202,7 +196,7 @@ contains
 !           call dalton_mpi_bcast(lucita_cfg_ras1_set,        0, my_comm_world)
 !           call dalton_mpi_bcast(lucita_cfg_ras2_set,        0, my_comm_world)
 !           call dalton_mpi_bcast(lucita_cfg_ras3_set,        0, my_comm_world)
-!           integer 
+!           integer
 !           call dalton_mpi_bcast(nas1_lucita,                0, my_comm_world)
 !           call dalton_mpi_bcast(nas2_lucita,                0, my_comm_world)
 !           call dalton_mpi_bcast(nas3_lucita,                0, my_comm_world)
@@ -227,7 +221,7 @@ contains
 !-------------------------------------------------------------------------------
 
 !     logical
-        
+
       call dalton_mpi_bcast(docisrdft_mc2lu,                  0,my_comm_world)
       srdft_ci_with_lucita = docisrdft_mc2lu
       call dalton_mpi_bcast(integrals_from_mcscf_env,         0,my_comm_world)
@@ -280,7 +274,7 @@ contains
   subroutine sync_coworkers_ij_abcd(xarray1,xarray2)
 !******************************************************************************
 !
-!    purpose:  provide co-workers with 1-/2-electron integrals in parallel 
+!    purpose:  provide co-workers with 1-/2-electron integrals in parallel
 !              CI/MCSCF runs.
 !
 !******************************************************************************
@@ -346,15 +340,15 @@ contains
       set_sync_default_val = set_value_sync_ctrl_array
 
       call dalton_mpi_bcast(set_sync_default_val, 0, my_comm_world)
-     
+
 !     insert value in ctrl-array
       sync_ctrl_array(sync_ctrl_array_pos) = set_sync_default_val
 
   end subroutine set_sync_default
 !******************************************************************************
-  
+
 end module
-#else 
+#else
 subroutine sync_coworkers
 ! dummy routine for non-mpi compilation
 end

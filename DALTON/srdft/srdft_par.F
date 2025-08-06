@@ -36,6 +36,7 @@ C  Parameter list same as for subroutine SRDFT,
 C  see SRDFT for an explanation of the parameters.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
       implicit none
       logical :: DOERG,DO_MOLGRAD,DOATR,TRIPLET
       integer :: ND_SIM, LWORK, IPRINT_in
@@ -44,8 +45,6 @@ C*****************************************************************************
 
 #include "priunit.h"
 
-!  mpif.h   : for MPI
-#include "mpif.h"
 
 
 ! Used from include files:
@@ -177,12 +176,11 @@ C
 C  Node (slave) driver for parallel integration over srdft functional.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
       implicit none
       integer :: LWORK, IPRINT_in
       real*8 :: WORK(LWORK)
 
-!  mpif.h   : for MPI
-#include "mpif.h"
 
       logical :: DOERG,DO_MOLGRAD,DOATR,TRIPLET
       integer :: ND_SIM, NDMAT, NEXCMAT, NDMAT_in, IPRINT
@@ -317,7 +315,7 @@ C     variables for SRCPBERI
 !     and transfer results to master in SRDFT
 !     ==================
 
-      ND_SIM = 1 
+      ND_SIM = 1
       EDFT(1:3)  = 0.0D0
       CALL DZERO(WORK(KEXCMAT),NEXCMAT*N2BASX)
       CALL SRDFT(

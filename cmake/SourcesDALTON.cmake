@@ -501,6 +501,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/gp/mpimacro.F
     DALTON/gp/qpack.F
     DALTON/gp/vcraypack.F
+    DALTON/include/dalton_mpi_interface.F90
     DALTON/lucita/ciinfo.F
     DALTON/lucita/dalton_interface.F
     DALTON/lucita/density.F

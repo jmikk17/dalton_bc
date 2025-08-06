@@ -3365,6 +3365,7 @@ C     Process basis data
 C
 C******************************************************************************
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "pi.h"
@@ -3374,7 +3375,6 @@ C******************************************************************************
 #include "maxaqn.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
 #include "infpar.h"
 #endif
 
