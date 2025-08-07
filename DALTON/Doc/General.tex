@@ -199,14 +199,14 @@ Chapter~\ref{ch:embedding} for an introduction to PE and PDE calculations.
 \item[\Key{PRIERR}]\verb| |\newline
 \verb|READ (LUCMD, *) IPRERR|
 \index{error print level} \index{print level!error}
-Reads in the print level that is to be used in the DALTON.ERR
+Sets the print level that is to be used for the DALTON.STAT text
 file. Default print level is \verb|IPRUSR+1|.
 
 \item[\Key{PRINT}]\verb| |\newline
 \verb|READ (LUCMD, *) IPRUSR|
-\index{print level!general}
-Reads in the print level that is to be used the rest of the subsequent
-calculations. Default is a print level of 0.
+\index{print level!general}\index{IPRUSR}
+Sets the default general print level for all the other input units.
+Default is a print level of 0.
 
 \item[\Key{PROPERTIES}] Invoke the \aba\ module for the evaluation of static
 and dynamic properties, using a previously converged and saved wave function and saved integral files. See Chapter~\ref{ch:abacus}.

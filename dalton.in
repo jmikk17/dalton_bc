@@ -112,7 +112,7 @@ usage (){
         echo ' -omp num         : set the number of OpenMP threads. Note that Dalton is not OpenMP'
         echo '                    parallelized, however, this option can be used with e.g. threaded blas as MKL'
      if [ $mpi_enabled = "ON" ] ; then  # MPI parallel version
-        echo ' -N num |-np num  : use num MPI processes (defaults to 1, illegal if DALTON_LAUNCHER specified)'
+        echo ' -np num|-mpi num : use num MPI processes (defaults to 1, illegal if DALTON_LAUNCHER specified)'
      fi
         echo ' -cpexe           : copy '$dalton'.x to DALTON_TMPDIR before execution, either to global scratch'
         echo '                    (if DALTON_USE_GLOBAL_SCRATCH is set) or to local scratch on all nodes'
@@ -191,7 +191,7 @@ while [ -n "`echo $1 | grep '^-'`" ]; do
       -put ) PUT_FILES="$PUT_FILES $2"; shift;;
       -rsh ) SCP=rcp; SSH=rsh;;
       -f ) optf=$2; shift;;
-      -N|-np ) optn=$2; shift;;
+      -N|-np|-mpi ) optn=$2; shift;; # keep -N for backwards compatibility
       -omp ) export OMP_NUM_THREADS=$2; shift;;
       -ow ) opto=2;;
       -o ) OUTFIL=$2; opto=1; shift;;
