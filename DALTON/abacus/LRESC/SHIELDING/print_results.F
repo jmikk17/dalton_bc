@@ -99,8 +99,7 @@ C
             IF (EXTRAINFO) call PRINT_LRSHIELD_CORR
      &         ('PSOK    ',aba,LRPSOKaba,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             call PRINT_LRSHIELD_CORR('OZK     ',aba,LROZK,'iso ')
             call PRINT_LRSHIELD_CORR('PSOK    ',avg,LRPSOK,'iso ')
@@ -126,7 +125,7 @@ C
             call PRINT_LRSHIELD_CORR('BSO(Fc) ',aba,LRFCBS,'ani1')
             call PRINT_LRSHIELD_CORR('BSO(Sd) ',aba,LRSDBS,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             IF (EXTRAINFO) THEN
               call PRINT_LRSHIELD_CORR('Fc-Kin  ',aba,LRFCZK,'iso ')
@@ -150,7 +149,7 @@ C
             call PRINT_LRSHIELD_CORR('Mv/p    ',aba,QRPSOOZMV,'ani1')
             call PRINT_LRSHIELD_CORR('Dw/p    ',aba,QRPSOOZDW,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             call PRINT_LRSHIELD_CORR('Mv/p    ',aba,QRPSOOZMV,'iso ')
             call PRINT_LRSHIELD_CORR('Dw/p    ',aba,QRPSOOZDW,'iso ')
@@ -163,7 +162,7 @@ C
             call PRINT_LRSHIELD_CORR('SO(Fc)  ',aba,QROZFCSO,'ani1')
             call PRINT_LRSHIELD_CORR('SO(Sd)  ',aba,QROZSDSO,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             call PRINT_LRSHIELD_CORR('SO(Fc)  ',aba,QROZFCSO,'iso ')
             call PRINT_LRSHIELD_CORR('SO(Sd)  ',aba,QROZSDSO,'iso ')
@@ -182,7 +181,7 @@ C
             IF (SIGMAP2T) call PRINT_LRSHIELD_SUM(
      &                        '2nd Order Triplets   ',SGP3T,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &           slash,'xx','yy','zz','iso'
             IF (SIGMAP1S) call PRINT_LRSHIELD_SUM(
      &                      '1st Order Singlets   ',SGP1S,'iso ')
@@ -219,7 +218,7 @@ C
           end if
           call PRINT_LRSHIELD_CORR('DIAK    ',aba,LRDIAK,'ani1')
           ELSE  ! only diagonal elements
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             call PRINT_LRSHIELD_CORR('FC/d    ',aba,LRFCAV,'iso ')
             if (PYINTS) then
@@ -240,7 +239,7 @@ C
             call PRINT_LRSHIELD_CORR('Mv/d    ',aba,LRDIAM,'ani1')
             call PRINT_LRSHIELD_CORR('Dw/d    ',aba,LRDIAD,'ani1')
           ELSE  ! only diagonal elements
-            WRITE(LUPRI,'(8X,A,16X,A,12X,A,13X,A,10X,A)')
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &            slash,'xx','yy','zz','iso'
             call PRINT_LRSHIELD_CORR('Mv/d    ',aba,LRDIAM,'iso ')
             call PRINT_LRSHIELD_CORR('Dw/d    ',aba,LRDIAD,'iso ')
@@ -255,7 +254,7 @@ C
             IF (SIGMAD1S) call PRINT_LRSHIELD_SUM(
      &                         '1st Order Singlets   ',SGD1S,'ani1')
           ELSE ! only diagonal elements
-            WRITE(LUPRI,'(/,7X,A,17X,A,12X,A,13X,A,10X,A)') 
+            WRITE(LUPRI,'(7X,A,13X,A,12X,A,13X,A,10X,A)')
      &           slash,'xx','yy','zz','iso'
             IF (SIGMAD0S) call PRINT_LRSHIELD_SUM(
      &                         '0th Order Singlets   ',SGD0S,'iso ')
@@ -413,7 +412,7 @@ C     J. J. Aucar 2022
 C     Information about calculation of LRESC
       iso =(tensor(1,1)+tensor(2,2)+tensor(3,3))/3.0
       IF (elements == 'iso ') THEN
-        WRITE (LUPRI,'(4X,A,6X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
+        WRITE (LUPRI,'(4X,A,2X,F12.4,2X,F12.4,3X,F12.4,F12.4,A)')
      &         phrase,tensor(1,1),tensor(2,2),tensor(3,3),iso,' [ppm]'
       ELSEIF (elements == 'ani1') THEN
         WRITE(LUPRI,'(7X,A,18X,A,12X,A,13X,A,10X,A)')

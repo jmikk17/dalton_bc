@@ -77,7 +77,7 @@ C         Info about SOS correction
      &                         'doi: 10.1063/5.0264596'
 
       IF (.NOT. PRTALL1) THEN
-         WRITE(LUPRI,'(/,7X,A)')'For printing LRESC corrections,'//
+         WRITE(LUPRI,'(/,5X,A)')'- For printing LRESC corrections,'//
      &   ' add .PRTALL in your input file under *LROPTS'
 
       ENDIF
@@ -141,17 +141,23 @@ C ---Not Default
          IF (SIGMAPNR) WRITE (LUPRI,'(7X,A)')
      &   'Non-relativistic paramagnetic contributions'
          IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
-     &   'Diamagnetic zeroth order singlet corrections'
+     &   'Diamagnetic zeroth order singlet corrections' //
+     &   ' ( FC/d, SD/d, PSO-OZ and DIAK )'
          IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
-     &   'Diamagnetic first order singlet corrections'
+     &   'Diamagnetic first order singlet corrections' //
+     &   ' ( Mv/d and Dw/d )'
          IF (SIGMAP1S)  WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic first order singlet corrections'
+     &   'Paramagnetic first order singlet corrections' //
+     &   ' ( OZK and PSOK )'
          IF (SIGMAP1T) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic first order triplet corrections'
+     &   'Paramagnetic first order triplet corrections' //
+     &   ' ( SZK(Fc), SZK(Sd), BSO(Fc) and BSO(Sd) )'
          IF (SIGMAP2S) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic second order singlet corrections'
+     &   'Paramagnetic second order singlet corrections' //
+     &   ' ( Mv/p and Dw/p )'
          IF (SIGMAP2T) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic second order triplet corrections'
+     &   'Paramagnetic second order triplet corrections' //
+     &   ' ( SO(Fc) and SO(Sd) )'
       ENDIF
       WRITE(LUPRI,*)' '
 
