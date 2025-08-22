@@ -16,8 +16,8 @@
 !
 !
 C
-C  /* Deck lrscinp_shi */      
-C This module read nesserary input for LRESC calculations.
+C  /* Deck lrscinp_shi */
+C This module read necessary input for LRESC calculations.
 C jim-gesc : May-2012
 C
 C      
@@ -575,12 +575,18 @@ C     Check for Warnings
 C --Warnings
       IF ( (WARNLRS).OR.(WARNLRT).OR.(WARNQR) )
      & CALL HEADER('Warnings :',3)
-      IF (WARNLRS) WRITE (LUPRI,'(4X,A)')
-     &      '-  Check LRESC-LR-S file.'
-      IF (WARNLRT) WRITE (LUPRI,'(4X,A)')
-     &      '-  Check LRESC-LR-T file.'
-      IF (WARNQR) WRITE (LUPRI,'(4X,A)')
-     &      '-  Check LRESC-QR file.'
+      IF (WARNLRS) THEN
+        WRITE (LUPRI,'(4X,A)') '-  Check LRESC-LR-S file.'
+        CALL check_lr_s
+      END IF
+      IF (WARNLRT) THEN
+        WRITE (LUPRI,'(4X,A)') '-  Check LRESC-LR-T file.'
+        CALL check_lr_t
+      END IF
+      IF (WARNQR) THEN
+        WRITE (LUPRI,'(4X,A)')'-  Check LRESC-QR file.'
+        CALL check_qr
+      END IF
 
 
 
