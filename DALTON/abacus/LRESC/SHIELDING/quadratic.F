@@ -43,7 +43,7 @@ c      integer :: naos,nmos
 
       CHARACTER*8 RTNLBL(2)
 
-      LOGICAL FOUND
+      LOGICAL FOUND, matched
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
 
@@ -54,12 +54,14 @@ c      integer :: naos,nmos
       Character*8, dimension(:,:,:), allocatable :: operadores_C
 
       INTEGER                  :: NopA, NopB, NopC
-      LOGICAL :: TRIPLETE,TRPLET_FLAG
+      LOGICAL :: TRIPLETE,TRPLET_FLAG, file_exists
 
 
       
       CALL QENTER('LRSCQUAD')
       CALL GETTIM(TIMQR,WALQR)
+
+      matched = .FALSE.
 
 c      naos = NBAST ! NBAST: Total number of (atomic) basis functions
 c      nmos= NORBT  ! NORBT: Total number of molecular orbitals
@@ -313,30 +315,36 @@ c         spin_rank(:,3) = '1'
 
 c        END IF
 
+!     Logical for first call to read LRESC-QR file
+      inquire(file = 'LRESC-QR', exist = file_exists)
 
 c     ij shielding tensor element
       do i = 1, 3 !
       do j = 1, 3 !
-         IF (NopA+NopB+NopC.LT.6) THEN !Combine all A,B,C operators (one of them has 3 components)
+         IF (NopA+NopB+NopC.LT.6) THEN !Combine all A,B,C operators (none of them has 3 components)
             do k = 1, NopA
             do l = 1, NopB
             do m = 1, NopC
                operadores_trio(1)=operadores_A(i,j,k)
                operadores_trio(2)=operadores_B(i,j,l)
                operadores_trio(3)=operadores_C(i,j,m)
-               call create_QRinput(operadores_trio,spin_trio)
-               LUPRI = 6232
-               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
-     &              position='append')
-               call RSPDRV(WORK,LWORK)
-               CLOSE(LUPRI)
-               LUPRI  = 2
-            
-               CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-               CALL GPCLOSE(LURSP3,'DELETE')
-               CALL GPCLOSE(LURSP4,'DELETE')
-               CALL GPCLOSE(LURSP5,'DELETE')
-               call get_QRvalue(QR(i,j),operadores_trio)
+               if (file_exists)
+     &            call get_QRvalue(QR(i,j),operadores_trio,matched)
+               if (.not.matched) then
+                 call create_QRinput(operadores_trio,spin_trio)
+                 LUPRI = 6232
+                 OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
+     &                position='append')
+                 call RSPDRV(WORK,LWORK)
+                 CLOSE(LUPRI)
+                 LUPRI  = 2
+                 CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+                 CALL GPCLOSE(LURSP3,'DELETE')
+                 CALL GPCLOSE(LURSP4,'DELETE')
+                 CALL GPCLOSE(LURSP5,'DELETE')
+                 call get_QRvalue(QR(i,j),operadores_trio,matched)
+               END IF
+               matched = .FALSE.
                TOTALQR(i,j) = TOTALQR(i,j) + QR(i,j)
             end do
             end do
@@ -347,18 +355,23 @@ c     ij shielding tensor element
                operadores_trio(1)=operadores_A(i,j,k)
                operadores_trio(2)=operadores_B(i,j,k)
                operadores_trio(3)=operadores_C(i,j,k)
-               call create_QRinput(operadores_trio,spin_trio)
-               LUPRI = 6232
-               OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
-     &              position='append')
-               call RSPDRV(WORK,LWORK)
-               CLOSE(LUPRI)
-               LUPRI  = 2
-               CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
-               CALL GPCLOSE(LURSP3,'DELETE')
-               CALL GPCLOSE(LURSP4,'DELETE')
-               CALL GPCLOSE(LURSP5,'DELETE')
-               call get_QRvalue(QR(i,j),operadores_trio)
+               if (file_exists)
+     &            call get_QRvalue(QR(i,j),operadores_trio,matched)
+               if (.not.matched) then
+                 call create_QRinput(operadores_trio,spin_trio)
+                 LUPRI = 6232
+                 OPEN(UNIT=LUPRI, FILE='LRESC-QR',status='unknown',
+     &                position='append')
+                 call RSPDRV(WORK,LWORK)
+                 CLOSE(LUPRI)
+                 LUPRI  = 2
+                 CALL GPCLOSE(LURSP ,'KEEP') !RSPVEC file
+                 CALL GPCLOSE(LURSP3,'DELETE')
+                 CALL GPCLOSE(LURSP4,'DELETE')
+                 CALL GPCLOSE(LURSP5,'DELETE')
+                 call get_QRvalue(QR(i,j),operadores_trio,matched)
+               END IF
+               matched = .FALSE.
                TOTALQR(i,j) = TOTALQR(i,j) + QR(i,j)
             end do
          END IF
@@ -431,8 +444,8 @@ c     ij shielding tensor element
       RETURN
       END
 
-      subroutine get_QRvalue(QUAVAL,labels_in)
-      logical :: file_exists, file_open
+      subroutine get_QRvalue(QUAVAL,labels_in,match)
+      logical :: file_exists, file_open, match
       INTEGER :: fileID
       CHARACTER STRING*75
       CHARACTER*8, intent(in) :: labels_in(3)
@@ -443,19 +456,21 @@ c
 
 #include "priunit.h"
 
+      match = .FALSE.
+
 C Based on some lines of SUBROUTINE BCCHK
 
-      inquire(file = 'RESULTS.RSP', exist = file_exists,
+      inquire(file = 'LRESC-QR', exist = file_exists,
      &            opened = file_open)
       if (file_exists) then
          if (.not. file_open) then
             fileID = -1
-            CALL GPOPEN(fileID,'RESULTS.RSP','OLD',' ','FORMATTED',
+            CALL GPOPEN(fileID,'LRESC-QR','OLD',' ','FORMATTED',
      &           IDUMMY,.FALSE.)
          end if
          rewind(fileID)
       else
-         call quit('RESULTS.RSP file not found')
+        call quit('LRESC-QR file not found')
       end if
 
 
@@ -469,6 +484,7 @@ C Based on some lines of SUBROUTINE BCCHK
      &    labels_read(2) .EQ. labels_in(2) .AND.
      &    labels_read(3) .EQ. labels_in(3) ) then
          READ (fileID,'(/,30X,3F20.8)') FRQB, FRQC, QUAVAL
+         match = .true.
       ELSE
          GOTO 346
       END IF
