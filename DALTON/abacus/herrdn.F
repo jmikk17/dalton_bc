@@ -3908,7 +3908,7 @@ C           Calculate nuclear dipole moment with origin (0,0,0)
          call quit('ERROR: You cannot have both '//
      &   'floating and ghost orbitals in same calculation')
       END IF
-      IF (NFLOAT .GT. 0 .AND. NMULBS .GT. 0) THEN
+      IF (NFLOAT .GT. 0 .AND. NMULBS .GT. 1) THEN
          call quit('ERROR: You cannot have both floating '//
      &   'orbitals and multiple basis sets in same calculation')
       END IF
