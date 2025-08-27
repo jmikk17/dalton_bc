@@ -2993,6 +2993,11 @@ C     Reset gauge origin and nuclear charges
       END
 c  /* Deck SCALE_CHRG */
        SUBROUTINE SCALE_CHRG(SVCHRG)
+!
+! Scaled charges for effective 1-electron spin-orbit integrals
+! Operator labels: X1SPNSCA, Y1SPNSCA, Z1SPNSCA; class SOSCALE
+! Scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764
+!
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -3011,6 +3016,9 @@ C
 C     Scale charges 
 C
       CALL DCOPY(NUCIND,CHARGE,1,SVCHRG,1)
+      write(lupri,'(/1x,A/1x,A)')
+     & 'Scaled charges for effective 1-electron spin-orbit integals,',
+     & 'scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764'
 C     Charges printout 
       WRITE(LUPRI,'(A)') ' Atom       Scaled charge'
       DO I = 1, NUCIND
