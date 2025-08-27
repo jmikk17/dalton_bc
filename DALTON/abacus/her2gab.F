@@ -1267,8 +1267,13 @@ C
 #include "nuclei.h"
       DIMENSION DRAO(NSYMBL,NSYMBL,NDMAT),INDEX(NSYMBL)
       CHARACTER SPDCAR*1,COMP(2)*1
+#ifdef PRG_DIRAC
       COMP(1) = 'L'
       COMP(2) = 'S'
+#else
+      COMP(1) = ' '
+      COMP(2) = ' '
+#endif
 C
 C     First make pointer from symmetry dependent blocks to
 C     symmetry independent blocks

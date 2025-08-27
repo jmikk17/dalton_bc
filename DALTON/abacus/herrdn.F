@@ -946,10 +946,11 @@ C
 #if defined(BUILD_GEN1INT)
 C...  added by Bin Gao, Feb. 16, 2011
 C...  initializes Gen1Int interface
-      call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
-     &                       NBLCK(:,1), KANG, JCO(:,:,1),
-     &                       KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
-     &                       ALPHA(:,:,1), CPRIMU(:,:,:,1))
+      if (.not. dkhint) ! do not initialize when dkhint, wait for the contracted basis set
+     &   call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
+     &                          NBLCK(:,1), KANG, JCO(:,:,1),
+     &                          KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
+     &                          ALPHA(:,:,1), CPRIMU(:,:,:,1))
 #endif
 
 C
@@ -1449,6 +1450,7 @@ C
      &                  ' or .CONTINUUM')
                   END IF
                   IQM(I,J) = LCMMAX + 1
+                  IZATOM(I) = -999 ! code for Rydberg/continuum basis set
 
                   if (LCNTNUUM) then
                   CALL CMBAS_CNUUM(IQM(I,J),JCO(1,I,J),NUC(IBLOCK(J),J),
@@ -2692,10 +2694,12 @@ C
 
          CALL PRICAR(WORK,LWORK)
 
-         IF (USE_PELIB()
-     &       .OR. PELIB_IFC_DO_MEP()
-     &       .OR. PELIB_IFC_DO_SAVDEN()) THEN
+         IF (.NOT.DKHINT) THEN ! skip if uncontracted basis sets for DKH2
+         IF (USE_PELIB() .OR.
+     &       PELIB_IFC_DO_MEP() .OR.
+     &       PELIB_IFC_DO_SAVDEN()) THEN
             CALL PELIB_IFC_INIT()
+         END IF
          END IF
       END IF
 C
@@ -3830,6 +3834,7 @@ C
       DIPNUC(1:3) = D0
       NUCDEP    = 0
       NCDTOT    = 0
+      NGHOST    = 0
       NFLOAT    = 0
 
       DO 100 N = 1, NCTOT
@@ -3839,13 +3844,26 @@ C
      &      WRITE (LUPRI,1000) NAMN(N),(CORD(I,N),I=1,3),CHARGE(N),
      &                        IFAKBN(ISTBNU(N)), NDEG - 1
          NUCDEG(N) = NDEG
-         IF (CHARGE(N) .EQ. D0 .AND. NAMN(N) .NE. 'cav' .AND.
-     &       N .LE. NUCIND) THEN
+         IF (MULBSI(N) .GT. 1) THEN
+            ! auxiliary basis set center, do nothing here
+         ELSE IF (NAMN(N) .EQ. 'cav' .OR. IZATOM(N) .EQ. -999) THEN
+            ! spherical cavity center or Rydberg/continuum center, do nothing here
+         ELSE IF (IZATOM(N) .LT. 0) THEN ! ghost center
+            NGHOST = NGHOST + 1
+         ELSE IF (IZATOM(N) .EQ. 0 .AND. N .LE. NUCIND) THEN
+            ! This is a floating orbital center, floating orbitals can be used in ABACUS
+            !    ghost orbital centers have izatom(n) = -nq
+            !    mbsi orbital centers have izatom(n) = -nq
+            !    a Rydberg/continuum orbital center have izatom(n) = -999
+            !    point charges have izatom(n) = -1234567890
             NFLOAT = NFLOAT + NDEG
          ELSE IF (NFLOAT .GT. 0) THEN
-!           CALL QUIT(
-!    &      'All nuclei MUST come before floating orbital centers')
-!           So 1:NATOMS run over the real nuclei
+            IF (IPREAD .LT. 5)
+     &      WRITE (LUPRI,1000) NAMN(N),(CORD(I,N),I=1,3),CHARGE(N),
+     &                        IFAKBN(ISTBNU(N)), NDEG - 1
+            CALL QUIT('.mol input error:'//
+     &      'All nuclei MUST come before floating orbital centers')
+!           So 1:NATOMS run over real and ghost nuclei
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
@@ -3885,6 +3903,16 @@ C           Calculate nuclear dipole moment with origin (0,0,0)
             END IF
   200    CONTINUE
   100 CONTINUE
+
+      IF (NFLOAT .GT. 0 .AND. NGHOST .GT. 0) THEN
+         call quit('ERROR: You cannot have both '//
+     &   'floating and ghost orbitals in same calculation')
+      END IF
+      IF (NFLOAT .GT. 0 .AND. NMULBS .GT. 1) THEN
+         call quit('ERROR: You cannot have both floating '//
+     &   'orbitals and multiple basis sets in same calculation')
+      END IF
+
 C     Now: NUCDEP = QM atoms + floating centers
 C          NCDTOT = NUCDEP + MM centers
       NATOMS = NUCDEP - NFLOAT
@@ -4431,7 +4459,7 @@ C
         END IF
   10  CONTINUE
       IF (NFLOAT .GT. 0) WRITE (LUPRI,'(/A,I5)')
-     &   '  Number of floating/multiple basis set orbitals :',NFLOAT
+     &   '  Number of floating basis set centers :',NFLOAT
       IF (MAXREP .GT. 0 .AND. IPREAD .GT. 0) THEN
          IF (IPREAD .GE. 10) THEN
             WRITE(LUPRI,'(10X,A/)') 'Symmetry pointer indices'

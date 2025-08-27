@@ -208,6 +208,7 @@ C
 C
       DIMENSION QMTEST(NMMBA1)
 C
+#include "gnrinf.h"
 #include <shells.h>
 #include <symmet.h>
 #include <pgroup.h>
@@ -2668,7 +2669,7 @@ C
       END IF
 
       IF (WORD == 'DIPLEN ') THEN
-         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF()) THEN
+         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF() .AND. .NOT.DKHINT) THEN
             WRITE(LUPRI,*) 'INFO: EEF CONTRIBUTION ADDED TO DIPOLE'//
      &                     ' MOMENT INTEGRALS'
             ALLOCATE(EEFMATS(3*NELMNT))
@@ -2992,6 +2993,11 @@ C     Reset gauge origin and nuclear charges
       END
 c  /* Deck SCALE_CHRG */
        SUBROUTINE SCALE_CHRG(SVCHRG)
+!
+! Scaled charges for effective 1-electron spin-orbit integrals
+! Operator labels: X1SPNSCA, Y1SPNSCA, Z1SPNSCA; class SOSCALE
+! Scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764
+!
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -3010,6 +3016,9 @@ C
 C     Scale charges 
 C
       CALL DCOPY(NUCIND,CHARGE,1,SVCHRG,1)
+      write(lupri,'(/1x,A/1x,A)')
+     & 'Scaled charges for effective 1-electron spin-orbit integals,',
+     & 'scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764'
 C     Charges printout 
       WRITE(LUPRI,'(A)') ' Atom       Scaled charge'
       DO I = 1, NUCIND

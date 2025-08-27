@@ -6,7 +6,7 @@
       REAL*8  CHARGE, CORD, GNUEXP
 
       INTEGER         NUCNUM, NUCDEG, ISTBNU, NCTOT,                    &
-     &        NUCIND, NUCDEP, NTRACO, ITRACO, NATOMS, NFLOAT,           &
+     &        NUCIND, NUCDEP, NTRACO, ITRACO, NATOMS, NFLOAT, NGHOST,   &
      &        NBASIS, NLARGE, NSMALL, NPBAS,  NPLRG,  NPSML,            &
      &        NCHTOT, INCENT, INUNIQ, NDEGNM, ISOTOP, IZATOM,           &
      &        NBASISAUX, NPBASAUX,    NAUX,   NPAUX,  MULBSI,           &
@@ -15,8 +15,8 @@
       COMMON /NUCLEI/ CHARGE(MXCENT), CORD(3,MXCENT), GNUEXP(MXCENT),   &
      &                                NUCNUM(MXCENT,8), NUCDEG(MXCENT), &
      &                ISTBNU(MXCENT), NDEGNM(MXCENT), NUCIND, NUCDEP,   &
-     &                NTRACO, ITRACO(3),                                &
-     &                NATOMS, NFLOAT, NBASIS, NLARGE, NSMALL, NPBAS,    &
+     &                NTRACO, ITRACO(3), NATOMS, NFLOAT, NGHOST,        &
+     &                NBASIS, NLARGE, NSMALL, NPBAS,                    &
      &                NPLRG, NPSML, NCHTOT, INCENT(MXCENT), NCTOT,      &
      &                INUNIQ(MXCENT), ISOTOP(MXCENT),IZATOM(MXCENT),    &
      &                NBASISAUX, NPBASAUX, NAUX, NPAUX,                 &

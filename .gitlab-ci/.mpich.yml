@@ -15,24 +15,6 @@ gcc-9-mpich-3.3:
     - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
-gcc-9-mpich-3.3-int64:
-  image: fedora:31
-  variables:
-    OMP_NUM_THREADS: "1"
-  rules: !reference [.define-build-rules, rules]
-  allow_failure: true
-  script:
-    - !reference [.define-cores, script]
-    - dnf install -y -q lapack64 lapack64-devel
-    - module load mpi/mpich-x86_64
-    - mpirun --version
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
-    - cd build
-    - make -j $N_PROC
-    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
-  interruptible: true
-  
 gcc-11-mpich-3.4:
   image: fedora:35
   variables:
@@ -50,24 +32,6 @@ gcc-11-mpich-3.4:
     - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
   interruptible: true
 
-gcc-11-mpich-3.4-int64:
-  image: fedora:35
-  variables:
-    OMP_NUM_THREADS: "1"
-  rules: !reference [.define-build-rules, rules]
-  allow_failure: true
-  script:
-    - !reference [.define-cores, script]
-    - dnf install -y -q lapack64
-    - module load mpi/mpich-x86_64
-    - mpirun --version
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
-    - cd build
-    - make -j $N_PROC
-    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
-  interruptible: true
-
 gcc-12-mpich-4.0:
   image: fedora:37
   variables:
@@ -83,24 +47,6 @@ gcc-12-mpich-4.0:
     - cd build
     - make -j $N_PROC
     - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
-  interruptible: true
-
-gcc-12-mpich-4.0-int64:
-  image: fedora:37
-  variables:
-    OMP_NUM_THREADS: "1"
-  rules: !reference [.define-build-rules, rules]
-  allow_failure: true
-  script:
-    - !reference [.define-cores, script]
-    - dnf install -y -q lapack64
-    - module load mpi/mpich-x86_64
-    - mpirun --version
-    - export FFLAGS="-I/usr/lib64/gfortran/modules"
-    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
-    - cd build
-    - make -j $N_PROC
-    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial --timeout 30
   interruptible: true
 
 gcc-14-mpich-4.1-int64:

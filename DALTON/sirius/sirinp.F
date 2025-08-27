@@ -2168,7 +2168,7 @@ C *AUXILIARY (and misspelled *AUXILLIARY for backwards compatibility)
      &       'CC_INPUT ERROR: NSYM from SIRIFC .ne. NSYM in this run')
        END IF
        GOTO 910
- 2900  CALL DFTINP(WORD,INPERR,ALLOPT)
+ 2900  CALL DFTINP(WORD,ALLOPT)
        GO TO 910
  3000  CALL NEVPT2INP(WORD,INPERR,ALLOPT)
        GO TO 910
@@ -3074,7 +3074,6 @@ C INFINP : FLAG(*),DIRFCK
 C INFORB : NRHF(8)
 C INFTAP : LUSUPM
 C INFPRI : IPRSIR,IPRRHF
-C DFTACB : DFTIPT, DFTBR1, DFTBR2
 C
 #include "priunit.h"
 #include "mxcent.h"
@@ -3088,7 +3087,6 @@ C
 #include "infpri.h"
 #include "dftcom.h"
 #include "dfterg.h"
-#include "dftacb.h"
 C
       LOGICAL NODIIS,SET,ELECTR
       SAVE SET,ELECTR
@@ -3297,7 +3295,9 @@ C                        with given inital occ. from user input or file
 C
 C *** Option 23 >FC MVO<  Modified virtual orbitals from FC from NMVO
 C     Reference: C.W. Bauschlicher, JCP 72 (1980) 880.
-  123 READ (LUCMD,*) (NMVO(I), I = 1,NSYM)
+  123 READ (LUCMD,*,IOSTAT=IOerr) (NMVO(I), I = 1,NSYM)
+      if (IOerr .ne. 0) call quit(
+     &   'Error reading number of core orbitals after .FC MVO input')
       NMVOT = ISUM(8,NMVO,1)
       IF (FCVORB) THEN
          NINFO = NINFO + 1
@@ -5334,7 +5334,6 @@ C   INFDIM : MAXPHP
 C   SCBRHF : IOPRHF,NFRRHF(*),MAXFCK
 C   INFMP2 : NFRMP2(*)
 C   DFTCOM : DODFT, DOSRBCK, ...
-C   DFTACB : DFTIPT, DFTBR1, DFTBR2
 C   gnrinf : NEWSYM,SIR_INPPRC,EMBEDDING,QM3,QMMM,?
 C   infpar.h : PARHER
 C   pgroup : GROUP, REP
@@ -5358,7 +5357,6 @@ C
 #include "huckel.h"
 #include "dftcom.h"
 #include "dfterg.h"
-#include "dftacb.h"
 #include "infpar.h"
 #include "pgroup.h"
 #include "pcmlog.h"
