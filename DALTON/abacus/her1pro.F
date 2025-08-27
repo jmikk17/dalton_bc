@@ -208,6 +208,7 @@ C
 C
       DIMENSION QMTEST(NMMBA1)
 C
+#include "gnrinf.h"
 #include <shells.h>
 #include <symmet.h>
 #include <pgroup.h>
@@ -2668,7 +2669,7 @@ C
       END IF
 
       IF (WORD == 'DIPLEN ') THEN
-         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF()) THEN
+         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF() .AND. .NOT.DKHINT) THEN
             WRITE(LUPRI,*) 'INFO: EEF CONTRIBUTION ADDED TO DIPOLE'//
      &                     ' MOMENT INTEGRALS'
             ALLOCATE(EEFMATS(3*NELMNT))

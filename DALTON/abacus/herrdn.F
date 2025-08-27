@@ -946,10 +946,11 @@ C
 #if defined(BUILD_GEN1INT)
 C...  added by Bin Gao, Feb. 16, 2011
 C...  initializes Gen1Int interface
-      call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
-     &                       NBLCK(:,1), KANG, JCO(:,:,1),
-     &                       KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
-     &                       ALPHA(:,:,1), CPRIMU(:,:,:,1))
+      if (.not. dkhint) ! do not initialize when dkhint, wait for the contracted basis set
+     &   call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
+     &                          NBLCK(:,1), KANG, JCO(:,:,1),
+     &                          KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
+     &                          ALPHA(:,:,1), CPRIMU(:,:,:,1))
 #endif
 
 C
@@ -2692,10 +2693,12 @@ C
 
          CALL PRICAR(WORK,LWORK)
 
-         IF (USE_PELIB()
-     &       .OR. PELIB_IFC_DO_MEP()
-     &       .OR. PELIB_IFC_DO_SAVDEN()) THEN
+         IF (.NOT.DKHINT) THEN ! skip if uncontracted basis sets for DKH2
+         IF (USE_PELIB() .OR.
+     &       PELIB_IFC_DO_MEP() .OR.
+     &       PELIB_IFC_DO_SAVDEN()) THEN
             CALL PELIB_IFC_INIT()
+         END IF
          END IF
       END IF
 C
