@@ -2509,7 +2509,7 @@ C
       KSCR1 = KSAO + NNBAST
       LSCR1 = LSCRA - KSCR1
 
-      IF (DFTASC) CALL GET_HOMO_ASC(FC,SCRA(KSCR1),LSCR1)
+      IF (DFTASC) CALL GET_HOMO_ASC(FC)
 
       CALL ORTHO(CMO,SCRA(KSAO),SCRA(KSCR1),LSCR1)
       IF (SUPSYM) THEN
@@ -2688,12 +2688,12 @@ C
       CALL QEXIT('FVCORR')
       END
 
-      SUBROUTINE GET_HOMO_ASC(FD,SCRA,LSCRA)
+      SUBROUTINE GET_HOMO_ASC(FD)
 
 #include "implicit.h"
 #include "priunit.h"
-      DIMENSION FD(*),SCRA(*)
-      PARAMETER (DBIG = 1.D+12)
+      REAL*8  FD(norbt)
+
 #include "maxash.h"
 #include "maxorb.h"
 #include "mxcent.h"
@@ -2704,13 +2704,9 @@ C
 #include "dftcom.h"
 
       logical   exchanged
+      real*8  :: scra(norbt) ! automatic array
 C
-      KORBEN = 1
-      LNEED  = KORBEN + NORBT
-      IF (LNEED .GT. LSCRA) CALL ERRWRK('GET_HOMO_ASC',LNEED,LSCRA)
-      CALL DZERO(SCRA,NORBT)
-
-      call dcopy(NORBT,FD,1,SCRA,1)
+      scra(1:norbt) = FD(1:norbt)
 100   continue
       exchanged=.false.
       do i=1,norbt-1

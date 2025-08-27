@@ -1,5 +1,6 @@
+! file: dftacb.h - info for DFT asymptotic correction - used when DFTASC true
       LOGICAL LDFTVXC, LLIN, LTAN, LGRAC,DOLB94,DOMPOLE
-      DOUBLE PRECISION DFTIPTA, DFTIPTB, DFTHMO, DFTBR1, DFTBR2, EHOMO, &
+      REAL*8          DFTIPTA, DFTIPTB, DFTHMO, DFTBR1, DFTBR2, EHOMO,  &
      &                DISTMIN,DISTMAX,BRAG1,BRAG2,                      &
      &                DFTCH0, DFTCH1, DFTDST,SHF
 
