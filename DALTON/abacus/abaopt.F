@@ -1423,6 +1423,11 @@ C        Third parameter .FALSE. in call indicates that LUONEL will NOT be writt
          IPREAD = IPREAD_SAV
          HRINPC = .FALSE.
       END IF
+
+      IF (NFLOAT .GT. 0 .OR. NGHOST .GT. 0) THEN
+         CALL QUIT('ERROR: Geometry optimization with .OPTIMI cannot'//
+     &      ' be done with floating or ghost orbital centers')
+      END IF
 C
       IF (FINDRE .OR. DELINT .OR. REDINT .OR. INRDHS .OR. INMDHS) THEN
          KATARR = 2
