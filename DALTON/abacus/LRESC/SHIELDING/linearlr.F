@@ -596,7 +596,7 @@ C         'FCDE' 'FCDE'
       write(fileID,'(a)') '**RESPONSE'
       write(fileID,'(a)') '*LINEAR'
       write(fileID,'(a)') '.THCLR'
-      write(fileID,'(a)') '1.0D-6'
+      write(fileID,'(a)') '1.0D-5'
       IF (TRIPLETE) write(fileID,'(a)') '.TRIPLET'
 
       DO J = 1, size(LRATOMS)
