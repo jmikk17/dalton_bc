@@ -45,7 +45,7 @@ C
       lresc(:,:,18)=QROZFCSO                     ! SO(FC)
       lresc(:,:,19)=QROZSDSO                     ! SO(SD)
       IF (PYINTS) lresc(:,:,20)=LRFCAVpy         ! FC/d
-      IF(.NOT.PYTINTS) lresc(:,:,20)=LRFCAV      ! FC/d
+      IF(.NOT.PYINTS) lresc(:,:,20)=LRFCAV      ! FC/d
       lresc(:,:,21)=LRANGPavg                    ! PSO-OZ
       lresc(:,:,22)=LRDIAK                       ! DIAK
       lresc(:,:,23)=LRSDAV                       ! SD/d
