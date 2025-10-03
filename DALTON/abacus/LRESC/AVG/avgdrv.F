@@ -145,7 +145,7 @@ C     Correcciones orden c^(-4)
 
       aux0=matmul(transpose(cmos),cmos)
 
-c     Hago (pq).I x p 
+c     Get (pq).I x p
 c     X component
       aux1=matmul(matmul(GZZEFGy,aux0),ZDIPVEL)-
      &     matmul(matmul(GZZEFGz,aux0),YDIPVEL)
@@ -176,14 +176,14 @@ C     Replace time information with symmetry information
      &      LRSO1NAME,RTNLBL) !Write Matrix in AOPROPER
 
 
-c     Hago p.I.q.I.p
-c     1º Término
+c     Get p.I.q.I.p
+c     1st term
       aux4=matmul(matmul(matmul(XDIPVEL,aux0),ZZEFGm),
      &     matmul(aux0,XDIPVEL))
-c     2º Término
+c     2nd term
       aux5=matmul(matmul(matmul(YDIPVEL,aux0),ZZEFGm),
      &     matmul(aux0,YDIPVEL))
-c     3º Término
+c     3rd term
       aux6=matmul(matmul(matmul(ZDIPVEL,aux0),ZZEFGm),
      &     matmul(aux0,ZDIPVEL))
 

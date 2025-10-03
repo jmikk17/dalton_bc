@@ -547,12 +547,12 @@ C       ------------------
             EFGC2(KJ,2)=-CEFGDW*SNDPRP
       ENDIF
       
-C         <<TESTEANDO>>
+C         <<Testing>>
 C       ------------------
       IF(KEY.EQ."JSO2") THEN
-         write(LUPRI,*) "RESPUESTA modulo LRESC ",LABEL1," ",LABEL2,
+         write(LUPRI,*) "Response LRESC module ",LABEL1," ",LABEL2,
      &   SNDPRP
-c         write(*,*) "JUAN-NUEVA RESPUESTA con C ",LABEL1," ",LABEL2,
+c         write(*,*) "Response LRESC module with corresponding constant ",LABEL1," ",LABEL2,
 c     &   SNDPRP*C4EFGSO*calfa*calfa
       END IF
 

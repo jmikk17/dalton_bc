@@ -40,7 +40,7 @@ c      double precision,allocatable :: matrices(:,:,:)
       character (len=3) :: filename
 c      double precision,allocatable :: matrix(:,:)
       real(8), allocatable :: matrix(:,:)
-      integer :: operadores
+      integer :: operators
 
 C ------------------------------------------------------
 C       DALTON.CM variables
@@ -53,8 +53,8 @@ C ------------------------------------------------------
 c     Import new matrices from PySCF
       allocate (matrices(naos,naos,noperators))
       call import_numpytensor(matrices,newlabels,naos,noperators
-     &                        ,operadores,filename)
-      do ii = 1, operadores
+     &                        ,operators,filename)
+      do ii = 1, operators
          allocate (matrix(naos,naos))
          matrix = matrices(:,:,ii)
          label = newlabels(ii)
@@ -73,7 +73,7 @@ c        call OUTPUT(matrix,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)! prints matrix 
 
 
       subroutine import_numpytensor(matrices,labels,naos,noperators
-     &                              ,operadores,filename)
+     &                              ,operators,filename)
 
       use iso_fortran_env
 c      double precision,intent(out) :: matrices(naos,naos,noperators)
@@ -82,21 +82,21 @@ c      double precision :: matrix(naos,naos)
       real(8) :: matrix(naos, naos)
       character(len=8), dimension(noperators),intent(out) :: labels
       character(len=3), intent(in) :: filename
-      integer, intent(out) :: operadores
+      integer, intent(out) :: operators
       integer, intent(in) :: naos,noperators
       integer :: naospyscf
       character (len=8) :: label
       open(newunit=iu,file=filename//".bin"
      &   ,access="stream",status="old",action="read")
       REWIND iu
-      read(iu) operadores
+      read(iu) operators
       read(iu) naospyscf
       if (naos.ne.naospyscf) then
       write(*,*) "naos(dal,pyscf):",naos,naospyscf
-      write(*,*) "Operators to import from PySCF:",operadores
+      write(*,*) "Operators to import from PySCF:",operators
          CALL QUIT('naos not equal to naospyscf')
       end if
-      do i=1, operadores
+      do i=1, operators
          read(iu) label
 c        write(*,*) "reading:",label
          read(iu) matrix

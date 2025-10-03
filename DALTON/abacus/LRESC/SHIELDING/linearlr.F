@@ -33,11 +33,11 @@ C  /* Deck get_lr */
       REAL*8 LR(3,3),TOTALLR(3,3)
       REAL*8 LRtensor(3,3)
       CHARACTER*4 :: KEY
-      Character*8, dimension(:,:,:), allocatable :: operadores_A
-      Character*8, dimension(:,:,:), allocatable :: operadores_B
+      Character*8, dimension(:,:,:), allocatable :: A_operators
+      Character*8, dimension(:,:,:), allocatable :: B_operators
 
       INTEGER                  :: NopA, NopB
-      CHARACTER*8, dimension(2) :: operadores_duo
+      CHARACTER*8, dimension(2) :: operators_duo
       INTEGER :: SUMA_B
       character*3, dimension(3) :: nuc_coord
       character*3               :: nuc_number
@@ -117,21 +117,21 @@ C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
          NopB = 1
          TRPLET_FLAG = .FALSE.
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                    ij
-         operadores_A(1,1,1) = nuc_coord(1)//'NSCO'//CHRXYZ(1) !11
-         operadores_A(1,2,1) = nuc_coord(1)//'NSCO'//CHRXYZ(2) !12
-         operadores_A(1,3,1) = nuc_coord(1)//'NSCO'//CHRXYZ(3) !13
-         operadores_A(2,1,1) = nuc_coord(2)//'NSCO'//CHRXYZ(1) !21
-         operadores_A(2,2,1) = nuc_coord(2)//'NSCO'//CHRXYZ(2) !22
-         operadores_A(2,3,1) = nuc_coord(2)//'NSCO'//CHRXYZ(3) !23
-         operadores_A(3,1,1) = nuc_coord(3)//'NSCO'//CHRXYZ(1) !31
-         operadores_A(3,2,1) = nuc_coord(3)//'NSCO'//CHRXYZ(2) !32
-         operadores_A(3,3,1) = nuc_coord(3)//'NSCO'//CHRXYZ(3) !33
+         A_operators(1,1,1) = nuc_coord(1)//'NSCO'//CHRXYZ(1) !11
+         A_operators(1,2,1) = nuc_coord(1)//'NSCO'//CHRXYZ(2) !12
+         A_operators(1,3,1) = nuc_coord(1)//'NSCO'//CHRXYZ(3) !13
+         A_operators(2,1,1) = nuc_coord(2)//'NSCO'//CHRXYZ(1) !21
+         A_operators(2,2,1) = nuc_coord(2)//'NSCO'//CHRXYZ(2) !22
+         A_operators(2,3,1) = nuc_coord(2)//'NSCO'//CHRXYZ(3) !23
+         A_operators(3,1,1) = nuc_coord(3)//'NSCO'//CHRXYZ(1) !31
+         A_operators(3,2,1) = nuc_coord(3)//'NSCO'//CHRXYZ(2) !32
+         A_operators(3,3,1) = nuc_coord(3)//'NSCO'//CHRXYZ(3) !33
 C        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         IF (KEY.EQ."DIAD") operadores_B(:,:,1) ='DARWIN  '
-         IF (KEY.EQ."DIAM") operadores_B(:,:,1) ='MASSVELO'
+         allocate(B_operators(3,3,NopB))
+         IF (KEY.EQ."DIAD") B_operators(:,:,1) ='DARWIN  '
+         IF (KEY.EQ."DIAM") B_operators(:,:,1) ='MASSVELO'
       END IF
 
 
@@ -141,28 +141,28 @@ C        -----------------------------------
          TRPLET_FLAG = .FALSE.
 C        -----------------------------------
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                      ij
-         operadores_A(1,1,1) = 'PSO '//nuc_coord(1)//' '       !11
-         operadores_A(1,2,1) = 'PSO '//nuc_coord(1)//' '       !12
-         operadores_A(1,3,1) = 'PSO '//nuc_coord(1)//' '       !13
-         operadores_A(2,1,1) = 'PSO '//nuc_coord(2)//' '       !21
-         operadores_A(2,2,1) = 'PSO '//nuc_coord(2)//' '       !22
-         operadores_A(2,3,1) = 'PSO '//nuc_coord(2)//' '       !23
-         operadores_A(3,1,1) = 'PSO '//nuc_coord(3)//' '       !31
-         operadores_A(3,2,1) = 'PSO '//nuc_coord(3)//' '       !32
-         operadores_A(3,3,1) = 'PSO '//nuc_coord(3)//' '       !33
+         A_operators(1,1,1) = 'PSO '//nuc_coord(1)//' '       !11
+         A_operators(1,2,1) = 'PSO '//nuc_coord(1)//' '       !12
+         A_operators(1,3,1) = 'PSO '//nuc_coord(1)//' '       !13
+         A_operators(2,1,1) = 'PSO '//nuc_coord(2)//' '       !21
+         A_operators(2,2,1) = 'PSO '//nuc_coord(2)//' '       !22
+         A_operators(2,3,1) = 'PSO '//nuc_coord(2)//' '       !23
+         A_operators(3,1,1) = 'PSO '//nuc_coord(3)//' '       !31
+         A_operators(3,2,1) = 'PSO '//nuc_coord(3)//' '       !32
+         A_operators(3,3,1) = 'PSO '//nuc_coord(3)//' '       !33
 C        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         operadores_B(1,1,1) = 'XANGMOM '                      !11
-         operadores_B(1,2,1) = 'YANGMOM '                      !12
-         operadores_B(1,3,1) = 'ZANGMOM '                      !13
-         operadores_B(2,1,1) = 'XANGMOM '                      !21
-         operadores_B(2,2,1) = 'YANGMOM '                      !22
-         operadores_B(2,3,1) = 'ZANGMOM '                      !23
-         operadores_B(3,1,1) = 'XANGMOM '                      !31
-         operadores_B(3,2,1) = 'YANGMOM '                      !32
-         operadores_B(3,3,1) = 'ZANGMOM '                      !33
+         allocate(B_operators(3,3,NopB))
+         B_operators(1,1,1) = 'XANGMOM '                      !11
+         B_operators(1,2,1) = 'YANGMOM '                      !12
+         B_operators(1,3,1) = 'ZANGMOM '                      !13
+         B_operators(2,1,1) = 'XANGMOM '                      !21
+         B_operators(2,2,1) = 'YANGMOM '                      !22
+         B_operators(2,3,1) = 'ZANGMOM '                      !23
+         B_operators(3,1,1) = 'XANGMOM '                      !31
+         B_operators(3,2,1) = 'YANGMOM '                      !32
+         B_operators(3,3,1) = 'ZANGMOM '                      !33
       END IF
 
 
@@ -171,28 +171,28 @@ C        -----------------------------------
          NopB = 1
          TRPLET_FLAG = .FALSE.
 c        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                    ij
-         operadores_A(1,1,1) = 'PSOKE'//nuc_coord(1)           !11
-         operadores_A(1,2,1) = 'PSOKE'//nuc_coord(1)           !12
-         operadores_A(1,3,1) = 'PSOKE'//nuc_coord(1)           !13
-         operadores_A(2,1,1) = 'PSOKE'//nuc_coord(2)           !21
-         operadores_A(2,2,1) = 'PSOKE'//nuc_coord(2)           !22
-         operadores_A(2,3,1) = 'PSOKE'//nuc_coord(2)           !23
-         operadores_A(3,1,1) = 'PSOKE'//nuc_coord(3)           !31
-         operadores_A(3,2,1) = 'PSOKE'//nuc_coord(3)           !32
-         operadores_A(3,3,1) = 'PSOKE'//nuc_coord(3)           !33
+         A_operators(1,1,1) = 'PSOKE'//nuc_coord(1)           !11
+         A_operators(1,2,1) = 'PSOKE'//nuc_coord(1)           !12
+         A_operators(1,3,1) = 'PSOKE'//nuc_coord(1)           !13
+         A_operators(2,1,1) = 'PSOKE'//nuc_coord(2)           !21
+         A_operators(2,2,1) = 'PSOKE'//nuc_coord(2)           !22
+         A_operators(2,3,1) = 'PSOKE'//nuc_coord(2)           !23
+         A_operators(3,1,1) = 'PSOKE'//nuc_coord(3)           !31
+         A_operators(3,2,1) = 'PSOKE'//nuc_coord(3)           !32
+         A_operators(3,3,1) = 'PSOKE'//nuc_coord(3)           !33
 c        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         operadores_B(1,1,1) = 'XANGMOM '                      !11 
-         operadores_B(1,2,1) = 'YANGMOM '                      !12 
-         operadores_B(1,3,1) = 'ZANGMOM '                      !13 
-         operadores_B(2,1,1) = 'XANGMOM '                      !21 
-         operadores_B(2,2,1) = 'YANGMOM '                      !22 
-         operadores_B(2,3,1) = 'ZANGMOM '                      !23 
-         operadores_B(3,1,1) = 'XANGMOM '                      !31 
-         operadores_B(3,2,1) = 'YANGMOM '                      !32 
-         operadores_B(3,3,1) = 'ZANGMOM '                      !33 
+         allocate(B_operators(3,3,NopB))
+         B_operators(1,1,1) = 'XANGMOM '                      !11
+         B_operators(1,2,1) = 'YANGMOM '                      !12
+         B_operators(1,3,1) = 'ZANGMOM '                      !13
+         B_operators(2,1,1) = 'XANGMOM '                      !21
+         B_operators(2,2,1) = 'YANGMOM '                      !22
+         B_operators(2,3,1) = 'ZANGMOM '                      !23
+         B_operators(3,1,1) = 'XANGMOM '                      !31
+         B_operators(3,2,1) = 'YANGMOM '                      !32
+         B_operators(3,3,1) = 'ZANGMOM '                      !33
       END IF
 
       IF(KEY.EQ."PSOK") THEN
@@ -200,28 +200,28 @@ c        -----------------------------------
          NopB = 1
          TRPLET_FLAG = .FALSE.
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                    ij
-         operadores_A(1,1,1) = 'PSOKJ'//nuc_coord(1)           !11 
-         operadores_A(1,2,1) = 'PSOKJ'//nuc_coord(1)           !12
-         operadores_A(1,3,1) = 'PSOKJ'//nuc_coord(1)           !13
-         operadores_A(2,1,1) = 'PSOKJ'//nuc_coord(2)           !21
-         operadores_A(2,2,1) = 'PSOKJ'//nuc_coord(2)           !22
-         operadores_A(2,3,1) = 'PSOKJ'//nuc_coord(2)           !23
-         operadores_A(3,1,1) = 'PSOKJ'//nuc_coord(3)           !31
-         operadores_A(3,2,1) = 'PSOKJ'//nuc_coord(3)           !32
-         operadores_A(3,3,1) = 'PSOKJ'//nuc_coord(3)           !33
+         A_operators(1,1,1) = 'PSOKJ'//nuc_coord(1)           !11
+         A_operators(1,2,1) = 'PSOKJ'//nuc_coord(1)           !12
+         A_operators(1,3,1) = 'PSOKJ'//nuc_coord(1)           !13
+         A_operators(2,1,1) = 'PSOKJ'//nuc_coord(2)           !21
+         A_operators(2,2,1) = 'PSOKJ'//nuc_coord(2)           !22
+         A_operators(2,3,1) = 'PSOKJ'//nuc_coord(2)           !23
+         A_operators(3,1,1) = 'PSOKJ'//nuc_coord(3)           !31
+         A_operators(3,2,1) = 'PSOKJ'//nuc_coord(3)           !32
+         A_operators(3,3,1) = 'PSOKJ'//nuc_coord(3)           !33
 C        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         operadores_B(1,1,1) = 'XANGMOM '                      !11 
-         operadores_B(1,2,1) = 'YANGMOM '                      !12 
-         operadores_B(1,3,1) = 'ZANGMOM '                      !13 
-         operadores_B(2,1,1) = 'XANGMOM '                      !21 
-         operadores_B(2,2,1) = 'YANGMOM '                      !22 
-         operadores_B(2,3,1) = 'ZANGMOM '                      !23 
-         operadores_B(3,1,1) = 'XANGMOM '                      !31 
-         operadores_B(3,2,1) = 'YANGMOM '                      !32 
-         operadores_B(3,3,1) = 'ZANGMOM '                      !33 
+         allocate(B_operators(3,3,NopB))
+         B_operators(1,1,1) = 'XANGMOM '                      !11
+         B_operators(1,2,1) = 'YANGMOM '                      !12
+         B_operators(1,3,1) = 'ZANGMOM '                      !13
+         B_operators(2,1,1) = 'XANGMOM '                      !21
+         B_operators(2,2,1) = 'YANGMOM '                      !22
+         B_operators(2,3,1) = 'ZANGMOM '                      !23
+         B_operators(3,1,1) = 'XANGMOM '                      !31
+         B_operators(3,2,1) = 'YANGMOM '                      !32
+         B_operators(3,3,1) = 'ZANGMOM '                      !33
       END IF
 
 
@@ -230,48 +230,48 @@ C        -----------------------------------
          NopB = 1
          TRPLET_FLAG = .FALSE.
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                    ij
-         operadores_A(1,1,1) = 'PSO '//nuc_coord(1)//' '       !11 
-         operadores_A(1,2,1) = 'PSO '//nuc_coord(1)//' '       !12
-         operadores_A(1,3,1) = 'PSO '//nuc_coord(1)//' '       !13
-         operadores_A(2,1,1) = 'PSO '//nuc_coord(2)//' '       !21
-         operadores_A(2,2,1) = 'PSO '//nuc_coord(2)//' '       !22
-         operadores_A(2,3,1) = 'PSO '//nuc_coord(2)//' '       !23
-         operadores_A(3,1,1) = 'PSO '//nuc_coord(3)//' '       !31
-         operadores_A(3,2,1) = 'PSO '//nuc_coord(3)//' '       !32
-         operadores_A(3,3,1) = 'PSO '//nuc_coord(3)//' '       !33
+         A_operators(1,1,1) = 'PSO '//nuc_coord(1)//' '       !11
+         A_operators(1,2,1) = 'PSO '//nuc_coord(1)//' '       !12
+         A_operators(1,3,1) = 'PSO '//nuc_coord(1)//' '       !13
+         A_operators(2,1,1) = 'PSO '//nuc_coord(2)//' '       !21
+         A_operators(2,2,1) = 'PSO '//nuc_coord(2)//' '       !22
+         A_operators(2,3,1) = 'PSO '//nuc_coord(2)//' '       !23
+         A_operators(3,1,1) = 'PSO '//nuc_coord(3)//' '       !31
+         A_operators(3,2,1) = 'PSO '//nuc_coord(3)//' '       !32
+         A_operators(3,3,1) = 'PSO '//nuc_coord(3)//' '       !33
 C        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         operadores_B(1,1,1) = CHRXYZ(1)//'OZKE   '            !11 
-         operadores_B(1,2,1) = CHRXYZ(2)//'OZKE   '            !12 
-         operadores_B(1,3,1) = CHRXYZ(3)//'OZKE   '            !13 
-         operadores_B(2,1,1) = CHRXYZ(1)//'OZKE   '            !21 
-         operadores_B(2,2,1) = CHRXYZ(2)//'OZKE   '            !22 
-         operadores_B(2,3,1) = CHRXYZ(3)//'OZKE   '            !23 
-         operadores_B(3,1,1) = CHRXYZ(1)//'OZKE   '            !31 
-         operadores_B(3,2,1) = CHRXYZ(2)//'OZKE   '            !32 
-         operadores_B(3,3,1) = CHRXYZ(3)//'OZKE   '            !33 
+         allocate(B_operators(3,3,NopB))
+         B_operators(1,1,1) = CHRXYZ(1)//'OZKE   '            !11
+         B_operators(1,2,1) = CHRXYZ(2)//'OZKE   '            !12
+         B_operators(1,3,1) = CHRXYZ(3)//'OZKE   '            !13
+         B_operators(2,1,1) = CHRXYZ(1)//'OZKE   '            !21
+         B_operators(2,2,1) = CHRXYZ(2)//'OZKE   '            !22
+         B_operators(2,3,1) = CHRXYZ(3)//'OZKE   '            !23
+         B_operators(3,1,1) = CHRXYZ(1)//'OZKE   '            !31
+         B_operators(3,2,1) = CHRXYZ(2)//'OZKE   '            !32
+         B_operators(3,3,1) = CHRXYZ(3)//'OZKE   '            !33
       END IF
 
       IF (KEY.EQ."FCZK") THEN
          NopA = 1
          TRPLET_FLAG = .TRUE.
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                          ij
-         operadores_A(:,:,:) = ' '
-         operadores_A(1,1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !11
-         operadores_A(2,2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !22
-         operadores_A(3,3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !33
+         A_operators(:,:,:) = ' '
+         A_operators(1,1,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !11
+         A_operators(2,2,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !22
+         A_operators(3,3,1) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number  !33
 C        -----------------------------------
          NopB = 1
-         allocate(operadores_B(3,3,NopB))
+         allocate(B_operators(3,3,NopB))
          IF(KEY.EQ."FCZK") THEN
-            operadores_B(:,:,:) = ' '
-            operadores_B(1,1,1) = 'KINENERG'                      !11
-            operadores_B(2,2,1) = 'KINENERG'                      !22
-            operadores_B(3,3,1) = 'KINENERG'                      !33
+            B_operators(:,:,:) = ' '
+            B_operators(1,1,1) = 'KINENERG'                      !11
+            B_operators(2,2,1) = 'KINENERG'                      !22
+            B_operators(3,3,1) = 'KINENERG'                      !33
          END IF
 
       END IF
@@ -282,42 +282,42 @@ C        -----------------------------------
          NopB = 1
          TRPLET_FLAG = .TRUE.
 C        -----------------------------------
-         allocate(operadores_A(3,3,NopA))
+         allocate(A_operators(3,3,NopA))
 c                  3*i+j-3                                          ij
-         operadores_A(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+         A_operators(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
 C        -----------------------------------
-         allocate(operadores_B(3,3,NopB))
-         operadores_B(1,1,1) = 'dd/dxdx '
-         operadores_B(1,2,1) = 'dd/dxdy '
-         operadores_B(1,3,1) = 'dd/dxdz '
+         allocate(B_operators(3,3,NopB))
+         B_operators(1,1,1) = 'dd/dxdx '
+         B_operators(1,2,1) = 'dd/dxdy '
+         B_operators(1,3,1) = 'dd/dxdz '
 C        ----------------------------------
-         operadores_B(2,1,1) = 'dd/dxdy '
-         operadores_B(2,2,1) = 'dd/dydy '
-         operadores_B(2,3,1) = 'dd/dydz '
+         B_operators(2,1,1) = 'dd/dxdy '
+         B_operators(2,2,1) = 'dd/dydy '
+         B_operators(2,3,1) = 'dd/dydz '
 C        ----------------------------------
-         operadores_B(3,1,1) = 'dd/dxdz '
-         operadores_B(3,2,1) = 'dd/dydz '
-         operadores_B(3,3,1) = 'dd/dzdz '
+         B_operators(3,1,1) = 'dd/dxdz '
+         B_operators(3,2,1) = 'dd/dydz '
+         B_operators(3,3,1) = 'dd/dzdz '
       END IF
 
       IF (KEY.EQ."SDK ") THEN
          NopA = 1
          NopB = 1
          TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
+         allocate(A_operators(3,3,NopA))
+         allocate(B_operators(3,3,NopB))
 C        -----------------------------------
-         operadores_A(1,1,1) = 'SD '//nuc_coord(1)//' x'
-         operadores_A(1,2,1) = 'SD '//nuc_coord(1)//' y'
-         operadores_A(1,3,1) = 'SD '//nuc_coord(1)//' z'
-         operadores_A(2,1,1) = 'SD '//nuc_coord(2)//' x'
-         operadores_A(2,2,1) = 'SD '//nuc_coord(2)//' y'
-         operadores_A(2,3,1) = 'SD '//nuc_coord(2)//' z'
-         operadores_A(3,1,1) = 'SD '//nuc_coord(3)//' x'
-         operadores_A(3,2,1) = 'SD '//nuc_coord(3)//' y'
-         operadores_A(3,3,1) = 'SD '//nuc_coord(3)//' z'
+         A_operators(1,1,1) = 'SD '//nuc_coord(1)//' x'
+         A_operators(1,2,1) = 'SD '//nuc_coord(1)//' y'
+         A_operators(1,3,1) = 'SD '//nuc_coord(1)//' z'
+         A_operators(2,1,1) = 'SD '//nuc_coord(2)//' x'
+         A_operators(2,2,1) = 'SD '//nuc_coord(2)//' y'
+         A_operators(2,3,1) = 'SD '//nuc_coord(2)//' z'
+         A_operators(3,1,1) = 'SD '//nuc_coord(3)//' x'
+         A_operators(3,2,1) = 'SD '//nuc_coord(3)//' y'
+         A_operators(3,3,1) = 'SD '//nuc_coord(3)//' z'
 C        -----------------------------------
-         operadores_B(:,:,:) = 'KINENERG'
+         B_operators(:,:,:) = 'KINENERG'
 C        -----------------------------------
       END IF
 
@@ -326,54 +326,54 @@ C        -----------------------------------
          NopA = 3
          NopB = 3
          TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
+         allocate(A_operators(3,3,NopA))
+         allocate(B_operators(3,3,NopB))
 C        ----------------------------------- 
 c                      3*i+j-3                                       ij
          DO K=1, 3
-            operadores_A(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
-            operadores_A(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
-            operadores_A(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
-            operadores_A(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
-            operadores_A(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
-            operadores_A(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
-            operadores_A(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
-            operadores_A(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
-            operadores_A(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
+            A_operators(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
+            A_operators(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
+            A_operators(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
+            A_operators(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
+            A_operators(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
+            A_operators(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
+            A_operators(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
+            A_operators(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
+            A_operators(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
          END DO
 C        -----------------------------------
 c        K=1
-         operadores_B(1,1,1) = 'dd/dxdx ' !11
-         operadores_B(2,1,1) = 'dd/dxdx ' !21
-         operadores_B(3,1,1) = 'dd/dxdx ' !31
-         operadores_B(1,2,1) = 'dd/dxdy ' !12
-         operadores_B(2,2,1) = 'dd/dxdy ' !22
-         operadores_B(3,2,1) = 'dd/dxdy ' !32
-         operadores_B(1,3,1) = 'dd/dxdz ' !13
-         operadores_B(2,3,1) = 'dd/dxdz ' !23
-         operadores_B(3,3,1) = 'dd/dxdz ' !33
+         B_operators(1,1,1) = 'dd/dxdx ' !11
+         B_operators(2,1,1) = 'dd/dxdx ' !21
+         B_operators(3,1,1) = 'dd/dxdx ' !31
+         B_operators(1,2,1) = 'dd/dxdy ' !12
+         B_operators(2,2,1) = 'dd/dxdy ' !22
+         B_operators(3,2,1) = 'dd/dxdy ' !32
+         B_operators(1,3,1) = 'dd/dxdz ' !13
+         B_operators(2,3,1) = 'dd/dxdz ' !23
+         B_operators(3,3,1) = 'dd/dxdz ' !33
 C        -----------------------------------
 c        K=2
-         operadores_B(1,1,2) = 'dd/dxdy ' !11
-         operadores_B(2,1,2) = 'dd/dxdy ' !21
-         operadores_B(3,1,2) = 'dd/dxdy ' !31
-         operadores_B(1,2,2) = 'dd/dydy ' !12
-         operadores_B(2,2,2) = 'dd/dydy ' !22
-         operadores_B(3,2,2) = 'dd/dydy ' !32
-         operadores_B(1,3,2) = 'dd/dydz ' !13
-         operadores_B(2,3,2) = 'dd/dydz ' !23
-         operadores_B(3,3,2) = 'dd/dydz ' !33
+         B_operators(1,1,2) = 'dd/dxdy ' !11
+         B_operators(2,1,2) = 'dd/dxdy ' !21
+         B_operators(3,1,2) = 'dd/dxdy ' !31
+         B_operators(1,2,2) = 'dd/dydy ' !12
+         B_operators(2,2,2) = 'dd/dydy ' !22
+         B_operators(3,2,2) = 'dd/dydy ' !32
+         B_operators(1,3,2) = 'dd/dydz ' !13
+         B_operators(2,3,2) = 'dd/dydz ' !23
+         B_operators(3,3,2) = 'dd/dydz ' !33
 C        -----------------------------------
 c        K=3
-         operadores_B(1,1,3) = 'dd/dxdz ' !11
-         operadores_B(2,1,3) = 'dd/dxdz ' !21
-         operadores_B(3,1,3) = 'dd/dxdz ' !31
-         operadores_B(1,2,3) = 'dd/dydz ' !12
-         operadores_B(2,2,3) = 'dd/dydz ' !22
-         operadores_B(3,2,3) = 'dd/dydz ' !32
-         operadores_B(1,3,3) = 'dd/dzdz ' !13
-         operadores_B(2,3,3) = 'dd/dzdz ' !23
-         operadores_B(3,3,3) = 'dd/dzdz ' !33
+         B_operators(1,1,3) = 'dd/dxdz ' !11
+         B_operators(2,1,3) = 'dd/dxdz ' !21
+         B_operators(3,1,3) = 'dd/dxdz ' !31
+         B_operators(1,2,3) = 'dd/dydz ' !12
+         B_operators(2,2,3) = 'dd/dydz ' !22
+         B_operators(3,2,3) = 'dd/dydz ' !32
+         B_operators(1,3,3) = 'dd/dzdz ' !13
+         B_operators(2,3,3) = 'dd/dzdz ' !23
+         B_operators(3,3,3) = 'dd/dzdz ' !33
 C        ----------------------------------
       END IF
 
@@ -381,49 +381,49 @@ C        ----------------------------------
          NopA = 3
          NopB = 3
          TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
+         allocate(A_operators(3,3,NopA))
+         allocate(B_operators(3,3,NopB))
 C        ----------------------------------- 
-         operadores_A(1,1,1) = 'dd/dxdx '
-         operadores_A(1,2,1) = 'dd/dxdy '
-         operadores_A(1,3,1) = 'dd/dxdz '
-         operadores_A(2,1,1) = 'dd/dxdx '
-         operadores_A(2,2,1) = 'dd/dxdy '
-         operadores_A(2,3,1) = 'dd/dxdz '
-         operadores_A(3,1,1) = 'dd/dxdx '
-         operadores_A(3,2,1) = 'dd/dxdy '
-         operadores_A(3,3,1) = 'dd/dxdz '
+         A_operators(1,1,1) = 'dd/dxdx '
+         A_operators(1,2,1) = 'dd/dxdy '
+         A_operators(1,3,1) = 'dd/dxdz '
+         A_operators(2,1,1) = 'dd/dxdx '
+         A_operators(2,2,1) = 'dd/dxdy '
+         A_operators(2,3,1) = 'dd/dxdz '
+         A_operators(3,1,1) = 'dd/dxdx '
+         A_operators(3,2,1) = 'dd/dxdy '
+         A_operators(3,3,1) = 'dd/dxdz '
 
-         operadores_A(1,1,2) = 'dd/dxdy '
-         operadores_A(1,2,2) = 'dd/dydy '
-         operadores_A(1,3,2) = 'dd/dydz '
-         operadores_A(2,1,2) = 'dd/dxdy '
-         operadores_A(2,2,2) = 'dd/dydy '
-         operadores_A(2,3,2) = 'dd/dydz '
-         operadores_A(3,1,2) = 'dd/dxdy '
-         operadores_A(3,2,2) = 'dd/dydy '
-         operadores_A(3,3,2) = 'dd/dydz '
+         A_operators(1,1,2) = 'dd/dxdy '
+         A_operators(1,2,2) = 'dd/dydy '
+         A_operators(1,3,2) = 'dd/dydz '
+         A_operators(2,1,2) = 'dd/dxdy '
+         A_operators(2,2,2) = 'dd/dydy '
+         A_operators(2,3,2) = 'dd/dydz '
+         A_operators(3,1,2) = 'dd/dxdy '
+         A_operators(3,2,2) = 'dd/dydy '
+         A_operators(3,3,2) = 'dd/dydz '
 
-         operadores_A(1,1,3) = 'dd/dxdz '
-         operadores_A(1,2,3) = 'dd/dydz '
-         operadores_A(1,3,3) = 'dd/dzdz '
-         operadores_A(2,1,3) = 'dd/dxdz '
-         operadores_A(2,2,3) = 'dd/dydz '
-         operadores_A(2,3,3) = 'dd/dzdz '
-         operadores_A(3,1,3) = 'dd/dxdz '
-         operadores_A(3,2,3) = 'dd/dydz '
-         operadores_A(3,3,3) = 'dd/dzdz '
+         A_operators(1,1,3) = 'dd/dxdz '
+         A_operators(1,2,3) = 'dd/dydz '
+         A_operators(1,3,3) = 'dd/dzdz '
+         A_operators(2,1,3) = 'dd/dxdz '
+         A_operators(2,2,3) = 'dd/dydz '
+         A_operators(2,3,3) = 'dd/dzdz '
+         A_operators(3,1,3) = 'dd/dxdz '
+         A_operators(3,2,3) = 'dd/dydz '
+         A_operators(3,3,3) = 'dd/dzdz '
 C        -----------------------------------
          DO K=1, 3
-            operadores_B(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
-            operadores_B(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
-            operadores_B(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
-            operadores_B(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
-            operadores_B(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
-            operadores_B(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
-            operadores_B(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
-            operadores_B(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
-            operadores_B(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
+            B_operators(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
+            B_operators(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
+            B_operators(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
+            B_operators(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
+            B_operators(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
+            B_operators(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
+            B_operators(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
+            B_operators(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
+            B_operators(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
          END DO
 C        -----------------------------------
       END IF
@@ -432,22 +432,22 @@ C        -----------------------------------
          NopA = 1
          NopB = 1
          TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
+         allocate(A_operators(3,3,NopA))
+         allocate(B_operators(3,3,NopB))
 C        -----------------------------------
 c                  3*i+j-3                               ij
 C        -----------------------------------
-         operadores_A(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
+         A_operators(:,:,:) = 'FC '//NAMN(LRATOM)(1:2)//nuc_number
 C        -----------------------------------
-         operadores_B(1,1,1) = 'SOMF  XX' !11
-         operadores_B(1,2,1) = 'SOMF  XY' !12
-         operadores_B(1,3,1) = 'SOMF  XZ' !13
-         operadores_B(2,1,1) = 'SOMF  YX' !21
-         operadores_B(2,2,1) = 'SOMF  YY' !22
-         operadores_B(2,3,1) = 'SOMF  YZ' !23
-         operadores_B(3,1,1) = 'SOMF  ZX' !31
-         operadores_B(3,2,1) = 'SOMF  ZY' !32
-         operadores_B(3,3,1) = 'SOMF  ZZ' !33
+         B_operators(1,1,1) = 'SOMF  XX' !11
+         B_operators(1,2,1) = 'SOMF  XY' !12
+         B_operators(1,3,1) = 'SOMF  XZ' !13
+         B_operators(2,1,1) = 'SOMF  YX' !21
+         B_operators(2,2,1) = 'SOMF  YY' !22
+         B_operators(2,3,1) = 'SOMF  YZ' !23
+         B_operators(3,1,1) = 'SOMF  ZX' !31
+         B_operators(3,2,1) = 'SOMF  ZY' !32
+         B_operators(3,3,1) = 'SOMF  ZZ' !33
 C        -----------------------------------
       END IF
 
@@ -455,31 +455,31 @@ C        -----------------------------------
          NopA = 3
          NopB = 3
          TRPLET_FLAG = .TRUE.
-         allocate(operadores_A(3,3,NopA))
-         allocate(operadores_B(3,3,NopB))
+         allocate(A_operators(3,3,NopA))
+         allocate(B_operators(3,3,NopB))
 C        -----------------------------------
          DO K=1, 3
-            operadores_A(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
-            operadores_A(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
-            operadores_A(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
-            operadores_A(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
-            operadores_A(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
-            operadores_A(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
-            operadores_A(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
-            operadores_A(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
-            operadores_A(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
+            A_operators(1,1,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !11
+            A_operators(1,2,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !12
+            A_operators(1,3,K) = 'SD '//nuc_coord(1)//' '//CHRXYZ(-K)  !13
+            A_operators(2,1,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !21
+            A_operators(2,2,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !22
+            A_operators(2,3,K) = 'SD '//nuc_coord(2)//' '//CHRXYZ(-K)  !23
+            A_operators(3,1,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !31
+            A_operators(3,2,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !32
+            A_operators(3,3,K) = 'SD '//nuc_coord(3)//' '//CHRXYZ(-K)  !33
          END DO
 C        -----------------------------------
          DO K=1, 3
-            operadores_B(1,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !11
-            operadores_B(1,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !12
-            operadores_B(1,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !13
-            operadores_B(2,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !21
-            operadores_B(2,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !22
-            operadores_B(2,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !23
-            operadores_B(3,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !31
-            operadores_B(3,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !32
-            operadores_B(3,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !33
+            B_operators(1,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !11
+            B_operators(1,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !12
+            B_operators(1,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !13
+            B_operators(2,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !21
+            B_operators(2,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !22
+            B_operators(2,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !23
+            B_operators(3,1,K) = 'SOMF  '//CHRXYZ(K)//'X' !31
+            B_operators(3,2,K) = 'SOMF  '//CHRXYZ(K)//'Y' !32
+            B_operators(3,3,K) = 'SOMF  '//CHRXYZ(K)//'Z' !33
          END DO
 C        -----------------------------------
          END IF
@@ -492,23 +492,23 @@ c     Elemento ij del tensor de shielding
          do k = 1, NopA
            IF ((NopA.Eq.1).or.(NopB.Eq.1)) THEN !Combine all A with all B
             do l = 1, NopB
-               operadores_duo(1) = operadores_A(i,j,k)
-               operadores_duo(2) = operadores_B(i,j,l)
+               operators_duo(1) = A_operators(i,j,k)
+               operators_duo(2) = B_operators(i,j,l)
 
-                  call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
+                  call get_LRvalue(LR(i,j),operators_duo,TRIPLETE) !LR from here has an extra minus sign
                TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
-c               IF (JIMPRT .GE. 3) write(lupri,*) operadores_duo(1),
-c     &         ' ',operadores_duo(2)," LR: ",LR(i,j)
+c               IF (JIMPRT .GE. 3) write(lupri,*) operators_duo(1),
+c     &         ' ',operators_duo(2)," LR: ",LR(i,j)
             end do
          else
             l = k
-            operadores_duo(1) = operadores_A(i,j,k)
-            operadores_duo(2) = operadores_B(i,j,l)
+            operators_duo(1) = A_operators(i,j,k)
+            operators_duo(2) = B_operators(i,j,l)
 
-            call get_LRvalue(LR(i,j),operadores_duo,TRIPLETE) !LR from here has an extra minus sign
+            call get_LRvalue(LR(i,j),operators_duo,TRIPLETE) !LR from here has an extra minus sign
             TOTALLR(i,j) = TOTALLR(i,j) - LR(i,j) !LR sign is corrected here
-c         IF (JIMPRT .GE. 3) write(lupri,*) 'Labels:', operadores_duo(1),
-c     &      ' ',operadores_duo(2)," LR:",LR(i,j)
+c         IF (JIMPRT .GE. 3) write(lupri,*) 'Labels:', operators_duo(1),
+c     &      ' ',operators_duo(2)," LR:",LR(i,j)
          end if
          end do
 
@@ -517,7 +517,7 @@ c     &      ' ',operadores_duo(2)," LR:",LR(i,j)
 c            write(lupri,*) KEY,"(",i,",",j,"):",LRtensor(i,j)
 c            write(lupri,*)
             IF (JIMPRT .GE. 3) write(lupri,*) '    Labels: ', 
-     &       operadores_duo(1),' ',operadores_duo(2),". LR:",LR(i,j)
+     &       operators_duo(1),' ',operators_duo(2),". LR:",LR(i,j)
          END IF
 
       end do
@@ -536,8 +536,8 @@ c            write(lupri,*)
       IF (KEY.EQ.'SDK ') LRSDK = LRtensor
       IF (KEY.EQ.'SDD ') LRSDD = LRtensor
 
-      deallocate(operadores_A)
-      deallocate(operadores_B)
+      deallocate(A_operators)
+      deallocate(B_operators)
 
       CALL QEXIT('LRSLINEAR')
 
@@ -562,7 +562,7 @@ C  /* Deck newlrinput_all */
 #include "chrnos.h"
 #include "chrxyz.h"
 
-      CHARACTER*8, allocatable :: operadores(:)
+      CHARACTER*8, allocatable :: operators(:)
       INTEGER                  :: NopA, NopB, NLRoperators
       INTEGER :: SUMA_B, NNLRATOMS
       INTEGER, intent(in)  :: LRATOMS(NNLRATOMS)
@@ -625,69 +625,69 @@ C         'FCDE' 'FCDE'
       END IF
       IF ((TRIPLETE).AND.(SIGMAP1T)) NLRoperators = NLRoperators + 26
 
-      allocate(operadores(NLRoperators))
+      allocate(operators(NLRoperators))
       el = 1
 
 
       IF (.not.(TRIPLETE)) THEN
       IF (SIGMAPNR) THEN ! Non-relativistic paramagnetic contribution
 C        ---------------------------------------------------
-         operadores(el)   = 'XANGMOM '
-         operadores(el+1) = 'YANGMOM '
-         operadores(el+2) = 'ZANGMOM '
+         operators(el)   = 'XANGMOM '
+         operators(el+1) = 'YANGMOM '
+         operators(el+2) = 'ZANGMOM '
 C        ---------------------------------------------------
-         operadores(el+3) = 'PSO '//nuc_coord(1)//' '
-         operadores(el+4) = 'PSO '//nuc_coord(2)//' '
-         operadores(el+5) = 'PSO '//nuc_coord(3)//' '
+         operators(el+3) = 'PSO '//nuc_coord(1)//' '
+         operators(el+4) = 'PSO '//nuc_coord(2)//' '
+         operators(el+5) = 'PSO '//nuc_coord(3)//' '
 C        ---------------------------------------------------
          el = el + 6
       END IF
 
       IF (SIGMAD1S) THEN !SIGMAD1S: DIAM and DIAD
 C        ---------------------------------------------------
-         operadores(el)   = nuc_coord(1)//'NSCO'//CHRXYZ(1)
-         operadores(el+1) = nuc_coord(1)//'NSCO'//CHRXYZ(2)
-         operadores(el+2) = nuc_coord(1)//'NSCO'//CHRXYZ(3)
-         operadores(el+3) = nuc_coord(2)//'NSCO'//CHRXYZ(1)
-         operadores(el+4) = nuc_coord(2)//'NSCO'//CHRXYZ(2)
-         operadores(el+5) = nuc_coord(2)//'NSCO'//CHRXYZ(3)
-         operadores(el+6) = nuc_coord(3)//'NSCO'//CHRXYZ(1)
-         operadores(el+7) = nuc_coord(3)//'NSCO'//CHRXYZ(2)
-         operadores(el+8) = nuc_coord(3)//'NSCO'//CHRXYZ(3)
+         operators(el)   = nuc_coord(1)//'NSCO'//CHRXYZ(1)
+         operators(el+1) = nuc_coord(1)//'NSCO'//CHRXYZ(2)
+         operators(el+2) = nuc_coord(1)//'NSCO'//CHRXYZ(3)
+         operators(el+3) = nuc_coord(2)//'NSCO'//CHRXYZ(1)
+         operators(el+4) = nuc_coord(2)//'NSCO'//CHRXYZ(2)
+         operators(el+5) = nuc_coord(2)//'NSCO'//CHRXYZ(3)
+         operators(el+6) = nuc_coord(3)//'NSCO'//CHRXYZ(1)
+         operators(el+7) = nuc_coord(3)//'NSCO'//CHRXYZ(2)
+         operators(el+8) = nuc_coord(3)//'NSCO'//CHRXYZ(3)
 C        ---------------------------------------------------
 C        ---------------------------------------------------
 C        ---------------------------------------------------
-         operadores(el+9)  = 'DARWIN  '
+         operators(el+9)  = 'DARWIN  '
 C        ---------------------------------------------------
-         operadores(el+10) = 'MASSVELO'
+         operators(el+10) = 'MASSVELO'
 C        ---------------------------------------------------
          el = el + 11
       END IF
 
       IF (SIGMAP1S) THEN !SIGMAP1S: PSOK and OZK
 C        ---------------------------------------------------
-         operadores(el) = 'XANGMOM '
-         operadores(el+1) = 'YANGMOM '
-         operadores(el+2) = 'ZANGMOM '
+         operators(el) = 'XANGMOM '
+         operators(el+1) = 'YANGMOM '
+         operators(el+2) = 'ZANGMOM '
 C        ---------------------------------------------------
 C        ---------------------------------------------------
-         operadores(el+3) = 'PSO '//nuc_coord(1)//' '
-         operadores(el+4) = 'PSO '//nuc_coord(2)//' '
-         operadores(el+5) = 'PSO '//nuc_coord(3)//' '
+         operators(el+3) = 'PSO '//nuc_coord(1)//' '
+         operators(el+4) = 'PSO '//nuc_coord(2)//' '
+         operators(el+5) = 'PSO '//nuc_coord(3)//' '
 C        ---------------------------------------------------
-         operadores(el+6)  = CHRXYZ(1)//'OZKE   '
-         operadores(el+7) = CHRXYZ(2)//'OZKE   '
-         operadores(el+8) = CHRXYZ(3)//'OZKE   '
+         operators(el+6)  = CHRXYZ(1)//'OZKE   '
+         operators(el+7) = CHRXYZ(2)//'OZKE   '
+         operators(el+8) = CHRXYZ(3)//'OZKE   '
 C        ---------------------------------------------------
-         operadores(el+9)   = 'PSOKJ'//nuc_coord(1)
-         operadores(el+10) = 'PSOKJ'//nuc_coord(2)
-         operadores(el+11) = 'PSOKJ'//nuc_coord(3)
+         operators(el+9)   = 'PSOKJ'//nuc_coord(1)
+         operators(el+10) = 'PSOKJ'//nuc_coord(2)
+         operators(el+11) = 'PSOKJ'//nuc_coord(3)
          el = el + 12
 C        ---------------------------------------------------
          IF (EXTRAINFO) THEN
-            operadores(el)   = 'PSOKE'//nuc_coord(1)
-            operadores(el+1) = 'PSOKE'//nuc_coord(2)
-            operadores(el+2) = 'PSOKE'//nuc_coord(3)
+            operators(el)   = 'PSOKE'//nuc_coord(1)
+            operators(el+1) = 'PSOKE'//nuc_coord(2)
+            operators(el+2) = 'PSOKE'//nuc_coord(3)
             el = el + 3
          END IF
 C        ---------------------------------------------------
@@ -697,56 +697,56 @@ C        ---------------------------------------------------
       IF (TRIPLETE) THEN
       IF (SIGMAP1T) THEN !FCZK, FCDE, FCBS, SDK1, SDD and SDBS
 C        ---------------------------------------------------
-         operadores(el)   = 'FC '//NAMN(LRATOM)(1:2)//nuc_number !FCZK & FCBS
+         operators(el)   = 'FC '//NAMN(LRATOM)(1:2)//nuc_number !FCZK & FCBS
 C        ---------------------------------------------------
-         operadores(el+1) = 'SD '//nuc_coord(1)//' x'            !SDK1 & SDBS
-         operadores(el+2) = 'SD '//nuc_coord(1)//' y'
-         operadores(el+3) = 'SD '//nuc_coord(1)//' z'
-         operadores(el+4) = 'SD '//nuc_coord(2)//' x'
-         operadores(el+5) = 'SD '//nuc_coord(2)//' y'
-         operadores(el+6) = 'SD '//nuc_coord(2)//' z'
-         operadores(el+7) = 'SD '//nuc_coord(3)//' x'
-         operadores(el+8) = 'SD '//nuc_coord(3)//' y'
-         operadores(el+9) = 'SD '//nuc_coord(3)//' z'
+         operators(el+1) = 'SD '//nuc_coord(1)//' x'            !SDK1 & SDBS
+         operators(el+2) = 'SD '//nuc_coord(1)//' y'
+         operators(el+3) = 'SD '//nuc_coord(1)//' z'
+         operators(el+4) = 'SD '//nuc_coord(2)//' x'
+         operators(el+5) = 'SD '//nuc_coord(2)//' y'
+         operators(el+6) = 'SD '//nuc_coord(2)//' z'
+         operators(el+7) = 'SD '//nuc_coord(3)//' x'
+         operators(el+8) = 'SD '//nuc_coord(3)//' y'
+         operators(el+9) = 'SD '//nuc_coord(3)//' z'
 C        ---------------------------------------------------
 C        ---------------------------------------------------
-         operadores(el+10) = 'KINENERG'                          !FCZK
+         operators(el+10) = 'KINENERG'                          !FCZK
 C        ---------------------------------------------------
-         operadores(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD
-         operadores(el+12) = 'dd/dxdy '
-         operadores(el+13) = 'dd/dxdz '
-         operadores(el+14) = 'dd/dydy '
-         operadores(el+15) = 'dd/dydz '
-         operadores(el+16) = 'dd/dzdz '
+         operators(el+11) = 'dd/dxdx '                          !FCDE,SDK1 & SDD
+         operators(el+12) = 'dd/dxdy '
+         operators(el+13) = 'dd/dxdz '
+         operators(el+14) = 'dd/dydy '
+         operators(el+15) = 'dd/dydz '
+         operators(el+16) = 'dd/dzdz '
 C        ---------------------------------------------------
-         operadores(el+17) = 'SOMF  XX'                          !FCBS & SDBS
-         operadores(el+18) = 'SOMF  XY'
-         operadores(el+19) = 'SOMF  XZ'
-         operadores(el+20) = 'SOMF  YX'
-         operadores(el+21) = 'SOMF  YY'
-         operadores(el+22) = 'SOMF  YZ'
-         operadores(el+23) = 'SOMF  ZX'
-         operadores(el+24) = 'SOMF  ZY'
-         operadores(el+25) = 'SOMF  ZZ'
+         operators(el+17) = 'SOMF  XX'                          !FCBS & SDBS
+         operators(el+18) = 'SOMF  XY'
+         operators(el+19) = 'SOMF  XZ'
+         operators(el+20) = 'SOMF  YX'
+         operators(el+21) = 'SOMF  YY'
+         operators(el+22) = 'SOMF  YZ'
+         operators(el+23) = 'SOMF  ZX'
+         operators(el+24) = 'SOMF  ZY'
+         operators(el+25) = 'SOMF  ZZ'
 C        --------------------------------------------------- !NEW SDZK &SDD1
-c         operadores(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
+c         operators(el+26) = 'XYEFG'//CHRNOS(LRATOM/10)//
 c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
+c         operators(el+27) = 'XZEFG'//CHRNOS(LRATOM/10)//
 c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
-c         operadores(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
+c         operators(el+28) = 'YZEFG'//CHRNOS(LRATOM/10)//
 c     &   CHRNOS(MOD(LRATOM,10))//CHRNOS(1)
 C        ---------------------------------------------------
          el = el + 26
       END IF
       END IF
 
-      do i = 1, SIZE(operadores,DIM=1)
+      do i = 1, SIZE(operators,DIM=1)
          write(fileID,'(a)') '.PROPRT'
-         write(fileID,'(a)') operadores(i)
+         write(fileID,'(a)') operators(i)
       end do
 
 
-      deallocate(operadores)
+      deallocate(operators)
       END DO
 
       write(fileID,'(a)') '**END OF DALTON INPUT'

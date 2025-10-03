@@ -73,18 +73,18 @@ def _get_DIFC_II(mol, atm_id, cartesian = False ):
     with mol.with_rinv_origin((mol.atom_coord(atm_id))):
         if (cartesian):
 #	    Cartesians
-            iprinviprip = mol_h2o.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-            rinvipiprip = mol_h2o.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-            ipiprinvrip = mol_h2o.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            iprinviprip = mol_system.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            rinvipiprip = mol_system.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            ipiprinvrip = mol_system.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
             iprinvip = mol.intor('int1e_iprinvip_cart', 9).reshape(3,3,nao_cart,nao_cart)
             ipiprinv = mol.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)
             rinvipip=numpy.transpose(ipiprinv,axes=[0,1,3,2]).conjugate()
             integrals=numpy.zeros([3,3,nao_cart,nao_cart])
         else :
 #	    Sphericals
-            iprinviprip = mol_h2o.intor('int1e_iprinviprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
-            rinvipiprip = mol_h2o.intor('int1e_rinvipiprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
-            ipiprinvrip = mol_h2o.intor('int1e_ipiprinvrip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            iprinviprip = mol_system.intor('int1e_iprinviprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            rinvipiprip = mol_system.intor('int1e_rinvipiprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            ipiprinvrip = mol_system.intor('int1e_ipiprinvrip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
             iprinvip = mol.intor('int1e_iprinvip_sph', 9).reshape(3,3,nao_sph,nao_sph)
             ipiprinv = mol.intor('int1e_ipiprinv_sph', 9).reshape(3,3,nao_sph,nao_sph)
             rinvipip=numpy.transpose(ipiprinv,axes=[0,1,3,2]).conjugate()
@@ -108,15 +108,15 @@ def _get_DIFC_II(mol, atm_id, cartesian = False ):
 
 base = "dyall_cv4z"
 
-mol_h2o = gto.M(atom="molecula.xyz",basis = base)
-mol_h2o, ctr_coeff = mol_h2o.to_uncontracted_cartesian_basis()
+mol_system = gto.M(atom="molecula.xyz",basis = base)
+mol_system, ctr_coeff = mol_system.to_uncontracted_cartesian_basis()
 
-naos_sph = mol_h2o.intor('int1e_ovlp_sph').shape[0]
-nao_cart = mol_h2o.intor('int1e_ovlp_cart').shape[0]
-nro_operadores=numpy.array([19*mol_h2o.natm])
+naos_sph = mol_system.intor('int1e_ovlp_sph').shape[0]
+nao_cart = mol_system.intor('int1e_ovlp_cart').shape[0]
+operators_N=numpy.array([19*mol_system.natm])
 print("naos_cart:",nao_cart)
 print("naos_sph:",naos_sph)
-print("Number of operators: ",nro_operadores)
+print("Number of operators: ",operators_N)
 
 cartesian = False
 if (cartesian):
@@ -126,7 +126,7 @@ else:
 
 
 with open("shi.bin", "wb") as file:
-    numpy.array(nro_operadores[0], dtype=numpy.int32).tofile(file)
+    numpy.array(operators_N[0], dtype=numpy.int32).tofile(file)
     if (cartesian):
        numpy.array(nao_cart, dtype=numpy.int32).tofile(file)
     else:
@@ -134,16 +134,16 @@ with open("shi.bin", "wb") as file:
 
 
 # Iterate over atoms to obtain the integrals
-for i in range(mol_h2o.natm):
-    DIFC_0=_get_DIFC_0(mol_h2o, atm_id = i, cartesian = cartesian)
+for i in range(mol_system.natm):
+    DIFC_0=_get_DIFC_0(mol_system, atm_id = i, cartesian = cartesian)
     titulos1=['FC1  '+"{:03.0f}".format(i+1)]
 
-    DIFC_I=_get_DIFC_I(mol_h2o, atm_id = i, cartesian = cartesian)
+    DIFC_I=_get_DIFC_I(mol_system, atm_id = i, cartesian = cartesian)
     titulos2_row1=['FC2xx'+"{:03.0f}".format(i+1), 'FC2xy'+"{:03.0f}".format(i+1), 'FC2xz'+"{:03.0f}".format(i+1)]
     titulos2_row2=['FC2yx'+"{:03.0f}".format(i+1), 'FC2yy'+"{:03.0f}".format(i+1), 'FC2yz'+"{:03.0f}".format(i+1)]
     titulos2_row3=['FC2zx'+"{:03.0f}".format(i+1), 'FC2zy'+"{:03.0f}".format(i+1), 'FC2zz'+"{:03.0f}".format(i+1)]
 
-    DIFC_II=_get_DIFC_II(mol_h2o, atm_id = i, cartesian = cartesian)
+    DIFC_II=_get_DIFC_II(mol_system, atm_id = i, cartesian = cartesian)
     titulos3_row1=['FC3xx'+"{:03.0f}".format(i+1), 'FC3xy'+"{:03.0f}".format(i+1), 'FC3xz'+"{:03.0f}".format(i+1)]
     titulos3_row2=['FC3yx'+"{:03.0f}".format(i+1), 'FC3yy'+"{:03.0f}".format(i+1), 'FC3yz'+"{:03.0f}".format(i+1)]
     titulos3_row3=['FC3zx'+"{:03.0f}".format(i+1), 'FC3zy'+"{:03.0f}".format(i+1), 'FC3zz'+"{:03.0f}".format(i+1)]

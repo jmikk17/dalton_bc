@@ -114,7 +114,7 @@ c           aux3 = 2.0*(0.5*aux2) !This corresponds to the built-in PSO-K integr
             call WRITEAOPJUAN(aux3,NBAST,'PSOKJ'//nuc_coord(I),RTNLBL) !Write Matrix in AOPROPER
 
 c           For debugging purposes:
-c           write(lupri,*) "IMPRIMIENDO EL OPERADOR: "
+c           write(lupri,*) "PRINT OPERATOR: "
 c     &     //'PSOKJ'//nuc_coord(I)
 c           call OUTPUT(aux3,1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)  ! prints aux3
 

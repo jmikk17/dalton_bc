@@ -19,7 +19,7 @@ C
 
 !     As the subroutine duplicates the matrix, its use is recommended
 !     just for small matrices.
-      subroutine diagonalizar(matrix,nmatrix,autovalores,autoestados)
+      subroutine diag_lresc(matrix,nmatrix,eigenvalues,autoestados)
 
 
       INTERFACE
@@ -51,7 +51,7 @@ C
 
        DOUBLE PRECISION, allocatable :: a(:,:),d(:),e(:)
        DOUBLE PRECISION, intent(in) :: matrix(nmatrix,nmatrix)
-       DOUBLE PRECISION, intent(out) :: autovalores(nmatrix)
+       DOUBLE PRECISION, intent(out) :: eigenvalues(nmatrix)
        DOUBLE PRECISION, intent(out) :: autoestados(nmatrix,nmatrix)
        INTEGER, intent(in) :: nmatrix
        INTEGER n, np
@@ -72,7 +72,7 @@ c       A is "Q", as its the tred2 output. d-out the eigenvalues and e-out is us
         call eigsrtLRESC(d,a,nmatrix,nmatrix)
 
 c       eigenvalues are ordered from smallest to largest
-        autovalores=d
+        eigenvalues=d
 c       A is now the matrix whose columns are the eigenstates
         autoestados=a
         deallocate (a)

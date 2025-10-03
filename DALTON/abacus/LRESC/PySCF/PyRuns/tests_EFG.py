@@ -124,34 +124,34 @@ def _PCNQM_charges(distance):
 #mol = gto.M(atom = 'He 0 0 0', basis = 'ccpvdz') # This can be entered in the command line
 base = "dyall_cv2z"
 
-mol_h2o = gto.M(atom="molecula.xyz",basis = base)
-mol_h2o, ctr_coeff = mol_h2o.to_uncontracted_cartesian_basis()
+mol_system = gto.M(atom="molecula.xyz",basis = base)
+mol_system, ctr_coeff = mol_system.to_uncontracted_cartesian_basis()
 
-#rhf_h2o = scf.RHF(mol_h2o)
+#rhf_h2o = scf.RHF(mol_system)
 #e_h2o = rhf_h2o.kernel()
 
 #pyscf.prop.efg.rhf.EFG(method, efg_nuc=None)
 #pyscf.prop.efg.rhf.kernel(method, efg_nuc=None)
 
 #atm_id=0
-#integrals=efg._get_quadrupole_integrals(mol_h2o, atm_id)
-#integrals=_get_quadrupole_integrals(mol_h2o, atm_id)
+#integrals=efg._get_quadrupole_integrals(mol_system, atm_id)
+#integrals=_get_quadrupole_integrals(mol_system, atm_id)
 #print(integrals.shape)
 #print("zz integrals:")
 #print(integrals[2,2,:,:])
 
-#integrals_new=_get_new_integrals(mol_h2o, atm_id)
+#integrals_new=_get_new_integrals(mol_system, atm_id)
 #print(integrals_new.shape)
 #Derivative with respect to Z Z Z Z
 #print(integrals_new[2,2,2,2,:,:])
 #print(integrals_new[2,2,2,2,:,:].shape)
 
-orbitals = numpy.array([mol_h2o.nao])
-naos_sph = mol_h2o.intor('int1e_ovlp_sph').shape[0]
-nro_operadores=numpy.array([3*mol_h2o.natm])
+orbitals = numpy.array([mol_system.nao])
+naos_sph = mol_system.intor('int1e_ovlp_sph').shape[0]
+operators_N=numpy.array([3*mol_system.natm])
 print("naos_cart:",orbitals)
 print("naos_sph:",naos_sph)
-print("Number of operators: ",nro_operadores)
+print("Number of operators: ",operators_N)
 
 
 """
@@ -163,7 +163,7 @@ PCNQM_x=[0,0,0,0,0,0]
 PCNQM_y=[0,0,0,0,0,0]
 PCNQM_z=[0,0,0,0,0,0]
 for i in range(6):
-    PCNQM_x[i],PCNQM_y[i],PCNQM_z[i]=_get_newop_SO_S_qzz_PCNQM(mol_h2o,charges_coord,i, zeta = valorzeta)
+    PCNQM_x[i],PCNQM_y[i],PCNQM_z[i]=_get_newop_SO_S_qzz_PCNQM(mol_system,charges_coord,i, zeta = valorzeta)
 factorPCNQM=1.0
 
 newop_PCNQM_x=factorPCNQM*(-2*PCNQM_x[0]-2*PCNQM_x[1]+PCNQM_x[2]+PCNQM_x[3]+PCNQM_x[4]+PCNQM_x[5])

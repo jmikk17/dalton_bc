@@ -43,18 +43,18 @@ def _get_DIFC_II(mol, atm_id, cartesian = False ):
     with mol.with_rinv_origin((mol.atom_coord(atm_id))):
         if (cartesian):
 #	    Cartesians
-            iprinviprip = mol_h2o.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-            rinvipiprip = mol_h2o.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-            ipiprinvrip = mol_h2o.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            iprinviprip = mol_system.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            rinvipiprip = mol_system.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+            ipiprinvrip = mol_system.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
             iprinvip = mol.intor('int1e_iprinvip_cart', 9).reshape(3,3,nao_cart,nao_cart)
             ipiprinv = mol.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)
             rinvipip=numpy.transpose(ipiprinv,axes=[0,1,3,2]).conjugate()
             integrals=numpy.zeros([3,3,nao_cart,nao_cart])
         else :
 #	    Sphericals
-            iprinviprip = mol_h2o.intor('int1e_iprinviprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
-            rinvipiprip = mol_h2o.intor('int1e_rinvipiprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
-            ipiprinvrip = mol_h2o.intor('int1e_ipiprinvrip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            iprinviprip = mol_system.intor('int1e_iprinviprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            rinvipiprip = mol_system.intor('int1e_rinvipiprip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
+            ipiprinvrip = mol_system.intor('int1e_ipiprinvrip_sph', 81).reshape(3,3,3,3,nao_sph,nao_sph)
             iprinvip = mol.intor('int1e_iprinvip_sph', 9).reshape(3,3,nao_sph,nao_sph)
             ipiprinv = mol.intor('int1e_ipiprinv_sph', 9).reshape(3,3,nao_sph,nao_sph)
             rinvipip=numpy.transpose(ipiprinv,axes=[0,1,3,2]).conjugate()
@@ -71,23 +71,23 @@ def _get_DIFC_II(mol, atm_id, cartesian = False ):
 
 base = "dyall_cv2z"
 
-mol_h2o = gto.M(atom="molecula.xyz",basis = base)
-mol_h2o, ctr_coeff = mol_h2o.to_uncontracted_cartesian_basis()
+mol_system = gto.M(atom="molecula.xyz",basis = base)
+mol_system, ctr_coeff = mol_system.to_uncontracted_cartesian_basis()
 
 
-orbitales = numpy.array([mol_h2o.nao])
-naos_sph = mol_h2o.intor('int1e_ovlp_sph').shape[0]
-nao_cart = mol_h2o.intor('int1e_ovlp_cart').shape[0]
-nro_operadores=numpy.array([3*mol_h2o.natm])
+orbitales = numpy.array([mol_system.nao])
+naos_sph = mol_system.intor('int1e_ovlp_sph').shape[0]
+nao_cart = mol_system.intor('int1e_ovlp_cart').shape[0]
+operators_N=numpy.array([3*mol_system.natm])
 
 
-with mol_h2o.with_rinv_origin(mol_h2o.atom_coord(0)):
-	iprinvip_cart = mol_h2o.intor('int1e_iprinvip_cart', 9).reshape(3,3,nao_cart,nao_cart)
-	ipiprinv_cart = mol_h2o.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)
+with mol_system.with_rinv_origin(mol_system.atom_coord(0)):
+	iprinvip_cart = mol_system.intor('int1e_iprinvip_cart', 9).reshape(3,3,nao_cart,nao_cart)
+	ipiprinv_cart = mol_system.intor('int1e_ipiprinv_cart', 9).reshape(3,3,nao_cart,nao_cart)
 
-	iprinviprip_cart = mol_h2o.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-	rinvipiprip_cart = mol_h2o.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
-	ipiprinvrip_cart = mol_h2o.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+	iprinviprip_cart = mol_system.intor('int1e_iprinviprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+	rinvipiprip_cart = mol_system.intor('int1e_rinvipiprip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
+	ipiprinvrip_cart = mol_system.intor('int1e_ipiprinvrip_cart', 81).reshape(3,3,3,3,nao_cart,nao_cart)
 
 	print("Cartesian integrals:") #1º coord, 2º coord, bra, ket
 	print(iprinvip_cart[0,0,0,0])
@@ -102,8 +102,8 @@ with mol_h2o.with_rinv_origin(mol_h2o.atom_coord(0)):
 	print(ipiprinvrip_cart[0,0,1,0,0,0])
 
 
-DIFC_I=_get_DIFC_I(mol_h2o, atm_id = 0, cartesian=True)
-DIFC_II=_get_DIFC_II(mol_h2o, atm_id = 0, cartesian=True)
+DIFC_I=_get_DIFC_I(mol_system, atm_id = 0, cartesian=True)
+DIFC_II=_get_DIFC_II(mol_system, atm_id = 0, cartesian=True)
 
 print(numpy.shape(DIFC_I))
 print("1st term")
@@ -116,13 +116,13 @@ print(DIFC_II[0,0,0,0])
 
 
 
-for i in range(mol_h2o.natm):
-    DIFC_I=_get_DIFC_I(mol_h2o, atm_id = 0, cartesian=True)
+for i in range(mol_system.natm):
+    DIFC_I=_get_DIFC_I(mol_system, atm_id = 0, cartesian=True)
     titulos1_row1=['FC01xx'+"{:02.0f}".format(i+1), 'FC01xy'+"{:02.0f}".format(i+1), 'FC01xz'+"{:02.0f}".format(i+1)]
     titulos1_row2=['FC01yx'+"{:02.0f}".format(i+1), 'FC01yy'+"{:02.0f}".format(i+1), 'FC01yz'+"{:02.0f}".format(i+1)]
     titulos1_row3=['FC01zx'+"{:02.0f}".format(i+1), 'FC01zy'+"{:02.0f}".format(i+1), 'FC01zz'+"{:02.0f}".format(i+1)]
 
-    DIFC_II=_get_DIFC_II(mol_h2o, atm_id = 0, cartesian=True)
+    DIFC_II=_get_DIFC_II(mol_system, atm_id = 0, cartesian=True)
     titulos2_row1=['FC02xx'+"{:02.0f}".format(i+1), 'FC02xy'+"{:02.0f}".format(i+1), 'FC02xz'+"{:02.0f}".format(i+1)]
     titulos2_row2=['FC02yx'+"{:02.0f}".format(i+1), 'FC02yy'+"{:02.0f}".format(i+1), 'FC02yz'+"{:02.0f}".format(i+1)]
     titulos2_row3=['FC02zx'+"{:02.0f}".format(i+1), 'FC02zy'+"{:02.0f}".format(i+1), 'FC02zz'+"{:02.0f}".format(i+1)]

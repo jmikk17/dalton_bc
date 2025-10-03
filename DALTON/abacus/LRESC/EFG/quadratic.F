@@ -32,12 +32,12 @@ C
 
       DIMENSION WORK(LWORK)
       CHARACTER*9 :: KEY
-      CHARACTER*8 :: operadores_trio(3)
+      CHARACTER*8 :: operators_trio(3)
       CHARACTER*1 :: spin_trio(3)
 
-      Character*8, dimension(:,:), allocatable :: operadores_A
-      Character*8, dimension(:,:), allocatable :: operadores_B
-      Character*8, dimension(:,:), allocatable :: operadores_C
+      Character*8, dimension(:,:), allocatable :: A_operators
+      Character*8, dimension(:,:), allocatable :: B_operators
+      Character*8, dimension(:,:), allocatable :: C_operators
       character*8 LISTA1(4*MXCOOR+9)
       
       REAL*8, dimension(:), allocatable :: QR(:),TOTALQR(:)
@@ -70,32 +70,32 @@ c      REAL*8 QRvector(3)
          NopA = 1
          NopB = 3
          NopC = 3
-         allocate(operadores_A(NopA,NUCIND))
-         allocate(operadores_B(NopB,NUCIND))
-         allocate(operadores_C(NopC,NUCIND))
+         allocate(A_operators(NopA,NUCIND))
+         allocate(B_operators(NopB,NUCIND))
+         allocate(C_operators(NopC,NUCIND))
          spin_trio(1)='0'
          spin_trio(2)='1'
          spin_trio(3)='1'
 
 
-         operadores_A(1, :) = reshape(LISTA1, (/NUCIND/))
+         A_operators(1, :) = reshape(LISTA1, (/NUCIND/))
 
-         operadores_B(1,:) = 'X1SPNORB'
-         operadores_B(2,:) = 'Y1SPNORB'
-         operadores_B(3,:) = 'Z1SPNORB'
-         operadores_C(1,:) = 'X1SPNORB'
-         operadores_C(2,:) = 'Y1SPNORB'
-         operadores_C(3,:) = 'Z1SPNORB'
+         B_operators(1,:) = 'X1SPNORB'
+         B_operators(2,:) = 'Y1SPNORB'
+         B_operators(3,:) = 'Z1SPNORB'
+         C_operators(1,:) = 'X1SPNORB'
+         C_operators(2,:) = 'Y1SPNORB'
+         C_operators(3,:) = 'Z1SPNORB'
 
       END IF
 
 
       do j = 1, NUCIND
       do i = 1, 3
-         operadores_trio(1)=operadores_A(1,j)
-         operadores_trio(2)=operadores_B(i,j)
-         operadores_trio(3)=operadores_C(i,j)
-         call create_QRinput(operadores_trio,spin_trio)
+         operators_trio(1)=A_operators(1,j)
+         operators_trio(2)=B_operators(i,j)
+         operators_trio(3)=C_operators(i,j)
+         call create_QRinput(operators_trio,spin_trio)
          LUPRI = 6232
          OPEN(UNIT=LUPRI, FILE='LRESC-EFG-QR',status='unknown',
      &              position='append')
@@ -106,7 +106,7 @@ c      REAL*8 QRvector(3)
          CALL GPCLOSE(LURSP3,'DELETE')
          CALL GPCLOSE(LURSP4,'DELETE')
          CALL GPCLOSE(LURSP5,'DELETE')
-         call get_QRvalue(QR(i),operadores_trio)
+         call get_QRvalue(QR(i),operators_trio)
          TOTALQR(j) = TOTALQR(j) + QR(i)
       end do
       end do
@@ -118,9 +118,9 @@ c      REAL*8 QRvector(3)
       END IF
 
 
-      deallocate(operadores_A)
-      deallocate(operadores_B)
-      deallocate(operadores_C)
+      deallocate(A_operators)
+      deallocate(B_operators)
+      deallocate(C_operators)
       deallocate(QR)
       deallocate(TOTALQR)
 

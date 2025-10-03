@@ -401,7 +401,7 @@ C     ---------------------------
 
          indice = indice + 1
 !        For debugging purposes:
-!        write(lupri,*) "IMPRIMIENDO EL OPERADOR: "
+!        write(lupri,*) "PRINT OPERATOR: "
 !     &                 //nuc_coord(IJ)//'psoz'//chrxyz(I)
 !        call OUTPUT(aux3,1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)  ! prints aux1
       END DO
