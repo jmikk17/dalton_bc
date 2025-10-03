@@ -92,7 +92,8 @@ C
         END IF
 
         IF(SIGMAP1S.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1S] ' //
+     &                            '(1st Order Singlets)'
           IF (PRTTEN) THEN
             call PRINT_LRSHIELD_CORR('OZK     ',aba,LROZK,'ani1')
             call PRINT_LRSHIELD_CORR('PSOK    ',avg,LRPSOK,'ani1')
@@ -109,7 +110,8 @@ C
         ENDIF
 
         IF (SIGMAP1T.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1T]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA1T] ' //
+     &                            '(1st Order Triplets)'
           IF (PRTTEN) THEN
             IF (EXTRAINFO) THEN
               call PRINT_LRSHIELD_CORR('Fc-Kin  ',aba,LRFCZK,'ani1')
@@ -144,7 +146,8 @@ C
         ENDIF
 
         IF (SIGMAP2S.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2S]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2S] ' //
+     &                            '(2nd Order Singlets)'
           IF (PRTTEN) THEN
             call PRINT_LRSHIELD_CORR('Mv/p    ',aba,QRPSOOZMV,'ani1')
             call PRINT_LRSHIELD_CORR('Dw/p    ',aba,QRPSOOZDW,'ani1')
@@ -157,7 +160,8 @@ C
         ENDIF
 
         IF (SIGMAP2T.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2T]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.PARA2T] ' //
+     &                            '(2nd Order Triplets)'
           IF (PRTTEN) THEN
             call PRINT_LRSHIELD_CORR('SO(Fc)  ',aba,QROZFCSO,'ani1')
             call PRINT_LRSHIELD_CORR('SO(Sd)  ',aba,QROZSDSO,'ani1')
@@ -205,7 +209,8 @@ C
         END IF
 
         IF(SIGMAD0S.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM0S] ' //
+     &                            '(0th Order Singlets)'
           IF (PRTTEN) THEN
             call PRINT_LRSHIELD_CORR('FC/d    ',aba,LRFCAV,'ani1')
           if (PYINTS) then
@@ -234,7 +239,8 @@ C
         ENDIF
 
         IF(SIGMAD1S.AND.PRTALL1) THEN
-          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM1S]'
+          WRITE(LUPRI,'(/,7X,A)') 'Detailed info : [.DIAM1s] ' //
+     &                            '(1st Order Singlets)'
           IF (PRTTEN) THEN
             call PRINT_LRSHIELD_CORR('Mv/d    ',aba,LRDIAM,'ani1')
             call PRINT_LRSHIELD_CORR('Dw/d    ',aba,LRDIAD,'ani1')
