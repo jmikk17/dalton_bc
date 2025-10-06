@@ -91,7 +91,8 @@ C
 
           if (in_block) then
           ! Find WARNING
-          if (index(line, "WARNING") > 0) then
+          if ((index(line, "WARNING") > 0).OR.
+     &     (index(line, "negative eigenvalues") > 0)) then
               ! Deal with PSO vs PSOKJ as an exception
               if (operator.eq."PSO") then
               if (index(line, "PSOKJ") > 0) then

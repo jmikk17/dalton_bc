@@ -23,7 +23,7 @@ simple.add(from_string = 'Cartesian Coordinates',
       num_lines = 7,
       rel_tolerance = 1.0e-8)
 
-simple.add(from_string = 'Non relativistic contributions for F',
+simple.add(from_string = 'Non relativistic contributions for',
       num_lines = 27,
       abs_tolerance = 1.0e-3)
 
@@ -70,6 +70,7 @@ detailed.add(from_string = 'Anisotropic parameters:',
 
 
 test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': simple})
+test.run(['prop_lresc_warnings.dal'], ['HCl_intgrl.mol'], f={'out': simple})
 test.run(['prop_lresc_detailed.dal'], ['HF_intgrl.mol'], f={'out': detailed})
 
 sys.exit(test.return_code)

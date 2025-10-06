@@ -90,9 +90,11 @@ c         WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
 c     &   CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
 c      ELSE
 c      IF (.not.LRATOM_changed) THEN
-      IF (NLRATOMS.EQ.NUCIND) THEN
-              WRITE(LUPRI,'(/,4X,A)') '-  All Atoms selected'
-      END IF
+
+c      Yet not implemented.
+c      IF (NLRATOMS.EQ.NUCIND) THEN
+c              WRITE(LUPRI,'(/,4X,A)') '-  All Atoms selected'
+c      END IF
 
       IF (.NOT.LRATOM_changed) THEN
          WRITE(LUPRI,'(/,4X,A)')'-  Remember : '
