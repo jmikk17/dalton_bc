@@ -354,19 +354,19 @@ C        -------------------------
 C
 C  Print Section for LABELS on LISTAS
 C  ----------------------------------------------
-C
-      IF (JJAPRT.GE.2) THEN
-         WRITE(LUPRI,*)' @LinearLR setting  LABEL1 :'
-         DO i =1, nlab1
-            WRITE(LUPRI,*)'   LABEL1 :', LISTA1(I)
-         ENDDO
-         WRITE(LUPRI,*)
+C     For debugging purposes only
+C      IF (JJAPRT.GE.2) THEN
+C         WRITE(LUPRI,*)' @LinearLR setting  LABEL1 :'
+C         DO i =1, nlab1
+C            WRITE(LUPRI,*)'   LABEL1 :', LISTA1(I)
+C         ENDDO
+C         WRITE(LUPRI,*)
 C 
-         WRITE(LUPRI,*)' @LinearLR setting  LABEL2 :'
-         DO i =1, nlab2
-            WRITE(LUPRI,*)'   LABEL2 :', LISTA2(I)
-         ENDDO
-      ENDIF
+C         WRITE(LUPRI,*)' @LinearLR setting  LABEL2 :'
+C         DO i =1, nlab2
+C            WRITE(LUPRI,*)'   LABEL2 :', LISTA2(I)
+C         ENDDO
+C      ENDIF
 C
 C
 C ---------------------------------------------------------------------
@@ -526,11 +526,12 @@ C
 C
                SNDPRP = DDOT(2*NVARPT,WORK(KSLV),1,WORK(KGD1),1)
 C
-               IF (JJAPRT.GE.2) THEN
-               WRITE (LUPRI,'(1A,I2,5A,F50.12)')
-     &         '#',KJ,' Response of operators: <<',LABEL2,';',LABEL1,
-     &            '>> = ',SNDPRP
-               ENDIF
+C              For debugging purposes only
+C               IF (JJAPRT.GE.2) THEN
+C               WRITE (LUPRI,'(1A,I2,5A,F50.12)')
+C     &         '#',KJ,' Response of operators: <<',LABEL2,';',LABEL1,
+C     &            '>> = ',SNDPRP
+C               ENDIF
 C
 C              WRITE properties into the various property matrices
 C              ===================================================
