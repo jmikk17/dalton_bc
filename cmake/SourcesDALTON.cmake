@@ -180,11 +180,11 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/LRESC/AVG/checks.F
     DALTON/abacus/LRESC/AVG/operators.F
     DALTON/abacus/LRESC/AVG/construct_operator.F
-    DALTON/abacus/LRESC/PySCF/read_matrix.F
-    DALTON/abacus/LRESC/PySCF/generate_xyz.F
-    DALTON/abacus/LRESC/EIGEN/dtqli.F
-    DALTON/abacus/LRESC/EIGEN/dtred2.F
-    DALTON/abacus/LRESC/EIGEN/eigsrt.F
+    #DALTON/abacus/LRESC/PySCF/read_matrix.F
+    #DALTON/abacus/LRESC/PySCF/generate_xyz.F
+    #DALTON/abacus/LRESC/EIGEN/dtqli.F
+    #DALTON/abacus/LRESC/EIGEN/dtred2.F
+    #DALTON/abacus/LRESC/EIGEN/eigsrt.F
     DALTON/abacus/LRESC/EIGEN/main.F
     DALTON/abacus/LRESC/filesmanagement/warnings.F
     DALTON/abacus/LRESC/filesmanagement/files.F
