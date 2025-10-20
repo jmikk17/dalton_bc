@@ -380,6 +380,9 @@ c     ij shielding tensor element
       end do
       end do
 
+!     i (row) associated to mu, j (column) associated to B
+      QRtensor = transpose(TOTALQR)
+
       IF (KEY.EQ.'OZ-PSO-MV') QRPSOOZMV = QRtensor
       IF (KEY.EQ.'OZ-PSO-Dw') QRPSOOZDW = QRtensor
       IF (KEY.EQ.'OZ-FC-SO ') QROZFCSO = QRtensor

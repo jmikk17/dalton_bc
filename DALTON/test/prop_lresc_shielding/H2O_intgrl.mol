@@ -1,0 +1,10 @@
+ATOMBASIS
+Experimental geometry taken from https://cccbdb.nist.gov/ (20/10/2025).
+Larger basis sets should be used for production calculations.
+Angstrom Atomtypes=2 Generators=0
+Charge= 8.0 Atoms=1 Basis=dyall.cv2z
+O      0.0000       0.0000     0.1173
+Charge= 1.0 Atoms=2 Basis=dyall.cv2z
+H1     0.0000       0.7572    -0.4692
+H2     0.0000      -0.7572    -0.4692
+FINISH
