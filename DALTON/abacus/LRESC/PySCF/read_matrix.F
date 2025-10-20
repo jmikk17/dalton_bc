@@ -74,23 +74,34 @@ c        call OUTPUT(matrix,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)! prints matrix 
 
       subroutine import_numpytensor(matrices,labels,naos,noperators
      &                              ,operators,filename)
-
-      use iso_fortran_env
-c      double precision,intent(out) :: matrices(naos,naos,noperators)
-c      double precision :: matrix(naos,naos)
+C
+C     32-bit integers are enough for operators and naos
+C
+      use iso_fortran_env, only: int32
       real(8), intent(out) :: matrices(naos, naos, noperators)
       real(8) :: matrix(naos, naos)
       character(len=8), dimension(noperators),intent(out) :: labels
       character(len=3), intent(in) :: filename
+      integer(int32) :: op32
       integer, intent(out) :: operators
       integer, intent(in) :: naos,noperators
+      integer(int32) :: naospyscf32
       integer :: naospyscf
       character (len=8) :: label
+
       open(newunit=iu,file=filename//".bin"
      &   ,access="stream",status="old",action="read")
       REWIND iu
-      read(iu) operators
-      read(iu) naospyscf
+      read(iu) op32
+      read(iu) naospyscf32
+
+      ! Force to write variables in memory, before conversion
+      write(*,*)
+
+      ! Convert to Fortran native size
+      operators = int(op32, kind=selected_int_kind(9))
+      naospyscf = int(naospyscf32, kind=selected_int_kind(9))
+
       if (naos.ne.naospyscf) then
       write(*,*) "naos(dal,pyscf):",naos,naospyscf
       write(*,*) "Operators to import from PySCF:",operators
