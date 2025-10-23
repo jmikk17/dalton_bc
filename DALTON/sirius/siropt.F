@@ -1671,6 +1671,7 @@ C
          ICSTRT   = MOD(ICSTRT,100)
       ELSE
          TRCNO  = .FALSE.
+         CNOLBL = '      '
       END IF
 C
 C *** ICSTRT < 0 ***
@@ -1765,7 +1766,7 @@ C
          IF (LW22 .LT. 0) CALL ERRWRK('OPTST.CICTL',-KW22,LFREE)
 C
 C      A  single configuration will already have natural orbitals
-         IF (MAXCIT .LE. 0) THEN
+         IF (MAXCIT .EQ. 0) THEN
             IF (CNOLBL .EQ. 'ONLYNO') THEN
                TRCNO  = .FALSE.
             ELSE IF (CNOLBL .NE. 'TRTOFC') THEN
@@ -2050,7 +2051,7 @@ C
 C
  9000 CONTINUE
       REWIND LUIT1
-      IF ( .NOT.FNDLAB(TABLE(6),LUIT1) ) THEN
+      IF ( .NOT.FNDLAB(TABLE(6),LUIT1) ) THEN ! NEWORB
          CALL READMO(WRK,7)
          CALL NEWORB(LBLDAT(2),WRK,.FALSE.)
       END IF
@@ -2155,7 +2156,7 @@ C        write the natural orbitals to LUIT1 label NEWORB
          END IF
          IF (.NOT.FLAG(34)) FLAG(14) = .FALSE.
 C        if (int.transf. needed in optimization)
-      END IF
+      END IF ! (TRCNO)
 C
 C *** Append label EODATA, if not already there
 C

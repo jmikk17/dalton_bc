@@ -110,7 +110,7 @@ C
       DATA TABLE/'********','OLDORB  ','NEWORB  ','STARTVEC'/
 C
       CALL QENTER('SIROUT')
-      CICALC = (FLAG(4) .AND. .NOT.FLAG(2))
+      CICALC = (FLAG(4) .AND. .NOT.FLAG(2)) ! flag(2) true means CI was followed by MCSCF
 C
       LDUMP = .TRUE.
       IF (IPRI4 .GE. 3) P4FLAG(3) = .TRUE.
@@ -411,7 +411,7 @@ C        CI calculation
      &         POTNUC,(EMCSCF-POTNUC-ESOLT)
             WRITE (LUPRI,5030) GRDNRM
          END IF
-      ELSE IF (FLAG(2) .AND. MCTYPE .GT. 0) THEN
+      ELSE IF (FLAG(2)) THEN
 C        MCSCF type calculation
          IF (DOMCSRDFT) THEN
             WRITE (LUPRI,5014) CHIVAL

@@ -266,7 +266,6 @@ C
 C     Local variables
 C
       logical           :: diskh2, natorb, moisno, calc_2p_dens
-      character (len=6) :: keywrd
       integer           :: xctype1, xctype2, spindens_lvl_save
 C
       real*8            :: EMYDFTAUX, EENSEMB, ESRDV_ens, ESRDFT(3)
@@ -419,8 +418,6 @@ C
 C     CALL CIINTS(DISKH2,CMO,EMY,ESOLT,FCAC,H2AC,WRK,LFREE)
       EMY_CI = EMY_CI + ESOLT ! add any solvent energy to the inactive energy
 C
-!     set keyword for saving the final vector(s) in SIRSAV (called from CISAVE)
-      keywrd = 'CISAVE' 
 !     if(DOCISRDFT)then
 !       thrcit = 5.0d-4
 !       maxitc = 50
@@ -667,7 +664,7 @@ C
 C     Save CI vectors and orbitals on LUIT1
 C
       if(maxitc .gt. 0 .or. ci_program .eq. 'LUCITA   ')then
-        CALL CISAVE(KEYWRD,NCROOT,NCIRED,ECI,residual_croot,
+        CALL CISAVE(NCROOT,NCIRED,ECI,residual_croot,
      &              WRK(kvec_generic),CMO,INDXCI,WRK(KW2),LW2)
 C       CALL CISAVE(NCROOT,NCIRED,ECI,RESID,EVEC,CMO,INDXCI,WRK,LFREE)
       end if
@@ -2201,7 +2198,7 @@ C
       RETURN
       END
 C  /* Deck cisave */
-      SUBROUTINE CISAVE(KEYWRD,NCROOT,NCIRED,ECI,RESID,EVEC,CMO,INDXCI,
+      SUBROUTINE CISAVE(NCROOT,NCIRED,ECI,RESID,EVEC,CMO,INDXCI,
      *                  WRK,LFREE)
 C
 C 27-Sep-1986 Hans Joergen Aa. Jensen
@@ -2212,7 +2209,6 @@ C
 #include "implicit.h"
 #include "priunit.h"
       DIMENSION ECI(*), RESID(*), EVEC(*), CMO(*), INDXCI(*), WRK(*)
-      character (len=6), intent(in) :: keywrd
 #include "dummy.h"
 C
 C Used from common blocks :
@@ -2237,7 +2233,7 @@ C
       NRTSAV = NROOTS
       ISTATE = ISTACI
       NROOTS = NCROOT
-      CALL SIRSAV(keywrd,CMO,DUMMY,DUMMY,EVEC,DUMMY,INDXCI,WRK,LFREE)
+      CALL SIRSAV('CISAVE',CMO,DUMMY,DUMMY,EVEC,DUMMY,INDXCI,WRK,LFREE)
 C     CALL SIRSAV(KEYWRD,CMO,IBNDX,REDL,EVEC,XKAP,INDXCI,WRK,LFREE)
       ISTATE = ISTSAV
       NROOTS = NRTSAV

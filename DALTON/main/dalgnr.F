@@ -71,7 +71,6 @@ C
       ISTACI = ISTCIB
       NFIELD = NFILDB
       MXCIMA = MXCMAB
-      ICICNO = ICCNOB
       IMCCNO = IMCNOB
       IF (NEWSYM) THEN
          DOSCF  = DOSCFB
@@ -211,7 +210,6 @@ C
       ISTCIB = ISTACI
       NFILDB = NFIELD
       MXCMAB = MXCIMA
-      ICCNOB = ICICNO
       IMCNOB = IMCCNO
       DOSCFB = DOSCF
       DOMP2B = DOMP2
