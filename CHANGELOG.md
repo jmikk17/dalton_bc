@@ -42,6 +42,7 @@
 - Added aug-cc-pwCVTZ-DK3 for In-Xe, Cs, Ba
 - Added aug-cc-pVQZ-DK3 for In-Xe, Cs, Ba
 - Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
+- Added relativistic dyall.(vXz/cvXz/avXz/aeXz/acvXz/aaeXz) basis sets (X = 2, 3, 4)
 
 ### Fixed
 - Fixed linear response with gTDA and all solvent models, incl. PE and PCM (the Y component was not zeroed for configuration trial vectors) (H. J. Aa. Jensen)
