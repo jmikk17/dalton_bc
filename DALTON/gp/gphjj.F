@@ -785,9 +785,6 @@ C     SD=MAX(C1,C2*SD)
 
       ITJACO = 0
   200 ITJACO = ITJACO + 1
-      IF (ITJACO .GT. MXITJA) THEN
-         CALL QUIT('ERROR: JACO_THR did not converge ...')
-      END IF
 
          T = D0
          DO I = 2,NB
@@ -797,6 +794,13 @@ C     SD=MAX(C1,C2*SD)
          END DO
 
       IF (T .LT. SD) GO TO 8000 ! finished 
+
+      IF (ITJACO .GT. MXITJA) THEN
+         WRITE(LUPRI,'(/A,I0,A/A,1P,D10.2)')
+     &      'ERROR: JACO_THR did not converge in ',MXITJA,' iterations',
+     &      ' Max off-diagonal element:',T
+         CALL QUIT('ERROR: JACO_THR did not converge ...')
+      END IF
 
          IA  = JBIG(IB)
          IAA = IA*(IA-1)/2
@@ -1064,19 +1068,21 @@ C
       END
 C  /* Deck readdi */
       SUBROUTINE READDI(IT,IU,N,IX)
-      DIMENSION IX(N)
+      INTEGER IT, IU, N, IX(N)
       READ(IT,REC=IU) IX
       RETURN
       END
 C  /* Deck readt */
       SUBROUTINE READT (IT,N,X)
-#include "implicit.h"
+      implicit none
 #include "priunit.h"
+      INTEGER IT, N, IERR
+      REAL*8  X(N)
       CHARACTER*120 FNAME
-      DIMENSION X(N)
-      IF (IT .LE. 0) GOTO 30
+
       READ (IT,IOSTAT=IERR,END=10,ERR=20) X
       RETURN
+
  10   CONTINUE
       INQUIRE(UNIT=IT,NAME=FNAME)
       WRITE(LUPRI,*) 'READT: END reading file ',FNAME
@@ -1086,14 +1092,13 @@ C  /* Deck readt */
       CALL QUIT('READT: END reading file')
  20   CONTINUE
       INQUIRE(UNIT=IT,NAME=FNAME)
-      WRITE(LUPRI,*) 'READT: ERROR reading file ',FNAME
-      WRITE(LUPRI,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
-      WRITE(  0  ,*) 'READT: ERROR reading file ',FNAME
-      WRITE(  0  ,*) 'UNIT ',IT, ' record length ',N,' error code ',IERR
+      WRITE(LUPRI,'(2A)') 'READT: ERROR reading file ',FNAME
+      WRITE(LUPRI,'(3(A,I0))')
+     &   'UNIT ',IT, ' record length ',N,' error code ',IERR
+      WRITE(0,'(2A)') 'READT: ERROR reading file ',FNAME
+      WRITE(0,'(3(A,I0))')
+     &   'UNIT ',IT, ' record length ',N,' error code ',IERR
       CALL QUIT('READT: Error reading file')
- 30   CONTINUE
-      WRITE (LUPRI,*) 'READT ERRROR: non-positive file unit number ',IT
-      CALL QUIT('READT ERRROR: non-positive file unit number')
       END
 C  /* Deck writi */
       SUBROUTINE WRITI (IT,N,INTX)
