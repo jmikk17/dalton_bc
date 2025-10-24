@@ -24,6 +24,7 @@ C  G. Aucar, Danian, romero, homero,bart y lisa
 
 C  Revisited and modified: J. Aucar 2020/2021
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -31,14 +32,13 @@ C
 #include "inforb.h"
 #include "nuclei.h"
 #include "inftap.h"
-#include "lrescinf.h"
 #include "chrnos.h"
 
 
       CHARACTER*8 B0
       integer PRT
       CHARACTER*8  STARS
-      CHARACTER*8 RTNLBL(2)
+      CHARACTER*8 RTNLBL(2),LRSO1NAME
       PARAMETER (STARS = '********')
       double precision, dimension(NBAST*NORBT), intent(in) :: xmos
       double precision, dimension(NBAST,NBAST), intent(inout) :: OVERLP
@@ -47,6 +47,7 @@ C
       double precision :: ORBC(NOCCT),Av,Aux
       
       double precision, dimension(NBAST,NBAST) :: aux1,aux2,aux3
+      double precision, dimension(NBAST,NBAST) :: aux4,aux5,aux6
       double precision, dimension(NBAST,NBAST) :: aux0
       double precision, dimension(NBAST,NBAST) :: XDIPVEL
       double precision, dimension(NBAST,NBAST) :: YDIPVEL,ZDIPVEL
@@ -55,6 +56,7 @@ C
       double precision, dimension(NBAST,NBAST) :: X1SPNORB
       double precision, dimension(NBAST,NBAST) :: Y1SPNORB,Z1SPNORB
       double precision, dimension(NBAST,NBAST) :: ZZEFGm
+      double precision, dimension(NBAST,NBAST) :: LRSO1
 
 
 C ------------------------------------------------------
@@ -101,14 +103,13 @@ C     Get the operators (its representation in the AO basis)
          ZZEFG(I)= 'ZZEFG'//CHRNOS(I/10)//CHRNOS(MOD(I,10))//CHRNOS(1)
          DO J=1,3
             INDEX=3*(I-1)+J
-            GZZEFG(INDEX)= 'GEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(INDEX) !
+            GZZEFG(INDEX)= 'GEFG '//CHRNOS(0)//CHRNOS(0)//CHRNOS(INDEX)
          ENDDO
       
       call READAOP(GZZEFGx, naos,GZZEFG(3*(I-1)+1)) !gets GZZEFG_X(I) matrix
       call READAOP(GZZEFGy, naos,GZZEFG(3*(I-1)+2)) !gets GZZEFG_Y(I) matrix
       call READAOP(GZZEFGz, naos,GZZEFG(3*(I-1)+3)) !gets GZZEFG_Z(I) matrix
       call READAOP(ZZEFGm,naos,ZZEFG(I))            !gets ZZEFG0(I)1 matrix
-       
 
 
 C     Correccion pqp
@@ -144,11 +145,14 @@ C     Correcciones orden c^(-4)
 
       aux0=matmul(transpose(cmos),cmos)
 
-c     Hago (pq).I x p     
+c     Get (pq).I x p
+c     X component
       aux1=matmul(matmul(GZZEFGy,aux0),ZDIPVEL)-
      &     matmul(matmul(GZZEFGz,aux0),YDIPVEL)
+c     Y component
       aux2=matmul(matmul(GZZEFGz,aux0),XDIPVEL)-
      &     matmul(matmul(GZZEFGx,aux0),ZDIPVEL)
+c     Z component
       aux3=matmul(matmul(GZZEFGx,aux0),YDIPVEL)-
      &     matmul(matmul(GZZEFGy,aux0),XDIPVEL)
 
@@ -158,25 +162,39 @@ c     Hago (pq).I x p
 C     Replace time information with symmetry information
       RTNLBL(2)='SQUARE  '
 
-
       call WRITEAOPJUAN(aux1,naos,
-     &      'E1GLRSx'//CHRNOS(I),RTNLBL) !Write Matrix in AOPROPER
+     &      'E1GLRSx'//CHRNOS(MOD(I,10)),RTNLBL) !Write Matrix in AOPROPER
       call WRITEAOPJUAN(aux2,naos,
-     &      'E1GLRSy'//CHRNOS(I),RTNLBL) !Write Matrix in AOPROPER
+     &      'E1GLRSy'//CHRNOS(MOD(I,10)),RTNLBL) !Write Matrix in AOPROPER
       call WRITEAOPJUAN(aux3,naos,
-     &      'E1GLRSz'//CHRNOS(I),RTNLBL) !Write Matrix in AOPROPER
+     &      'E1GLRSz'//CHRNOS(MOD(I,10)),RTNLBL) !Write Matrix in AOPROPER
 
-      call WRITEAOPJUAN(aux1+aux2+aux3,naos,
-     &      'E1GLRS '//CHRNOS(I),RTNLBL) !Write Matrix in AOPROPER
+      LRSO1=aux1+aux2+aux3
 
+      LRSO1NAME='E1GLRSS'//CHRNOS(MOD(I,10))
+      call WRITEAOPJUAN(LRSO1,naos,
+     &      LRSO1NAME,RTNLBL) !Write Matrix in AOPROPER
+
+
+c     Get p.I.q.I.p
+c     1st term
+      aux4=matmul(matmul(matmul(XDIPVEL,aux0),ZZEFGm),
+     &     matmul(aux0,XDIPVEL))
+c     2nd term
+      aux5=matmul(matmul(matmul(YDIPVEL,aux0),ZZEFGm),
+     &     matmul(aux0,YDIPVEL))
+c     3rd term
+      aux6=matmul(matmul(matmul(ZDIPVEL,aux0),ZZEFGm),
+     &     matmul(aux0,ZDIPVEL))
+
+      call WRITEAOPJUAN(aux4+aux5+aux6,naos,
+     &      'EFGpqp '//CHRNOS(MOD(I,10)),RTNLBL) !Write Matrix in AOPROPER
 
       ENDDO
 
-      RTNLBL(2)='ANTISYMM'
       call WRITEAOPJUAN(X1SPNORB+Y1SPNORB+Z1SPNORB,naos
      &                  ,'E1G  SO1',RTNLBL) !Write Matrix in AOPROPER
 
-      
 
       return
       END SUBROUTINE

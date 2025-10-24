@@ -748,6 +748,7 @@ C soppa program) contain the same triplet variables, import the necessary
 C variables from soppinf.h through the so_info module:
       use SO_INFO, only: AORPA, AOHRP, DCRPA, DCHRP, SDCHR,
      &                   AOSOP, AOSOC, AOCC2, AOTOP
+      USE lrescinf_module
 C
 #include "implicit.h"
 #include "iratdef.h"
@@ -849,7 +850,7 @@ C                     52         53         54
 C                     55         56         57
      &             '.DISDIP', '.SECMOM', '.THIRDM',
 C                     58         59         60
-     &             '.VIB_G ', '.LOCALI', '.LR-SHI',
+     &             '.VIB_G ', '.LOCALI', '.RELSHI',
 C                     61         62        63
      &             '.TDA SI', '.TDA TR', '.RPA(D)', 
 C                     64         65
@@ -1873,22 +1874,23 @@ c         IF (.NOT.NOLOND)  WRITE(LUPRI,*)
 c     &     ' Unsupported input - LONDON Orbitals not implemented' //
 c     &     ' for LRESC properties'
 c            CALL QUIT('Not supported input in ABAINP')
+         IF (.NOT.LRINTS) CALL QUIT('Ask for .LR-SHI under **INTEGRALS')
 
          WRITE (LUPRI,'(5X,A)')
      &      ' Linear Response Elimination of Small Component (LRESC)'//
-     &      ' applied to shielding. Observations :   ' ,
-     &      '     1) Uncontracted Basis set should be used ',
-     &      '     2) LRESC Corrections : ',
-     &      '          Diamagnetic first and second order ',
-     &      '          Paramagnetic second singlet and triplet order ',
-     &      '     3) GAUGEO should be placed at selected nucleus at au'
+     &      ' applied to shielding.'! Observations :   ' ,
+!     &      '     1) Uncontracted Basis set should be used ',
+!     &      '     2) LRESC Corrections : ',
+!     &      '          Diamagnetic first and second order ',
+!     &      '          Paramagnetic second singlet and triplet order ',
+!     &      '     3) GAUGEO should be placed at selected nucleus at au'
       ENDIF
       
       IF (RNLRSCEFG) THEN
 
          WRITE (LUPRI,'(5X,A)')
      &      ' Linear Response Elimination of Small Component (LRESC)'//
-     &      ' applied to EFG. Observations :   ' ,
+     &      ' applied to EFG.  Observations :   ' ,
      &      '     1) Uncontracted Basis set should be used ',
      &      '     2) First order LRESC Corrections'
       ENDIF

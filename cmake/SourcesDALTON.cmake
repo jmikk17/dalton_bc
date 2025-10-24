@@ -161,17 +161,34 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/hertst.F
     DALTON/abacus/her_lslib.F
     DALTON/abacus/huckel.F
+    DALTON/abacus/LRESC/lrescinf_module.F
     DALTON/abacus/LRESC/EFG/expval.F
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F
+    DALTON/abacus/LRESC/EFG/header.F
+    DALTON/abacus/LRESC/EFG/quadratic.F
+    DALTON/abacus/LRESC/EFG/print_results.F
     DALTON/abacus/LRESC/SHIELDING/expval.F
-    DALTON/abacus/LRESC/SHIELDING/angkin.F
+    #DALTON/abacus/LRESC/SHIELDING/angkin.F
     DALTON/abacus/LRESC/SHIELDING/linearlr.F
+    DALTON/abacus/LRESC/SHIELDING/quadratic.F
     DALTON/abacus/LRESC/SHIELDING/shieldingdrv.F
+    DALTON/abacus/LRESC/SHIELDING/header.F
+    DALTON/abacus/LRESC/SHIELDING/print_results.F
     #DALTON/abacus/LRESC/SHIELDING/angpso.F
     DALTON/abacus/LRESC/AVG/avgdrv.F
     DALTON/abacus/LRESC/AVG/checks.F
     DALTON/abacus/LRESC/AVG/operators.F
+    DALTON/abacus/LRESC/AVG/construct_operator.F
+    DALTON/abacus/LRESC/PySCF/read_matrix.F
+    #DALTON/abacus/LRESC/PySCF/generate_xyz.F
+    #DALTON/abacus/LRESC/EIGEN/dtqli.F
+    #DALTON/abacus/LRESC/EIGEN/dtred2.F
+    #DALTON/abacus/LRESC/EIGEN/eigsrt.F
+    DALTON/abacus/LRESC/EIGEN/main.F
+    DALTON/abacus/LRESC/filesmanagement/warnings.F
+    DALTON/abacus/LRESC/filesmanagement/files.F
+    DALTON/abacus/LRESC/filesmanagement/shielding_binary.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F

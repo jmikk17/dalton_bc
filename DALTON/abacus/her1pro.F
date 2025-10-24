@@ -4069,6 +4069,7 @@ C  /* Deck npetyp */
       LOGICAL DOATOM(NUCIND)
       CHARACTER LABINT(9*MXCENT)*8, NAME*2
 #include "qm3.h"
+#include "chrnos.h"
 
 C
       NOPTYP = NATOM
@@ -4080,12 +4081,16 @@ C
       IF (.NOT. FORQM3) THEN
         DO 100 IATOM = 1, NUCIND
           IF (DOATOM(IATOM)) THEN
-            NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
+c            NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
             DO 200 IREP = 0, MAXREP
+              JATOM = IPTNUC(IATOM,IREP)
               IF (IAND(ISTBNU(IATOM),IREP) .EQ. 0) THEN
                 ITYP = ITYP + 1
                 NPETBL(IATOM,IREP) = ITYP
-                LABINT(ITYP) = 'POT.E '//NAME
+c                LABINT(ITYP) = 'POT.E '//NAME
+                 LABINT(ITYP) = 'POT.E'//CHRNOS(JATOM/100)
+     &                                 //CHRNOS(MOD(JATOM,100)/10)
+     &                                 //CHRNOS(MOD(JATOM,10))
                 INTREP(ITYP) = IREP
               END IF
  200        CONTINUE
@@ -4094,12 +4099,16 @@ C
       ELSE
         ITYP = 0
         DO 300 IATOM = 1, NCTOT
-          NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
+c          NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
           DO 400 IREP = 0, MAXREP
+            JATOM = IPTNUC(IATOM,IREP)
             IF (IAND(ISTBNU(IATOM),IREP) .EQ. 0) THEN
               ITYP = ITYP + 1
               NPETBL(IATOM,IREP) = ITYP
-              LABINT(ITYP) = 'POT.E '//NAME
+c              LABINT(ITYP) = 'POT.E '//NAME
+               LABINT(ITYP) = 'POT.E'//CHRNOS(JATOM/100)
+     &                               //CHRNOS(MOD(JATOM,100)/10)
+     &                               //CHRNOS(MOD(JATOM,10))
               INTREP(ITYP) = IREP
             END IF
  400      CONTINUE

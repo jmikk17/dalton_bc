@@ -1,4 +1,4 @@
-\chapter{Calculation of magnetic properties}\label{ch:magnetic}
+\chapter{Magnetic properties}\label{ch:magnetic}
 
 This chapter describes the calculation of properties depending on
 magnetic fields, both as created by an external magnetic field as well
@@ -15,6 +15,8 @@ in another tube than the sample. We also shortly describe
 two properties very closely related to the magnetizability and nuclear
 shieldings, respectively, the rotational {\em g} factor\index{rotational g factor}
 and the nuclear spin--rotation constants\index{spin--rotation constant}.
+Relativistic corrections to nuclear magnetic shieldings are also avaiable, and can be
+obtained within the Linear Response Elimination of Small Component (LRESC) scheme. \cite{melojcp03}
 
 Three properties that in principle depend on the %nuclear
 magnetic moments are
@@ -270,12 +272,13 @@ calculations.
 
 %------------------------------------------------------------
 % by jmelo May-2013
+% and jjaucar 2023
 
 \section{Relativistic corrections to Nuclear shielding constants}\label{sec:lresc}
 
 Linear Response Elimination of Small Component scheme (LRESC) provides the calculation
 of first and second order relativistic corrections to nuclear shielding constants. 
-This corrections are invoked through the keyword \Key{LRESC} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions are on this papers. 
+This corrections are invoked through the keyword \Key{RELSHI} on the \Sec{*PROPERTIES} input module. Detailed description of the LRESC theoretical scheme and discussions can be found on
 
 \begin{center}
 \fbox{
@@ -284,89 +287,134 @@ This corrections are invoked through the keyword \Key{LRESC} on the \Sec{*PROPER
 \noindent
 {\bf Reference literature:}
 \begin{list}{}{}
-\item J.I. Melo, M.C. Ruiz de Azua, C.G Giribet, G.A. Aucar, and R.H. Romero \newblock {\em J. Chem. Phys.}, {\bf 118},\hspace{0.25em}2, (2003).
+\item J. I. Melo, M. C. Ruiz de Azua, C. G. Giribet, G. A. Aucar and R. H. Romero (2003). \newblock {\em J. Chem. Phys.}, {\bf 118}(2), 471-486.
 
-\item M.C.Ruiz de Azua, J.I. Melo, and C.G Giribet \newblock {\em Mol. Phys.}, {\bf 101},\hspace{0.25em}20, (2003).
+\item Juan J. Aucar, Alejandro F. Maldonado and J. I. Melo (2025). \newblock {\em J. Chem. Phys.}, {\bf 162}(19).
 
-\item J.I. Melo, M.C.Ruiz de Azua, C.G Giribet, G.A. Aucar and P.F. Provasi \newblock {\em J.Chem.Phys.}, {\bf 121},\hspace{0.25em}14, (2004).
+%\item M.C.Ruiz de Azua, J.I. Melo, and C.G Giribet \newblock {\em Mol. Phys.}, {\bf 101},\hspace{0.25em}20, (2003).
 
-\item P.G. Roura, J.I. Melo, M.C.Ruiz de Azua, and C.G Giribet \newblock {\em J.Chem.Phys.}, {\bf 125},\hspace{0.25em}064107, (2006).
+%\item J.I. Melo, M.C.Ruiz de Azua, C.G Giribet, G.A. Aucar and P.F. Provasi \newblock {\em J.Chem.Phys.}, {\bf 121},\hspace{0.25em}14, (2004).
+
+%\item P.G. Roura, J.I. Melo, M.C.Ruiz de Azua, and C.G Giribet \newblock {\em J.Chem.Phys.}, {\bf 125},\hspace{0.25em}064107, (2006).
 \end{list}
 }}
 \end{center}
 
-LRESC module computes all first and second order (singlet and triplet) corrections to nuclear magnetic shielding constant of a specific nucleus in a molecule. 
-Third order corrections are not included in the present version of the code, anyway they can be computed via \Sec{*RESPONSE} module (see \Sec{Quadratic Response}, \ref{subsec:quadrsp}). Namely spin orbit correction to shielding constants and paramagnetic third order scalar terms (Darwin and Massvelo). A complete input file for the calculation within LRESC corrections to shielding constant is thus :
+LRESC module computes singlet and triplet corrections to nuclear magnetic shielding constant of a specific nucleus in a molecule. An input example file for the calculation within LRESC corrections to shielding constant is thus:
 
 \begin{verbatim}
 **DALTON INPUT
 .RUN PROPERTIES
-**INTEGRLAS 
-.LR-SHI  ! mandatory, to have all necessary integrals computed to use in LRESC module.
+**INTEGRALS
+.SELECT
+ 1
+ ATOM
+.LR-SHI
 **WAVE FUNCTIONS
 .HF
 **PROPERTIES
-.LR-SHI
+.RELSHI
 **END OF DALTON INPUT
 \end{verbatim}
 
-The integrals computed under \Key{LRINTS} are described in INTEGRALS chapter Section \ref{sec:herinp}
-
-There are a few keywords to get more control over the output and the amount of corrections to be calculated. A detailed physical description on each correction can be found in Ref.~\cite{melomaldojcp12}. Regarding basis sets convergence, benchmark calculations where presented on Ref.~\cite{melomaldojcp12},~\cite{melomaldotca11},~\cite{melojcp03} . The complete list of control keywords are:
-
+Under \Key{SELECT} the number \textit{1} indicates the number of nuclei to be studied, and \textit{ATOM} must be replaced by the atom number under study, according to the list in MOLECULE.INP.
+In the current implementation, by default the gauge origin is placed in its position. If its neccesary to get the nuclear magnetic shielding of several nuclei the user is advised to restart the wave function calculation as described in Section \ref{sec:ig_restart}. The keywords \Key{LR-SHI} and \Key{SELECT} are mandatory in the current implementation. The complete list of control keywords for \Sec{LR-SHI} in the \Sec{**INTEGRALS} section is:
 \begin{list}{}{\itemsep 0.10cm \parsep 0.0cm}
-\item[\Key{PRINT}] Controls the print level, for debugging purpose.
-\item[\Key{SELECT}] Select the atom to which LRESC corrections will be calculated. Default is 1, first atom in input list (.mol file).
-\item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. If not, only the total Paramagnetic and Diamagnetic corrections are printed. Depending on whether you asked for all or just some of LRESC corrections (see next keywords).
-\item[\Key{PARA1S}] Only Paramagnetic Singlet First order corrections are calculated 
-\item[\Key{PARA1T}] Only Paramagnetic Triplet First order corrections are calculated 
-\item[\Key{PARA3S}] (not implemented yet) Only Paramagnetic Singlet Third order corrections are calculated. 
-\item[\Key{PARA3T}] (not implemented yet) Only Paramagnetic Triplet Third order corrections are calculated. 
-\item[\Key{DIAM0S}] Only Diamagnetic Singlet Zeroth order corrections are calculated
-\item[\Key{DIAM1S}] Only Diamagnetic Singlet First order corrections are calculated 
+\item[\Key{LRGAUGEO}] Define the gauge origin coordinates for the LRESC-shielding module (for debugging purposes). By default, the gauge origin is placed at the selected nucleus position.
+\item[\Key{LRCMG}] Define the gauge origin for the LRESC-shielding module at the mass-center (for debugging purposes). By default, the gauge origin is placed at the selected nucleus position.
+\end{list}
+
+There are a few keywords to get more control over the calculation and the output. Under the \Sec{**PROPERTIES} section there is a list of options available by calling to \Sec{LROPTS}:
+\begin{list}{}{}
+\item[\Key{PRTALL}] Full output of individual LRESC corrections will be prompted in output file. By default, they are all calculated but not printed in detail.
+\item[\Key{PRTTENSOR}] Off-diagonal elements will be printed.
+\item[\Key{EXTRAINFO}] Prints extra-info (for developers).
+\item[\Key{PYINTS}] Import atomic integrals generated previously by PySCF (for developers). The subroutine \textit{import\_matrix} is called. The file \textit{SHIELDING.py} within the \textit{LRESC} folder contains a template to generate the integrals in PySCF.
+\item[\Key{PARANR}] Request the paramagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
+\item[\Key{DIANR}] Request the diamagnetic non-relativistic contributions and disable the full corrections calculation that is set by default.
+\item[\Key{PARA1S}] Request the Paramagnetic Singlet First order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA1T}] Request the Paramagnetic Triplet First order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA2S}] Request the Paramagnetic Singlet Second order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PARA2T}] Request the Paramagnetic Triplet Second order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{DIAM0S}] Request the Diamagnetic Singlet Zeroth order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{DIAM1S}] Request the Diamagnetic Singlet First order order order corrections and disable the full corrections calculation that is set by default.
+\item[\Key{PRINT}] Controls the print level, for debugging purposes.
+\item[\Key{SELECT}] Deprecated.
+\item[\Key{LRATOM}] Deprecated.
 \end{list}
 
 
-Default Values, and some tips for better running:
 
+A detailed theoretical description on each correction can be found in Ref.~\cite{melomaldojcp12}. Regarding basis sets convergence, benchmark calculations were presented on Refs.~\cite{melojcp03}, ~\cite{melomaldojcp12},~\cite{melomaldotca11}.
+
+There are some important issues to keep in mind:
 \begin{center}
 \begin{itemize}{}{}
-\item First Atom on input list is selected, unless specified with \Key{SELECT}. 
-\item Center of Mass gauge origin for atomic integrals. As mentioned, \Key{GAUGEO} on 
-\Sec{*INTEGRALS} must be placed in the position of the selected nucleus. Default value is the center of mass.
-\item All LRESC terms will be calculated, unless some (or more) of them are asked for : PARA1S, PARA1T, DIAM0S and/or DIAM1S. See example below.
-\item Uncontracted basis set is recommended. 
-\item No symmetry for molecule specification. 
-\item Hartree-Fock and DFT schemes supported for the ground state Wave Function.
+%\item Uncontracted basis set is recommended. !Too old
+\item Molecular symmetry is not yet implemented.
+\item Only Hartree-Fock and DFT schemes are supported.
+\item All LRESC corrections will be calculated, unless one (or more) of them are asked for (see keywords PARANR, DIANNR, PARA1S, PARA1T, PARA2S, PARA2T, DIAM0S and DIAM1S described above).
+\item As LRESC demands many linear and quadratic response calculations, all the related output text is redirected to specific files in the scratch directory (\textit{LRESC-LR-S}, \textit{LRESC-LR-T}, \textit{LRESC-QR}), which are available in the tar.gz archive file.
 \end{itemize}
 \end{center}
 
+An input example file for the shielding calculation of the first atom in the molecule printing each LRESC correction and off-diagonal shielding tensor elements is thus:
 
 \begin{verbatim}
-(...)
-*INTEGRALS
-.LR-SHI
-.GAUGEO 
-a b c        ! a b c atomic cartesian coordinates of selected nucleus (in a.u.)
-(...)
-**PROPERTIES
-.LR-SHI
-*LROPTS
-.PRTALL      ! detailed output on individual corrections
-.PRINT
-JIMPRT       ! reads one integer , for debugging
+**DALTON INPUT
+.RUN PROPERTIES
+**INTEGRALS
 .SELECT
-LRATOM       ! reads one integer corresponding to the order of selected nucleus list on input file 
-.DIAM0S      ! calculation of diamagnetic  zeroth order terms
-.DIAM1S      ! calculation of diamagnetic  first order terms
-.PARA1S      ! calculation of paramagnetic first(singlet) order terms
-.PARA1T      ! calculation of paramagnetic first(triplet) order terms
+ 1
+ ATOM
+.LR-SHI
+**WAVE FUNCTIONS
+.HF
+**PROPERTIES
+.RELSHI
+*LROPTS
+.PRTALL
+.PRTTENSOR
 **END OF DALTON INPUT
 \end{verbatim}
 
 
+In the scratch directory there is a binary file called \textit{lresc-shield-array.npy} for users that prefer to post-process data within Python. The proper way to load it is:
+\begin{lstlisting}
+import numpy as np
+with open("lresc-shield-array.npy", 'rb') as f:
+...     shape = np.fromfile(f, dtype=np.int32, count=4)
+...     n_items = np.prod(shape)
+...     data = np.fromfile(f, dtype=np.float64, count=n_items)
+...     labels_withspaces = np.fromfile(f, dtype='S10', count=25).astype(str)
+...     labels = np.char.strip(labels_withspaces)
+array = data.reshape(shape, order='F')
+\end{lstlisting}
 
+The array imported in this way has four dimensions, each one correspoding to:
+\begin{enumerate}%[1)]
+ \item Nucleus index.
+ \item Cartesian component (nuclear dipole moment).
+ \item Cartesian component (external magnetic field).
+ \item Non-relativistic values, LRESC corrections and relativistic results.
+\end{enumerate}
 
+The fourth dimension allows the user to select specific results. For example, to print the available labels and get the OZK correction,
+\begin{lstlisting}
+import xarray as xr
+xr_array = xr.DataArray(
+           array,
+           dims=("atom", "i", "j", "contribution"),
+           coords={"contribution": labels}
+           )
+print(labels)
+OZK = xr_array.sel(contribution="OZK")[0, :, :]
+print(OZK.values)
+\end{lstlisting}
+which, as \textit{OZK} is in the 10th position of \textit{labels}, can be also selected by
+\begin{lstlisting}
+OZK = array[0,:,:,9]
+\end{lstlisting}
 
 %------------------------------------------------------------
 

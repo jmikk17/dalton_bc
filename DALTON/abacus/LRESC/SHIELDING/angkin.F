@@ -28,12 +28,12 @@ Cc      dalton.out = lupri
 Cc      aca esta nasht = 0.5 naos
 Cc      aca esta norbt = nmos
 Cc      aca estan los print levels =  iprsir
+      USE lrescinf_module
 #include "priunit.h"
 #include "infpri.h"
 #include "inftap.h"
 #include "inforb.h"
 #include "chrnos.h"
-#include "lrescinf.h"
 
 C
 C ------------------------------------------------------
@@ -481,10 +481,10 @@ C
 C =================================================================
 C =================================================================
        SUBROUTINE getmatrix(label,RTNLBL,TOTOVL,nelmnt)
+      USE lrescinf_module
 #include "inforb.h"
 #include "priunit.h"
 #include "inftap.h"
-#include "lrescinf.h"
 
        LOGICAL ANTSYM, FNDLB2
        CHARACTER*8 RTNLBL(2),label

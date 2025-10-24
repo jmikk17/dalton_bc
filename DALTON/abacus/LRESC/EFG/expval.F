@@ -27,6 +27,7 @@ C           Juan J. Aucar         April 2020
 C...  Note:
 C...  This subroutine was written by Juan Ignacio Melo using
 C...  the subroutine ABACTOCD  as a model (2012)
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
@@ -66,7 +67,6 @@ C
 c#include "infsop.h"
 
 C
-#include "lrescinf.h"
 #include "chrxyz.h"
 #include "chrnos.h"
 #include "orgcom.h"
@@ -82,16 +82,18 @@ C
       CALL QENTER('AVELRSC')
       CALL TIMER('START ',TIMEIN,TIMOUT)
 
-      IF (JJAPRT .GE. 2) THEN
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-         WRITE(LUPRI,*)
-      IF (KEY.EQ.'EFG ') WRITE(LUPRI,'(A)')
-     &      '   LINEARLR, Electric Field Gradient : pqp and kin '
-         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-      IF (KEY.EQ.'EFG2') WRITE(LUPRI,'(A)')
-     &      '   LINEARLR, Electric Field Gradient : nabla^2(qzz) '
-      WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-      END IF
+
+C      For debugging purposes only
+C      IF (JJAPRT .GE. 2) THEN
+C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+C         WRITE(LUPRI,*)
+C      IF (KEY.EQ.'EFG ') WRITE(LUPRI,'(A)')
+C     &      '   LINEARLR, Electric Field Gradient : pqp and kin '
+C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+C      IF (KEY.EQ.'EFG2') WRITE(LUPRI,'(A)')
+C     &      '   LINEARLR, Electric Field Gradient : nabla^2(qzz) '
+C      WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
+C      END IF
 C
 C     Get reference state
 C     ===================
@@ -230,14 +232,14 @@ C     ---------------------------
       END DO
       ENDIF
 
-C  Print LABELS
+C  Print LABELS (for debugging purposes)
 C -----------------------------------
-      IF(JJAPRT.GE.2) THEN
-         WRITE(lupri,*) '@AVELRSC setting  LABEL :'
-         DO i =1, NLAB
-            WRITE(LUPRI,*)'   LABEL :', LISTA1(I)
-         ENDDO
-      ENDIF
+C      IF(JJAPRT.GE.2) THEN
+C         WRITE(lupri,*) '@AVELRSC setting  LABEL :'
+C         DO i =1, NLAB
+C            WRITE(LUPRI,*)'   LABEL :', LISTA1(I)
+C         ENDDO
+C      ENDIF
 C
 C ---------------------------------------------------------------------
 C
@@ -263,16 +265,17 @@ C
          KJ = KJ+1
 !           Get average value of operator
             CALL PRP1AVE(LISTA1(IDIP),SNDPRP,WORK(KCMO),WORK(KUDV),
-     $      WORK(KWRKG1),LWRKG1,JJAPRT)
-            IF (JJAPRT.GE.2) THEN
-               WRITE (LUPRI,'(1A,I2,3A,F20.12)')
-     &         '#',KJ,' Expectation Value for Operator : < ',
-     &         LISTA1(IDIP), ' > = ',SNDPRP
-            ENDIF
+     &      WORK(KWRKG1),LWRKG1,JJAPRT)
+C          For debugging purposes only
+C            IF (JJAPRT.GE.2) THEN
+C               WRITE (LUPRI,'(1A,I2,3A,F20.12)')
+C     &         '#',KJ,' Expectation Value for Operator : < ',
+C     &         LISTA1(IDIP), ' > = ',SNDPRP
+C            ENDIF
 
-			IF (KEY.EQ.'EFG ') THEN 
-				EFGC0(IDIP)=SNDPRP
-			ENDIF
+         IF (KEY.EQ.'EFG ') THEN
+            EFGC0(IDIP)=SNDPRP
+         ENDIF
 cx         ENDIF
 C
 C       =========================================================

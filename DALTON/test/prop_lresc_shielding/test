@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+#    prop_lresc_shielding
+#    --------------------
+#    Molecules:        FH, ClH and H2O
+#    Wave Function:    Hartree Fock
+#    Test Purpose:     LRESC corrections to NMR shielding tensor
+#    With PySCF:       shi.bin file was generated executing
+#                      python3 SHIELDING.py, being the molecule.xyz
+#                      file available, and PySCF installed.
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+simple = Filter()
+
+simple.add(from_string = 'Atoms and basis sets',
+      num_lines = 15,
+      rel_tolerance = 1.0e-2)
+
+simple.add(from_string = 'Cartesian Coordinates',
+      num_lines = 7,
+      rel_tolerance = 1.0e-8)
+
+simple.add(from_string = 'Non relativistic contributions for',
+      num_lines = 27,
+      abs_tolerance = 1.0e-3)
+
+
+detailed = Filter()
+
+detailed.add(from_string = 'Atoms and basis sets',
+      num_lines = 15,
+      rel_tolerance = 1.0e-2)
+
+detailed.add(from_string = 'Cartesian Coordinates',
+      num_lines = 7,
+      rel_tolerance = 1.0e-8)
+
+detailed.add(from_string = 'Paramagnetic LRESC corrections for ',
+      num_lines = 85,
+      abs_tolerance = 1.0e-3)
+      
+detailed.add(from_string = 'Diamagnetic LRESC corrections for ',
+      num_lines = 50,
+      abs_tolerance = 1.0e-3)
+      
+detailed.add(from_string = 'Non relativistic contributions for ',
+      num_lines = 27,
+      abs_tolerance = 1.0e-3)
+
+detailed.add(from_string = 'Total LRESC corrections for ',
+      num_lines = 28,
+      abs_tolerance = 1.0e-3)
+
+detailed.add(from_string = 'Total (NR+LRESC) results for ',
+      num_lines = 28,
+      abs_tolerance = 1.0e-3)
+
+detailed.add(from_string = 'Anisotropic parameters:',
+      num_lines = 6,
+      abs_tolerance = 1.0e-3)
+
+#detailed.add(from_string = 'Principal values and tensor axes:',
+#      num_lines = 8,
+#      abs_tolerance = 1.0e-3)
+
+
+
+
+test.run(['prop_lresc.dal'], ['HF_intgrl.mol'], f={'out': simple})
+test.run(['prop_lresc_warnings.dal'], ['HCl_intgrl.mol'], f={'out': simple})
+test.run(['prop_lresc_detailed.dal'], ['HF_intgrl.mol'], f={'out': detailed})
+test.run(['prop_lresc_pyscf.dal'], ['H2O_intgrl.mol'], args='-put shi.bin', f={'out': detailed})
+
+
+
+
+sys.exit(test.return_code)

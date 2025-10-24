@@ -16,11 +16,11 @@
 !
 !
 C
-C  /* Deck lrscinp */
-C This module read nesserary input for LRESC calculations.
+C  /* Deck lrscinp_shi */
+C This module read necessary input for LRESC calculations.
 C jim-gesc : May-2012
 C
-C
+C      
       SUBROUTINE LRSCINP_SHI(WORD)
 C
 C Purpose:
@@ -31,42 +31,40 @@ C     J. I. Melo
 C  Edited:
 C     J. J. Aucar 2021 (LRESC Structure)
 C
-#include "implicit.h"
+      USE lrescinf_module
+c#include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-#include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 11, D0 = 0.0D0)
+      PARAMETER (NTABLE = 16, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       DIMENSION IPOINT(MXCENT)
 C#include "dorps.h"
 #include "spnout.h"
-c#include "lrescinf.h"
 C                      1         2         3	    4	      5
       DATA TABLE /'.GAUGEO','.PRINT ','.SELECT','.PRTALL','.xXXXXx',
 C                      6         7         8	    9	      10
-     &            '.PARA1S','.PARA1T','.PARA3S','.PARA3T','.DIAM0S',
-C                      11 
-     &            '.DIAM1S'/
+     &            '.PARA1S','.PARA1T','.PARA2S','.PARA2T','.DIAM0S',
+C                      11       12        13       14         15
+     &            '.DIAM1S','.PRTTEN','.PARANR','.DIANR ','.PYINTS',
+C                      16
+     &            '.EXTRAI'/
 C
-c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
-
       NEWDEF = (WORD .EQ. '*LROPTS')
       ICHANG = 0
       IF (NEWDEF) THEN
          WORD1 = WORD
  100     CONTINUE
             READ (LUCMD,'(A7)') WORD
-c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
             PROMPT = WORD(1:1)
             IF (PROMPT .EQ. '!' .OR. PROMPT .EQ. '#') THEN
                GOTO 100
             ELSE IF (PROMPT .EQ. '.') THEN
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                  GOTO (1,2,3,4,5,6,7,8,9,10,11), I
+                  GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -79,46 +77,35 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
                CALL PRTAB(NTABLE,TABLE,WORD1//
      &         ' input keywords',LUPRI)
                CALL QUIT('Input keywords in LRESC Input, LRSCINP')
-C   READ GAUGEO : DEFINIR ALGUNA VAR PARA GAUGEO
+C              Redefining Gauge Origin
  1             CONTINUE
-cv                write(lupri,*)' ..aca leo gaugeo ', WORD
-                  READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
-                  DO ICENT = 1, NUCIND
-c                 NAME =  NAMEX(3*ICENT)(1:4)
-                     WRITE (LUPRI,'(2X,A,3X," : ",3(A1,2X,A,F15.10))')
-     &                  NAMEX(3*ICENT)(1:4), '1' , 'x' , CORD(1,ICENT),
-     &                  '2' , 'y' , CORD(2,ICENT),
-     &                  '3' , 'z' , CORD(3,ICENT)
-                  ENDDO
-                  GAUCHANG =.TRUE.
+               CALL QUIT('(.GAUGEO) was deprecated.')
+C                  READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
+c                  GAUCHANG =.TRUE.
                   ICHANG = ICHANG + 1
                   GOTO 100
-C   SET PRINT LEVEL
+C              SET PRINT LEVEL for LRESC-SHIELDING
  2             CONTINUE
                   READ (LUCMD,*) JIMPRT
-c                 write(lupri,*)' ..aca leo print level :', JIMPRT
                   ICHANG = ICHANG + 1
                   GOTO 100
-C   SET WHICH NUC TO DO LRESC
+C              TO BE DEVELOPED. It's defined under *LR-SHI
  3             CONTINUE
-cx                write(lupri,*)'@LRINP  antes de leer'
                   READ (LUCMD,*) LRATOM
                   ICHANG = ICHANG + 1
-cx                write(lupri,*)'LRINP  despues de leer', LRATOM
-cx                write(lupri,*)'Your selection is atom #:',LRATOM,
-cx     $          'named : ', NAMN(LRATOM), 'on Molecule.mol file'
                   IF (LRATOM.GT.NATOMS)THEN
                      write(lupri,*) 'Input Error on LRSCINP'
                      write(lupri,*) 'Your selection exceeds total ',
      &                    'number of atoms on input file'
                      CALL QUIT('LRATOM greater than NATOMS, LRSCINP')
                   END IF
+
                   GOTO 100
  4             CONTINUE
                   PRTALL1 = .TRUE.
                   GOTO 100
  5             CONTINUE
-c                  do algo 
+c                 Free option
                   GOTO 100
  6             CONTINUE
                   SIGMAP1S = .TRUE.
@@ -131,12 +118,12 @@ c                  do algo
                   ICHANG = ICHANG + 1
                   GOTO 100
  8             CONTINUE
-                  SIGMAP3S = .TRUE.
+                  SIGMAP2S = .TRUE.
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
  9             CONTINUE
-                  SIGMAP3T = .TRUE.
+                  SIGMAP2T = .TRUE.
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
@@ -150,6 +137,27 @@ c                  do algo
                   LRESCALL = .FALSE.
                   ICHANG = ICHANG + 1
                   GOTO 100
+ 12            CONTINUE
+                  PRTTEN = .TRUE.
+                  GOTO 100
+ 13            CONTINUE
+                  SIGMAPNR = .TRUE.
+                  LRESCALL = .FALSE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
+ 14            CONTINUE
+                  SIGMADNR = .TRUE.
+                  LRESCALL = .FALSE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
+ 15            CONTINUE
+                  PYINTS = .TRUE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
+ 16            CONTINUE
+                  EXTRAINFO = .TRUE.
+                  ICHANG = ICHANG + 1
+                  GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
             ELSE
@@ -160,27 +168,25 @@ c                  do algo
             END IF
          END IF
  300  CONTINUE
-c jim-dbg ICHANG > 0 cambios en default variables
-c jim-dbg ICHANG < 0 no cambios
 
 
       RETURN
       END
 C -----------------------------------------------------------------------
 C
-C  /* Deck lrscini */
+C  /* Deck lrscini_shi */
       SUBROUTINE LRSCINI_SHI
 C
 C Purpose:
-C     Initialize the variables common LRESCINI: include/lrescinf.h.
+C     Initialize the variables: lrescinf_module.
 C     This routine is call by ABAINIALL : abacus/abadrv.F
 C Author:
 C     J. I. Melo
 C Edited:
 C     J. J. Aucar. 2021
 C
+      USE lrescinf_module
 #include "implicit.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "cbiqr.h"
 #include "abainf.h"
@@ -188,22 +194,31 @@ C
       PARAMETER(D0 = 0.0D+0)
 
       JIMPRT    = 0
-      LRATOM    = 1
+
 
       LRGAUG(1) = D0
       LRGAUG(2) = D0
       LRGAUG(3) = D0
 
-      GAUCHANG = .FALSE.
+C      GAUCHANG = .FALSE.
 
+      SIGMAPNR = .FALSE.
+      SIGMADNR = .FALSE.
       SIGMAP1S = .FALSE.
       SIGMAP1T = .FALSE.
       SIGMAD1S = .FALSE.
       SIGMAD0S = .FALSE.
-      SIGMAP3S = .FALSE.
-      SIGMAP3T = .FALSE.
+      SIGMAP2S = .FALSE.
+      SIGMAP2T = .FALSE.
 
       LRESCALL = .TRUE.
+
+      PYINTS    = .FALSE.
+      EXTRAINFO = .FALSE.
+
+      WARNLRS = .FALSE.
+      WARNLRT = .FALSE.
+      WARNQR  = .FALSE.
 C
 C     Initialize /CUADRA/
 C
@@ -222,29 +237,38 @@ C
       CALL DZERO (QBFREQ,NFMAX)
       CALL DZERO (QCFREQ,NFMAX)
 C
-C  Init Result Matrices
-C jim 4.0 : anddy aca ver que matrices encesita gesc.
-
-!LRESC corrections to dia and para terms of shielding
+!     LRESC corrections
+      LRDNR  = D0
       LRFCAV = D0
+!
+      LRFCAV0 = D0
+      LRFCAV1 = D0
+      LRFCAV2 = D0
+      LRFCAV3 = D0
+!
       LRDIAK = D0
       LRANGP = D0
+      LRANGPavg = D0
+      LRSDAV = D0
 
       LRDIAM = D0
       LRDIAD = D0
 
-      LRLKIN = D0
+      LRPNR  = D0
+      LROZK  = D0
       LRPSOK = D0
-      LRPSKI = D0  ! this is just for debugging
+      LRPSOKaba = D0
       LRFCZK = D0
-      LRSDZK = D0
+      LRFCDE = D0
+      LRSDK = D0
+      LRSDD = D0
       LRFCBS = D0
       LRSDBS = D0
 
       RETURN
       END
 c    ---------------------------------------
-C  /* Deck lrscdrv */
+C  /* Deck lrscdrv_shi */
       SUBROUTINE LRSCDRV_SHI(WORK,LWORK)
 C
 C Purpose:
@@ -254,455 +278,411 @@ C Author:
 C     J. I. Melo
 C Edited:
 C     J. J. Aucar 2021
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
+#include "inftap.h"
+#include "infrsp.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
-C this is for print section
 #include "nuclei.h"
+#include "chrnos.h"              
+#include "gnrinf.h"
+#include "cbiher.h"
 C
 C
-      LOGICAL PING
+      LOGICAL PING, FOUND
+      DIMENSION WORK(LWORK)
+      logical :: file_exists, file_open
+      logical :: warning_found
+      INTEGER, allocatable :: LRATOMS(:)
+      real(8) ::  array_oneatom(3,3,25)
+      real(8), allocatable :: lresc_array(:,:,:,:)
       PING=.FALSE.
-cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_SHI')
-
 
 C ----------------------------
       IF (LRESCALL) THEN
+         SIGMADNR = .TRUE.
+         SIGMAPNR = .TRUE.
          SIGMAD0S = .TRUE.
          SIGMAD1S = .TRUE.
          SIGMAP1S = .TRUE.
          SIGMAP1T = .TRUE.
+         SIGMAP2S = .TRUE.
+         SIGMAP2T = .TRUE.
       ENDIF
 
+C     Print information about LRESC metodology
+      CALL HEADER_LRSHIELD
 C
-C Diamagnetic corrections to Shielding:
-C        Zeroth Order, Singlet of course
+C     Diamagnetic corrections to Shielding:
+C     Zeroth Order, Singlet of course
 C
-      IF (SIGMAD0S) THEN
-         CALL AVELRSC('FCAV',WORK,LWORK)
-         CALL AVELRSC('DIAK',WORK,LWORK)
-cx         IF(NORBT.NE.NBAST) Then
-cx            PING = .TRUE.
-cx            write(lupri,*)' WARNING : @ANGPSO (NORBT.NE.NBAST) :',
-cx     &      ' AngPso not computed due to basis set dependencies'
-cx         ELSE
-         CALL AVELRSC('ANGP',WORK,LWORK) ! ANGPSO testing ! should work!
-cx         ENDIF
+c     Nuclei list
+      IF ( (LRATOM_changed).and.(NLRATOMS.EQ.1) ) THEN
+         allocate(LRATOMS(1))
+         LRATOMS(1) = LRATOM
+      ELSEIF (.not.LRATOM_changed ) THEN
+         allocate(LRATOMS(NUCIND))
+         DO I = 1, NUCIND
+            LRATOMS(I)=I
+         END DO
+      ELSE
+         allocate(LRATOMS(NLRATOMS))
+         DO I = 1, NLRATOMS
+            LRATOMS(I)=LRATOMSS(I)
+         END DO
       END IF
-C
-C Diamagnetic corrections to Shielding:
-C        First Order Singlet
+
+
+      allocate(lresc_array(NLRATOMS,3,3,25))
+
+
+C --------------------------------------------------
+C Some files have to be closed and/or deleted
+c when the RESPONSE module is called before LRESC
+      inquire(file = 'RSPVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP ,'DELETE') !RSPVEC file
+
+
+      inquire(file = 'RSP_BVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP3 ,'DELETE')
+
+
+      inquire(file = 'RSP_DIAG', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP4 ,'DELETE')
+
+
+      inquire(file = 'RSP_SVEC', exist = file_exists,
+     &            opened = file_open)
+      IF (file_exists .AND. file_open) 
+     &      CALL GPCLOSE(LURSP5 ,'DELETE')
+C --------------------------------------------------
+      call copy_file(LUESC,LUESC2,'DALTON.INP', 'DALTON_BACKUP.INP')
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C     PySCF(libcint) integrals
+      if (PYINTS) THEN
+         call import_matrix(19*NUCIND,"shi")
+      end if
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C     PSOK (AVG) integrals
+      IF (SIGMAP1S)  THEN
+         CALL construct_operator('PSOK') ! PSOK with AVG
+      END IF
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C --------------------------------------------------
+c     Construct LR singlet inputs and run responses (all at once)
+      IF (SIGMAPNR.OR.SIGMAP1S.OR.SIGMAD1S) THEN
+         call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.FALSE.)
+         CALL GETTIM(TIMLRS,WALLRS)
+         IF (JIMPRT.GE.1)
+     &   WRITE (LUPRI,'(5X,A)') 'Singlet Linear Responses'//
+     &                       ' are under calculation'
+c        Run Linear Responses
+         LUPRI = 6232
+         OPEN(UNIT=LUPRI, FILE='LRESC-LR-S',status='unknown',
+     &        position='append')
+         call RSPDRV(WORK,LWORK)
+         CLOSE(LUPRI)
+         LUPRI  = 2
+
+C        Check for Warnings
+         open(unit=6232, file=trim('LRESC-LR-S'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNLRS = .true.
+         close(6232)
+
+         CALL GETTIM(TEND,WEND)
+         TIMLRS = TEND - TIMLRS
+         WALLRS = WEND - WALLRS
+         IF (JIMPRT .GE. 2) THEN
+            CALL TIMTXT('    Total CPU  time used in LRESC-LR-S:',
+     &                       TIMLRS,LUPRI)
+            CALL TIMTXT('    Total wall time used in LRESC-LR-S:',
+     &                       WALLRS,LUPRI)
+         END IF
+
+      END IF
+C --------------------------------------------------
+C Some files have to be deleted
+c when calling for TRIPLET responses after singlet responses
+      inquire(file = 'RSPVEC', exist = file_exists)
+      IF (file_exists) THEN
+         CALL GPOPEN(LURSP,'RSPVEC','OLD',' ','FORMATTED',
+     &               IDUMMY,.FALSE.)
+         CALL GPCLOSE(LURSP ,'DELETE')
+      END IF
+
+      LURSP1 = -1
+      inquire(file = 'RSPRST.E2C', exist = file_exists)
+      IF (file_exists) THEN
+         CALL GPOPEN(LURSP1,'RSPRST.E2C','OLD',' ','FORMATTED',
+     &               IDUMMY,.FALSE.)
+         CALL GPCLOSE(LURSP1 ,'DELETE')
+      END IF
+C --------------------------------------------------
+c     Construct LR triplet inputs and run responses (all at once)
+      IF (SIGMAP1T) THEN
+         call LRINPUT_ALL(LRATOMS,SIZE(LRATOMS),.TRUE.)
+         CALL GETTIM(TIMLRT,WALLRT)
+         IF (JIMPRT.GE.1)
+     &   WRITE (LUPRI,'(5X,A)') 'Triplet Linear Responses'//
+     &                       ' are under calculation'
+c        Run Linear Responses
+         LUPRI = 6232
+         OPEN(UNIT=LUPRI, FILE='LRESC-LR-T',status='unknown',
+     &        position='append')
+         call RSPDRV(WORK,LWORK)
+         CLOSE(LUPRI)
+         LUPRI  = 2
+
+C        Check for Warnings
+         open(unit=6232, file=trim('LRESC-LR-T'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNLRT = .true.
+         close(6232)
+
+         CALL GETTIM(TEND,WEND)
+         TIMLRT = TEND - TIMLRT
+         WALLRT = WEND - WALLRT
+         IF (JIMPRT .GE. 2) THEN
+            CALL TIMTXT('    Total CPU  time used in LRESC-LR-T:',
+     &                       TIMLRT,LUPRI)
+            CALL TIMTXT('    Total wall time used in LRESC-LR-T:',
+     &                       WALLRT,LUPRI)
+         END IF
+
+      END IF
+C --------------------------------------------------
+      DO I = 1, size(LRATOMS)
+      LRATOM = LRATOMS(I)
+
+C     Next lines will be used for setting GO at each nucleus. Should be
+C     done also for LR and QR.
+c      call REGENERATE_INTEGRALS(CORD(:,LRATOM)) !Placing GO at each nucleus
+c      NEWPRP = .TRUE.  !So that AOPROPER is re-written
+c      HRINPC = .FALSE. !So that HERMIT INPUTS IS READ AGAIN FROM DALTON.INP
+c      CALL HERCTL(WORK,LWORK)
+c      HRINPC = .TRUE.
+
+      IF (SIGMADNR) THEN
+         TRPLET = .FALSE.
+         TRPFLG = .FALSE.
+         CALL AVELRSC('DINR',WORK,LWORK) ! NSCO
+      END IF
+
+      IF (SIGMAD0S) THEN
+         TRPLET = .FALSE.
+         TRPFLG = .FALSE.
+         IF (EXTRAINFO) CALL AVELRSC('ANGP',WORK,LWORK) ! PSO-OZ
+         CALL AVELRSC('NEWJ',WORK,LWORK) ! PSO-OZ with AVG
+         CALL AVELRSC('FCAV',WORK,LWORK) ! FC
+         CALL AVELRSC('DIAK',WORK,LWORK) ! NSKE
+         CALL AVELRSC('SDAV',WORK,LWORK) ! SD_ij
+!      END IF
+         IF (PYINTS) THEN
+            CALL AVELRSC('FCt0',WORK,LWORK) ! FC type (FC integrals)
+            CALL AVELRSC('FCt1',WORK,LWORK) ! FC type # (r . nabla) / (r^3)
+            CALL AVELRSC('FCt2',WORK,LWORK) ! FC type # (r_i . nabla_j) /(r^3)
+            CALL AVELRSC('FCt3',WORK,LWORK) ! FC type # (r_i r_j)/(r^5) r.nabla
+         END IF
+
+      END IF
+C --------------------------------------------------
+C     Paramagnetic corrections to Shielding:
+C     Non-relativistic singlet
+      IF (SIGMAPNR)  THEN
+         CALL GET_LR('NRPA',.FALSE.) ! PSO | ANGMOM
+      END IF
+C     First Order Singlet
+      IF (SIGMAP1S)  THEN
+         CALL GET_LR('PSOK',.FALSE.) ! ANGMOM | PSO-K with AVG
+         CALL GET_LR('OZK ',.FALSE.) !   PSO  | OZ-KE
+         IF (EXTRAINFO) THEN
+            CALL GET_LR('PSKK',.FALSE.) ! ANGMOM | PSO-K with abacus integrals
+         END IF
+      END IF
+
+C     Diamagnetic corrections to Shielding:
+C     First Order Singlet
 C
       IF (SIGMAD1S) THEN
-         CALL LINEARLR('DIAM',WORK,LWORK)
-         CALL LINEARLR('DIAD',WORK,LWORK)
+         CALL GET_LR('DIAM',.FALSE.) ! NSCO | Mv
+         CALL GET_LR('DIAD',.FALSE.) ! NSCO | Dw
       END IF
 C
-C Paramagnetic corrections to Shielding:
-C        First Order Singlet
 C
-      IF (SIGMAP1S)  THEN
-         CALL LINEARLR('PSOK',WORK,LWORK)
-C         WRITE(LUPRI,'(A)')'   Calling to SIGMAP1S for : PSKI  '//
-C     &        'using A.1.B routine'  ! con mis integrales
-C         WRITE(LUPRI,'(/721A1/)')('*',I=1,72)
-C         CALL LINEARLR('PSKI',WORK,LWORK)
-C
-         CALL LINEARLR('LKIN',WORK,LWORK)
-      END IF
-C
-C Paramagnetic corrections to Shielding:
-C        First Order TRIPLET
-C
+C     Paramagnetic corrections to Shielding:
+C     First Order TRIPLET
       IF (SIGMAP1T) THEN
-         CALL LINEARLR('FCZK',WORK,LWORK)
-         CALL LINEARLR('SDZK',WORK,LWORK)
-         CALL LINEARLR('FCBS',WORK,LWORK)
-         CALL LINEARLR('SDBS',WORK,LWORK)
-      END IF
-C
-C Paramagnetic corrections to Shielding:
-C            Third Order SINLGET
-C
-      IF (SIGMAP3S) THEN
-         WRITE (LUPRI,'(A)')'   Calling to SIGMA3S for : Paramagnetic'//
-     &         ' Singlet Second Order Shielding corrections'
-cv         CALL CUADRAS('LPSO')
-      END IF
-C
-C Paramagnetic corrections to Shielding:
-C           Third Order TRIPLET
-C
-      IF (SIGMAP3T) THEN
-         WRITE (LUPRI,'(A)')'   Calling to SIGMA3T for : '
-cv         CALL CUADRAS('LFCO')
+         CALL GET_LR('FCZK',.TRUE.) !   FC   | KINENERG
+         CALL GET_LR('FCDE',.TRUE.) !   FC   | dd/didj
+         CALL GET_LR('SDK ',.TRUE.) !  SD_ij | KINENERG
+         CALL GET_LR('SDD ',.TRUE.) !   SD   | dd/d d
+         CALL GET_LR('FCBS',.TRUE.) !   FC   | SOMF_ij
+         CALL GET_LR('SDBS',.TRUE.) !   SD   | SOMF
       END IF
 
-C *******************************************************************
-C *******************************************************************
-C
-C
-C
-C -================---------------======================
-C                  Print Section
-C -================---------------======================
-C
-C     Information about calculation of LRESC
-C
-C ---- Default
-      CALL
-     & TITLER
-     &('ABACUS - RELATIVISTIC CORRECTIONS LRESC TO SHIELDING','*',124)
+c     Paramagnetic corrections to Shielding:
+c     Third Order
 
-      WRITE(lupri,*)
-      WRITE(lupri,*)' First and Second order relativistic '//
-     & 'corrections to nuclear shielding constant.'
-
-      WRITE(LUPRI,*)
-
-      IF (LRESCALL) THEN
-            WRITE(lupri,*)
-     &   '* LRESC corrections to paramagnetic component were activated'
-      ELSE
-            WRITE(lupri,*) '* LRESC corrections were activated'
-      ENDIF
-
-      WRITE(LUPRI,*)
-
-c      WRITE(LUPRI,*)'   -  For definitions on terms named ABC,'//
-c     &              ' refered to relativistic correction '
-c      WRITE(LUPRI,*)'      of sigma, see JCP. 137, 214319(2012). '
-      WRITE(LUPRI,*)'   -  Original LRESC papers at : J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi:10.1063/1.1525808'
-      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
-c     &                       ' DOI: 10.1080/00268970310001617784'
-      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
-     & 'doi:10.1063/1.2244572'
-c      WRITE(LUPRI,*)' Gaugeo placed at : ', GAGORG
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,
-     &         ": ", NAMN(LRATOM)
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
-     &  CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,'(4X,A)')'-  Remember : '
-      WRITE(LUPRI,'(14X,A)')'*  GAUGEO should be placed at selected '//
-     &  'nucleus, on INTEGRALS SECTION, in a.u'
-      IF (.NOT. PRTALL1) THEN
-         WRITE(LUPRI,'(14X,A)')'*  For individual contributions, add '//
-     &   '.PRTALL in your input file under *LROPTS'
-      ENDIF
-      WRITE(LUPRI,'(14X,A)')'*  Third Order Singlet and Triplet '//
-     & 'Corrections must be run in order to get'
-      WRITE(LUPRI,'(17X,A)')'all relativistic corrections. Not '//
-     &                      ' yet implemented, but can be done via'
-      WRITE(LUPRI,'(17X,A)')'RESPONSE calculation (see Manual for'//
-     &                      ' details)'
-
-C ---Not Default
-      IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.(.NOT. LRESCALL))
-     & CALL HEADER('Changes of defaults for LRESC :',0)
-
-      IF (GAUCHANG) THEN
-         WRITE(lupri,*)'*** WARNING:'
-         WRITE(lupri,*)'GAUGEO must be placed on selected nucleus at'
-         WRITE(lupri,*)'a.u. due to Hermite section (1 body integrals)'
+c     Singlets
+      IF (SIGMAP2S) THEN
+         IF (JIMPRT.GE.1) THEN
+         WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
+     &                     ' are under calculation'
+         END IF
+         CALL QUADRATICLR('OZ-PSO-MV',WORK,LWORK) !OK
+         CALL QUADRATICLR('OZ-PSO-Dw',WORK,LWORK) !OK
       END IF
 
-      IF (JIMPRT.NE.0) THEN
-         WRITE (LUPRI,'(A,I5)')
-     &      '--- Print level : ', JIMPRT
+c     Triplets
+      IF (SIGMAP2T) THEN
+         IF (JIMPRT.GE.1) THEN
+         WRITE (LUPRI,'(5X,A)') 'Singlet quadratic responses'//
+     &                     ' are under calculation'
+         END IF
+         CALL QUADRATICLR('OZ-FC-SO ',WORK,LWORK) !OK
+         CALL QUADRATICLR('OZ-SD-SO ',WORK,LWORK) !OK
       END IF
 
-      IF (.NOT. LRESCALL) THEN
-         WRITE (LUPRI,'(A)')
-     &      '--- Not all corrections were activated. ' //
-     &      'Only the following will be done : '
-         IF (SIGMAP1S)  WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order singlet corrections to shielding'
-         IF (SIGMAP1T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic first order triplet corrections to shielding'
-         IF (SIGMAP3S) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order singlet corrections to shielding'
-         IF (SIGMAP3T) WRITE (LUPRI,'(A)')'  LRESC : '//
-     &   '   Paramagnetic third order triplet corrections to shielding'
-            WRITE (LUPRI,*) 'LRESC : '
-         IF (SIGMAD0S) WRITE (LUPRI,*)
-     &   '    Diamagnetic zero order singlet corrections to shielding'
-         IF (SIGMAD1S) WRITE (LUPRI,*)
-     &   '   Diamagnetic first order singlet corrections to shielding'
-         IF (NUCSPI .GT. 0)
-     &      WRITE (LUPRI,'(A)')' XXXXXXXX NUCSPI GT 0 ??  '//
-     &           '    '
-      ENDIF
-         WRITE(LUPRI,*)' '
-C
-C Isotropic values
-C
+c      Null (as expected)!
+c       CALL QUADRATICLR('SZ-PSO-MV',WORK,LWORK)
+c       CALL QUADRATICLR('SZ-PSO-Dw',WORK,LWORK)
+
+c      Null (shouldnt be)
+c       CALL QUADRATICLR('SZ-FC-SO ',WORK,LWORK) ! Según paper 2011, esto da cero
+c       CALL QUADRATICLR('SZ-SD-SO ',WORK,LWORK) !ONIT
+
+C     Check for Warnings
+      if ( (SIGMAP2S).or.(SIGMAP2T) ) then
+         open(unit=6232, file=trim('LRESC-QR'), status='old')
+         call SearchWord(6232, 'WARNING', warning_found)
+         if (warning_found) WARNQR = .true.
+         close(6232)
+      end if
+
+
+C --Warnings
+      IF ( (WARNLRS).OR.(WARNLRT).OR.(WARNQR) )
+     & CALL HEADER('Warnings :',3)
+      IF (WARNLRS) THEN
+        WRITE (LUPRI,'(4X,A)') '-  Check LRESC-LR-S file.'
+        CALL check_lr_s
+      END IF
+      IF (WARNLRT) THEN
+        WRITE (LUPRI,'(4X,A)') '-  Check LRESC-LR-T file.'
+        CALL check_lr_t
+      END IF
+      IF (WARNQR) THEN
+        WRITE (LUPRI,'(4X,A)')'-  Check LRESC-QR file.'
+        CALL check_qr
+      END IF
+
+
+
+
       SLRESC  = 0.0
+      SGPNR   = 0.0  ! non-relativistic paramagnetic
+      SGDNR   = 0.0  ! non-relativistic diamagnetic
       SGD0S   = 0.0  ! sigma 0order singlet DIAM  : Fc, AngPso, DiaKin
       SGD1S   = 0.0  ! sigma 1order singlet DIAM  : DiaMv, DiaDw
       SGP1S   = 0.0  ! sigma 1order singlet PARAM : Lkin, Psokin
       SGP1T   = 0.0  ! sigma 1order triplet PARAM : FcKin, SdKin, SdBso, FcBso
-
-C    Add constants to print all in ppm's
-      DO i=1, 3
-!Diamagnetic corrections
-         !LRESC
-         FCTEMP  = LRFCAV(i,i)
-         ANGTEMP = LRANGP(i,i)
-         DARTEMP = LRDIAD(i,i)
-         TEMPMAS = LRDIAM(i,i)
-         LRFCAV(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV(i,i)
-         LRDIAK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK(i,i)
-         LRANGP(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP(i,i)
-         LRDIAD(i,i) = calfa*calfa*1.0D+6* CDIAD* LRDIAD(i,i)
-         LRDIAM(i,i) = calfa*calfa*1.0D+6* CDIAM* LRDIAM(i,i)
-!Paramagnetic corrections
-         LRFCZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK(i,i)
-         LRSDZK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CSDZK*LRSDZK(i,i)
-         LRFCBS(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS(i,i)
-         LRSDBS(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS(i,i)
-         LRLKIN(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CLKIN*LRLKIN(i,i)
-         LRPSOK(i,i) = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK(i,i)
-      ENDDO
-C
-C Trace
-C
-      DO i=1, 3
-!Diamagnetic corrections
-         !LRESC
-         SGD0S = SGD0S + LRFCAV(i,i) + LRDIAK(i,i) + LRANGP(i,i)
-         SGD1S = SGD1S + LRDIAD(i,i) + LRDIAM(i,i)
-!Paramagnetic corrections
-         SGP1S = SGP1S + LRLKIN(i,i) + LRPSOK(i,i)
-         SGP1T = SGP1T +
-     &    LRFCZK(i,i) + LRSDZK(i,i)+LRFCBS(i,i)+LRSDBS(i,i)
-      ENDDO
-      SLRESC  =  SGD0S + SGD1S + SGP1S + SGP1T
-C
-C  Corrections of shielding constant are the trace of each tensor
-C
-      SLRESC = SLRESC/3.0
-!Diamagnetic corrections
-      !LRESC
-      SGD0S = SGD0S/3.0
-      SGD1S = SGD1S/3.0
-!Paramagnetic corrections
-      SGP1S = SGP1S/3.0
-      SGP1T = SGP1T/3.0
+      SGP3S   = 0.0  ! sigma 3order singlet PARAM : PSOOZMv, PSOOZDw
+      SGP3T   = 0.0  ! sigma 3order triplet PARAM : OZFCSO, OZSDSO
+C     Add constants and print all in ppm's
+!     Diamagnetic non-relativistic value
+         LRDNR = calfa*calfa*1.0D+6*CDNR*LRDNR
+!     Diamagnetic corrections
+         LRFCAV = calfa*calfa*calfa*calfa*1.0D+6* CFCAV*LRFCAV
+         LRDIAK = calfa*calfa*calfa*calfa*1.0D+6* CDIAK*LRDIAK
+         LRSDAV = calfa*calfa*calfa*calfa*1.0D+6* CSDAV*LRSDAV
+         LRANGP = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGP
+         LRANGPavg = calfa*calfa*calfa*calfa*1.0D+6* CANGP*LRANGPavg
+         LRDIAD = calfa*calfa*1.0D+6* CDIAD* LRDIAD
+         LRDIAM = calfa*calfa*1.0D+6* CDIAM* LRDIAM
+!
+         LRFCAV0 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV0*LRFCAV0
+         LRFCAV1 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV1*LRFCAV1
+         LRFCAV2 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV2*LRFCAV2
+         LRFCAV3 = calfa*calfa*calfa*calfa*1.0D+6* CFCAV3*LRFCAV3
+         LRFCAVpy = LRFCAV0+LRFCAV1+LRFCAV2+LRFCAV3 !Imported from pyscf
+!
+!     Paramagnetic non-relativistic value
+         LRPNR = calfa*calfa*1.0D+6*CPNR*LRPNR
+!     Paramagnetic corrections
+         LRFCZK = calfa*calfa*calfa*calfa*1.0D+6* CFCZK*LRFCZK
+         LRFCDE = calfa*calfa*calfa*calfa*1.0D+6* CFCDE*LRFCDE
+         LRSDK = calfa*calfa*calfa*calfa*1.0D+6* CSDK*LRSDK
+         LRSDD = calfa*calfa*calfa*calfa*1.0D+6* CSDD*LRSDD
+         LRFCBS = calfa*calfa*calfa*calfa*1.0D+6* CFCBS*LRFCBS
+         LRSDBS = calfa*calfa*calfa*calfa*1.0D+6* CSDBS*LRSDBS
+         LROZK  = calfa*calfa*calfa*calfa*1.0D+6* COZK*LROZK
+         LRPSOK = calfa*calfa*calfa*calfa*1.0D+6* CPSOK*LRPSOK
+         LRPSOKaba = calfa*calfa*calfa*calfa*1.0D+6* CPSOKaba*LRPSOKaba
+c
+         QRPSOOZMV = calfa*calfa*1.0D+6* CPSOOZMV*QRPSOOZMV
+         QRPSOOZDW = calfa*calfa*1.0D+6* CPSOOZDW*QRPSOOZDW
+         QROZFCSO =  calfa*calfa*1.0D+6* COZFCSO*QROZFCSO
+         QROZSDSO =  calfa*calfa*1.0D+6* COZSDSO*QROZSDSO
 C
 
+!     Diamagnetic corrections
+         IF (PYINTS) THEN
+            SGD0S = SGD0S + LRFCAVpy + LRDIAK + LRANGPavg + LRSDAV
+         ELSE
+            SGD0S = SGD0S + LRFCAV + LRDIAK + LRANGPavg + LRSDAV
+         END IF
+         SGD1S = SGD1S + LRDIAD + LRDIAM
+!     Paramagnetic corrections
+         SGPNR = LRPNR
+         SGDNR = LRDNR
+         SGP1S = SGP1S + LROZK + LRPSOK
+         SGP1T = SGP1T + LRFCZK + LRFCDE + LRSDK
+     &         + LRSDD  + LRFCBS + LRSDBS
+         SGP3S = SGP3S + QRPSOOZMV + QRPSOOZDW
+         SGP3T = SGP3T + QROZFCSO + QROZSDSO
+!     Total (doesnt include non-rel contributions)
+      SLRESC  = SGD0S + SGD1S + SGP1S + SGP1T + SGP3S + SGP3T
 C
-C Paramagnetic 1st singlet or triplet
-C
-      IF ((SIGMAP1S).OR.(SIGMAP1T)) THEN
-         WRITE(LUPRI,*)
-         CALL HEADER('Paramagnetic Corrections',-1)
-         IF(SIGMAP1S) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Singlets. Total Value : ', SGP1S,' [ppm]'
-            WRITE(LUPRI,*)
-            IF(PRTALL1) THEN
-               aa =(LRLKIN(1,1)+LRLKIN(2,2)+LRLKIN(3,3))/3.0
-               WRITE(LUPRI,*)
-     &'       Detailed info : [.PARA1S] Diagonal'//
-     &                   ' components, for each operator'
-               WRITE(LUPRI,*)'       ---------------            xx  '//
-     &                       '          yy             zz          iso'
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'Lkin :  '
-     &         ,LRLKIN(1,1),LRLKIN(2,2),LRLKIN(3,3),aa,' [ppm]'
-               aa = (LRPSOK(1,1)+LRPSOK(2,2)+LRPSOK(3,3))/3.0
-               WRITE (LUPRI,'(9X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'PsoKin : '
-     &         ,LRPSOK(1,1),LRPSOK(2,2),LRPSOK(3,3),aa,' [ppm]'
-            ENDIF
-         ENDIF
+C     LRESC-SHIELDING results section
+      call PRINT_LRSHIELD
 
-         IF (SIGMAP1T) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Triplets. Total Value : ', SGP1T,'[ppm]'
-            WRITE(LUPRI,*)
-            IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &'       Detailed info : [.PARA1T] Diagonal'//
-     &                      ' components, for each operator'
-               WRITE(LUPRI,*)'       ---------------            xx  '//
-     &                       '          yy             zz          iso'
-               aa = (LRFCZK(1,1) + LRFCZK(2,2) + LRFCZK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FcKin : '
-     &         ,LRFCZK(1,1),LRFCZK(2,2),LRFCZK(3,3),aa,' [ppm]'
-               aa = (LRSDZK(1,1) + LRSDZK(2,2) + LRSDZK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'SdKin : '
-     &         ,LRSDZK(1,1),LRSDZK(2,2),LRSDZK(3,3),aa,' [ppm]'
-               aa = (LRFCBS(1,1) + LRFCBS(2,2) + LRFCBS(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FcBso : '
-     &         ,LRFCBS(1,1),LRFCBS(2,2),LRFCBS(3,3),aa,' [ppm]'
-               aa = (LRSDBS(1,1) + LRSDBS(2,2) + LRSDBS(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'SdBso : '
-     &         ,LRSDBS(1,1),LRSDBS(2,2),LRSDBS(3,3),aa,' [ppm]'
-            ENDIF
-         ENDIF
-         IF((SIGMAP1S.AND.SIGMAP1T).OR.LRESCALL) THEN
-            WRITE(LUPRI,*)
-            WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Total Paramagnetic Corrections :     ',
-     &       (SGP1S+SGP1T),' [ppm]'
-         ENDIF
-      ENDIF
-C
-C diamagnetic 0th or 1st order singlet
-C
-      IF ((SIGMAD0S).OR.(SIGMAD1S)) THEN
-         WRITE(LUPRI,*)
-c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
-         CALL HEADER(' Diamagnetic Corrections :',-1)
-         IF(SIGMAD0S) THEN
-            WRITE(LUPRI,*)
-               WRITE(LUPRI,*)'    LRESC'
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &         'First Order Singlets. Total Value :  ', SGD0S,' [ppm]'
-            WRITE(LUPRI,*)
-            IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &         '       Detailed info : [.DIAM1S] Diagonal'//
-     &                      ' components, for each operator'
-               WRITE(LUPRI,*)
-     &          '       ---------------                   xx'//
-     &                       '             yy            zz'//
-     &                       '         iso'
 
-               aa = (LRFCAV(1,1) + LRFCAV(2,2) + LRFCAV(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,13X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'FC LRESC : '
-     &         ,LRFCAV(1,1),LRFCAV(2,2),LRFCAV(3,3),aa,' [ppm]'
+C     Save results to array
+      call create_array_oneatom(array_oneatom)
+      IF (NLRATOMS.EQ.1) lresc_array(1, :, :,:) = array_oneatom
+      IF (NLRATOMS.NE.1) lresc_array(LRATOM, :, :,:) = array_oneatom
 
-               aa = (LRANGP(1,1) + LRANGP(2,2) + LRANGP(3,3))/3.0
-               IF (PING) THEN
-               WRITE (LUPRI,'(10X,A,11X,A,6X,A,6X,A,6X,A)')
-     &         'AngPso LRESC: '
-     &           ,'not calc','not calc','not calc','see WARNING'
-               ELSE
-               WRITE (LUPRI,'(10X,A,10X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'AngPso LRESC: '
-     &         ,LRANGP(1,1),LRANGP(2,2),LRANGP(3,3),aa,' [ppm]'
-               ENDIF
+      END DO
 
-               aa = (LRDIAK(1,1) + LRDIAK(2,2) + LRDIAK(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaKin LRESC : '
-     &         ,LRDIAK(1,1),LRDIAK(2,2),LRDIAK(3,3),aa,' [ppm]'
+C     Export results to binary file
+      call binary_lresc(lresc_array)
+      deallocate(lresc_array)
 
-            ENDIF
-         ENDIF
 
-         IF(SIGMAD1S) THEN
-            WRITE(LUPRI,*)
-               WRITE(LUPRI,*)'    LRESC '
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &      'Second Order Singlets. Total Value : ', SGD1S,' [ppm]'
-            WRITE(LUPRI,*)
-            IF(PRTALL1) THEN
-               WRITE(LUPRI,*)
-     &                '       Detailed info : [.DIAM1S] Diagonal'//
-     &                      ' components, for each operator'
-               WRITE(LUPRI,*)'       ---------------            xx  '//
-     &                       '          yy             zz          iso'
-
-                  WRITE(*,'(10X,A)')'LRESC '
-               aa = (LRDIAM(1,1) + LRDIAM(2,2) + LRDIAM(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaMv  : '
-     &         ,LRDIAM(1,1),LRDIAM(2,2),LRDIAM(3,3),aa,' [ppm]'
-               aa = (LRDIAD(1,1) + LRDIAD(2,2) + LRDIAD(3,3))/3.0
-               WRITE (LUPRI,'(10X,A,9X,F13.5,X,F13.5,X,F13.5,F13.5,A)')
-     &         'DiaDw  : '
-     &         ,LRDIAD(1,1),LRDIAD(2,2),LRDIAD(3,3),aa,' [ppm]'
-            ENDIF
-         ENDIF
-
-         IF((SIGMAD1S.AND.SIGMAD0S).OR.LRESCALL) THEN
-            WRITE(LUPRI,*)
-               WRITE (LUPRI,'(5X,A,9X,F17.5,A)')
-     &         'Total Diamagnetic Corrections from LRESC :      ',
-     &         (SGD0S+SGD1S),' [ppm]'
-         ENDIF
-      ENDIF
-C
-C All of them in detail
-C
-      IF (LRESCALL) THEN
-c         WRITE(LUPRI,'(/721A1/)')('=',I=1,35)
-         CALL HEADER('Total Relativistic Corrections :',-1)
-            WRITE (LUPRI,'(/5X,A,F17.5,A)')
-     &           'Sum of corrections of LRESC : ' ,SLRESC, ' [ppm]'
+c     SIRIFC has to remain open after all
+      IF (SIGMAD1S.OR.SIGMAPNR.OR.SIGMAP1S.OR.SIGMAP1T) THEN
+      IF ((.NOT.SIGMAP2S).OR.(.NOT. SIGMAP2T)) THEN
+         CALL GPOPEN(LUSIFC,'SIRIFC','OLD',' ',' ',IDUMMY, !BORRAR
+     &                     .FALSE.)
+      END IF
       END IF
 
-      WRITE(LUPRI,*) 
-cx      write(LUPRI,*)'Note : Run RESPONSE module for third order '//
-cx     &     'paramagnetic corrections.'
-cx      write(LUPRI,*)'       Can use this as template. Settled for' //
-cx     &     ' the first atom on input file, named X '
-cx      WRITE(LUPRI,*)'          Spin Orbit :' 
-cx      WRITE(LUPRI,*)'                  **RESPONSE'
-cx      WRITE(LUPRI,*)'                  *QUADRATIC'
-cx      WRITE(LUPRI,*)'                  .ISPABC'
-cx      WRITE(LUPRI,*)'                  0    1    1'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  XANGMOM'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  YANGMOM'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  ZANGMOM'
-cx      WRITE(LUPRI,*)'                  .BPROP'
-cx      WRITE(LUPRI,*)'                  FC X  01'
-cx      WRITE(LUPRI,*)'                  .CPROP'
-cx      WRITE(LUPRI,*)'                  X1SPNORB'
-cx      WRITE(LUPRI,*)'                  .CPROP'
-cx      WRITE(LUPRI,*)'                  Y1SPNORB'
-cx      WRITE(LUPRI,*)'                  .CPROP'
-cx      WRITE(LUPRI,*)'                  Z1SPNORB'
-cx      WRITE(LUPRI,*)' ----------------------'
-cx      WRITE(LUPRI,*)'           Massvelo or Darwin :'
-cx      WRITE(LUPRI,*)'                  **RESPONSE'
-cx      WRITE(LUPRI,*)'                  *QUADRATIC'
-cx      WRITE(LUPRI,*)'                  .ISPABC'
-cx      WRITE(LUPRI,*)'                  0    0    0'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  XANGMOM'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  YANGMOM'
-cx      WRITE(LUPRI,*)'                  .APROP'
-cx      WRITE(LUPRI,*)'                  ZANGMOM'
-cx      WRITE(LUPRI,*)'              .    BPROP'
-cx      WRITE(LUPRI,*)'                  PSO 001'
-cx      WRITE(LUPRI,*)'                  .BPROP'
-cx      WRITE(LUPRI,*)'                  PSO 002'
-cx      WRITE(LUPRI,*)'                  .BPROP'
-cx      WRITE(LUPRI,*)'                  PSO 003'
-cx      WRITE(LUPRI,*)'                  .CPROP'
-cx      WRITE(LUPRI,*)'                  MASSVELO   !(or DARWIN)'
-
-
+      call move_file(LUESC2,LUESC,'DALTON_BACKUP.INP', 'DALTON.INP')
+      deallocate(LRATOMS)
       CALL QEXIT('LRSCDRV_SHI')
       RETURN
       END
 c    ---------------------------------------
 c    ---------------------------------------
-

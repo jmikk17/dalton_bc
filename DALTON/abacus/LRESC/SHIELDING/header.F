@@ -1,0 +1,169 @@
+
+!
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
+!
+!
+C
+
+C     /* Deck header_lrshield */
+      SUBROUTINE HEADER_LRSHIELD
+C Purpose:
+C     Print information about LRESC-SHIELDING module              
+C Author:
+C     J. J. Aucar 2022 (moved from workplace)
+      USE lrescinf_module
+#include "implicit.h"
+#include "dummy.h"
+#include "mxcent.h"
+#include "priunit.h"
+#include "wrkrsp.h"
+#include "inforb.h"
+#include "nuclei.h"
+#include "orgcom.h"
+
+      CALL QENTER('LRSCDRV_SHI')
+C
+C     Information about calculation of LRESC
+C
+C ---- Default
+      CALL TITLER
+     &('LRESC RELATIVISTIC CORRECTIONS TO SHIELDING','*',124)
+
+      WRITE(LUPRI,*)'   -  Original LRESC papers at :'
+      write(lupri,'(7X,A)') 'J. Chem. Phys. 118, 2 (2003),'//
+     &            'doi:10.1063/1.1525808'
+c      WRITE(LUPRI,'(33X,A)')' Mol. Phys. 101, 20, 3103-3109 (2003) '
+c     &                       ' DOI: 10.1080/00268970310001617784'
+c      WRITE(LUPRI,'(33X,A)')' J. Chem. Phys. 125, 064107 (2006), '//
+c     & 'doi:10.1063/1.2244572'
+      WRITE(LUPRI,'(7X,A)')'Int. J. Quantum Chem. 118, '//
+     &    'e25487 (2017), doi.org/10.1002/qua.25487'
+
+      IF(PRTALL1) THEN
+         WRITE(LUPRI,'(/,4X,A)')'-  Acronyms for LRESC corrections'//
+     &                          ' taken from:'
+         WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
+     &                         'doi: 10.1063/5.0264596'
+      END IF
+
+      WRITE(LUPRI,'(/,4X,A)')
+     &      '-  Tensor treatment (Haeberlen notation) :'
+      WRITE(LUPRI,'(7X,A)') 'Pure Appl.Chem. 80, 1 (2008), '//
+     &                         'doi:10.1351/pac200880010059'
+
+C         Info about SOS correction
+          WRITE(LUPRI,'(/,4X,A)')'-  The SOS correction is not '//
+     &    'included here, and it must be for anisotropic parameters.'
+
+           WRITE(LUPRI,'(7X,A)') 'For linear molecules see '//
+     &                           'Eqs. 23 and 30 from Ref. :'
+           WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 134, 3 (2011), '//
+     &                         'doi: 10.1063/1.3528717'
+           WRITE(LUPRI,'(7X,A)') 'For no linear molecules see :'
+           WRITE(lupri,'(7X,A)') 'J. Chem. Phys. 162, 19 (2025), '//
+     &                         'doi: 10.1063/5.0264596'
+
+      IF (.NOT. PRTALL1) THEN
+         WRITE(LUPRI,'(/,5X,A)')'- For printing LRESC corrections,'//
+     &   ' add .PRTALL in your input file under *LROPTS'
+
+      ENDIF
+
+c     For sublist of atoms (not implemented yet) this should be modified
+c      IF (LRATOM_changed) THEN
+c         WRITE(LUPRI,'(4X,A,I2,A,A)') '-  Selected Atom    : #',LRATOM,
+c     &         ": ", NAMN(LRATOM)
+c         WRITE(LUPRI,'(4X,A,3F10.4)') '-  Atom coordinates :',
+c     &   CORD(1,LRATOM), CORD(2,LRATOM),CORD(3,LRATOM)
+c      ELSE
+c      IF (.not.LRATOM_changed) THEN
+
+c      Yet not implemented.
+c      IF (NLRATOMS.EQ.NUCIND) THEN
+c              WRITE(LUPRI,'(/,4X,A)') '-  All Atoms selected'
+c      END IF
+
+      IF (.NOT.LRATOM_changed) THEN
+         WRITE(LUPRI,'(/,4X,A)')'-  Remember : '
+         WRITE(LUPRI,'(7X,A)')'GAUGEO must be placed at desired '//
+     &   'nucleus.'
+      END IF
+
+C ---Not Default
+      IF ((GAUCHANG).OR.(JIMPRT.NE.0).OR.
+     & (.NOT.LRESCALL).OR.(PRTALL1).OR.(PRTTEN))
+     & CALL HEADER('Changes of defaults for LRESC :',3)
+
+      IF (JIMPRT.NE.0) THEN
+         WRITE (LUPRI,'(A,I5)')
+     &      '- (.PRINT) Print level : ', JIMPRT
+      END IF
+
+      IF (GAUCHANG) THEN
+         WRITE(LUPRI,'(4X,A)') '- Gauge origin was changed from '//
+     &    'default (so that its not placed at the nucleus position)'
+      END IF
+
+
+
+      IF (PRTTEN) WRITE(LUPRI,'(4X,A)')
+     &  '- (.PRTTEN) Off-diagonal elements and anisotropic '//
+     &  'parameters are also printed'
+
+      IF (PRTALL1) THEN
+            WRITE(lupri,'(4X,A)')
+     &   '- (.PRTALL) All LRESC corrections are printed'
+         IF(EXTRAINFO) THEN
+          WRITE(lupri,'(4X,A)') '- (.EXTRAINFO) PSOK (avg) and '//
+     &    'PSO-OZ (avg) selected for total contributions'
+         IF (PYINTS) WRITE(lupri,'(4X,A)') '- (.PYINTS) FC (libcint) '//
+     &               'selected for total diamagnetic contribution'
+         END IF
+      ENDIF
+
+      IF (.NOT. LRESCALL) THEN
+         WRITE (LUPRI,'(4X,A)')
+     &      '-  Specific LRESC corrections were activated. ' //
+     &      'Only the following will be done : '
+         IF (SIGMADNR) WRITE (LUPRI,'(7X,A)')
+     &   'Non-relativistic diamagnetic contributions'
+         IF (SIGMAPNR) WRITE (LUPRI,'(7X,A)')
+     &   'Non-relativistic paramagnetic contributions'
+         IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
+     &   'Diamagnetic zeroth order singlet corrections' //
+     &   ' ( FC/d, SD/d, PSO-OZ and DIAK )'
+         IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
+     &   'Diamagnetic first order singlet corrections' //
+     &   ' ( Mv/d and Dw/d )'
+         IF (SIGMAP1S)  WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic first order singlet corrections' //
+     &   ' ( OZK and PSOK )'
+         IF (SIGMAP1T) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic first order triplet corrections' //
+     &   ' ( SZK(Fc), SZK(Sd), BSO(Fc) and BSO(Sd) )'
+         IF (SIGMAP2S) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic second order singlet corrections' //
+     &   ' ( Mv/p and Dw/p )'
+         IF (SIGMAP2T) WRITE (LUPRI,'(7X,A)')
+     &   'Paramagnetic second order triplet corrections' //
+     &   ' ( SO(Fc) and SO(Sd) )'
+      ENDIF
+      WRITE(LUPRI,*)' '
+
+
+      CALL QEXIT('LRSCDRV_SHI')
+      RETURN
+      END
