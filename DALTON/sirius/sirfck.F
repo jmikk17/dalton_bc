@@ -1217,8 +1217,8 @@ C
       CALL MOLLAB('BASINFO ',LU2INT,LUPRI)
       READ (LU2INT) MSYM, MBAS, LBUF, NIBUF, NBITS, LENINT4
       IF (IPRFCK .GE. 2) THEN
-         WRITE(LUPRI,'(/3A,3I5)')
-     &   'SIRFCK2: File "',FN2INT,'" opened. LBUF,NIBUF,NBITS:',
+         WRITE(LUPRI,'(/3A,I0,2I5)')
+     &   'SIRFCK2: File "',FN2INT,'" opened. LBUF,NIBUF,NBITS: ',
      &   LBUF,NIBUF,NBITS
       END IF
       IF (MSYM .NE. NSYM) THEN
