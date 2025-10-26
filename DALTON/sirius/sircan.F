@@ -466,12 +466,12 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       END IF
       IF (TRTONO) THEN
          TRTONO = .FALSE.
-         DO 40 J = 2, NASHT
+         DO J = 2, NASHT
             JDV = KDV + IROW(J)
-            DO 30 I = 1, (J-1)
+            DO I = 1, (J-1)
                IF (ABS(WRK(JDV+I)) .GT. THRCAN) TRTONO = .TRUE.
-   30       CONTINUE
-   40    CONTINUE
+            END DO
+         END DO
          IF (IPRCNO .GE. 2 .AND. .NOT.TRTONO)
      *      WRITE (LUPRI,'(A/A,1P,D10.1/)')
      *      ' Transformation of active orbitals to natural orbitals'//
@@ -480,9 +480,9 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       END IF
       IF (GETOCC .AND. .NOT.TRTONO) THEN
 C     ... orbitals are already NO's
-         DO 77 I = 1,NASHT
+         DO I = 1,NASHT
             AOCC(I) = WRK(KDV-1+IROW(I+1))
-   77    CONTINUE
+         END DO
       END IF
 C
 C
@@ -555,9 +555,9 @@ C
          CALL JACO_THR(WRK(JFC),WRK(JCMO2),NORBI,NORBI,NBASI,0.0D0)
 C        CALL JACO_THR (F,VEC,NB,NMAX,NROWV,THR_JACO)
 C
-         DO 175 I=1,NORBI
+         DO I=1,NORBI
             WRK(KBIG-1 + I) = WRK(JFC-1 + IROW(I+1))
-  175    CONTINUE
+         END DO
 C
 C        skip frozen orbitals
 C
@@ -648,7 +648,7 @@ C        CALL TRA_MO_TO_NO(DV,UNO,CMO,AOCC)
                WRITE (LUPRI,'(/A)')
      &            ' Occupations of CAS natural orbitals:'
             END IF
-            DO 440 ISYM = 1,NSYM
+            DO ISYM = 1,NSYM
                IF (NASH(ISYM) .GT. 0) THEN
                   WRITE (LUPRI,'(/A,I3,5A/)') ' Symmetry',ISYM,
      &               ' ( irrep ',REP(ISYM-1),' in ',GROUP,' )'
@@ -656,7 +656,7 @@ C        CALL TRA_MO_TO_NO(DV,UNO,CMO,AOCC)
                   IEND = IASH(ISYM) + NASH(ISYM)
                   WRITE (LUPRI,'(5F14.9)') (AOCC(I), I = IST,IEND)
                END IF
-  440       CONTINUE
+            END DO
          END IF
          IF (IPRCNO .GE. 7) THEN
             IF (TRTONO) THEN

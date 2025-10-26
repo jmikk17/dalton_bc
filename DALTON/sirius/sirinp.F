@@ -728,7 +728,7 @@ C     LUW*     Output units for print output (now defined in SIRSET)
       IPRRHF = IPRUSR - 1
       IPRMP2 = IPRUSR + 4
       IPRSOL = IPRUSR + 4
-      IPRCNO = IPRUSR + 1
+      IPRCNO = IPRUSR
       IPRFCK = IPRUSR
       CMOPRI = .FALSE.
 C     set limit for POPPRI in each DIIS/QCHF/MCSCF iter to 30 nuclei
