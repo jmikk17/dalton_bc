@@ -52,4 +52,5 @@
     - module purge
     - echo "=== Available modules ==="
     - module avail
-    - module load tbb/2022.2 compiler-rt/2025.2.1 compiler/2025.2.1 mkl/2025.2 mpi/2021.16
+    - module load tbb/2022.3 compiler-rt/2025.3.0 compiler/2025.3.0 mkl/2025.3 mpi/2021.17
+

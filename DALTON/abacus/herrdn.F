@@ -2075,15 +2075,17 @@ C
         GO TO 104
 C
   103   CONTINUE
-        WRITE(LUPRI,'(/A,I5/A,I5,A)')
-     &     ' ERROR: Unable to read Cartesian coordinates of atom no.',
-     &     NCTOT,' from line',NMLINE,' in the MOLECULE input file:'
-        WRITE(LUPRI,'(A)') MLINE(NMLINE)
+        WRITE(LUPRI,'(/A,I0/A,I0,A,I0,A)')
+     &     ' ERROR: Unable to read Cartesian coordinates of atom no. ',
+     &     NCTOT,' from line ',NMLINE,' position ',IPOS,
+     &     ' in the MOLECULE input file:'
+        WRITE(LUPRI,'(A)') MLINE(NMLINE)(IPOS:)
+        WRITE(LUPRI,'(2A)') 'Full line:',MLINE(NMLINE)
         IF (LUERR .NE. LUPRI) THEN
            WRITE(LUERR,'(/A,I5/A,I5,A)')
      &     ' ERROR: Unable to read Cartesian coordinates of atom no.',
      &     NCTOT,' from line',NMLINE,' in the MOLECULE input file:'
-           WRITE(LUERR,'(A)') MLINE(NMLINE)
+           WRITE(LUERR,'(A)') MLINE(NMLINE)(IPOS:)
         END IF
         CALL QUIT('ERROR reading atomic coordinates in MOLECULE input')
 C

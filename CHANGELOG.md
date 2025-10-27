@@ -3,6 +3,7 @@
 ## [2025.0-dev] (unreleased)
 
 ### New features added
+- Population anlysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
 - CI with PElib (polarizable embedding or polarizable density embedding. (H. J. Aa. Jensen)
 - EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
 - CI response properties for \*\*PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
@@ -54,6 +55,7 @@
 ### Changed
 - Select FCKTRA for MO transformation by default if > 255 basis functions and parallel. (H. J. Aa. Jensen)
 - Abort if molecular charge is -4 or lower (it is probably an input error). Can be overridden with new .MINCHA keyword. (H. J. Aa. Jensen)
+- Default is now to always write SIRIFC interface file in \*\*WAVE FUNCTION module
 
 
 ## [2020.1] (2022-01-20)

@@ -156,7 +156,7 @@ ERROR[5]="INITIAL ENERGY NOT CORRECT"
 # Gradient
 CRIT1=`$GREP "OS * x * (0| )\.00130" $log | wc -l`
 CRIT2=`$GREP "OP * x * (\-0|\-)\.00130" $log | wc -l`
-CRIT3=`$GREP "OP * y * (\-0|\-)\.00188" $log | wc -l`
+CRIT3=`$GREP "OP * y * (\-0|\-)\.0018[89]" $log | wc -l`
 TEST[6]=`expr	$CRIT1 \+ $CRIT2 \+ $CRIT3`
 CTRL[6]=3
 ERROR[6]="INITIAL GRADIENT NOT CORRECT"

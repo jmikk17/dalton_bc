@@ -251,17 +251,11 @@ C     Several common block are restored
 C     (MUST be called before NEWSYM reset to false)
 C
          CALL SRESTR
-         IF (RNRESP .OR. RNABAC) THEN
-C           ... write SIRIFC and calculate WOP of all symmetries
-C               for RESPONS and/or ABACUS
-            FLAG(25) = .TRUE.
-            FLAG(11) = .TRUE.
-         END IF
-         IF (WESTA) THEN
-C           ... write SIRIFC and CI info for WESTA program
-            FLAG(25) = .TRUE.
-            FLAG(26) = .TRUE.
-         END IF
+
+         FLAG(25) = .TRUE. ! always write SIRIFC in this version
+
+         IF (WESTA) FLAG(26) = .TRUE.
+C        ... write CI string info for WESTA program
 C
 C     We obviously have MO's from previous iteration
 C     (.MOSTART NEWORB because abawlk.F(WLKSAV) saves
@@ -545,7 +539,6 @@ C MAXRC : Max dimension of reduced CI matrix
 C     ... do not converge to a specific state.
       NROOCI = 1
       MXCIMA = 25
-      ICICNO = 0
 C
 C********** Default values section SCFINP *****
 C           and common scbrhf.h
@@ -735,7 +728,7 @@ C     LUW*     Output units for print output (now defined in SIRSET)
       IPRRHF = IPRUSR - 1
       IPRMP2 = IPRUSR + 4
       IPRSOL = IPRUSR + 4
-      IPRCNO = IPRUSR + 1
+      IPRCNO = IPRUSR
       IPRFCK = IPRUSR
       CMOPRI = .FALSE.
 C     set limit for POPPRI in each DIIS/QCHF/MCSCF iter to 30 nuclei
@@ -802,19 +795,9 @@ c        NINFO = NINFO + 1
 c        WRITE (LUPRI,'(/A)') ' INFO: SUPSYM disabled'//
 c    &      ' because SUPSYM not implemented in MP2 and CC'
 c     END IF
-      IF (DOCCSD) THEN
-         FLAG(11) = .TRUE.
-         IF (DOSCF) FLAG(25) = .TRUE.
-      END IF
-      IF (RNRESP .OR. RNABAC) THEN
-         FLAG(25) = .TRUE.
-         FLAG(11) = .TRUE.
-      END IF
-      IF (WESTA) THEN
-C        ... write SIRIFC and CI info for WESTA program
-         FLAG(25) = .TRUE.
-         FLAG(26) = .TRUE.
-      END IF
+      FLAG(25) = .TRUE. ! always write SIRIFC in this version
+      IF (WESTA) FLAG(26) = .TRUE.
+C     ... write CI string info for WESTA program
       IF (BOYORB .OR. PIPORB .OR. BOYSEL) THEN
          IF (SUPSYM) THEN
             WRITE(LUPRI,'(/A)')
@@ -832,8 +815,6 @@ C        ... write SIRIFC and CI info for WESTA program
 C...     the orbital gradient may be non-zero without SUPSYM
 C        and the WF is then not variational in abacus
       END IF
-      IF (FLAG(21)) FLAG(2) = .TRUE.
-C     ... qc-scf needs flag(2) for file opening
       IF (SUPSYM .AND. NWOPT.GT.0) THEN
          SUPSYM = .FALSE.
          NWARN = NWARN + 1
@@ -1760,14 +1741,6 @@ C
      *       /' (Only inactive orbitals can be frozen with ".FROZEN",',
      *        ' use ".FREEZE" instead)')
 C
-C Population analysis (flag(6)) requires natural/canonical orbitals
-C
-      IF (FLAG(6)) THEN
-         RHFCAN = .TRUE.
-         ICICNO = 1
-         IMCCNO = 1
-      END IF
-C
 C If (SOLVNT) check epsilon, cavity radius, and lmax
 C
       IF (FLAG(16)) THEN
@@ -1816,8 +1789,8 @@ C
          IF (NERROR.GT.0) CALL ERRINP(12,INPERR)
       END IF
 C
-      IF (FLAG(2) .AND. .NOT. FLAG(4)) THEN
-C        ... if not ci calculation then
+      IF (FLAG(2)) THEN
+C        ... if MCSCF
          IF (NROOTS.LT.1.OR.NROOTS.GT.MAXRTS)
      *                                CALL ERRINP(13,INPERR)
          DO 36 I=1,NROOTS
@@ -2386,7 +2359,7 @@ C *** Option 4 >CC< We want to do a subsequent Coupled Cluster calculation
             DOSCF  = .TRUE.
             NUMRUN = NUMRUN + 1
          END IF
-         FLAG(21) = .TRUE.
+         FLAG(21) = .TRUE. ! QC-SCF
       GO TO 100
 C
 C *** Option 5 >RESTAR< restart SIRIUS, SIRIUS.RST (LUIT1) must be available
@@ -2399,7 +2372,7 @@ C *** Option 6 >HF    <  Restricted Hartree-Fock SCF (alias: .SCF)
          IF (.NOT.DOSCF) THEN
 C           ... DOSCF may also be set with .CC
             DOSCF    = .TRUE.
-            FLAG(21) = .TRUE.
+            FLAG(21) = .TRUE. ! QC-SCF
 C           ... flag for QCSCF -- quadratically convergent HF or DFT
             NUMRUN = NUMRUN + 1
          END IF
@@ -2512,7 +2485,7 @@ C           ... DOSCF may also be set with .CC
          END IF
          DODFT    = .TRUE.
          DOSCF    = .TRUE.
-         FLAG(21) = .TRUE.
+         FLAG(21) = .TRUE. ! QC-SCF
 C        ... flag for QCSCF -- quadratically convergent HF or DFT
 
 c     dodft should be enough but it is sometimes necessary to have also dftrun set.
@@ -2603,7 +2576,7 @@ C     ... .HFSRDFT  Hartree-Fock srDFT hybrid
          DOSCF     = .TRUE.
          DOHFSRDFT = .TRUE.
          ADDSRI    = .TRUE.
-         FLAG(21)  = .TRUE.
+         FLAG(21)  = .TRUE. ! QC-SCF
 C        ... flag for QCHF -- quadratically convergent Hartree-Fock
          LUSUPM = -1
 C        ... Disable use of super-matrix integrals,
@@ -3181,7 +3154,7 @@ C *** Option 4 >H1VIRT<  Virtual orbitals that diagonalize 1-el. H
       GO TO 100
 C
 C *** Option 5 >NOQCSCF<  No quadratically convergent SCF
-  105 FLAG(21) = .FALSE.
+  105 FLAG(21) = .FALSE. ! QC-SCF
       GO TO 100
 C
 C *** Option 6 >PRINT <  General print level in Hartree-Fock
@@ -4521,7 +4494,7 @@ C
 C
       DATA TABLE /'.ALL   ','.DIPMOM','.GROSSA','.GROSSM','.MULLIK',
      *            '.NETALL','.NETMO ','.QUADRP','.VIRIAL','.PRINT ',
-     &            '.HJAAJP'/
+     &            '.HJPOP '/
 C
 C External flags
       FLAG( 6) = .TRUE.
@@ -4616,7 +4589,7 @@ C *** Option 10 >PRINT <  Print level
       if (iprxxx .eq. 7) IPOPTYP = 2
       GO TO 100
 C
-C *** Option 11 >HJAAJP<  HJAaJ population analysis
+C *** Option 11 >HJPOP <  HJAaJ population analysis
   111 FLAG(73) = .FALSE.
       IPOPTYP = 3
       GO TO 100

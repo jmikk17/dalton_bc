@@ -410,8 +410,9 @@ C     If spin-dependent srDFT then both charge and spin density 1-el matrices
          NDV = 1
       END IF
       KDV    = KFRSAV
-      KWRK1  = KDV    + NDV*NNASHX
+      KUNO   = KDV    + NDV*NNASHX
       KDSV   = KDV    + NNASHX
+      KWRK1  = KUNO   + N2ASHX
       LWRK1  = LWRK   - KWRK1
 C .. 1.2 .. (FCKMAT)
       KFC    = KWRK1
@@ -465,12 +466,12 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       END IF
       IF (TRTONO) THEN
          TRTONO = .FALSE.
-         DO 40 J = 2, NASHT
+         DO J = 2, NASHT
             JDV = KDV + IROW(J)
-            DO 30 I = 1, (J-1)
+            DO I = 1, (J-1)
                IF (ABS(WRK(JDV+I)) .GT. THRCAN) TRTONO = .TRUE.
-   30       CONTINUE
-   40    CONTINUE
+            END DO
+         END DO
          IF (IPRCNO .GE. 2 .AND. .NOT.TRTONO)
      *      WRITE (LUPRI,'(A/A,1P,D10.1/)')
      *      ' Transformation of active orbitals to natural orbitals'//
@@ -479,9 +480,9 @@ C        CALL MAKDV(CREF,DV,INDXCI,WRK,LFREE)
       END IF
       IF (GETOCC .AND. .NOT.TRTONO) THEN
 C     ... orbitals are already NO's
-         DO 77 I = 1,NASHT
+         DO I = 1,NASHT
             AOCC(I) = WRK(KDV-1+IROW(I+1))
-   77    CONTINUE
+         END DO
       END IF
 C
 C
@@ -554,9 +555,9 @@ C
          CALL JACO_THR(WRK(JFC),WRK(JCMO2),NORBI,NORBI,NBASI,0.0D0)
 C        CALL JACO_THR (F,VEC,NB,NMAX,NROWV,THR_JACO)
 C
-         DO 175 I=1,NORBI
+         DO I=1,NORBI
             WRK(KBIG-1 + I) = WRK(JFC-1 + IROW(I+1))
-  175    CONTINUE
+         END DO
 C
 C        skip frozen orbitals
 C
@@ -608,7 +609,7 @@ C
                WRITE (LUPRI,'(/A)')
      &            ' FDAC = FCAC+FVAC matrix before TRACI :'
             END IF
-            CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
+            CALL OUTPAK(WRK(KDV),NASHT,-1,LUPRI)
          END IF
 C
 C        if RAS, zero blocks between RAS1, RAS2, and RAS3 spaces
@@ -628,44 +629,13 @@ C
      &           ' Norm of zeroed RAS1-RAS2 block:',DVZRAS(1),
      &           ' Norm of zeroed RAS1-RAS3 block:',DVZRAS(2),
      &           ' Norm of zeroed RAS2-RAS3 block:',DVZRAS(3)
-               CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
+               CALL OUTPAK(WRK(KDV),NASHT,-1,LUPRI)
             END IF
          END IF
-C
-C        do NO transformation w/o symmetry blocking (for TRACI)
-         KUNO   = KWRK1
-         KBIG   = KUNO   + N2ASHX
-         CALL DUNIT(WRK(KUNO),NASHT)
-         CALL JACO_THR(WRK(KDV),WRK(KUNO),NASHT,NASHT,NASHT,0.0D0)
-C
-C        select positive phase of transformation vectors
-C        (920715-hjaaj: we assume that degenerate orbitals
-C         will get equivalent phase for SUPSYM)
-C
-         JUNO   = KUNO
-         DO 410 I = 1,NASHT
-            IF (TRTONO) AOCC(I) = WRK(KDV-1 + IROW(I+1))
-            JUNOMX = JUNO-1 + IDAMAX(NASHT,WRK(JUNO),1)
-            IF (WRK(JUNOMX) .LT. 0.0D0)
-     &         CALL DSCAL(NASHT,-1.0D0,WRK(JUNO),1)
-            JUNO   = JUNO + NASHT
-  410    CONTINUE
-CHJ-S-860827
-C        JOCC = KDV
-C        JUNO = KUNO
-C        DO 420 ISYM = 1,NSYM
-C           NASHI = NASH(ISYM)
-C        IF (NASHI .EQ. 0) GO TO 420
-C           CALL ORDER2(WRK(JUNO),WRK(JOCC),NASHI,NASHT)
-C           860827-hj: Do not reorder active orbitals;
-C                      1) reduce may have been specified
-C                      2) we may get small diagonal elements in
-C                         UNO(NASHT,NASHT) below; TRACI only works
-C                         for non-zero diagonal elements.
-C           JOCC = JOCC + NASHI
-C           JUNO = JUNO + NASHI*NASHT
-C 420    CONTINUE
-CHJ-E
+
+         CALL TRA_MO_TO_NO(WRK(KDV),WRK(KUNO),CMO,AOCC) ! NO or diagonalizing FDAC
+C        CALL TRA_MO_TO_NO(DV,UNO,CMO,AOCC)
+
          IF (TRTONO .AND. IPRCNO .GE. 1) THEN
             IF (MCTYPE .EQ. 2) THEN
                WRITE (LUPRI,'(/A)')
@@ -678,7 +648,7 @@ CHJ-E
                WRITE (LUPRI,'(/A)')
      &            ' Occupations of CAS natural orbitals:'
             END IF
-            DO 440 ISYM = 1,NSYM
+            DO ISYM = 1,NSYM
                IF (NASH(ISYM) .GT. 0) THEN
                   WRITE (LUPRI,'(/A,I3,5A/)') ' Symmetry',ISYM,
      &               ' ( irrep ',REP(ISYM-1),' in ',GROUP,' )'
@@ -686,7 +656,7 @@ CHJ-E
                   IEND = IASH(ISYM) + NASH(ISYM)
                   WRITE (LUPRI,'(5F14.9)') (AOCC(I), I = IST,IEND)
                END IF
-  440       CONTINUE
+            END DO
          END IF
          IF (IPRCNO .GE. 7) THEN
             IF (TRTONO) THEN
@@ -696,39 +666,8 @@ CHJ-E
                WRITE (LUPRI,'(/A)')
      *         ' Transformation to Fock-type orbitals (active orb.)'
             END IF
-            CALL OUTPUT(WRK(KUNO),1,NASHT,1,NASHT,NASHT,NASHT,1,LUPRI)
+            CALL OUTPUT(WRK(KUNO),1,NASHT,1,NASHT,NASHT,NASHT,-1,LUPRI)
          END IF
-C
-C900801-hjaaj: If transformation is unit matrix, skip TRACI.
-C
-         CALL DUNIT(WRK(KBIG),NASHT)
-         CALL DAXPY(N2ASHX,-1.0D0,WRK(KUNO),1,WRK(KBIG),1)
-         I = IDAMAX(N2ASHX,WRK(KBIG),1)
-         IF (ABS(WRK(KBIG-1+I)) .LE. THRCAN) THEN
-            IF (IPRCNO .GE. 5) WRITE (LUPRI,'(/A/A,1P,D10.1/)')
-     *         ' Transformation of active orbitals'//
-     *         ' and CI vector abandoned',
-     *         ' because max deviation from unit transformation'//
-     *         ' is ',ABS(WRK(KBIG-1+I))
-            GO TO 9999
-         END IF
-C
-C
-         DO 460 ISYM = 1,NSYM
-            NASHI  = NASH(ISYM)
-         IF (NASHI.EQ.0) GO TO 460
-            NBASI  = NBAS(ISYM)
-            ICMOA  = 1    + ICMO(ISYM) + NISH(ISYM)*NBASI
-            JUNO   = KUNO + IASH(ISYM)*NASHT + IASH(ISYM)
-C
-            CALL DCOPY(NASHI*NBASI,CMO(ICMOA),1,WRK(KBIG),1)
-            CALL DGEMM('N','N',NBASI,NASHI,NASHI,1.D0,
-     &                 WRK(KBIG),NBASI,
-     &                 WRK(JUNO),NASHT,0.D0,
-     &                 CMO(ICMOA),NBASI)
-C
-  460    CONTINUE
-C
 C
 C Step 5: Redo CI calculation for natural orbitals.
 C
@@ -745,7 +684,7 @@ C           CALL TRACI(NCVEC,CVEC,LCVEC,UMO,INDXCI,WRK,LFREE,IPRCNO)
                CALL MAKDV(CVECS(1,ICREF),WRK(KDV),
      *                    INDXCI,WRK(KWRK1),LWRK1)
                WRITE (LUPRI,'(//A)') ' DV matrix after TRACI :'
-               CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
+               CALL OUTPAK(WRK(KDV),NASHT,-1,LUPRI)
             END IF
          END IF
 C
@@ -915,7 +854,7 @@ C
       IF (NASHT .GT. 0) THEN
          IF (IPRINT .GE. 10) THEN
             WRITE (LUPRI,'(//A)') ' GETNO: 1-electron density matrix'
-            CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
+            CALL OUTPAK(WRK(KDV),NASHT,-1,LUPRI)
          END IF
 C
          IF ( SUPSYM .AND. .NOT.NOAVER ) THEN
@@ -924,7 +863,7 @@ C
                WRITE(LUPRI,'(//A/A)')
      *            ' Density matrix adapted to supersymmetry',
      *            ' ======================================='
-               CALL OUTPAK(WRK(KDV),NASHT,1,LUPRI)
+               CALL OUTPAK(WRK(KDV),NASHT,-1,LUPRI)
             END IF
          END IF
          DVMAX = 0.0D0
@@ -1070,7 +1009,7 @@ C  HJAAJ MAERKE TODO 071108: if (supsym) also OCCSUM for each supersym
      &         ' Transformation to NO (active orb.) for symmetry',ISYM
             IST  = IASH(ISYM) + 1
             IEND = IASH(ISYM) + NASH(ISYM)
-            CALL OUTPUT(UNO,IST,IEND,IST,IEND,NASHT,NASHT,1,LUPRI)
+            CALL OUTPUT(UNO,IST,IEND,IST,IEND,NASHT,NASHT,-1,LUPRI)
          END IF
   620    CONTINUE
       END IF
@@ -1117,5 +1056,59 @@ C        ... redo JWOP in case ISSMO should have changed in ORDRSS /hjaaj aug 04
       END IF
       CALL QEXIT('GETNO ')
       RETURN
+      END
+
+      SUBROUTINE TRA_MO_TO_NO(DV,UNO,CMO,AOCC)
+
+!     1. diagonalize active density matrix DV
+!     2. copy NO occupation numbers to AOCC
+!     3. do MO to NO transformation w/o symmetry blocking (e.g. for TRACI)
+
+      implicit none
+      real*8 :: DV(NNASHX), CMO(NCMOT), AOCC(NASHT)
+      real*8 :: UNO(NASHT,NASHT)
+
+#include "inforb.h"
+      integer :: I, J, NASHI, NBASI, JCMOA
+      real*8  :: VAL, DAMAX
+      real*8, allocatable :: TMP(:)
+      integer :: IDAMAX
+
+      CALL DUNIT(UNO,NASHT)
+      CALL JACO_THR(DV,UNO,NASHT,NASHT,NASHT,0.0D0)
+
+C     Save to AOCC and select positive phase of transformation vectors
+C     (920715-hjaaj: we assume that degenerate orbitals will get equivalent phase for SUPSYM)
+
+      DO I = 1, NASHT
+         AOCC(I) = DV((I*(I+1))/2)
+         J = IDAMAX(NASHT,UNO(1,I),1)
+         IF (UNO(J,I) .LT. 0.0D0) UNO(1:NASHT,I) = -UNO(1:NASHT,I)
+      END DO
+C
+C900801-hjaaj: If transformation is unit matrix, skip TRACI.
+C
+      allocate( TMP(NASHT*NBAST) )
+      CALL DUNIT(TMP,NASHT)
+      CALL DAXPY(N2ASHX,-1.0D0,UNO,1,TMP,1)
+      VAL = DAMAX(N2ASHX,TMP,1) ! max abs value in TMP(NASHT,NASHT)
+      IF (VAL .LE. 1.d-14) RETURN
+C
+C
+      DO I = 1,NSYM
+         NASHI  = NASH(I)
+      IF (NASHI.EQ.0) CYCLE
+         NBASI  = NBAS(I)
+         JCMOA  = 1 + ICMO(I) + NISH(I)*NBASI
+         J      = 1 + IASH(I)
+
+         CALL DCOPY(NASHI*NBASI,CMO(JCMOA),1,TMP,1)
+         CALL DGEMM('N','N',NBASI,NASHI,NASHI,1.D0,
+     &              TMP,NBASI,
+     &              UNO(J,J),NASHT, 0.D0,
+     &              CMO(JCMOA),NBASI)
+
+      END DO
+
       END
 C     --- end of DALTON/sirius/sircan.F ---

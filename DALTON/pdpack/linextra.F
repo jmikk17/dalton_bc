@@ -26,6 +26,7 @@ C            (zero block of matrix; find next element .gt. a)
 C 6) DSPSOL, DSPSLI, DGESOL, DGEINV : driver routines calling LINPACK
 C 7) BLAS and LAPACK routines missing for ESSL:
 C            LSAME; ILAENV, DSPTRI, DSPCON
+C 8) DAMAX (okt 2025)
 C
 C
 C
@@ -1986,4 +1987,36 @@ C            LSAME; ILAENV, DSPTRI, DSPCON
       ddot_128 = ddot_value
       return
       end
+
+      REAL*8 FUNCTION DAMAX(N,DX,INCX)
+!
+!     Hans Jørgen Aa. Jensen, October 2025
+!     DAMAX finds the value of the element having max. absolute value.
+!     (extension to BLAS based on IDAMAX)
+      implicit none
+
+      INTEGER  N, INCX
+      REAL*8   DX(*)
+!     .. Local Scalars ..
+      INTEGER  I,IX
+!     .. Intrinsic Functions ..
+      INTRINSIC DABS
+!     ..
+      DAMAX = 0.0D0
+      IF (N.LT.1 .OR. INCX.LE.0) RETURN
+      DAMAX = DX(1)
+      IF (N.EQ.1) RETURN
+      IF (INCX.EQ.1) THEN
+         DO I = 2,N
+            IF (DABS(DX(I)).GT.DAMAX) DAMAX = DABS(DX(I))
+         END DO
+      ELSE ! code for increment INCX not equal to 1
+         DO I = 1,N-1
+            IX = 1 + I * INCX
+            IF (DABS(DX(IX)).GT.DAMAX) DAMAX = DABS(DX(IX))
+         END DO
+      END IF
+      RETURN
+      END
+
 C --- end of linextra.F ---
