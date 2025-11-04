@@ -18,38 +18,38 @@ added and correted basis sets, performance improvements, bugs fixed etc. }
 
 \begin{description}
 
- \item Population anlysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
- \item CI with PElib (polarizable embedding or polarizable density embedding. (H. J. Aa. Jensen)
- \item EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+ \item Population analysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
+ \item CI with PElib (polarizable embedding or polarizable density embedding). (H. J. Aa. Jensen)
+ \item EKT, ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. It is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
  \item CI response properties for **PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
- \item SOPPA
+ \item Second-order Polarization Propagator Approximation (SOPPA):
   \begin{itemize}
-   \item Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver (Luna Zamok)
-   \item Added PE-AO-SOPPA/RPA (Peter Reinholdt)
-   \item First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coeffiients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
+   \item Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level (in AO-SOPPA). (Luna Zamok)
+   \item Added polarizable embedding using PElib: PE-AO-SOPPA/RPA (Peter Reinholdt)
+   \item First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coefficients. (Javier Sanz Rodrigo and Stephan P. A. Sauer)
   \end{itemize}
- \item Atomic Integrals (Juanjo Aucar)
+ \item Atomic Integrals (Juanjo Aucar):
   \begin{itemize}
-   \item Divergence of the zz Electric Field Gradient component
-   \item Laplacian of xx, yy and zz Electric Field Gradient components
+   \item Divergence of the zz Electric Field Gradient component.
+   \item Laplacian of xx, yy and zz Electric Field Gradient components.
   \end{itemize}
- \item LRESC (Juanjo Aucar)
+ \item Linear Response Elimination of Small Component (LRESC) (Juanjo Aucar):
   \begin{itemize}
-   \item Implementation for the Electric Field Gradient at first order in 1/c2
+   \item Implementation for the Electric Field Gradient at first order in $1/c^2$.
    \item New implementation for the LRESC-SHIELDING module. Includes anisotropy parameters and paramagnetic third order corrections.
   \end{itemize}
  \item The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
- \item Print two effective numbers of unpaired electrons in final wave function output (H. J. Aa. Jensen)
-  \begin{itemize}
-   \item 1) sum(i)  n\_i (2 - n\_i)
-   \item 2) sum(i) (n\_i (2 - n\_i))**2
-  \end{itemize}
- \item Analysis of SSCCs in terms of localized orbitals \\
-    Implementation of an extra keyword .SOCVIR which initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
+ \item Print two effective numbers of unpaired electrons in final wave function output for MCSCF and MC-srDFT (H. J. Aa. Jensen):
+  \begin{enumerate}
+   \item $\sum_i  n_i (2 - n_i)$
+   \item $\sum_i (n_i (2 - n_i))^2$
+  \end{enumerate}
+ \item Analysis of indirect spin-spin coupling constants (SSCCs) in terms of localized orbitals: \\
+    New keyword .SOCVIR initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
  \item PDE-London: Added implementation of London orbitals, aka gauge-including atomic orbitals (GIAO), for PDE \\ {}
-  [ Reference: F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. 18, 7384-7393 (2022), https://doi.org/10.1021/acs.jctc.2c00829 ].
- \item Polarizable embedding (PE) with periodic boundary conditions (PBC)
-  [ Reference: S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), https://doi.org/10.26434/chemrxiv-2023-fc0gk ].
+  [ Reference: F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. 18, 7384-7393 (2022), \url{https://doi.org/10.1021/acs.jctc.2c00829} ].
+ \item Polarizable embedding (PE) with periodic boundary conditions (PBC) \\ {}
+  [ Reference: S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), \url{https://doi.org/10.26434/chemrxiv-2023-fc0gk} ].
 
 \end{description}
 
