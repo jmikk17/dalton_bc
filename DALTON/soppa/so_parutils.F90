@@ -20,7 +20,6 @@ module so_parutils
 #include "iprtyp.h"
 #include "maxaqn.h"
 #include "chrnos.h"
-#include "ibtpar.h"
 !
 ! These common-blocks are needed across this module
 !

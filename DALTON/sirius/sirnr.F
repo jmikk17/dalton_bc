@@ -708,8 +708,6 @@ C     local variables:
 C
       LOGICAL KAPOPT, FORCEO, CTRUNC, SYMTRZ
 C
-#include "ibtdef.h"
-C
 C     **********
 C     ********** End of declarations, start execution.
 C     ********** First, define some entities we will need.
@@ -1009,8 +1007,6 @@ C
 #include "infind.h"
 #include "inftap.h"
 #include "infpri.h"
-C
-#include "ibtdef.h"
 C
       CALL QENTER('SNRRED')
 C

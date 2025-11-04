@@ -392,7 +392,6 @@ C
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
-#include "ibtpar.h"
 #include "ccorb.h"
       DIMENSION XINT(LENGTH,*),RBUF(LBUF)
       INTEGER*4 IBUF4(LBUF*NIBUF), LENGTH4

@@ -4130,9 +4130,9 @@ C ---------------------------- not non-adiabatic coupling:
      &   ' => excited state symmetry',KSYMST,'  ( ',REP(KSYMST-1),')'
          CALL TITLER(PRI_LINE,'*',103)
          IF (TRPLET) THEN
-            CALC_TYPE = '- singlet excitation'
-         ELSE
             CALC_TYPE = '- triplet excitation'
+         ELSE
+            CALC_TYPE = '- singlet excitation'
          END IF
          IF (TDA) THEN
             IF (NCONF .gt. 1) THEN

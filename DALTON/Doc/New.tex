@@ -5,6 +5,45 @@
 {\it See {\rm CHANGELOG.md} in the root directory of the Dalton distribution (available from \\ {\rm \url{https://gitlab.com/dalton/dalton}} for 
 added and correted basis sets, performance improvements, bugs fixed etc. }
 
+\section{New features in Dalton2025}
+
+\begin{description}
+
+ \item Population analysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
+ \item CI with PElib (polarizable embedding or polarizable density embedding). (H. J. Aa. Jensen)
+ \item EKT, ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. It is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+ \item CI response properties for **PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
+ \item Second-order Polarization Propagator Approximation (SOPPA):
+  \begin{itemize}
+   \item Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level (in AO-SOPPA). (Luna Zamok)
+   \item Added polarizable embedding using PElib: PE-AO-SOPPA/RPA (Peter Reinholdt)
+   \item First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coefficients. (Javier Sanz Rodrigo and Stephan P. A. Sauer)
+  \end{itemize}
+ \item Atomic Integrals (Juanjo Aucar):
+  \begin{itemize}
+   \item Divergence of the zz Electric Field Gradient component.
+   \item Laplacian of xx, yy and zz Electric Field Gradient components.
+  \end{itemize}
+ \item Linear Response Elimination of Small Component (LRESC) (Juanjo Aucar):
+  \begin{itemize}
+   \item Implementation for the Electric Field Gradient at first order in $1/c^2$.
+   \item New implementation for the LRESC-SHIELDING module. Includes anisotropy parameters and paramagnetic third order corrections.
+  \end{itemize}
+ \item The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
+ \item Print two effective numbers of unpaired electrons in final wave function output for MCSCF and MC-srDFT (H. J. Aa. Jensen):
+  \begin{enumerate}
+   \item $\sum_i  n_i (2 - n_i)$
+   \item $\sum_i (n_i (2 - n_i))^2$
+  \end{enumerate}
+ \item Analysis of indirect spin-spin coupling constants (SSCCs) in terms of localized orbitals: \\
+    New keyword .SOCVIR initiates the calculation of contributions to the coupling constants from pairs of one localized occupied and one localized virtual orbital. This is possible for RPA and DFT calculations. (Ronan Gleeson and Stephan P. A. Sauer)
+ \item PDE-London: Added implementation of London orbitals, aka gauge-including atomic orbitals (GIAO), for PDE \\ {}
+  [ Reference: F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. 18, 7384-7393 (2022), \url{https://doi.org/10.1021/acs.jctc.2c00829} ].
+ \item Polarizable embedding (PE) with periodic boundary conditions (PBC) \\ {}
+  [ Reference: S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), \url{https://doi.org/10.26434/chemrxiv-2023-fc0gk} ].
+
+\end{description}
+
 \section{New features in Dalton2020}
 
 \begin{description}
@@ -85,11 +124,11 @@ J. Chem. Phys. 151, 144107 (2019)]\\
 \item{\bf Effective external field (EEF)} for one- and two-photon absorption in PE-HF/DFT calculations.\\ {}
   [ Reference: N. H. List, H. J. Aa. Jensen, and J. Kongsted. Phys. Chem. Chem. Phys. 18, 10070 (2016). ]
 \item{\bf Remove the most diffuse virtual orbitals} after SCF or MCSCF (new .VIRTRUNC option). (H. J. Aa. Jensen).
-\item{\bf PE-QM interaction energy} Add purely classical multipole-multipole interaction energy in PE-QM calculations (which can be skipped using the .SKIPMUL keyword under the \*PELIB section).
+\item{\bf PE-QM interaction energy} Add purely classical multipole-multipole interaction energy in PE-QM calculations (which can be skipped using the .SKIPMUL keyword under the *PELIB section).
 \item{\bf FDE} Add basic frozen density embedding (FDE) functionality (A. Gomes, C. Jacob, L. Visscher).
 \item{\bf Dipole velocity complex linear polarizability} with test rsp\_cpp\_veloci (N. H. List).
 \item{\bf Resonant-convergent (damped) cubic response} at HF/DFT levels (T. Fahleson and P. Norman)\\ {}
-  [ T. Fahleson and P. Norman. J. Chem. Phys. 147, 144109 (2017). ]
+  [ Reference: T. Fahleson and P. Norman. J. Chem. Phys. 147, 144109 (2017). ]
  
  \end{enumerate}
 

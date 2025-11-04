@@ -302,7 +302,6 @@ C
 #include "inttra.h"
 #include "inftra.h"
 #include "inftap.h"
-#include "ibtdef.h"
 C
       CALL QENTER('SORTA ')
 C
@@ -3057,8 +3056,6 @@ C
       INTEGER*2 INDCD2(2)
       EQUIVALENCE (INDCD, INDCD2)
       SAVE INDCDN, LENGTH
-C
-#include "ibtdef.h"
 C
 C ****************************************************************
 C

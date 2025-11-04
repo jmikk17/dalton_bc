@@ -394,7 +394,6 @@ C
 #include "eribuf.h"
 #include "ccorb.h"
 #include "ccisao.h"
-#include "ibtpar.h"
 C
       LOGICAL LOCDBG
       PARAMETER ( LOCDBG = .FALSE. )

@@ -3,14 +3,14 @@
 ## [2025.0-dev] (unreleased)
 
 ### New features added
-- Population anlysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
+- Population analysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
 - CI with PElib (polarizable embedding or polarizable density embedding. (H. J. Aa. Jensen)
-- EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+- EKT, ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
 - CI response properties for \*\*PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver (Luna Zamok)
   - Added PE-AO-SOPPA/RPA (Peter Reinholdt)
-  - First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coeffiients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
+  - First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coefficients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
 - Atomic Integrals (Juanjo Aucar)
   - Divergence of the zz Electric Field Gradient component
   - Laplacian of xx,yy and zz Electric Field Gradient components
