@@ -271,7 +271,6 @@ C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
 #include "priunit.h"
-#include "ibtpar.h"
 #include "ccorb.h"
       REAL*8    XINT(LENGTH,*),RBUF(LBUF)
       INTEGER*4 IBUF4(NIBUF*LBUF), LENGTH4

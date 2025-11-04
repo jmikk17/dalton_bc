@@ -2067,7 +2067,6 @@ C  /* Deck nrdint */
 #include "mxcent.h"
       LOGICAL NRDINT, DAB, DCD, DPQ
 #include "eribuf.h"
-#include "ibtpar.h"
 
       I = IAND(ISHFT(INDEX,-3*NBITS),IBIT1)
       J = IAND(ISHFT(INDEX,-2*NBITS),IBIT1)
@@ -2084,7 +2083,6 @@ C  /* Deck erican */
       SUBROUTINE ERICAN(IBIN4,INTS,LBIN,NIBUF,NBITS)
 #include "implicit.h"
 #include "priunit.h"
-#include "ibtpar.h"
       INTEGER*4 IBIN4(NIBUF,LBIN)
 
 C
@@ -2123,7 +2121,6 @@ C  /* Deck eripri */
      &                  ISCOOR)
 #include "implicit.h"
 #include "priunit.h"
-#include "ibtpar.h"
       DIMENSION BUF(NDIM)
       INTEGER*4 IBUF4(NIBUF,NDIM)
 

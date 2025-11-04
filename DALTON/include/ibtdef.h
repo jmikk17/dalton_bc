@@ -1,5 +1,4 @@
-      INTEGER   IBT02, IBT08, IBT10, IBT16
-      INTEGER*4 IBT08_4, IBT16_4
 C----- bit manipulation definitions
-#include <ibtpar.h>
+      INTEGER, PARAMETER   :: IBT08=255,   IBT16=65535
+      INTEGER*4, PARAMETER :: IBT08_4=255, IBT16_4=65535
 C-----

@@ -242,7 +242,6 @@ C
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
       REAL*8    BUF(LBUF)
       INTEGER*4 IBUF4(LBUF*NIBUF), ICOUNT4
 #include "twosta.h"
@@ -932,7 +931,7 @@ C  /* Deck dr2pri */
       SUBROUTINE DR2PRI(BUF,IBUF4,LBUF,ICOUNT,NBUF)
 #include "implicit.h"
 #include "priunit.h"
-#include "ibtpar.h"
+#include "ibtdef.h"
       REAL*8    BUF(LBUF)
       INTEGER*4 IBUF4(LBUF)
       SAVE IATOM, ICOOR, IREPE
@@ -1529,7 +1528,6 @@ C
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
 #include "eritap.h"
 #include "eribuf.h"
       DIMENSION BUF(LBUF)

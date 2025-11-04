@@ -1054,7 +1054,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
 #include "mxcent.h"
 #include "eribuf.h"
       DIMENSION XINT(*)
@@ -3056,7 +3055,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
       DIMENSION XINT(*)
       DIMENSION KADR2(NBAST,NBAST)
       DIMENSION RBUF(LBUF)
@@ -4341,7 +4339,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "eribuf.h"
