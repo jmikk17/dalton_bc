@@ -110,8 +110,11 @@ C
 #include "infvar.h"
 #include "dftcom.h"
 #include "pcmlog.h"
+#include "nuclei.h"
 C
       LOGICAL SAVLR, DORESP, FLAGSV, EX, NEED_PVX, FOUND
+      CHARACTER*2 CHG2, IND2
+      CHARACTER*8 LABEL, LABFND
 C
       CALL QENTER('RSPDRV')
 C
@@ -193,12 +196,50 @@ C
 C
 C     ATMMOM integrals calculated here to support population analysis methods using the density
 C
-      if (atmmom) then
+      if (.not.(atmmom .or. atmmomc6)) then
+         if (atmsel) call quit('SELATM error: no ATMMOM keyword')
+      end if
+C
+C     Generate labels for atomic multipole moment operators
+C
+      if (atmmom .or. atmmomc6) then
+         if (.not. atmsel) then
+            natm = nucdep
+            do i=1,natm
+               atmind(i) = i
+            end do
+         end if
+         istr = 0
+         if (ioratm .lt. 0) istr = abs(ioratm)
+         do iorder = istr, abs(ioratm)
+            do i=1,natm
+               j = atmind(i)
+               write(ind2,'(I2.2)') j
+               ichg = charge(j) 
+               write(chg2,'(I2.2)') ichg
+               if (iorder .eq. 0) then
+                  label = 'AM'// ind2 // chg2 // '00'
+                  if (atmmom) llrop(indprp(label)) = .true.
+                  if (atmmomc6) lc6op(indprp(label)) = .true.
+               else if (iorder .eq. 1) then
+                  label = 'AM'// ind2 // chg2 // '0x'
+                  if (atmmom) llrop(indprp(label)) = .true.
+                  if (atmmomc6) lc6op(indprp(label)) = .true.
+                  label = 'AM'// ind2 // chg2 // '0y'
+                  if (atmmom) llrop(indprp(label)) = .true.
+                  if (atmmomc6) lc6op(indprp(label)) = .true.
+                  label = 'AM'// ind2 // chg2 // '0z'
+                  if (atmmom) llrop(indprp(label)) = .true.
+                  if (atmmomc6) lc6op(indprp(label)) = .true.
+               endif
+            end do
+         end do
+C
+C     Get density matrices and calculate ATMMOM integrals
+C
          kfree  = 1
          lfree  = lwrk
-         ! logic removed for now, fails for minimal basis CAS
-         !if (nisht>0) then
-         if (.true.) then
+         if (nisht>0) then
             call memget('REAL',kcmo,ncmot,wrk,kfree,lfree)
             call memget('REAL',kdcao,n2basx,wrk,kfree,lfree) 
             call dzero(wrk(kdcao),n2basx)
@@ -209,8 +250,7 @@ C
             call memget('REAL',kcmo,0,wrk,kfree,lfree)
             call memget('REAL',kdcao,0,wrk,kfree,lfree) 
          end if
-         !if (nasht>0) then
-         if (.true.) then
+         if (nasht>0) then
             call memget('REAL',kdv,nnashx,wrk,kfree,lfree) 
             call memget('REAL',kdvao,n2basx,wrk,kfree,lfree) 
             call dzero(wrk(kdvao),n2basx)
@@ -221,11 +261,9 @@ C
             call memget('REAL',kdv,0,wrk,kfree,lfree) 
             call memget('REAL',kdvao,0,wrk,kfree,lfree) 
          end if
-         !call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
-         call fckden(.true.,.true.,wrk(kdcao),wrk(kdvao),
+         call fckden((nisht>0),(nasht>0),wrk(kdcao),wrk(kdvao),
      &      wrk(kcmo),wrk(kdv),wrk(kfree),lwrk)
-         !if (nisht>0 .and. nasht>0) then
-         if (.true.) then
+         if (nisht>0 .and. nasht>0) then
             call daxpy(n2basx,1.0d0,wrk(kdvao),1,wrk(kdcao),1)
             call numint_driver(wrk(kdcao),wrk(kfree),lfree,.false.)
          else if (nisht>0) then
@@ -235,6 +273,7 @@ C
          end if
          call memrel('outside numint',wrk,1,1,kfree,lfree)
       end if
+
 
       KWSYM = 1
       LWSYM = LWRK  - KWSYM
@@ -2043,10 +2082,9 @@ C
 C--------------------
 C
       LOGICAL NEWDEF, SPNDEF, NXTLAB
-      PARAMETER ( NTABLE = 48 )
+      PARAMETER ( NTABLE = 49 )
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       CHARACTER*8 LABEL, LABFND
-      CHARACTER*2 CHG2, IND2
       INTEGER NUMBER_ORBS(8)
 C
 !                    1          2          3          4
@@ -2072,7 +2110,9 @@ C
 !                   41         42         43         44
      &            '.SPIN-D', '.DIPLF ', '.DIPLFX', '.DIPLFY',
 !                   45         46         47         48
-     &            '.DIPLFZ', '.CHANNE', '.VIRTUA', '.ATMMOM'/
+     &            '.DIPLFZ', '.CHANNE', '.VIRTUA', '.ATMMOM',
+!                   49
+     &            '.SELATM'/
 C
 C
 C
@@ -2094,7 +2134,7 @@ C
                      GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,
      *                      16,17,18,19,20,21,22,23,24,25,26,27,
      *                      28,29,30,31,32,33,34,35,36,37,38,39,40,41,
-     *                      42,43,44,45,46,47,48),I
+     *                      42,43,44,45,46,47,48,49),I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -2396,16 +2436,9 @@ C     .VIRTUAL
                GO TO 100
 
  48            CONTINUE ! ATMMOM input. 
-               ! A lot of stuff has been stored in infrsp.h
-               ! Check later if this is actually needed 
-
                ATMMOM = .TRUE.
-
-               ! Current symmetry problems
-               !  * Symmetry coordinates instead of true cords in MBIS algorithm
-               !  * Dimension of density / integration electrons
                IF (NSYM.NE.1)
-     &            CALL QUIT('SYMMETRY NOT TESTED YET')
+     &            CALL QUIT('SYMMETRY NOT SUPORTED')
 
                ! Read in order of multipole integrals
                READ (LUCMD,*) IORATM 
@@ -2414,60 +2447,13 @@ C     .VIRTUAL
                IF (IORATM .LT. -1) 
      &            CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
 
-               ! Make a symmetry-proof charge array
-               K = 0
-               DO I = 1,NUCIND 
-                  DO J = 1,NUCDEG(I)
-                     K = K + 1
-                     ATMCHG(K) = CHARGE(I) 
-                  END DO
-               END DO
-
-               ! Look for atom selection input
-               READ (LUCMD,*) WORD
-               CALL UPCASE(WORD)
-               IF (WORD(1:7) .EQ. '.SELATM') THEN
-                  ATMSEL = .TRUE.
-                  READ (LUCMD,*) NATM
-                  DO I=1,NATM
-                     READ (LUCMD,*) ATMIND(I) 
-                     ! hardcoded to length of 100 in infrsp.h
-                  END DO
-               ELSE
-                  ATMSEL = .FALSE.
-                  NATM = NUCDEP
-                  DO I=1,NATM
-                     ATMIND(I) = I
-                  END DO
-                  BACKSPACE (LUCMD)
-               END IF                
-
-               ! Create labels
-               ISTR = 0
-               IF (IORATM .LT. 0) ISTR = ABS(IORATM)
-               DO IORDER = ISTR, ABS(IORATM)
-                  DO I=1,NATM
-                     J = ATMIND(I)
-                     WRITE(IND2,'(I2.2)') J
-                     ICHG = ATMCHG(J) 
-                     WRITE(CHG2,'(I2.2)') ICHG
-                     IF (IORDER .EQ. 0) THEN
-                        LABEL = 'AM'// IND2 // CHG2 // '00'
-                        LLROP( INDPRP(LABEL)) = .TRUE.
-                     ELSE IF (IORDER .EQ. 1) THEN
-                        LABEL = 'AM'// IND2 // CHG2 // '0x'
-                        LLROP( INDPRP(LABEL)) = .TRUE.
-                        LABEL = 'AM'// IND2 // CHG2 // '0y'
-                        LLROP( INDPRP(LABEL)) = .TRUE.
-                        LABEL = 'AM'// IND2 // CHG2 // '0z'
-                        LLROP( INDPRP(LABEL)) = .TRUE.
-                     ELSE
-                        CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
-                     ENDIF
-                  END DO
-               END DO
-
                GO TO 100 
+   49          CONTINUE ! SELATM - only calc. ATMMOM for specific atoms.
+               ATMSEL = .TRUE.
+               READ (LUCMD,*) NATM
+               DO I=1,NATM
+                  READ (LUCMD,*) ATMIND(I)
+               END DO
 
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
@@ -2618,10 +2604,9 @@ C
 #include "inforb.h"
 C
       LOGICAL NEWDEF
-      PARAMETER ( NTABLE = 42 )
+      PARAMETER ( NTABLE = 44 )
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
       CHARACTER*8 LABEL, LABFND
-      CHARACTER*2 CHG2, IND2
 C
       DATA TABLE /'.DIPLEN', '.DIPLNX', '.DIPLNY', '.DIPLNZ',
      *            '.DIPVEL', '.DIPVLX', '.DIPVLY', '.DIPVLZ',
@@ -2633,7 +2618,7 @@ C
      *            '.FREQUE', '.XXXXXX', '.GSLEGN', '.NGRID ',
      *            '.XXXXXX', '.C10SPH', '.C6ATM ', '.C8ATM ',
      *            '.C10ATM', '.C6LMO ', '.C8LMO ', '.C10LMO',
-     *            '.RESTC6', '.ATMMOM'/
+     *            '.RESTC6', '.ATMMOM', '.ORIENT', '.SELATM'/
 C
 C
 C READ IN  INPUT
@@ -2653,7 +2638,7 @@ C
                   IF (TABLE(I) .EQ. WORD) THEN
                      GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,
      *                      18,19,20,21,22,23,24,25,26,27,28,29,30,31,
-     *                      32,33,34,35,36,37,38,39,40,41,42), I
+     *                      32,33,34,35,36,37,38,39,40,41,42,43,44), I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -2914,9 +2899,9 @@ C     .C10LMO
                   RESTC6 = .TRUE.
                GO TO 100
    42          CONTINUE
-                  ATMMOM = .TRUE.
+                  ATMMOMC6 = .TRUE.
                   IF (NSYM.NE.1)
-     &               CALL QUIT('SYMMETRY NOT TESTED YET')
+     &               CALL QUIT('SYMMETRY NOT SUPORTED')
    
                   ! Read in order of multipole integrals
                   READ (LUCMD,*) IORATM 
@@ -2925,57 +2910,15 @@ C     .C10LMO
                   IF (IORATM .LT. -1) 
      &               CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
 
-                  ! Make a symmetry-proof charge array
-                  K = 0
-                  DO I = 1,NUCIND 
-                     DO J = 1,NUCDEG(I)
-                        K = K + 1
-                        ATMCHG(K) = CHARGE(I) 
-                     END DO
-                  END DO
-
-                  ! Look for atom selection input
-                  READ (LUCMD,*) WORD
-                  CALL UPCASE(WORD)
-                  IF (WORD(1:7) .EQ. '.SELATM') THEN
-                     ATMSEL = .TRUE.
-                     READ (LUCMD,*) NATM
-                     DO I=1,NATM
-                        READ (LUCMD,*) ATMIND(I) 
-                        ! hardcoded to length of 100 in infrsp.h
-                     END DO
-                  ELSE
-                     ATMSEL = .FALSE.
-                     NATM = NUCDEP
-                     DO I=1,NATM
-                        ATMIND(I) = I
-                     END DO
-                     BACKSPACE (LUCMD)
-                  END IF                
-
-                  ! Create labels
-                  ISTR = 0
-                  IF (IORATM .LT. 0) ISTR = ABS(IORATM)
-                  DO IORDER = ISTR, ABS(IORATM)
-                     DO I=1,NATM
-                        J = ATMIND(I)
-                        WRITE(IND2,'(I2.2)') J
-                        ICHG = ATMCHG(J) 
-                        WRITE(CHG2,'(I2.2)') ICHG
-                        IF (IORDER .EQ. 0) THEN
-                           LABEL = 'AM'// IND2 // CHG2 // '00'
-                           LC6OP( INDPRP(LABEL)) = .TRUE.
-                        ELSE IF (IORDER .EQ. 1) THEN
-                           LABEL = 'AM'// IND2 // CHG2 // '0x'
-                           LC6OP( INDPRP(LABEL)) = .TRUE.
-                           LABEL = 'AM'// IND2 // CHG2 // '0y'
-                           LC6OP( INDPRP(LABEL)) = .TRUE.
-                           LABEL = 'AM'// IND2 // CHG2 // '0z'
-                           LC6OP( INDPRP(LABEL)) = .TRUE.
-                        ELSE
-                           CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
-                        ENDIF
-                     END DO
+               GO TO 100
+   43          CONTINUE
+                  ORIENT_FREQ = .TRUE.
+               GO TO 100
+   44          CONTINUE
+                  ATMSEL = .TRUE.
+                  READ (LUCMD,*) NATM
+                  DO I=1,NATM
+                     READ (LUCMD,*) ATMIND(I)
                   END DO
                GO TO 100
             ELSE IF (PROMPT .EQ. '*') THEN

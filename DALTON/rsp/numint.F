@@ -44,7 +44,7 @@
       dimension work(lwork), ao_density(nbast,nbast)
 ! defined here:
       integer luwdump, kfrsav, kfree, lfree, nbuf
-      logical save_mem, dft_isgga, dogga
+      logical old_grid, dft_isgga, dogga
       character(len=8) label
       real*8 ele, ele2
 
@@ -52,8 +52,7 @@
       EXTERNAL DFT_ISGGA
 
 ! option for old or new num_aoint
-! save_mem = true is old grid
-      save_mem = .false.
+      old_grid = .false.
 
 ! timers and memory pointers
       call qenter('numint_driver')
@@ -74,7 +73,7 @@
       call gpopen(luprop,'AOPROPER','UNKNOWN',
      &            ' ','UNFORMATTED',idummy,.false.)
 
-      if (save_mem) then
+      if (old_grid) then
          ! set up dft orbital common block 
          call setupsos(0,.false.,idum1,idum2)
          ! make dftgrid if first run
@@ -82,9 +81,8 @@
             call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
             dftgrid_done_old = .true.
          end if
-         ! allocate for proccesing of grid data
-         ! make_dftgrid hardcodes limit of points per atom to 1.0d6
-         ! however, can never be more than total grid
+         ! make_dftgrid routine limits points per atom to 1.0d6,
+         ! but we never need more than total grid size
          nbuf = min(1 000 000,ntot_dftgrid)
 
          call memget('REAL',kx,nbuf,work,kfree,lfree)
@@ -100,11 +98,10 @@
          ! evaluate orbitals and density in grid points 
          call evaluate_grid(work(kx),work(ky),work(kz),work(kw),
      &      work(kgso),work(kgso_prod),work(kcnt),work(kdga),ao_density,
-     &      nbuf,work,lwork,cc_flag,save_mem,ntot_screened)
+     &      nbuf,work,lwork,cc_flag,ntot_screened)
 
          call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
          ntot_dftgrid = ntot_screened
-! new blocked grid test
       else
          dogga = dft_isgga()
          ntot_dftgrid = 0
@@ -118,7 +115,6 @@
             end do
          end if
          call memget('REAL',kprod,mxbllen*nnbasx,work,kfree,lfree)
-         write(*,*) 'dogga:', dogga
          call newtimer('START')
 
          if (dogga) then
@@ -135,13 +131,9 @@
       end if
 
 ! allocate for MBIS populations routine 
-      ! need a npoints common block thing to allocate properly here
-      !max_pnt = min(1 000 000,ntot_screened)
       max_pnt = min(1 000 000,ntot_dftgrid)
       max_atm = min(50,nucdep)
          
-      write(*,*) 'lfree before mbis', lfree
-
       call memget('REAL',kx,max_pnt,work,kfree,lfree)
       call memget('REAL',ky,max_pnt,work,kfree,lfree)
       call memget('REAL',kz,max_pnt,work,kfree,lfree)
@@ -158,12 +150,12 @@
       call newtimer('START')
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
-     &   max_pnt,max_atm,luwdump,save_mem)
+     &   max_pnt,max_atm,luwdump,old_grid)
       call newtimer('mbis')
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 ! allocate for and calculate ao integrals, memory saving version
-      if (save_mem) then
+      if (old_grid) then
 
          call memget('REAL',kint,nnbasx,work,kfree,lfree)
          call memget('REAL',kgso,nbast,work,kfree,lfree)
@@ -260,7 +252,7 @@
 
       ntot_dftgrid = ntot_dftgrid + nblen
 
-      do i = 0,nbast ! why from 0?
+      do i = 0,nbast
          active(i) = .false.
       enddo
       do isym = 1,nsym
@@ -313,7 +305,7 @@
 
       subroutine evaluate_grid(corx,cory,corz,int_weight,
      &   gso,gso_prod,ncnt,dmatgao,ao_density,nbuf,
-     &   work,lwork,cc_flag,save_mem,ntot_screened)
+     &   work,lwork,cc_flag,ntot_screened)
 #include "implicit.h"
 #include "dftcom.h"
 #include "inforb.h"
@@ -338,7 +330,7 @@
      &          gso(nbast),ncnt(nbast),dmatgao(nbast),
      &          ao_density(nbast,nbast),work(lwork), gso_prod(nnbasx)
       integer   nbuf
-      logical   cc_flag, save_mem
+      logical   cc_flag
 
 ! defined within routine
       real*8    cor(3)
@@ -350,11 +342,6 @@
       call gpopen(luquad,'DALTON.QUAD','OLD','SEQUENTIAL',
      &   'UNFORMATTED',idummy,.false.)
 
-!     write(*,*) 'ao dens in eval grid'
-!     do i = 1,nbast
-!        write(*,*) (ao_density(i,j),j=1,nbast)
-!     enddo
-
       if (cc_flag) then
          do i = 1,nbast
             do j = 1,nbast
@@ -363,17 +350,11 @@
                ao_density(j,i) = ao_density(i,j)
             end do
          end do
-!        write(*,*) 'CC ao dens in evaluate_grid after sym'
-!        do i = 1,nbast
-!           write(*,*) (ao_density(i,j),j=1,nbast)
-!        end do
       end if
 
       nelctrn = d0
 
       rewind luddump
-
-!     write(*,*) 'i,rho,intweight print' !debug
 
       ntot_screened = 0
   100 continue
@@ -391,14 +372,13 @@
             cor(1) = corx(ipnt)
             cor(2) = cory(ipnt)
             cor(3) = corz(ipnt)
-            ! TODO: add a check on weight being 0
             thrint = dfthri/weight 
 
 ! evaluate orbitals in the grid point
             call getsos(gso,ncnt,cor,work,lwork,
      &                  nbast,.false.,.false.,thrint,iprlr)
-!           CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
-!    &                  NBAST,DO_LONDON,DOGGA,THRINT,IPRINT)
+!           call getsos(gso,ncnt,cor,work,lwork,
+!    &                  nbast,do_london,dogga,thrint,iprlr)
 
 ! get density in point
             rho = d0
@@ -409,8 +389,6 @@
 
             write(luddump) corx(ipnt),cory(ipnt),corz(ipnt),
      &            int_weight(ipnt),rho,(gso(j),j=1,nbast)
-
-!           write(*,*) ipnt, rho, weight !debug
 
             ntot_screened = ntot_screened + 1
 
@@ -424,8 +402,6 @@
          write(*,*) 'Error in reading, footer is', atm_points 
          call quit("Error reading file in evaluate_grid")
       end if
-
-!     write(*,*) 'print done' !debug
 
       call gpclose(luquad,'KEEP')
 
@@ -452,7 +428,7 @@
 
 ! Based on the MBIS article by Verstraelen et.al - doi.org/10.1021/acs.jctc.6b00456
       subroutine mbis_pop(corx,cory,corz,int_weight,rho,
-     &                 mbis_weight,max_pnt,max_atm,luwdump,save_mem)
+     &                 mbis_weight,max_pnt,max_atm,luwdump,old_grid)
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -468,7 +444,7 @@
      &          int_weight(max_pnt),rho(max_pnt),
      &          mbis_weight(max_atm)
       integer   max_pnt,max_atm
-      logical   save_mem
+      logical   old_grid
 ! defined in here
 ! TODO: some should be allocated with memget instead
 ! 10 used as max l, but currently only imp. for 3 in zeffini
@@ -491,10 +467,8 @@
       endif
 
 ! saving variables in other names to fit with old code
-! TODO: change zan to atmchg from infrsp.h. Atmchg includes degenerate atoms
       do i=1,nat
         zan(i)=charge(i) !nuclear charge of atom, nuclei.h
-       !zan(i)=atmchg(i) !changed to symmetry-proof charge array, infrsp.h ! doesnt work for cc, needs something general
         qatm(i)=d0
         do j=1,3
           coor(j,i)=cord(j,i) !cord(3,mxcent), nuclei.h
@@ -508,7 +482,7 @@
       start_pnt=1
       end_pnt=0
       suma = d0
-      if (save_mem) then
+      if (old_grid) then
 10       continue
          read(luddump,end=100) corx(ipt),cory(ipt),corz(ipt),
      &                      int_weight(ipt),rho(ipt)
@@ -522,8 +496,6 @@
 100      continue
       else
 11       continue
-         ! could make a block list here, storing nr of points in each block
-         ! which could be used to check for blocking later
          read(luddump) npoint, tmp2 ! number of ao products
          if (npoint.gt.0) then
             read(luddump) tmp2 ! gao index array
@@ -578,7 +550,6 @@
             enddo
          enddo
 
-c       loop over points
          do i=1,ipt
             rhom = rho(i)
             fwt = int_weight(i) 
@@ -588,7 +559,7 @@ c       loop over points
                   wtatm(l,n)=0.0d0
                enddo
             enddo
-c         construct atomic weight function in the given point
+!         construct atomic weight function in the given point
             do n=1,nat
                dx = corx(i) - coor(1,n)
                dy = cory(i) - coor(2,n)
@@ -662,14 +633,13 @@ c         construct atomic weight function in the given point
             enddo
          enddo
 
-c        update zeff
+!        update zeff
          do n=1,nat
             do l=1,lmax(n)
                zstmp(l,n)=d0
             enddo
          enddo
 
-c        loop over points
          do i=1,ipt
             rhom = rho(i)
             fwt = int_weight(i)
@@ -680,7 +650,7 @@ c        loop over points
                enddo
             enddo
 
-c         reconstruct atomic weights functions - same as before
+!         reconstruct atomic weights functions - same as before
             do n=1,nat
                dx = corx(i) - coor(1,n)
                dy = cory(i) - coor(2,n)
@@ -697,11 +667,11 @@ c         reconstruct atomic weights functions - same as before
                   wtatm(l,n) = wtatm(l,n) + tmp
                enddo
             enddo
-c         assign ISA fractions and partition electrons 
+!         assign ISA fractions and partition electrons 
             wtot = d0
             do n=1,nat
                do l=1,lmax(n)
-                  wtot = wtot + wtatm(l,n) !does the abs change these?
+                  wtot = wtot + wtatm(l,n) 
                enddo
             enddo
             if (wtot.gt.d0 .and. abs(rhom*fwt).gt.eps) then
@@ -718,7 +688,6 @@ c         assign ISA fractions and partition electrons
                enddo
             endif
          enddo
-c        end ipt loop
 
          write(*,*)' Zshell'
 !        write(lupri,*)' Zshell'
@@ -738,7 +707,6 @@ c        end ipt loop
 
         write(*,*)' '
       enddo 
-c     end kitter loop
 
 20    format(i5,3f15.8)
 21    format(2i5,3f15.8)
@@ -770,7 +738,6 @@ c     end kitter loop
 ! using qstmp since qshell is not saved in final iteration
 
       write(luwdump) ipt
-!     write(*,*) 'i,mbis print' !debug
 
       do i=1,ipt
          rhom = rho(i)
@@ -814,12 +781,9 @@ c     end kitter loop
             enddo
          endif
          write(luwdump) (mbis_weight(j),j=1,nat)
-!        write(luwdump) (mbis_weight(j)*int_weight(i),j=1,nat)
-!        write(*,*) i,(mbis_weight(j),j=1,nat) !debug
-      enddo !ipt
+      enddo 
 
       write(luwdump) -1
-!     write(*,*) 'print done' !debug
 
       return
       end
@@ -839,39 +803,43 @@ c     end kitter loop
 
       do i=1,nat
          znuc = zan(i)
-         zeff(1,i) = 2.0d0*znuc !used for everythin except ghost, where we overwrite
+         zeff(1,i) = 2.0d0*znuc
+
+         ! Check for dummy atom 
          if (znuc.le.1.0d-8) then 
-         ! check for dummy atom - seems dangerous to check agains an exact zero
             lmax(i) = 1
             zeff(1,i) = 1.0d0
             qshell(1,i)= 1.0d-3
             qshell(2,i)=d0
          end if
+
          if (znuc.gt.1.0d-8 .and. znuc.le.2.0d0) then
             lmax(i) = 1
             qshell(1,i)=znuc
             qshell(2,i)=d0
          endif
+
          if (znuc.gt.2.0d0 .and. znuc.le.10.0d0) then
             lmax(i) = 2
             zeff(2,i) = 2.0d0
             qshell(1,i)=2.0d0
             qshell(2,i)=znuc-2.0d0 
          endif
+
          if (znuc.gt.10.0d0 .and. znuc.le.18.0d0) then
             lmax(i) = 3
             zeff(2,i) = 2.0d0*sqrt(znuc)
             zeff(3,i) = 2.0d0
             qshell(1,i)=2.0d0
             qshell(2,i)=8.0d0 
-            qshell(3,i)=znuc-10.0d0 !Z-core=valens, neccesary since we dont know if valence is full
+            qshell(3,i)=znuc-10.0d0
          endif
+
          if (znuc.gt.18) call quit('Z > 18 not implemented in zeffini')
       enddo
  
       return
       end
-
 
       subroutine num_aoint(integral_label,ao_int,gso,luddump,luwdump)
 #include "implicit.h"
@@ -892,9 +860,6 @@ c     end kitter loop
       real*8      tmp, int_weight, mbis_weight, cor(3),
      &            ao_test(nbast,nbast)
 
-! we could in principle calc. all integrals the first time we are here, but
-! with the 'select' feature we will not know which integrals we need
-
 ! label: AM + two char for index + two char for charge + two char for direc. and moment
 
       read(integral_label(3:4),*) atm_idx
@@ -904,7 +869,6 @@ c     end kitter loop
 
       integral_type = integral_label(7:8)
       select case (integral_type)
-! this can be extended to two cor_idx for quadrupole integrals
          case ('00')
             cor_idx = 0
          case ('0x')
@@ -939,7 +903,6 @@ c     end kitter loop
      &                 (gso(j),j=1,nbast)
          read(luwdump) (tmp,j=1,atm_idx-1), mbis_weight
          do a=1,nbast
-            ! index of the last element in previous row, i.e. the diagonal
             idx=(a*a-a)/2 
             do b=1,a
                ao_int(idx+b) = ao_int(idx+b) + 
@@ -968,26 +931,10 @@ c     end kitter loop
 
 100   continue
 
-!     if (ipt .ne. ipt_check) 
-!    &   call quit("Error in reading of files in numint")
-
-!     read(luwdump) ipt_check
-!     if (ipt_check .ne. -1) 
-!    &   call quit("Error in reading of files in numint")
-      
-!     CALL DSPTSI(NBAST,ao_int,ao_test)
-!     write(lupri,*) 'ao_int test'
-!     CALL OUTPUT(ao_test,1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
-      write(*,*) 'ao int test'
-      do i = 1,nnbasx
-         write(*,*) ao_int(i)
-      end do
 
       call getdat(rtnlbl(1),rtnlbl(2))
 
       rtnlbl(2) = 'SYMMETRI'
-      !rtnlbl(1) holds opperator sym, we ignore that for now?
-         !rtnlbl(1) is not read in in getgpv, seems like its inferred from integral vals.?
       
       call wrtpro(ao_int,nnbasx,integral_label,rtnlbl,iprlr)
 
@@ -1022,7 +969,6 @@ c     end kitter loop
       real*8      dist,scal,val, ao_test(nnbasx)
 
 ! parse all labels in here, so we can calculate all integrals with minimal file i/o
-!     call newtimer('START')
       lbl_idx = 0
       if (cc_flag) then
          do i = 1,nprlbl_cc
@@ -1086,17 +1032,10 @@ c     end kitter loop
       do while (points_read .lt. npoints)
          read(luddump) b_points, b_gsoprod 
          read(luddump) (gso_prod_idx(k),k=1,b_gsoprod)
-!        write(*,*) 'gso products:', b_gsoprod, 'out of', nnbasx
-!        write(*,*) 'points:', b_points, 'out of', mxbllen
          if (b_points .eq. 0) cycle
-!        call read_block2(luwdump,gso_prod(1:b_points,1:b_gsoprod),
-!    &                    mbis_weight(1:b_points,1:natmlbl),
          call read_block(luwdump,gso_prod,mbis_weight,
      &                    points_read,b_gsoprod,b_points,
      &                    cor_idx,atm_idx,natmlbl)
-!        do i = 1,b_points
-!           ao_test = ao_test + gso_prod(i,:)
-!        enddo
 
          ao_tmp = d0
          call dgemm('N', 'T', b_gsoprod, natmlbl, b_points,
@@ -1114,8 +1053,6 @@ c     end kitter loop
          enddo         
       enddo
 
-!     write(*,*) 'aotest', ao_test
-
       read(luwdump) footer
       if (footer .ne. -1) then
          write(*,*) 'Error in reading, footer is', footer
@@ -1129,14 +1066,7 @@ c     end kitter loop
          write(*,*) 'Writing lbl:', prplbl_atm(k)
          ao_test = ao_int(1:nnbasx,k)
          call wrtpro(ao_test,nnbasx,prplbl_atm(k),rtnlbl,iprlr)
-!        call wrtpro(ao_int(1,k),nnbasx,prplbl_atm(k),rtnlbl,iprlr)
-!        write(*,*) 'ao int test'
-!        do i = 1,nnbasx
-!           write(*,*) ao_int(i,k)
-!        end do
       enddo
-
-!     call newtimer('num_aoint_opt')
 
       return
       end
@@ -1178,7 +1108,6 @@ c     end kitter loop
             enddo
          endif
       else
-         ! TODO
          read(luddump) cor(1,:), cor(2,:), cor(3,:), tmp, tmp, 
      &            (gso_prod(i),i=1,b_gsoprod*b_points)
          do i=1,b_points

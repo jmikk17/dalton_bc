@@ -6,7 +6,7 @@
       INTEGER MFREQ, MCFREQ
       PARAMETER ( MFREQ = 30 , MCFREQ = 30 )
 
-      REAL*8          THCRSP, FREQ,   CFREQ,  ORBSFT, ATMCHG
+      REAL*8          THCRSP, FREQ,   CFREQ,  ORBSFT
       INTEGER         IREFSY, IPRRSP, MAXIT,  MAXITO,                    &     
      &                NFREQ,  NCFREQ, NCREF,  ISTOCK, MAXOCK,            &
      &                MAXRM,  LPVMAT, NACTT,  NACT,   IACT, JACT,        &
@@ -18,7 +18,6 @@
       LOGICAL         DFT_SO, RSPECD, RSPOCD, SOPRPA, TRDQF
       LOGICAL         ATMMOM, ATMSEL
       COMMON /INFRSP/ THCRSP, FREQ(MFREQ),    CFREQ(MCFREQ),  ORBSFT,    & ! real*8 variables
-     &                ATMCHG(100),                                       &
      &                IREFSY, IPRRSP, MAXIT,  MAXITO,                    & ! integer variables
      &                NFREQ,  NCFREQ, NCREF,  ISTOCK, MAXOCK,            &
      &                MAXRM,  LPVMAT, NACTT,  NACT(8),IACT(8),JACT(8),   &

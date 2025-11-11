@@ -367,10 +367,10 @@ C
  900  CONTINUE
       IF (IPRRSP.GT.15) THEN
          WRITE(LUPRI,'(4(/A,I3))')
-     *   ' NUMBER OF CARTESIAN Cn LENGTH OPERATORS  : NCAR =',NCAR,
-     *   ' NUMBER OF SPHERICAL Cn LENGTH OPERATORS  : NSPH =',NSPH,
-     *   ' NUMBER OF Cn VELOCITY OPERATORS          : NVEL =',NVEL,
-     *   ' NUMBER OF ATOMIC LENGTH OPERATORS        : NAMS =',NAMS
+     *   ' NUMBER OF CARTESIAN Cn LENGTH OPERATORS       : NCAR =',NCAR,
+     *   ' NUMBER OF SPHERICAL Cn LENGTH OPERATORS       : NSPH =',NSPH,
+     *   ' NUMBER OF CARTESIAN ATOMIC Cn LENGTH OPERATORS: NAMS =',NAMS,
+     *   ' NUMBER OF Cn VELOCITY OPERATORS               : NVEL =',NVEL
       END IF
       NGRDMX = MAX(16,NGRID)
       NMOMC  = 20
@@ -442,8 +442,8 @@ c
       DIMENSION GRIDSQ(0:NGRDMX),ALPHA(1:NSYMOP,1:NSYMOP,0:NGRDMX)
       DIMENSION CAUCHY(1:NSYMOP,1:NSYMOP,1:NMOMC)
       DIMENSION OLDAL(NSYMOP,0:NGRDMX)
-!     DIMENSION OMEGA(0:16)
-      DIMENSION OMEGA(0:10)
+      DIMENSION OMEGA(0:16)
+      DIMENSION OMEGA_ORIENT(0:10)
       CHARACTER*8 IC,JC
       LOGICAL LDONE,END
       LOGICAL FIRST, LC6IFC
@@ -452,14 +452,14 @@ c
       DATA ITYPE /3/
       DATA THRESHW /1.D-08/
 c
-!     DATA OMEGA/0.0D0,
-!    *           0.0000011354D0,0.0000324954D0,0.0002074939D0,
-!    *           0.0007766098D0,0.0022314002D0,0.0055272185D0,
-!    *           0.0125684274D0,0.0273216537D0,0.0585616091D0,
-!    *           0.1273031181D0,0.2894765239D0,0.7170385627D0,
-!    *           2.0602366551D0,7.7110713698D0,49.2377677794D0,
-!    *           1409.1898779477D0/
       DATA OMEGA/0.0D0,
+     *           0.0000011354D0,0.0000324954D0,0.0002074939D0,
+     *           0.0007766098D0,0.0022314002D0,0.0055272185D0,
+     *           0.0125684274D0,0.0273216537D0,0.0585616091D0,
+     *           0.1273031181D0,0.2894765239D0,0.7170385627D0,
+     *           2.0602366551D0,7.7110713698D0,49.2377677794D0,
+     *           1409.1898779477D0/
+      DATA OMEGA_ORIENT/0.0D0,
      *           0.0000437D0,0.0013086D0,0.0091102D0,0.0390632D0,
      *           0.1372089D0,0.4555098D0,1.5999700D0,6.8604430D0,
      *           47.7603400D0, 1430.6370000D0 /
@@ -468,25 +468,28 @@ c -- parameters
 c
 c compute squared gridpoints
 c
-      !IF(GSLEGN) THEN
-      IF(.true.) THEN
+      IF (GSLEGN) THEN
 c -- use Gauss Legendre grid from old C6 module
-         !NGRID=16
-         NGRID=10
+         NGRID=16
          DO 5 I=0,NGRID
             GRIDSQ(I) = OMEGA(I)
    5     CONTINUE
+      ELSE IF (ORIENT_FREQ) THEN
+c -- use frequencies matching the defualt from the ORIENT program
+         NGRID=10
+         DO 15 I=0,NGRID
+            GRIDSQ(I) = OMEGA_ORIENT(I)
+   15    CONTINUE
       ELSE
 c-- compute gridpoints according to Gauss Chebychev scheme
          GRIDSQ(0) = ZERO
          N= NGRID
          NN=2*N
          FAC=PI/(2*NN)
-         DO 15 I=1,N
+         DO 25 I=1,N
             X=FAC*(2*I-1)
             GRIDSQ(N-I+1)=(D1/TAN(X))**2
-            write(*,*) 'gridsq debug:', I, N, GRIDSQ(N-I+1)
-  15     CONTINUE
+  25     CONTINUE
       ENDIF
 c
 c write header output file when first call
@@ -676,6 +679,10 @@ c -- parameters
 c
 c compute squared gridpoints
 c
+      IF(ORIENT_FREQ) THEN 
+         CALL QUIT('EFPOLV: ORIENT frequencies' //
+     &      ' not implemented for velocity')
+      END IF
       IF(GSLEGN) THEN
 c -- use Gauss Legendre grid from old C6 module
          NGRID=16
@@ -810,14 +817,14 @@ C
       WRITE(LUPRI,'(/A,A/A,I4)')
      *   ' operator type:    ',OPTYPE,
      *   ' operator symmetry:',KSYMOP
-!     IF (OPTYPE(2:4) .NE. 'DIP') THEN
-!        NWARN = NWARN + 1
-!        WRITE (LUPRI,'(//3A/A)')
-!    &      ' C6PRPS WARNING: oscillator strength is not',
-!    &      ' defined for ',OPTYPE,
-!    &      ' WARNING: C6PRPS cannot continue.'
-!        RETURN
-!     END IF
+      IF ((OPTYPE(2:4) .NE. 'DIP') .AND. (OPTYPE(1:2) .NE. 'AM')) THEN
+         NWARN = NWARN + 1
+         WRITE (LUPRI,'(//3A/A)')
+     &      ' C6PRPS WARNING: oscillator strength is not',
+     &      ' defined for ',OPTYPE,
+     &      ' WARNING: C6PRPS cannot continue.'
+         RETURN
+      END IF
       CALL DZERO(SUMOSC,NSUM)
       WRITE(LUPRI,'(/A)')
      *   ' State no:   Transition moment:'//
@@ -828,7 +835,8 @@ C(I5,1P,G26.12,G24.12,G20.12)
       DO 500 INUM = 1,KZRED
          XTEMP=XMOM(INUM)
          ETEMP=EIVAL(INUM)
-         IF (OPTYPE(2:5) .EQ. 'DIPL') THEN
+         IF ((OPTYPE(2:5) .EQ. 'DIPL') .OR. 
+     &       (OPTYPE(1:2) .EQ. 'AM')) THEN
             OSCSTR=D2*XTEMP*XTEMP*ETEMP
          ELSE IF (OPTYPE(2:5) .EQ. 'DIPV') THEN
             OSCSTR=D2*XTEMP*XTEMP/ETEMP
