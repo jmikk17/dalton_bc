@@ -816,7 +816,6 @@ C        calculate numerical atomic moment integrals
 C---------------------------------------------------------------
 C
          IF (ATMMOM) THEN
-            ! calculate integrals with numint_driver
             KDENS = 1
             KFREE = KDENS + N2BST(ISYMOP)
             LFREE = LWORK - KFREE

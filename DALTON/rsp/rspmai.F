@@ -196,7 +196,7 @@ C
       if (atmmom) then
          kfree  = 1
          lfree  = lwrk
-         ! loogic removed for now, fails for minimal basis CAS
+         ! logic removed for now, fails for minimal basis CAS
          !if (nisht>0) then
          if (.true.) then
             call memget('REAL',kcmo,ncmot,wrk,kfree,lfree)
