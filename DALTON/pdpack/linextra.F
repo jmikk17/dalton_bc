@@ -41,16 +41,15 @@ C
 C     Forms the two-norm of a vector.
 C 19-Sep-1988 -- hjaaj -- based on DNRM2 from LINPACK
 C     This version does not use extended precision for intermediates
-C     as the LINPACK version does.C 1) DNORM2 (emulate ESSL DNORM2: do not use extended precision for intermediates)
-
+C     as the LINPACK version does.
 C     Equivalent to DNORM2 in IBM's ESSL library.
+C 1) DNORM2 (emulate ESSL DNORM2: do not use extended precision for intermediates)
 C
 C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL TO ONE.
 C     DNRM2: JACK DONGARRA, LINPACK, 3/11/78.
 C
-#include "implicit.h"
-C
-      DIMENSION DX(*)
+      REAL*8  DNORM2,DX(*),DTEMP
+      INTEGER I,INCX,IX,M,MP1,N
       PARAMETER ( ZERO = 0.0D0 )
 C
       IF (N.LE.0) THEN
@@ -121,6 +120,29 @@ C        ... is zero but included such that error may be detected.
 C
       RETURN
       END
+C  /* Deck dappge */
+      SUBROUTINE DAPPGE(N,AAP,AGE)
+C
+C  Oct-2001 Hans Joergen Aa. Jensen; based on DAPTGE
+C
+C Purpose: unpack antisymmetric,   packed (lower triangle) matrix AAP
+C              to antisymmetric, unpacked matrix and add to AGE.
+C
+#include "implicit.h"
+      DIMENSION AAP(*), AGE(N,*)
+C
+      DO 200 J = 1,N
+         JOFF = (J*J-J)/2
+         DO 100 I = 1,J-1
+            AGE(I,J) = AGE(I,J) - AAP(JOFF+I)
+            AGE(J,I) = AGE(J,I) + AAP(JOFF+I)
+  100    CONTINUE
+         AGE(J,J) = AGE(J,J) + AAP(JOFF+J)
+C        ... is zero but included such that error may be detected.
+  200 CONTINUE
+C
+      RETURN
+      END
 C  /* Deck dsptsi */
       SUBROUTINE DSPTSI(N,ASP,ASI)
 C
@@ -147,11 +169,36 @@ C
 C
       RETURN
       END
+C  /* Deck dsppsi */
+      SUBROUTINE DSPPSI(N,ASP,ASI)
+C
+C  Oct-2001 Hans Joergen Aa. Jensen; based on DSPTSI
+C
+C Purpose: unpack symmetric,   packed matrix ASP
+C              to symmetric, unpacked matrix and add to ASI.
+C
+#include "implicit.h"
+      DIMENSION ASP(*), ASI(N,*)
+C
+      ENTRY      DSPPGE(N,ASP,ASI)
+C     ... equivalent subroutine name
+C
+      DO 200 J = 1,N
+         JOFF = (J*J-J)/2
+         DO 100 I = 1,J-1
+            ASI(I,J) = ASI(I,J) + ASP(JOFF+I)
+            ASI(J,I) = ASI(J,I) + ASP(JOFF+I)
+  100    CONTINUE
+         ASI(J,J) = ASI(J,J) + ASP(JOFF+J)
+  200 CONTINUE
+C
+      RETURN
+      END
 C  /* Deck dgetap */
       SUBROUTINE DGETAP(N,AGE,AAP)
 C
 C  8-Feb-1987 Hans Joergen Aa. Jensen
-Cdgetap
+C
 C Purpose: Transform from GE format to AP format, that is:
 C          extract antisymmetric part of general matrix AGE
 C          to antisymmetric, packed matrix AAP (lower
@@ -182,23 +229,13 @@ C
 #include "implicit.h"
       DIMENSION AGE(N,*), ASP(*)
       PARAMETER ( DP5 = 0.5D0 )
-#ifdef LUCI_DEBUG
-#include <priunit.h>
-#endif
 C
       DO 200 J = 1,N
          JOFF = (J*J-J)/2
          DO 100 I = 1,J
             ASP(JOFF+I) = DP5 * (AGE(I,J) + AGE(J,I))
-#ifdef LUCI_DEBUG
-            write(lupri,*) 'joff,i,j ==> age(i,j), age(j,i,)',joff,
-     &                      i,j,AGE(I,J), AGE(J,I),ASP(JOFF+I)
-#endif
   100    CONTINUE
   200 CONTINUE
-#ifdef LUCI_DEBUG
-      write(lupri,*) 'end of DGETSP'
-#endif
 C
       RETURN
       END
@@ -275,7 +312,7 @@ C
 C  8-Feb-1987 Hans Joergen Aa. Jensen
 C
 C Purpose: Transform from SI format to SP format, that is:
-C          copy upper triangle of symmetric matrix ASI
+C          copy UPPER triangle of symmetric matrix ASI
 C          to symmetric, packed matrix ASP.
 C
 #include "implicit.h"
@@ -290,6 +327,29 @@ C
 C
       RETURN
       END
+
+C  /* Deck dsltsp */
+      SUBROUTINE DSLTSP(N,ASI,ASP)
+C
+C  8-Feb-1987 Hans Joergen Aa. Jensen
+C
+C Purpose: Transform from SI format to SP format, that is:
+C          copy LOWER triangle of symmetric matrix ASI
+C          to symmetric, packed matrix ASP.
+C
+#include "implicit.h"
+      DIMENSION ASI(N,*), ASP(*)
+C
+      DO 200 J = 1,N
+         JOFF = (J*J-J)/2
+         DO 100 I = 1,J
+            ASP(JOFF+I) = ASI(J,I)
+  100    CONTINUE
+  200 CONTINUE
+C
+      RETURN
+      END
+
 C  /* Deck dsifsp */
       SUBROUTINE DSIFSP(N,ASI,ASP)
 C
@@ -381,9 +441,8 @@ C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL TO ONE.
 C 30-Apr-1984 -- hjaaj -- based on DDOT from LINPACK
 C     DDOT: JACK DONGARRA, LINPACK, 3/11/78.
 C
-#include "implicit.h"
-C
-      DIMENSION DA(*)
+      REAL*8  DSUM,  DA(*),DTEMP
+      INTEGER I,INCA,IA,M,MP1,N
       PARAMETER ( D0 = 0.0D0 )
 C
       IF (N.LE.0) THEN
@@ -424,6 +483,9 @@ C
    60 DSUM = DTEMP
       RETURN
       END
+#endif
+#if !defined (VAR_DXML)
+#if !defined (VAR_MKL)
 C  /* Deck idamin */
       INTEGER FUNCTION IDAMIN(N,DX,INCX)
 C
@@ -432,9 +494,8 @@ C     890927-Hans Joergen Aa. Jensen
 C     Based on IDAMAX by
 C     JACK DONGARRA, LINPACK, 3/11/78.
 C
-#include "implicit.h"
-C
-      DIMENSION DX(*)
+      REAL*8  DX(*),DMIN
+      INTEGER I,INCX,IX,N
 C
       IF( N .LT. 1 ) THEN
         IDAMIN = 0
@@ -467,15 +528,17 @@ C
    30 CONTINUE
       RETURN
       END
+#endif
+#endif
+#if !defined (VAR_DXML)
 C  /* Deck idmax */
       INTEGER FUNCTION IDMAX(N,DX,INCX)
 C
 C     FINDS THE INDEX OF ELEMENT HAVING MAX. VALUE.
 C     890105 hjaaj, based on IDAMAX by JACK DONGARRA, LINPACK, 3/11/78.
 C
-#include "implicit.h"
-C
-      DIMENSION DX(*)
+      REAL*8  DX(*),DMAX
+      INTEGER I,INCX,IX,N
 C
       IF( N .LT. 1 ) THEN
         IDMAX = 0
@@ -508,15 +571,16 @@ C
    30 CONTINUE
       RETURN
       END
+#endif
+#if !defined (VAR_DXML)
 C  /* Deck idmin */
       INTEGER FUNCTION IDMIN(N,DX,INCX)
 C
 C     FINDS THE INDEX OF ELEMENT HAVING MIN. VALUE.
 C     890105 hjaaj, based on IDAMAX by JACK DONGARRA, LINPACK, 3/11/78.
 C
-#include "implicit.h"
-C
-      DIMENSION DX(*)
+      REAL*8  DX(*),DMIN
+      INTEGER I,INCX,IX,N
 C
       IF( N .LT. 1 ) THEN
         IDMIN = 0
@@ -555,7 +619,6 @@ C
 C Block 4: "iblas": ICOPY, ISCAL, ISWAP
 
 C  /* Deck iblas */
-
       SUBROUTINE ICOPY(N,IX,INCX,IY,INCY)
 C
 C     COPY integer IX TO integer IY.
@@ -571,7 +634,6 @@ C
          IF(INCX.EQ.1) GOTO 20
          IF(INCX.GT.1) GOTO 60
       END IF
-    5 CONTINUE
 C
 C        CODE FOR UNEQUAL OR NONPOSITIVE INCREMENTS.
 C
@@ -630,7 +692,6 @@ CC 5) DSPSOL, DGESOL, DGEINV : driver routines calling LINPACK
       IF(N.LE.0)RETURN
       IF(INCX.EQ.1) GOTO 20
       IF(INCX.GT.1) GOTO 60
-    5 CONTINUE
 C
 C        CODE FOR NONPOSITIVE INCREMENT.
 C
