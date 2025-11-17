@@ -1981,7 +1981,7 @@ C 32 SIRINP  NEG: Gram-Schmidt; POS: sym. orbital orthog.  ORB ORTHGR..
 C 33 SIRINP  Delete orbitals based on AO overlap matrix    ORB : AODEL
 C 34 intern. MO integrals not needed in MCSCF optimization
 C 35 SIRSTP  tight step control for ground state also      STP : TIGHT
-C 36 SIRNEO  Dont use additional termination tests.        STP : NO TER
+C 36 SIRNEO  Dont use additional termination tests.        STP : NO EXT
 C 37 SIROPT  Dont switch to Broydn update in local region. UPD : genera
 C 38 SIROPT  Dont switch from NEO to NR in local region.   OPT : NEO AL
 C 39 SIROPT  Only NR local optimization, no NEO steps.     OPT : NR ALW
@@ -4410,7 +4410,7 @@ C *** Option 3 >MIN DA<  Minimum damping value
   103 READ(LUCMD,*) BETMIN
       GO TO 100
 C
-C *** Option 4 >NO TER<  Skip extra termination tests
+C *** Option 4 >NO EXT<  Skip extra termination tests
   104 FLAG(36) = .TRUE.
       GO TO 100
 C

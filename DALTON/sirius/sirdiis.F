@@ -826,7 +826,6 @@ C           .. subtract DCOVLP*FVAO_previous to get DCOVLP*FCAO_previous
          END IF
          EMY = DDOT(NNBAST,DAOSAV,1,H1AO,1)
      &       + DDOT(NNBAST,DAOSAV,1,FAOSAV(1,INDEVC,1),1) * DP5
-         IF (DOHFSRDFT) EMY = EMY + EDFTY + ESRDFTY
 C
          IF (ONLYFC) THEN
             EACTIV = D0
@@ -861,7 +860,7 @@ C
                CALL DAXPY(N2BASX,-D1,DCAO(1+N2BASX),1,DCAO,1)
             END IF
 
-               CALL DFT_ADD_KS(ONLYFC,EMY,DCAO,NDMAT,
+               CALL DFT_ADD_KS(ONLYFC,DCAO,NDMAT,
      &                    FAOSAV(1,INDEVC,1),FAOSAV(1,INDEVC,2),
      &                    WRK(KFREE),LFREE,IPR_DIIS)
          END IF
@@ -1085,7 +1084,7 @@ C
 
 C
          EMCDIF = EMCSCF
-         EMCSCF = EMY + EACTIV + EPOT + ESOLT
+         EMCSCF = EMY + EACTIV + EPOT + ESOLT + ESRDFTY + EDFTY
 
          IF (QM3 .AND. (.NOT. OLDTG)) EMCSCF = EMCSCF - EELEL
 C        this also includes the case of MMPCM
@@ -2205,11 +2204,14 @@ C
       RETURN
       END
 c /* DFT_ADD_KS */
-      SUBROUTINE DFT_ADD_KS(ONLYFC,EMY,DCAO,NDMAT,FCAO,FVAO,
+      SUBROUTINE DFT_ADD_KS(ONLYFC,DCAO,NDMAT,FCAO,FVAO,
      &                      WRK,LWRK,IPRFCK)
 c     TMP1 is of NNBASX size, TMP2 is of N2BASX size.  They are passed
-c     because they are available but they could as well be allocated
-c     here.
+c     because they are available but they could as well be allocated here.
+c
+C Output:
+C   DFT potentials added to FCAO and, if singly occupied orbitals, to FVAO
+C   EDFTY in dfterg.h
 #include "implicit.h"
 c
 #include "inforb.h"
@@ -2218,9 +2220,9 @@ c
 c
       PARAMETER (DP5 = 0.5D0, D1 = 1.0D0)
 c
-      DIMENSION DCAO(N2BASX*NDMAT),FCAO(N2BASX),FVAO(N2BASX)
-      DIMENSION WRK(LWRK)
       LOGICAL ONLYFC
+      REAL*8  DCAO(N2BASX,NDMAT),FCAO(N2BASX),FVAO(N2BASX)
+      REAL*8  WRK(LWRK)
 c
       CALL QENTER('DFT_ADD_KS')
 c
@@ -2243,7 +2245,7 @@ C     EXCTRO = DP5*DDOT(NNBASX,DCAO,1,FCAO,1)
          ELSE
             CALL DAXPY(NNBAST,1D0,WRK(KTMP1),1,FCAO,1)
          END IF
-      ELSE
+      ELSE ! High-spin with singly occupied orbitals
 C     memory allocation
          KDENA = KLST
          KKSMA = KDENA +N2BASX*2
@@ -2260,7 +2262,7 @@ C     Kohn-Sham contribution evaluation
             CALL DAXPY(N2BASX,DP5,DCAO,1,WRK(KDENA),1)
             CALL DAXPY(N2BASX,DP5,DCAO,1,WRK(KDENA+N2BASX),1)
          END IF
-         CALL DAXPY(N2BASX,1.D0,DCAO(1+N2BASX),1,WRK(KDENA),1)
+         CALL DAXPY(N2BASX,1.D0,DCAO(1,2),1,WRK(KDENA),1)
 C
 C  For specific case of molecules bearing only alpha electron(s),
 C  like hydrogen atom, we call "old" open-shell code, which
@@ -2298,8 +2300,6 @@ c
          CALL DAXPY(NNBAST, DP5,WRK(KKSPB),1,FVAO,1)
       END IF
 C
-      EMY = EMY + EDFTY
-C     EDFTY = EDFTY +EXCTRO-DP5*DDOT(N2BASX,DCAO,1,FCAO,1)
       CALL QEXIT('DFT_ADD_KS')
       RETURN
       END
