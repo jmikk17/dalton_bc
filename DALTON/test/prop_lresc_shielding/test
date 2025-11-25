@@ -22,10 +22,6 @@ simple.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
 
-simple.add(from_string = 'Cartesian Coordinates',
-      num_lines = 7,
-      rel_tolerance = 1.0e-8)
-
 simple.add(from_string = 'Non relativistic contributions for',
       num_lines = 27,
       abs_tolerance = 1.0e-3)
@@ -36,10 +32,6 @@ detailed = Filter()
 detailed.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
-
-detailed.add(from_string = 'Cartesian Coordinates',
-      num_lines = 7,
-      rel_tolerance = 1.0e-8)
 
 detailed.add(from_string = 'Paramagnetic LRESC corrections for ',
       num_lines = 85,

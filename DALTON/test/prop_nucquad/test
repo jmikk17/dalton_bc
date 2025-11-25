@@ -16,11 +16,6 @@ test = TestRun(__file__, sys.argv)
 
 f = Filter()
 
-# Molecular geometry
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 10,
-      rel_tolerance = 1.0e-8)
-
 # Symmetry
 f.add(string = 'Number of coordinates in each symmetry',
       rel_tolerance = 1.0e-2)

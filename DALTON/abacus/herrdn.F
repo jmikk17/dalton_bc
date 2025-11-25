@@ -4772,9 +4772,10 @@ C
       IPTEST = MIN(NUCDEP/13,2)
 C     hjaaj: x,y,z normally only interesting for
 C            small molecules, otherwise just a lot of lines.
+C            Note that the coefficients ARE printed in the copy of the input.
       IF (QMMM .OR. USE_PELIB()) IPTEST = 0
-      IF ( IPREAD .GT. IPTEST )  THEN
-         CALL HEADER('Cartesian Coordinates (a.u.)',1)
+      IF ( IPREAD .GT. 0 )  THEN
+         CALL HEADER('Cartesian Coordinates (bohr)',1)
          WRITE (LUPRI,'(A,I5)')'  Total number of coordinates:',NCOOR
       END IF
 
@@ -4839,25 +4840,35 @@ C
          END IF
   100 CONTINUE
       NPCMN = IPCMN
+
+!     Print in XYZ format (Angstrom)
+      if (ipread .gt. 0) then
+         CALL HEADER('Cartesian Coordinates (xyz format; angstrom)',1)
+         CALL print_xyz(CORD,LUPRI)
+      end if
 C
 C     ********************************
 C     ***** Symmetry Coordinates *****
 C     ********************************
 C
       ISTRT = NCOOR + NCENTS + 1
-      IF (LWORK .LT. 2*NCOOR*NCOOR) CALL STOPIT('PRICAR','TRACOR',
-     &                                          2*NCOOR*NCOOR,LWORK)
-      CALL TRACOR(WORK(ISTRT),WORK(ISTRT + NCOOR*NCOOR),1,NCOOR,IPREAD)
+
       IF (MAXREP .GT. 0) THEN
+         IF (LWORK .LT. ISTRT + 2*NCOOR*NCOOR)
+     &       CALL STOPIT('PRICAR','TRACOR',2*NCOOR*NCOOR,LWORK)
+         CALL TRACOR(WORK(ISTRT),WORK(ISTRT+NCOOR*NCOOR),1,NCOOR,IPREAD)
+
          IF (IPREAD .GT. 0) THEN
             CALL HEADER('Symmetry Coordinates',1)
             WRITE (LUPRI,'(A,8I5)')
      &            '  Number of coordinates in each symmetry: ',
      &            (NCRREP(I,1),I=0,MAXREP)
          END IF
+
+         IF (IPREAD .GT. IPTEST) THEN
          DO 300 ISYM = 0, MAXREP
          IF (NCRREP(ISYM,1) .GT. 0) THEN
-            IF (IPREAD .GT. IPTEST) WRITE (LUPRI,'(/A,2X,A3,A2,I2,A1/)')
+            WRITE (LUPRI,'(/A,2X,A3,A2,I2,A1/)')
      &          '  Symmetry',REP(ISYM),' (',ISYM+1,')'
             DO 400 IATOM = 1, NUCIND
                DO 500 ICOOR = 1, 3
@@ -4873,7 +4884,6 @@ C
                            NSIGN(NB) = NSGN
                         END IF
   600                CONTINUE
-                     IF (IPREAD .GT. IPTEST) THEN
                      IF (NB .EQ. 1) THEN
                         WRITE (LUPRI,'(I5,3X,A,2X,A,I5)') ISCOOR,
      &                     NAMEX(3*IATOM)(1:4), CHRXYZ(-ICOOR), NBASE(1)
@@ -4884,12 +4894,12 @@ C
      &                   NBASE(1),(CHRSGN(NSIGN(I)),NBASE(I),I=2,NB),
      &                   ' ]/',NB
                      END IF
-                     END IF
                   END IF
   500          CONTINUE
   400       CONTINUE
          END IF
   300    CONTINUE
+         END IF ! (IPREAD .GT. IPTEST) THEN
       END IF
 C
       IF (NUCDEP .EQ. 1) THEN

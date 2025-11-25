@@ -17,9 +17,6 @@ f = Filter()
 f.add(from_string='label', to_string='Spherical',
       rel_tolerance = 1.0e-7)
 
-f.add(from_string='Total number of coordinates', to_string='Symmetry',
-      rel_tolerance = 1.0e-7)
-
 f.add(string='coordinates in each symmetry',
       rel_tolerance = 1.0e-7)
 
