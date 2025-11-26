@@ -386,7 +386,7 @@ C
       integer :: iatom, icent, inuc, isymop, mulcnt, i
       character*4 :: atom_symbol
 
-      write (io_unit, '(i0/)') nucdep
+      write (io_unit, '(i5/)') nucdep
       iatom = 0
       do icent = 1, nucind
          inuc = izatom(icent)

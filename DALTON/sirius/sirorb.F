@@ -271,7 +271,7 @@ C    *                   DIAOR,INDXCI,WRK,LFREE)
             NCONF  = 0
             CALL GRDINF(GNORM,GORB)
             NCONF  = MCONF
-            EMCSCF = POTNUC + EMCMY + EMCACT + EDFTY
+            EMCSCF = POTNUC + EMCMY + EMCACT + EDFTY + ESRDFTY
             WRITE (LUPRI,1010) EMCSCF,ITORB
             IF ( P4FLAG(2) .OR. (LUPRI.EQ.LUW4 .AND. P6FLAG(1)) )
      *         WRITE (LUW4,1015) POTNUC,EMCMY,EMCACT

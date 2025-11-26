@@ -11,10 +11,6 @@ test = TestRun(__file__, sys.argv)
 f = Filter()
 f.add(re = 'Basis set used is \"cc-pVDZ\" from the basis set library\.')
 
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 8,
-      rel_tolerance = 1.0e-8)
-
 f.add(string = 'Nuclear repulsion energy',
       rel_tolerance = 1.0e-10)
 

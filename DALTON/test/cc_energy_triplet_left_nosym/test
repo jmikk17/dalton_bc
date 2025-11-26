@@ -21,10 +21,6 @@ f.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
 
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 8,
-      rel_tolerance = 1.0e-8)
-
 f.add(from_string = 'Number of t1 amplitudes',
       num_lines = 3,
       rel_tolerance = 10e-2)

@@ -521,10 +521,6 @@ C
          CALL FCK_MAKE_FCEFF_LOCALSPIN(FC,FV(1,2),DV,WRK(KFREE),LFREE)
       END IF
 C
-C     Add srdft correction to EMCMY:
-C
-      EMCMY = EMCMY + ESRDFTY
-C
       CALL QEXIT('FCKMAT')
       RETURN
       END
@@ -619,7 +615,7 @@ C         (ESRDFTY is in common block and is calculated inside FCK2AO)
          CALL DFTKSMb(DCAO,FCAO,EDFTY,WRK(KFREE),LFREE,IPRFCK)
          EDFTY = EDFTY + EXCTRO - HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
-     &   ' Kohn-Sham DFT xc energy      :',EDFTY
+     &   ' Kohn-Sham DFT effective xc energy :',EDFTY
       ELSE
          EDFTY = 0.0D0
       ENDIF
@@ -642,7 +638,7 @@ C
          EMCMY1 = DDOT(N2BASX,DCAO,1,WRK(KH1AO),1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
      &   ' Inactive one-electron energy :',EMCMY1
-         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1) + EDFTY
+         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
 !! Manu debug
 #ifdef SIRGRAD_DEBUG
         write(lupri,*) 'printing H1AO ...'
@@ -1459,7 +1455,7 @@ C   CREF, the CI vector for the current expansion point (CEP).
 C   CMO, the orbitals for the CEP
 C
 C Output:
-C   EMCACT, energy of the CEP.
+C   EMCACT, active energy of the CEP.
 C   G, gradient of the CEP.
 C   EMCMY, inactive energy part of EMCSCF.
 C   DV, one-electron charge (and spin if srDFT) d.m. for CREF:
@@ -1697,13 +1693,11 @@ C
          EMCACT = ENRACT(DV,FCAC,FQ)
 C
       ELSE IF (HSROHF) THEN
-         IF (ADDSRI) THEN
-            call quit('Something needs to be done for srdft and hsrohf')
-         END IF
          CALL DZERO(FQ,NORBT*NASHT)
          CALL GETAC(FV,FCAC) ! put -K(DV), i.e. minus DV exchange, in FCAC
-         IF (SRDFT_SPINDNS) CALL QUIT(
-     &      'Sorry, SRDFT_SPINDNS not implemented yet for HSROHF')
+!        IF (SRDFT_SPINDNS) THEN
+!           CALL GETAC(FV(NNORBT+1),FCAC(1,2))  ! FSAC not needed when NCONF.eq.1
+!        END IF
          EMCACT = -ENRACT(DV,FCAC,FQ)/2
       ELSE IF (NASHT .EQ. 1) THEN
          CALL DZERO(FQ,NORBT)

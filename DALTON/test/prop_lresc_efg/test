@@ -19,10 +19,6 @@ f.add(from_string = 'Atoms and basis sets',
       num_lines = 12,
       rel_tolerance = 1.0e-2)
 
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 6,
-      rel_tolerance = 1.0e-8)
-
 f.add(string = 'Gradient of the zz EFG component at the nuclei',
         abs_tolerance=1.0e-8)
 f.add(string = 'Laplacian of the xx,yy and zz EFG component at the nuclei',

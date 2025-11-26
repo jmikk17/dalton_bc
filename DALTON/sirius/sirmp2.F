@@ -153,11 +153,7 @@ C *** Option 12 >RSDHF< compute the RSDHf energy
   112 DO_RSDHF = .TRUE.
       SRMP2_SRINTS = .TRUE.   ! .RSDHF activates .SRINTS
 !     LAMSR = 1.0D0           ! original RSDHf model 
-      READ(LUCMD,*) LAMSR     ! read the fraction lambda of srHFX and
-!                               lr-sr MP2 coupling  
-      write(lupri,*)''
-      write(lupri,*)'just after reading, lamsr =', LAMSR
-      write(lupri,*)''
+      READ(LUCMD,*) LAMSR     ! read the fraction lambda of srHFX and lr-sr MP2 coupling
 !
 ! Manu: Caution ! what follows cannot be used as such otherwise HF-srDFT
 ! is performed with this sr functional ...
@@ -209,6 +205,9 @@ C
      &      'FATAL ERROR: illegal combination of keywords in *MP2')
          END IF
       END IF
+
+      IF (DO_RSDHF) WRITE(LUPRI,'(/A,1P,D10.2)')
+     &  '@ RSDHf energy requested with scaling factor lambda_sr =',LAMSR
 
       WORD1 = WORD
       RETURN
@@ -512,13 +511,13 @@ C
       IF ( IPRMP2 .GE. 20 ) THEN
          WRITE(LUPRI,'(/A)')
      *     ' MP2 one-electron density matrix, not modified with factors'
-         CALL OUTPUT(WRK(KDONE),1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)
+         CALL OUTPUT(WRK(KDONE),1,NORBT,1,NORBT,NORBT,NORBT,-1,LUPRI)
       END IF
       CALL MP2FAC(WRK(KDONE),WRK(KORBEN))
       IF ( IPRMP2 .GE. 10 ) THEN
          WRITE(LUPRI,'(/A)')
      *     ' Final MP2 one-electron density matrix'
-         CALL OUTPUT(WRK(KDONE),1,NORBT,1,NORBT,NORBT,NORBT,1,LUPRI)
+         CALL OUTPUT(WRK(KDONE),1,NORBT,1,NORBT,NORBT,NORBT,-1,LUPRI)
       END IF
 C
       IF (IPRMP2 .GE. 0) THEN
@@ -723,7 +722,7 @@ C                      SRDFT(ND_SIM,EXCMAT,DMAT,ESRDFT(1:3),DOERG,
 ! Manu debug b
                   write(lupri,*) ''
                   write(lupri,*) 'checking energy contributions'
-                  write(lupri,*) 'EMY =', EMY
+                  write(lupri,*) 'EMY    =', EMY
                   write(lupri,*) 'ESRDFT =', ESRDFT ! from HF-srDFT
                   write(lupri,*) 'ESRHFX =', ESRHFX
 !                 write(lupri,*) 'ELRHFX =', ELRHFX 
@@ -808,6 +807,10 @@ C                      SRDFT(ND_SIM,EXCMAT,DMAT,ESRDFT(1:3),DOERG,
      &       '@   Hartree-Fock total energy   :',EMY,
      &       '@   + DCPT2 contribution        :',EMP2,
      &       '@   = DCPT2 energy              :',EMY+EMP2
+            ELSE IF (NASHT.GT.0) THEN
+               WRITE (LUPRI,'(//A,F25.10)')
+     &       '@ (ROHF) MP2 contribution from doubly occ. orbitals:',
+     &       EMP2
             ELSE
                WRITE (LUPRI,'(/,3(/A,F25.10))')
      &       '@   Hartree-Fock total energy   :',EMY,
@@ -944,7 +947,7 @@ C     If iprmp2 .le. 0 then mp2fro will be false
      &       ' MP2 one-electron density matrix with no frozen orbitals'
             END IF
             CALL OUTPUT(WRK(KDONEF),1,NORBT,1,NORBT,NORBT,NORBT,
-     &         1,LUPRI)
+     &         -1,LUPRI)
          END IF
 C
          IF (FCKFRO) THEN
@@ -1588,12 +1591,10 @@ C  FC; the inactive Fock matrix and scratch area for overlap matrix
 C  SCRA; general scratch area
 C
 #include "implicit.h"
-      DIMENSION CMO(*),FC(*),ORBEN(*),SCRA(*)
-      LOGICAL   FCKFRO, FOUND
+      LOGICAL  FCKFRO
+      INTEGER  LSCRA
+      REAL*8   EMY,CMO(*),FC(*),ORBEN(*),SCRA(LSCRA)
 C
-C
-      PARAMETER (VALCON_MAX = 1.D-4, VALCON_WARN = 1.D-5,
-     &           D0 = 0.0D0, DBIG = 1.D+12, GAPMIN = 0.1D0)
 #include "dummy.h"
 C
 C  Used from common blocks:
@@ -1603,6 +1604,8 @@ C     INFINP : POTNUC, HSROHF
 C     INFORB : NRHF(*), NRHFT, ...
 C     SCBRHF : IOPRHF,NFRRHF(*)
 C     INFMP2 : NFRMP2(*)
+C     dftcom.h : SRDFT_SPINDNS
+C     dfterg.h : ESRDFTY
 C
 #include "maxash.h"
 #include "maxorb.h"
@@ -1616,6 +1619,12 @@ C
 #include "infind.h"
 #include "inftap.h"
 #include "infpri.h"
+#include "dftcom.h"
+#include "dfterg.h"
+
+      LOGICAL  FOUND, HSROHF_save
+      PARAMETER (VALCON_MAX = 1.D-4, VALCON_WARN = 1.D-5,
+     &           D0 = 0.0D0, DBIG = 1.D+12, GAPMIN = 0.1D0)
 C
       IJ_FOCK(I,J) = (J-1)*NORBI + I
 C
@@ -1691,20 +1700,28 @@ C
       ELSE IF (NASHT .GT. 0) THEN
          WRITE (LUPRI,'(/A)') ' Generating Fock matrix FC+FV'
          EMY = D0
+         IF (SRDFT_SPINDNS) THEN
+            NDV = 2
+         ELSE
+            NDV = 1
+         END IF
          KDV = 1
-         KFV = KDV + NNASHX
-         KWRK= KFV + NNORBT
+         KFV = KDV + NDV*NNASHX
+         KWRK= KFV + NDV*NNORBT
          LWRK= LSCRA - KWRK
-         CALL DZERO(SCRA(KDV),NNASHX+NNORBT)
+         CALL DZERO(SCRA(KDV),NDV*(NNASHX+NNORBT))
          JDV_II = KDV - 1
          DO I = 1,NASHT
             JDV_II = JDV_II + I
             SCRA(JDV_II) = 1.0D0
+            IF (NDV .EQ. 2) SCRA(NNASHX+JDV_II) = 1.0D0
          END DO
+         HSROHF_save = HSROHF
+         HSROHF = .FALSE. ! i.e. get FC and FV, not FC+FV, -FV(exchange)
          CALL FCKMAT(.FALSE.,SCRA(KDV),CMO,EMY,FC,SCRA(KFV),
      &      SCRA(KWRK),LWRK)
-         IF (.NOT.HSROHF)  ! if HSROHF then FC already contains FC+FV
-     &   CALL DAXPY(NNORBT,1.0D0,SCRA(KFV),1,FC,1)
+         HSROHF = HSROHF_save
+         CALL DAXPY(NNORBT,1.0D0,SCRA(KFV),1,FC,1)
       ELSE ! construct Fock matrix
          WRITE (LUPRI,'(/A)') ' Generating Fock matrix'
          EMY = D0
@@ -1713,7 +1730,7 @@ C        CALL FCKMAT(ONLYFC,DV,CMO,EMY,FC,FV,WRK,LFREE)
       END IF
 
       IF (IPRMP2 .GE. 3) WRITE (LUPRI,1730) EMY
-      EMY = EMY + POTNUC
+      EMY = EMY + POTNUC + ESRDFTY
       IF (IPRMP2 .GE. 3) THEN
          WRITE (LUPRI,1732) EMY
          IF (NASHT .GT. 0) WRITE (LUPRI,'(A)') ' Note:'//
@@ -1745,6 +1762,11 @@ C
          VALCON  = D0
          IVALCON = 0
          NOCCI = NRHFI + NASH(ISYM)
+         if (iprmp2 .ge. 20) then
+          write(lupri,*) 'isym,nrhfi,nocci,norbi',isym,nrhfi,nocci,norbi
+          write(lupri,*) 'fc+fv in MP2FCK'
+          call output(scra,1,norbi,1,norbi,norbi,norbi,-1,lupri)
+         end if
          DO  I = NFRRHF_I+1,NRHFI
 C
 C           To check if this occupied orbital is converged we find
@@ -1764,8 +1786,8 @@ C        ... VALCON now max euclidean 2-norm of off-diagonal elements for any ro
      +  ' MAX 2-norm of off-diagonal Fock matrix elements is',VALCON,
      +  ' for MO no.',IVALCON,' in symmetry',ISYM,
      +  ' This Fock matrix row is:'
-            CALL OUTPUT(SCRA(IJ_FOCK(IVALCON,1)), 1,1, NRHFI+1,NORBI,
-     +                  NORBI,NORBI, 1,LUPRI)
+            CALL OUTPUT(SCRA(IJ_FOCK(1,1)), IVALCON,IVALCON,
+     +                  NOCCI+1,NORBI, NORBI,NORBI,-1,LUPRI)
             CALL QUIT('MP2FCK: MOs are NOT optimized SCF orbitals')
          ELSE IF ( VALCON .GT. VALCON_WARN ) THEN
             WRITE(LUPRI,'(/A//A,F12.8,A,I6,A,I3//A)') 'WARNING: '//
@@ -1773,8 +1795,8 @@ C        ... VALCON now max euclidean 2-norm of off-diagonal elements for any ro
      +  ' MAX 2-norm of off-diagonal Fock matrix elements is',VALCON,
      +  ' for MO no.',IVALCON,' in symmetry',ISYM,
      +  ' This Fock matrix row is:'
-            CALL OUTPUT(SCRA(IJ_FOCK(IVALCON,1)), 1,1, NRHFI+1,NORBI,
-     +                  NORBI,NORBI, 1,LUPRI)
+            CALL OUTPUT(SCRA(IJ_FOCK(1,1)), IVALCON,IVALCON,
+     +                  NOCCI+1,NORBI, NORBI,NORBI,-1,LUPRI)
          ELSE IF (IPRMP2 .GE. 6) THEN
             WRITE(LUPRI,'(A,I3,A,1P,D10.2)') 'Symmetry',ISYM,
      +  ': MAX 2-norm of a row of off-diagonal Fock matrix elements is',

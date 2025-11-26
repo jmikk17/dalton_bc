@@ -356,6 +356,7 @@ C-841209-hj: force beta positive
      *    BETMIN .GT. BETMAX) BETMIN = D1
       IF (BETMAX .LT. D1)     BETMAX = D1
 C
+      RTRUST_save = RTRUST
 C
       IF (IPRI6 .GT. 0) THEN
          CALL GETTIM(T_1,W_1)
@@ -565,7 +566,7 @@ C
       END IF
 C
 C----------------
-      EMCSCF = POTNUC + EMY + EACTIV + ESOLT + EQM3
+      EMCSCF = POTNUC + EMY + EACTIV + ESOLT + EQM3 + ESRDFTY + EDFTY
 C----------------
 C
       IF (ITABS .GT. 0) THEN
@@ -577,18 +578,13 @@ C
          IF (LUPRI.NE.LUW4)
      &   WRITE (LUPRI,1010) WF_TYPE(1:len_WF_TYPE),EMCSCF,ITMAC
       END IF
-      IF (DOHFSRDFT.OR.DOMCSRDFT) THEN
-         EMYTMP = EMY - ESRDFTY
-      ELSE
-         EMYTMP = EMY
-      ENDIF
       IF (P4FLAG(2)) THEN
-         WRITE (LUW4,1015) POTNUC,EMYTMP,EACTIV
+         WRITE (LUW4,1015) POTNUC,EMY,EACTIV
          IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUW4,1018) ESRDFTY
       END IF
 chj   IF (P6FLAG(1)) THEN
          IF (LUPRI.NE.LUW4 .OR. .NOT.P4FLAG(2)) THEN
-            WRITE (LUPRI,1015) POTNUC,EMYTMP,EACTIV
+            WRITE (LUPRI,1015) POTNUC,EMY,EACTIV
             IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUPRI,1018) ESRDFTY
          END IF
 chj   END IF
@@ -1293,6 +1289,9 @@ C
 C write timing information for optimization to LUSTAT
 C
       IF (IPRSTAT.GT.0) CALL TIMOPT('END',LUSTAT,WRK,LFREE)
+C     restore RTRUST to original value for next 2. order optimization
+C     (e.g. MCSCF after QCHF or geometry optimization)
+      RTRUST = RTRUST_save
 C *** end of subroutine SIROPT
       CALL QEXIT('SIROPT')
       RETURN

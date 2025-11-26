@@ -2177,7 +2177,7 @@ C
 C     Final results are printed, partially through PRIINF.
 C
          IF (MOLDEN) CALL MOLDEN_GECON(.TRUE.,DUMMY)
-         CALL TITLER(' End of Optimization ','<',120)
+         CALL TITLER(' End of Geometry Optimization ','<',120)
          CALL PRIINF(GEINFO,WORK(2),LWORK)
          IF (CONOPT) THEN
             WRITE(LUPRI,'(/A,I3,A)')
@@ -2289,7 +2289,7 @@ C
       ELSE
          TMPLOG = DOSPE
          DOSPE = .FALSE.
-         CALL TITLER('Optimization Control Center','<',120)
+         CALL TITLER('Geometry Optimization Control Center','<',120)
          CALL PRIINF(GEINFO,WORK(2),LWORK)
          DOSPE = TMPLOG
          WRITE(LUPRI,'(/A/A,I3,A/A/)')
@@ -2339,7 +2339,7 @@ C
  20      CONTINUE
  10   CONTINUE
 C
-      CALL TITLER('Optimization Control Center',':',115)
+      CALL TITLER('Geometry Optimization Control Center',':',115)
       IF (.NOT. GECONV) THEN
          CALL HEADER('Next geometry (au)',-1)
          CALL PRIGEO(CORDNW)
