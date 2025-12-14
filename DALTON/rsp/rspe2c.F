@@ -5230,30 +5230,33 @@ C
       IF (KZCONF.GT.0 .AND. KOFFTY.EQ.1) THEN
          CALL GETREF(WRK(KCREF),KZCONF)
       END IF
-      CALL DZERO(WRK(KBVEC),KZYVAR)
+      I = 2*KZYVAR*KZYVAR + KZYVAR
+      CALL DZERO(WRK(KE2),I)
+
       DO 100 I = 1,KZYVAR
-         IF (I.LE.KZCONF) THEN
+         IF (I.LE.KZCONF) THEN ! Z_c trial vector
             NCSIM = 1
             NOSIM = 0
             IOFF  = I
-         ELSE IF (I.LE.KZVAR) THEN
+         ELSE IF (I.LE.KZVAR) THEN ! Z_o trial vector
             NCSIM = 0
             NOSIM = 1
             IOFF  = I - KZCONF
-         ELSE IF (I.LE.KZVAR+KZCONF) THEN
-            GO TO 100
-         ELSE
+         ELSE IF (I.LE.KZVAR+KZCONF) THEN ! Y_c trial vector
+            GO TO 100 ! skip, result obtained from Z_c trial vector
+         ELSE ! Y_o trial vector
             NCSIM = 0
             NOSIM = 1
             IOFF  = I - KZVAR - KZCONF + KZWOPT
          ENDIF
          WRK(KBVEC-1+IOFF) = D1
          IF (( NCSIM.GT.0 ).AND.( KOFFTY.EQ.1)) THEN
-            IBOFF = 0
-            ICREF  = IOFF
-            IF (IOFF.GT.KZCONF) THEN
+            IF (IOFF.GT.KZCONF) THEN ! Y_c trial vector
                IBOFF = KZCONF
-               ICREF = ICREF - KZCONF
+               ICREF = IOFF - KZCONF
+            ELSE                     ! Z_c trial vector
+               IBOFF = 0
+               ICREF = IOFF
             END IF
             CALL DAXPY(KZCONF,-WRK(KCREF+ICREF-1),WRK(KCREF),1,
      *                 WRK(KBVEC+IBOFF),1)
@@ -5301,12 +5304,15 @@ C
             WRK(KBVEC-1+IOFF) = D0
          END IF
  100  CONTINUE
+
+C     Copy Z_c block to Y_c block
       KTOT = KZVAR * KZYVAR
       DO 105 J = 1,KZCONF
          JTOT = (J-1)*KZYVAR
          CALL DCOPY(KZVAR,WRK(KE2+JTOT),1,WRK(KE2+JTOT+KTOT+KZVAR),1)
          CALL DCOPY(KZVAR,WRK(KE2+JTOT+KZVAR),1,WRK(KE2+JTOT+KTOT),1)
          CALL DCOPY(KZVAR,WRK(KS2+JTOT),1,WRK(KS2+JTOT+KTOT+KZVAR),1)
+         CALL DSCAL(KZVAR,-1.0d0,WRK(KS2+JTOT+KTOT+KZVAR),1)
  105  CONTINUE
       WRITE(LUPRI,'(/A,I8)')' E(2) MATRIX : DIMENSION ',KZYVAR
       CALL OUTPUT(WRK(KE2),1,KZYVAR,1,KZYVAR,KZYVAR,KZYVAR,-1,LUPRI)
