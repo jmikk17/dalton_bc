@@ -674,7 +674,8 @@
                   wtot = wtot + wtatm(l,n) 
                enddo
             enddo
-            if (wtot.gt.d0 .and. abs(rhom*fwt).gt.eps) then
+            !if (wtot.gt.d0 .and. abs(rhom*fwt).gt.eps) then
+            if (abs(wtot).gt.d0 .and. abs(rhom*fwt).gt.eps) then
                do n=1,nat
                   dx = corx(i) - coor(1,n)
                   dy = cory(i) - coor(2,n)
@@ -695,8 +696,8 @@
             do l=1,lmax(n)
                if (abs(zstmp(l,n)).gt.eps) then ! 10^-14
                   zstmp(l,n) = (3.0d0*qshell(l,n))/zstmp(l,n)
-               else
-                  zstmp(l,n) = (3.0d0*qshell(l,n))/eps
+               else 
+                  zstmp(l,n) = (3.0d0*qshell(l,n))/sign(eps,zstmp(l,n))
                endif
                tmp = zstmp(l,n)-zeff(l,n)
                write(*,21)n,l,zeff(l,n),zstmp(l,n),tmp
@@ -773,6 +774,7 @@
                wtot = wtot + wtatm(l,n)
             enddo
          enddo
+         !if (wtot.gt.d0 .and. (abs(rhom*fwt).gt.eps)) then
          if (abs(wtot).gt.d0 .and. (abs(rhom*fwt).gt.eps)) then
             do n=1,nat
                do l=1,lmax(n)
