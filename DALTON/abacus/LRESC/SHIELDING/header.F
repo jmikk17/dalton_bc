@@ -139,26 +139,26 @@ C ---Not Default
      &      '-  Specific LRESC corrections were activated. ' //
      &      'Only the following will be done : '
          IF (SIGMADNR) WRITE (LUPRI,'(7X,A)')
-     &   'Non-relativistic diamagnetic contributions'
+     &   '[.DIANR]  Non-relativistic diamagnetic contributions'
          IF (SIGMAPNR) WRITE (LUPRI,'(7X,A)')
-     &   'Non-relativistic paramagnetic contributions'
+     &   '[.PARANR] Non-relativistic paramagnetic contributions'
          IF (SIGMAD0S) WRITE (LUPRI,'(7X,A)')
-     &   'Diamagnetic zeroth order singlet corrections' //
+     &   '[.DIAM0S] Diamagnetic zeroth order singlet corrections' //
      &   ' ( FC/d, SD/d, PSO-OZ and DIAK )'
          IF (SIGMAD1S) WRITE (LUPRI,'(7X,A)')
-     &   'Diamagnetic first order singlet corrections' //
+     &   '[.DIAM1S] Diamagnetic first order singlet corrections' //
      &   ' ( Mv/d and Dw/d )'
          IF (SIGMAP1S)  WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic first order singlet corrections' //
+     &   '[.PARA1S] Paramagnetic first order singlet corrections' //
      &   ' ( OZK and PSOK )'
          IF (SIGMAP1T) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic first order triplet corrections' //
+     &   '[.PARA1T] Paramagnetic first order triplet corrections' //
      &   ' ( SZK(Fc), SZK(Sd), BSO(Fc) and BSO(Sd) )'
          IF (SIGMAP2S) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic second order singlet corrections' //
+     &   '[.PARA2S] Paramagnetic second order singlet corrections' //
      &   ' ( Mv/p and Dw/p )'
          IF (SIGMAP2T) WRITE (LUPRI,'(7X,A)')
-     &   'Paramagnetic second order triplet corrections' //
+     &   '[.PARA2S] Paramagnetic second order triplet corrections' //
      &   ' ( SO(Fc) and SO(Sd) )'
       ENDIF
       WRITE(LUPRI,*)' '
