@@ -139,12 +139,8 @@
       call memget('REAL',kz,max_pnt,work,kfree,lfree)
       call memget('REAL',kw,max_pnt,work,kfree,lfree)
 
-      write(*,*) 'lfree mid mbis', lfree
-
       call memget('REAL',krho,max_pnt,work,kfree,lfree)
       call memget('REAL',kw_mbis,max_atm,work,kfree,lfree)
-
-      write(*,*) 'lfree after mbis', lfree
 
 ! evaluate MBIS pop. weights in each point
       call newtimer('START')
@@ -436,7 +432,12 @@
 #include "infrsp.h"
 #include "inforb.h"
 #include "inftap.h"
-
+! TODO: 
+! * most defined in here should be allocated with memget instead 
+! * 10 used as max l, but currently only imp. for 3 in zeffini
+! * introduce common block for max vals
+! * use Dalton variables instead of redefining charge etc.
+! * cleanup of print -> conditional lupri print on print level
       parameter (d0 = 0.0d0, pi=acos(-1.0d0), epi=8.0d0*pi,
      &           qconv=1.0d-9, eps=1.0d-14, dencut=1.0d-10)
 ! incoming
@@ -446,8 +447,6 @@
       integer   max_pnt,max_atm
       logical   old_grid
 ! defined in here
-! TODO: some should be allocated with memget instead
-! 10 used as max l, but currently only imp. for 3 in zeffini
       integer   npoint,lmax(max_atm),ipt,tmp2
       real*8    zan(max_atm),qatm(max_atm),qtmp(max_atm),
      &          zeff(10,max_atm),zstmp(10,max_atm),
@@ -496,7 +495,7 @@
 100      continue
       else
 11       continue
-         read(luddump) npoint, tmp2 ! number of ao products
+         read(luddump) npoint, tmp2 ! points in block, number of ao products
          if (npoint.gt.0) then
             read(luddump) tmp2 ! gao index array
             end_pnt = end_pnt + npoint
@@ -519,21 +518,20 @@
       end if
 
 
-! tot grid points = ipt-1 due to the way the reading is constructed
+! tot grid points = ipt-1 due to the way the initial reading was constructed
       ipt=ipt-1
-      write(lupri,*) ' grid points, tot elec.'
-      write(lupri,14) ipt,suma
-      write(lupri,*)' '
-14    format(i10,2f20.10)
+      write(*,'(a, i10)') 'Total grid points:        ', ipt
+      write(*,'(a, f10.5)') 'Total elec. from num int: ', suma
+      write(*,*)' '
 30    format(2i5,5f12.4)
       
 ! guess initial parameters for pro-atomic density 
       call zeffini(kpar,nat,zan,zeff,qshell,lmax)
-      write(*,*)'Zeff initial' ! 1/sigma
+      write(*,*)'Alpha initial val. (1/sigma)'
       do i=1,nat
         write(*,30)i,lmax(i),(zeff(j,i),j=1,lmax(i))
       enddo
-      write(*,*)'Qshell initial' ! N_Ai 
+      write(*,*)'Population initial val.' ! N_Ai 
       do i=1,nat
         write(*,30)i,lmax(i),(qshell(j,i),j=1,lmax(i))
       enddo
