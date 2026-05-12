@@ -1,6 +1,5 @@
       subroutine numint_driver(ao_density,work,lwork,cc_flag)
 !*****************************************************************************
-!     JESM 16-10-2024
 !     Driver routine for numerical integration of atomic moments
 !     
 !     Purpose:
@@ -21,7 +20,7 @@
 #include "infpar.h"
 ! Used from include:
 ! dftcom.h:       dftgrid_done_old, mxbllen
-! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht (ccorb.h for cc?)
+! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht
 ! dummy.h:        idummy
 ! mxcent.h:       MXCENT, needed for nuclei.h
 ! nuclei.h:       nucdep
@@ -46,17 +45,17 @@
       integer luwdump, kfrsav, kfree, lfree, nbuf
       logical old_grid, dft_isgga, dogga
       character(len=8) label
-      real*8 ele, ele2
+      real*8 ele
 
       external evaluate_blocked_grid
-      EXTERNAL DFT_ISGGA
+      external dft_isgga
 
-! option for old or new num_aoint
+! option for old or new grid - currently only adjustable through this hardcoded variable
+! old grid is less precise and less adjustable but can run mpi
       old_grid = .false.
 
 ! timers and memory pointers
       call qenter('numint_driver')
-      call newtimer('START')
 
       kfrsav = 1
       kfree  = kfrsav
@@ -74,15 +73,16 @@
      &            ' ','UNFORMATTED',idummy,.false.)
 
       if (old_grid) then
-         ! set up dft orbital common block 
+
+         ! set up dft orbital common block and grid
          call setupsos(0,.false.,idum1,idum2)
-         ! make dftgrid if first run
          if (.not. dftgrid_done_old) then
             call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
             dftgrid_done_old = .true.
          end if
+
          ! make_dftgrid routine limits points per atom to 1.0d6,
-         ! but we never need more than total grid size
+         ! however can never need more than total grid size
          nbuf = min(1 000 000,ntot_dftgrid)
 
          call memget('REAL',kx,nbuf,work,kfree,lfree)
@@ -102,9 +102,12 @@
 
          call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
          ntot_dftgrid = ntot_screened
-      else
+
+      else ! blocked grid from regular DFT calculations
+
          dogga = dft_isgga()
          ntot_dftgrid = 0
+
          if (cc_flag) then
             do i = 1,nbast
                do j = 1,nbast
@@ -114,6 +117,7 @@
                end do
             end do
          end if
+
          call memget('REAL',kprod,mxbllen*nnbasx,work,kfree,lfree)
          call newtimer('START')
 
@@ -124,10 +128,11 @@
             call dftint(ao_density,1,0,.false.,work(kfree),lfree,
      &               evaluate_blocked_grid,work(kprod),ele)
          endif
-         call newtimer('dftint')
 
          write(luddump) -1, -1
+         call newtimer('dftint')
          call memrel('dftint',work,kfrsav,kfrsav,kfree,lfree)
+
       end if
 
 ! allocate for MBIS populations routine 
@@ -142,7 +147,7 @@
       call memget('REAL',krho,max_pnt,work,kfree,lfree)
       call memget('REAL',kw_mbis,max_atm,work,kfree,lfree)
 
-! evaluate MBIS pop. weights in each point
+! calculate MBIS population weights in each point
       call newtimer('START')
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
@@ -176,7 +181,7 @@
             enddo
          end if
 
-! same as above, but hopefully faster 
+! same as above, but with blocked grid 
       else
          nbuf2 = 30 000
          natmlbl = 0
@@ -206,13 +211,13 @@
          call newtimer('num_aoint_opt')
 
       end if
+
       call memrel('inside numint',work,kfrsav,kfrsav,kfree,lfree)
 
       call gpclose(luprop,'KEEP')
       call gpclose(luddump,'KEEP')
       call gpclose(luwdump,'KEEP')
 
-!     call newtimer('numint_driver')
       call qexit('numint_driver')
 
       return
@@ -221,6 +226,16 @@
       subroutine evaluate_blocked_grid(nblen,nblcnt,nblocks,ldaib,gao,
      &                                 rhoa,grada,dst,vfa,xcpot,
      &                                 coord,wght,gao_prod)
+!*****************************************************************************
+!     Callback for dftint, evaluating one block of DFT grid points
+!
+!     Purpose:
+!     For each block of grid points passed by dftint, determine which AOs
+!     are active using the symmetry block lists, compute weighted AO products
+!     chi_a(r)*chi_b(r)*w(r) for all active upper-triangular (a,b) pairs,
+!     and write coordinates, weights, density, and AO products to
+!     DENSITY.GRID. Accumulates the total grid point count in ntot_dftgrid.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -235,6 +250,17 @@
 #include "dftcom.h"
 
 #include "inftap.h"
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       natoms (for dst array dimension)
+! inforb.h:       nbast, nnbasx, nsym
+! symmet.h:       maxrep, nsym
+! dftcom.h:       mxbllen, ntot_dftgrid
+! inftap.h:       luddump
+!
+! Files used for:
+! luddump:        writing grid coordinates, weights, density, and AO products
+!
       dimension gao(nblen,nbast,*), coord(3,nblen), wght(nblen),
      &          rhoa(nblen), grada(3,nblen),
      &          nblcnt(8), nblocks(2,ldaib,8),
@@ -302,6 +328,17 @@
       subroutine evaluate_grid(corx,cory,corz,int_weight,
      &   gso,gso_prod,ncnt,dmatgao,ao_density,nbuf,
      &   work,lwork,cc_flag,ntot_screened)
+!*****************************************************************************
+!     Evaluate orbitals and density on the old (non-blocked) DFT grid
+!
+!     Purpose:
+!     Read grid points from DALTON.QUAD, evaluate AO basis functions and the
+!     electron density at each point, discard points below the density
+!     threshold (dfthr0), and write surviving points with coordinates,
+!     weights, density, and AO values to DENSITY.GRID. Reports the integrated
+!     electron count and aborts if it deviates from the reference by more
+!     than DFTELS.
+!*****************************************************************************
 #include "implicit.h"
 #include "dftcom.h"
 #include "inforb.h"
@@ -311,13 +348,18 @@
 #include "priunit.h"
 #include "inftap.h"
 ! Used from include:
-! implicit.h:     
-! dftcom.h        dftels, dfthri, dfthr0
-! inforb.h:       nrhft, nnbasx (ccorb.h for cc?)
+! dftcom.h:       dftels, dfthri, dfthr0
+! inforb.h:       nrhft, nnbasx
 ! dummy.h:        idummy
 ! rspprp.h:       MXLLR (needed for inflr.h)
 ! inflr.h:        iprlr
 ! priunit.h:      lupri
+! inftap.h:       luddump
+!
+! Files used for:
+! luquad:         reading grid points from DALTON.QUAD (opened here)
+! luddump:        writing coordinates, weights, density, and AO values
+! lupri:          printing electron count check
 !
 
       parameter (d0 = 0.0d0)
@@ -425,6 +467,17 @@
 ! Based on the MBIS article by Verstraelen et.al - doi.org/10.1021/acs.jctc.6b00456
       subroutine mbis_pop(corx,cory,corz,int_weight,rho,
      &                 mbis_weight,max_pnt,max_atm,luwdump,old_grid)
+!*****************************************************************************
+!     Iterative MBIS population analysis
+!
+!     Purpose:
+!     Read grid coordinates, weights, and electron density from DENSITY.GRID,
+!     then iteratively optimize pro-atomic exponential parameters (zeff) and
+!     shell populations (qshell) until the MBIS charges converge. On
+!     convergence, compute per-point atom weights
+!     w_A(r) = rho_A^0(r) / sum_B rho_B^0(r) and write them to WEIGHT.GRID
+!     for use in the AO integral routines.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -432,7 +485,18 @@
 #include "infrsp.h"
 #include "inforb.h"
 #include "inftap.h"
-! TODO: 
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       nucdep, charge (nuclear charge), cord (atomic coordinates)
+! priunit.h:      lupri
+! inftap.h:       luddump (read from DENSITY.GRID)
+!
+! Files used for:
+! luddump:        reading grid coordinates, weights, and electron density
+! luwdump:        writing per-point MBIS atom weights (passed as argument)
+! lupri:          printing convergence progress and final results
+!
+! TODO:
 ! * most defined in here should be allocated with memget instead 
 ! * 10 used as max l, but currently only imp. for 3 in zeffini
 ! * introduce common block for max vals
@@ -789,11 +853,24 @@
       end
 
       subroutine zeffini(kpar,nat,zan,zeff,qshell,lmax)
-!     Purpose : Obtain the initial values of zeff and qshell 
+!*****************************************************************************
+!     Initialize pro-atomic density parameters for MBIS
+!
+!     Purpose:
+!     Set initial values of the exponential decay parameters (zeff) and
+!     shell populations (qshell) for each atom based on nuclear charge.
+!     Atoms are assigned one shell (H-He), two shells (Li-Ne), or three
+!     shells (Na-Ar); Z > 18 is not implemented. These starting values feed
+!     the iterative MBIS procedure in mbis_pop.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
       parameter(d0=0.0d0)
 #include "nuclei.h"
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       (no variables used directly; included for implicit sizing)
+!
       real*8    zan(kpar),zeff(10,kpar),qshell(10,kpar),znuc
       integer   lmax(kpar)
 
@@ -842,6 +919,17 @@
       end
 
       subroutine num_aoint(integral_label,ao_int,gso,luddump,luwdump)
+!*****************************************************************************
+!     Compute a single numerical AO integral from the old (non-blocked) grid
+!
+!     Purpose:
+!     For one integral label (format: AM + 2-char atom index + 2-char charge
+!     + 2-char type), read grid points and AO values from DENSITY.GRID and
+!     MBIS weights from WEIGHT.GRID point by point, accumulate the integral
+!     sum_r chi_a(r)*chi_b(r)*w_A(r)*weight(r)*[dist(r)] into ao_int, and
+!     write the result to AOPROPER. Supports monopole (00) and first-moment
+!     (0x/0y/0z) integrals. See num_aoint_opt for the blocked-grid version.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -849,6 +937,19 @@
 #include "priunit.h"
 #include "rspprp.h"
 #include "inflr.h"
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       cord (atomic coordinates for distance calculation)
+! inforb.h:       nbast, nnbasx
+! priunit.h:      lupri
+! rspprp.h:       MXLLR (needed for inflr.h)
+! inflr.h:        iprlr
+!
+! Files used for:
+! luddump:        reading grid coordinates, weights, density, and AO values
+! luwdump:        reading per-point MBIS atom weights
+! luprop:         writing the AO integral matrix via wrtpro
+!
       parameter (d0 = 0.0d0)
 !incoming
       character*8 integral_label
@@ -943,6 +1044,16 @@
 
       subroutine num_aoint_opt(ao_int, ao_tmp, gso_prod,
      &           mbis_weight,luwdump, cc_flag, nbuf2, natmlbl)
+!*****************************************************************************
+!     Optimized computation of all numerical AO integrals (blocked grid)
+!
+!     Purpose:
+!     Parse all AM-type integral labels at once, then loop over blocks from
+!     DENSITY.GRID using read_block to collect AO products and MBIS weights.
+!     Accumulate all integrals simultaneously with a single DGEMM call per
+!     block, avoiding repeated file I/O by processing all labels in one pass.
+!     Write each resulting AO integral matrix to AOPROPER via wrtpro.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -953,6 +1064,22 @@
 #include "ccrspprp.h"
 #include "inftap.h"
 #include "dftcom.h"
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       cord (passed through to read_block for distance calc.)
+! inforb.h:       nbast, nnbasx
+! priunit.h:      lupri
+! rspprp.h:       prplbl, nprlbl (non-CC property labels)
+! inflr.h:        iprlr
+! ccrspprp.h:     prplbl_cc, nprlbl_cc (CC property labels)
+! inftap.h:       luddump
+! dftcom.h:       mxbllen, ntot_dftgrid
+!
+! Files used for:
+! luddump:        reading blocked grid data (AO products and coordinates)
+! luwdump:        reading per-point MBIS atom weights (passed as argument)
+! luprop:         writing AO integral matrices via wrtpro
+!
       parameter (d0 = 0.0d0)
 !incoming
       integer     luwdump,nbuf2,natmlbl
@@ -1073,6 +1200,16 @@
 
       subroutine read_block(luwdump,gso_prod,mbis_weight,points_read,
      &      b_gsoprod,b_points,cor_idx,atm_idx,natmlbl)
+!*****************************************************************************
+!     Read one block of grid data for num_aoint_opt
+!
+!     Purpose:
+!     Read one DFT block from DENSITY.GRID (AO products and, if needed,
+!     grid coordinates) and the corresponding MBIS weights from WEIGHT.GRID.
+!     For integrals that require a coordinate distance (cor_idx > 0), read
+!     the coordinates and multiply each MBIS weight by the atom-centered
+!     displacement, so the caller (num_aoint_opt) needs no per-point geometry.
+!*****************************************************************************
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -1080,7 +1217,19 @@
 #include "priunit.h"
 #include "inftap.h"
 #include "dftcom.h"
-! incoming      
+! Used from include:
+! mxcent.h:       MXCENT, needed for nuclei.h
+! nuclei.h:       nucdep, cord (atomic coordinates for distance calculation)
+! inforb.h:       nnbasx
+! priunit.h:      lupri
+! inftap.h:       luddump
+! dftcom.h:       mxbllen
+!
+! Files used for:
+! luddump:        reading AO products, coordinates, weights, and density
+! luwdump:        reading per-point MBIS atom weights (passed as argument)
+!
+! incoming
       integer  luwdump, cor_idx(natmlbl), atm_idx(natmlbl),
      &         natmlbl, points_read, b_gsoprod, b_points
       real*8   mbis_weight(mxbllen*natmlbl), 
