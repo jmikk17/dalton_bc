@@ -164,7 +164,6 @@
          if (cc_flag) then
             do i = 1,nprlbl_cc
                label = prplbl_cc(i)
-               write(*,*) 'lbl check', label
                if (label(1:2) .eq. 'AM') then
                   call num_aoint(label,work(kint),work(kgso),
      &               luddump,luwdump)
@@ -173,7 +172,6 @@
          else
             do i = 1,nprlbl
                label = prplbl(i)
-               write(*,*) 'lbl check', label
                if (label(1:2) .eq. 'AM') then
                   call num_aoint(label,work(kint),work(kgso),
      &               luddump,luwdump)
