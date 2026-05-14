@@ -780,7 +780,7 @@ C
 C....    DETERMINE SORT PARAMETERS
 C
       NBLOCK = MEMT/NENMAX
-      IF (NBLOCK .GT. MAXADR) NBLOCK = MAXADR
+      IF (NBLOCK .GT. MAXCHN) NBLOCK = MAXCHN
 C
 C....    NBLOCK IS NUMBER OF BLOCKS TO HOLD SIMULTANEOUSLY
 C
@@ -1330,7 +1330,7 @@ C           *************************************
 C           **  COMPUTE BLOCK LENGTHS FOR SORT **
 C           *************************************
 C
-      MEMMAX = (MEMS-LBUF-2*MAXADR-3*MAXLOC)
+      MEMMAX = (MEMS-LBUF-2*MAXCHN-3*MAXLOC)
       NBLOCK = 0
       NPS = 0
       NPSMAX = 0
@@ -1406,7 +1406,7 @@ C     **   DYNAMIC ALLOCATION FOR PSORT   **
 C     **************************************
 C
       NBINS  = (NSLICE+NPASS-1)/NPASS
-      NBINS  = MIN(NBINS,MAXADR)
+      NBINS  = MIN(NBINS,MAXCHN)
       NPS    = MAX(NPSMAX,NPS)
       NPS1   = NPS + 1
       NPOINT = 2*NPS + 2
@@ -1425,7 +1425,7 @@ C
       JRBUF  = JBUF   + MAXBUF
       JITAB  = JBUF   + LBUF
       JNTOP  = JITAB  + NPS
-      JPOINT = JNTOP  + MAXADR
+      JPOINT = JNTOP  + MAXCHN
       JBIN   = JPOINT + NPOINT + 1
       JSORT  = JBIN   + LDABUG + 1
       LSORT  = LWORK  - (JSORT - 1)
@@ -1450,7 +1450,7 @@ C
      5       '    Number of elements per buffer       ',I6,/,
      6       '    Maximum number of P blocks in a pass',I6,//)
  2100 FORMAT('  Number of two-electron density',
-     *       ' elements sorted:',I8,/)
+     *       ' elements sorted: ',I0,/)
       END
 C  /* Deck psize */
       SUBROUTINE PSIZE(MEMMAX,NBLOCK,NSLICE,NUMP,NPASS,MXBUF,MXMAX,
@@ -1616,7 +1616,7 @@ C
                      IRAYO = IRAYO + NUM
                      IPOINT(LOC+1,2) = IRAYO
                      IF (LOC .GE. NPOINT) GOTO 50
-                  ELSE IF (IBINO+1 .LT. MAXADR) THEN
+                  ELSE IF (IBINO+1 .LT. MAXCHN) THEN
                      NTOP(IBINO) = IRAYO
                      IBINO = IBINO + 1
                      IRAYO = 0

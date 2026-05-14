@@ -75,6 +75,7 @@ C
 #endif
       use parallel_models_mpi, only: lucita_models_enabled
 
+      use dalton_mpi_interface
 #include "implicit.h"
 
 #include "priunit.h"
@@ -84,7 +85,6 @@ C infpar.h: MASTER,MYNUM, PARHER
 #include "infpar.h"
 C iprtyp.h: define parallel calculation types
 #include "iprtyp.h"
-#include "mpif.h"
 
 C gnrinf.h : PARCAL, DIRCAL
 #include "gnrinf.h"
@@ -322,13 +322,13 @@ C
 C ITASK .gt. 0: wake slaves and get hold of them for task ITASK
 C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C
+      use dalton_mpi_interface
       implicit none
       integer :: itask, iprint
 C
 #if defined (VAR_MPI)
 #include "maxorb.h"
 #include "infpar.h"
-      INCLUDE 'mpif.h'
 #include "mtags.h"
 
       integer :: NODE
@@ -515,13 +515,13 @@ C  /* Deck pardrv */
       SUBROUTINE PARDRV(FMAT,DMAT,NDMAT,ISYMDM,IFCTYP,WORK,NSTAT,
      &                  HESSEE,LWORK,ITYPE,MAXDIF,IATOM,NODV,NOPV,
      &                  NOCONT,TKTIME,RETUR,IPRINT,IPRTYP,
-     &                  ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,GENCTR)
+     &                  ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP)
 C
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "mtags.h"
-      LOGICAL NODV,NOPV,NOCONT,RETUR,TKTIME,GENCTR
+      LOGICAL NODV,NOPV,NOCONT,RETUR,TKTIME
       DIMENSION FMAT(*),DMAT(*),ISYMDM(*),IFCTYP(*),WORK(LWORK),
      &          NSTAT(NODTOT), HESSEE(*)
 CTROND
@@ -573,7 +573,7 @@ C
      &                   WORK,LWORK,ITYPE,MAXDIF,IATOM,NODV,
      &                   NOPV,NOCONT,TKTIME,RETUR,IPRINT,
      &                   ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,
-     &                   DINTSKP,RELCAL,GENCTR)
+     &                   DINTSKP,RELCAL)
       ELSE IF (IPRTYP.EQ.ERI_WORK) THEN
          if (iprint .gt. 3)
      &      write (lupri,*) 'Calling parallel ERI routines.'

@@ -578,8 +578,10 @@ C
          IANR12 = IANCC2
          IAPR12 = IAPCC2
 C
-          WRITE(LUPRI,'(//A,I3)') ' CCR12 ANSATZ = ',IANR12
-          WRITE(LUPRI,'(/A,I3/)') ' CCR12 APPROX = ',IAPR12
+          IF (IANR12 .NE. 0) THEN
+             WRITE(LUPRI,'(/A,I3)')  ' CCR12 ANSATZ = ',IANR12
+             WRITE(LUPRI,'( A,I3/)') ' CCR12 APPROX = ',IAPR12
+          END IF
           CALL FLSHFO(LUPRI)
 
 C+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

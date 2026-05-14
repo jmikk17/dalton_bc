@@ -29,18 +29,20 @@ C     This routine is called by ABAINP : abacus/abadrv.F
 C Author:
 c	Juan J. Aucar, 2021
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
-#include "lrescinf.h"
 #include "nuclei.h"
 #include "abainf.h"
-      PARAMETER (NTABLE = 4, D0 = 0.0D0)
+      PARAMETER (NTABLE = 6, D0 = 0.0D0)
       LOGICAL NEWDEF
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 #include "spnout.h"
-C                      1         2         3		4
-      DATA TABLE /'.PRINT ','.PRTALL','.ORBCON','.PQPKIN'/
+C                      1         2         3         4
+      DATA TABLE /'.PRINT ','.PRTALL','.ORBCON','.PQPKIN',
+C                      5         6
+     &             '.C2    ','.C4    '/
 C
 c      write(lupri,*) ' LRSCOPTS :  called with : ' , WORD
 
@@ -57,7 +59,7 @@ c           write(lupri,*) ' @LRSCINP : reading : ' , WORD
             ELSE IF (PROMPT .EQ. '.') THEN
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                  GOTO (1,2,3,4), I
+                  GOTO (1,2,3,4,5,6), I
                   END IF
  200           CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -89,6 +91,14 @@ c                 write(lupri,*)' ..Reading print level :', JJAPRT
                   PRTALL2 = .TRUE.
                   PQPKINLRESC= .TRUE.
             GOTO 100
+ 5             CONTINUE
+               EFGC2flag = .TRUE.
+               EFGC4flag = .FALSE.
+               GOTO 100
+ 6             CONTINUE
+               EFGC2flag = .FALSE.
+               EFGC4flag = .TRUE.
+               GOTO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GOTO 300
             ELSE
@@ -99,9 +109,6 @@ c                 write(lupri,*)' ..Reading print level :', JJAPRT
             END IF
          END IF
  300  CONTINUE
-c jim-dbg ICHANG > 0 default variables change
-c jim-dbg ICHANG < 0 no changes in default variables
-
 
       RETURN
       END
@@ -111,13 +118,13 @@ C  /* Deck lrscini */
       SUBROUTINE LRSCINI_EFG
 C
 C Purpose:
-C     Initialize the variables common LRESCINI: include/lrescinf.h.
+C     Initialize the variables: lrescinf_module
 C     This routine is call by ABAINIALL : abacus/abadrv.F
 C Author:
 C     Juan J. Aucar       April 2021 (EFG)
 C
+      USE lrescinf_module
 #include "implicit.h"
-#include "lrescinf.h"
 #include "mxcent.h"
 #include "cbiqr.h"
 #include "abainf.h"
@@ -126,9 +133,13 @@ C
       PARAMETER(D0 = 0.0D+0)
 
       JJAPRT    = 0
+      EFGC2 = 0.0D0
+      EFGC4 = 0.0D0
 
       ORBCON=.FALSE.
       PQPKINLRESC= .FALSE.
+      EFGC2FLAG = .TRUE.
+      EFGC4FLAG = .TRUE.
 C
 C     Initialize /CUADRA/
 C
@@ -157,147 +168,77 @@ C Purpose:
 C     Main routine of LRESC module.
 C     This routine is call by ABACTL : abacus/abadrv.F
 C Author:
-C     Juan J. Aucar, 2021
+C     Juan J. Aucar, 2021. Revisited in 2024
+      USE lrescinf_module
 #include "implicit.h"
 #include "dummy.h"
 #include "mxcent.h"
 #include "priunit.h"
 #include "wrkrsp.h"
-#include "lrescinf.h"
 #include "inforb.h"
-C this is for print section
 #include "nuclei.h"
 C
 C
-      LOGICAL PING
-      PING=.FALSE.
-cv      write(lupri,*)'@ LRSCDRV : '
       CALL QENTER('LRSCDRV_EFG')
 
-
+C     Print information about LRESC metodology
+      CALL HEADER_LREFG
 
 c c^-2
-            CALL AVELRSC_EFG('EFG ',WORK,LWORK)
-            CALL AVELRSC_EFG('EFG2',WORK,LWORK)
+      CALL GETTIM(CTIME0,WTIME0)
+      CALL AVELRSC_EFG('EFG ',WORK,LWORK) !Contains NR value
+      CALL GETTIM(CTIME1,WTIME1)
+
+      IF (EFGC2FLAG) THEN
+            IF (PQPKINLRESC) CALL AVELRSC_EFG('EFG2',WORK,LWORK)
             CALL LINEARLR_EFG('J-Dw',WORK,LWORK) 
             CALL LINEARLR_EFG('J-Mv',WORK,LWORK)
-
-
-      CALL TITLER('EFG(ZZ) LRESC RELATIVISTIC CORRECTIONS','*',124)
-      WRITE(lupri,*)
-      WRITE(lupri,*)'   First order relativistic '// 
-     & 'corrections to the zz component of the electronic EFG.'
-      WRITE(LUPRI,*)
-       WRITE(LUPRI,*)'   -  Original LRESC papers at :'
-       WRITE(LUPRI,'(33X,A)')' J. Chem. Phys.'//
-     &               ' 118, 2 (2003), doi: 10.1063/1.1525808' 
-       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2019), '//
-     & 'doi: 10.1002/qua.25935'
-       WRITE(LUPRI,'(33X,A)')' Int. J. Quantum Chem. (2021), '//
-     & 'doi: 10.1002/qua.26769'
-   
-
-      WRITE(LUPRI,*)
-      WRITE(LUPRI,*)'   -  Corrections calculated in all symmetry '// 
-     & 'independent centers'
-
-      IF (PRTALL2) THEN 
-      WRITE(LUPRI,*)'   -  To identify LRESC corrections '// 
-     & 'see related papers'
+            CALL GETTIM(CTIME2,WTIME2)
       END IF
-        
-      IF (.NOT. PRTALL2) THEN 
-         WRITE(LUPRI,'(14X,A)')'*  For LRESC corrections, add '//
-     &   '.PRTALL in your input file under *LROPTE'
-      ENDIF
-    
-C
-C NR value
-C
-      IF (PRTALL2) THEN
-            WRITE(LUPRI,*)
-            CALL HEADER('Non-relativistic Values (NR) [au]',-1)
 
+c c^-4
+      IF (EFGC4FLAG) THEN
+c            call generate_xyz() !Generate xyz file. For use with pySCF
+c            CALL LINEARLR_EFG('Mvc4',WORK,LWORK) ! From SS contribution
+c            CALL LINEARLR_EFG('Dwc4',WORK,LWORK) ! From SS contribution
+c           Triplet responses must be calculated at the end            
+c            CALL LINEARLR_EFG('JSO2',WORK,LWORK) !wrong results...
 
-            WRITE(LUPRI,'(10X,A,19X,A)') 'Atom','NR'
-            WRITE(LUPRI,'(10X,A)') REPEAT('-',28)
-            IJ = 0
-            DO I=1,NUCIND
-                  WRITE (LUPRI,'(10X,A,9X,F15.5)')
-     &            NAMN(I),EFGC0(I)
-                  IJ = IJ + 1
-            END DO
-       ENDIF
+C           Import generated PySCF matrix to AOPROPER for SO-S
+            call import_matrix(3*NUCIND+3,"efg")
+            CALL LINEARLR_EFG('SOSx',WORK,LWORK)
+            CALL LINEARLR_EFG('SOSy',WORK,LWORK)
+            CALL LINEARLR_EFG('SOSz',WORK,LWORK)
+            CALL GETTIM(CTIME3,WTIME3)
 
+c           SO-L correction
+            CALL QRLREFG('EFG-SO-SO',WORK,LWORK)
+            CALL GETTIM(CTIME4,WTIME4)
+      END IF
 
+C     !Calculate (wall&cpu) times spent in each section
+      EFGTIME(1,1)=CTIME1-CTIME0
+      EFGTIME(1,2)=WTIME1-WTIME0
+      EFGTIME(2,1)=CTIME2-CTIME1
+      EFGTIME(2,2)=WTIME2-WTIME1
+      EFGTIME(3,1)=CTIME3-CTIME2
+      EFGTIME(3,2)=WTIME3-WTIME2
+      EFGTIME(4,1)=CTIME4-CTIME3
+      EFGTIME(4,2)=WTIME4-WTIME3
+      EFGTIME(5,1)=CTIME4-CTIME0
+      EFGTIME(5,2)=WTIME4-WTIME0
 
-
-C First order corrections
-C
-      IF (PRTALL2) THEN
-            WRITE(LUPRI,*)
-            CALL HEADER('First Order Corrections (1st Order) [au]',-1)
-            WRITE(LUPRI,*)'         Atom           Mv  '//
-     &              '            Dw              Lap            Total'
-            WRITE(LUPRI,'(10X,A)') REPEAT('-',67)
-            IJ = 0
-            DO I=1,NUCIND
-               relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
-               WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5,X,F15.5)')
-     &         NAMN(I),EFGC2(I,1),EFGC2(I,2),EFGC2(I,5),relall
-               IJ = IJ + 1
-            END DO
-
-
-            IF (PQPKINLRESC) THEN
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,'(10X,A)') 'Extra info :' 
-                  WRITE(LUPRI,'(10X,A)') REPEAT('-',12)
-                  WRITE(LUPRI,'(10X,A)')' pqpkin should approach'//
-     &            '  Lap in the basis set limit'
-                  WRITE(LUPRI,*)' '
-                  WRITE(LUPRI,*)'         Atom           pqp'//
-     &              '     +       kin    =        pqpkin'
-                  WRITE(LUPRI,'(10X,A)') REPEAT('-',53)
-                  IJ = 0
-                  DO I=1,NUCIND
-                        WRITE (LUPRI,'(10X,A,F15.5,X,F15.5,X,F15.5)')
-     &               NAMN(I),EFGC2(I,3),EFGC2(I,4),EFGC2(I,3)+EFGC2(I,4)
-                        IJ = IJ + 1
-                  END DO
-            END IF
-
-      ENDIF
-C
-
-
-      WRITE(LUPRI,*) 
-      WRITE(LUPRI,*) 
-      WRITE(LUPRI,*) 
-      WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
-      WRITE(LUPRI,'(27X,A)') 'Total EFG (zz component) [au]'
-      WRITE(LUPRI,'(27X,A)') REPEAT('=',29)
-      WRITE(LUPRI,*) 
-       
-      WRITE(LUPRI,*) '         Atom           '//
-     &         'NR           1st Order          Total'
-
-      WRITE(LUPRI,'(10X,A)') REPEAT('-',52)
-      IJ = 0
+C     First and Second order Total Contributions
       DO I=1,NUCIND
-         relall=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,5)
-         total=EFGC0(I)+relall
-         WRITE (LUPRI,'(10X,A,A,F15.5,X,F15.5,X,F15.5)')
-     &       '@',NAMN(I),EFGC0(I),relall,total
-         IJ = IJ + 1
+         EFGC2(I,6)=EFGC2(I,1)+EFGC2(I,2)+EFGC2(I,3)+EFGC2(I,4)
+         EFGC4(I,7)=EFGC4(I,1)+EFGC4(I,4)+EFGC4(I,5)+EFGC4(I,6)
       END DO
-      WRITE(LUPRI,*) 
 
+c     Print Results
+      call PRINT_LREFG
 
       CALL QEXIT('LRSCDRV_EFG')
       RETURN
       END
 c    ---------------------------------------
 c    ---------------------------------------
-

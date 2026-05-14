@@ -15,7 +15,7 @@
 !  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
 !
 !
-      SUBROUTINE dftINP(WORD,INPERR,ALLOPT)
+      SUBROUTINE dftINP(WORD,ALLOPT)
 #include "implicit.h"
 #include "gnrinf.h"
 #include "dftinf.h"
@@ -38,6 +38,8 @@
      &            '.DFTVXC','.DFDTST'/
 C
       WORD1 = WORD
+      IF (ALLOPT) CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',
+     &                       LUPRI)
 C
  100  CONTINUE
             READ (LUCMD, '(A7)') WORD
@@ -54,14 +56,15 @@ C
                   END IF
  200           CONTINUE
                WRITE (LUPRI,'(/4A/)') ' Keyword "',WORD,
-     *              '" not recognized for ',WORD1
-               CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+     &              '" not recognized for ',WORD1
+               IF (.NOT. ALLOPT)
+     &         CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
                CALL QUIT('Illegal keyword for '//WORD1)
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
             ELSE
                WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
-     *            '" not recognized for ',WORD1
+     &            '" not recognized for ',WORD1
                CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
                CALL QUIT('Illegal keyword for '//WORD1)
             END IF

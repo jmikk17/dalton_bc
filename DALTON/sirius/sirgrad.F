@@ -518,16 +518,8 @@ C     of FS and DV to FC, creating an effective FC for the local spin
 C     model.  / hjaaj Feb 2010
 C
       IF (SRDFT_LOCALSPIN .AND. SRDFT_SPINDNS) THEN
-#ifdef MOD_SRDFT
          CALL FCK_MAKE_FCEFF_LOCALSPIN(FC,FV(1,2),DV,WRK(KFREE),LFREE)
-#else
-         call quit('Sorry, srDFT local spin not in this version')
-#endif
       END IF
-C
-C     Add srdft correction to EMCMY:
-C
-      EMCMY = EMCMY + ESRDFTY
 C
       CALL QEXIT('FCKMAT')
       RETURN
@@ -623,7 +615,7 @@ C         (ESRDFTY is in common block and is calculated inside FCK2AO)
          CALL DFTKSMb(DCAO,FCAO,EDFTY,WRK(KFREE),LFREE,IPRFCK)
          EDFTY = EDFTY + EXCTRO - HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
-     &   ' Kohn-Sham DFT xc energy      :',EDFTY
+     &   ' Kohn-Sham DFT effective xc energy :',EDFTY
       ELSE
          EDFTY = 0.0D0
       ENDIF
@@ -646,7 +638,7 @@ C
          EMCMY1 = DDOT(N2BASX,DCAO,1,WRK(KH1AO),1)
          IF (P6FLAG(11)) WRITE (LUPRI,'(A,F25.12)')
      &   ' Inactive one-electron energy :',EMCMY1
-         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1) + EDFTY
+         EMCMY = EMCMY1 + HALF*DDOT(N2BASX,DCAO,1,FCAO,1)
 !! Manu debug
 #ifdef SIRGRAD_DEBUG
         write(lupri,*) 'printing H1AO ...'
@@ -1172,7 +1164,7 @@ C
       IF (NSSHA .GT. 0) THEN
          IOFFA = IORB(ISYMA) + NOCC(ISYMA)
          DO 105 IA = IOFFA + 1, IOFFA + NSSHA
-            INDXO = KLWOP(ICW,ISW(IA)-NISHT)
+            INDXO = KLWOP(ICW,ICH(IA))
             IF (INDXO.GT.0) THEN
                ORDIAG(INDXO) = ORDIAG(INDXO) - D4*H2CD(IA,IA)
             END IF
@@ -1463,7 +1455,7 @@ C   CREF, the CI vector for the current expansion point (CEP).
 C   CMO, the orbitals for the CEP
 C
 C Output:
-C   EMCACT, energy of the CEP.
+C   EMCACT, active energy of the CEP.
 C   G, gradient of the CEP.
 C   EMCMY, inactive energy part of EMCSCF.
 C   DV, one-electron charge (and spin if srDFT) d.m. for CREF:
@@ -1592,11 +1584,7 @@ C
 C        CALL MAKDM(CREF,DV,PV,INDXCI,WRK,LFREE)
          IF (NDV.GE.2) THEN
             IF (SRDFT_LOCALSPIN) THEN
-#ifdef MOD_SRDFT
                CALL MAKE_DS_LOCALSPIN(DV(1,1),DV(1,2),WRK(KWRKF),LWRKF)
-#else
-               CALL QUIT('Sorry! Local spin not in this version')
-#endif
             ELSE
                CALL MAKDSV(CREF,DV(1,2),INDXCI,WRK,LFREE)
             END IF
@@ -1705,13 +1693,11 @@ C
          EMCACT = ENRACT(DV,FCAC,FQ)
 C
       ELSE IF (HSROHF) THEN
-         IF (ADDSRI) THEN
-            call quit('Something needs to be done for srdft and hsrohf')
-         END IF
          CALL DZERO(FQ,NORBT*NASHT)
          CALL GETAC(FV,FCAC) ! put -K(DV), i.e. minus DV exchange, in FCAC
-         IF (SRDFT_SPINDNS) CALL QUIT(
-     &      'Sorry, SRDFT_SPINDNS not implemented yet for HSROHF')
+!        IF (SRDFT_SPINDNS) THEN
+!           CALL GETAC(FV(NNORBT+1),FCAC(1,2))  ! FSAC not needed when NCONF.eq.1
+!        END IF
          EMCACT = -ENRACT(DV,FCAC,FQ)/2
       ELSE IF (NASHT .EQ. 1) THEN
          CALL DZERO(FQ,NORBT)
@@ -1816,7 +1802,7 @@ C    &         ' No redundant orbital variations found.'
                   L = JWOP(2,IG)
                   JWOP(1,IGNEW) = K
                   JWOP(2,IGNEW) = L
-                  KLWOP(ISW(K),ISW(L)-NISHT) = IG
+                  KLWOP(ISW(K),ICH(L)) = IG
                   WRK(KORDIA-1+IGNEW) = WRK(KORDIA-1+IG)
                ELSE
                   ISK = ISMO(JWOP(1,IG))
@@ -2068,8 +2054,8 @@ C ** first index inactive:
          ELSE
 C ** first index active
 C    (only other possibility, inactive, is already eliminated):
-            NKW = ISW(K) - NISHT
-            TEMP = D0
+            NKW   = ICH(K)
+            TEMP  = D0
             TEMPS = D0
             NX = NISHI
             DO 100 NXW = IASHI+1,IASHI+NASHI
@@ -2093,7 +2079,7 @@ C    (only other possibility, inactive, is already eliminated):
          END IF
          IF (ITYPL .EQ. JTACT) THEN
 C ** second index active:
-            NLW = ISW(L) - NISHT
+            NLW = ICH(L)
             TEMP = D0
             TEMPS = D0
             NX = NISHI

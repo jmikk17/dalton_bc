@@ -241,15 +241,12 @@ C
             JTRLVL = -4
          ENDIF
 
-         IF (NEWCMO .OR. FTRCTL .OR.
-     &       (ABS(JTRLVL) .GT. ITRLVL_LAST) .OR.
-     &       (USEDRC .AND. LVLDRC_LAST .LT. 0) ) THEN
-            FLAGSV = DORSP
-            DORSP  = .TRUE.
-            CALL SIR_INTOPEN
-            DORSP  = FLAGSV
-            CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KWTRA),LWTRA)
-         END IF
+         FLAGSV = DORSP
+         DORSP  = .TRUE.
+         CALL SIR_INTOPEN
+         DORSP  = FLAGSV
+         CALL TRACTL(JTRLVL,WRK(KCMO),WRK(KWTRA),LWTRA)
+
          NEWCMO = .FALSE.
       END IF ! IF ( (NASHT .GT. 1 .AND. .NOT.HSROHF) .OR. .NOT.DIRFCK ) THEN
       END IF ! IF (NEWCMO .OR. FTRCTL) THEN
@@ -453,8 +450,8 @@ C
      *              WRK(KFCAC),WRK(KH2AC),WRK(KINDX),WRK(KWRK1),LWRK1)
 C       CALL RSPVAR(UDV,FOCK,FC,FV,FCAC,H2AC,XINDX,WRK,LWRK)
         IF ( KZVAR.EQ.0) THEN
-           NWARN = NWARN + 1
-           WRITE(LUPRI,'(/2A)')' ****ABARSP WARNING******',
+           NINFO = NINFO + 1
+           WRITE(LUPRI,'(/2A)')' ****ABARSP INFORMATION ******',
      *           ' NUMBER OF VARIABLES IN THIS SYMMETRY IS ZERO'
            GO TO 100
         END IF
@@ -623,7 +620,19 @@ C        CALL RSPEVE(IBTYP,EIVAL,EIVEC,BVECS,WRK,NBX,IBOFF)
          DO 550 INUM = 1,NBX
             EXVAL(ISIM-1+INUM) = WRK(KEIVAL-1+ISIM-1+INUM)
             CALL WRITT(LUSOVE,KZYVAR,WRK(KBVECS+(INUM-1)*KZYVAR))
-            IF (IPRPP .GT. 0) THEN
+            IF (KZCONF .GT. 1 .AND. KZWOPT .GT. 0) THEN
+               EXCIT_TEST =
+     &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZCONF),1) +
+     &         DNRM2(KZWOPT,WRK(KBVECS+(INUM-1)*KZYVAR+KZVAR+KZCONF),1)
+               IF (EXCIT_TEST .LT. 1.D-10) THEN
+                  WRITE(LUPRI,'(/A,I0,A,I0,A/A/)')
+     & '@ WARNING: Excitation vector ',INUM,' in symmetry ',KSYMOP,
+     &    ' is only in configuration space',
+     & '@ WARNING: '//
+     &    'thus this excited state is of a different spin symmetry'
+               END IF
+            END IF
+           IF (IPRPP .GT. 0) THEN
                WRITE(LUPRI,'(/A,I5,//A,1P,G16.8,A,3(/20X,G16.8,A),/)')
      *             ' STATE NO:',(ISIM-1+INUM),
      *             ' EXCITATION ENERGY :',WRK(KEIVAL-1+ISIM-1+INUM),

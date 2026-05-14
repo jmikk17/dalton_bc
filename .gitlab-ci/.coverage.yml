@@ -1,0 +1,60 @@
+coverage:
+  image: fedora:37
+  coverage: '/Percentage Coverage:\s*([^%]+)/'
+  timeout: 3h
+  rules: !reference [.define-build-rules, rules]
+  before_script:
+    - dnf install -y gcc gcc-c++ gcc-gfortran openblas openblas-devel lapack lapack-devel
+                     mpich mpich-devel openmpi openmpi-devel hdf5 hdf5-devel git make cmake
+                     python python3 python3-pip python3-h5py redhat-rpm-config findutils
+                     which procps-ng coreutils environment-modules
+    - . ~/.bashrc
+    - . /etc/profile.d/modules.sh
+    - module purge
+    - module avail
+    - uname -a
+    - lscpu
+    - free -h
+    - gfortran --version
+    - gcc --version
+    - g++ --version
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - !reference [.define-cores, script]
+    - dnf install -y -q gcovr
+    - gcovr --version
+    - module load mpi/mpich-x86_64
+    - mpirun --version
+    - pip install -q codecov
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release --coverage
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - export OMP_NUM_THREADS=1
+    - export MPICH_NO_LOCAL=1
+    - echo "Running ctest in parallel with $M jobs"
+    - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
+    - df -m
+    - ctest -j$M --output-on-failure -L dalton -LE "serial|short|medium"
+    - df -m
+    - export DALTON_LAUNCHER=""
+    - echo "Running ctest serially with $N_PROC jobs"
+    - ctest -j$N_PROC --output-on-failure -L serial -LE "long|verylong" -E "fde_static-vemb_dipole_short"
+    - df -m
+    - ctest -j$N_PROC --output-on-failure -L serial -LE "short|medium" -E "fde_static-vemb_dipole_short"
+    - df -m
+    - echo "Generating coverage report"
+    - ctest -D ExperimentalCoverage
+    - cd ..
+    - gcovr -r . build/ --exclude 'external/' --txt --print-summary -o coverage.txt
+    - cat coverage.txt
+    - echo "The command df -m is executed to verify use of shared memory at /dev/shm "
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+      - coverage.txt
+    expire_in: 3 days
+  interruptible: true

@@ -1291,11 +1291,9 @@ C
             KFIXOF = KFIXOR
             DO 1050 JR=1,NBX
                JROFF = (JR-1)*KZYVAR
-               CALL DAXPY(KZYVAR,DM1,GP,1,
-     *                        BVECS(1+JROFF),1)
+               CALL DAXPY(KZYVAR,DM1,GP,1,BVECS(1+JROFF),1)
                IF (OPTORB) THEN
-                  CALL DAXPY(KZWOPT,DM1,GP(1+KZCONF),1,
-     *                        BVECS(KFIXOF),1)
+                  CALL DAXPY(KZWOPT,DM1,GP(1+KZCONF),1,BVECS(KFIXOF),1)
                   CALL DAXPY(KZWOPT,DM1,GP(1+KZVAR+KZCONF),1,
      *                        BVECS(KFIXOF+KZWOPT),1)
                ENDIF
@@ -1305,8 +1303,7 @@ C
          IF (IPRRSP.GT.101) THEN
             WRITE (LUPRI,*) ' RSPNEX: (Z,Y) residual vectors no.',
      *         ISIMC,' to',(ISIMC-1+NBX)
-            CALL OUTPUT(BVECS,1,KZVAR,1,2*NBX,
-     *                  KZVAR,2*NBX,-1,LUPRI)
+            CALL OUTPUT(BVECS,1,KZVAR,1,2*NBX,KZVAR,2*NBX,-1,LUPRI)
          ENDIF
 C
 C        THE RESIDUAL IS NOW CONSTRUCTED
@@ -1478,10 +1475,10 @@ C
                            ! Copy Y component to Z component if Y component has largest element,
                            ! this is necessary to converge frequency dependent properties
                            ! (for excitation energies, just zero Y component).
-                           IB_MAX = IDAMAX(KZYWOP,BVECS(KSJR),1)
+                           IB_MAX = IDAMAX(KZYWOP,BVECS(KSJR+1),1)
                            IF ( IB_MAX .GT. KZWOPT ) THEN
-                              CALL DCOPY(KZWOPT,BVECS(KSJR+KZWOPT),1,
-     &                                          BVECS(KSJR),1)
+                              CALL DCOPY(KZWOPT,BVECS(KSJR+KZWOPT+1),1,
+     &                                          BVECS(KSJR+1),1)
                            END IF
                         END IF
                         ! zero Y component

@@ -392,7 +392,6 @@ C
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
-#include "ibtpar.h"
 #include "ccorb.h"
       DIMENSION XINT(LENGTH,*),RBUF(LBUF)
       INTEGER*4 IBUF4(LBUF*NIBUF), LENGTH4
@@ -816,7 +815,7 @@ C        REWIND (LU2DER)
      &            RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &            WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &            IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &            DUMMY,RELCAL,.false.)
+     &            DUMMY,RELCAL)
 
       TIM1 = SECOND()
 

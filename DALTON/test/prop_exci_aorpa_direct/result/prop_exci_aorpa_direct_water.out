@@ -4,8 +4,11 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON 2014.0
+    This is output from DALTON release Dalton2025.0-dev (2025)
+         ( Web site: http://daltonprogram.org )
+
    ----------------------------------------------------------------------------
+
     NOTE:
      
     Dalton is an experimental code for the evaluation of molecular
@@ -22,15 +25,15 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       J. Cukras, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
        T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
        L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
        C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
        H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
        M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
-       P. Joergensen, M. Kaminski, J. Kauczor, S. Kirpekar,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
        T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
        J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
        O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
@@ -45,133 +48,155 @@
        O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
        and H. Agren,
        "The Dalton quantum chemistry program system",
-       WIREs Comput. Mol. Sci. 2013. (doi: 10.1002/wcms.1172)
-    
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
+     
     and
-    
-       Dalton, a Molecular Electronic Structure Program,
-       Release DALTON2014.0 (2014), see http://daltonprogram.org
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2025.0-dev (2025), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
-    Authors in alphabetical order (major contribution(s) in parenthesis):
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             KTH Stockholm,                Sweden      (DALTON installation and execution frameworks)
-  Pablo Baudin,             University of Valencia,       Spain       (Cholesky excitation energies)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
-  Janusz Cukras,            University of Trieste,        Italy       (MChD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (Polarizable embedding model, TDA)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Erik D. Hedegaard,        Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Maciej Kaminski,          University of Warsaw,         Poland      (CPPh in RESPONS)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Nanna H. List             Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding model, QM/MM)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University,  Poland      (CC3)
-  Morten N. Pedersen,       Univ. of Southern Denmark,    Denmark     (Polarizable embedding model)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Kristian Sneskov,         Aarhus University,            Denmark     (Polarizable embedding model, QM/MM)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM, Polarizable embedding model)
-  Casper Steinmann,         Univ. of Southern Denmark,    Denmark     (QFIT, Polarizable embedding model)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Sat Jan  3 11:20:19 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:40 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/beyer/master/worksite/dalton/DALTON/prop_exci_aorpa_direct
-   2) /home/beyer/master/worksite/dalton/DALTON/build32/basis
+   1) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/test/prop_exci_aorpa_direct
+   2) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | beyer
- Host                     | sunray
- System                   | Linux-2.6.32-41-server
+ Who compiled             | hjj
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-6.11.0-25-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
- MPI                      | ON
- Fortran compiler         | /opt/openmpi-1.5_intel/bin/mpif90
- Fortran compiler version | ifort (IFORT) 12.1.0 20110811
- C compiler               | /opt/openmpi-1.5_intel/bin/mpicc
- C compiler version       | icc (ICC) 12.1.0 20110811
- C++ compiler             | /opt/openmpi-1.5_intel/bin/mpicxx
- C++ compiler version     | unknown
- BLAS                     | /opt/intel/mkl/lib/intel64/libmkl_intel_lp64.so;/o
-                          | pt/intel/mkl/lib/intel64/libmkl_sequential.so;/opt
-                          | /intel/mkl/lib/intel64/libmkl_core.so;/usr/lib/lib
-                          | pthread.so;/usr/lib/libm.so
- LAPACK                   | /opt/intel/mkl/lib/intel64/libmkl_lapack95_lp64.a;
-                          | /opt/intel/mkl/lib/intel64/libmkl_intel_lp64.so
+ MPI                      | OFF
+ Fortran compiler         | /opt/intel/oneapi/2025.1/bin/ifx
+ Fortran compiler version | ifx (IFX) 2025.1.1 20250418
+ C compiler               | /opt/intel/oneapi/2025.1/bin/icx
+ C compiler version       | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ C++ compiler             | /opt/intel/oneapi/2025.1/bin/icpx
+ C++ compiler version     | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ BLAS                     | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_intel_
+                          | lp64.so;/opt/intel/oneapi/2025.1/lib/intel64/libmk
+                          | l_sequential.so;/opt/intel/oneapi/2025.1/lib/intel
+                          | 64/libmkl_core.so;/usr/lib/x86_64-linux-gnu/libpth
+                          | read.a;/usr/lib/x86_64-linux-gnu/libm.so
+ LAPACK                   | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_lapack
+                          | 95_lp64.a;/opt/intel/oneapi/2025.1/lib/intel64/lib
+                          | mkl_intel_lp64.so
  Static linking           | OFF
- Last Git revision        | 21d8d827ca1040047c3fba3c4328fbb9e2875786
- Git branch               | parallelSOPPA
- Configuration time       | 2014-12-19 12:39:42.869996
+ Last Git revision        | d7b65be647c556da3ad56bf6498d867e1336e077
+ Git branch               | hjaaj-mcapsg
+ Configuration time       | 2025-05-09 10:12:19.645684
 
  * Sequential calculation.
 
@@ -179,38 +204,38 @@ Compilation information
    Content of the .dal input file
  ----------------------------------
 
-**DALTON INPUT                                    
-.RUN PROPERTIES                                   
-.DIRECT                                           
-**WAVE FUNCTIONS                                  
-.HF                                               
-**PROPERTIES                                      
-.SOPPA                                            
-.EXCITA                                           
-.PRINT                                            
- 2                                                
-*SOPPA                                            
-.AORPA                                            
-*EXCITA                                           
-.DIPSTR                                           
-.ROTVEL                                           
-.NEXCITA                                          
-    5    5    5    5    0    0    0    0          
-**END OF DALTON INPUT                             
+**DALTON INPUT
+.RUN PROPERTIES
+.DIRECT
+**WAVE FUNCTIONS
+.HF
+**PROPERTIES
+.SOPPA
+.EXCITA
+.PRINT
+ 2
+*SOPPA
+.AORPA
+*EXCITA
+.DIPSTR
+.ROTVEL
+.NEXCITA
+    5    5    5    5    0    0    0    0
+**END OF DALTON INPUT
 
 
    Content of the .mol file
  ----------------------------
 
-BASIS                                                                          
-cc-pVDZ                                                                        
-      Calculation of excitation energies through ABACUS                        
-                                                                               
-   2    2  X  Y      0.10D-14                                                  
-      8.00    1                                                                
-O   0.00000             0.00000              0.1241444240                      
-      1.00    1                                                                
-H   0.00000             1.43153              -0.985265576                      
+BASIS
+cc-pVDZ
+      Calculation of excitation energies through ABACUS
+
+   2    2  X  Y      0.10D-14
+      8.00    1
+O   0.00000             0.00000              0.1241444240
+      1.00    1
+H   0.00000             1.43153              -0.985265576
 
 
        *******************************************************************
@@ -235,19 +260,10 @@ H   0.00000             1.43153              -0.985265576
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1:       Calculation of excitation energies through ABACUS                 
- 2:                                                                         
-    ------------------------------------------------------------------------
-
-
-
-@ WARNING - deprecated old .mol fixed format input has been detected:
-   2    2  X  Y      0.10D-14                                                   
-@ WARNING - this input format may not be supported in future releases.
-
-
-
+    --------------------------------------------------------------------------------
+ 1:       Calculation of excitation energies through ABACUS
+ 2: 
+    --------------------------------------------------------------------------------
 
   Atomic type no.    1
   --------------------
@@ -255,7 +271,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   8 :
-     "/home/beyer/master/worksite/dalton/DALTON/build32/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis/cc-pVDZ"
 
   Atomic type no.    2
   --------------------
@@ -263,7 +279,7 @@ H   0.00000             1.43153              -0.985265576
   Number of symmetry independent centers:    1
   Number of basis sets to read;    2
   Basis set file used for this atomic type with Z =   1 :
-     "/home/beyer/master/worksite/dalton/DALTON/build32/basis/cc-pVDZ"
+     "/home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis/cc-pVDZ"
 
 
                          SYMGRP: Point group information
@@ -317,6 +333,7 @@ H   0.00000             1.43153              -0.985265576
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000015
+ Center-of-mass coordinates (Angs):    0.000000    0.000000   -0.000008
 
 
   Atoms and basis sets
@@ -497,8 +514,6 @@ H   0.00000             1.43153              -0.985265576
 
  Default print level:        1
 
- * Nuclear model: Point charge
-
  Calculation of one-electron Hamiltonian integrals.
 
  Center of mass  (bohr):      0.000000000000      0.000000000000     -0.000015049426
@@ -511,8 +526,18 @@ H   0.00000             1.43153              -0.985265576
      ************************** Output from HERINT **************************
      ************************************************************************
 
- >>>> Total CPU  time used in HERMIT:   0.00 seconds
- >>>> Total wall time used in HERMIT:   0.01 seconds
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      z     -0.97737576        -2.48424123        -8.28653678
+
+
+  Total CPU  time used in HERMIT:   0.01 seconds
+  Total wall time used in HERMIT:   0.01 seconds
 
 
                         .----------------------------------.
@@ -546,17 +571,19 @@ H   0.00000             1.43153              -0.985265576
  **********************************************************************
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:19 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:40 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-           Calculation of excitation energies through ABACUS                 
-                                                                             
+           Calculation of excitation energies through ABACUS
+     
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+
+@    Time-dependent Hartree-Fock calculation (random phase approximation).
  Fock matrices are calculated directly without use of integrals on disk.
 
  Initial molecular orbitals are obtained according to
@@ -564,7 +591,7 @@ H   0.00000             1.43153              -0.985265576
 
      Wave function specification
      ============================
-@    Wave function type        >>> HF <<<
+@    Wave function type        --- HF ---
 @    Number of closed shell electrons          10
 @    Number of electrons in active shells       0
 @    Total charge of the molecule               0
@@ -575,11 +602,11 @@ H   0.00000             1.43153              -0.985265576
 
      Orbital specifications
      ======================
-     Abelian symmetry species          All |    1    2    3    4
-                                           |  A1   B1   B2   A2 
+@    Abelian symmetry species          All |    1    2    3    4
+@                                          |  A1   B1   B2   A2 
                                        --- |  ---  ---  ---  ---
-     Total number of orbitals           24 |   11    4    7    2
-     Number of basis functions          24 |   11    4    7    2
+@    Total number of orbitals           24 |   11    4    7    2
+@    Number of basis functions          24 |   11    4    7    2
 
       ** Automatic occupation of RHF orbitals **
 
@@ -603,85 +630,131 @@ H   0.00000             1.43153              -0.985265576
 
  Iter     Total energy    Error norm  Delta(E)    SCF occupation
  -----------------------------------------------------------------------------
-   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    T  1.00D-02  8.00D-03
+   1  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    1    T  4.37D-03  4.00D-03
 @  1  -75.8016297608       2.30D+00  -7.58D+01     3   1   1   0
       Virial theorem: -V/T =      1.999463
-@      MULPOP O      -0.43; H   _1  0.22; H   _2  0.22; 
+@    MULPOP   O      -0.43; H   _1  0.22; H   _2  0.22; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
-   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    T  1.00D-02  8.00D-03
-@  2  -76.0187288373       3.57D-01  -2.17D-01     3   1   1   0
-      Virial theorem: -V/T =      1.999555
-@      MULPOP O      -0.27; H   _1  0.13; H   _2  0.13; 
+   2  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    2    T  3.69D-03  4.00D-03
+@  2  -76.0137459055       3.94D-01  -2.12D-01     3   1   1   0
+      Virial theorem: -V/T =      2.000477
+@    MULPOP   O      -0.27; H   _1  0.13; H   _2  0.13; 
+   2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
  -----------------------------------------------------------------------------
-   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    3    T  1.00D-02  8.00D-03
-@  3  -76.0261063595       8.85D-02  -7.38D-03     3   1   1   0
-      Virial theorem: -V/T =      2.001670
-@      MULPOP O      -0.28; H   _1  0.14; H   _2  0.14; 
+   3  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)   -6    3    T  3.69D-03  4.00D-03
+@  3  -76.0257589727       1.03D-01  -1.20D-02     3   1   1   0
+      Virial theorem: -V/T =      2.001561
+@    MULPOP   O      -0.28; H   _1  0.14; H   _2  0.14; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
  -----------------------------------------------------------------------------
-   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    4    F  1.00D-02  8.00D-03
-@  4  -76.0266798512       3.29D-02  -5.73D-04     3   1   1   0
-      Virial theorem: -V/T =      2.000020
-@      MULPOP O      -0.31; H   _1  0.15; H   _2  0.15; 
+   4  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    4    F  3.66D-03  4.00D-03
+@  4  -76.0266803114       3.27D-02  -9.21D-04     3   1   1   0
+      Virial theorem: -V/T =      2.000010
+@    MULPOP   O      -0.31; H   _1  0.15; H   _2  0.15; 
+   4  Level shift: doubly occupied orbital energies shifted by -1.25D-02
  -----------------------------------------------------------------------------
-   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    5    T  0.00D+00  8.00D-03
-@  5  -76.0267390572       7.17D-03  -5.92D-05     3   1   1   0
-      Virial theorem: -V/T =      2.000664
-@      MULPOP O      -0.30; H   _1  0.15; H   _2  0.15; 
+   5  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    5    T  3.70D-03  3.00D-03
+@  5  -76.0267390442       6.61D-03  -5.87D-05     3   1   1   0
+      Virial theorem: -V/T =      2.000644
+@    MULPOP   O      -0.30; H   _1  0.15; H   _2  0.15; 
  -----------------------------------------------------------------------------
-   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    T  1.00D-02  8.00D-03
-@  6  -76.0267418358       7.54D-04  -2.78D-06     3   1   1   0
-      Virial theorem: -V/T =      2.000549
-@      MULPOP O      -0.31; H   _1  0.15; H   _2  0.15; 
+   6  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    6    T  3.66D-03  4.00D-03
+@  6  -76.0267418020       9.18D-04  -2.76D-06     3   1   1   0
+      Virial theorem: -V/T =      2.000545
+@    MULPOP   O      -0.31; H   _1  0.15; H   _2  0.15; 
  -----------------------------------------------------------------------------
-   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    T  1.00D-02  8.00D-03
-@  7  -76.0267418964       1.35D-04  -6.06D-08     3   1   1   0
+   7  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    7    T  3.89D-03  4.00D-03
+@  7  -76.0267418950       1.63D-04  -9.30D-08     3   1   1   0
       Virial theorem: -V/T =      2.000556
-@      MULPOP O      -0.31; H   _1  0.15; H   _2  0.15; 
+@    MULPOP   O      -0.31; H   _1  0.15; H   _2  0.15; 
  -----------------------------------------------------------------------------
-   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    T  1.00D-02  8.00D-03
-@  8  -76.0267418987       1.11D-05  -2.27D-09     3   1   1   0
+   8  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    8    T  3.99D-03  4.00D-03
+@  8  -76.0267418986       1.96D-05  -3.65D-09     3   1   1   0
       Virial theorem: -V/T =      2.000557
-@      MULPOP O      -0.31; H   _1  0.15; H   _2  0.15; 
+@    MULPOP   O      -0.31; H   _1  0.15; H   _2  0.15; 
  -----------------------------------------------------------------------------
-   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    T  1.00D-02  8.00D-03
-@  9  -76.0267418987       2.07D-06  -1.37D-11     3   1   1   0
+   9  Screening settings (-IFTHRS, JTDIIS, DIFDEN, times)  -10    9    T  3.71D-03  4.00D-03
+@  9  -76.0267418987       4.33D-06  -5.19D-11     3   1   1   0
 
 @ *** DIIS converged in   9 iterations !
-@     Converged SCF energy, gradient:    -76.026741898678    2.07D-06
-    - total time used in SIRFCK :              0.00 seconds
+@     Converged SCF energy, gradient:    -76.026741898675    4.33D-06
+    - total time used in SIRFCK :              0.03 seconds
 
 
  *** SCF orbital energy analysis ***
 
- Only the five lowest virtual orbital energies printed in each symmetry.
-
- Number of electrons :   10
- Orbital occupations :    3    1    1    0
+ Number of electrons        :   10
+ Closed shell orbitals      :    3    1    1    0
 
  Sym       Hartree-Fock orbital energies
 
-1 A1    -20.55066296    -1.33615942    -0.56649078     0.18536448     0.85354108
-          1.16363572     1.44420047     1.86740399
+1 A1    -20.55066324    -1.33615956    -0.56649073     0.18536450     0.85354110
+          1.16363570     1.44420039     1.86740391     2.48765397     3.50932861
+          3.86416917
 
-2 B1     -0.49308729     1.20035799     1.67410855     3.28499306
+2 B1     -0.49308742     1.20035788     1.67410851     3.28499294
 
-3 B2     -0.69856495     0.25609267     0.78828016     1.25343487     1.93402424
-          2.45003960
+3 B2     -0.69856515     0.25609261     0.78828009     1.25343474     1.93402423
+          2.45003952     4.14658094
 
-4 A2      1.47617070     3.33756147
+4 A2      1.47617067     3.33756136
 
-    E(LUMO) :     0.18536448 au (symmetry 1)
-  - E(HOMO) :    -0.49308729 au (symmetry 2)
+    E(LUMO) :     0.18536450 au (symmetry 1)
+  - E(HOMO) :    -0.49308742 au (symmetry 2)
   ------------------------------------------
-    gap     :     0.67845176 au
+    gap     :     0.67845192 au
 
- >>> Writing SIRIFC interface file
+ --- Writing SIRIFC interface file
 
- >>>> CPU and wall time for SCF :       0.080       0.072
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A1 ) in point group C2v -- 3 principal poles with pole strength 1
+
+   ============  ============  ============
+      20.550663      1.336160      0.566491
+     559.211993     36.358751     15.414997
+   ============  ============  ============
+
+     HF-SCF KT symmetry 2 ( B1 ) in point group C2v -- 1 principal poles with pole strength 1
+
+   ============
+       0.493087
+      13.417591
+   ============
+
+     HF-SCF KT symmetry 3 ( B2 ) in point group C2v -- 1 principal poles with pole strength 1
+
+   ============
+       0.698565
+      19.008925
+   ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A1 ) :   559.212      36.359      15.415
+
+@ Symmetry 2 (B1 ) :    13.418
+
+@ Symmetry 3 (B2 ) :    19.009
+
+@ Symmetry 4 (A2 ) :  No IPs in this symmetry
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       0.042       0.041
 
 
                        .-----------------------------------.
-                       | >>> Final results from SIRIUS <<< |
+                       | --- Final results from SIRIUS --- |
                        `-----------------------------------'
 
 
@@ -689,54 +762,73 @@ H   0.00000             1.43153              -0.985265576
 @    Spatial symmetry:            1 ( irrep  A1  in C2v )
 @    Total charge of molecule:    0
 
-@    Final HF energy:             -76.026741898678                 
+@    Final HF energy:             -76.026741898675                 
 @    Nuclear repulsion:             9.183706230245
-@    Electronic energy:           -85.210448128923
+@    Electronic energy:           -85.210448128920
 
-@    Final gradient norm:           0.000002072599
+@    Final gradient norm:           0.000004330731
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:19 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:40 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
- (Only coefficients >0.0100 are printed.)
+ ------------------------------------
+ Printout of final molecular orbitals
+ ------------------------------------
+
+ File label for these MO orbitals:   9May25   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
 
  Molecular orbitals for symmetry species 1  (A1 )
  ------------------------------------------------
 
-    Orbital         1        2        3        4        5
-   1 O   :1s     1.0004  -0.0082  -0.0022   0.0520  -0.0654
-   2 O   :1s     0.0023   0.8706   0.2955  -0.1427  -0.5036
-   3 O   :1s    -0.0014  -0.1222   0.1803  -0.9197   0.6089
-   4 O   :2pz   -0.0026  -0.1146   0.7945   0.2782   0.4803
-   5 O   :2pz    0.0017   0.0657  -0.0006   0.2094  -0.2307
-   6 O   :3d0    0.0000   0.0012  -0.0179  -0.0075   0.0010
-   7 O   :3d2+  -0.0001  -0.0030   0.0046   0.0099  -0.1069
-   8 H   :1s    -0.0004   0.3287  -0.3514   0.1006   1.3411
-   9 H   :1s     0.0006  -0.1547   0.1356   0.7784  -1.2207
-  10 H   :2py    0.0006  -0.0372   0.0318  -0.0175   0.2953
-  11 H   :2pz   -0.0005   0.0205   0.0075   0.0163  -0.0594
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s     1.0004  -0.0082  -0.0022   0.0520  -0.0654  -0.0033   0.2014
+   2 O   :1s     0.0023   0.8706   0.2955  -0.1427  -0.5036  -0.2262   1.0381
+   3 O   :1s    -0.0014  -0.1222   0.1803  -0.9197   0.6089  -0.6164  -1.0968
+   4 O   :2pz   -0.0026  -0.1146   0.7945   0.2782   0.4803  -1.0993   0.1941
+   5 O   :2pz    0.0017   0.0657  -0.0006   0.2094  -0.2307   1.7840  -0.8307
+   6 O   :3d0    0.0000   0.0012  -0.0179  -0.0075   0.0010  -0.0129  -0.1175
+   7 O   :3d2+  -0.0001  -0.0030   0.0046   0.0099  -0.1069  -0.0068  -0.0050
+   8 H   :1s    -0.0004   0.3287  -0.3514   0.1006   1.3411   0.9284  -0.5689
+   9 H   :1s     0.0006  -0.1547   0.1356   0.7784  -1.2207  -0.3526   0.4939
+  10 H   :2py    0.0006  -0.0372   0.0318  -0.0175   0.2953  -0.0837   0.3307
+  11 H   :2pz   -0.0005   0.0205   0.0075   0.0163  -0.0594   0.2516   0.5445
+
+    Orbital         8        9       10       11
+   1 O   :1s    -0.7246   0.2760  -0.0840   0.1444
+   2 O   :1s    -3.1334   1.4248  -0.3028   0.3523
+   3 O   :1s     4.8256  -0.0206   0.7282  -2.4678
+   4 O   :2pz   -0.1578  -0.9748  -0.0264   0.5877
+   5 O   :2pz   -0.8951   0.2685  -0.5240   0.6516
+   6 O   :3d0   -0.1141  -0.0529   1.0839  -0.1375
+   7 O   :3d2+   0.1082   0.2169   0.1777   1.1590
+   8 H   :1s    -1.4078  -0.8131  -0.5181   2.1027
+   9 H   :1s     0.3179   0.2483   0.2222  -0.8622
+  10 H   :2py    0.3725   0.7441   0.3515  -0.6203
+  11 H   :2pz    0.0224  -0.5373   0.3151   0.4925
 
  Molecular orbitals for symmetry species 2  (B1 )
  ------------------------------------------------
 
-    Orbital         1        2        3
-   1 O   :2px    0.9197  -1.4102   0.0265
-   2 O   :2px    0.0721   1.6737   0.6221
-   3 O   :3d1+  -0.0182   0.0034   0.1609
-   4 H   :2px    0.0310   0.0092  -0.7668
+    Orbital         1        2        3        4
+   1 O   :2px    0.9197  -1.4102   0.0265   0.0174
+   2 O   :2px    0.0721   1.6737   0.6221  -0.3191
+   3 O   :3d1+  -0.0182   0.0034   0.1609   1.0426
+   4 H   :2px    0.0310   0.0092  -0.7668   0.3977
 
  Molecular orbitals for symmetry species 3  (B2 )
  ------------------------------------------------
 
-    Orbital         1        2        3
-   1 O   :2py    0.7137  -0.4131  -0.3906
-   2 O   :2py   -0.1064  -0.4807  -0.2794
-   3 O   :3d1-  -0.0268   0.0212  -0.1116
-   4 H   :1s     0.5577   0.0447   1.6068
-   5 H   :1s    -0.1895   1.4202  -1.4934
-   6 H   :2py   -0.0233  -0.0208   0.0737
-   7 H   :2pz    0.0327   0.0171  -0.1525
+    Orbital         1        2        3        4        5        6        7
+   1 O   :2py    0.7137  -0.4131  -0.3906  -1.0705  -0.0151  -1.2207   0.6801
+   2 O   :2py   -0.1064  -0.4807  -0.2794   2.2559   0.9074   0.4102   0.8296
+   3 O   :3d1-  -0.0268   0.0212  -0.1116  -0.0443   0.0293  -0.1380  -1.3252
+   4 H   :1s     0.5577   0.0447   1.6068  -0.6442  -0.6586   0.4995  -1.8435
+   5 H   :1s    -0.1895   1.4202  -1.4934  -0.5010   0.2387   0.0798   0.6358
+   6 H   :2py   -0.0233  -0.0208   0.0737   0.3026  -0.4711  -0.7241   0.6051
+   7 H   :2pz    0.0327   0.0171  -0.1525  -0.1865  -0.6933   0.5543  -0.4938
 
  Molecular orbitals for symmetry species 4  (A2 )
  ------------------------------------------------
@@ -745,17 +837,12 @@ H   0.00000             1.43153              -0.985265576
    1 O   :3d2-  -0.1314   1.0658
    2 H   :2px   -0.6856  -0.3708
 
-
-
- >>>> Total CPU  time used in SIRIUS :      0.08 seconds
- >>>> Total wall time used in SIRIUS :      0.07 seconds
+  Total CPU  time used in SIRIUS :   0.05 seconds
+  Total wall time used in SIRIUS :   0.05 seconds
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:19 2015
-     Host name              : sunray                                  
-
- NOTE:    1 warnings have been issued.
- Check output, result, and error files for "WARNING".
+     Date and time (Linux)  : Fri May  9 10:12:40 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                      .---------------------------------------.
@@ -770,7 +857,11 @@ H   0.00000             1.43153              -0.985265576
 
 
 
-      AO integral driven SOPPA :
+      SOPPA : Second Order Polarization Propagator Approximation
+
+
+
+      AO integral driven SOPPA  :
          (Ref.: K. L. Bak, H. Koch, J. Oddershede, O. Christiansen and S. P. A. Sauer
           J. Chem. Phys. 112, 4173-4185 (2000))
 
@@ -782,14 +873,14 @@ H   0.00000             1.43153              -0.985265576
 
       Electronic excitation energies 
       Direct calculation - no two-electron integrals written or read.
-      No mass-velocity correction calculated
-      No Darwin correction calculated
+      No mass-velocity energy correction calculated
+      No Darwin energy correction calculated
       Natural orbital connection is used
       for perturbation dependent basis sets.
 
 
- Changes of defaults in SOPPA:
- -----------------------------
+ Changes of defaults in the SOPPA Module:
+ ----------------------------------------
 
  AO integral driven RPA
 
@@ -805,76 +896,6 @@ H   0.00000             1.43153              -0.985265576
  Conventional rotational strength
  Dipole strength
 
- WARNING SIR_INTOPEN, old integral transformation not found as expected, ICASE = 1
- - ICASE = 1: MO integral file MOTWOINT does not exist
- - ICASE = 2: no MO integrals on MOTWOINT
- - ICASE = 3: transformation level on MOTWOINT not sufficient
-
- NSETUP: MO transformation level too low or no MO integral file found.
- NSETUP: generating MO 2-el. integral file.
-
-
- WORKING AREA IN TRANSFORMATION SECTION    8000000
-
- TRANSFORMATION SECTION: PARAMETER =  10
- MAXIMUM NUMBER OF AO INTEGRALS =      12419
-
----> (Re)generating AOTWOINT
-
-
-     ************************************************************************
-     ************************** Output from HERINT **************************
-     ************************************************************************
-
-
- Threshold for neglecting two-electron integrals:  1.00D-15
- HERMIT - Number of two-electron integrals written:       11412 ( 25.3% )
- HERMIT - Megabytes written:                              0.137
-
-
- FIRST HALF-SORT STATISTICS
-  NUMBER OF PASSES OVER AO FI      1
-  NUMBER OF BLOCKS PER CHA       300
-  TOTAL NUMBER OF CHAINS           1
-  NUMBER OF BUFFERS PER PA         1
-
-  NUMBER OF INTEGRALS PER DIRECT ACCESS BUFFER      1706
-
-  NUMBER OF DA RECORDS FOR ALL INTEGRALS      15
-  NUMBER OF DA RECORDS ACTUALLY USED          14
-  PERCENT NON-ZERO AO INTEGRALS             0.01
-
-  THRESHOLD FOR DISCARDING INTEGRALS  1.00D-16
-
- TIME IN SORTA      0.01
-
- NUMBER OF INTEGRALS (PQ/CD) WRITTEN ON UNIT 13 IS     24538
-
-  THRESHOLD FOR DISCARDING INTEGRALS  1.00D-15
- TIME IN TRACD      0.00
-
- SECOND HALF-SORT STATISTICS
-  NUMBER OF PASSES OVER FILE       1
-  NUMBER OF BLOCKS PER CHA       300
-  TOTAL NUMBER OF CHAINS           1
-  NUMBER OF BUFFERS PER PA         1
-
- NUMBER OF INTEGRALS PER DIRECT ACCESS BUFFER      1706
-
-  NUMBER OF DA RECORDS FOR ALL INTEGRALS      15
-  NUMBER OF DA RECORDS ACTUALLY USED          15
-  PERCENT NON-ZERO INTEGRALS                0.01
- TIME IN SORTB      0.00
- TIME IN TRAAB      0.00
-
- NUMBER OF TRANSFORMED INTEGRALS WRITTEN ON UNIT 12 IS     24538
- USING   300 + 1 RECORDS WITH BUFFER LENGTH   107
-
-  THRESHOLD FOR DISCARDING INTEGRALS  1.00D-15
- TOTAL TIME IN TRACD,SORTB,TRAAB      0.00
-
- Integral transformation: Total CPU and WALL times (sec)       0.010       0.014
-
 
                                  Isotopic Masses
                                  ---------------
@@ -887,6 +908,7 @@ H   0.00000             1.43153              -0.985265576
                        Natural abundance:  99.730 %
 
  Center-of-mass coordinates (a.u.):    0.000000    0.000000   -0.000015
+ Center-of-mass coordinates (Angs):    0.000000    0.000000   -0.000008
 
  Center of mass dipole origin  :    0.000000    0.000000   -0.000015
 
@@ -899,8 +921,9 @@ H   0.00000             1.43153              -0.985265576
 
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:19 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:40 2025
+     Host name              : adm-110765.pc.sdu.dk                    
+
 
 
                             **************************
@@ -942,135 +965,140 @@ H   0.00000             1.43153              -0.985265576
  Maximum number of trial vectors for each excitation is  3
 
 
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       1
+ p-h variables             :      66
+ -----------------------------------
+
   ******************************************************************
-                RPA iterations, Excitation symmetry 1
-  ******************************************************************
-
-
-  ==================================================================
-                  1. RPA iteration, Excitation symmetry 1
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.44107108     1.3069D-01       no
-                 2       0.69868615     2.3808D-01       no
-                 3       1.03321075     1.7019D-01       no
-                 4       1.14317910     2.4561D-01       no
-                 5       1.23481202     2.5096D-01       no
-            --------------------------------------------------
+                   RPA iterations, Excitation symmetry 1
+  ********************************************************************
 
   ==================================================================
-                  2. RPA iteration, Excitation symmetry 1
+             1. RPA  iteration, Excitation symmetry 1
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.43236526     1.7584D-02       no
-                 2       0.66815282     5.3605D-02       no
-                 3       1.01528290     3.5265D-02       no
-                 4       1.10713155     7.1153D-02       no
-                 5       1.19560654     5.5684D-02       no
+                 1       0.44107122     1.3069D-01       no
+                 2       0.69868634     2.3808D-01       no
+                 3       1.03321062     1.7019D-01       no
+                 4       1.14317920     2.4561D-01       no
+                 5       1.23481213     2.5096D-01       no
             --------------------------------------------------
 
   ==================================================================
-                  3. RPA iteration, Excitation symmetry 1
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.43215653     2.0990D-03       no
-                 2       0.66640281     6.5117D-03       no
-                 3       1.01227519     2.8228D-02       no
-                 4       1.10321823     2.8776D-02       no
-                 5       1.18189344     1.5677D-01       no
-            --------------------------------------------------
-
-  ==================================================================
-                  4. RPA iteration, Excitation symmetry 1
+             2. RPA  iteration, Excitation symmetry 1
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.43215586     1.6103D-04       no
-                 2       0.66639720     3.8390D-04       no
-                 3       1.01206899     1.7348D-03       no
+                 1       0.43236539     1.7584D-02       no
+                 2       0.66815302     5.3605D-02       no
+                 3       1.01528283     3.5265D-02       no
+                 4       1.10713156     7.1153D-02       no
+                 5       1.19560675     5.5684D-02       no
+            --------------------------------------------------
+
+  ==================================================================
+             3. RPA  iteration, Excitation symmetry 1
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.43215666     2.0990D-03       no
+                 2       0.66640301     6.5117D-03       no
+                 3       1.01227514     2.8228D-02       no
+                 4       1.10321824     2.8776D-02       no
+                 5       1.18189367     1.5677D-01       no
+            --------------------------------------------------
+
+  ==================================================================
+             4. RPA  iteration, Excitation symmetry 1
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.43215600     1.6103D-04       no
+                 2       0.66639740     3.8390D-04       no
+                 3       1.01206894     1.7348D-03       no
                  4       1.10302193     2.0197D-03       no
-                 5       1.17233239     1.9743D-02       no
+                 5       1.17233249     1.9743D-02       no
             --------------------------------------------------
 
   ==================================================================
-                  5. RPA iteration, Excitation symmetry 1
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.43215586     7.6582D-06      yes
-                 2       0.66639717     3.0301D-05      yes
-                 3       1.01206822     2.2572D-04       no
-                 4       1.10302073     3.3754D-04       no
-                 5       1.17213761     4.7352D-03       no
-            --------------------------------------------------
-
-  ==================================================================
-                  6. RPA iteration, Excitation symmetry 1
+             5. RPA  iteration, Excitation symmetry 1
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.43215586     5.6477D-06      yes
-                 2       0.66639717     2.0166D-05      yes
-                 3       1.01206821     4.5656D-05      yes
-                 4       1.10302070     8.2046D-05      yes
-                 5       1.17212539     1.8606D-03       no
+                 1       0.43215599     7.6582D-06      yes
+                 2       0.66639737     3.0301D-05      yes
+                 3       1.01206817     2.2572D-04       no
+                 4       1.10302074     3.3754D-04       no
+                 5       1.17213771     4.7352D-03       no
             --------------------------------------------------
 
   ==================================================================
-                  7. RPA iteration, Excitation symmetry 1
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.43215586     5.6530D-06      yes
-                 2       0.66639717     1.9882D-05      yes
-                 3       1.01206821     4.2896D-05      yes
-                 4       1.10302070     7.7988D-05      yes
-                 5       1.17212401     5.2228D-04       no
-            --------------------------------------------------
-
-  ==================================================================
-                  8. RPA iteration, Excitation symmetry 1
+             6. RPA  iteration, Excitation symmetry 1
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.43215586     5.6691D-06      yes
-                 2       0.66639717     1.9924D-05      yes
-                 3       1.01206821     4.0921D-05      yes
-                 4       1.10302070     7.6470D-05      yes
-                 5       1.17212393     1.2076D-04       no
+                 1       0.43215599     5.6477D-06      yes
+                 2       0.66639737     2.0166D-05      yes
+                 3       1.01206816     4.5656D-05      yes
+                 4       1.10302071     8.2046D-05      yes
+                 5       1.17212550     1.8607D-03       no
             --------------------------------------------------
 
   ==================================================================
-                  9. RPA iteration, Excitation symmetry 1
+             7. RPA  iteration, Excitation symmetry 1
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.43215586     5.7066D-06      yes
-                 2       0.66639717     1.9733D-05      yes
-                 3       1.01206821     3.9239D-05      yes
-                 4       1.10302070     7.3437D-05      yes
-                 5       1.17212392     3.2576D-05      yes
+                 1       0.43215599     5.6530D-06      yes
+                 2       0.66639737     1.9882D-05      yes
+                 3       1.01206816     4.2896D-05      yes
+                 4       1.10302071     7.7988D-05      yes
+                 5       1.17212411     5.2229D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             8. RPA  iteration, Excitation symmetry 1
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.43215599     5.6691D-06      yes
+                 2       0.66639737     1.9925D-05      yes
+                 3       1.01206816     4.0921D-05      yes
+                 4       1.10302071     7.6470D-05      yes
+                 5       1.17212403     1.2076D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             9. RPA  iteration, Excitation symmetry 1
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.43215599     5.7066D-06      yes
+                 2       0.66639737     1.9733D-05      yes
+                 3       1.01206816     3.9239D-05      yes
+                 4       1.10302071     7.3438D-05      yes
+                 5       1.17212403     3.2576D-05      yes
             --------------------------------------------------
 
  -------------------------------------------------------------
@@ -1087,13 +1115,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  1, state no.  1
 
- RPA excitation energy :  0.43215586     au
-                           11.759559     eV
-                           94847.247     cm-1
-                           1134.6250     kj / mole
+        RPA excitation energy :  0.43215599     au
+                                   11.759563     eV
+                                   94847.277     cm-1
+                                   1134.6254     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.15 + -0.15  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.02 + -0.00  =  -0.02 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1102,7 +1129,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 1   1   |   2       3     |   -0.106483  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1111,22 +1138,21 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  1, state no.  2
 
- RPA excitation energy :  0.66639717     au
-                           18.133589     eV
-                           146257.27     cm-1
-                           1749.6255     kj / mole
+        RPA excitation energy :  0.66639737     au
+                                   18.133595     eV
+                                   146257.32     cm-1
+                                   1749.6260     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.41 + -0.41  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.01 +  0.00  =   0.01 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 2   2   |   1       1     |   -0.122175  |
- |    exci. | 3   3   |   1       1     |    0.979199  |
+ |    exci. | 2   2   |   1       1     |    0.122175  |
+ |    exci. | 3   3   |   1       1     |   -0.979199  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1135,23 +1161,22 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  1, state no.  3
 
- RPA excitation energy :   1.0120682     au
-                           27.539777     eV
-                           222123.29     cm-1
-                           2657.1847     kj / mole
+        RPA excitation energy :   1.0120682     au
+                                   27.539775     eV
+                                   222123.28     cm-1
+                                   2657.1845     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.08 + -0.08  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.02 + -0.00  =  -0.02 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
  |    exci. | 1   1   |   1       3     |    0.111426  |
- |    exci. | 1   1   |   2       3     |   -0.962814  |
- |    exci. | 2   2   |   1       1     |   -0.200572  |
+ |    exci. | 1   1   |   2       3     |   -0.962815  |
+ |    exci. | 2   2   |   1       1     |   -0.200571  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1160,23 +1185,22 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  1, state no.  4
 
- RPA excitation energy :   1.1030207     au
-                           30.014720     eV
-                           242085.06     cm-1
-                           2895.9804     kj / mole
+        RPA excitation energy :   1.1030207     au
+                                   30.014720     eV
+                                   242085.06     cm-1
+                                   2895.9804     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.17 + -0.17  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.00 +  0.00  =   0.00 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 2   2   |   1       1     |   -0.239749  |
- |    exci. | 3   3   |   1       1     |   -0.127501  |
- |    exci. | 3   3   |   2       1     |    0.949652  |
+ |    exci. | 2   2   |   1       1     |    0.239750  |
+ |    exci. | 3   3   |   1       1     |    0.127501  |
+ |    exci. | 3   3   |   2       1     |   -0.949652  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1185,156 +1209,160 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  1, state no.  5
 
- RPA excitation energy :   1.1721239     au
-                           31.895114     eV
-                           257251.46     cm-1
-                           3077.4109     kj / mole
+        RPA excitation energy :   1.1721240     au
+                                   31.895117     eV
+                                   257251.49     cm-1
+                                   3077.4112     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.08 + -0.08  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.02 + -0.00  =  -0.02 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   1   |   1       2     |    0.591863  |
+ |    exci. | 1   1   |   1       2     |    0.591860  |
  |    exci. | 1   1   |   2       3     |    0.118249  |
- |    exci. | 1   1   |   3       3     |    0.446055  |
- |    exci. | 2   2   |   1       1     |   -0.639401  |
+ |    exci. | 1   1   |   3       3     |    0.446057  |
+ |    exci. | 2   2   |   1       1     |   -0.639402  |
  |    exci. | 3   3   |   2       1     |   -0.128167  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
  ZDIPLEN  RPA transition moments for excitation symmetry  1
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1    -0.62509 +    0.03187 =   -0.59323
-   2    -0.60435 +    0.05120 =   -0.55315
+   2     0.60435 +   -0.05120 =    0.55315
    3     0.03488 +    0.00701 =    0.04189
-   4    -0.62453 +    0.05972 =   -0.56481
+   4     0.62453 +   -0.05972 =    0.56481
    5     0.07854 +   -0.02041 =    0.05812
- =========================================
+ ===================================================================
 
  ZDIPVEL  RPA transition moments for excitation symmetry  1
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.32398 +    0.01435 =    0.33833
-   2     0.34328 +    0.03807 =    0.38135
+   2    -0.34328 +   -0.03807 =   -0.38135
    3    -0.08732 +    0.00137 =   -0.08595
-   4     0.52408 +    0.06910 =    0.59318
+   4    -0.52408 +   -0.06910 =   -0.59318
    5    -0.07088 +   -0.02115 =   -0.09203
- =========================================
+ ===================================================================
 
  XXSECMOM RPA transition moments for excitation symmetry  1
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.11293 +   -0.04018 =    0.07275
-   2     0.27330 +   -0.08926 =    0.18404
+   2    -0.27330 +    0.08926 =   -0.18404
    3    -0.34465 +   -0.02856 =   -0.37321
-   4    -0.77127 +    0.00839 =   -0.76288
+   4     0.77127 +   -0.00839 =    0.76288
    5    -0.59654 +   -0.01179 =   -0.60833
- =========================================
+ ===================================================================
 
  YYSECMOM RPA transition moments for excitation symmetry  1
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.60051 +   -0.09645 =    0.50406
-   2     2.08597 +   -0.12898 =    1.95699
+   2    -2.08597 +    0.12898 =   -1.95699
    3     0.55138 +   -0.05769 =    0.49369
-   4    -0.28668 +   -0.00726 =   -0.29394
-   5     0.22052 +    0.01854 =    0.23906
- =========================================
+   4     0.28668 +    0.00726 =    0.29394
+   5     0.22051 +    0.01854 =    0.23905
+ ===================================================================
 
  ZZSECMOM RPA transition moments for excitation symmetry  1
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.53796 +   -0.04668 =    0.49128
-   2     0.80635 +   -0.12866 =    0.67769
+   2    -0.80635 +    0.12866 =   -0.67769
    3    -0.07420 +   -0.00826 =   -0.08246
-   4     0.04789 +   -0.02235 =    0.02555
+   4    -0.04789 +    0.02235 =   -0.02555
    5     0.72908 +    0.02035 =    0.74943
- =========================================
+ ===================================================================
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       2
+ p-h variables             :      38
+ -----------------------------------
 
   ******************************************************************
-                RPA iterations, Excitation symmetry 2
-  ******************************************************************
-
-
-  ==================================================================
-                  1. RPA iteration, Excitation symmetry 2
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.34101730     1.0523D-01       no
-                 2       0.92495444     1.5326D-01       no
-                 3       1.14744373     1.2132D-01       no
-                 4       1.21588484     7.9521D-02       no
-                 5       1.48393399     1.1687D-01       no
-            --------------------------------------------------
+                   RPA iterations, Excitation symmetry 2
+  ********************************************************************
 
   ==================================================================
-                  2. RPA iteration, Excitation symmetry 2
+             1. RPA  iteration, Excitation symmetry 2
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.33633699     8.7107D-03       no
-                 2       0.91440713     1.5285D-02       no
-                 3       1.14005083     1.5815D-02       no
-                 4       1.21384682     9.6080D-03       no
-                 5       1.47687860     2.3737D-02       no
+                 1       0.34101746     1.0523D-01       no
+                 2       0.92495457     1.5326D-01       no
+                 3       1.14744375     1.2132D-01       no
+                 4       1.21588487     7.9521D-02       no
+                 5       1.48393407     1.1688D-01       no
             --------------------------------------------------
 
   ==================================================================
-                  3. RPA iteration, Excitation symmetry 2
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.33631998     2.7462D-04       no
-                 2       0.91432924     5.6884D-04       no
-                 3       1.13998119     1.1826D-03       no
-                 4       1.21381722     1.7515D-03       no
-                 5       1.47667934     3.2426D-03       no
-            --------------------------------------------------
-
-  ==================================================================
-                  4. RPA iteration, Excitation symmetry 2
+             2. RPA  iteration, Excitation symmetry 2
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.33631997     9.2052D-06      yes
-                 2       0.91432919     1.2409D-05      yes
-                 3       1.13998103     4.0627D-05      yes
-                 4       1.21381684     5.2686D-05      yes
-                 5       1.47667726     2.6808D-04       no
+                 1       0.33633716     8.7106D-03       no
+                 2       0.91440726     1.5285D-02       no
+                 3       1.14005084     1.5815D-02       no
+                 4       1.21384684     9.6080D-03       no
+                 5       1.47687867     2.3737D-02       no
             --------------------------------------------------
 
   ==================================================================
-                  5. RPA iteration, Excitation symmetry 2
+             3. RPA  iteration, Excitation symmetry 2
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.33631997     7.3905D-06      yes
-                 2       0.91432919     7.9211D-06      yes
-                 3       1.13998103     2.8314D-05      yes
-                 4       1.21381684     2.4684D-05      yes
-                 5       1.47667724     8.3019D-05      yes
+                 1       0.33632015     2.7462D-04       no
+                 2       0.91432937     5.6884D-04       no
+                 3       1.13998121     1.1826D-03       no
+                 4       1.21381724     1.7515D-03       no
+                 5       1.47667941     3.2427D-03       no
+            --------------------------------------------------
+
+  ==================================================================
+             4. RPA  iteration, Excitation symmetry 2
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.33632014     9.2053D-06      yes
+                 2       0.91432932     1.2409D-05      yes
+                 3       1.13998104     4.0627D-05      yes
+                 4       1.21381686     5.2685D-05      yes
+                 5       1.47667733     2.6808D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             5. RPA  iteration, Excitation symmetry 2
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.33632014     7.3904D-06      yes
+                 2       0.91432932     7.9213D-06      yes
+                 3       1.13998104     2.8314D-05      yes
+                 4       1.21381686     2.4683D-05      yes
+                 5       1.47667731     8.3018D-05      yes
             --------------------------------------------------
 
  -------------------------------------------------------------
@@ -1351,22 +1379,21 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  2, state no.  1
 
- RPA excitation energy :  0.33631997     au
-                           9.1517319     eV
-                           73813.700     cm-1
-                           883.00794     kj / mole
+        RPA excitation energy :  0.33632014     au
+                                   9.1517365     eV
+                                   73813.738     cm-1
+                                   883.00839     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.14 + -0.14  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.05 + -0.00  =  -0.05 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   2   |   1       1     |   -0.988319  |
- |    exci. | 1   2   |   2       1     |   -0.138436  |
+ |    exci. | 1   2   |   1       1     |    0.988319  |
+ |    exci. | 1   2   |   2       1     |    0.138436  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1375,23 +1402,22 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  2, state no.  2
 
- RPA excitation energy :  0.91432919     au
-                           24.880163     eV
-                           200672.06     cm-1
-                           2400.5709     kj / mole
+        RPA excitation energy :  0.91432932     au
+                                   24.880166     eV
+                                   200672.09     cm-1
+                                   2400.5713     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.12 + -0.12  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.03 + -0.00  =  -0.03 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   2   |   1       1     |    0.145370  |
- |    exci. | 1   2   |   2       1     |   -0.970711  |
- |    exci. | 1   2   |   3       1     |    0.175772  |
+ |    exci. | 1   2   |   1       1     |   -0.145370  |
+ |    exci. | 1   2   |   2       1     |    0.970711  |
+ |    exci. | 1   2   |   3       1     |   -0.175772  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1400,13 +1426,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  2, state no.  3
 
- RPA excitation energy :   1.1399810     au
-                           31.020462     eV
-                           250196.91     cm-1
-                           2993.0197     kj / mole
+        RPA excitation energy :   1.1399810     au
+                                   31.020462     eV
+                                   250196.92     cm-1
+                                   2993.0198     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.10 + -0.10  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.05 +  0.00  =  -0.04 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1416,7 +1441,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 2   1   |   1       3     |    0.105643  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1425,22 +1450,21 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  2, state no.  4
 
- RPA excitation energy :   1.2138168     au
-                           33.029636     eV
-                           266402.00     cm-1
-                           3186.8756     kj / mole
+        RPA excitation energy :   1.2138169     au
+                                   33.029637     eV
+                                   266402.01     cm-1
+                                   3186.8757     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.19 + -0.19  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.13 + -0.00  =  -0.13 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   2   |   3       1     |   -0.102355  |
- |    exci. | 2   1   |   1       3     |   -0.994882  |
+ |    exci. | 1   2   |   3       1     |    0.102355  |
+ |    exci. | 2   1   |   1       3     |    0.994882  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1449,169 +1473,173 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  2, state no.  5
 
- RPA excitation energy :   1.4766772     au
-                           40.182432     eV
-                           324093.19     cm-1
-                           3877.0155     kj / mole
+        RPA excitation energy :   1.4766773     au
+                                   40.182434     eV
+                                   324093.21     cm-1
+                                   3877.0157     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.02 + -0.02  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.04 +  0.00  =   0.04 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   2   |   4       1     |    0.995292  |
+ |    exci. | 1   2   |   4       1     |   -0.995292  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
  XDIPLEN  RPA transition moments for excitation symmetry  2
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1    -0.34946 +   -0.01108 =   -0.36053
-   2     0.38222 +   -0.03043 =    0.35179
+ -------------------------------------------------------------------
+   1     0.34946 +    0.01108 =    0.36053
+   2    -0.38222 +    0.03043 =   -0.35179
    3     0.10569 +   -0.01665 =    0.08904
-   4    -0.01526 +   -0.01210 =   -0.02737
-   5    -0.07830 +   -0.00674 =   -0.08504
- =========================================
+   4     0.01526 +    0.01210 =    0.02737
+   5     0.07830 +    0.00674 =    0.08504
+ ===================================================================
 
  XDIPVEL  RPA transition moments for excitation symmetry  2
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1     0.24988 +   -0.02453 =    0.22535
-   2    -0.23671 +   -0.04474 =   -0.28145
+ -------------------------------------------------------------------
+   1    -0.24988 +    0.02453 =   -0.22535
+   2     0.23671 +    0.04474 =    0.28145
    3    -0.11957 +   -0.03247 =   -0.15204
-   4     0.16978 +   -0.01731 =    0.15247
-   5     0.09479 +   -0.01717 =    0.07762
- =========================================
+   4    -0.16978 +    0.01731 =   -0.15247
+   5    -0.09479 +    0.01717 =   -0.07762
+ ===================================================================
 
  YANGMOM  RPA transition moments for excitation symmetry  2
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1     0.17948 +    0.00143 =    0.18091
-   2     0.18456 +   -0.00503 =    0.17953
+ -------------------------------------------------------------------
+   1    -0.17948 +   -0.00143 =   -0.18092
+   2    -0.18456 +    0.00503 =   -0.17953
    3     0.09311 +   -0.00010 =    0.09301
-   4    -0.10978 +    0.00573 =   -0.10405
-   5     0.02873 +    0.00148 =    0.03022
- =========================================
+   4     0.10978 +   -0.00573 =    0.10405
+   5    -0.02873 +   -0.00148 =   -0.03022
+ ===================================================================
 
  XZSECMOM RPA transition moments for excitation symmetry  2
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1     0.10202 +    0.01285 =    0.11487
-   2     0.08280 +    0.01844 =    0.10124
+ -------------------------------------------------------------------
+   1    -0.10202 +   -0.01285 =   -0.11487
+   2    -0.08280 +   -0.01844 =   -0.10123
    3    -0.45712 +   -0.00481 =   -0.46193
-   4    -0.62265 +   -0.01373 =   -0.63638
-   5    -0.29587 +   -0.00125 =   -0.29712
- =========================================
+   4     0.62265 +    0.01373 =    0.63638
+   5     0.29587 +    0.00125 =    0.29712
+ ===================================================================
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       3
+ p-h variables             :      56
+ -----------------------------------
 
   ******************************************************************
-                RPA iterations, Excitation symmetry 3
-  ******************************************************************
-
-
-  ==================================================================
-                  1. RPA iteration, Excitation symmetry 3
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.51216602     1.4008D-01       no
-                 2       0.55729903     9.1517D-02       no
-                 3       0.98281349     1.6797D-01       no
-                 4       1.18589124     1.6959D-01       no
-                 5       1.28834128     1.7108D-01       no
-            --------------------------------------------------
+                   RPA iterations, Excitation symmetry 3
+  ********************************************************************
 
   ==================================================================
-                  2. RPA iteration, Excitation symmetry 3
+             1. RPA  iteration, Excitation symmetry 3
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.49701501     1.7259D-02       no
-                 2       0.55172874     1.2219D-02       no
-                 3       0.96922645     2.6771D-02       no
-                 4       1.16211262     5.3775D-02       no
-                 5       1.26202049     4.8319D-02       no
+                 1       0.51216614     1.4008D-01       no
+                 2       0.55729921     9.1517D-02       no
+                 3       0.98281345     1.6797D-01       no
+                 4       1.18589132     1.6959D-01       no
+                 5       1.28834145     1.7108D-01       no
             --------------------------------------------------
 
   ==================================================================
-                  3. RPA iteration, Excitation symmetry 3
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.49689588     9.0938D-04       no
-                 2       0.55165948     1.4461D-03       no
-                 3       0.96890798     1.9246D-03       no
-                 4       1.15982771     1.2853D-02       no
-                 5       1.26055799     7.2118D-03       no
-            --------------------------------------------------
-
-  ==================================================================
-                  4. RPA iteration, Excitation symmetry 3
+             2. RPA  iteration, Excitation symmetry 3
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.49689564     7.5761D-05      yes
-                 2       0.55165902     1.3331D-04       no
-                 3       0.96890677     1.8699D-04       no
-                 4       1.15976992     2.1957D-03       no
-                 5       1.26054412     7.7471D-04       no
+                 1       0.49701517     1.7259D-02       no
+                 2       0.55172890     1.2219D-02       no
+                 3       0.96922640     2.6771D-02       no
+                 4       1.16211270     5.3775D-02       no
+                 5       1.26202070     4.8319D-02       no
             --------------------------------------------------
 
   ==================================================================
-                  5. RPA iteration, Excitation symmetry 3
-  ==================================================================
-
-            --------------------------------------------------
-            Excitation   Energy (au)     Residual    Converged
-            --------------------------------------------------
-                 1       0.49689564     3.7327D-05      yes
-                 2       0.55165902     7.0091D-06      yes
-                 3       0.96890677     1.9632D-05      yes
-                 4       1.15976910     3.2540D-04       no
-                 5       1.26054399     1.9272D-04       no
-            --------------------------------------------------
-
-  ==================================================================
-                  6. RPA iteration, Excitation symmetry 3
+             3. RPA  iteration, Excitation symmetry 3
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.49689564     3.5620D-05      yes
-                 2       0.55165902     5.8510D-06      yes
-                 3       0.96890677     1.0630D-05      yes
-                 4       1.15976904     8.6959D-05      yes
-                 5       1.26054396     1.3044D-04       no
+                 1       0.49689605     9.0938D-04       no
+                 2       0.55165965     1.4461D-03       no
+                 3       0.96890793     1.9246D-03       no
+                 4       1.15982779     1.2853D-02       no
+                 5       1.26055819     7.2118D-03       no
             --------------------------------------------------
 
   ==================================================================
-                  7. RPA iteration, Excitation symmetry 3
+             4. RPA  iteration, Excitation symmetry 3
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.49689564     3.5589D-05      yes
-                 2       0.55165902     5.8286D-06      yes
-                 3       0.96890677     1.1005D-05      yes
-                 4       1.15976904     7.9115D-05      yes
-                 5       1.26054394     7.6916D-05      yes
+                 1       0.49689580     7.5761D-05      yes
+                 2       0.55165918     1.3331D-04       no
+                 3       0.96890672     1.8699D-04       no
+                 4       1.15977001     2.1956D-03       no
+                 5       1.26054432     7.7472D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             5. RPA  iteration, Excitation symmetry 3
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.49689580     3.7327D-05      yes
+                 2       0.55165918     7.0091D-06      yes
+                 3       0.96890671     1.9632D-05      yes
+                 4       1.15976919     3.2540D-04       no
+                 5       1.26054420     1.9272D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             6. RPA  iteration, Excitation symmetry 3
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.49689580     3.5620D-05      yes
+                 2       0.55165918     5.8511D-06      yes
+                 3       0.96890671     1.0630D-05      yes
+                 4       1.15976913     8.6959D-05      yes
+                 5       1.26054416     1.3044D-04       no
+            --------------------------------------------------
+
+  ==================================================================
+             7. RPA  iteration, Excitation symmetry 3
+  ==================================================================
+
+            --------------------------------------------------
+            Excitation   Energy (au)     Residual    Converged
+            --------------------------------------------------
+                 1       0.49689580     3.5589D-05      yes
+                 2       0.55165918     5.8286D-06      yes
+                 3       0.96890671     1.1005D-05      yes
+                 4       1.15976913     7.9115D-05      yes
+                 5       1.26054415     7.6919D-05      yes
             --------------------------------------------------
 
  -------------------------------------------------------------
@@ -1628,13 +1656,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  3, state no.  1
 
- RPA excitation energy :  0.49689564     au
-                           13.521218     eV
-                           109055.99     cm-1
-                           1304.5993     kj / mole
+        RPA excitation energy :  0.49689580     au
+                                   13.521223     eV
+                                   109056.02     cm-1
+                                   1304.5997     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.19 + -0.19  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.05 + -0.00  =  -0.05 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1644,7 +1671,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 3   1   |   3       3     |    0.112662  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1653,21 +1680,20 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  3, state no.  2
 
- RPA excitation energy :  0.55165902     au
-                           15.011405     eV
-                           121075.16     cm-1
-                           1448.3805     kj / mole
+        RPA excitation energy :  0.55165918     au
+                                   15.011410     eV
+                                   121075.19     cm-1
+                                   1448.3810     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.10 + -0.10  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.00 + -0.00  =  -0.00 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   3   |   1       1     |    0.991056  |
+ |    exci. | 1   3   |   1       1     |   -0.991056  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1676,23 +1702,22 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  3, state no.  3
 
- RPA excitation energy :  0.96890677     au
-                           26.365294     eV
-                           212650.45     cm-1
-                           2543.8643     kj / mole
+        RPA excitation energy :  0.96890671     au
+                                   26.365293     eV
+                                   212650.44     cm-1
+                                   2543.8642     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.17 + -0.17  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.03 + -0.00  =  -0.03 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
  |    exci. | 1   3   |   2       1     |   -0.178181  |
- |    exci. | 3   1   |   1       3     |    0.148580  |
+ |    exci. | 3   1   |   1       3     |    0.148579  |
  |    exci. | 3   1   |   2       3     |   -0.966168  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1701,18 +1726,17 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  3, state no.  4
 
- RPA excitation energy :   1.1597690     au
-                           31.558921     eV
-                           254539.88     cm-1
-                           3044.9732     kj / mole
+        RPA excitation energy :   1.1597691     au
+                                   31.558923     eV
+                                   254539.90     cm-1
+                                   3044.9734     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.21 + -0.21  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.00 + -0.00  =   0.00 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 1   3   |   1       1     |    0.104510  |
+ |    exci. | 1   3   |   1       1     |    0.104511  |
  |    exci. | 1   3   |   2       1     |   -0.947843  |
  |    exci. | 1   3   |   3       1     |    0.172134  |
  |    exci. | 3   1   |   1       2     |   -0.106833  |
@@ -1720,7 +1744,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 4   2   |   1       1     |   -0.108097  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1729,115 +1753,119 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  3, state no.  5
 
- RPA excitation energy :   1.2605439     au
-                           34.301145     eV
-                           276657.41     cm-1
-                           3309.5576     kj / mole
+        RPA excitation energy :   1.2605441     au
+                                   34.301151     eV
+                                   276657.46     cm-1
+                                   3309.5581     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.08 + -0.08  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.12 + -0.00  =  -0.12 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 3   1   |   1       2     |   -0.963274  |
- |    exci. | 3   1   |   2       2     |   -0.157142  |
- |    exci. | 3   1   |   3       3     |   -0.123770  |
+ |    exci. | 3   1   |   1       2     |    0.963274  |
+ |    exci. | 3   1   |   2       2     |    0.157142  |
+ |    exci. | 3   1   |   3       3     |    0.123770  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
  YDIPLEN  RPA transition moments for excitation symmetry  3
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1    -0.54204 +    0.03832 =   -0.50372
-   2     0.93193 +   -0.03051 =    0.90141
+   2    -0.93192 +    0.03051 =   -0.90141
    3     0.52382 +   -0.06089 =    0.46293
    4    -0.71217 +    0.07040 =   -0.64177
-   5    -0.15823 +   -0.03014 =   -0.18837
- =========================================
+   5     0.15823 +    0.03014 =    0.18837
+ ===================================================================
 
  YDIPVEL  RPA transition moments for excitation symmetry  3
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.20820 +    0.04718 =    0.25537
-   2    -0.48722 +   -0.01848 =   -0.50570
+   2     0.48722 +    0.01848 =    0.50570
    3    -0.34898 +   -0.06938 =   -0.41836
-   4     0.60500 +    0.06688 =    0.67189
-   5     0.24422 +   -0.04293 =    0.20128
- =========================================
+   4     0.60501 +    0.06688 =    0.67189
+   5    -0.24422 +    0.04293 =   -0.20129
+ ===================================================================
 
  XANGMOM  RPA transition moments for excitation symmetry  3
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1     0.28949 +   -0.00239 =    0.28711
-   2     0.13040 +    0.00677 =    0.13717
+ -------------------------------------------------------------------
+   1     0.28949 +   -0.00239 =    0.28710
+   2    -0.13040 +   -0.00677 =   -0.13717
    3    -0.50617 +    0.00912 =   -0.49705
    4    -0.17657 +    0.00036 =   -0.17621
-   5     0.08929 +    0.00186 =    0.09116
- =========================================
+   5    -0.08929 +   -0.00186 =   -0.09116
+ ===================================================================
 
  YZSECMOM RPA transition moments for excitation symmetry  3
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
-   1     0.69076 +    0.00513 =    0.69590
-   2    -0.87985 +    0.02140 =   -0.85845
+ -------------------------------------------------------------------
+   1     0.69077 +    0.00513 =    0.69590
+   2     0.87985 +   -0.02140 =    0.85845
    3    -0.00876 +    0.01117 =    0.00241
    4     0.84725 +   -0.03737 =    0.80988
-   5     0.41651 +   -0.01309 =    0.40343
- =========================================
+   5    -0.41651 +    0.01309 =   -0.40343
+ ===================================================================
+
+ -----------------------------------
+ RPA:
+ Perturbation symmetry     :       4
+ p-h variables             :      30
+ -----------------------------------
 
   ******************************************************************
-                RPA iterations, Excitation symmetry 4
-  ******************************************************************
-
+                   RPA iterations, Excitation symmetry 4
+  ********************************************************************
 
   ==================================================================
-                  1. RPA iteration, Excitation symmetry 4
+             1. RPA  iteration, Excitation symmetry 4
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.40365807     7.3560D-02       no
-                 2       0.85246945     1.0626D-01       no
-                 3       1.25720860     1.1705D-01       no
-                 4       1.37406561     5.6924D-02       no
-                 5       1.60975634     9.3800D-02       no
+                 1       0.40365832     7.3560D-02       no
+                 2       0.85246946     1.0626D-01       no
+                 3       1.25720859     1.1705D-01       no
+                 4       1.37406556     5.6924D-02       no
+                 5       1.60975632     9.3800D-02       no
             --------------------------------------------------
 
   ==================================================================
-                  2. RPA iteration, Excitation symmetry 4
+             2. RPA  iteration, Excitation symmetry 4
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.40112034     1.1969D-03       no
+                 1       0.40112060     1.1969D-03       no
                  2       0.84584756     3.6962D-03       no
-                 3       1.24998885     3.6335D-03       no
-                 4       1.37248079     9.7854D-03       no
+                 3       1.24998883     3.6335D-03       no
+                 4       1.37248075     9.7854D-03       no
                  5       1.60415763     1.1875D-02       no
             --------------------------------------------------
 
   ==================================================================
-                  3. RPA iteration, Excitation symmetry 4
+             3. RPA  iteration, Excitation symmetry 4
   ==================================================================
 
             --------------------------------------------------
             Excitation   Energy (au)     Residual    Converged
             --------------------------------------------------
-                 1       0.40112011     2.5924D-13      yes
-                 2       0.84584373     3.6040D-13      yes
-                 3       1.24998401     5.8474D-13      yes
-                 4       1.37245173     7.0919D-13      yes
-                 5       1.60409092     1.7891D-12      yes
+                 1       0.40112037     2.3793D-13      yes
+                 2       0.84584373     1.9200D-13      yes
+                 3       1.24998399     9.2357D-13      yes
+                 4       1.37245169     1.2435D-12      yes
+                 5       1.60409092     1.7571D-12      yes
             --------------------------------------------------
 
  -------------------------------------------------------------
@@ -1854,13 +1882,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  4, state no.  1
 
- RPA excitation energy :  0.40112011     au
-                           10.915033     eV
-                           88035.687     cm-1
-                           1053.1407     kj / mole
+        RPA excitation energy :  0.40112037     au
+                                   10.915040     eV
+                                   88035.744     cm-1
+                                   1053.1414     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.15 + -0.15  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.01 + -0.00  =   0.01 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1870,7 +1897,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 3   2   |   3       1     |   -0.116926  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1879,13 +1906,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  4, state no.  2
 
- RPA excitation energy :  0.84584373     au
-                           23.016579     eV
-                           185641.24     cm-1
-                           2220.7624     kj / mole
+        RPA excitation energy :  0.84584373     au
+                                   23.016579     eV
+                                   185641.24     cm-1
+                                   2220.7624     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.04 + -0.04  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.00 +  0.00  =  -0.00 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1894,7 +1920,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 3   2   |   2       1     |    0.977322  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1903,22 +1929,21 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  4, state no.  3
 
- RPA excitation energy :   1.2499840     au
-                           34.013795     eV
-                           274339.78     cm-1
-                           3281.8325     kj / mole
+        RPA excitation energy :   1.2499840     au
+                                   34.013795     eV
+                                   274339.77     cm-1
+                                   3281.8325     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.05 + -0.05  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:   0.00 + -0.00  =   0.00 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 3   2   |   1       1     |   -0.112265  |
- |    exci. | 3   2   |   3       1     |    0.990162  |
+ |    exci. | 3   2   |   1       1     |    0.112265  |
+ |    exci. | 3   2   |   3       1     |   -0.990162  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1927,13 +1952,12 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  4, state no.  4
 
- RPA excitation energy :   1.3724517     au
-                           37.346311     eV
-                           301218.34     cm-1
-                           3603.3715     kj / mole
+        RPA excitation energy :   1.3724517     au
+                                   37.346310     eV
+                                   301218.33     cm-1
+                                   3603.3714     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.19 + -0.19  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.00 + -0.00  =  -0.01 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
@@ -1941,7 +1965,7 @@ H   0.00000             1.43153              -0.985265576
  |    exci. | 2   3   |   1       1     |    0.999345  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
@@ -1950,45 +1974,44 @@ H   0.00000             1.43153              -0.985265576
  --------------------------------------------------------------
  Excitation symmetry  4, state no.  5
 
- RPA excitation energy :   1.6040909     au
-                           43.649534     eV
-                           352057.26     cm-1
-                           4211.5401     kj / mole
+        RPA excitation energy :   1.6040909     au
+                                   43.649534     eV
+                                   352057.26     cm-1
+                                   4211.5401     kj / mole
 
- 1p-1h + 1h-1p excitation weight: 100.02 + -0.02  = 100.00 %
-
+ 1p-1h + 1h-1p excitation weight:  -0.03 +  0.00  =  -0.03 %
  |=====================================================|
  |          | Symmetry|  Orbital index  |   Amplitude  |
  |          | index   |   a   b   i   j |              |
  |=====================================================|
- |    exci. | 4   1   |   1       3     |    0.997331  |
+ |    exci. | 4   1   |   1       3     |   -0.997331  |
  |-----------------------------------------------------|
 
- Printed all single excitation amplitudes greater than 0.100000
+ Printed all single excitation amplitudes greater than  0.100000
 
  --------------------------------------------------------------
 
  ZANGMOM  RPA transition moments for excitation symmetry  4
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1     0.28138 +   -0.00655 =    0.27483
    2    -0.26101 +    0.00868 =   -0.25233
-   3     0.04708 +   -0.00034 =    0.04674
-   4    -0.21083 +    0.00942 =   -0.20141
-   5    -0.39541 +    0.00110 =   -0.39432
- =========================================
+   3    -0.04708 +    0.00034 =   -0.04674
+   4    -0.21083 +    0.00942 =   -0.20140
+   5     0.39541 +   -0.00110 =    0.39432
+ ===================================================================
 
  XYSECMOM RPA transition moments for excitation symmetry  4
- =========================================
+ ===================================================================
  Exci.    1p-1h        1h-1p        Total
- -----------------------------------------
+ -------------------------------------------------------------------
    1    -0.29952 +   -0.02255 =   -0.32206
    2    -0.41000 +    0.01721 =   -0.39279
-   3     0.40800 +    0.00562 =    0.41363
+   3    -0.40800 +   -0.00562 =   -0.41363
    4     0.64531 +    0.00720 =    0.65251
-   5     0.45525 +   -0.01085 =    0.44441
- =========================================
+   5    -0.45526 +    0.01085 =   -0.44441
+ ===================================================================
 
  |=====================================================| 
  |     Memory statistics for AO-SOPPA subroutines      |
@@ -1998,7 +2021,9 @@ H   0.00000             1.43153              -0.985265576
  |  START                            0           0.0   |
  |  SO_EXCIT1.1                     25           0.0   |
  |  SO_PRPINT                    13526           0.1   |
- |  SO_AODENS                 63994060         488.2   |
+ |  SO_ERES.2B                  763088           5.8   |
+ |  SO_ERES.3                   765192           5.8   |
+ |  SO_ERES.3                   765193           5.8   |
  |=====================================================| 
 
  |=====================================================| 
@@ -2006,58 +2031,38 @@ H   0.00000             1.43153              -0.985265576
  |=====================================================| 
  |   Routine            cpu time   of total        sum |
  |-----------------------------------------------------| 
- |   ERIDI2              0: 0: 2     88.6 %     88.6 % |
- |   CCRDAO              0: 0: 0      9.2 %     97.8 % |
- |   CC_AOFOCK           0: 0: 0      0.7 %     98.5 % |
- |   SO_ERES             0: 0: 0      0.7 %     99.3 % |
- |   SO_RES_OVLR         0: 0: 0      0.4 %     99.6 % |
- |   SO_ORTH_TRN         0: 0: 0      0.4 %    100.0 % |
- |   SO_GETMO            0: 0: 0      0.0 %    100.0 % |
- |   SO_INIT             0: 0: 0      0.0 %    100.0 % |
- |   SO_MOENERGY         0: 0: 0      0.0 %    100.0 % |
- |   SO_DENS             0: 0: 0      0.0 %    100.0 % |
- |   SO_T2MP             0: 0: 0      0.0 %    100.0 % |
- |   SO_AODENS           0: 0: 0      0.0 %    100.0 % |
- |   SO_BCKTR            0: 0: 0      0.0 %    100.0 % |
- |   ERIDI1              0: 0: 0      0.0 %    100.0 % |
- |   SO_T2M1             0: 0: 0      0.0 %    100.0 % |
- |   CCTRBT              0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_A            0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_CB           0: 0: 0      0.0 %    100.0 % |
- |   SO_SIGAI            0: 0: 0      0.0 %    100.0 % |
- |   SO_SIGDA            0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_B            0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_C            0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_SYM          0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_FCK          0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_OVL          0: 0: 0      0.0 %    100.0 % |
- |   CC_FCKMO            0: 0: 0      0.0 %    100.0 % |
- |   SO_TWOFOCK          0: 0: 0      0.0 %    100.0 % |
- |   SO_ONEFOCK          0: 0: 0      0.0 %    100.0 % |
- |   SO_CHECK            0: 0: 0      0.0 %    100.0 % |
- |   SO_INCRED           0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_TCB          0: 0: 0      0.0 %    100.0 % |
- |   SO_RES_CD           0: 0: 0      0.0 %    100.0 % |
- |   SO_DIAG             0: 0: 0      0.0 %    100.0 % |
- |   SO_TRIAL1           0: 0: 0      0.0 %    100.0 % |
- |   SO_REDEV            0: 0: 0      0.0 %    100.0 % |
- |   SO_TRIAL2           0: 0: 0      0.0 %    100.0 % |
- |   SO_ORDEIG           0: 0: 0      0.0 %    100.0 % |
- |   SO_OPTVEC           0: 0: 0      0.0 %    100.0 % |
- |   SO_ROPT             0: 0: 0      0.0 %    100.0 % |
- |   SO_SRES             0: 0: 0      0.0 %    100.0 % |
- |   SO_DENSAI           0: 0: 0      0.0 %    100.0 % |
- |   ???????????         0: 0: 0      0.0 %    100.0 % |
- |   ?????????           0: 0: 0      0.0 %    100.0 % |
+ |   ERIDI2              0:00:01     84.0 %     84.0 % |
+ |   CCRDAO              0:00:00     10.1 %     94.1 % |
+ |   SO_ERES             0:00:00      1.5 %     95.6 % |
+ |   SO_ORTH_TRN         0:00:00      1.0 %     96.6 % |
+ |   CC_AOFOCK           0:00:00      0.6 %     97.2 % |
+ |   SO_TRIAL2           0:00:00      0.4 %     97.6 % |
+ |   SO_INCRED           0:00:00      0.3 %     97.9 % |
+ |   SO_DENSAI           0:00:00      0.3 %     98.2 % |
+ |   SO_OPTVEC           0:00:00      0.3 %     98.5 % |
+ |   SO_REDEV            0:00:00      0.2 %     98.7 % |
+ |   CC_FCKMO            0:00:00      0.1 %     98.8 % |
+ |   ERIDI1              0:00:00      0.1 %     98.9 % |
+ |   SO_AODENS           0:00:00      0.1 %     98.9 % |
+ |   SO_GETMO            0:00:00      0.1 %     99.0 % |
+ |   SO_ROPT             0:00:00      0.0 %     99.0 % |
+ |   SO_BCKTR            0:00:00      0.0 %     99.1 % |
+ |   SO_TRIAL1           0:00:00      0.0 %     99.1 % |
+ |   SO_TWOFOCK          0:00:00      0.0 %     99.1 % |
+ |   SO_ORDEIG           0:00:00      0.0 %     99.1 % |
+ |   SO_INIT             0:00:00      0.0 %     99.2 % |
+ |   SO_ONEFOCK          0:00:00      0.0 %     99.2 % |
+ |   SO_DIAG             0:00:00      0.0 %     99.2 % |
+ |   SO_MOENERGY         0:00:00      0.0 %     99.2 % |
  |-----------------------------------------------------| 
- |   Total CPU time      0: 0: 3                       |
+ |  Total CPU time       0:00:02                       |
  |=====================================================| 
 
  |-----------------------------------------------------| 
- |   SO_READ             0: 0: 0      0.0 %            |
- |   SO_WRITE            0: 0: 0      0.0 %            |
- |   SO_OPEN             0: 0: 0      0.0 %            |
- |   SO_CLOSE            0: 0: 0      0.0 %            |
+ |   SO_READ             0: 0: 0      0.9 %            |
+ |   SO_WRITE            0: 0: 0      0.3 %            |
+ |   SO_OPEN             0: 0: 0      0.2 %            |
+ |   SO_CLOSE            0: 0: 0      0.1 %            |
  |-----------------------------------------------------| 
 
  |=====================================================| 
@@ -2065,14 +2070,14 @@ H   0.00000             1.43153              -0.985265576
  |=====================================================| 
  |   Routine           wall time   of total       sum  |
  |-----------------------------------------------------| 
- |   SO_ERES             0: 0: 0      0.0 %      0.0 % |
- |   SO_SRES             0: 0: 0      0.0 %      0.0 % |
- |   SO_REDEV            0: 0: 0      0.0 %      0.0 % |
- |   SO_TRIAL2           0: 0: 0      0.0 %      0.0 % |
+ |   SO_ERES             0:00:02     96.8 %     96.8 % |
+ |   SO_SRES             0:00:00      0.0 %     96.8 % |
+ |   SO_REDEV            0:00:00      0.9 %     97.7 % |
+ |   SO_TRIAL2           0:00:00      1.4 %     99.0 % |
  |-----------------------------------------------------| 
- |   Total wall time     0: 0: 3                       |
+ |   Total wall time     0: 0: 2                       |
  |=====================================================| 
- >>>  Time used in EXCITA     is   2.72 seconds
+  Time used in EXCITA     is       1.77 seconds
 
 
    ***************************************************************************
@@ -2081,8 +2086,8 @@ H   0.00000             1.43153              -0.985265576
 
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:22 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:42 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                              Molecular geometry (au)
@@ -2099,11 +2104,16 @@ H   0.00000             1.43153              -0.985265576
                         Molecular wave function and energy
                         ----------------------------------
 
-     Spin multiplicity  1     State number       1     Total charge       0
+     Spatial symmetry   1 ( A1  )
+     Spin multiplicity  1
+     2 * M_S            0
+     State number       1
+     Total charge       0
 
      Total energy        -76.0267418987 au (Hartrees)
                          -2068.79288404 eV
                            -199608.1801 kJ/mol
+                            -47707.5000 kcal/mol
 
 
  ======================================================================
@@ -2114,32 +2124,33 @@ H   0.00000             1.43153              -0.985265576
 @               Singlet electronic excitation energies
                 --------------------------------------
 
+ Convergence threshold: 1.00E-04
                ========================================
                  Sym.   Mode   Frequency    Frequency
                 ex. st.  No.      (au)         (eV)
-               ----------------------------------------
-                   1      1     0.432156    11.759559
-                   1      2     0.666397    18.133589
-                   1      3     1.012068    27.539777
+               --------------------------------------- A1 
+                   1      1     0.432156    11.759563
+                   1      2     0.666397    18.133595
+                   1      3     1.012068    27.539775
                    1      4     1.103021    30.014720
-                   1      5     1.172124    31.895114
-               ----------------------------------------
-                   2      1     0.336320     9.151732
-                   2      2     0.914329    24.880163
+                   1      5     1.172124    31.895117
+               --------------------------------------- B1 
+                   2      1     0.336320     9.151736
+                   2      2     0.914329    24.880166
                    2      3     1.139981    31.020462
-                   2      4     1.213817    33.029636
-                   2      5     1.476677    40.182432
-               ----------------------------------------
-                   3      1     0.496896    13.521218
-                   3      2     0.551659    15.011405
-                   3      3     0.968907    26.365294
-                   3      4     1.159769    31.558921
-                   3      5     1.260544    34.301145
-               ----------------------------------------
-                   4      1     0.401120    10.915033
+                   2      4     1.213817    33.029637
+                   2      5     1.476677    40.182434
+               --------------------------------------- B2 
+                   3      1     0.496896    13.521223
+                   3      2     0.551659    15.011410
+                   3      3     0.968907    26.365293
+                   3      4     1.159769    31.558923
+                   3      5     1.260544    34.301151
+               --------------------------------------- A2 
+                   4      1     0.401120    10.915040
                    4      2     0.845844    23.016579
                    4      3     1.249984    34.013795
-                   4      4     1.372452    37.346311
+                   4      4     1.372452    37.346310
                    4      5     1.604091    43.649534
                ========================================
 
@@ -2152,24 +2163,24 @@ H   0.00000             1.43153              -0.985265576
 @==============================================================================
 @  Symmetry of excited state: 1  ( A1 )
 @           1     0.432156     0.0000  0.0000 -0.7829    0.0000  0.0000 -0.5932
-@           2     0.666397     0.0000  0.0000 -0.5723    0.0000  0.0000 -0.5532
+@           2     0.666397     0.0000  0.0000  0.5723    0.0000  0.0000  0.5532
 @           3     1.012068     0.0000  0.0000  0.0849    0.0000  0.0000  0.0419
-@           4     1.103021     0.0000  0.0000 -0.5378    0.0000  0.0000 -0.5648
+@           4     1.103021     0.0000  0.0000  0.5378    0.0000  0.0000  0.5648
 @           5     1.172124     0.0000  0.0000  0.0785    0.0000  0.0000  0.0581
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 2  ( B1 )
-@           1     0.336320    -0.6700  0.0000  0.0000   -0.3605  0.0000  0.0000
-@           2     0.914329     0.3078  0.0000  0.0000    0.3518  0.0000  0.0000
+@           1     0.336320     0.6700  0.0000  0.0000    0.3605  0.0000  0.0000
+@           2     0.914329    -0.3078  0.0000  0.0000   -0.3518  0.0000  0.0000
 @           3     1.139981     0.1334  0.0000  0.0000    0.0890  0.0000  0.0000
-@           4     1.213817    -0.1256  0.0000  0.0000   -0.0274  0.0000  0.0000
-@           5     1.476677    -0.0526  0.0000  0.0000   -0.0850  0.0000  0.0000
+@           4     1.213817     0.1256  0.0000  0.0000    0.0274  0.0000  0.0000
+@           5     1.476677     0.0526  0.0000  0.0000    0.0850  0.0000  0.0000
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 3  ( B2 )
 @           1     0.496896     0.0000 -0.5139  0.0000    0.0000 -0.5037  0.0000
-@           2     0.551659     0.0000  0.9167  0.0000    0.0000  0.9014  0.0000
+@           2     0.551659     0.0000 -0.9167  0.0000    0.0000 -0.9014  0.0000
 @           3     0.968907     0.0000  0.4318  0.0000    0.0000  0.4629  0.0000
 @           4     1.159769     0.0000 -0.5793  0.0000    0.0000 -0.6418  0.0000
-@           5     1.260544     0.0000 -0.1597  0.0000    0.0000 -0.1884  0.0000
+@           5     1.260544     0.0000  0.1597  0.0000    0.0000  0.1884  0.0000
 @------------------------------------------------------------------------------
 @  Symmetry of excited state: 4  ( A2 )
 @           1     0.401120     0.0000  0.0000  0.0000    0.0000  0.0000  0.0000
@@ -2194,23 +2205,23 @@ H   0.00000             1.43153              -0.985265576
    1      4    30.0147    0.00000  0.00000  0.00000   0.00000  0.00000  0.00000
    1      5    31.8951    0.00000  0.00000  0.00000   0.00000  0.00000  0.00000
  ------------------------------------------------------------------------------
-   2      1     9.1517    0.00000  0.09046  0.00000   0.00000  0.00000  0.00000
-   2      2    24.8802    0.00000  0.08977  0.00000   0.00000  0.00000  0.00000
+   2      1     9.1517    0.00000 -0.09046  0.00000   0.00000  0.00000  0.00000
+   2      2    24.8802    0.00000 -0.08977  0.00000   0.00000  0.00000  0.00000
    2      3    31.0205    0.00000  0.04651  0.00000   0.00000  0.00000  0.00000
-   2      4    33.0296    0.00000 -0.05202  0.00000   0.00000  0.00000  0.00000
-   2      5    40.1824    0.00000  0.01511  0.00000   0.00000  0.00000  0.00000
+   2      4    33.0296    0.00000  0.05202  0.00000   0.00000  0.00000  0.00000
+   2      5    40.1824    0.00000 -0.01511  0.00000   0.00000  0.00000  0.00000
  ------------------------------------------------------------------------------
    3      1    13.5212    0.14355  0.00000  0.00000   0.00000  0.00000  0.00000
-   3      2    15.0114    0.06859  0.00000  0.00000   0.00000  0.00000  0.00000
+   3      2    15.0114   -0.06859  0.00000  0.00000   0.00000  0.00000  0.00000
    3      3    26.3653   -0.24852  0.00000  0.00000   0.00000  0.00000  0.00000
-   3      4    31.5589   -0.08810  0.00000  0.00000   0.00000  0.00000  0.00000
-   3      5    34.3011    0.04558  0.00000  0.00000   0.00000  0.00000  0.00000
+   3      4    31.5589   -0.08811  0.00000  0.00000   0.00000  0.00000  0.00000
+   3      5    34.3012   -0.04558  0.00000  0.00000   0.00000  0.00000  0.00000
  ------------------------------------------------------------------------------
    4      1    10.9150    0.00000  0.00000  0.13741   0.00000  0.00000  0.00000
-   4      2    23.0166    0.00000  0.00000 -0.12617   0.00000  0.00000  0.00000
-   4      3    34.0138    0.00000  0.00000  0.02337   0.00000  0.00000  0.00000
+   4      2    23.0166    0.00000  0.00000 -0.12616   0.00000  0.00000  0.00000
+   4      3    34.0138    0.00000  0.00000 -0.02337   0.00000  0.00000  0.00000
    4      4    37.3463    0.00000  0.00000 -0.10070   0.00000  0.00000  0.00000
-   4      5    43.6495    0.00000  0.00000 -0.19716   0.00000  0.00000  0.00000
+   4      5    43.6495    0.00000  0.00000  0.19716   0.00000  0.00000  0.00000
  ------------------------------------------------------------------------------
 
 
@@ -2239,7 +2250,7 @@ H   0.00000             1.43153              -0.985265576
 @  3      2    15.0114        0.3091   0.2988       0.000    0.000    0.000
 @  3      3    26.3653        0.1204   0.1384       0.000    0.000    0.000
 @  3      4    31.5589        0.2595   0.3185       0.000    0.000    0.000
-@  3      5    34.3011        0.0214   0.0298       0.000    0.000    0.000
+@  3      5    34.3012        0.0214   0.0298       0.000    0.000    0.000
 @ --------------------------------------------------------------------------
 @  4      1    10.9150        0.0000   0.0000       0.000    0.000    0.000
 @  4      2    23.0166        0.0000   0.0000       0.000    0.000    0.000
@@ -2264,7 +2275,7 @@ H   0.00000             1.43153              -0.985265576
     1    2     1.142     3.375     2.095     6.612
     1    3     0.835     1.122     2.476     4.432
     1    4     0.661     1.943     2.304     4.907
-    1    5     1.699     1.465     1.166     4.330
+    1    5     1.699     1.465     1.165     4.330
     1    6     0.411     2.364     1.344     4.119
     1    7     0.330     0.970     1.028     2.329
     1    8     0.699     1.194     0.798     2.691
@@ -2302,11 +2313,11 @@ H   0.00000             1.43153              -0.985265576
     2    3    31.0205    -0.420     0.767     1.877     2.225
     2    4    33.0296     1.845     0.186    -0.561     1.470
     2    5    40.1824    -0.538     1.477     1.861     2.800
-    3    1    13.5212     1.414     6.391     1.840     9.646
+    3    1    13.5212     1.414     6.392     1.840     9.646
     3    2    15.0114     1.909     2.984     3.320     8.212
     3    3    26.3653     0.769     3.599     0.775     5.144
     3    4    31.5589     0.952     1.753     1.760     4.464
-    3    5    34.3011     1.306     6.066     2.560     9.931
+    3    5    34.3012     1.306     6.066     2.560     9.931
     4    1    10.9150     0.469     6.174     2.660     9.304
     4    2    23.0166     0.044     4.116     1.754     5.914
     4    3    34.0138    -0.110     3.335     1.408     4.632
@@ -2352,22 +2363,22 @@ H   0.00000             1.43153              -0.985265576
  CPU time statistics for ABACUS
  ------------------------------
 
- EXCITA     00:00:03     100 %
+ EXCITA     00:00:02     100 %
 
- TOTAL      00:00:03     100 %
+ TOTAL      00:00:02     100 %
 
 
- >>>> Total CPU  time used in ABACUS:   2.72 seconds
- >>>> Total wall time used in ABACUS:   2.72 seconds
+  Total CPU  time used in ABACUS:   1.77 seconds
+  Total wall time used in ABACUS:   1.77 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
- >>>> Total CPU  time used in DALTON:   2.81 seconds
- >>>> Total wall time used in DALTON:   2.82 seconds
+  Total CPU  time used in DALTON:   1.83 seconds
+  Total wall time used in DALTON:   1.83 seconds
 
  
-     Date and time (Linux)  : Sat Jan  3 11:20:22 2015
-     Host name              : sunray                                  
+     Date and time (Linux)  : Fri May  9 10:12:42 2025
+     Host name              : adm-110765.pc.sdu.dk                    

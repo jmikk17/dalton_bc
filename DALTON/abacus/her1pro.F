@@ -208,6 +208,7 @@ C
 C
       DIMENSION QMTEST(NMMBA1)
 C
+#include "gnrinf.h"
 #include <shells.h>
 #include <symmet.h>
 #include <pgroup.h>
@@ -2078,6 +2079,7 @@ C
          SQUARE = .TRUE.
       GOTO 200
 C
+C     NPETES
 C     Potential energy at the tesseraes
 C     ---------------------------------
 C
@@ -2667,7 +2669,7 @@ C
       END IF
 
       IF (WORD == 'DIPLEN ') THEN
-         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF()) THEN
+         IF (USE_PELIB() .AND. PELIB_IFC_DO_LF() .AND. .NOT.DKHINT) THEN
             WRITE(LUPRI,*) 'INFO: EEF CONTRIBUTION ADDED TO DIPOLE'//
      &                     ' MOMENT INTEGRALS'
             ALLOCATE(EEFMATS(3*NELMNT))
@@ -2738,7 +2740,7 @@ C
   600     CONTINUE
        ELSE IF (FORQM3) THEN
           IF ( (INTTYP .NE. 29) .AND.
-     &         (INTTYP .NE. 35) ) THEN 
+     &         (INTTYP .NE. 35) ) THEN !NUCPOT
              IADR = KSOINT
              DO 721 I = 1, NOPTYP
                 IF (PROPRI .OR. IPRINT .GT. 4) THEN
@@ -2816,7 +2818,7 @@ C               ... specific QM3 code
                 END IF
   721         CONTINUE
             ELSE IF ( (INTTYP .EQ. 29)
-     &           .or. (INTTYP .EQ. 35) ) THEN
+     &           .or. (INTTYP .EQ. 35) ) THEN !NUCPOT
               LM3TMP = NOPTYP/NCTOT
               IF (INTTYP .EQ. 29) THEN
                 NCOMS = 0
@@ -2849,7 +2851,7 @@ C               ... specific QM3 code
      &                                RTNLBL,IPRINT)
                         ELSE IF ( (ISUBSY(K) .NE. 0) .AND.
      &                          (ISUBSI(K) .LE. NSISY(I))
-     &                         .AND. (INTTYP .EQ. 35) .AND.
+     &                         .AND. (INTTYP .EQ. 35) .AND. !NUCPOT
      &                          (MDLWRD(I)(1:3) .EQ. 'SPC') 
      &                         .AND.(.NOT.INTDIR)) THEN
                           NUSITE = NUSITE + 1
@@ -2991,6 +2993,11 @@ C     Reset gauge origin and nuclear charges
       END
 c  /* Deck SCALE_CHRG */
        SUBROUTINE SCALE_CHRG(SVCHRG)
+!
+! Scaled charges for effective 1-electron spin-orbit integrals
+! Operator labels: X1SPNSCA, Y1SPNSCA, Z1SPNSCA; class SOSCALE
+! Scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764
+!
 #include "implicit.h"
 #include "mxcent.h"
 #include "nuclei.h"
@@ -3009,6 +3016,9 @@ C
 C     Scale charges 
 C
       CALL DCOPY(NUCIND,CHARGE,1,SVCHRG,1)
+      write(lupri,'(/1x,A/1x,A)')
+     & 'Scaled charges for effective 1-electron spin-orbit integals,',
+     & 'scaling according to Koseki et al, J.Phys.Chem 1995, 99, 12764'
 C     Charges printout 
       WRITE(LUPRI,'(A)') ' Atom       Scaled charge'
       DO I = 1, NUCIND
@@ -3140,7 +3150,7 @@ Ckr   SPIN is anyway only a local variable
 !          should we also include MM centers ?
            IF (INTTYP .EQ. 29) QM3_special = .TRUE.
            IF (INTTYP .EQ. 30) QM3_special = .TRUE.
-           IF (INTTYP .EQ. 35) QM3_special = .TRUE.
+           IF (INTTYP .EQ. 35) QM3_special = .TRUE. !NUCPOT
       END IF
       IF (QM3_special) THEN
          NATOM = NCTOT
@@ -3189,7 +3199,7 @@ C
  121      CONTINUE
  120    CONTINUE
       END IF
-      IF (INTTYP .EQ. 35) THEN
+      IF (INTTYP .EQ. 35) THEN !NUCPOT
         DO 114 I=0,ISYTP
           DO 115 J = NSYSBG(I), NSYSED(I)
             DO 116 K = 1, NCTOT
@@ -4059,6 +4069,7 @@ C  /* Deck npetyp */
       LOGICAL DOATOM(NUCIND)
       CHARACTER LABINT(9*MXCENT)*8, NAME*2
 #include "qm3.h"
+#include "chrnos.h"
 
 C
       NOPTYP = NATOM
@@ -4070,12 +4081,16 @@ C
       IF (.NOT. FORQM3) THEN
         DO 100 IATOM = 1, NUCIND
           IF (DOATOM(IATOM)) THEN
-            NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
+c            NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
             DO 200 IREP = 0, MAXREP
+              JATOM = IPTNUC(IATOM,IREP)
               IF (IAND(ISTBNU(IATOM),IREP) .EQ. 0) THEN
                 ITYP = ITYP + 1
                 NPETBL(IATOM,IREP) = ITYP
-                LABINT(ITYP) = 'POT.E '//NAME
+c                LABINT(ITYP) = 'POT.E '//NAME
+                 LABINT(ITYP) = 'POT.E'//CHRNOS(JATOM/100)
+     &                                 //CHRNOS(MOD(JATOM,100)/10)
+     &                                 //CHRNOS(MOD(JATOM,10))
                 INTREP(ITYP) = IREP
               END IF
  200        CONTINUE
@@ -4084,12 +4099,16 @@ C
       ELSE
         ITYP = 0
         DO 300 IATOM = 1, NCTOT
-          NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
+c          NAME = NAMEX(3*(IATOM - 1) + 1)(1:2)
           DO 400 IREP = 0, MAXREP
+            JATOM = IPTNUC(IATOM,IREP)
             IF (IAND(ISTBNU(IATOM),IREP) .EQ. 0) THEN
               ITYP = ITYP + 1
               NPETBL(IATOM,IREP) = ITYP
-              LABINT(ITYP) = 'POT.E '//NAME
+c              LABINT(ITYP) = 'POT.E '//NAME
+               LABINT(ITYP) = 'POT.E'//CHRNOS(JATOM/100)
+     &                               //CHRNOS(MOD(JATOM,100)/10)
+     &                               //CHRNOS(MOD(JATOM,10))
               INTREP(ITYP) = IREP
             END IF
  400      CONTINUE

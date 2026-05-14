@@ -503,6 +503,8 @@ cDM added to pass vectors to MAGPCMSEC
 #include "pcmdef.h"
 #include "pcm.h"
 #include "pcmlog.h"
+! linaba.h : ABACI
+#include "linaba.h"
 cDM
 C
       SIGN = 1.0D0
@@ -650,6 +652,10 @@ C
 C     Multiplies Fock matrix with second derivative of overlap integrals
 C
       IF (WORD .EQ. 'DIASUS ' .OR. WORD .EQ. 'DSUSCGO') THEN
+         IF (ABACI) THEN
+            CALL QUIT('ERROR, '//WORD//
+     &      ' not implemented for CI properties')
+         END IF
          NCOMP  = 0
          NPATOM = 0
          CALL GET1IN(DUMMY,'S2MAG  ',NCOMP,WORK(1),LWORK,LABINT,INTREP,
@@ -2947,7 +2953,7 @@ C MBH+JK
      *                  0.0D0,0.0D0,0.0D0,1,0,0,0)
 C                        WRITE(LUPRI,*)'MBH: AUTOHZ VALUE: ',AUTOHZ
 C MBH+JK
-                        WRITE(LUPRI,'(9(/,2X,A,F12.7,A),/,/)')
+                        WRITE(LUPRI,'(9(/,2X,A,F12.4,A),/,/)')
      &                       'Isotropic coupling        :',AVETOT,' Hz',
      &                       'Anisotropic coupling      :',ANIS  ,' Hz',
      &                       'Asymmetry                 :',ASYMM ,'   ',
@@ -3163,7 +3169,7 @@ C
                               PSO    = AVEISO(IATIJ,3)*FACTOR
                               SD     = AVEISO(IATIJ,4)*FACTOR
                               FC     = AVEISO(IATIJ,5)*FACTOR
-                           WRITE(LUPRI,'(9(/,2X,A,F12.6,A),/,/)')
+                           WRITE(LUPRI,'(9(/,2X,A,F12.4,A),/,/)')
      &                       'Isotropic coupling        :',AVETOT,' Hz',
      &                       'Anisotropic coupling      :',ANIS  ,' Hz',
      &                       'Asymmetry                 :',ASYMM ,'   ',

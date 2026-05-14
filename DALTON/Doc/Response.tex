@@ -526,9 +526,15 @@ quadrupole\index{quadrupole operator} operator, respectively.
 
 \item{\Key{RESTPP}}
 Restart\index{restart!excitation energy} of single residue response
-calculation. This can only be used if the root which is
-specified is the same which was used \textit{last} in the previous
-single residue response calculation.
+calculation which did not converge (you cannot e.g. restart a converged
+calculation with a lower convergence threshold, the files necessary for
+RESTPP are deleted by DALTON after convergence).
+The files RSPRST.E2C, RSP\_BVEC, RSP\_SVEC, and RSP\_DIAG
+must be provided for restart, they are by default on the tar.gz file
+This can only be used if the first roots requested
+has the same symmetry as the trial vectors on file.  \\
+If the wave function is MCSCF type, the converged wave function must
+be reestablished with .STARTOLDCI and .MOSTART NEWORB options.
 
 \item{\Key{ROOTS}}\\
 \verb|READ *,(ROOTS(I) I=1,NSYM)|\\
@@ -1810,6 +1816,6 @@ to hyperfine coupling tensor.
 
 \item{\Key{PRINT}}     \\
 \verb|READ (LUCMD,*),IPRESR |\\
-   The line following gives the print level for the HFC routines.
+Specify the print level for the HFC routines.
 
 \end{description}

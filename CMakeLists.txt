@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 # set not CYGWIN_WIN32, to quench warning messages from CYGWIN cmake
 # will do no harm if not CYGWIN
@@ -44,7 +44,6 @@ option(ENABLE_BUILTIN_BLAS   "Enable builtin BLAS implementation (slow)"        
 option(ENABLE_AUTO_BLAS      "Enable CMake to autodetect BLAS"                  ON)
 option(ENABLE_BUILTIN_LAPACK "Enable builtin LAPACK implementation (slow)"      OFF)
 option(ENABLE_AUTO_LAPACK    "Enable CMake to autodetect LAPACK"                ON)
-option(ENABLE_SRDFT          "Enable srdft module"                              ON)
 option(ENABLE_LARGE_TEST     "Enable Large-scale (long) test cases"             OFF)
 option(ENABLE_BENCHMARK      "Enable benchmark test cases"                      OFF)
 option(ENABLE_PYTHON         "Enable Python driver script"                      OFF)

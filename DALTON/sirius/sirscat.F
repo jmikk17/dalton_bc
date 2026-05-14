@@ -1,3 +1,4 @@
+!
 !  Dalton, a molecular electronic structure program
 !  Copyright (C) The Dalton Authors (see AUTHORS file for details).
 !

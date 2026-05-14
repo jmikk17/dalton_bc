@@ -230,7 +230,7 @@ C           and subtract from input CMO matrix
 
 !     translate sirius integral level code to FCKTRA and NEWTRA integral level code
       IF (IPRTRA .GE. 0)
-     &   WRITE(LUPRI,'(/2A)', advance="no") ' FCKTRA type ',TYPE_TEXT
+     &   WRITE(LUPRI,'(2A)', advance="no") ' FCKTRA type ',TYPE_TEXT
       call N_TRALVL(JTRSIR, NTRLVL)
       IF (.NOT. NEWTRA_USEDRC) THEN
          IF (JTRSIR .GE. 1 .AND. JTRSIR .LE. 4) NTRLVL = NTRLVL + 1
@@ -507,7 +507,7 @@ C --- start of executable code
 
       HFXFAC_SAVE = HFXFAC
 
-!     Set control variables for the different types. 
+!     Set control variables for the different types.
 !       HFXFAC and IFCTYP() are used if SIRFCK is used (LUSUPM .lt. 0)
 !       ONLY_J is used if RDSUPM is used (LUSUPM .gt. 0)
       if (TYPE_TEXT(1:4) .eq. 'COUL') then ! Coulomb/Mulliken integrals
@@ -886,6 +886,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
+      use dalton_mpi_interface
       implicit none
       character*4 TYPE_TEXT
       integer ICDTRA(NNORBX), IFTHRS, LWORK
@@ -893,7 +894,6 @@ C --- start of executable code
 
 #include "priunit.h"
 
-#include "mpif.h"
 
 ! Used from include files:
 !  gnrinf.h : CHIVAL
@@ -1017,6 +1017,7 @@ C --- start of executable code
 !
 !  Written by Hans Joergen Aa. Jensen 2016
 !
+      use dalton_mpi_interface
       implicit none
       integer LWORK, IPRINT
       real*8  WORK(LWORK)
@@ -1046,8 +1047,6 @@ C --- start of executable code
 #include "inftap.h"
 #include "cbihr2.h"
 
-!  mpif.h   : for MPI
-#include "mpif.h"
 
 !     First make sure basis set information is known to this node
 

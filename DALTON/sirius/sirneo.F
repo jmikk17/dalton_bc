@@ -746,8 +746,6 @@ C
 C
       SAVE QCNOLD
 C
-#include "ibtdef.h"
-C
 C     data statements:
 C
       DATA QCNOLD/0.0D0/
@@ -1717,8 +1715,6 @@ C
 C local:
 C
       LOGICAL EXTEND,SOLVE
-C
-#include "ibtdef.h"
 C
       CALL QENTER('NEORED')
 C

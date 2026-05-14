@@ -1,0 +1,144 @@
+intel-oneapi-serial-32:
+  image: fedora:40
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  allow_failure: true
+  before_script:
+    - !reference [.intel-install, before_script]
+    # Print useful info
+    - uname -a
+    - lscpu
+    - free -h
+    - ifx --version
+    - icx --version
+    - icpx --version
+    - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - !reference [.define-cores, script]
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --type=release
+    - cd build
+    - make -j $N_PROC
+    - ldd dalton.x
+    - echo "Running ctest with $N_PROC jobs"
+    - ctest -j$N_PROC --output-on-failure -L "serial|essential" -LE "long|verylong" -E cc_rsp_alpha
+  interruptible: true
+
+intel-oneapi-serial-64:
+  image: fedora:40
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  allow_failure: true
+  before_script:
+    - !reference [.intel-install, before_script]
+    # Print useful info
+    - uname -a
+    - lscpu
+    - free -h
+    - ifx --version
+    - icx --version
+    - icpx --version
+    - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - !reference [.define-cores, script]
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - python setup --fc=ifx --cc=icx --cxx=icpx --mkl=sequential --int64 --type=release
+    - cd build
+    - make -j $N_PROC
+    - ldd dalton.x
+    - echo "Running ctest with $N_PROC jobs"
+    - ctest -j$N_PROC --output-on-failure -L "serial|essential" -LE "long|verylong" -E cc_rsp_alpha
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+    expire_in: 3 days
+  interruptible: true
+
+intel-oneapi-mpi-32:
+  image: fedora:40
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  allow_failure: true
+  before_script:
+    - !reference [.intel-install, before_script]
+    # Print useful info
+    - uname -a
+    - lscpu
+    - free -h
+    - mpiifx --version
+    - mpiicx --version
+    - mpiicpx --version
+    - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - !reference [.define-cores, script]
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --type=release
+    - cd build
+    - make -j $N_PROC
+    - ldd dalton.x
+    - export I_MPI_SHM_HEAP_VSIZE=0
+    - export I_MPI_SHM=disable
+    - echo "Running ctest with $M jobs"
+    - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
+  interruptible: true
+
+
+intel-oneapi-mpi-64:
+  image: fedora:40
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  allow_failure: true
+  before_script:
+    - !reference [.intel-install, before_script]
+    # Print useful info
+    - uname -a
+    - lscpu
+    - free -h
+    - mpiifx --version
+    - mpiicx --version
+    - mpiicpx --version
+    - mpirun --version
+    - echo "MKLROOT=$MKLROOT"
+    - python3 --version
+    - git --version
+    - cmake --version
+  script:
+    - !reference [.define-cores, script]
+    - ulimit -s unlimited
+    - echo "The shell is $SHELL"
+    - python setup --fc=mpiifx --cc=mpiicx --cxx=mpiicpx --mkl=sequential --int64 --type=release
+    - cd build
+    - make -j $N_PROC
+    - ldd dalton.x
+    - export I_MPI_SHM_HEAP_VSIZE=0
+    - export I_MPI_SHM=disable
+    - echo "Running ctest with $M jobs"
+    - ctest -j$M --output-on-failure -L dalton -LE "serial|long|verylong"
+  artifacts:
+    when: always
+    paths:
+      - build/test/
+    expire_in: 3 days
+  interruptible: true

@@ -43,10 +43,9 @@ C
       INTEGER   IPNTNO(4,*), IPNTRP(3,*),
      &          NINDAB(NORBA*NORBB,2), NINDCD(NORBC*NORBD,2)
 
-
-      PARAMETER (LBUF_alloc = 12000)
-      REAL*8    BUF(LBUF_alloc)
-      INTEGER*4 IBUF4(LBUF_alloc*2)
+#include "lbuf_aotwoint.h"
+      REAL*8    BUF(LBUF_AOTWOINT_DEFAULT)
+      INTEGER*4 IBUF4(LBUF_AOTWOINT_DEFAULT*2)
       SAVE      BUF, IBUF4, ICOUNT
 
 #include "nuclei.h"
@@ -77,7 +76,7 @@ C
       END IF
 C
       CALL ERIBUF_INI
-      LBUF = LBUF_alloc
+      LBUF = LBUF_AOTWOINT_DEFAULT
 C
 C     *******************************************************
 C     ***** Initialization when subroutine first called *****
@@ -101,7 +100,7 @@ C
          IREPD  = IEOR(IEOR(IREPA,IREPB),IREPC)
          IF (NOTEST) THEN
             IF (NIBUF .EQ. 1) THEN
-               INT = 0
+               jINT = 0
                DO 200 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -109,8 +108,8 @@ C
                   INDB = IPTSYM(NSTRNB + IB,IREPB)
                   INDAB = MAX(INDA,INDB)*IBIT1 + INDA + INDB
                   DO 210 ICD = 1, NORBCD
-                     INT = INT + 1
-                     SOINT = SO(ISOFF+INT)
+                     jINT = jINT + 1
+                     SOINT = SO(ISOFF+jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                        IC = KHKTC*(NINDCD(ICD,1) - 1)
                        ID = KHKTD*(NINDCD(ICD,2) - 1)
@@ -129,7 +128,7 @@ C
   210             CONTINUE
   200          CONTINUE
             ELSE
-               INT = 0
+               jINT = 0
                DO 205 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -137,8 +136,8 @@ C
                   INDB = IPTSYM(NSTRNB + IB,IREPB)
                   INDAB = MAX(INDA,INDB)*IBIT1 + INDA + INDB
                   DO 215 ICD = 1, NORBCD
-                     INT = INT + 1
-                     SOINT = SO(ISOFF+INT)
+                     jINT = jINT + 1
+                     SOINT = SO(ISOFF+jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                        IC = KHKTC*(NINDCD(ICD,1) - 1)
                        ID = KHKTD*(NINDCD(ICD,2) - 1)
@@ -158,20 +157,20 @@ C
   215             CONTINUE
   205          CONTINUE
             END IF
-         ELSE
+         ELSE ! not NOTEST
             DCMPAB = IPNTLG(1,I)
             DCMPCD = IPNTLG(2,I)
             DCABAB = IPNTLG(3,I)
             DRALTB = IREPA .LT. IREPB
             DRCLTD = IREPC .LT. IREPD
             DRABAB = DCABAB .AND. IREPA.EQ.IREPC .AND. IREPB.EQ.IREPD
-            INT = 0
+            jINT = 0
             DO 300 IAB = 1, NORBAB
                IA = KHKTA*(NINDAB(IAB,1) - 1)
                IB = KHKTB*(NINDAB(IAB,2) - 1)
                IF (DCMPAB) THEN
                   IF ((IB.GT.IA) .OR. (DRALTB.AND.IB.EQ.IA)) THEN
-                     INT = INT + NORBCD
+                     jINT = jINT + NORBCD
                      GO TO 300
                   END IF
                END IF
@@ -181,7 +180,7 @@ C
                DO 310 ICD = 1,NORBCD
                   IC = KHKTC*(NINDCD(ICD,1) - 1)
                   ID = KHKTD*(NINDCD(ICD,2) - 1)
-                  INT = INT + 1
+                  jINT = jINT + 1
                   IF (DCMPCD ) THEN
                      IF (ID.GT.IC) GO TO 310
                      IF (DRCLTD .AND. ID.EQ.IC) GO TO 310
@@ -189,7 +188,7 @@ C
                   IF (DRABAB) THEN
                      IF (IA.LT.IC.OR.(IA.EQ.IC.AND.IB.LT.ID)) GOTO 310
                   END IF
-                  SOINT = SO(ISOFF+INT)
+                  SOINT = SO(ISOFF+jINT)
                   IF (ABS(SOINT) .GT. THRESH) THEN
                      INDC = IPTSYM(NSTRNC + IC,IREPC)
                      INDD = IPTSYM(NSTRND + ID,IREPD)
@@ -243,7 +242,6 @@ C
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
       REAL*8    BUF(LBUF)
       INTEGER*4 IBUF4(LBUF*NIBUF), ICOUNT4
 #include "twosta.h"
@@ -269,26 +267,34 @@ C
          IF (IPRINT .GE. 6) THEN
             WRITE (LUPRI,'(2X,A,I5,A/)')
      &         'Type 0 integral buffer #',NBUF,' has been written.'
+            ierr = 0
             IBIT1 = 2**NBITS - 1
-            DO 100 INT = 1, ICOUNT
+            DO 100 jINT = 1, ICOUNT
+               iF (ABS(BUF(JINT)) .LT. 1.D100) CYCLE
+                  ierr = ierr + 1
                IF (NIBUF .EQ. 1) THEN
-                  IJKL = IBUF4(INT)
+                  IJKL = IBUF4(jINT)
                   I = IAND(ISHFT(IJKL,-3*NBITS),IBIT1)
                   J = IAND(ISHFT(IJKL,-2*NBITS),IBIT1)
                   K = IAND(ISHFT(IJKL,  -NBITS),IBIT1)
                   L = IAND(      IJKL,          IBIT1)
                ELSE
-                  IJ = IBUF4(2*INT-1)
-                  KL = IBUF4(2*INT  )
+                  IJ = IBUF4(2*jINT-1)
+                  KL = IBUF4(2*jINT  )
                   I = IAND(ISHFT(IJ, -NBITS),IBIT1)
                   J = IAND(      IJ,         IBIT1)
                   K = IAND(ISHFT(KL, -NBITS),IBIT1)
                   L = IAND(      KL,         IBIT1)
                END IF
                WRITE (LUPRI,'(10X,A,2X,4I4,5X,1P,D16.8)')
-     &                      ' ## ', I, J, K, L, BUF(INT)
+     &                      ' ## ', I, J, K, L, BUF(jINT)
   100       CONTINUE
+            if (ierr .gt. 0) then
+               write(lupri,*) ierr,' bad integrals ',icount
+               call quit( 'un2wrt error stop - bad integrals' )
+            end if
          END IF
+
          ICOUNT = 0
       ELSE ! finished
          ICOUNT4 = ICOUNT
@@ -303,23 +309,23 @@ C
      &            ' integral buffer #',NBUF+1,' has been written.'
                write (lupri,*) ICOUNT,' integrals in buffer'
                IBIT1 = 2**NBITS - 1
-               DO 200 INT = 1, ICOUNT
+               DO 200 jINT = 1, ICOUNT
                   IF (NIBUF .EQ. 1) THEN
-                     IJKL = IBUF4(INT)
+                     IJKL = IBUF4(jINT)
                      I = IAND(ISHFT(IJKL,-3*NBITS),IBIT1)
                      J = IAND(ISHFT(IJKL,-2*NBITS),IBIT1)
                      K = IAND(ISHFT(IJKL,  -NBITS),IBIT1)
                      L = IAND(      IJKL,          IBIT1)
                   ELSE
-                     IJ = IBUF4(2*INT-1)
-                     KL = IBUF4(2*INT  )
+                     IJ = IBUF4(2*jINT-1)
+                     KL = IBUF4(2*jINT  )
                      I = IAND(ISHFT(IJ,-NBITS),IBIT1)
                      J = IAND(      IJ,        IBIT1)
                      K = IAND(ISHFT(KL,-NBITS),IBIT1)
                      L = IAND(      KL,        IBIT1)
                   END IF
                   WRITE (LUPRI,'(10X,A,2X,4I4,5X,1P,D16.8)')
-     &                         ' ## ', I, J, K, L, BUF(INT)
+     &                         ' ## ', I, J, K, L, BUF(jINT)
   200          CONTINUE
             END IF
          END IF
@@ -360,6 +366,7 @@ Chjaaj:     FBYTES is calculed in four lines, to avoid integer overflows.
       END IF
       RETURN
       END
+C&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 C  /* Deck fckout */
       SUBROUTINE FCKOUT(FMAT,DMAT,NDMAT,SO,IPNTNO,IPNTRP,IPNTLG,
      &                  FIRST,LAST,THRESH,NINDAB,NINDCD,IPRINT)
@@ -423,15 +430,15 @@ C
          IREPC  = IPNTRP(3,I)
          IREPD  = IEOR(IEOR(IREPA,IREPB),IREPC)
          IF (NOTEST) THEN
-            INT = 0
+            jINT = 0
             DO 200 IAB = 1, NORBAB
                IA = KHKTA*(NINDAB(IAB,1) - 1)
                IB = KHKTB*(NINDAB(IAB,2) - 1)
                INDA = IPTSYM(NSTRNA + IA,IREPA)
                INDB = IPTSYM(NSTRNB + IB,IREPB)
                DO 210 ICD = 1, NORBCD
-                  INT = INT + 1
-                  SOINT = SO(ISOFF+INT)
+                  jINT = jINT + 1
+                  SOINT = SO(ISOFF+jINT)
                   IF (ABS(SOINT) .GT. THRESH) THEN
                      IC = KHKTC*(NINDCD(ICD,1) - 1)
                      ID = KHKTD*(NINDCD(ICD,2) - 1)
@@ -459,13 +466,13 @@ C
             DRALTB = IREPA .LT. IREPB
             DRCLTD = IREPC .LT. IREPD
             DRABAB = DCABAB .AND. IREPA.EQ.IREPC .AND. IREPB.EQ.IREPD
-            INT = 0
+            jINT = 0
             DO 300 IAB = 1, NORBAB
                IA = KHKTA*(NINDAB(IAB,1) - 1)
                IB = KHKTB*(NINDAB(IAB,2) - 1)
                IF (DCMPAB) THEN
                   IF ((IB.GT.IA) .OR. (DRALTB.AND.IB.EQ.IA)) THEN
-                     INT = INT + NORBCD
+                     jINT = jINT + NORBCD
                      GO TO 300
                   END IF
                END IF
@@ -474,7 +481,7 @@ C
                DO 310 ICD = 1,NORBCD
                   IC = KHKTC*(NINDCD(ICD,1) - 1)
                   ID = KHKTD*(NINDCD(ICD,2) - 1)
-                  INT = INT + 1
+                  jINT = jINT + 1
                   IF (DCMPCD ) THEN
                      IF (ID.GT.IC) GO TO 310
                      IF (DRCLTD .AND. ID.EQ.IC) GO TO 310
@@ -482,7 +489,7 @@ C
                   IF (DRABAB) THEN
                      IF (IA.LT.IC.OR.(IA.EQ.IC.AND.IB.LT.ID)) GOTO 310
                   END IF
-                  SOINT = SO(ISOFF+INT)
+                  SOINT = SO(ISOFF+jINT)
                   IF (ABS(SOINT) .GT. THRESH) THEN
                      INDC = IPTSYM(NSTRNC + IC,IREPC)
                      INDD = IPTSYM(NSTRND + ID,IREPD)
@@ -536,12 +543,12 @@ C
      &          BUF(LENGTH), IBUF(4,LENGTH)
 
 C
-      DO 100 INT = 1, LENGTH
-         DINT = BUF(INT)
-         P    = IBUF(1,INT)
-         Q    = IBUF(2,INT)
-         R    = IBUF(3,INT)
-         S    = IBUF(4,INT)
+      DO 100 jINT = 1, LENGTH
+         DINT = BUF(jINT)
+         P    = IBUF(1,jINT)
+         Q    = IBUF(2,jINT)
+         R    = IBUF(3,jINT)
+         S    = IBUF(4,jINT)
          IF (P.EQ.Q)              DINT = DP5*DINT
          IF (R.EQ.S)              DINT = DP5*DINT
          IF (P.EQ.R .AND. S.EQ.Q) DINT = DP5*DINT
@@ -635,7 +642,7 @@ C
                IREPC  = IPNTRP(3,I,IREPX)
                IREPD  = IEOR(IEOR(IEOR(IREPA,IREPB),IREPC),IREPE)
                IF (NOTEST) THEN
-                  INT = 0
+                  jINT = 0
                   DO 400 IAB = 1, NORBAB
                      IA = KHKTA*(NINDAB(IAB,1) - 1)
                      IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -643,8 +650,8 @@ C
                      INDB = IPTSYM(NSTRNB + IB,IREPB)
                      INDAB = MAX(INDA,INDB)*IBIT1 + INDA + INDB
                      DO 410 ICD = 1, NORBCD
-                        INT = INT + 1
-                        SOINT = SO(ISOFF+INT)
+                        jINT = jINT + 1
+                        SOINT = SO(ISOFF+jINT)
                         IF (ABS(SOINT) .GT. THRESH) THEN
                            ICOUNT = ICOUNT + 1
                            IC = KHKTC*(NINDCD(ICD,1) - 1)
@@ -692,13 +699,13 @@ C
                   DRALTB = IREPA .LT. IREPB
                   DRCLTD = IREPC .LT. IREPD
                   DRABAB = DCABAB.AND.IREPA.EQ.IREPC.AND.IREPB.EQ.IREPD
-                  INT = 0
+                  jINT = 0
                   DO 500 IAB = 1, NORBAB
                      IA = KHKTA*(NINDAB(IAB,1) - 1)
                      IB = KHKTB*(NINDAB(IAB,2) - 1)
                      IF (DCMPAB) THEN
                         IF ((IB.GT.IA) .OR. (DRALTB.AND.IB.EQ.IA)) THEN
-                           INT = INT + NORBCD
+                           jINT = jINT + NORBCD
                            GO TO 500
                         END IF
                      END IF
@@ -708,7 +715,7 @@ C
                      DO 510 ICD = 1,NORBCD
                         IC = KHKTC*(NINDCD(ICD,1) - 1)
                         ID = KHKTD*(NINDCD(ICD,2) - 1)
-                        INT = INT + 1
+                        jINT = jINT + 1
                         IF (DCMPCD ) THEN
                            IF (ID.GT.IC) GO TO 510
                            IF (DRCLTD .AND. ID.EQ.IC) GO TO 510
@@ -717,7 +724,7 @@ C
                            IF (IA.LT.IC.OR.(IA.EQ.IC.AND.IB.LT.ID))
      &                        GOTO 510
                         END IF
-                        SOINT = SO(ISOFF+INT)
+                        SOINT = SO(ISOFF+jINT)
                         IF (ABS(SOINT) .GT. THRESH) THEN
                            ICOUNT = ICOUNT + 1
                            INDC = IPTSYM(NSTRNC + IC,IREPC)
@@ -924,7 +931,7 @@ C  /* Deck dr2pri */
       SUBROUTINE DR2PRI(BUF,IBUF4,LBUF,ICOUNT,NBUF)
 #include "implicit.h"
 #include "priunit.h"
-#include "ibtpar.h"
+#include "ibtdef.h"
       REAL*8    BUF(LBUF)
       INTEGER*4 IBUF4(LBUF)
       SAVE IATOM, ICOOR, IREPE
@@ -932,8 +939,8 @@ C  /* Deck dr2pri */
 
       WRITE(LUPRI,'(2X,A,I5,A/)')
      &   'Integral buffer #',NBUF + 1,' has been written.'
-      DO 100 INT = 1, ICOUNT
-         IJKL = IBUF4(INT)
+      DO 100 jINT = 1, ICOUNT
+         IJKL = IBUF4(jINT)
          I = IAND(ISHFT(IJKL,-24),IBT08)
          J = IAND(ISHFT(IJKL,-16),IBT08)
          K = IAND(ISHFT(IJKL, -8),IBT08)
@@ -944,7 +951,7 @@ C  /* Deck dr2pri */
             IATOM = IAND(ISHFT(IJKL,-24),IBT08)
          ELSE
             WRITE (LUPRI,'(10X,A,2X,4I4,5X,I2,A,I2,5X,1P,D16.8)')
-     &         ' ## ',I,J,K,L,IATOM,CHRXYZ(ICOOR),IREPE,BUF(INT)
+     &         ' ## ',I,J,K,L,IATOM,CHRXYZ(ICOOR),IREPE,BUF(jINT)
          END IF
   100 CONTINUE
       RETURN
@@ -1009,7 +1016,7 @@ C
             IREPC  = IPNTRP(3,I,IREPX)
             IREPD  = IEOR(IEOR(IEOR(IREPA,IREPB),IREPC),IREPE)
             IF (NOTEST) THEN
-               INT = 0
+               jINT = 0
                DO 400 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -1020,8 +1027,8 @@ C
                      ID = KHKTD*(NINDCD(ICD,2) - 1)
                      INDC = IPTSYM(NSTRNC + IC,IREPC)
                      INDD = IPTSYM(NSTRND + ID,IREPD)
-                     INT = INT + 1
-                     SOINT = SO(ISOFF1 + INT)
+                     jINT = jINT + 1
+                     SOINT = SO(ISOFF1 + jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                         INDAB = INDA*(IBIT1+1) + INDB
                         INDCD = INDC*(IBIT1+1) + INDD
@@ -1039,7 +1046,7 @@ C
      &                                IATOM,ICOOR,IREPE,0,SPNORB,IPRINT)
                         END IF
                      END IF
-                     SOINT = SO(ISOFF2 + INT)
+                     SOINT = SO(ISOFF2 + jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                         INDAB = INDA*(IBIT1+1) + INDB
                         INDDC = INDD*(IBIT1+1) + INDC
@@ -1066,13 +1073,13 @@ C
                DRALTB = IREPA .LT. IREPB
                DRCLTD = IREPC .LT. IREPD
                DRABAB = DCABAB.AND.IREPA.EQ.IREPC.AND.IREPB.EQ.IREPD
-               INT = 0
+               jINT = 0
                DO 500 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
                   IF (DCMPAB) THEN
                      IF ((IB.GT.IA) .OR. (DRALTB.AND.IB.EQ.IA)) THEN
-                        INT = INT + NORBCD
+                        jINT = jINT + NORBCD
                         GO TO 500
                      END IF
                   END IF
@@ -1084,7 +1091,7 @@ C
                      ID   = KHKTD*(NINDCD(ICD,2) - 1)
                      INDC = IPTSYM(NSTRNC + IC,IREPC)
                      INDD = IPTSYM(NSTRND + ID,IREPD)
-                     INT = INT + 1
+                     jINT = jINT + 1
                      IF (DCMPCD ) THEN
                         IF (ID.GT.IC) GO TO 510
                         IF (DRCLTD .AND. ID.EQ.IC) GO TO 510
@@ -1093,7 +1100,7 @@ C
                         IF (IA.LT.IC.OR.(IA.EQ.IC.AND.IB.LT.ID))
      &                     GOTO 510
                      END IF
-                     SOINT = SO(ISOFF1 + INT)
+                     SOINT = SO(ISOFF1 + jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                         INDAB = INDA*(IBIT1+1) + INDB
                         INDCD = INDC*(IBIT1+1) + INDD
@@ -1111,7 +1118,7 @@ C
      &                                IATOM,ICOOR,IREPE,0,SPNORB,IPRINT)
                         END IF
                      END IF
-                     SOINT = SO(ISOFF2 + INT)
+                     SOINT = SO(ISOFF2 + jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                      IF (INDA .EQ. INDB) GO TO 510
                      IF (INDC .EQ. INDD) GO TO 510
@@ -1263,7 +1270,7 @@ C
          IREPD  = IEOR(IEOR(IREPA,IREPB),IREPC)
          IF (NOTEST) THEN
             IF (NIBUF .EQ. 1) THEN
-               INT = 0
+               jINT = 0
                DO 200 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -1277,8 +1284,8 @@ Cholesky
                   ENDIF
 Cholesky
                   DO 210 ICD = 1, NORBCD
-                     INT = INT + 1
-                     SOINT = SO(ISOFF+INT)
+                     jINT = jINT + 1
+                     SOINT = SO(ISOFF+jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                        IC = KHKTC*(NINDCD(ICD,1) - 1)
                        ID = KHKTD*(NINDCD(ICD,2) - 1)
@@ -1316,7 +1323,7 @@ Cholesky
   210             CONTINUE
   200          CONTINUE
             ELSE
-               INT = 0
+               jINT = 0
                DO 205 IAB = 1, NORBAB
                   IA = KHKTA*(NINDAB(IAB,1) - 1)
                   IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -1331,8 +1338,8 @@ C                    IF (INDB .GT.  INDA) GOTO 205
                   ENDIF
 Cholesky
                   DO 215 ICD = 1, NORBCD
-                     INT = INT + 1
-                     SOINT = SO(ISOFF+INT)
+                     jINT = jINT + 1
+                     SOINT = SO(ISOFF+jINT)
                      IF (ABS(SOINT) .GT. THRESH) THEN
                        IC = KHKTC*(NINDCD(ICD,1) - 1)
                        ID = KHKTD*(NINDCD(ICD,2) - 1)
@@ -1374,7 +1381,7 @@ Cholesky
          ELSE
             DCMPCD = IPNTLG(2,I)
             DRCLTD = IREPC .LT. IREPD
-            INT = 0
+            jINT = 0
             DO 300 IAB = 1, NORBAB
                IA = KHKTA*(NINDAB(IAB,1) - 1)
                IB = KHKTB*(NINDAB(IAB,2) - 1)
@@ -1391,12 +1398,12 @@ Cholesky
                DO 310 ICD = 1,NORBCD
                   IC = KHKTC*(NINDCD(ICD,1) - 1)
                   ID = KHKTD*(NINDCD(ICD,2) - 1)
-                  INT = INT + 1
+                  jINT = jINT + 1
                   IF (DCMPCD ) THEN
                      IF (ID.GT.IC) GO TO 310
                      IF (DRCLTD .AND. ID.EQ.IC) GO TO 310
                   END IF
-                  SOINT = SO(ISOFF+INT)
+                  SOINT = SO(ISOFF+jINT)
                   IF (ABS(SOINT) .GT. THRESH) THEN
                      IF (NIBUF .EQ. 1) THEN
                        INDC = IPTSYM(NSTRNC + IC,IREPC)
@@ -1521,7 +1528,6 @@ C
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
 #include "eritap.h"
 #include "eribuf.h"
       DIMENSION BUF(LBUF)
@@ -1553,23 +1559,23 @@ C
             WRITE (LUPRI,'(2X,A,I5,A/)')
      &         'UN2WRN: Integral buffer #',NBUFX(0),' has been written.'
             IBIT1 = 2**NBITS - 1
-            DO 100 INT = 1, ICOUNT
+            DO 100 jINT = 1, ICOUNT
                IF (NIBUF .EQ. 1) THEN
-                  IJKL = IBUF4(INT)
+                  IJKL = IBUF4(jINT)
                   I = IAND(ISHFT(IJKL,-3*NBITS),IBIT1)
                   J = IAND(ISHFT(IJKL,-2*NBITS),IBIT1)
                   K = IAND(ISHFT(IJKL,  -NBITS),IBIT1)
                   L = IAND(       IJKL,         IBIT1)
                ELSE
-                  IJ = IBUF4(2*INT-1)
-                  KL = IBUF4(2*INT  )
+                  IJ = IBUF4(2*jINT-1)
+                  KL = IBUF4(2*jINT  )
                   I = IAND(ISHFT(IJ,-NBITS),IBIT1)
                   J = IAND(       IJ,       IBIT1)
                   K = IAND(ISHFT(KL,-NBITS),IBIT1)
                   L = IAND(       KL,       IBIT1)
                END IF
                WRITE (LUPRI,'(10X,A,2X,4I4,5X,1P,D16.8)')
-     &                      ' ## ', I, J, K, L, BUF(INT)
+     &                      ' ## ', I, J, K, L, BUF(jINT)
   100       CONTINUE
          END IF
          ICOUNT = 0
@@ -1584,23 +1590,23 @@ C
      &         'UN2WRN: Integral buffer #',NBUFX(0),' has been written.'
      &         //'  INDA =',INDA
                IBIT1 = 2**NBITS - 1
-               DO 200 INT = 1, ICOUNT
+               DO 200 jINT = 1, ICOUNT
                   IF (NIBUF .EQ. 1) THEN
-                     IJKL = IBUF4(INT)
+                     IJKL = IBUF4(jINT)
                      I = IAND(ISHFT(IJKL,-3*NBITS),IBIT1)
                      J = IAND(ISHFT(IJKL,-2*NBITS),IBIT1)
                      K = IAND(ISHFT(IJKL,  -NBITS),IBIT1)
                      L = IAND(       IJKL,         IBIT1)
                   ELSE
-                     IJ = IBUF4(2*INT-1)
-                     KL = IBUF4(2*INT  )
+                     IJ = IBUF4(2*jINT-1)
+                     KL = IBUF4(2*jINT  )
                      I = IAND(ISHFT(IJ,-NBITS),IBIT1)
                      J = IAND(       IJ,       IBIT1)
                      K = IAND(ISHFT(KL,-NBITS),IBIT1)
                      L = IAND(       KL,       IBIT1)
                   END IF
                   WRITE (LUPRI,'(10X,A,2X,4I4,5X,1P,D16.8)')
-     &                         ' ## ', I, J, K, L, BUF(INT)
+     &                         ' ## ', I, J, K, L, BUF(jINT)
   200          CONTINUE
             END IF
          END IF

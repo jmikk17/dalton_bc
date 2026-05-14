@@ -96,11 +96,12 @@ C CONTINUUM key added to activate CONTINUUM basis functs of Kaufmann - Sonia 201
 c===========================================================================
 C  /* Deck reainp */
       SUBROUTINE REAINP(WORD,RELCAL)
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "maxaqn.h"
 #include "mxcent.h"
-      PARAMETER ( NTABLE = 14, D1 = 1.0D0)
+      PARAMETER ( NTABLE = 15, D1 = 1.0D0)
       LOGICAL NEWDEF, RELCAL
       CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
 !
@@ -112,11 +113,12 @@ C  /* Deck reainp */
 #include "numder.h"
 #include "r12int.h"
 #include "qm3.h"
+#include "cbiher.h"
 C
       DATA TABLE /'.PRINT ', '.CONTIN', '.MAXPRI', '.BIGVEC',
      *            '.ONLYOV', '.SYMTHR', '.CM FUN', '.ZCMVAL',
      *            '.WRTLIN', '.UNCONT', '.ANGSTR', '.R12AUX',
-     &            '.NOMOVE', '.NUCMOD'/
+     &            '.NOMOVE', '.NUCMOD', '.EXPONE'/
 C
 C     ... in qm3.h, for QM3:
       ONLYOV = .FALSE.
@@ -137,7 +139,7 @@ C
                ICHANG = ICHANG + 1
                DO 200 I = 1, NTABLE
                   IF (TABLE(I) .EQ. WORD) THEN
-                     GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14), I
+                     GO TO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15), I
                   END IF
   200          CONTINUE
                IF (WORD .EQ. '.OPTION') THEN
@@ -241,6 +243,18 @@ C Nuclear model
      &           '*** ERROR '//WORD1//': Unknown nuclear model')
                ENDIF
                GO TO 100
+   15    CONTINUE
+            LRNUC = .TRUE.
+            READ (LUCMD, *, IOSTAT=IOS) LRNUCEXP
+            WRITE(LUPRI,*) 'Nuclear gaussians will be
+     &         changed to',LRNUCEXP
+            IF (IOS.NE.0) THEN
+              WRITE(LUPRI,*) 'Error in reading LRNUCEXP!'
+              WRITE(LUPRI,*) 'LRNUCEXP:', LRNUCEXP
+              CALL QUIT('Error in reading LRNUCEXP!')
+            ENDIF
+            GO TO 100
+
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
             ELSE
@@ -832,7 +846,7 @@ C     .. NMLINE_4 indentifies input line with Angstrom or Bohr indicator. ("line
       IF (ID3 .NE. ' ' .or. ANGS ) THEN
         ANG = .TRUE.
         IF (IPREAD .GT. 0)
-     &      WRITE (LUPRI,'(/2X,A/10X,A,F11.8,A2)')
+     &      WRITE (LUPRI,'(/2X,A/10X,A,F14.11,A2)')
      &          'Coordinates are entered in Angstrom'//
      &          ' and converted to atomic units.',
      &          '- Conversion factor : 1 bohr =',XTANG,' A'
@@ -946,10 +960,11 @@ C
 #if defined(BUILD_GEN1INT)
 C...  added by Bin Gao, Feb. 16, 2011
 C...  initializes Gen1Int interface
-      call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
-     &                       NBLCK(:,1), KANG, JCO(:,:,1),
-     &                       KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
-     &                       ALPHA(:,:,1), CPRIMU(:,:,:,1))
+      if (.not. dkhint) ! do not initialize when dkhint, wait for the contracted basis set
+     &   call gen1int_host_init(1, NONTYP, KATOM, NONT, IQM(:,1),
+     &                          NBLCK(:,1), KANG, JCO(:,:,1),
+     &                          KBLOCK, NUC(:,1), NRC(:,1), KPRIM,
+     &                          ALPHA(:,:,1), CPRIMU(:,:,:,1))
 #endif
 
 C
@@ -1449,6 +1464,7 @@ C
      &                  ' or .CONTINUUM')
                   END IF
                   IQM(I,J) = LCMMAX + 1
+                  IZATOM(I) = -999 ! code for Rydberg/continuum basis set
 
                   if (LCNTNUUM) then
                   CALL CMBAS_CNUUM(IQM(I,J),JCO(1,I,J),NUC(IBLOCK(J),J),
@@ -1939,6 +1955,7 @@ C
 C     Read and process data about symmetry independent centers
 C
 C*****************************************************************************
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1966,6 +1983,8 @@ C     include character ASYMB(0:NSYMB)*2 with atomic symbols
 #include "pcmlog.h"
 #include "pcm.h"
 #include "qm3.h"
+#include "cbiher.h"
+
 C
       NQ = NINT(Q)
 C
@@ -1975,6 +1994,9 @@ C
          ELSE
             GEXP = Q_EXPONENT
          ENDIF
+         IF (LRNUC) THEN
+            GEXP = LRNUCEXP
+         END IF
          IF (IPREAD.GT.0) WRITE(LUPRI,'(2X,A2,A,1P,D16.5/)') ASYMB(NQ),
      &   '  : Exponent for nuclear gaussian charge distribution : ',GEXP
       ELSE
@@ -2053,15 +2075,17 @@ C
         GO TO 104
 C
   103   CONTINUE
-        WRITE(LUPRI,'(/A,I5/A,I5,A)')
-     &     ' ERROR: Unable to read Cartesian coordinates of atom no.',
-     &     NCTOT,' from line',NMLINE,' in the MOLECULE input file:'
-        WRITE(LUPRI,'(A)') MLINE(NMLINE)
+        WRITE(LUPRI,'(/A,I0/A,I0,A,I0,A)')
+     &     ' ERROR: Unable to read Cartesian coordinates of atom no. ',
+     &     NCTOT,' from line ',NMLINE,' position ',IPOS,
+     &     ' in the MOLECULE input file:'
+        WRITE(LUPRI,'(A)') MLINE(NMLINE)(IPOS:)
+        WRITE(LUPRI,'(2A)') 'Full line:',MLINE(NMLINE)
         IF (LUERR .NE. LUPRI) THEN
            WRITE(LUERR,'(/A,I5/A,I5,A)')
      &     ' ERROR: Unable to read Cartesian coordinates of atom no.',
      &     NCTOT,' from line',NMLINE,' in the MOLECULE input file:'
-           WRITE(LUERR,'(A)') MLINE(NMLINE)
+           WRITE(LUERR,'(A)') MLINE(NMLINE)(IPOS:)
         END IF
         CALL QUIT('ERROR reading atomic coordinates in MOLECULE input')
 C
@@ -2692,10 +2716,12 @@ C
 
          CALL PRICAR(WORK,LWORK)
 
-         IF (USE_PELIB()
-     &       .OR. PELIB_IFC_DO_MEP()
-     &       .OR. PELIB_IFC_DO_SAVDEN()) THEN
+         IF (.NOT.DKHINT) THEN ! skip if uncontracted basis sets for DKH2
+         IF (USE_PELIB() .OR.
+     &       PELIB_IFC_DO_MEP() .OR.
+     &       PELIB_IFC_DO_SAVDEN()) THEN
             CALL PELIB_IFC_INIT()
+         END IF
          END IF
       END IF
 C
@@ -3365,6 +3391,7 @@ C     Process basis data
 C
 C******************************************************************************
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "pi.h"
@@ -3374,7 +3401,6 @@ C******************************************************************************
 #include "maxaqn.h"
 
 #ifdef VAR_MPI
-#include "mpif.h"
 #include "infpar.h"
 #endif
 
@@ -3830,6 +3856,7 @@ C
       DIPNUC(1:3) = D0
       NUCDEP    = 0
       NCDTOT    = 0
+      NGHOST    = 0
       NFLOAT    = 0
 
       DO 100 N = 1, NCTOT
@@ -3839,13 +3866,26 @@ C
      &      WRITE (LUPRI,1000) NAMN(N),(CORD(I,N),I=1,3),CHARGE(N),
      &                        IFAKBN(ISTBNU(N)), NDEG - 1
          NUCDEG(N) = NDEG
-         IF (CHARGE(N) .EQ. D0 .AND. NAMN(N) .NE. 'cav' .AND.
-     &       N .LE. NUCIND) THEN
+         IF (MULBSI(N) .GT. 1) THEN
+            ! auxiliary basis set center, do nothing here
+         ELSE IF (NAMN(N) .EQ. 'cav' .OR. IZATOM(N) .EQ. -999) THEN
+            ! spherical cavity center or Rydberg/continuum center, do nothing here
+         ELSE IF (IZATOM(N) .LT. 0) THEN ! ghost center
+            NGHOST = NGHOST + 1
+         ELSE IF (IZATOM(N) .EQ. 0 .AND. N .LE. NUCIND) THEN
+            ! This is a floating orbital center, floating orbitals can be used in ABACUS
+            !    ghost orbital centers have izatom(n) = -nq
+            !    mbsi orbital centers have izatom(n) = -nq
+            !    a Rydberg/continuum orbital center have izatom(n) = -999
+            !    point charges have izatom(n) = -1234567890
             NFLOAT = NFLOAT + NDEG
          ELSE IF (NFLOAT .GT. 0) THEN
-!           CALL QUIT(
-!    &      'All nuclei MUST come before floating orbital centers')
-!           So 1:NATOMS run over the real nuclei
+            IF (IPREAD .LT. 5)
+     &      WRITE (LUPRI,1000) NAMN(N),(CORD(I,N),I=1,3),CHARGE(N),
+     &                        IFAKBN(ISTBNU(N)), NDEG - 1
+            CALL QUIT('.mol input error:'//
+     &      'All nuclei MUST come before floating orbital centers')
+!           So 1:NATOMS run over real and ghost nuclei
          END IF
          IF ( ISUBSY(N) .EQ. 0 ) THEN
 C        ... only QM atoms contribute to nuclear dipole moment
@@ -3885,6 +3925,16 @@ C           Calculate nuclear dipole moment with origin (0,0,0)
             END IF
   200    CONTINUE
   100 CONTINUE
+
+      IF (NFLOAT .GT. 0 .AND. NGHOST .GT. 0) THEN
+         call quit('ERROR: You cannot have both '//
+     &   'floating and ghost orbitals in same calculation')
+      END IF
+      IF (NFLOAT .GT. 0 .AND. NMULBS .GT. 1) THEN
+         call quit('ERROR: You cannot have both floating '//
+     &   'orbitals and multiple basis sets in same calculation')
+      END IF
+
 C     Now: NUCDEP = QM atoms + floating centers
 C          NCDTOT = NUCDEP + MM centers
       NATOMS = NUCDEP - NFLOAT
@@ -3904,9 +3954,9 @@ C
      &           + (CORD(2,N)-CORD(2,M)*PT(IAND(ISYMAX(2,1),KB)))**2
      &           + (CORD(3,N)-CORD(3,M)*PT(IAND(ISYMAX(3,1),KB)))**2
               DIST = SQRT(DS)
-              IF (.NOT. NOATMD) THEN
-               IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
-              END IF
+c              IF (.NOT. NOATMD) THEN
+c               IF (DIST.LT.0.1.AND.CHARGE(M)*CHARGE(N).NE.D0) GOTO 5000
+c              END IF
               IF (IAND(KB,ISTBNU(N)) .EQ. 0) THEN
                 IF (DIST.GT.D0) THEN
                   HKAB  = FMULT(IAND(ISTBNU(M),ISTBNU(N)))
@@ -4431,7 +4481,7 @@ C
         END IF
   10  CONTINUE
       IF (NFLOAT .GT. 0) WRITE (LUPRI,'(/A,I5)')
-     &   '  Number of floating/multiple basis set orbitals :',NFLOAT
+     &   '  Number of floating basis set centers :',NFLOAT
       IF (MAXREP .GT. 0 .AND. IPREAD .GT. 0) THEN
          IF (IPREAD .GE. 10) THEN
             WRITE(LUPRI,'(10X,A/)') 'Symmetry pointer indices'
@@ -4722,9 +4772,10 @@ C
       IPTEST = MIN(NUCDEP/13,2)
 C     hjaaj: x,y,z normally only interesting for
 C            small molecules, otherwise just a lot of lines.
+C            Note that the coefficients ARE printed in the copy of the input.
       IF (QMMM .OR. USE_PELIB()) IPTEST = 0
-      IF ( IPREAD .GT. IPTEST )  THEN
-         CALL HEADER('Cartesian Coordinates (a.u.)',1)
+      IF ( IPREAD .GT. 0 )  THEN
+         CALL HEADER('Cartesian Coordinates (bohr)',1)
          WRITE (LUPRI,'(A,I5)')'  Total number of coordinates:',NCOOR
       END IF
 
@@ -4789,25 +4840,35 @@ C
          END IF
   100 CONTINUE
       NPCMN = IPCMN
+
+!     Print in XYZ format (Angstrom)
+      if (ipread .gt. 0) then
+         CALL HEADER('Cartesian Coordinates (xyz format; angstrom)',1)
+         CALL print_xyz(CORD,LUPRI)
+      end if
 C
 C     ********************************
 C     ***** Symmetry Coordinates *****
 C     ********************************
 C
       ISTRT = NCOOR + NCENTS + 1
-      IF (LWORK .LT. 2*NCOOR*NCOOR) CALL STOPIT('PRICAR','TRACOR',
-     &                                          2*NCOOR*NCOOR,LWORK)
-      CALL TRACOR(WORK(ISTRT),WORK(ISTRT + NCOOR*NCOOR),1,NCOOR,IPREAD)
+
       IF (MAXREP .GT. 0) THEN
+         IF (LWORK .LT. ISTRT + 2*NCOOR*NCOOR)
+     &       CALL STOPIT('PRICAR','TRACOR',2*NCOOR*NCOOR,LWORK)
+         CALL TRACOR(WORK(ISTRT),WORK(ISTRT+NCOOR*NCOOR),1,NCOOR,IPREAD)
+
          IF (IPREAD .GT. 0) THEN
             CALL HEADER('Symmetry Coordinates',1)
             WRITE (LUPRI,'(A,8I5)')
      &            '  Number of coordinates in each symmetry: ',
      &            (NCRREP(I,1),I=0,MAXREP)
          END IF
+
+         IF (IPREAD .GT. IPTEST) THEN
          DO 300 ISYM = 0, MAXREP
          IF (NCRREP(ISYM,1) .GT. 0) THEN
-            IF (IPREAD .GT. IPTEST) WRITE (LUPRI,'(/A,2X,A3,A2,I2,A1/)')
+            WRITE (LUPRI,'(/A,2X,A3,A2,I2,A1/)')
      &          '  Symmetry',REP(ISYM),' (',ISYM+1,')'
             DO 400 IATOM = 1, NUCIND
                DO 500 ICOOR = 1, 3
@@ -4823,7 +4884,6 @@ C
                            NSIGN(NB) = NSGN
                         END IF
   600                CONTINUE
-                     IF (IPREAD .GT. IPTEST) THEN
                      IF (NB .EQ. 1) THEN
                         WRITE (LUPRI,'(I5,3X,A,2X,A,I5)') ISCOOR,
      &                     NAMEX(3*IATOM)(1:4), CHRXYZ(-ICOOR), NBASE(1)
@@ -4834,12 +4894,12 @@ C
      &                   NBASE(1),(CHRSGN(NSIGN(I)),NBASE(I),I=2,NB),
      &                   ' ]/',NB
                      END IF
-                     END IF
                   END IF
   500          CONTINUE
   400       CONTINUE
          END IF
   300    CONTINUE
+         END IF ! (IPREAD .GT. IPTEST) THEN
       END IF
 C
       IF (NUCDEP .EQ. 1) THEN

@@ -770,31 +770,6 @@ C
 C
       RETURN
       END
-C  /* Deck imxvec */
-      FUNCTION IMXVEC(IVEC,NELMNT)
-c
-c Largest element in Integer vector IVEC
-c
-#include "implicit.h"
-#include "priunit.h"
-      DIMENSION IVEC(*)
-c
-      IF(NELMNT.LE.0 ) THEN
-        WRITE(LUPRI,*) ' >> IMXVEC << in problems '
-        WRITE(LUPRI,*) ' Largest element of a vector with zero elements'
-        WRITE(LUPRI,*) ' is hardly defined so STOP '
-        CALL QUIT('IMXVEC ')
-      END IF
-c
-      IMX = IVEC(1)
-      DO 100 IELMNT = 2, NELMNT
-        IMX = MAX(IMX,IVEC(IELMNT))
-  100 CONTINUE
-c
-      IMXVEC = IMX
-c
-      RETURN
-      END
 C  /* Deck inprod */
       FUNCTION INPROD(A,B,NDIM)
 C

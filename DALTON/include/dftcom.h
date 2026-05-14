@@ -22,8 +22,8 @@
       LOGICAL DFTADD, DFTRUN, DFTPOT, DFTORD, DFTASC, DFTHES,           &
      &        DFTHRS, NOPRUN, DOVWN3, DFTEST, DOVWNI, DFTIMG, HFXSET,   &
      &        DODFTD, DFTD_TEST,                                        &
-     &        DFTGRID_DONE,   DFTGRID_DONE_OLD
-      ! DFTGRID_DONE for REAQUA, DFTGRID_DONE_OLD for REAQUA_OLD ("grid done")
+     &        DFTGRID_DONE,   srDFTGRID_done
+      ! DFTGRID_DONE for REAQUA, srDFTGRID_done for REAQUA_srDFT ("grid done")
 
 !     variables for srDFT /hjaaj
 !     SRDFTRUN: used in abacus/ routines to determine if this is an MC-srDFT calculation
@@ -56,7 +56,7 @@
      &        DFTADD, DFTRUN, DFTPOT, DFTORD, DFTASC, DFTHES,           &
      &        DFTHRS, NOPRUN, DOVWN3, DFTEST, DOVWNI, DFTIMG, HFXSET,   &
      &        DODFTD, DFTD_TEST,                                        &
-     &        DFTGRID_DONE,   DFTGRID_DONE_OLD,                         &
+     &        DFTGRID_DONE,   srDFTGRID_done,                           &
 ! srDFT (logical):
      &        SRDFTRUN, SRDFT_SPINDNS, SRDFT_LOCALSPIN, SRDFT_ONTOP,    &
      &        DOSRX_LDA, DOSRX_GGA, DOSRBCK, DOHFEXCH, DOSRX_WIB,       &

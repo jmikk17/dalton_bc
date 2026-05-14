@@ -1,0 +1,75 @@
+gcc-9-ompi-4.0:
+  image: fedora:31
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
+    - echo "Openmpi options added to DALTON_LAUNCHER. Its current value is $DALTON_LAUNCHER"
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+  
+gcc-9-ompi-4.0-int64:
+  image: fedora:31
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
+    - echo "Openmpi options added to DALTON_LAUNCHER. Its current value is $DALTON_LAUNCHER"
+    - dnf install -y -q lapack64 lapack64-devel
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+  
+gcc-12-ompi-4.1:
+  image: fedora:37
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
+    - echo "Openmpi options added to DALTON_LAUNCHER. Its current value is $DALTON_LAUNCHER"
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --mpi --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true
+  
+gcc-12-ompi-4.1-int64:
+  image: fedora:37
+  variables:
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export DALTON_LAUNCHER="${DALTON_LAUNCHER} --allow-run-as-root --oversubscribe --bind-to none"
+    - echo "Openmpi options added to DALTON_LAUNCHER. Its current value is $DALTON_LAUNCHER"
+    - dnf install -y -q lapack64
+    - module load mpi/openmpi-x86_64
+    - mpirun --version
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --mpi --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $M --timeout 120 --output-on-failure -L essential -LE serial
+  interruptible: true

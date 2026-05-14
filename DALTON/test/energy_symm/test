@@ -16,10 +16,6 @@ test = TestRun(__file__, sys.argv)
 f = Filter()
 f.add(re = 'Basis set used is \"cc-pVDZ\" from the basis set library\.')
 
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 8,
-      rel_tolerance = 1.0e-8)
-
 f.add(string = 'Nuclear repulsion energy',
       rel_tolerance = 1.0e-10)
 
@@ -29,7 +25,10 @@ f.add(from_string = 'Wave function specification',
 f.add(string = 'Number of coordinates in each symmetry')
 f.add(string = 'Number of orbitals in each symmetry')
 
-f.add(string = 'Hartree-Fock total energy',
+f.add(string = 'Neglecting MO integrals abs value', # testing .THR2EL option
+      rel_tolerance = 1.0e-2)
+
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-9)
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-9)

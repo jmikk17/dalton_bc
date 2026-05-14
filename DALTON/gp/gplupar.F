@@ -43,9 +43,9 @@ C     IBATCH(6,*) : Offset of block with respect to start of block in
 C                   packed form
 C     IBATCH(7,*) : Length of block, expandend form
 C     IBATCH(8,*) : Length of block, packed form
-C    
+C
 C     original version : Jeppe Olsen     - August 1995
-C     parallel adaption: S. Knecht       - March  2007 
+C     parallel adaption: S. Knecht       - March  2007
 C
 C     Last revision:     S. Knecht       - March  2007
 C
@@ -150,7 +150,7 @@ C       only blocks corresponding to distribution
         GOTO 1000
       ELSE IF(ICOMP.EQ.0.AND.
      &  LENGTH+LBLOCK.GT. MXLNG .AND. NBLOCK.EQ.0) THEN
-        WRITE(luwrt,*) 
+        WRITE(luwrt,*)
      &  ' Not enough scratch space to include a single Block'
         WRITE(luwrt,*) ' Since I cannot procede I will stop '
         WRITE(luwrt,*) ' Insufficient buffer detected in PART_CIV_PAR1'
@@ -208,14 +208,14 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
-      real(8), intent(inout) :: vec1(*) 
+      real(8), intent(inout) :: vec1(*)
       integer, intent(in)    :: nblock, nvec, i_run_cplx
       integer, intent(in)    :: par_dist_block_list(nblock)
       integer, intent(in)    :: block_list(*)
@@ -237,7 +237,7 @@ C     initialize scratch offsets
       IOFFSET_IN_LUIN   = 0
       IOFFSET_INT_IN    = 0
 C
-C     initialize co-worker tag 
+C     initialize co-worker tag
       sender_id = 0
 C
 #ifdef LUCI_DEBUG
@@ -248,7 +248,7 @@ C
       print *, 'lbl_dist list'
       call iwrtma(block_list,1,NBLOCK,1,NBLOCK)
 #endif
-   
+
 C
 C     ================
 C      COMPLEX VECTOR
@@ -261,7 +261,7 @@ C
         NUM_BLK         = 0
 C
 C       ...............
-C       REAL PART FIRST 
+C       REAL PART FIRST
 C       ...............
 C
 C       set new offset
@@ -301,11 +301,11 @@ C
               end if
 
             else
- 
+
 !             LUCI_MASTER block
 !             -----------------
               LBL = block_list(II)
-   
+
               CALL ITODS(LBL,1,-1,LUOUT)
               IMZERO = 1
               IF(LUINLIST(IOFFSET_INT_IN) .gt. 0)THEN
@@ -333,11 +333,11 @@ C
             END IF ! abs(sender_id) > 0?
 
           END IF ! co-worker / master switch
- 
+
 !         co-worker block
 !         ---------------
           LBL = block_list(II)
- 
+
           if(luci_myproc .ne. luci_master)then
 C
             ISENDTOM = 0
@@ -362,7 +362,7 @@ C
             NUM_BLK         = 1
 
           else ! LUCI_MASTER
- 
+
             CALL ITODS(LBL,1,-1,LUOUT)
 
             ISENDTOM = 0
@@ -387,7 +387,7 @@ C
           end if ! co-worker / master switch
 
  500      CONTINUE
-        
+
 !         keep track of correct offset
           IOFFSET_IN_LUIN = IOFFSET_IN_LUIN + IOFFSET_SCRATCH
           IOFFSET_INT_IN  = IOFFSET_INT_IN  + NUM_BLK
@@ -400,7 +400,7 @@ C         write an EOF-mark
         ENDIF
 C
 C       ..............
-C          IMAG PART 
+C          IMAG PART
 C       ..............
 C
         IOFFSET_SCRATCH = 0
@@ -422,12 +422,12 @@ C
 C
 C LOOP OVER BLOCKS
 C
-         DO 601 II = 1, NBLOCK 
+         DO 601 II = 1, NBLOCK
 C
 C           slaves first ...
 C
            IF( LUCI_MYPROC .ne. LUCI_MASTER )THEN
-             IF( par_dist_block_list(II) .ne. LUCI_MYPROC )THEN 
+             IF( par_dist_block_list(II) .ne. LUCI_MYPROC )THEN
 C
                IOFFSET_SCRATCH = 0
                NUM_BLK         = 0
@@ -459,15 +459,15 @@ C
 C
 C                recieve block from node sender_id
 C
-                 sender_id = par_dist_block_list(II) 
-                 GOTO 102 
+                 sender_id = par_dist_block_list(II)
+                 GOTO 102
                END IF
              ELSE IF( par_dist_block_list(II) .eq. LUCI_MYPROC )THEN
 C
 C              LUCI_MASTER block
 C
                LBL = block_list(II)
-C  
+C
                CALL ITODS(LBL,1,-1,LUOUT)
 C
                IF(LUINLIST(IOFFSET_INT_IN) .gt. 0)THEN
@@ -504,7 +504,7 @@ C
             IF( LUCI_MYPROC .eq. LUCI_MASTER ) THEN
 C
                CALL ITODS(LBL,1,-1,LUOUT)
-C  
+C
             END IF
 C
             IF( LUCI_MYPROC .ne. LUCI_MASTER ) THEN
@@ -548,7 +548,7 @@ C
             END IF
 C
  600        CONTINUE
-C       
+C
 C           keep track of correct offset
             IOFFSET_IN_LUIN = IOFFSET_IN_LUIN + IOFFSET_SCRATCH
             IOFFSET_INT_IN  = IOFFSET_INT_IN  + NUM_BLK
@@ -589,10 +589,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -600,14 +600,14 @@ C
       real(8), intent(inout) :: vec1(*)
       integer, intent(in)    :: nblocks, nvec, i_run_cplx, luin, luout
       integer, intent(out)   :: luoutlist(*)
-      integer, intent(in)    :: par_dist_block_list(nblocks) 
+      integer, intent(in)    :: par_dist_block_list(nblocks)
       integer, intent(in)    :: block_list(*)
       integer, intent(in)    :: communicator_group
       integer(kind=MPI_OFFSET_KIND), intent(in) :: MY_IOFF_LUOUT
 !------------------------------------------------------------------------------
       INTEGER(KIND=MPI_OFFSET_KIND) IOFFSET_LUOUT
       INTEGER(KIND=MPI_OFFSET_KIND) IOFFSET_SCRATCH
-      INTEGER                :: NUM_BLK     = 0 
+      INTEGER                :: NUM_BLK     = 0
       integer                :: receiver_id = 0
       integer                :: ilen        = 0
       integer, parameter     :: no_zeroing  = 1
@@ -628,7 +628,7 @@ C     initialize scratch offsets
         call rewino(LUIN)
       end if
 #endif
- 
+
 C
 C     loop over vectors
       DO IVEC = 1, NVEC
@@ -727,7 +727,7 @@ csk               CALL WRTMATMN(VEC1,1,ILEN,1,ILEN,LUWRT)
                   CALL MPI_FILE_WRITE_AT(LUOUT,IOFFSET_LUOUT,VEC1,ILEN,
      &                                 MPI_REAL8,my_STATUS,IERR)
                   LUOUTLIST( IOFFSET_INT_LUOUT + NUM_BLK - 1 ) = 1
-                END IF 
+                END IF
 
 !               keep track of correct offset
                 IOFFSET_SCRATCH = ILEN
@@ -756,7 +756,7 @@ C
         IF( I_RUN_CPLX .eq. 2 ) THEN
 C
           IF( LUCI_MYPROC .eq. LUCI_MASTER )THEN
-C           skip marker on file 
+C           skip marker on file
             CALL IFRMDS(LBL,1,-1,LUIN)
 C
           END IF
@@ -786,7 +786,7 @@ C             get number of CPU that will recieve the block
 CSK              WRITE(LUWRT,*) ' receiver_id of IBLK',receiver_id,IBLK
 C
               IF( LUCI_MYPROC .ne. LUCI_MASTER .AND.
-     &            LUCI_MYPROC .NE. receiver_id ) 
+     &            LUCI_MYPROC .NE. receiver_id )
      &           GOTO 600
 !
               IF(LUCI_MYPROC .ne. LUCI_MASTER)THEN ! co-workers
@@ -846,7 +846,7 @@ C
                     CALL MPI_FILE_WRITE_AT(LUOUT,IOFFSET_LUOUT,VEC1,
      &                                  ILEN,MPI_REAL8,my_STATUS,IERR)
                     LUOUTLIST( IOFFSET_INT_LUOUT + NUM_BLK - 1 ) = 1
-                  END IF 
+                  END IF
 !                 keep track of correct offset
                   IOFFSET_SCRATCH = ILEN
                   IOFFSET_LUOUT = IOFFSET_LUOUT + IOFFSET_SCRATCH
@@ -866,7 +866,7 @@ C
 !
           END DO ! loop over blocks
 !
-        END IF ! COMPLEX PART NEEDED? 
+        END IF ! COMPLEX PART NEEDED?
 !
         IF( LUCI_MYPROC .eq. LUCI_MASTER ) THEN
 !         skip end-of-vector marker on file LUIN
@@ -898,14 +898,14 @@ C
 C     Last revision:     S. Knecht       - Jan 2012
 C
 ************************************************************************
+      use dalton_mpi_interface
       implicit none
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(MPI_INTEGER_KIND) :: my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
-      real(8), intent(inout) :: vec1(*) 
+      real(8), intent(inout) :: vec1(*)
       integer, intent(in)    :: ivec
       integer, intent(in)    :: nblock
       integer, intent(in)    :: par_dist_block_list(nblock)
@@ -933,7 +933,7 @@ C     initialize scratch offsets
       IOFFSET_INT_IN    = 0
       xoffset           = 1
 C
-C     initialize co-worker tag 
+C     initialize co-worker tag
       sender_id = 0
 C
 C     ============
@@ -975,7 +975,7 @@ C
             if(sender_id .eq. -2) goto 500
 
           else
- 
+
 !           LUCI_MASTER block
 !           -----------------
             IF(LUINLIST(IOFFSET_INT_IN) .gt. 0)THEN
@@ -996,10 +996,10 @@ C
           END IF ! abs(sender_id) > 0?
 
         END IF ! co-worker / master switch
- 
+
 !       co-worker block
 !       ---------------
- 
+
         if(luci_myproc .ne. luci_master)then
 C
           ISENDTOM = 0
@@ -1024,7 +1024,7 @@ C
           NUM_BLK         = 1
 
         else ! LUCI_MASTER
- 
+
           ISENDTOM = 0
           CALL MPI_RECV(ISENDTOM,1,my_MPI_INTEGER,sender_id,90,
      &                  communicator_group,my_STATUS,IERR)
@@ -1044,7 +1044,7 @@ C
         end if ! co-worker / master switch
 
  500    CONTINUE
-        
+
 !       keep track of correct offset
         xoffset         = xoffset + LBL
         IOFFSET_IN_LUIN = IOFFSET_IN_LUIN + IOFFSET_SCRATCH
@@ -1061,11 +1061,11 @@ C
      &                                 IGROUPLIST,IPROCLIST,IRILP)
 C
 C     Read blocks of the vector from disc file LUIN to array segment
-C     and broadcast to nodes that need the block, save on diskfile luout 
-C     if necessary. 
+C     and broadcast to nodes that need the block, save on diskfile luout
+C     if necessary.
 C     Communication via communicator jcomm.
 C
-C     OUTPUT: update of LUOUT with new TTSS-c-blocks, 
+C     OUTPUT: update of LUOUT with new TTSS-c-blocks,
 C             modified ISCALFAC_GROUP.
 C
 C     based on the corresponding spinfree-routine
@@ -1076,10 +1076,10 @@ C
 C     Written by  S. Knecht         - May 23 2007
 C
 C**********************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) jcomm_mpi
       integer(kind=MPI_INTEGER_KIND) ierr
@@ -1104,7 +1104,7 @@ C
 csk   WRITE(LUWRT,*) ' MY GROUPLIST resp PROCLIST'
 csk   CALL IWRTMAMN(IGROUPLIST,1,LUCI_NMPROC,1,LUCI_NMPROC,LUWRT)
 csk   CALL IWRTMAMN(IPROCLIST,1,LUCI_NMPROC,1,LUCI_NMPROC,LUWRT)
-C   
+C
 C     =========
 C     REAL PART
 C     =========
@@ -1118,7 +1118,7 @@ C
 C
 C     LOOP OVER BLOCKS
 C
-      DO IBLK = 1, NBLOCK 
+      DO IBLK = 1, NBLOCK
 C
 C       get length of block
 C
@@ -1165,7 +1165,7 @@ C         decide whether it is necessary to take part in communication
           IF(ISCALFAC_GROUP(IBLK) .ne. 0) NNCOLOR = 7
 
 !         CALL MPI_COMM_SPLIT(JCOMM,NNCOLOR,NNKEY,IBLOCKCOMM,IERR)
- 
+
 !         IF( NNCOLOR .eq. 8 ) GOTO 200
 
 C         broadcast the nonvanishing block
@@ -1202,7 +1202,7 @@ C
 !200      CONTINUE
 !         CALL MPI_COMM_FREE(IBLOCKCOMM,IERR)
 C
-        ELSE 
+        ELSE
 C         set local iscalfac to 0
           ISCALFAC_GROUP(IBLK) = 0
         END IF
@@ -1235,7 +1235,7 @@ CSK      WRITE(LUWRT,*) 'IOFF_BLOCK is',IOFF_BLOCK
 C
 C     LOOP OVER BLOCKS
 C
-      DO IBLK = 1, NBLOCK 
+      DO IBLK = 1, NBLOCK
 C
 C       get length of block
 C
@@ -1245,7 +1245,7 @@ C       check if block is active
 C
         IF( ISCALFAC( IBLK + IOFF_BLOCK ) .ne. 0 ) THEN
 C
-CSK          WRITE(LUWRT,*) 'ACTIVE BLOCK imag part',IBLK, 
+CSK          WRITE(LUWRT,*) 'ACTIVE BLOCK imag part',IBLK,
 CSK     &                    IBLK + IOFF_BLOCK
 C         check if block belongs to own group
 C
@@ -1321,7 +1321,7 @@ C
 !300      CONTINUE
 !         CALL MPI_COMM_FREE(IBLOCKCOMM,IERR)
 C
-        ELSE 
+        ELSE
 C         set local iscalfac to 0
           ISCALFAC_GROUP( IBLK + IOFF_BLOCK ) = 0
         END IF
@@ -1339,19 +1339,19 @@ C
 C
 C       print statistics
 C
-        WRITE(LUWRT,'(/A)') 
+        WRITE(LUWRT,'(/A)')
      &  '               coefficients exchange statistics  '
-        WRITE(LUWRT,'(A/)')   
+        WRITE(LUWRT,'(A/)')
      &  '              __________________________________ '
-        WRITE(LUWRT,'(2X,A,1X,I4)')   
+        WRITE(LUWRT,'(2X,A,1X,I4)')
      &  ' number of b_i blocks distributed         : ',IBI_DIST_NBLOCKS
-        WRITE(LUWRT,'(2X,A,1X,I4)')   
+        WRITE(LUWRT,'(2X,A,1X,I4)')
      &  ' number of b_i blocks recieved            : ',IBI_RECV_NBLOCKS
         WALLTID = SECTID(bcast_time)
-        WRITE(LUWRT,'(2X,A,1X,A)')   
+        WRITE(LUWRT,'(2X,A,1X,A)')
      &  ' time spent in b_i communication (bcast)  : ', WALLTID
         WALLTID = SECTID(read_write)
-        WRITE(LUWRT,'(2X,A,1X,A/)')   
+        WRITE(LUWRT,'(2X,A,1X,A/)')
      &  ' time spent in saving coefficients on disk: ', WALLTID
 C
       END IF
@@ -1369,7 +1369,7 @@ C     calculate inverted general preconditioner matrix times vector
 C
 C     original written by Jeppe Olsen - September 1993
 C
-C     adaption of sequential routine for parallel purposes  
+C     adaption of sequential routine for parallel purposes
 C                      by S. Knecht   -  March 13 2008
 C
 C     MPI file I/O version
@@ -1379,10 +1379,10 @@ C
 C      LUOUT       LUDIA        LUIN
 C
 C**********************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -1439,7 +1439,7 @@ C
 C       set new offset
 C
         IOFFSET_IN_LUIN = MY_IOFF_LUIN + IOFFSET_SCRATCH
-        IOFFSET_INT_IN  = 1 + NUM_BLK 
+        IOFFSET_INT_IN  = 1 + NUM_BLK
 C
 CSK     WRITE(LUWRT,*) 'This is my OFFSET for LUIN',
 CSK  &                  IOFFSET_IN_LUIN
@@ -1535,10 +1535,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -1590,7 +1590,7 @@ C
      &               MY_IOFFSET_SCRATCH
         IOFFSET_INT_IN = ( MY_ACT_BLK2 * JOFF ) + MY_NUM_BLK + 1
 C
-C       write active block array for LUOUT 
+C       write active block array for LUOUT
 C
         IOFFSET_INT_OUT = NUM_BLK + 1
 C
@@ -1608,11 +1608,11 @@ C
      &                       LUOUTLIST,NUM_BLK_SP)
 C
         IOFFSET_OUT = MY_IOFF_LUOUT + IOFFSET_SCRATCH
-     
+
 csk     WRITE(LUWRT,*) ' SCR content is'
 csk     CALL WRTMATMN(SCR,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),LUWRT)
 csk     WRITE(LUWRT,*) ' THIS IS MY IOFFSET_OUT',IOFFSET_OUT
-        
+
         IOFFSET_INT_OUT = NUM_BLK + 1
 C
         CALL WTVEC_BATCH_DRV3(SCR,LBATCH(ISBATCH),
@@ -1653,14 +1653,14 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
-      DIMENSION SCR(*), NBATCH_INF(8,*) 
+      DIMENSION SCR(*), NBATCH_INF(8,*)
       DIMENSION IVCOFF_IN(*), IVCOFF_OUT(*)
       INTEGER(KIND=MPI_OFFSET_KIND) IOFFSET
       INTEGER JOFF
@@ -1670,7 +1670,7 @@ C
 C
 C         check for need
 C
-          ILEN2 = NBATCH_INF(8,IBLK) 
+          ILEN2 = NBATCH_INF(8,IBLK)
 C
           IF( ILEN2 .gt. 0 ) THEN
 C
@@ -1696,12 +1696,12 @@ C
               CALL MPI_FILE_READ_AT(LUIN,IOFFSET,SCR(JOFF),
      &                              ILEN2,MPI_REAL8,my_STATUS,IERR)
 C
-CSK              WRITE(LUWRT,'(2X,A,1X,I12,1X,A,1X,I6,1X,I6)') 
+CSK              WRITE(LUWRT,'(2X,A,1X,I12,1X,A,1X,I6,1X,I6)')
 CSK     & 'Read-in from ILU1 at',IOFFSET,'for block',IOFFSET_INT_OUT +
 CSK     &  IBLK - 1, JOFF
 CSK              CALL WRTMATMN(SCR(JOFF),1,ILEN2,1,ILEN2,LUWRT)
 C
-            END IF 
+            END IF
 C           ^ IVCOFF_IN .gt. 0 ?
           END IF
 C         ^ ILEN2 .gt. 0 ?
@@ -1732,10 +1732,10 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -1797,10 +1797,10 @@ C
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -1864,7 +1864,7 @@ C
         WRITE(luwrt,*) '  overall active block length:', ITOTBLCKL
       END IF
 *
-      
+
       IAM_NOT_INV =   1
       IMINNP = LUCI_NMPROC
       NTEMPP = IMINNP
@@ -1872,7 +1872,7 @@ C
         IMINNP = MIN(ICOUNTABLK,IMINNP)
         write(luwrt,'(/a)') '  INFO from distblknd_1:'
         write(luwrt,'( a)')
-     &    '  INFO: # of active blocks < total # of processes.' 
+     &    '  INFO: # of active blocks < total # of processes.'
         write(luwrt,'(a,i6)') '  INFO: consider to decrease the'//
      &    ' # of processes to:',IMINNP
         write(luwrt,'(a)') '  INFO: alternatively change the GAS'//
@@ -1900,7 +1900,7 @@ Csk?      IF(LUCI_MYPROC.EQ.LUCI_MASTER) THEN
 Csk?        CALL IWRTMA(NPARBLOCK,1,NDIM,1,NDIM)
 Csk?      END IF
 C
-C     find optimal (?) c-block distribution 
+C     find optimal (?) c-block distribution
 C
 C
 C     start with the 'master group' and with the master
@@ -1955,7 +1955,7 @@ C     as long as MMPINFA <= LBPROC !
 C
       SUCCESS = .FALSE.
 C
- 200  CONTINUE 
+ 200  CONTINUE
 C
 C     find largest block connected to MXNUMB
 C
@@ -2054,7 +2054,7 @@ C?      IF(LUCI_MYPROC.eq.LUCI_MASTER) WRITE(6,*)'IRUN IS ',IRUN
       IF( IRUN .lt. JJJ ) THEN
 C?      IF(LUCI_MYPROC.eq.LUCI_MASTER) WRITE(6,*)'I WILL GO TO 250'
         GOTO 250
-      ELSE 
+      ELSE
         GOTO 290
       END IF
 C       CPU in same group?
@@ -2095,7 +2095,7 @@ C
       LONBLK = 0
 C
       DO IBLK = 1, NDIM
-        IF( NPARBLOCK(IBLK) .eq. -1 ) THEN 
+        IF( NPARBLOCK(IBLK) .eq. -1 ) THEN
           LONBLK = LONBLK + 1
           ICWEIGHT(LONBLK) = IBLK
         END IF
@@ -2118,7 +2118,7 @@ C
 *
         DO 3000 II = 1, LONBLK
 *
-          IBLK   = ICWEIGHT(II) 
+          IBLK   = ICWEIGHT(II)
           ITEMPL = IBLOCKL(IBLK)
           ITEMPD = NPARBLOCK(IBLK)
           ITEMPN = IBLK
@@ -2138,8 +2138,8 @@ C?          END IF
 *
         DO 4000 IPR = 1, NTEMPP
 *
-          ITEMPW2 = MMPINFA(IPR) 
-CSK         IF(LUCI_MYPROC.EQ.0) 
+          ITEMPW2 = MMPINFA(IPR)
+CSK         IF(LUCI_MYPROC.EQ.0)
 CSK     & WRITE(6,*) 'ITEMPW2 and ITEMPW1:',ITEMPW2,ITEMPW1
 * attention: IAMTPROC = 1 --> MYNEW_ID = 0 !
           IAMTPROC = IPR
@@ -2158,7 +2158,7 @@ C      now we should have found a proc and a block --> put both together !
 C
 C      calculation of block MXNUMB by proc IAMGPROC -1 (M excl.)
 C?       IF(NTEST.GT.0) THEN
-C?         IF(LUCI_MYPROC.EQ.0) 
+C?         IF(LUCI_MYPROC.EQ.0)
 C?     & WRITE(6,*)'calculation of block MXNUMB by proc',MXNUMB,IAMGPROC-1
 C?       ENDIF
 C
@@ -2198,10 +2198,10 @@ CSK   END IF
 *. Find distribution for (nonvanishing blocks) among the nodes
 *. Non vanishing block has a nonzero blocklength
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -2216,7 +2216,7 @@ C
 C     ------
 C     OUTPUT
 C     ------
-*     NPARBLOCK(NDIM): list of blocks with the corresponding assigned node  
+*     NPARBLOCK(NDIM): list of blocks with the corresponding assigned node
 *
       INTEGER   ICOUNTABLK, NTEST
       DIMENSION ICWEIGHTF(NDIM)
@@ -2231,8 +2231,8 @@ C     MMPINFA(*,2): total length ('weight') of the blocks
       INTEGER ITEMPN, IAMGPROC, IAMTPROC, MXNUMB, IRUN
       INTEGER(KIND=MPI_OFFSET_KIND) ITLTND,MXSIZE,MXSZTMP
       INTEGER(KIND=MPI_OFFSET_KIND) ITEMPL, ITEMPW1, ITEMPW2
-      INTEGER(KIND=MPI_OFFSET_KIND) ILEN, ITOTBLCKL, IILENGTH_MAX 
-      INTEGER(KIND=MPI_OFFSET_KIND) IIWEIGHTBLK, IILENGTH 
+      INTEGER(KIND=MPI_OFFSET_KIND) ILEN, ITOTBLCKL, IILENGTH_MAX
+      INTEGER(KIND=MPI_OFFSET_KIND) IIWEIGHTBLK, IILENGTH
 *
       NTEST        = 0
 
@@ -2258,10 +2258,10 @@ C     MMPINFA(*,2): total length ('weight') of the blocks
       DO ICBL = 1, NDIM
 C
         IIWEIGHTBLK = ICWEIGHTF(ICBL)
-        IILENGTH    = IBLOCKL(ICBL) 
+        IILENGTH    = IBLOCKL(ICBL)
         ILEN        = IILENGTH * IIWEIGHTBLK
 C
-        IF( ILEN .lt. 0 ) THEN 
+        IF( ILEN .lt. 0 ) THEN
           WRITE(luwrt,*)'Attention, minus block detected',ICBL
           WRITE(luwrt,*)'ILEN = ',ILEN
           WRITE(luwrt,*)'IBLOCKL(ICBL) = ',IBLOCKL(ICBL)
@@ -2307,7 +2307,7 @@ C
         IMINNP = MIN( ICOUNTABLK, IMINNP )
         write(luwrt,'(/a)') '  INFO from distblknd_2:'
         write(luwrt,'( a)')
-     &    '  INFO: # of active blocks < total # of processes.' 
+     &    '  INFO: # of active blocks < total # of processes.'
         write(luwrt,'(a,i6)') '  INFO: consider to decrease the'//
      &    ' # of processes to:',IMINNP
         write(luwrt,'(a)') '  INFO: alternatively change the GAS'//
@@ -2335,7 +2335,7 @@ C
 *
         DO 3000 II = 1, NDIM
 *
-          
+
           IIWEIGHTBLK = ICWEIGHTF(II)
           IILENGTH = IBLOCKL(II)
 C
@@ -2344,7 +2344,7 @@ C
           ITEMPD = NPARBLOCK(II)
           ITEMPN = II
 
-CSK          IF(LUCI_MYPROC.EQ.0) 
+CSK          IF(LUCI_MYPROC.EQ.0)
 CSK     & WRITE(6,*) 'ITEMPL,ITEMPD,ITEMPN:',ITEMPL,ITEMPD,ITEMPN
 *
 CSK          IF(LUCI_MYPROC.EQ.0) WRITE(6,*) 'MXSIZE:',MXSIZE
@@ -2366,7 +2366,7 @@ CSK                  WRITE(6,*) 'MXSZTMP (2):',MXSZTMP
 CSK       IF(LUCI_MYPROC.EQ.0) WRITE(6,*)'NTEMPP:',NTEMPP
         DO 4000 IPR = 1, NTEMPP
 *
-C?          ITEMPW2 = MMPINFA(IPR) 
+C?          ITEMPW2 = MMPINFA(IPR)
            ITEMPW2 = 0
            DO IBLK = 1, NDIM
             IF( NPARBLOCK(IBLK) .eq. IPR-1 ) THEN
@@ -2375,8 +2375,8 @@ C?          ITEMPW2 = MMPINFA(IPR)
               ITEMPW2 = ITEMPW2 + ( IILENGTH * IIWEIGHTBLK )
             END IF
            END DO
-          
-CSK         IF(LUCI_MYPROC.EQ.0) 
+
+CSK         IF(LUCI_MYPROC.EQ.0)
 CSK     & WRITE(6,*) 'ITEMPW2 and ITEMPW1:',ITEMPW2,ITEMPW1
 * attention: IAMTPROC = 1 --> MYNEW_ID = 0 !
           IAMTPROC = IPR
@@ -2446,7 +2446,7 @@ C
      &  ITLTND
         call flshfo(luwrt)
       END DO
-      
+
 *
       END
 ***********************************************************************
@@ -2458,10 +2458,10 @@ C
 *. Each cpu stores the information in ISCALFAC_LOCAL.
 *. Connection is marked by 1.
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -2509,7 +2509,7 @@ C
           END IF
         END DO
 C
-      END 
+      END
 ***********************************************************************
 
       SUBROUTINE INFO_PRINT_BATCH_REL(LBATCH, LEBATCH,
@@ -2519,7 +2519,7 @@ C     Input
       DIMENSION LBATCH(*), LEBATCH(*), I1BATCH(*), IBATCH(8,*)
 C
 C
-C     
+C
       DO ISBATCH = 1, JBATCH
         WRITE(LUPRINT,*)
         WRITE(LUPRINT,*) ' Info on batch ', ISBATCH
@@ -2562,10 +2562,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -2620,7 +2620,7 @@ C
      &               MY_IOFFSET_SCRATCH
         IOFFSET_INT_IN = ( MY_ACT_BLK2 * JOFF ) + MY_NUM_BLK + 1
 C
-C       write active block array for LUOUT 
+C       write active block array for LUOUT
 C
         IOFFSET_INT_OUT = NUM_BLK + 1
 C
@@ -2638,11 +2638,11 @@ C
      &                       LUOUTLIST,NUM_BLK_SP)
 C
         IOFFSET_OUT = MY_IOFF_LUOUT + IOFFSET_SCRATCH
-     
+
 CSK        WRITE(LUWRT,*) ' THIS IS MY IOFFSET_OUT',IOFFSET_OUT
 CSK        CALL WRTMATMN(SCR,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),LUWRT)
 CSK        WRITE(LUWRT,*) ' THIS IS MY IOFFSET_OUT',IOFFSET_OUT
-        
+
         IOFFSET_INT_OUT = NUM_BLK + 1
 C
         CALL WTVEC_BATCH_DRV3(SCR,LBATCH(ISBATCH),
@@ -2687,12 +2687,12 @@ C
         CALL DZERO(SCR,LEBATCH(JSBATCH))
 C
         IOFFSET_IN = MY_IOFF_LUIN + ( MY_VEC2_IOFF * JOFF ) +
-     &               MY_IOFFSET_SCRATCH +  MY_VEC1_IOFF 
+     &               MY_IOFFSET_SCRATCH +  MY_VEC1_IOFF
 C
-        IOFFSET_INT_IN = ( MY_ACT_BLK2 * JOFF ) + MY_NUM_BLK + 
+        IOFFSET_INT_IN = ( MY_ACT_BLK2 * JOFF ) + MY_NUM_BLK +
      &                   1 + MY_ACT_BLK1
 C
-C       write active block array for LUOUT - complex part 
+C       write active block array for LUOUT - complex part
 C       --> MY_ACT_BLK_ALL needed!
 C
         IOFFSET_INT_OUT = MY_ACT_BLK_ALL + NUM_BLK + 1
@@ -2711,10 +2711,10 @@ C
      &                        LUOUTLIST,NUM_BLK_SP)
 C
         IOFFSET_OUT = MY_IOFF_LUOUT + ILEN_COMB + IOFFSET_SCRATCH
-C     
+C
 CSK        WRITE(LUWRT,*) ' THIS IS MY IOFFSET_OUT imag',IOFFSET_OUT
 CSK        CALL WRTMATMN(SCR,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),LUWRT)
-      
+
         IOFFSET_INT_OUT = MY_ACT_BLK_ALL + NUM_BLK + 1
 C
         CALL WTVEC_BATCH_DRV3_C(SCR,LBATCH(JSBATCH),
@@ -2758,10 +2758,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -2813,7 +2813,7 @@ CSK     &                LUWRT)
 C
 C       new offset for writing on LUOUT
 C
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC1_IOFF
 C
         IOFFSET_INT_LUOUT  = 1 + NUM_BLK    +
@@ -2851,10 +2851,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -2914,7 +2914,7 @@ CSK     &                LUWRT)
 C
 C       new offset for writing on LUOUT
 C
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC2_IOFF
 C
         IOFFSET_INT_LUOUT  = 1 + NUM_BLK    +
@@ -2972,7 +2972,7 @@ CSK     &                LUWRT)
 C
 C       new offset for writing on LUOUT
 C
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC2_IOFF    +
      &                                        MY_VEC1_IOFF
 C
@@ -3012,10 +3012,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3077,10 +3077,10 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3093,12 +3093,12 @@ C
 C
         DO IBLK = 1, NBATCH_BLK
 C
-          ILEN2 = NBATCH_INF(8,IBLK) 
+          ILEN2 = NBATCH_INF(8,IBLK)
 CSK          WRITE(LUWRT,*) 'ILEN2 for block IBLK',
 CSK     &                    ILEN2,IBLK
           IF( ILEN2 .gt. 0 ) THEN
 C
-            NUM_A_B = NUM_A_B + 1 
+            NUM_A_B = NUM_A_B + 1
 C
             ILEN  = IVCOFF_IN1( IOFFSET_INT + NUM_A_B -1 )
 C
@@ -3106,15 +3106,15 @@ C
 C             memory offset
               JOFF = NBATCH_INF(6,IBLK)
 C
-CSK              WRITE(LUWRT,*) 'JOFF,ILEN2,ILEN again for block 
+CSK              WRITE(LUWRT,*) 'JOFF,ILEN2,ILEN again for block
 CSK     & IOFFSET_INT+ NUM_A_B -1',JOFF,ILEN2,ILEN,IOFFSET_INT+ NUM_A_B -1
               CALL MPI_FILE_READ_AT(MY_LUIN,IOFFSET,SCR(JOFF),
      &                              ILEN2,MPI_REAL8,my_STATUS,IERR)
 CSK              WRITE(LUWRT,*) ' my block'
 CSK              CALL WRTMATMN(SCR(JOFF),1,ILEN2,1,ILEN2,LUWRT)
-            ENDIF 
+            ENDIF
 C
-          ENDIF 
+          ENDIF
 C
           IOFFSET = IOFFSET + ILEN2
 C
@@ -3130,16 +3130,16 @@ C
 C
 C     write batch from segment SCR to MPI-file MY_LUOUT
 C
-C     active blocks on the MPI-file are flagged by a nonzero entry in 
+C     active blocks on the MPI-file are flagged by a nonzero entry in
 C     file list
 C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3152,7 +3152,7 @@ C
 C
         DO IBLK = 1, NBATCH_BLK
 C
-          ILEN2 = NBATCH_INF(8,IBLK) 
+          ILEN2 = NBATCH_INF(8,IBLK)
 CSK          WRITE(LUWRT,*) 'ILEN2 for block IBLK',
 CSK     &                    ILEN2,IBLK
           IF( ILEN2 .gt. 0 ) THEN
@@ -3171,14 +3171,14 @@ C
               IVCOFF_IN1( IOFFSET_INT + NUM_A_B - 1 ) = 1
             END IF
 C
-CSK              WRITE(LUWRT,*) 'JOFF,ILEN2,ILEN again for block 
+CSK              WRITE(LUWRT,*) 'JOFF,ILEN2,ILEN again for block
 CSK     & IOFFSET_INT+ NUM_A_B -1',JOFF,ILEN2,ILEN,IOFFSET_INT+ NUM_A_B -1
               CALL MPI_FILE_WRITE_AT(MY_LUOUT,IOFFSET,SCR(JOFF),
      &                               ILEN2,MPI_REAL8,my_STATUS,IERR)
 C
  100        CONTINUE
 C
-          ENDIF 
+          ENDIF
 C
           IOFFSET = IOFFSET + ILEN2
 C
@@ -3194,16 +3194,16 @@ C
 C
 C     write batch from segment SCR to MPI-file MY_LUOUT
 C
-C     active blocks on the MPI-file are flagged by a nonzero entry in 
+C     active blocks on the MPI-file are flagged by a nonzero entry in
 C     file list
 C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3216,7 +3216,7 @@ C
 C
         DO IBLK = 1, NBATCH_BLK
 C
-          ILEN2 = NBATCH_INF(8,IBLK) 
+          ILEN2 = NBATCH_INF(8,IBLK)
 CSK          WRITE(LUWRT,*) 'ILEN2 for block IBLK',
 CSK     &                    ILEN2,IBLK
           IF( ILEN2 .gt. 0 ) THEN
@@ -3236,7 +3236,7 @@ C
             END IF
 C
             IF( IDEBUGPRNT .ne. 0 ) THEN
-              WRITE(LUWRT,'(A,1X,I6,1X,I6,1X,I6,1X,A,1X,I14)') 'JOFF, 
+              WRITE(LUWRT,'(A,1X,I6,1X,I6,1X,I6,1X,A,1X,I14)') 'JOFF,
      & ILEN2 for block',JOFF,ILEN2,IOFFSET_INT+ NUM_A_B -1,'at off',
      & IOFFSET
               CALL WRTMATMN(SCR(JOFF),1,ILEN2,1,ILEN2,LUWRT)
@@ -3246,7 +3246,7 @@ C
 C
  100        CONTINUE
 C
-          ENDIF 
+          ENDIF
 C
           IOFFSET = IOFFSET + ILEN2
 C
@@ -3264,10 +3264,10 @@ C
 C     Last revision:     S. Knecht       - June  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3279,7 +3279,7 @@ C
 C
         DO IBLK = 1, NBATCH_BLK
 C
-          ILEN2 = NBATCH_INF(8,IBLK) 
+          ILEN2 = NBATCH_INF(8,IBLK)
 CSK          WRITE(LUWRT,*) 'ILEN2 for block IBLK',
 CSK     &                    ILEN2,IBLK
           IF( ILEN2 .gt. 0 ) THEN
@@ -3291,7 +3291,7 @@ C
             CALL MPI_FILE_READ_AT(MY_LUIN,IOFFSET,SCR(JOFF),
      &                            ILEN2,MPI_REAL8,my_STATUS,IERR)
 C
-          ENDIF 
+          ENDIF
 C
           IOFFSET = IOFFSET + ILEN2
 C
@@ -3310,7 +3310,7 @@ C     Written by  S. Knecht         - March 6 2008
 C
 C**********************************************************************
 C
-C     transforming vectors so that they become the actual approx. to the 
+C     transforming vectors so that they become the actual approx. to the
 C     eigenvectors
 C
 C     NOTE: NVEC  = NVEC
@@ -3321,10 +3321,10 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3365,7 +3365,7 @@ C     Written by  S. Knecht         - March 6 2008
 C
 C**********************************************************************
 C
-C     transforming vectors so that they become the actual approx. to the 
+C     transforming vectors so that they become the actual approx. to the
 C     eigenvectors
 C
 C     NOTE: NVEC  = NVEC
@@ -3376,10 +3376,10 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3461,9 +3461,9 @@ C
 C
 C       write VEC2 to LUOUT wrt offset at ISVEC - 1
 C
-        IOFFSET_LUOUT     = MY_IOFF_LUOUT  + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT     = MY_IOFF_LUOUT  + IOFFSET_SCRATCH +
      &                      ( MY_VEC1_IOFF * ( ISVEC - 1 ) )
-        IOFFSET_INT_LUOUT = 1 + NUM_BLK 
+        IOFFSET_INT_LUOUT = 1 + NUM_BLK
      &                        + ( MY_ACT_BLK1 * ( ISVEC - 1 ) )
 csk        WRITE(LUWRT,*) 'This is my OFFSET for LUOUT',
 csk     &                  IOFFSET_LUOUT
@@ -3496,11 +3496,11 @@ C
      &                                 LUIN,LUIN2,
      &                                 LUIN3,LUOUT)
 C
-C     calculate dot products between vector on file LUIN1 and LUIN2 
-C     resp. LUIN1 and LUIN3. Store vector VEC2 on LUOUT 
+C     calculate dot products between vector on file LUIN1 and LUIN2
+C     resp. LUIN1 and LUIN3. Store vector VEC2 on LUOUT
 C                            ==> LUIN1(VEC2) --> LUOUT(VEC2)
 C
-C     dot products SUM_batches ( VEC1 * VEC2 ) are reduced on every 
+C     dot products SUM_batches ( VEC1 * VEC2 ) are reduced on every
 C     process in MPI_COMM_WORLD
 C
 C     active blocks on the MPI-file are flagged by a nonzero length
@@ -3511,10 +3511,10 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3550,7 +3550,7 @@ C     set scratch vectors to zero
       CALL DZERO(SCRRED,NROOT)
 C
       IF( ( JOFF - 1 ) .gt. 0 ) CALL DZERO(SCRRED2, ( JOFF - 1) )
-C 
+C
       DO ISBATCH = 1, NBATCH
 C
         CALL DZERO(VEC2,LEBATCH(ISBATCH))
@@ -3633,7 +3633,7 @@ CSK  &                LUWRT)
 C
           IF( KVEC .eq. 1 ) ISTRED2 = NROOT + KVEC + (JOFF - 1 )*2*NROOT
 C         SCRRED2(KVEC) == SCRRED2(KVEC) - SUM ( VEC1 * VEC2 )
-          SCRRED2(KVEC) =  SCRRED2(KVEC) 
+          SCRRED2(KVEC) =  SCRRED2(KVEC)
      &                  -  DDOT( LEBATCH(ISBATCH), VEC1, 1, VEC2, 1 )
 C
   200   CONTINUE
@@ -3699,7 +3699,7 @@ C
      &                                 LUOUTLIST,LUOUT2LIST,
      &                                 LUIN,LUIN2,LUIN3,LUOUT,LUOUT2)
 C
-C     add vectors on file LUIN1 and LUIN2 resp. LUIN2 and LUIN3. 
+C     add vectors on file LUIN1 and LUIN2 resp. LUIN2 and LUIN3.
 C     store resulting vector VEC2 on LUOUT with scaling factor FACOFSCAL.
 C     LUOUT(VEC2) = LUIN2(VEC2) x FACOFSCAL
 C
@@ -3708,10 +3708,10 @@ C
 C     Last revision:     S. Knecht       - March 2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -3729,7 +3729,7 @@ C
       INTEGER(KIND=MPI_OFFSET_KIND) IOFFSET_SCRATCH
       INTEGER NUM_BLK
       REAL*8 REDFAC
-C     initialize scratch factor 
+C     initialize scratch factor
       REDFAC = 0.0D0
 C     initialize scratch offsets
       NUM_BLK = 0
@@ -3747,12 +3747,12 @@ C     initialize scratch offsets
 C
 csk   WRITE(LUWRT,*) 'THIS IS WORK_SP(1+(JVEC-1)*2*NROOT) inside',myproc
 csk   CALL WRTMATMN(FACIN1,1,NINVEC1,1,NINVEC1,LUWRT)
-C 
+C
       DO ISBATCH = 1, NBATCH
 C
         CALL DZERO(VEC2,LEBATCH(ISBATCH))
 C
-C       find offset 
+C       find offset
         IOFFSET_IN_LUIN2 = MY_IOFF_LUIN2 + IOFFSET_SCRATCH +
      &                   ( NINVEC2 - 1 )    * MY_VEC1_IOFF
         IOFFSET_INT_IN2  = 1 + NUM_BLK                     +
@@ -3768,7 +3768,7 @@ CSK     CALL WRTMATMN(VEC2,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),
 CSK  &                LUWRT)
 C
 C       calculate scalar products with vectors on LUIN
-C   
+C
         DO 100 IVEC = 1, NINVEC1
 C
 C         set new offset and zero read-in vector
@@ -3865,7 +3865,7 @@ C
 C     ^ loop over batches - part 1 -
 C
 C     communicate REDFAC to obtain correct scaling factor
-      
+
       FACTOR = 0.0D0
       CALL REDVEC(REDFAC,FACTOR,1,2,MPI_SUM,MPI_COMM_WORLD,-1)
 csk   WRITE(LUWRT,*) 'REDUCED FACTOR IN PART 3.2',FACTOR
@@ -3963,8 +3963,8 @@ C     ^ loop over batches 2
      &                                 LUIN3LIST,LUOUTLIST,JOFF2,
      &                                 LUIN,LUIN2,LUIN3,LUOUT)
 C
-C     calculate vector products between vector on file LUIN1 and LUIN2 
-C     resp. LUIN1 and LUIN3. Store vector VEC2 on LUOUT 
+C     calculate vector products between vector on file LUIN1 and LUIN2
+C     resp. LUIN1 and LUIN3. Store vector VEC2 on LUOUT
 C                            ==> LUIN1(VEC2) --> LUOUT(VEC2)
 C
 C     active blocks on the MPI-file are flagged by a nonzero length
@@ -3975,10 +3975,10 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4006,7 +4006,7 @@ C     initialize scratch offsets
       IOFFSET_INT_IN2   = 0
       IOFFSET_INT_IN3   = 0
       IOFFSET_INT_OUT   = 0
-C 
+C
       DO ISBATCH = 1, NBATCH
 C
         CALL DZERO(VEC2,LEBATCH(ISBATCH))
@@ -4058,7 +4058,7 @@ CSK  &                  LUWRT)
 C
 C         scaling of VEC2
 C
-          IF( IROOT .eq. 1 ) THEN 
+          IF( IROOT .eq. 1 ) THEN
             CALL DSCAL(LEBATCH(ISBATCH),FACIN2,VEC2,1)
           END IF
 C
@@ -4142,7 +4142,7 @@ C
      &                                LUINLIST,LUIN2LIST,LUIN3LIST,
      &                                LUIN4LIST,LUIN,LUIN2,LUIN3,LUIN4)
 C
-C     calculate dot products between vectors on file LUIN1 / LUIN2 
+C     calculate dot products between vectors on file LUIN1 / LUIN2
 C     and LUIN3 resp. LUIN4
 C
 C     active blocks on the MPI-file are flagged by a nonzero length
@@ -4153,10 +4153,10 @@ C
 C     Last revision:     S. Knecht       - March  2008
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4183,7 +4183,7 @@ C     initialize scratch offsets
       IOFFSET_INT_IN2  = 0
       IOFFSET_INT_IN3  = 0
       IOFFSET_INT_IN4  = 0
-C 
+C
       DO ISBATCH = 1, NBATCH
 C
         CALL DZERO(VEC2,LEBATCH(ISBATCH))
@@ -4196,7 +4196,7 @@ C
      &                      ( IVEC - 1 )    * MY_ACT_BLK1
 C
 CSK       WRITE(LUWRT,*) 'This is my OFFSET for LUIN ',
-CSK  &                    IOFFSET_IN_LUIN 
+CSK  &                    IOFFSET_IN_LUIN
 C
           CALL RDVEC_BATCH_DRV4(LUIN,VEC2,LBATCH(ISBATCH),
      &                          IBATCH(1,I1BATCH(ISBATCH)),
@@ -4206,7 +4206,7 @@ C
 CSK       WRITE(LUWRT,*) 'initial VEC2 on LUIN '
 CSK       CALL WRTMATMN(VEC2,1,LEBATCH(ISBATCH),1,LEBATCH(ISBATCH),
 CSK  &                  LUWRT)
-        ELSE 
+        ELSE
 C
           IOFFSET_IN_LUIN2  = MY_IOFF_LUIN2 + IOFFSET_SCRATCH +
      &                      ( ILOOP - 1 )   * MY_VEC1_IOFF
@@ -4251,7 +4251,7 @@ CSK  &                  LUWRT)
 C
           IJ = IVEC * ( IVEC - 1 ) / 2 + JVEC
 C         SCRRED(IJ) = SCRRED(IJ) + SUM ( VEC1 * VEC2 )
-          SCRRED(IJ) = SCRRED(IJ) + 
+          SCRRED(IJ) = SCRRED(IJ) +
      &                 DDOT(LEBATCH(ISBATCH),VEC1,1,VEC2,1)
 C
           IF (ISBATCH .eq. 1 ) THEN
@@ -4341,17 +4341,17 @@ C     IBATCH(6,*) : Offset of block with respect to start of block in
 C                   packed form
 C     IBATCH(7,*) : Length of block, expandend form
 C     IBATCH(8,*) : Length of block, packed form
-C    
+C
 C     original version : Jeppe Olsen     - August 1995
-C     parallel adaption: S. Knecht       - March  2007 
+C     parallel adaption: S. Knecht       - March  2007
 C
 C     Last revision:     S. Knecht       - March  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4367,10 +4367,10 @@ C     output
       INTEGER I1BATCH(*)
       INTEGER IBATCH(8,*)
 C     scratch
-      INTEGER LBLOCK_SAVE, LBLOCKP_SAVE 
+      INTEGER LBLOCK_SAVE, LBLOCKP_SAVE
 C
       LBLOCK_SAVE  = 0
-      LBLOCKP_SAVE = 0 
+      LBLOCKP_SAVE = 0
 C
       NTEST = 0000
       IF(NTEST.GE.100) THEN
@@ -4411,8 +4411,8 @@ C     loop over batches of blocks
       LENGTHP= 0
       NBLOCK = 0
       IFRST = 1
-      IF( NBATCH .gt. 1 ) ILOOPBLK = ILOOPBLK - 1 
-      
+      IF( NBATCH .gt. 1 ) ILOOPBLK = ILOOPBLK - 1
+
 C     loop over blocks in batch
  1000 CONTINUE
       IF(IFRST.EQ.0) THEN
@@ -4437,7 +4437,7 @@ C     can this block be included
         LBLOCKP = NSTA*(NSTA+1)/2
       END IF
       LBLOCKP_SAVE = LBLOCKP
-C     check if we need this block, if not: 
+C     check if we need this block, if not:
 C     LBLOCKP = 0
 C     LBLOCK  = 0
 CSK      IF(IEXCLBLK .eq. 1) THEN
@@ -4518,10 +4518,10 @@ C
      &           I1BATC,IBATC,ICCTOS,ICWEIGHT,NBLOCK,IBTOTW,ICWEIGHTF,
      &           IABSOLUTE_WEIGHT)
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8(A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4549,7 +4549,7 @@ C
 CSK        WRITE(6,*) '   TTSS and offsets and lenghts of each block '
         DO IBLOCK =I1BATC(JBATCH),I1BATC(JBATCH)+ LBATC(JBATCH)-1
 CSK          WRITE(6,'(10X,4I3,4I8)') (IBATC(II,IBLOCK),II=1,8)
-CSK          IF(IBATC(8,IBLOCK).NE.0.AND.LUCI_MYPROC.EQ.LUCI_MASTER.AND.NTEST.GE.10) 
+CSK          IF(IBATC(8,IBLOCK).NE.0.AND.LUCI_MYPROC.EQ.LUCI_MASTER.AND.NTEST.GE.10)
 CSK     &       WRITE(6,'(2X,A,1X,I5,1X,A,1X,I8)') 'Block number',IBLOCK,
 CSK     & 'has length',(IBATC(II,IBLOCK),II=8,8)
           JJJ = 0
@@ -4565,7 +4565,7 @@ CSK     & 'has length',(IBATC(II,IBLOCK),II=8,8)
             WRITE(6,'(2X,A,I4)')'Number of connections for this block:',
      &                           JJJ
             CALL IWRTMA(ICWEIGHT,1,JJJ,1,JJJ)
-            
+
             WRITE(6,*)'  '
           ENDIF
           IBTOTW(IBLOCK) = (JJJ) * IBATC(8,IBLOCK)
@@ -4578,7 +4578,7 @@ CSK        WRITE(6,'(2X,A)')'WEIGHT MATRIX'
 CSK        CALL IWRTMA(ICWEIGHTF,1,NBLOCK,1,NBLOCK)
       END IF
       DO IBLK = 1, NBLOCK
-        IABSOLUTE_WEIGHT = IABSOLUTE_WEIGHT + 
+        IABSOLUTE_WEIGHT = IABSOLUTE_WEIGHT +
      &                     ( ICWEIGHTF(IBLK) * IBATC(8,IBLK) )
       END DO
 *
@@ -4604,15 +4604,15 @@ C THE LOWER HALF OF THE MATRIX IS SUPPOSED TO BE IN VECTOR A.
 
       SUBROUTINE REDVEC(VECIN,VECOUT,NDIM,NTYPE,NOP,NCOMM,NTARGET)
 *
-*. Reduce an array VECIN of dimension NDIM that is distributed over 
-*. NCOMM to VECOUT on either a single process (NTARGET >= 0) or on 
-*. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE 
+*. Reduce an array VECIN of dimension NDIM that is distributed over
+*. NCOMM to VECOUT on either a single process (NTARGET >= 0) or on
+*. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ncomm_mpi
       integer(kind=MPI_INTEGER_KIND) ierr
@@ -4631,7 +4631,7 @@ CSK        DATATYPE = MPI_REAL8
       ELSE IF (NTYPE .EQ. 3)THEN
         DATATYPE = MPI_REAL
       ELSE IF (NTYPE .EQ. 4 .OR. NTYPE .EQ. 5) THEN
-        DATATYPE  =  MPI_CHARACTER 
+        DATATYPE  =  MPI_CHARACTER
       ELSE
         WRITE(6,*)' REDVEC: TYPE "',NTYPE,'" does not exist!'
         CALL quit('ERROR in REDVEC: Nonexisting DATATYPE')
@@ -4652,15 +4652,15 @@ CSK        DATATYPE = MPI_REAL8
 
       SUBROUTINE REDVEC_REL(VECIN,VECOUT,NDIM,NTYPE,NOP,NCOMM,NTARGET)
 *
-*. Reduce an array VECIN of dimension NDIM that is distributed over 
-*. NCOMM to VECOUT on either a single process (NTARGET >= 0) or on 
-*. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE 
+*. Reduce an array VECIN of dimension NDIM that is distributed over
+*. NCOMM to VECOUT on either a single process (NTARGET >= 0) or on
+*. all processes (NTARGET < 0). NTYPE determines the MPI_DATATYPE
 *. used in the reduce-call. NOP is the reduce-operation.
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ncomm_mpi
       integer(kind=MPI_INTEGER_KIND) ierr
@@ -4678,7 +4678,7 @@ CSK        DATATYPE = MPI_REAL8
       ELSE IF (NTYPE .EQ. 3)THEN
         DATATYPE = MPI_REAL
       ELSE IF (NTYPE .EQ. 4 .OR. NTYPE .EQ. 5) THEN
-        DATATYPE  =  MPI_CHARACTER 
+        DATATYPE  =  MPI_CHARACTER
       ELSE
         WRITE(6,*)' REDVEC: TYPE "',NTYPE,'" does not exist!'
         CALL quit('ERROR in REDVEC: Nonexisting DATATYPE')
@@ -4761,14 +4761,14 @@ C
 * Write scattered vector to disc, every node writes only it's part.
 * Information about the length of a blcok is stored in IBLOCKL.
 * Information about which block belongs to which node is stored in
-* IBLOCKD. 
+* IBLOCKD.
 * IXROOT is the current root to place a 1.0D0.
 * LU1LIST is the MPI file list.
 *
+      use dalton_mpi_interface
       IMPLICIT REAL*8 (A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4821,7 +4821,7 @@ csk     WRITE(LUWRT,*) ' LBL and IBOTTO for block II',LBL,IBOTTO,II
         CALL DZERO(VEC1,LBL)
 C       *******************************************************
 C       *******************************************************
-C              Find the places where a 1.0 should be set 
+C              Find the places where a 1.0 should be set
 C       *******************************************************
 C       *******************************************************
         DO 200 IEFF = 1, NSCAT
@@ -4866,7 +4866,7 @@ C         keep track of correct offset
 C         keep IBOT up-to-date for all nodes
           LBL = IBLOCKL( II )
           IBOTTO = IBOTTO + LBL
-      END DO  
+      END DO
 *
       END
 ***********************************************************************
@@ -4894,10 +4894,10 @@ C
 C     Last revision:     S. Knecht       - May  2007
 C
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
       integer(kind=MPI_INTEGER_KIND) ierr
 #include "parluci.h"
@@ -4951,7 +4951,7 @@ C
 C
            IOFFSET_IN_LUIN2 = MY_IOFF_LUIN2 + IOFFSET_SCRATCH +
      &                        ( IVEC - 1 )  * MY_VEC1_IOFF
-           IOFFSET_INT_IN2  = 1 + NUM_BLK  + 
+           IOFFSET_INT_IN2  = 1 + NUM_BLK  +
      &                        ( IVEC - 1 ) * MY_ACT_BLK1
 C
 csk     WRITE(LUWRT,*) 'This is my OFFSET for LUIN2',
@@ -4974,7 +4974,7 @@ C          SUBSPH(IJ) == VEC1 * VEC2
 C
            IJ = JOFF*(JOFF-1)/2 + IVEC
 C
-           SUBSPH(IJ) = SUBSPH(IJ) + 
+           SUBSPH(IJ) = SUBSPH(IJ) +
      &                  DDOT(LEBATCH(ISBATCH),VEC1,1,VEC2,1)
 C
   100   CONTINUE
@@ -4995,7 +4995,7 @@ C
 C
 C**********************************************************************
 C
-C     scale vector from file LUIN and LUOUT batchwise and write result 
+C     scale vector from file LUIN and LUOUT batchwise and write result
 C     of vector summation to luin
 C
 C     NOTE: IROOT = IROOT
@@ -5003,10 +5003,10 @@ C
 C     active blocks on the MPI-files are flagged by a nonzero list entry
 !
 ************************************************************************
+      use dalton_mpi_interface
       IMPLICIT REAL*8 ( A-H,O-Z)
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       DIMENSION my_STATUS(MPI_STATUS_SIZE)
 #include "parluci.h"
       DIMENSION VEC1(*), VEC2(*)
@@ -5052,7 +5052,7 @@ C
      &                        IOFFSET_IN_LUIN,IOFFSET_INT_IN,
      &                        LUINLIST,NUM_ACTIVE_BATCH)
 
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC1_IOFF
 C
         IOFFSET_INT_LUOUT  = 1 + NUM_BLK    +
@@ -5077,7 +5077,7 @@ C
         call dscal(LEBATCH(ISBATCH), fac2, vec2, 1)
         call daxpy(LEBATCH(ISBATCH), fac1, vec1, 1, vec2, 1)
 
-        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH + 
+        IOFFSET_LUOUT      =  MY_IOFF_LUOUT + IOFFSET_SCRATCH +
      &                        ( IROOT - 1 ) * MY_VEC1_IOFF
         IOFFSET_INT_LUOUT  = 1 + NUM_BLK    +
      &                        ( IROOT - 1 ) * MY_ACT_BLK1
@@ -5110,6 +5110,6 @@ C
 *                                                                     *
 ***********************************************************************
       SUBROUTINE PAR_DUMMY2
-      END 
+      END
 ***********************************************************************
 #endif /* defined VAR_MPI */

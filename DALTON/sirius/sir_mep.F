@@ -1,3 +1,21 @@
+!
+!  Dalton, a molecular electronic structure program
+!  Copyright (C) The Dalton Authors (see AUTHORS file for details).
+!
+!  This program is free software; you can redistribute it and/or
+!  modify it under the terms of the GNU Lesser General Public
+!  License version 2.1 as published by the Free Software Foundation.
+!
+!  This program is distributed in the hope that it will be useful,
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+!  Lesser General Public License for more details.
+!
+!  If a copy of the GNU LGPL v2.1 was not distributed with this
+!  code, you can obtain one at https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html.
+!
+!
+C     FILE: DALTON/sirius/sir_mep.F
 C************************************************************************************
 C  /* Deck calc_mep */
       SUBROUTINE CALC_MEP(CMO,WRK,KFRSAV,LFRSAV)
@@ -6,6 +24,7 @@ C  /* Deck calc_mep */
 !                 in (x,y,z) points listed on MEP.INP file;
 !                 values are written to MEP.OUT file.
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -27,9 +46,8 @@ C  /* Deck calc_mep */
 #include "gnrinf.h"
 #ifdef VAR_MPI
 #include "infpar.h"
-#include "mpif.h"
 #endif
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 
       DIMENSION WRK(LFRSAV)
@@ -46,7 +64,7 @@ C defined parallel calculation types
 
       CALL QENTER('CALC_MEP')
 
-C     Only scf for the moment 
+C     Only scf for the moment
 
       KFREE  = KFRSAV
       LFREE  = LFRSAV
@@ -68,7 +86,7 @@ C     Only scf for the moment
       ELSE
          CALL QUIT('Unknown units in POTENTIAL.INP')
       ENDIF
-   
+
       CALL MEMGET('REAL',KDV   ,NNASHX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KDENC ,N2BASX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KDENV ,N2BASX,WRK,KFREE,LFREE)
@@ -213,6 +231,7 @@ C*******************************************************************************
 C  /* Deck MEP_SLAVE */
       SUBROUTINE MEP_SLAVE(WRK,LWRK)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -235,7 +254,6 @@ C  /* Deck MEP_SLAVE */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
 #endif
 
       DIMENSION WRK(LWRK)
@@ -301,6 +319,7 @@ C  /* Deck MEP_LOOP */
       SUBROUTINE MEP_LOOP(XMEP,YMEP,ZMEP,NCENTERS,DENS,
      &                      WRK,LWRK,MEP,MEFX,MEFY,MEFZ)
 
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "dummy.h"
@@ -323,7 +342,6 @@ C  /* Deck MEP_LOOP */
 #ifdef VAR_MPI
 #include "mtags.h"
 #include "infpar.h"
-#include "mpif.h"
 #endif
 
       CHARACTER*8 LABINT(9*MXCENT)

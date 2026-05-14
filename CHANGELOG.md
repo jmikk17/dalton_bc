@@ -1,18 +1,22 @@
 # DALTON Change Log -- All notable changes to the DALTON program will be documented in this file.
 
-## [2024.0-dev] (unreleased)
+## [2025.0-dev] (unreleased)
 
 ### New features added
-- EKT, i.e. ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+- Population analysis for all MCSCF and CI wave functions. (H. J. Aa. Jensen)
+- CI with PElib (polarizable embedding or polarizable density embedding. (H. J. Aa. Jensen)
+- EKT, ionization potentials using the extended Koopmans' theorem for MCSCF and MC-srDFT. Is always activated for these types of wave functions. (Martin J. R. Jensen and H. J. Aa. Jensen)
+- CI response properties for \*\*PROPERTIES, for example spin-spin couplings. Corresponds to sum-over-states formulation over CI eigenstates. (H. J. Aa. Jensen)
 - SOPPA
   - Block Lanczos RPA eigenvalue solver for computing mean excitation energy and the dipole oscillator strength sums in Lanczos basis at RPA level. The solver is a part of AO-SOPPA and its driver is called from ABACUS driver (Luna Zamok)
   - Added PE-AO-SOPPA/RPA (Peter Reinholdt)
-  - First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coeffiients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
+  - First terms of the TOPPA A-matrix implemented: terms involving the second order doubles correlation coefficients (Javier Sanz Rodrigo & Stephan P. A. Sauer)
 - Atomic Integrals (Juanjo Aucar)
   - Divergence of the zz Electric Field Gradient component
   - Laplacian of xx,yy and zz Electric Field Gradient components
 - LRESC (Juanjo Aucar)
   - Implementation for the Electric Field Gradient at first order in 1/c2
+  - New implementation for the LRESC-SHIELDING module. Includes anisotropy parameters and paramagnetic third order corrections.
 - The MP3 model has been added to the CC module for the calculation of ground-state energies. (Andreas Erbs Hillers-Bendtsen, Frederik Ørsted Kjeldal, Nicolai Machholdt Høyer, and Kurt V. Mikkelsen)
 - Print two effective numbers of unpaired electrons in final wave function output (H. J. Aa. Jensen)
   - 1) sum(i)  n\_i (2 - n\_i)
@@ -23,11 +27,15 @@
   - F. J. Kamper, P. Reinholdt, E. D. Hedegård, and J. Kongsted, J. Chem. Theory Comput. 18, 7384-7393 (2022), https://doi.org/10.1021/acs.jctc.2c00829
 - Polarizable embedding (PE) with periodic boundary conditions (PBC)
   - S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), https://doi.org/10.26434/chemrxiv-2023-fc0gk
+- Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
 
-### Other new features added
+### Technical improvements
+- Rewritten srDFT integration -- now grid points are read once from file and broadcasted to any MPI workers.
+  Previously all MPI workers read the grid from their own DALTON.QUAD.nnnnn file - this change removes an I/O bottleneck if you run with many workers. (H. J. Aa. Jensen)
 - Performance improvement for .FCKTRA integral transformation: the second order integral transformation (gg|aa) plus (ga|ga)=\<gg|aa\> has been implemented.
   Used in MCSCF, MC-srDFT wave function optimization and linear response. Previously a third order transformation (gg|ga) was necessary. (H. J. Aa. Jensen)
-- Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
+- Possibility to speed-up MP2-NO by neglecting two-electron MO integrals abs value less than new threhshold \.THR2EL. (H. J. Aa. Jensen)
+- New option \.MP2special for cheaper, approximate MP2 initial guess orbitals for MCSCF/MCsrDFT, without compromising MCSCF convergence. (H. J. Aa. Jensen)
 
 ### Basis set changes
 - Added aug-cc-pwCVQZ-DK3 for In-Xe, Cs, Ba
@@ -35,8 +43,10 @@
 - Added aug-cc-pwCVTZ-DK3 for In-Xe, Cs, Ba
 - Added aug-cc-pVQZ-DK3 for In-Xe, Cs, Ba
 - Fixed a wrong p exponent for Boron in cc-pwCVDZ basis set
+- Added relativistic dyall.(vXz/cvXz/avXz/aeXz/acvXz/aaeXz) basis sets (X = 2, 3, 4)
 
 ### Fixed
+- Fixed linear response with gTDA and all solvent models, incl. PE and PCM (the Y component was not zeroed for configuration trial vectors) (H. J. Aa. Jensen)
 - Fixed error in PE-MCSCF calculation with GSPOL
 - Fixed parallel calculation of molecular gradient with CAMB3LYP
 - Abort if basis= option used in .mol file with BASIS (previously it was just ignored)
@@ -45,6 +55,7 @@
 ### Changed
 - Select FCKTRA for MO transformation by default if > 255 basis functions and parallel. (H. J. Aa. Jensen)
 - Abort if molecular charge is -4 or lower (it is probably an input error). Can be overridden with new .MINCHA keyword. (H. J. Aa. Jensen)
+- Default is now to always write SIRIFC interface file in \*\*WAVE FUNCTION module
 
 
 ## [2020.1] (2022-01-20)

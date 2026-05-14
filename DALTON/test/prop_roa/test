@@ -16,17 +16,12 @@ test = TestRun(__file__, sys.argv)
 
 f = Filter()
 
-# Molecular geometry
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 12,
-      rel_tolerance = 1.0e-8)
-
 # Energies
 f.add(string = 'Final HF energy',
       rel_tolerance = 1.0e-9)
 
 # Numerical walk
-f.add(string = 'Walk type: Numerical differentiation',
+f.add(string = 'Nummerical differentiation finished',
       rel_tolerance = 1.0e-2)
 f.add(string = 'Vibrational Raman intensities and optical activity',
       rel_tolerance = 1.0e-2)

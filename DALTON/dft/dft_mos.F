@@ -36,7 +36,7 @@ C
       KDMAT = 1
       KCMOS = KDMAT + N2BASX
       KCMO2 = KCMOS + N2BASX
-      KLAST = KCMO2 + 2*N2ORBX 
+      KLAST = KCMO2 + 2*N2ORBX
       LWRK  = LFREE - KLAST +1
       IF(KLAST.GT.LFREE) CALL QUIT('Insufficient memory in DFTMOMO')
       CALL DZERO(WORK(KCMO2),2*N2ORBX)
@@ -53,14 +53,14 @@ C
      &     ' Electrons in DFTMOMO:', ELE
       CALL DCOPY(2*N2ORBX,WORK(KCMO2),1,CMO2,1)
 C
-      DO J = 1, NORBT 
+      DO J = 1, NORBT
       DO I = 1, NORBT
          IF(I.NE.J)CMO2(I,J,2)=CMO2(I,J,2)/SQRT(CMO2(I,I,2)*CMO2(J,J,2))
       END DO
       END DO
       DO I = 1 ,NORBT
          CMO2(I,I,2) = D1
-      END DO 
+      END DO
 C
       IF (IPRINT.GE.15) THEN
          CALL HEADER('Matrix < abs(phi_p) abs(phi_q) >',-1)
@@ -75,20 +75,20 @@ C
 C /* Deck dftgmo */
       SUBROUTINE DFTGMO(CMO,IPRINT)
 C
-C     T. Helgaker 
+C     T. Helgaker
 C
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "inforb.h"
 #include "inftap.h"
-C 
+C
       DIMENSION CMO(NCMOT)
 C
       REWIND LUSIFC
       CALL MOLLAB('SIR IPH ',LUSIFC,LUPRI)
       READ (LUSIFC)
-      READ (LUSIFC) 
+      READ (LUSIFC)
       CALL READT(LUSIFC,NCMOT,CMO)
       IF (IPRINT.GT.100) THEN
          CALL HEADER('MOS in DFTGMO ',-1)
@@ -137,33 +137,33 @@ C
 C
       DO Q = 1, NORBT
       DO P = 1, NORBT
-         DO I = 1, NBLEN 
-            CMO2(P,Q,1) = CMO2(P,Q,1) 
+         DO I = 1, NBLEN
+            CMO2(P,Q,1) = CMO2(P,Q,1)
      &                  + WGHT(I)*ABS(CMOAO(I,P))*ABS(CMOAO(I,Q))
 #ifdef DFTMOS_DEBUG
 ! The following two lines produce the MO overlap matrix, that is a unit matrix,
 ! in CMO2(:,:,2), if the code is correct.
-            CMO2(P,Q,2) = CMO2(P,Q,2) 
+            CMO2(P,Q,2) = CMO2(P,Q,2)
      &                  + WGHT(I)*CMOAO(I,P)*CMOAO(I,Q)
 #else
-            CMO2(P,Q,2) = CMO2(P,Q,2) 
+            CMO2(P,Q,2) = CMO2(P,Q,2)
      &                  + WGHT(I)*(CMOAO(I,P)**2)*(CMOAO(I,Q)**2)
 #endif
          END DO
       END DO
-      END DO 
+      END DO
       RETURN
       END
 C
       SUBROUTINE KICK_SLAVES_MOMO(NBAST,NORBT,DMAT,CMOS,IPRINT)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
-C     
+C
       DIMENSION DMAT(NBAST,NBAST), CMOS(NBAST,NORBT)
 C
       IF (MYNUM .EQ. MASTER) THEN
@@ -184,6 +184,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_MOMO_SLAVE(WORK,LWORK,IPRINT)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "mxcent.h"
 #include "maxorb.h"
@@ -192,7 +193,6 @@ C
 C
       DIMENSION WORK(LWORK)
 #include "dftcom.h"
-#include "mpif.h"
       EXTERNAL DFTMO2
       LOGICAL DFT_ISGGA
       EXTERNAL DFT_ISGGA
@@ -214,13 +214,13 @@ C
       CALL DFT_MOMO_COLLECT(WORK(KCMO2),N2ORBX,WORK(KLAST),LWRK)
       RETURN
       END
-#endif      
+#endif
 C
       SUBROUTINE DFT_MOMO_COLLECT(CMO2,IDIM,WORK,LWORK)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpif.h"
       DIMENSION CMO2(IDIM,2), WORK(LWORK)
       CALL DCOPY(2*IDIM,CMO2,1,WORK,1)
       CALL MPI_REDUCE(WORK,CMO2,2*IDIM,MPI_DOUBLE_PRECISION,

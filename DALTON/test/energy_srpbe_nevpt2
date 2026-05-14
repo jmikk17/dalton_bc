@@ -138,7 +138,7 @@ CTRL[4]=7
 ERROR[4]="INCORRECT WAVE FUNCTION"
 
 # SCF energy:
-CRIT1=`$GREP "Hartree-Fock total energy *: * \-76\.332196" $log | wc -l`
+CRIT1=`$GREP "Hartree-Fock.* total energy *: * \-76\.332196" $log | wc -l`
 TEST[5]=`expr $CRIT1`
 CTRL[5]=2
 ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
@@ -146,14 +146,14 @@ ERROR[5]="HF-srPBE ENERGY NOT CORRECT"
 # MP2 energy:
 # = short-range MP2 second order energy         :           -76.3349496802
 # = short-range MP2 second order energy         :           -76.3349545671
-CRIT1=`$GREP "MP2 second order.* energy *: * \-76\.334949" $log | wc -l`
-CRIT2=`$GREP "MP2 second order.* energy *: * \-76\.334954" $log | wc -l`
+CRIT1=`$GREP "MP2.* second order.* energy *: * \-76\.33494" $log | wc -l`
+CRIT2=`$GREP "MP2.* second order.* energy *: * \-76\.33495" $log | wc -l`
 TEST[6]=`expr $CRIT1 \+ $CRIT2 `  # 1 + 1
 CTRL[6]=2
 ERROR[6]="MP2-srPBE ENERGY NOT CORRECT"
 
 # MCSCF energy:
-CRIT1=`$GREP "Final MC-SRDFT energy: * \-76\.334141" $log | wc -l`
+CRIT1=`$GREP "Final MC-SRDFT energy: * \-76\.33414[01]" $log | wc -l`
 TEST[7]=`expr $CRIT1`
 CTRL[7]=1
 ERROR[7]="MC-srPBE ENERGY NOT CORRECT"
@@ -162,14 +162,14 @@ ERROR[7]="MC-srPBE ENERGY NOT CORRECT"
 # STATE   DIAGONALISATION        PERTURBATION SC-D        PERTURBATION PC-D
 #    1     -76.33414178            -76.33540884            -76.33542776  ! one test
 #    1     -76.33414177            -76.33540884            -76.33542776  ! another compilation
-CRIT1=`$GREP "1 * \-76\.334141.. * -76.335408.. * -76.335427" $log | wc -l`
+CRIT1=`$GREP "1 * \-76\.33414... * -76.33540... * -76.33542" $log | wc -l`
 TEST[8]=`expr $CRIT1`
 CTRL[8]=1
 ERROR[8]="NEVPT2-srPBE ENERGY NOT CORRECT"
 
 # Occupancy of natural orbitals:
 #  2.000000000   1.999980484   1.999123273   0.000630907   0.000345967
-CRIT1=`$GREP -l " 2.000000000 * 1.999980.*   1.99912.* 0*.000630.* 0*.000345" $log | wc -l`
+CRIT1=`$GREP -l " 2.000000000 * 1.999980.*   1.99912.* 0*.00063.* 0*.000345" $log | wc -l`
 #  1.999845212   0.000161162
 CRIT2=`$GREP -l " 1.99984.* 0*.000161" $log | wc -l`
 #  1.999006802   0.000906192

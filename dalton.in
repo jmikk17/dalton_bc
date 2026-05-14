@@ -65,11 +65,6 @@ pcmfil=''
 SSH=ssh
 SCP=scp
 
-# DALTON_NUM_MPI_PROCS is deprecated, print a warning if it is used
-if [ -n "$DALTON_NUM_MPI_PROCS" ]; then
-    echo "WARNING: DALTON_NUM_MPI_PROCS is deprecated and will be removed in future releases, use DALTON_LAUNCHER instead"
-fi
-
 #default values for options
 optd=0
 optD=1
@@ -117,7 +112,7 @@ usage (){
         echo ' -omp num         : set the number of OpenMP threads. Note that Dalton is not OpenMP'
         echo '                    parallelized, however, this option can be used with e.g. threaded blas as MKL'
      if [ $mpi_enabled = "ON" ] ; then  # MPI parallel version
-        echo ' -N num |-np num  : use num MPI processes (defaults to 1, illegal if DALTON_LAUNCHER specified)'
+        echo ' -np num|-mpi num : use num MPI processes (defaults to 1, illegal if DALTON_LAUNCHER specified)'
      fi
         echo ' -cpexe           : copy '$dalton'.x to DALTON_TMPDIR before execution, either to global scratch'
         echo '                    (if DALTON_USE_GLOBAL_SCRATCH is set) or to local scratch on all nodes'
@@ -147,7 +142,8 @@ usage (){
         echo '                                unless DALTON_USE_GLOBAL_SCRATCH is defined'
      fi
      if [ $mpi_enabled = "ON" ] ; then  # MPI parallel version
-        echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary (if defined, -N flag not allowed)'
+        echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary, e.g. "mpirun -np 64" (if defined, -N flag not allowed)'
+        echo '    DALTON_NUM_MPI_PROCS      : number of MPI processes. Use DALTON_LAUNCHER if you want to set more options.'
      else
         echo '    DALTON_LAUNCHER           : launcher for the '$dalton'.x binary'
      fi
@@ -195,7 +191,7 @@ while [ -n "`echo $1 | grep '^-'`" ]; do
       -put ) PUT_FILES="$PUT_FILES $2"; shift;;
       -rsh ) SCP=rcp; SSH=rsh;;
       -f ) optf=$2; shift;;
-      -N|-np ) optn=$2; shift;;
+      -N|-np|-mpi ) optn=$2; shift;; # keep -N for backwards compatibility
       -omp ) export OMP_NUM_THREADS=$2; shift;;
       -ow ) opto=2;;
       -o ) OUTFIL=$2; opto=1; shift;;
@@ -550,9 +546,9 @@ if [ $mpi_enabled = "ON" -a $optn -gt 1 ] ; then  # MPI parallel
 fi
 
 if [ -n "$DALTON_LAUNCHER" ] ; then
+       echo "    DALTON_LAUNCHER is defined as: $DALTON_LAUNCHER"
     if [ $optn -gt 1 ] ; then
        echo; echo  "*** JOB SPECIFICATION ERROR:"
-       echo "    DALTON_LAUNCHER was defined as: $DALTON_LAUNCHER"
        echo "    Definition of DALTON_LAUNCHER is not compatible with -N/-np flag nor definition of DALTON_NUM_MPI_PROCS"
        echo "--> Include instead number of MPI processes in your definition of DALTON_LAUNCHER"; echo
        exit 1
@@ -627,9 +623,11 @@ filelist="DALTON.STAT SIRIUS.RST RESULTS.RSP RESPONSE.C8 RSPVEC ABSVECS SIRIFC* 
 filelist="$filelist DALTON.NCA DALTON.MOL DALTON.ORB DALTON.IRC DALTON.BAS DALTON.TRJ DALTON.CM DALTON.HES DALTON.MOPUN DALTON.WLK"
 filelist="$filelist molden.inp DALTON.PROP LUCITA_CVECS.a LUCITA_CVECS.b LUCITA_CVECS.c LUCITA_CVECS.d LUCITA_CVECS.e LUCITA_CVECS.f LUCITA_CVECS.g LUCITA_CVECS.h"
 filelist="$filelist gv.off FCIDUMP UNIT1 UNIT2 rsp_tensor_human final_geometry.xyz *.cube"
+filelist="$filelist RSPRST.E2C RSP_BVEC RSP_SVEC RSP_DIAG"
 pcmfiles="cavity.off PCM_matrix PCM_mep_asc PEDRA.OUT *.npy *.npz *.vtk molec_dyadic.dat"
 pelib_files="pelib_electrostatics.bin pelib_induced_moments.bin pelib_induced_charges.bin pelib_response_matrix.bin pelib_nuclear_potential.bin pelib_nuclear_field.bin pelib_multipole_potential.bin pelib_multipole_field.bin"
-filelist="$filelist $pcmfiles $pelib_files $GET_FILES"
+lresc_files="LRESC-LR-S LRESC-LR-T LRESC-QR lresc-array.npy"
+filelist="$filelist $pcmfiles $pelib_files $lresc_files $GET_FILES"
 
 if [ -s $DALTON.OUT.n0001 -a -r $DALTON.OUT.n0001 ]; then
    tarfilelist="$DALTON.OUT.n*"

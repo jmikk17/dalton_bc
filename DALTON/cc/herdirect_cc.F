@@ -165,7 +165,7 @@ C
       IF (KLAST .GT. LWORK) CALL STOPIT('HERDI2','PAOVEC',KLAST,LWORK)
       LWRK   = LWORK - KLAST + 1
 C
-      ITYPE  = 7
+      ITYPE  = 7 ! ADISTR - all g_abcd for fixed a
       MAXDIF = 0
       JPRINT = 0
       NBUFX(0) = 0
@@ -211,8 +211,7 @@ C
      &            NOPV,NOCONT,TKTIME,IPRINT,IPRNTA,IPRNTB,IPRNTC,
      &            IPRNTD,RETUR,ISHELA,I2TYP,
      &            WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL,
-     &            .false.)
+     &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL)
       IF (IPRFCK.GT.1)
      &   CALL TIMER('TWOINT (A*|**) distributions',TIMSTR,TIMEND)
 C
@@ -285,7 +284,7 @@ C
       IF (KLAST .GT. LWORK) CALL STOPIT('NERDI2','PAOVEC',KLAST,LWORK)
       LWRK   = LWORK - KLAST + 1
 C
-      ITYPE  = 7
+      ITYPE  = 7 ! ADISTR - all g_abcd for fixed a
       MAXDIF = 0
       JPRINT = 0
       NBUFX(0) = 0
@@ -346,8 +345,7 @@ C
      &            NOPV,NOCONT,TKTIME,IPRINT,IPRNTA,IPRNTB,IPRNTC,
      &            IPRNTD,RETUR,ISHELA,I2TYP,
      &            WORK(KJSTRS),WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL,
-     &            .false.)
+     &            ICEDIF,IFTHRS,GABRAO,DMRAO,DMRSO,DINTSKP,RELCAL)
       IF (IPRFCK.GT.1)
      &   CALL TIMER('TWOINT (AB|**) distributions',TIMSTR,TIMEND)
 C

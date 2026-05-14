@@ -126,7 +126,7 @@ C
 C
 C COPY VECTOR ON FILE LUIN TO FILE LUOUT
 *
-* Packed version 
+* Packed version
 C
 C
 C LBLK DEFINES STRUCTURE OF FILE
@@ -138,7 +138,7 @@ C
         REWIND LUIN
         REWIND LUOUT
       END IF
- 
+
 C
 C LOOP OVER BLOCKS
 C
@@ -415,7 +415,7 @@ C?      write(6,*) ' ZAP_BLOCK_VEC :  LBLK = ', LBLK
           CALL FRMDSC2(SEGMNT,LBL,KBLK,LUIN,IMZERO,IAMPACK,
      &                 NO_ZEROING)
 C         CALL FRMDSC_LUCI(SEGMNT,LBL,KBLK,LUIN,IMZERO,IAMPACK)
-          IF(IMZERO.EQ.0) THEN  
+          IF(IMZERO.EQ.0) THEN
            IF(ICLS_A(I_BLK_TO_CLS(IBLK)).EQ.0) THEN
              NCLS_A = NCLS_A + 1
            END IF
@@ -460,12 +460,12 @@ C    &     I_BLK_TO_CLS(IBLK)
 *       ELEMENT I
 *       SUBVAL : VALUE OF SORTED ELEMENTS
 
+      use dalton_mpi_interface
       IMPLICIT REAL*8           ( A-H,O-Z)
 #include "priunit.h"
 #ifdef VAR_MPI
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) my_STATUS(MPI_STATUS_SIZE)
 #endif
 
@@ -569,7 +569,7 @@ C            call iwrtma(ISCR(1),1,LSUB+MSUB,1,LSUP+MSUP)
 C
 C     TRANSFER ARRAY FROM DISK FILE IFILE
 C
-*. Version allowing zero and packed blocks 
+*. Version allowing zero and packed blocks
 *
       IMPLICIT REAL*8(A-H,O-Z)
       DIMENSION ARRAY(*)
@@ -579,7 +579,7 @@ C
       INTEGER IPAK(LPBLK)
       DIMENSION XPAK(LPBLK)
       integer, intent(in) :: IFILE
- 
+
       SAVE LBATCH
       DATA LBATCH/0/
 C
@@ -608,7 +608,7 @@ C         WRITE(6,*) ' File is packed, file number = ', IFILE
 *. Loop over packed records of dimension LPBLK
       NBATCH = 0
 C1000 CONTINUE
-*. The next LPBLK elements 
+*. The next LPBLK elements
   999   CONTINUE
           NBATCH = NBATCH + 1
           LBATCHP = LBATCH
@@ -621,9 +621,9 @@ C1000 CONTINUE
           READ(IFILE) ISTOP
           DO IELMNT = 1, LBATCH
             IF(IPAK(IELMNT).LE.0.OR.IPAK(IELMNT).GT.NDIM) THEN
-              WRITE(6,*) ' FRMDSC : Problemo IELMNT = ',IELMNT 
+              WRITE(6,*) ' FRMDSC : Problemo IELMNT = ',IELMNT
               WRITE(6,*) ' IPAK(IELMNT) = ',IPAK(IELMNT )
-              WRITE(6,*) ' LBATCH IFILE  = ',LBATCH,IFILE    
+              WRITE(6,*) ' LBATCH IFILE  = ',LBATCH,IFILE
               IF(NBATCH.EQ.1) THEN
                WRITE(6,*) ' NBATCH = 1 '
               ELSE
@@ -663,10 +663,10 @@ C
 C
 C     Transfer vector from disk file IFILE to array ARRAY
 C
-*. Version allowing zero and packed blocks 
+*. Version allowing zero and packed blocks
 *
 * If NO_ZEROING = 1, the elements of zero blocks
-*    are not set to zero, the routine just returns with 
+*    are not set to zero, the routine just returns with
 *    IMZERO = 1
 *
       IMPLICIT REAL*8(A-H,O-Z)
@@ -679,7 +679,7 @@ C
 
       SAVE LBATCH
       DATA LBATCH/0/
- 
+
       IMZERO = 0
 C
       IPACK = 1
@@ -706,7 +706,7 @@ C       CALL IFRMDS(ISCR,2,MMBLOCK,IFILE)
 *. Loop over packed records of dimension LPBLK
       NBATCH = 0
 C1000 CONTINUE
-*. The next LPBLK elements 
+*. The next LPBLK elements
   999   CONTINUE
           NBATCH = NBATCH + 1
           LBATCHP = LBATCH
@@ -719,9 +719,9 @@ C1000 CONTINUE
           READ(IFILE) ISTOP
           DO IELMNT = 1, LBATCH
             IF(IPAK(IELMNT).LE.0.OR.IPAK(IELMNT).GT.NDIM) THEN
-              WRITE(6,*) ' FRMDSC : Problemo IELMNT = ',IELMNT 
+              WRITE(6,*) ' FRMDSC : Problemo IELMNT = ',IELMNT
               WRITE(6,*) ' IPAK(IELMNT) = ',IPAK(IELMNT )
-              WRITE(6,*) ' LBATCH IFILE  = ',LBATCH,IFILE    
+              WRITE(6,*) ' LBATCH IFILE  = ',LBATCH,IFILE
               IF(NBATCH.EQ.1) THEN
                WRITE(6,*) ' NBATCH = 1 '
               ELSE
@@ -1034,7 +1034,7 @@ C?         CALL WRTMT_LU(VEC1,1,NBL1,1,NBL1)
 C?         CALL WRTMT_LU(VEC2,1,NBL1,1,NBL1)
           ELSE
           IF(NBL1 .GT. 0 )
-     &    X = X + DDOT(NBL1,VEC1,1,VEC1,1) 
+     &    X = X + DDOT(NBL1,VEC1,1,VEC1,1)
         END IF
       END IF
       IF(NBL1.GE. 0 .AND. LBLK .LE. 0) GOTO 1000
@@ -1117,7 +1117,7 @@ C
 *
 * LUOUT = Factor * LUOUT + sum(I=1,nvec)fac(I) LUIN(I)
 *
-* LUOUT and LUSCR are rewinded and input data 
+* LUOUT and LUSCR are rewinded and input data
 * on these files are lost.
 *
 * MVCSMD2 is identical MVCSMD, except that
@@ -1187,7 +1187,7 @@ C            COPVCD(LUIN,LUOUT,SEGMNT,IREW,LBLK)
       END
 ***********************************************************************
       SUBROUTINE REWINE( LU ,LBLK )
-* 
+*
 * LBLK used to select FASTIO or not, is now ignored.
       REWIND LU
 *
@@ -1404,7 +1404,7 @@ C RECORDS WITH LENGTH NBLOCK.
         IF(MMBLOCK.GT.2) MMBLOCK = 2
 *
         ISCR(1) = IMZERO
-*. No packing 
+*. No packing
         ISCR(2) = 0
 C       CALL ITODS(ISCR,2,MMBLOCK,IFIL)
         CALL ITODS(ISCR,2,2,IFIL)
@@ -1461,7 +1461,7 @@ C
         IF(MMBLOCK.GT.2) MMBLOCK = 2
 *
         ISCR(1) = IMZERO
-*. No packing 
+*. No packing
          ISCR(2) = 0
 C       CALL ITODS(ISCR,2,MMBLOCK,IFIL)
         CALL ITODS(ISCR,2,2,IFIL)
@@ -1503,7 +1503,7 @@ C RECORDS WITH LENGTH NBLOCK.
       INTEGER START,STOP
       REAL*8 INPROD
       INTEGER ISCR(2)
-* 
+*
       PARAMETER(LPBLK=50000)
       INTEGER IPAK(LPBLK)
       DIMENSION XPAK(LPBLK)
@@ -1524,7 +1524,7 @@ C?    CALL XFLUSH(6)
         IF(MMBLOCK.GT.2) MMBLOCK = 2
 *
         ISCR(1) = IMZERO
-*. Packing 
+*. Packing
         ISCR(2) = 1
 C       CALL ITODS(ISCR,2,MMBLOCK,IFIL)
         CALL ITODS(ISCR,2,2,IFIL)
@@ -1536,7 +1536,7 @@ C       CALL ITODS(ISCR,2,MMBLOCK,IFIL)
 *. Loop over packed records of dimension LPBLK
       IELMNT = 0
  1000 CONTINUE
-*. The next LPBLK elements 
+*. The next LPBLK elements
       LBATCH = 0
 *. Obtain next batch of elemnts
   999 CONTINUE
@@ -1551,9 +1551,9 @@ C       CALL ITODS(ISCR,2,MMBLOCK,IFIL)
        IF(LBATCH.EQ.LPBLK.OR.IELMNT.EQ.NDIM) goto 998
        GOTO 999
 *. Send to DISK
- 998   CONTINUE   
+ 998   CONTINUE
        WRITE(IFIL) LBATCH
-       IF(LBATCH.GT.0) THEN 
+       IF(LBATCH.GT.0) THEN
          WRITE(IFIL) (IPAK(I),I=1, LBATCH)
          WRITE(IFIL) (XPAK(I),I=1, LBATCH)
        END IF
@@ -1765,12 +1765,12 @@ C
 * IAMPACKED added Oct. 98 / Jeppe Olsen
       IMPLICIT REAL*8 (A-H,O-Z)
       INTEGER ISCR(2)
-* Zero record 
+* Zero record
       ISCR(1) = 1
 *. Packed form
       ISCR(2) = IAMPACKED
 *
       CALL ITODS(ISCR,2,2,IFIL)
 *
-      RETURN 
+      RETURN
       END

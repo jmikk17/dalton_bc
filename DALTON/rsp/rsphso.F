@@ -1528,7 +1528,7 @@ C        Always full exchange for spin-orbit integrals:
      &               IPRNTD,RTNTWO,IDUMMY,I2TYP,WRK(KJSTRS),
      &               WRK(KNPRIM),WRK(KNCONT),WRK(KIORBS),
      &               IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &               .FALSE.,.false.)
+     &               .FALSE.)
          HFXFAC=HFXSAV
          CALL MEMREL('HSOFCKAO.TWOINT',WRK,KFC,KJSTRS,KFREE,LFREE)
          IF (HSODEBUG) THEN

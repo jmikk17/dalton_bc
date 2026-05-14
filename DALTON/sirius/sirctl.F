@@ -159,9 +159,9 @@ C To prepare combination runs: Save flags for MCSCF. Nullify flags
 C for RHF, MP2, CI
 C
 C - save
-      DO 2 IFLAG = 1, NFLAG
+      DO IFLAG = 1, NFLAG
          FLAGSV(IFLAG) = FLAG(IFLAG)
-    2 CONTINUE
+      END DO
       MCTYPE_save = MCTYPE
 C - change
 C     Now disable non-symmetric IWOPSY for properties
@@ -305,13 +305,12 @@ C
             IPRRHF = IPRSIR
 C           ... use global print level in DIIS if IPRRHF not specified
          END IF
-         FLAG(2)  = .FALSE.
-         FLAG(4)  = .FALSE.
-C        Fock approximation to orbital Hessian diagonal:
-         FLAG(12) = .FALSE.
+         FLAG(2)  = .FALSE. ! MCSCF
+         FLAG(4)  = .FALSE. ! CI
+         FLAG(12) = .FALSE. ! Fock approximation to orbital Hessian diagonal:
 C        Integral transformations not needed:
-         FLAG(14) = .TRUE.
-         FLAG(34) = .TRUE.
+         FLAG(14) = .TRUE. ! integral transformation not needed
+         FLAG(34) = .TRUE. ! integral transformation not needed at all in this module
 C        Use always NEO for RHF (920221-hjaaj)
 C        unless .NR ALWAYS (FLAG(39)) is set, e.g. for core relax calc.
          IF (.NOT.FLAG(39)) FLAG(38) = .TRUE.
@@ -389,13 +388,13 @@ C
 C        Call SIROPT to perform QC-SCF iterations
 C
          ICONVI = ICONV
-         IF (FLAG(21) .AND. ICONV .LE. 0) THEN
+         IF (FLAG(21) .AND. ICONV .LE. 0) THEN ! QC-SCF
 #ifdef HAS_PCMSOLVER
             if (pcm_cfg%do_pcm) call quit('ERROR: DIIS '//
      &      'failed to converge and QC-SCF is not implemented with '//
      &      'PCMSolver')
 #endif
-            FLAG( 2) = .TRUE.
+            FLAG( 2) = .FALSE. ! MCSCF
             FLAG( 5) = FLAGSV(5)
             FLAG(15) = RHFCAN
             MXMASV = MAXMAC
@@ -452,8 +451,8 @@ C
          IPRI6  = MPRI6
          IPRI4  = MPRI4
          FLAG(25)   = FLAGSV(25)
-         FLAG(34)   = FLAGSV(34)
-         FLAG(14)   = .FALSE.
+         FLAG(34)   = FLAGSV(34) ! integral transformation not needed at all in this module
+         FLAG(14)   = .FALSE.    ! integral transformation not needed
          FLAGSV(14) = .FALSE.
 
 !#define AO_DENSITIES_ON_FILE
@@ -506,11 +505,11 @@ C
      *      ' preceding Hartree-Fock not converged.')
 C
          FLAG( 9) = .TRUE.
-         FLAG( 2) = .FALSE.
-         FLAG( 4) = .FALSE.
-         FLAG(14) = .FALSE.
+         FLAG( 2) = .FALSE. ! MCSCF
+         FLAG( 4) = .FALSE. ! CI
+         FLAG(14) = .FALSE. ! integral transformation not needed
 C
-         FLAG(21) = .FALSE.
+         FLAG(21) = .FALSE. ! QC-SCF
 C
          CALL GETTIM(TSTART,WSTART)
          CALL MP2CTL(WORK,LWORK)
@@ -524,7 +523,7 @@ C
          CALL FLSHFO(LUW4)
          CALL FLSHFO(LUPRI)
          CALL FLSHFO(LUSTAT)
-         FLAG(14)   = .FALSE.
+         FLAG(14)   = .FALSE. ! integral transformation not needed
          FLAGSV(14) = .FALSE.
       END IF
 C
@@ -609,7 +608,7 @@ C
          CALL READMO(WORK(KCMO),JRDMO)
          CALL FCVIRT(WORK(KCMO),WORK(KWRK1),LWRK1)
          CALL NEWORB('FCVORB  ',WORK(KCMO),.TRUE.)
-         FLAG(14) = .FALSE.
+         FLAG(14) = .FALSE. ! integral transformation not needed
          FLAGSV(14) = .FALSE.
          IF (SUPSYM) THEN
 C           ... orbital super symmetries may have been reordered
@@ -639,11 +638,11 @@ C
          NUMRUN = NUMRUN + 1
          DOHFSRDFT = .FALSE.
 C        ... no more HFSRDFT
-         FLAG( 4) = .TRUE.
-         FLAG( 2) = .FALSE.
-         FLAG(21) = .FALSE.
+         FLAG( 4) = .TRUE.  ! CI
+         FLAG( 2) = .FALSE. ! MCSCF
+         FLAG(21) = .FALSE. ! QC-SCF
          FLAG( 9) = .FALSE.
-         FLAG(15) = (ICICNO .GT. 0)
+         FLAG(15) = .FALSE. ! no modification of orbitals after CI!
 C        ... if CI it is again OK to call sirout.
          FLAG( 5) = FLAGSV( 5)
          MCTYPE = MCTYPE_save
@@ -662,6 +661,11 @@ C        ... do not write interface file if followed by MCSCF
 C
          CALL GETTIM(TSTART,WSTART)
          CALL CIMAIN(WORK,LWORK,ICONV)
+
+         if (FLAG(15)) write(lupri,'(/A)')
+     &      '@ INFO: Active orbitals were transformed to '//
+     &      ' natural orbitals after CI for population analysis'
+
          CALL GETTIM(TEND,WEND)
          TUSED = TEND - TSTART
          WUSED = WEND - WSTART
@@ -674,7 +678,7 @@ C
          CALL FLSHFO(LUSTAT)
 
          IF (DOCINO) THEN
-            FLAG(14) = .FALSE.
+            FLAG(14) = .FALSE. ! integral transformation not needed
             FLAGSV(14) = .FALSE.
             IF (SUPSYM) THEN
 C              ... orbital super symmetries may have been reordered
@@ -707,19 +711,19 @@ C Recover MCSCF flags and settings
          PCM    = PCM_save
          MCTYPE = MCTYPE_save
 C
-         FLAG( 2) = .TRUE.
-         FLAG(21) = .FALSE.
-         FLAG( 4) = .FALSE.
+         FLAG( 2) = .TRUE.  ! MCSCF
+         FLAG(21) = .FALSE. ! QC-SCF
+         FLAG( 4) = .FALSE. ! CI
          FLAG( 9) = .FALSE.
-         IF (IMCCNO .GT. 0) THEN
+
+         IF (IMCCNO .GT. 0) THEN ! user asked for traci, .NOTRACI is IMCCNO = -1
             FLAG(15) = .TRUE.
-         ELSE IF (IMCCNO .EQ. 0) THEN
+         ELSE IF (IMCCNO .EQ. 0) THEN ! no user input, as default do traci in MCSCF
             FLAG(15) = .TRUE.
 C           IF (MCTYPE .EQ. 2) FLAG(48) = .TRUE.
-C           HJMAERKE 921216: use FOCKONLY (FLAG(48))
-C              for RAS ?????????
+C           HJMAERKE 921216: use FOCKONLY (FLAG(48)) for RAS ?????????
          END IF
-C
+
          IF (DOCINO) THEN
             ICI0 = 1 ! orbitals transformed to NO, thus CI coefficients cannot be used
          ELSE IF (DOCI) THEN
@@ -972,7 +976,7 @@ C
 #if defined(BUILD_GEN1INT)
 C... added by Bin Gao, to generate cube files
       if (DO_CUBE) then
-        call gen1int_host_get_cube(LFREE, WORK(KFREE), LUPRI, IPRSIR)
+        call gen1int_host_get_cube(LWORK, WORK, LUPRI, IPRSIR)
         call gen1int_host_cube_finalize()
       end if
 #endif

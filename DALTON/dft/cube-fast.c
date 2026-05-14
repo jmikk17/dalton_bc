@@ -42,6 +42,14 @@
 #include "inforb.h"
 #include "priunit.h" 
 
+typedef void (*matvec_func_t)(real PM, integer sym, const real* mat, const real* vec, real a, real* res);
+/* Explicit prototypes */
+static void matn_times_vec_full(real PM, integer sym, const real* mat, const real* vec, real a, real* res);
+static void matt_times_vec_full(real PM, integer sym, const real* mat, const real* vec, real a, real* res);
+static void matn_times_vec_symm(real PM, integer sym, const real* mat, const real* vec, real a, real* res);
+static void matt_times_vec_symm(real PM, integer sym, const real* mat, const real* vec, real a, real* res);
+ 
+
 #if !defined __inline__
 /* inline some stuff whenever possible */
 #define __inline__
@@ -167,8 +175,8 @@ struct CubeFastData_ {
     real roBCDx[3];
 
     /* Matrix vector multiplication scheme */
-    void (*matn_times_vec)();
-    void (*matt_times_vec)();
+    matvec_func_t matn_times_vec;
+    matvec_func_t matt_times_vec;
     char mm_code_version[24];
 
     /* Matrix distribution scheme */
@@ -451,8 +459,8 @@ eval_omega_vectors(CubeFastData *t,
     integer  symC = t->symC;
     integer  symD = t->symD;
     
-    void (*matn_times_vec)() = t->matn_times_vec;
-    void (*matt_times_vec)() = t->matt_times_vec;
+    matvec_func_t matn_times_vec = t->matn_times_vec;
+    matvec_func_t matt_times_vec = t->matt_times_vec;
 
     real *kb_mo, *kc_mo, *kd_mo;  
     real *kbT_mo, *kcT_mo, *kdT_mo;
@@ -961,7 +969,7 @@ add_dft_contribution(DftGrid* grid, CubeFastData* d)
     integer x;
     real pref;
     real* dftcontr = d->dftcontr;
-    void (*add_commutators)() = d->add_commutators;
+    void (*add_commutators)(CommData**, integer, real*) = d->add_commutators;
     FourthDrv drvs; /* the functional derivatives */
     integer lst = 0;
     CommData *commlist[49];

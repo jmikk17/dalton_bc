@@ -98,7 +98,7 @@ typedef integer blocksz_t;
 
 extern void FSYM(setupsos)(const integer* geodrv, const integer* dolnd,
 			   integer *ntypso, integer *lndoff);
-extern void FSYM(getsos)(real* atv, integer* ncnt, real* coorx,
+extern void FSYM(getsos)(real* atv, real* coorx,
 			 real* work, integer* lwork, const integer* nbast, 
 			 const integer* dolnd, const integer* dogga,
 			 const real* dfthri, const integer* iprint);
@@ -132,7 +132,6 @@ dft_grid_new(integer needgrad, integer needlap, integer needgb)
     
     grid->coor   = calloc(3*GRID_BUFF_SZ, sizeof(real));
     grid->weight = calloc(GRID_BUFF_SZ, sizeof(real));
-    grid->ncnt   = calloc(inforb_.nbast, sizeof(integer));
     grid->needlap= needlap;
     grid->needgb = needgb;
     grid->dogga  = selected_func->is_gga();
@@ -161,7 +160,6 @@ dft_grid_free(DftGrid* res)
 {
   free(res->coor);
   free(res->weight);
-  free(res->ncnt);
   free(res->atv);
   free(res->mov);
   if(res->mog) free(res->mog);
@@ -172,7 +170,7 @@ static __inline__ void
 dft_grid_getval(DftGrid* grid, integer ipnt, real* work, integer* lwork)
 {
     real thrint = grid->dfthri/grid->weight[ipnt];
-    FSYM(getsos)(grid->atv, grid->ncnt, &grid->coor[ipnt][0], 
+    FSYM(getsos)(grid->atv, &grid->coor[ipnt][0], 
 		 work, lwork, &inforb_.nbast, &grid->needgb,
 		 &grid->dogga, &thrint, &ONEI);
 }

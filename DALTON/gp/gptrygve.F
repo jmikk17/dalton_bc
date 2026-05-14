@@ -256,10 +256,8 @@ C  /* Deck stopit */
       END
 C  /* Deck quit */
       SUBROUTINE QUIT(TEXT)
+      use dalton_mpi_interface
 #include "implicit.h"
-#if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
-#endif
 #include "priunit.h"
 #include "maxorb.h"
 C INFPAR: MYNUM
@@ -324,10 +322,8 @@ C
 C exit with error code of zero
 C (QUIT exits with error code of 100)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
-#if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
-#endif
 #include "priunit.h"
 #include "maxorb.h"
 C INFPAR: MYNUM
@@ -440,7 +436,7 @@ C   Open files for direct access through WRITDX and READDX routines.
 C   The ....DX routines enables direct access, even when the number
 C   of elements per record (the logical record length) is greater
 C   than the maximum physical record length.
-C   THIS IS MACHINE DEPENDENT 
+C   THIS IS MACHINE DEPENDENT
 C
 C Input:
 C  LUDX     file unit number
@@ -908,7 +904,7 @@ C
       CALL QENTER('GPOPEN')
 C
 C     Initialization
-C     
+C
       IF (FIRST) THEN
          CALL IZERO(IUNTAB,99)
          FIRST = .FALSE.
@@ -939,7 +935,7 @@ C     /HJAaJ Sep 2007
       IF (LUNIT .EQ. 0) GO TO 8000
       IF (LUNIT .EQ. 5) GO TO 8000
       IF (LUNIT .EQ. 6) GO TO 8000
-#endif 
+#endif
 C
 C     Copy input strings to local strings,
 C     remove trailing blanks, check for use of defaults
@@ -990,6 +986,8 @@ C
          IF ((IUN .EQ. 5) .OR. (IUN .EQ. 6))
      &        GOTO 10
          IF (IUNTAB(IUN) .NE. 0) GOTO 10
+         inquire(IUN,opened=FEXST)
+         IF (FEXST) GOTO 10 ! this file number has been opened without using GPOPEN
          LUNIT = IUN
       ELSE
 C
@@ -1167,14 +1165,14 @@ C                  calculation.
 #endif
       CALL QEXIT('GPOPEN')
       RETURN
-C     
+C
 C error branches
 C
  9001 CONTINUE
       WRITE (LUGPPRI,'(//A/A/A//A)')
      &   '--> ERROR (GPOPEN) NO MORE AVAILABLE FILE NUMBERS!',
      &   '--> THIS CALCULATION EITHER NEEDS TOO MANY SIMULTANEOUS '//
-     &   'FILES OR', 
+     &   'FILES OR',
      &   '--> SOMEBODY HAS FORGOTTEN TO CLOSE FILES IN THE SOURCE CODE',
      &   '### Please report the problem on http://daltonforum.org'
       CALL QTRACE(LUGPPRI)
@@ -1267,13 +1265,13 @@ C
 C Purpose:
 C   General purpose routine for closing files in the Dalton program.
 C   The routine will ensure that files that are closed and that will not
-C   be reopened in a later part of the program will make their unit 
+C   be reopened in a later part of the program will make their unit
 C   number available for reuse.
 C
-C   These files are strongly machine dependent, although care has been 
+C   These files are strongly machine dependent, although care has been
 C   taken to avoid using unit numbers that are illegal or reserved on a
 C   particular architecture. However, the use of GPOPEN and GPCLSE should
-C   remove much of the machine dependence in the rest of the Dalton 
+C   remove much of the machine dependence in the rest of the Dalton
 C   program
 C
 C Input:
@@ -1375,7 +1373,7 @@ C
       END IF
 C
 C     We just close it
-C     
+C
  20   CLOSE (LUNIT)
       IUNTAB(LUNIT) = 0
       LUNIT = -30000-LUNIT
@@ -1387,7 +1385,7 @@ C
       write (lugppri,*) 'GPCLOSE closed unit',LUNIT
 #endif
       RETURN
-C     
+C
 C error branches
 C
  9001 CONTINUE
@@ -1512,7 +1510,7 @@ C /* Deck UPCASE */
       SUBROUTINE UPCASE(WORD)
 C
 C     Routine that uppercases the word provided. Allows the input easily to
-C     be made case insensitive. F90 routine supplied by Anthony Stone and 
+C     be made case insensitive. F90 routine supplied by Anthony Stone and
 C     77-ified by K.Ruud
 C
 #include "implicit.h"
@@ -1547,7 +1545,7 @@ C
 
 
       subroutine clear_iuntab()
-#include "implicit.h"
+         integer iuntab, i
          common /unitar/ iuntab(1:99)
          do i = 1, 99
             iuntab(i) = 0

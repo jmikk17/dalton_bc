@@ -287,7 +287,7 @@ C
  1160 FORMAT (1X,'IHRSYM   ',I7)
  1170 FORMAT (1X,'I120     ',3I7)
  1180 FORMAT (1X,'NU1234   ',I7)
-      END
+      END ! C1DRIV
 C  /* Deck c10int */
       SUBROUTINE C10INT(HERINT,INDHER,INDHVC,IODDHR,INDHSQ,HCINT,
      &                  HCSINT,HCCONT,ETUV,HCPRIM,COEF12,CONT1,CONT2,
@@ -501,7 +501,7 @@ C
          END IF
       END IF
       RETURN
-      END
+      END ! C10INT
 C  /* Deck c1eint */
       SUBROUTINE C1EINT(HERINT,INDHER,INDHVC,IODDHR,INDHSQ,HCINT,COEF12,
      &                  CONT1,CONT2,ETUV,HCPRIM,HCCONT,HCSINT,SCR1,SCR2,
@@ -765,13 +765,15 @@ C
  1120 FORMAT (1X,'JOFFEX    ',(7I7))
  1130 FORMAT (1X,'JOFFEY    ',(7I7))
  1140 FORMAT (1X,'JOFFEZ    ',(7I7))
-      END
+      END ! C1EINT
 C  /* Deck cooint */
       SUBROUTINE COOINT(HERINT,INDHER,INDHVC,IODDHR,INDHSQ,HCINT,
      &                  HCSINT,HCCONT,ETUV,HCPRIM,COEF12,CONT1,CONT2,
      &                  SCR1,SCR2,IPRINT,LMNV12,IODD12,KODD12,
      &                  NPCO1,NPCO2,NUCS12,NPNT12,NRED12)
 C
+C     Orbit-orbit differentiated integrals
+C     ====================================
 C     TUH & WK 07.04.03
 C
 #include "implicit.h"
@@ -1015,7 +1017,7 @@ C
             END DO
          END IF
       RETURN
-      END
+      END ! COOINT
 C  /* Deck c1cont */
       SUBROUTINE C1CONT(HCPRIM,HCCNT,CONT1,CONT2,SCR1,SCR2,IODDHR,
      &                  IODDCH,NTUV,NPCO1,NPCO2,NUCS12,NPNT12,NRED12)

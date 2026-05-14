@@ -161,17 +161,34 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/abacus/hertst.F
     DALTON/abacus/her_lslib.F
     DALTON/abacus/huckel.F
+    DALTON/abacus/LRESC/lrescinf_module.F
     DALTON/abacus/LRESC/EFG/expval.F
     DALTON/abacus/LRESC/EFG/efgdrv.F
     DALTON/abacus/LRESC/EFG/linearlr.F
+    DALTON/abacus/LRESC/EFG/header.F
+    DALTON/abacus/LRESC/EFG/quadratic.F
+    DALTON/abacus/LRESC/EFG/print_results.F
     DALTON/abacus/LRESC/SHIELDING/expval.F
-    DALTON/abacus/LRESC/SHIELDING/angkin.F
+    #DALTON/abacus/LRESC/SHIELDING/angkin.F
     DALTON/abacus/LRESC/SHIELDING/linearlr.F
+    DALTON/abacus/LRESC/SHIELDING/quadratic.F
     DALTON/abacus/LRESC/SHIELDING/shieldingdrv.F
+    DALTON/abacus/LRESC/SHIELDING/header.F
+    DALTON/abacus/LRESC/SHIELDING/print_results.F
     #DALTON/abacus/LRESC/SHIELDING/angpso.F
     DALTON/abacus/LRESC/AVG/avgdrv.F
     DALTON/abacus/LRESC/AVG/checks.F
     DALTON/abacus/LRESC/AVG/operators.F
+    DALTON/abacus/LRESC/AVG/construct_operator.F
+    DALTON/abacus/LRESC/PySCF/read_matrix.F
+    #DALTON/abacus/LRESC/PySCF/generate_xyz.F
+    #DALTON/abacus/LRESC/EIGEN/dtqli.F
+    #DALTON/abacus/LRESC/EIGEN/dtred2.F
+    #DALTON/abacus/LRESC/EIGEN/eigsrt.F
+    DALTON/abacus/LRESC/EIGEN/main.F
+    DALTON/abacus/LRESC/filesmanagement/warnings.F
+    DALTON/abacus/LRESC/filesmanagement/files.F
+    DALTON/abacus/LRESC/filesmanagement/shielding_binary.F
     DALTON/amfi/amfi.F
     DALTON/amfi/symtra.F
     DALTON/cc/asqr.F
@@ -501,6 +518,7 @@ set(DALTON_FIXED_FORTRAN_SOURCES
     DALTON/gp/mpimacro.F
     DALTON/gp/qpack.F
     DALTON/gp/vcraypack.F
+    DALTON/include/dalton_mpi_interface.F90
     DALTON/lucita/ciinfo.F
     DALTON/lucita/dalton_interface.F
     DALTON/lucita/density.F
@@ -895,19 +913,17 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES LLVMFlang)
         )
 endif()
 
-if(ENABLE_SRDFT)
-    message("-- Enable srdft module")
-    add_definitions(-DMOD_SRDFT)
+# srdft sources
     set(DALTON_srdft_SOURCES
         DALTON/srdft/dftaux_srdft.F
         DALTON/srdft/dftdrv_srdft.F
         DALTON/srdft/dftfunjt.F
         DALTON/srdft/dftfun_srdft.F
-        DALTON/srdft/dftgrd_srdft.F
         DALTON/srdft/sirmp2_srdft.F
         DALTON/srdft/sir_srdft.F
         DALTON/srdft/srdft.F
         DALTON/srdft/srdftjt.F
+        DALTON/srdft/srdft_grid.F
         DALTON/srdft/srdft_molgrad.F
         DALTON/srdft/srdft_par.F
         DALTON/srdft/srdftfun.F
@@ -929,4 +945,27 @@ if(ENABLE_SRDFT)
     set(DALTON_FREE_FORTRAN_SOURCES
         ${DALTON_FREE_FORTRAN_SOURCES}
         ${DALTON_srdft_FREE_SOURCES})
+
+# 14.Feb.2024 hjaaj: changed qfitlib from external module to included into Dalton source files
+if(ENABLE_QFITLIB)
+    message("-- Enable qfitlib module")
+    #add_definitions(-DBUILD_QFITLIB)   # already done in cmake/Definitions.cmake
+    #add_definitions(-DPRG_DALTON)      # already done in cmake/Definitions.cmake
+    set(DALTON_qfitlib_SOURCES
+        DALTON/qfitlib/src/qfit.F90
+        DALTON/qfitlib/src/connolly.F90
+        DALTON/qfitlib/src/linear_solver.F90
+        DALTON/qfitlib/src/input_readers.F90
+        DALTON/qfitlib/src/global_variables.F90
+        DALTON/qfitlib/src/precision.F90
+        DALTON/qfitlib/src/integrals.F90
+        DALTON/qfitlib/src/utilities.F90
+        DALTON/qfitlib/src/io.F90
+        DALTON/qfitlib/src/auxmat.f90
+        DALTON/qfitlib/src/pot.f90
+        DALTON/qfitlib/src/tensor.f90
+        DALTON/qfitlib/qfitlib_interface.F90) # must be last, depends on modules defined in src/
+    set(DALTON_FREE_FORTRAN_SOURCES
+        ${DALTON_FREE_FORTRAN_SOURCES}
+        ${DALTON_qfitlib_SOURCES})
 endif()

@@ -500,8 +500,9 @@ module gen1int_matrix
   !> \param root_mpi is the root processor which broadcasts the matrix
   !> \param mat_comm is the MPI communicator
   subroutine MatBcast(A, root_mpi, mat_comm)
+#include "mpi_mod.h"
+#include "mpi_header.h"
     type(matrix), intent(inout) :: A
-#include "mpif.h"
     integer(kind=MPI_INTEGER_KIND), intent(in) :: root_mpi
     integer(kind=MPI_INTEGER_KIND), intent(in) :: mat_comm
     integer(kind=MPI_INTEGER_KIND) :: rank_proc  !rank of processor

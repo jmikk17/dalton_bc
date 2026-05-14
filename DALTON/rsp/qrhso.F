@@ -1334,7 +1334,7 @@ C        Always full exchange in spin-orbit integrals:
      &               IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &               WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &               IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &               .FALSE.,.false.)
+     &               .FALSE.)
          CALL MEMREL('HSOFCKAO.TWOINT',WORK,KF,KJSTRS,KFREE,LFREE)
          HFXFAC=HFXSAV
       IF (IPRHSO .gt. 100 .or. HSODEBUG) THEN

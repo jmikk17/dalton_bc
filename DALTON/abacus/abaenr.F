@@ -981,7 +981,6 @@ C
 #include "infvar.h"
 #include "inflin.h"
 #include "linaba.h"
-#include "ibtdef.h"
 C
 C Section 1: extend reduced PROJECTED HESSIAN matrix
 C            with N new b-vectors

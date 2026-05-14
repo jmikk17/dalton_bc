@@ -16,12 +16,26 @@
 \usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
 \hypersetup{urlcolor=brown,linkcolor=blue,citecolor=red}
 
+\usepackage{listings}
+
+\lstset{language=Python,        % Code language
+        basicstyle=\ttfamily,   % Font
+        keywordstyle=\color{blue}\bfseries, % Keywords in bold and blue
+        stringstyle=\color{red}, % Strings in red
+        commentstyle=\color{green}, % Comments in green
+        frame=single,           % Frame style
+        numbers=left,           % Line numebering at left
+        numberstyle=\tiny\color{gray}, % Numbers style
+        literate={'}{\textquotesingle}1,
+        columns=flexible
+}
+
 %****************************************************
 %****************************************************
 %****************************************************
 % Define release version, should correspond to the
 % content of the file VERSION in the root directory.
-\newcommand{\latestrelease}{Dalton2024.0-dev}
+\newcommand{\latestrelease}{Dalton2025.0-dev}
 %****************************************************
 %****************************************************
 %****************************************************

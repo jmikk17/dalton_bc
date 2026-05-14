@@ -187,7 +187,7 @@ module gen1int_shell
             sub_shell%powers(3,iao) = ang_num-(xpow+ypow)
           end do
         end do
-      end if  
+      end if
     end if
     if (present(last_shell)) then
       sub_shell%base_idx = last_shell%base_idx &
@@ -207,9 +207,10 @@ module gen1int_shell
   !> \param root_mpi is the root processor which broadcasts the AO sub-shells
   !> \param api_comm_mpi is the MPI communicator
   subroutine Gen1IntShellBcast(num_shells, sub_shells, root_mpi, api_comm_mpi)
+#include "mpi_mod.h"
     integer, intent(in) :: num_shells
     type(sub_shell_t), intent(inout) :: sub_shells(num_shells)
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), intent(in) :: root_mpi, api_comm_mpi
     integer(kind=MPI_INTEGER_KIND) ::  rank_proc         !rank of processor
     integer(kind=MPI_INTEGER_KIND) ::  ierr_mpi, count_mpi
@@ -424,6 +425,7 @@ module gen1int_shell
                                     num_dens, ao_dens, val_expt, write_expt)
     ! matrix module
     use gen1int_matrix
+#include "mpi_mod.h"
     integer, intent(in) :: num_shells_bra
     type(sub_shell_t), intent(in) :: sub_shells_bra(*)
     integer, intent(in) :: num_shells_ket
@@ -434,7 +436,7 @@ module gen1int_shell
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -498,7 +500,7 @@ module gen1int_shell
                                                     !are either \var(REQUEST_WORK) or the AO sub-shell pair
                                                     !to send back, the third is the rank of the worker
     integer(kind=MPI_INTEGER_KIND) :: msg_tag       !message tag
-    integer(kind=MPI_INTEGER_KIND) :: mpi_status(MPI_STATUS_SIZE) !MPI status
+    integer(kind=MPI_INTEGER_KIND) :: my_mpi_status(MPI_STATUS_SIZE) !MPI status
     integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, count_mpi, worker_rank
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
 #endif
@@ -714,7 +716,7 @@ module gen1int_shell
           ! receives a request from a woker
           count_mpi = 3
           call MPI_Recv(worker_request, count_mpi, MPI_INTEGERK, int(MPI_ANY_SOURCE,kind=MPI_INTEGER_KIND), &
-                        int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), api_comm_mpi, mpi_status, ierr_mpi)
+                        int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), api_comm_mpi, my_mpi_status, ierr_mpi)
           ! the worker requests new work
           if (worker_request(1)==REQUEST_WORK) then
             ! no more sub-shell pair to calculate
@@ -762,7 +764,7 @@ module gen1int_shell
             worker_rank = worker_request(3) ! change to MPI_INTEGER_KIND
             call MPI_Recv(contr_ints(1:size_ints), count_mpi, MPI_REALK,   &
                           worker_rank, int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), api_comm_mpi, &
-                          mpi_status, ierr_mpi)
+                          my_mpi_status, ierr_mpi)
             ! sets the minimum and maximum of indices of rows of the integral matrices
             min_row_idx = sub_shells_bra(worker_request(1))%base_idx+1
             max_row_idx = sub_shells_bra(worker_request(1))%base_idx &
@@ -832,7 +834,7 @@ module gen1int_shell
           ! receives the next sub-shell pair or "finished" signal from manager
           count_mpi = 2
           call MPI_Recv(shell_pair, count_mpi, MPI_INTEGERK, manager_mpi, int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), &
-                        api_comm_mpi, mpi_status, ierr_mpi)
+                        api_comm_mpi, my_mpi_status, ierr_mpi)
           if (shell_pair(1)==NO_MORE_WORK) then
             exit
           else
@@ -1159,7 +1161,7 @@ module gen1int_shell
               end do
             end do
           end do
-        end if 
+        end if
         ! decreases the number of remaining pairs
         remaining_jobs = remaining_jobs-1
       end do
@@ -1232,6 +1234,7 @@ module gen1int_shell
                                     num_geo_total, val_expt)
     ! matrix module
     use gen1int_matrix
+#include "mpi_mod.h"
     integer, intent(in) :: num_shells_bra
     type(sub_shell_t), intent(in) :: sub_shells_bra(*)
     integer, intent(in) :: num_shells_ket
@@ -1242,7 +1245,7 @@ module gen1int_shell
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -1301,7 +1304,7 @@ module gen1int_shell
                                                     !are either \var(REQUEST_WORK) or the AO sub-shell pair
                                                     !to send back, the third is the rank of the worker
     integer(kind=MPI_INTEGER_KIND) :: msg_tag       !message tag
-    integer(kind=MPI_INTEGER_KIND) :: mpi_status(MPI_STATUS_SIZE) !MPI status
+    integer(kind=MPI_INTEGER_KIND) :: my_mpi_status(MPI_STATUS_SIZE) !MPI status
     integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, count_mpi, worker_rank
     integer(kind=MPI_INTEGER_KIND), parameter :: manager_mpi = MANAGER
 #endif
@@ -1487,7 +1490,7 @@ module gen1int_shell
           ! receives a request from a woker
           count_mpi = 3
           call MPI_Recv(worker_request, count_mpi, MPI_INTEGERK, int(MPI_ANY_SOURCE,kind=MPI_INTEGER_KIND), &
-                        int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), api_comm_mpi, mpi_status, ierr_mpi)
+                        int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), api_comm_mpi, my_mpi_status, ierr_mpi)
           ! the worker requests new work
           if (worker_request(1)==REQUEST_WORK) then
             ! no more sub-shell pair to calculate
@@ -1551,7 +1554,7 @@ module gen1int_shell
           ! receives the next sub-shell pair or "finished" signal from manager
           count_mpi = 2
           call MPI_Recv(shell_pair, count_mpi, MPI_INTEGERK, manager_mpi, int(MPI_ANY_TAG,kind=MPI_INTEGER_KIND), &
-                        api_comm_mpi, mpi_status, ierr_mpi)
+                        api_comm_mpi, my_mpi_status, ierr_mpi)
           if (shell_pair(1)==NO_MORE_WORK) then
             exit
           else
@@ -1876,7 +1879,7 @@ module gen1int_shell
               end do
             end do
           end do
-        end if 
+        end if
         ! decreases the number of remaining pairs
         remaining_jobs = remaining_jobs-1
       end do
@@ -1920,6 +1923,7 @@ module gen1int_shell
                                api_comm_mpi, gto_type,          &
                                order_mag, order_ram, order_geo)
     use gen1int_matrix
+#include "mpi_mod.h"
     integer, intent(in) :: num_shells
     type(sub_shell_t), intent(in) :: sub_shells(num_shells)
     type(matrix), intent(in) :: mo_coef
@@ -1929,7 +1933,7 @@ module gen1int_shell
     integer, intent(in) :: num_mo
     real(REALK), intent(inout) :: val_mo(num_points*num_derv,num_mo)
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi

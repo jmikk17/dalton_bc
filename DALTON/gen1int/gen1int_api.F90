@@ -269,7 +269,7 @@ module gen1int_api
 #ifdef PRG_DIRAC
                  select case (icomp)
                  case (LARGE_COMP)
-#endif         
+#endif
                    call Gen1IntShellCreate(spher_gto=spher_gto,                        &
                                            idx_cent=IDX_CENT,                          &
                                            coord_cent=CORD(1:3,IDX_CENT),              &
@@ -296,7 +296,7 @@ module gen1int_api
                                                                  LARGE_COMP),                &
                                            sub_shell=sub_shells(ishell,icomp))
                  end select
-#endif         
+#endif
                end if
                deallocate(contr_coef)
             end do
@@ -333,7 +333,8 @@ module gen1int_api
   !> \param root_mpi is the root processor which broadcasts the AO sub-shells
   !> \param api_comm_mpi is the MPI communicator
   subroutine Gen1IntAPIBcast(root_mpi, api_comm_mpi)
-#include "mpif.h"
+#include "mpi_mod.h"
+#include "mpi_header.h"
     ! declaration of MPI variables so they also work with int64 integer and int32 mpi library
     integer(kind=MPI_INTEGER_KIND), intent(in) :: root_mpi, api_comm_mpi
     integer(kind=MPI_INTEGER_KIND) :: rank_proc  !rank of processor
@@ -529,6 +530,7 @@ module gen1int_api
   subroutine Gen1IntAPIGetMO(comp_shell, mo_coef, num_points, grid_points, &
                              num_derv, num_mo, val_mo, api_comm_mpi, gto_type, &
                              order_mag, order_ram, order_geo)
+#include "mpi_mod.h"
     integer, intent(in) :: comp_shell(:)
     type(matrix), intent(in) :: mo_coef
     integer, intent(in) :: num_points
@@ -537,7 +539,7 @@ module gen1int_api
     integer, intent(in) :: num_mo
     real(REALK), intent(out) :: val_mo(num_points*num_derv,num_mo)
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -798,12 +800,13 @@ module gen1int_api
                                       num_ints, val_ints, write_ints,          &
                                       num_dens, ao_dens, val_expt, write_expt, &
                                       io_viewer, level_print)
+#include "mpi_mod.h"
     type(prop_comp_t), intent(in) :: prop_comp
     type(nary_tree_t), intent(inout) :: nary_tree_bra
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -864,12 +867,13 @@ module gen1int_api
                                       num_points, grid_points,                 &
                                       num_dens, ao_dens, num_ints, val_expt,   &
                                       io_viewer, level_print)
+#include "mpi_mod.h"
     type(prop_comp_t), intent(in) :: prop_comp
     type(nary_tree_t), intent(inout) :: nary_tree_bra
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -1116,13 +1120,14 @@ module gen1int_api
                                       api_comm_mpi, num_ints, val_ints, write_ints,  &
                                       num_dens, ao_dens, val_expt, write_expt,       &
                                       io_viewer, level_print)
+#include "mpi_mod.h"
     integer, intent(in) :: nnz_comp(:,:)
     type(one_prop_t), intent(in) :: one_prop
     type(nary_tree_t), intent(inout) :: nary_tree_bra
     type(nary_tree_t), intent(inout) :: nary_tree_ket
     type(nary_tree_t), intent(inout) :: nary_tree_total
 #ifdef VAR_MPI
-#include "mpif.h"
+#include "mpi_header.h"
     integer(kind=MPI_INTEGER_KIND), optional, intent(in) :: api_comm_mpi
 #else
     integer, optional, intent(in) :: api_comm_mpi
@@ -1284,7 +1289,7 @@ module gen1int_api
                                             write_ints=write_ints,                   &
                                             num_dens=num_dens,                       &
                                             ao_dens=ao_dens,                         &
-                                            val_expt=val_expt,                       & 
+                                            val_expt=val_expt,                       &
                                             write_expt=write_expt)
               end do
             end if

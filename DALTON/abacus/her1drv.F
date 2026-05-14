@@ -1077,6 +1077,7 @@ C
       LOGICAL NODC, NODV
       DIMENSION DSO(NNBAST), FSO(NNBAST), WORK(LWORK)
 C
+      CALL QENTER('DSOFSO')
       IF (ABASOP) THEN
          LKDV  = NORBT*NORBT
          LKUDV = NORBT*NORBT
@@ -1092,6 +1093,7 @@ C
       IF (KLAST .GT. LWORK) CALL STOPIT('DSOFSO',' ',KLAST,LWORK)
       CALL DSOFSO_1(WORK(KCMO),WORK(KFT),WORK(KDV),WORK(KUDV),
      &            DSO,FSO,IPRINT,NODC,NODV)
+      CALL QEXIT('DSOFSO')
       RETURN
       END
 C  /* Deck dsofso_1 */
@@ -1106,7 +1108,7 @@ C     Symmetry included        880418  PRT & TUH
 C
 #include "implicit.h"
       PARAMETER (D0 = 0.0D0, TWO = 2.0D0, HALF = 0.5D0)
-      LOGICAL NODC, NODV
+      LOGICAL   NODC, NODV
       DIMENSION CMO(*), FT(*), DV(*), DSO(NNBAST), FSO(NNBAST)
       DIMENSION UDV(NORBT,NORBT)
 #include "iratdef.h"
@@ -1121,13 +1123,19 @@ C
 #include "inforb.h"
 #include "inftap.h"
 #include "infrsp.h"
+#include "linaba.h"
       INTEGER R, S, RS, U, V, UV
+      LOGICAL FNDLAB
 C
 C
-C     ***** Read input from LUSIFC *****
+C     ***** Read input from file SIRIFC, unit LUSIFC *****
 C
       REWIND LUSIFC
-      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
+      IF ( .NOT.FNDLAB('SIR IPH ',LUSIFC) ) THEN
+      ! this might be a CI calculation
+         REWIND LUSIFC
+         CALL MOLLAB('CIRESPON',LUSIFC,LUPRI)
+      END IF
       READ (LUSIFC)
       READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,NWOPH,
      *              NCDETS,NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT
@@ -1139,9 +1147,15 @@ C
       ELSE
          READ (LUSIFC)
       END IF
-      CALL READI(LUSIFC,IRAT*N2ORBT,FT)
+
+      IF (ABACI) THEN
+         CALL DZERO(FT,N2ORBT)
+      ELSE
+         CALL READI(LUSIFC,IRAT*N2ORBT,FT)
+      END IF
 C     
       IF (ABASOP) THEN
+         REWIND (LUSIFC)
          IF (CCPPA) THEN
             CALL MOLLAB('CCSDINFO',LUSIFC,LUPRI)
          ELSE

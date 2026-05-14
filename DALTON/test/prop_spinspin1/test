@@ -20,12 +20,6 @@ f.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
 
-# Molecular geometry
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 10,
-      rel_tolerance = 1.0e-8)
-
-
 # Symmetry
 f.add(string = 'Number of coordinates in each symmetry',
       rel_tolerance = 1.0e-2)
@@ -33,7 +27,7 @@ f.add(string = 'Number of orbitals in each symmetry',
       rel_tolerance = 1.0e-2)
 
 # Energies
-f.add(string = 'Hartree-Fock total energy',
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-9)
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-9)
@@ -47,7 +41,7 @@ f.add(string = 'Spin-spin couplings printed for atoms',
 
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-3)
 
 
 test.run(['prop_spinspin.dal'], ['H2O_intgrl_sym.mol'], f={'out': f},

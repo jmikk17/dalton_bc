@@ -16,21 +16,19 @@
 !
 !
 C
-C     Parallel-routines, by Alf Christian Hennum 
-C 
+C     Parallel-routines, by Alf Christian Hennum
+C
 #ifdef INCLUDE_DFTPAR
       SUBROUTINE DFTPAR(DMAT,DTRMAT,EXCMAT,NXCMAT,DOERG,DOGRD,DOLND,
      &     DOATR,CORX,CORY,CORZ,WEIGHT,NBUF,GSO,NCNT,DST,
      &     C0,C1,C2,DMAGAO,HES,DOHES,TRPLET,FACDRC,FACVWN,
      &     FACBCK,FACLYP,FACKT,DODRC,DOVWN,DOBCK,DOLYP,DOGGA,DOKT,
      &     WORK,LWORK,IPRINT)
-C     
+C
 C     T. Helgaker sep 99
 C
+      use dalton_mpi_interface
 #include "implicit.h"
-#if defined (VAR_MPI)
-      INCLUDE "mpif.h"
-#endif
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
@@ -38,7 +36,7 @@ C
 #include "pi.h"
 #include "dummy.h"
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, DP5 = 0.5D0)
-      PARAMETER (THRSH = 1.0D-8, THRSH2 = 1.0D-9) 
+      PARAMETER (THRSH = 1.0D-8, THRSH2 = 1.0D-9)
 C
 #include "inforb.h"
 #include "nuclei.h"
@@ -49,23 +47,23 @@ C
 #include "orgcom.h"
 #include "maxaqn.h"
 #include "symmet.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 C
       INTEGER A, B
-      LOGICAL DOERG, DOGRD, DODRC, DOVWN, DOBCK, DOLYP, DOKT, 
-     &        DOLND, DOATR, FROMVX, DOGGA, TRPLET, DOHES, FINNISH 
-      DIMENSION CORX(NBUF), CORY(NBUF), CORZ(NBUF), WEIGHT(NBUF), 
+      LOGICAL DOERG, DOGRD, DODRC, DOVWN, DOBCK, DOLYP, DOKT,
+     &        DOLND, DOATR, FROMVX, DOGGA, TRPLET, DOHES, FINNISH
+      DIMENSION CORX(NBUF), CORY(NBUF), CORZ(NBUF), WEIGHT(NBUF),
      &          DMAT(NBAST,NBAST), DTRMAT(NBAST,NBAST),
-     &          GSO(NBAST*NTYPSO), EXCMAT(NBAST,NBAST,NXCMAT), 
-     &          NCNT(NBAST), DST(NATOMS), C0(NORBT), C1(NORBT,3), 
-     &          C2(NORBT),DMAGAO(NBAST), HES(NOCCT,NVIRT,NOCCT,NVIRT), 
-     &          RHG(3), WORK(LWORK)     
+     &          GSO(NBAST*NTYPSO), EXCMAT(NBAST,NBAST,NXCMAT),
+     &          NCNT(NBAST), DST(NATOMS), C0(NORBT), C1(NORBT,3),
+     &          C2(NORBT),DMAGAO(NBAST), HES(NOCCT,NVIRT,NOCCT,NVIRT),
+     &          RHG(3), WORK(LWORK)
 C
-C     start up the nodes:  
+C     start up the nodes:
 C
       IPRTYP = DFT_KSM_WORK
-      FINNISH = .FALSE.      
+      FINNISH = .FALSE.
 #if defined (VAR_MPI)
       CALL MPI_BCAST(IPRTYP,1,my_MPI_INTEGER,MASTER,
      &     MPI_COMM_WORLD,IERR)
@@ -73,17 +71,17 @@ C
      &     MPI_COMM_WORLD,IERR)
 C
 C     transfer data for memory allocation
-C           
-      CALL MPI_BCAST(NBAST,1,my_MPI_INTEGER,MASTER,
-     &               MPI_COMM_WORLD,IERR)      
-      CALL MPI_BCAST(NBUF,1,my_MPI_INTEGER,MASTER,
-     &               MPI_COMM_WORLD,IERR)      
-      CALL MPI_BCAST(NATOMS,1,my_MPI_INTEGER,MASTER,
-     &               MPI_COMM_WORLD,IERR)      
-      CALL MPI_BCAST(NXCMAT,1,my_MPI_INTEGER,MASTER,
-     &               MPI_COMM_WORLD,IERR)      
 C
-C     Some hessian stuff that's not used. 
+      CALL MPI_BCAST(NBAST,1,my_MPI_INTEGER,MASTER,
+     &               MPI_COMM_WORLD,IERR)
+      CALL MPI_BCAST(NBUF,1,my_MPI_INTEGER,MASTER,
+     &               MPI_COMM_WORLD,IERR)
+      CALL MPI_BCAST(NATOMS,1,my_MPI_INTEGER,MASTER,
+     &               MPI_COMM_WORLD,IERR)
+      CALL MPI_BCAST(NXCMAT,1,my_MPI_INTEGER,MASTER,
+     &               MPI_COMM_WORLD,IERR)
+C
+C     Some hessian stuff that's not used.
 C
       CALL MPI_BCAST(NOCCT,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
@@ -94,10 +92,10 @@ C
       CALL MPI_BCAST(NORBT,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
-C     DFT constants : 
+C     DFT constants :
 C
       CALL MPI_BCAST(WDFTX,1,MPI_DOUBLE_PRECISION,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WDFTC,1,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WDFTB,1,MPI_DOUBLE_PRECISION,
@@ -106,8 +104,8 @@ C
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WDFTK,1,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
-C      
-C     Some other nedeed variables :  
+C
+C     Some other nedeed variables :
 C
       CALL MPI_BCAST(NSYM,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
@@ -120,16 +118,16 @@ C
 C
       NCO = 0
       IF (DOHES) NC0  = NORBT
-C     
-C     Move everything else: 
-C     
+C
+C     Move everything else:
+C
       CALL DFTMPIDAT(DMAT,DTRMAT,EXCMAT,NXCMAT,
      &     DOERG,DOVWN,
      &     NCNT,DST,C0,C1,C2,HES,DOHES,TRPLET,
      &     IPRINT)
-C     
-C     Call the dft-driver :  
-C     
+C
+C     Call the dft-driver :
+C
       CALL DFTDRV(DMAT,DTRMAT,EXCMAT,NXCMAT,DOERG,DOGRD,DOLND,
      &     DOATR,CORX,CORY,CORZ,WEIGHT,NBUF,GSO,NCNT,DST,
      &     C0,C1,C2,DMAGAO,HES,DOHES,TRPLET,FACDRC,FACVWN,
@@ -141,17 +139,15 @@ C
 C
       SUBROUTINE DFT_NODSTR(WORK,LWORK,IPRINT)
 C
-C     ACH 
-C     Takes info from master and allocate memory. 
+C     ACH
+C     Takes info from master and allocate memory.
 C
+      use dalton_mpi_interface
 #include "implicit.h"
-#if defined (VAR_MPI)
-      INCLUDE "mpif.h"
-#endif
 #include "maxorb.h"
 #include "infpar.h"
 #include "priunit.h"
-#include "inforb.h"      
+#include "inforb.h"
 #include "mxcent.h"
 C
 #include "nuclei.h"
@@ -165,23 +161,23 @@ C
 
       PARAMETER (FACTHR = 1.0D-8)
 C
-      DIMENSION WORK(LWORK) 
-C      
+      DIMENSION WORK(LWORK)
+C
       LOGICAL DOHES, DOERG, DOGRD, DOLND, DOATR, TRPLET,
      &        DOGGA, DOVWN, DODRC, DOBCK, DOLYP, DOKT
-C     
+C
 #if defined (VAR_MPI)
       CALL MPI_BCAST(NBAST,1,my_MPI_INTEGER,MASTER,
      &     MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NBUF,1,my_MPI_INTEGER,MASTER,
      &     MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NATOMS,1,my_MPI_INTEGER,MASTER,
-     &               MPI_COMM_WORLD,IERR)      
+     &               MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NXCMAT,1,my_MPI_INTEGER,MASTER,
-     &     MPI_COMM_WORLD,IERR)      
-C     
+     &     MPI_COMM_WORLD,IERR)
+C
 C     hessian stuff
-C     
+C
       CALL MPI_BCAST(NOCCT,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NVIRT,1,my_MPI_INTEGER,
@@ -191,10 +187,10 @@ C
       CALL MPI_BCAST(NORBT,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
-C     some needed constants and other things 
-C     
+C     some needed constants and other things
+C
       CALL MPI_BCAST(WDFTX,1,MPI_DOUBLE_PRECISION,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WDFTC,1,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(WDFTB,1,MPI_DOUBLE_PRECISION,
@@ -212,8 +208,8 @@ C
       CALL MPI_BCAST(DOGRD,1,my_MPI_LOGICAL,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
-C     decide what to do and allocate: as in dftexe: 
-C     
+C     decide what to do and allocate: as in dftexe:
+C
       FACDRC = WDFTX
       FACVWN = WDFTC
       FACBCK = WDFTB
@@ -221,22 +217,22 @@ C
       FACKT  = WDFTK
 C
       DODRC = DABS(FACDRC) .GT. FACTHR
-      DOVWN = DABS(FACVWN) .GT. FACTHR 
-      DOBCK = DABS(FACBCK) .GT. FACTHR 
-      DOLYP = DABS(FACLYP) .GT. FACTHR 
+      DOVWN = DABS(FACVWN) .GT. FACTHR
+      DOBCK = DABS(FACBCK) .GT. FACTHR
+      DOLYP = DABS(FACLYP) .GT. FACTHR
       DOKT  = DABS(FACKT)  .GT. FACTHR
       DOGGA = DOBCK .OR. DOLYP .OR. DOKT
-C     
+C
       NC0  = 0
       IF (DOHES) NC0  = NORBT
-C     
+C
       NOSYM = NSYM.EQ.1
-C     
+C
       NDER = 0
       IF (DOGRD) NDER = 1
       IF (DOGGA) THEN
-         NDER = NDER + 1 
-         IF (DFTPOT) NDER = NDER + 1 
+         NDER = NDER + 1
+         IF (DFTPOT) NDER = NDER + 1
       END IF
       IF (NDER.EQ.0) NTYPSO =  1
       IF (NDER.EQ.1) NTYPSO =  4
@@ -246,10 +242,10 @@ C
       NSO2 = 5
       IF (DOLND) THEN
          NTYPSO = NTYPSO + 3
-         NSOB   = NTYPSO - 2 
+         NSOB   = NTYPSO - 2
          IF (DOGGA) THEN
             NTYPSO = NTYPSO + 9
-            NSOB1  = NTYPSO - 8 
+            NSOB1  = NTYPSO - 8
          END IF
       END IF
       KSO0 = (NSO0-1)*NBAST + 1
@@ -258,9 +254,9 @@ C
       KSOB = (NSOB-1)*NBAST + 1
       KSOB1 = (NSOB1-1)*NBAST + 1
 C
-      IDMAT = 1 
+      IDMAT = 1
       IDTRMAT = IDMAT    + NBAST*NBAST
-      IEXCMAT = IDTRMAT  + NBAST*NBAST      
+      IEXCMAT = IDTRMAT  + NBAST*NBAST
       KX    =   IEXCMAT  + NBAST*NBAST*NXCMAT
       KY    = KX    + NBUF
       KZ    = KY    + NBUF
@@ -278,20 +274,20 @@ CKR      KHES  = KDGA  + NBAST
 CKR      KLST  = KHES  + NOCCT*NVIRT*NOCCT*NVIRT
       LWORK  = LWORK - KLST + 1
 C
-C     Set Zero: only the masters excmat is going to be updated 
-C     
+C     Set Zero: only the masters excmat is going to be updated
+C
       CALL DZERO(WORK(IEXCMAT),NBAST*NBAST*NXCMAT)
 C
-C     The nodes do not want to write anything !! 
-C     
+C     The nodes do not want to write anything !!
+C
       iprint = -1000
 C
-C     Get the rest of the data from master: 
+C     Get the rest of the data from master:
 C
       CALL DFTMPIDAT(WORK(IDMAT),WORK(IDTRMAT),WORK(IEXCMAT),NXCMAT,
      &     DOERG,DOVWN,
      &     WORK(KCNT),WORK(KDST),WORK(KC0),WORK(KC1),WORK(KC2),
-     &     WORK(KHES),DOHES,TRPLET,IPRINT) 
+     &     WORK(KHES),DOHES,TRPLET,IPRINT)
 C
 C     Loop
 C
@@ -304,20 +300,20 @@ C
      &            FACBCK,FACLYP,FACKT,DODRC,DOVWN,DOBCK,DOLYP,DOGGA,
      &            DOKT,WORK(KLST),LWORK,IPRINT)
       LWORK=LWORK+KLST+1
-#endif      
+#endif
       RETURN
       END
-C     
+C
       SUBROUTINE DFTMPIDAT(DMAT,DTRMAT,EXCMAT,NXCMAT,
      &     DOERG,DOVWN,
      &     NCNT,DST,C0,C1,C2,HES,DOHES,TRPLET,IPRINT)
-C     
-C     Moves everything that is needed. Something that is not needed is also 
-C     moved, but what ? 
 C
+C     Moves everything that is needed. Something that is not needed is also
+C     moved, but what ?
+C
+      use dalton_mpi_interface
 #include "implicit.h"
 #if defined (VAR_MPI)
-      INCLUDE "mpif.h"
 #include "priunit.h"
 #include "aovec.h"
 #include "maxorb.h"
@@ -341,8 +337,8 @@ C
 #include "pincom.h"
 C
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, DP5 = 0.5D0)
-      PARAMETER (THRSH = 1.0D-8, THRSH2 = 1.0D-9) 
-C     
+      PARAMETER (THRSH = 1.0D-8, THRSH2 = 1.0D-9)
+C
       LOGICAL TRPLET,DOERG, DOHES,DOVWN
       DIMENSION EXCMAT(NBAST,NBAST,NXCMAT),
      &          DMAT(NBAST,NBAST), DTRMAT(NBAST,NBAST),
@@ -354,10 +350,10 @@ C
 #include "lmns.h"
 #include "sphtrm.h"
 C
-C     Things needed by make_dftgrid: 
+C     Things needed by make_dftgrid:
 C
 C     NBASIS, CHARGE(NATOMS),CORD(MXCENT), NUCIND, MAXOPR
-C     ISYMAX,PT      
+C     ISYMAX,PT
 C
       CALL MPI_BCAST(NBASIS,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
@@ -380,22 +376,22 @@ C
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(CORD,MXCENT*3,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
-C     
-C     Things needed by getaos: 
 C
-C     KMAX, NHKT(MXSHEL), KHKT(MXSHEL), 
+C     Things needed by getaos:
+C
+C     KMAX, NHKT(MXSHEL), KHKT(MXSHEL),
 C     KCKT(),SPHR(),
 C     NUCO(), NUMCF(), JSTRT(),
-C     CENT(MXSHEL,2,3)     
-C     ISTEP(MXAQNM),  MVAL(MXAQNM),   NVAL(MXAQNM)      
-C     CSP(NCSP), ISPADR(MXQN), maxrep 
+C     CENT(MXSHEL,2,3)
+C     ISTEP(MXAQNM),  MVAL(MXAQNM),   NVAL(MXAQNM)
+C     CSP(NCSP), ISPADR(MXQN), maxrep
 C     NAOS(8) ,MAXREP, MAXOPR, IPIND(MXCORB),NHKT(MXSHEL),   KHKT(MXSHEL), ISTBAO(IA)
 C     KSTRT(MXSHEL) , ISYMAO, PT(0:7),ISYMAO(MXQN,MXAQN)
 C     ksymop
-C     
+C
 C     INFORMATIONS FOR DIFFERENT DFT-ROUTINES
 C     I have lost the overview.
-C     
+C
       CALL MPI_BCAST(KSYMOP,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(ISTEP,MXAQNM,my_MPI_INTEGER,
@@ -411,7 +407,7 @@ C
       CALL MPI_BCAST(IBAS,8,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(IPIND,MXCORB,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NAOS,8,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(KSTRT,MXSHEL,my_MPI_INTEGER,
@@ -420,7 +416,7 @@ C
       CALL MPI_BCAST(CSP,NCSP,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(ISPADR,MXQN,MPI_DOUBLE_PRECISION,
-     &     MASTER,MPI_COMM_WORLD,IERR)     
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(KMAX,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NHKT,MXSHEL,my_MPI_INTEGER,
@@ -428,28 +424,28 @@ C
       CALL MPI_BCAST(KHKT,MXSHEL,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(KCKT,MXSHEL,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(SPHR,MXSHEL,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NUCO,MXSHEL,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(NUMCF,MXSHEL,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(JSTRT,MXSHEL,my_MPI_INTEGER,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(CENT,2*3*MXSHEL,MPI_DOUBLE_PRECISION,
-     &     MASTER,MPI_COMM_WORLD,IERR)            
+     &     MASTER,MPI_COMM_WORLD,IERR)
 C
 C     for GETGAO
 C     PRICCF, PRIEXP
 C
       CALL MPI_BCAST(PRICCF,MXCONT*MXPRIM,MPI_DOUBLE_PRECISION,
-     &     MASTER,MPI_COMM_WORLD,IERR)      
+     &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(PRIEXP,MXPRIM,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
 C     Some symmetry related things
-C     
+C
 C     GETGA1
 C     JSTA,NUCA,LMNVALUA
 c     IPTCNT(3*MXCENT,0:7,2)
@@ -479,8 +475,8 @@ C
       CALL MPI_BCAST(NUCA,1,my_MPI_INTEGER,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
-C     The arrays: 
-C 
+C     The arrays:
+C
       CALL MPI_BCAST(DMAT,NBAST*NBAST,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(DTRMAT,NBAST*NBAST,MPI_DOUBLE_PRECISION,
@@ -492,9 +488,9 @@ C
       CALL MPI_BCAST(C0,NORBT,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,IERR)
 C
-C     Hessian ? 
+C     Hessian ?
 C
-      IF (DOHES) THEN 
+      IF (DOHES) THEN
          CALL MPI_BCAST(C1,NORBT*3,MPI_DOUBLE_PRECISION,
      &        MASTER,MPI_COMM_WORLD,IERR)
          CALL MPI_BCAST(C2,NORBT,MPI_DOUBLE_PRECISION,
@@ -505,22 +501,22 @@ C
 C
 C     THE common blocks
 C
-C     dfterg 3 stk double prec      
+C     dfterg 3 stk double prec
 C
       CALL MPI_BCAST(EDFTX,1,MPI_DOUBLE_PRECISION,
-     &     MASTER, MPI_COMM_WORLD,IERR)      
+     &     MASTER, MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(EDFTC,1,MPI_DOUBLE_PRECISION,
-     &     MASTER, MPI_COMM_WORLD,IERR)      
+     &     MASTER, MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(EDFTY,1,MPI_DOUBLE_PRECISION,
-     &     MASTER, MPI_COMM_WORLD,IERR)      
-C     dftcom: 
+     &     MASTER, MPI_COMM_WORLD,IERR)
+C     dftcom:
 C     All of it is prob not nescecary
       isize =  1
       CALL MPI_BCAST(DFTADD,ISIZE,my_MPI_LOGICAL,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(DFTGRID_DONE,ISIZE,MPI_LOGICAL,
      &     MASTER,MPI_COMM_WORLD,IERR)
-      CALL MPI_BCAST(DFTGRID_DONE_OLD,ISIZE,MPI_LOGICAL,
+      CALL MPI_BCAST(srDFTGRID_DONE,ISIZE,MPI_LOGICAL,
      &     MASTER,MPI_COMM_WORLD,IERR)
       CALL MPI_BCAST(DFTRUN,ISIZE,my_MPI_LOGICAL,
      &     MASTER,MPI_COMM_WORLD,IERR)
@@ -563,13 +559,11 @@ C
       SUBROUTINE UPDTENE(ELCTRN,ERGDRC,ERGVWN,ERGBCK,
      &     ERGLYP,ERGKT,EXCMAT,NBAST,NXCMAT,WORK,LWORK)
 C
-C     Ach 
-C     Updates the different energies and the exchange mat: 
-C     
-#include "implicit.h"       
-#if defined (VAR_MPI)
-      INCLUDE "mpif.h"
-#endif
+C     Ach
+C     Updates the different energies and the exchange mat:
+C
+      use dalton_mpi_interface
+#include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
 Ca
@@ -579,21 +573,21 @@ C
       CALL MPI_BARRIER(MPI_COMM_WORLD,ierr)
 C
       CALL MPI_REDUCE(ELCTRN,EELCTRN,1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(ERGDRC,EERGDRC,1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(ERGVWN,EERGVWN,1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(ERGBCK,EERGBCK,1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(ERGLYP,EERGLYP, 1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(ERGKT, EERGKT, 1,MPI_DOUBLE_PRECISION,MPI_SUM,
-     %     0, MPI_COMM_WORLD, IERR) 
+     %     0, MPI_COMM_WORLD, IERR)
       CALL MPI_REDUCE(EXCMAT,WORK,NBAST*NBAST*NXCMAT,
      &     MPI_DOUBLE_PRECISION,MPI_SUM,
      %     0, MPI_COMM_WORLD, IERR)
-      IF (MYNUM .EQ. 0) then 
+      IF (MYNUM .EQ. 0) then
          ELCTRN=EELCTRN
          ERGDRC=EERGDRC
          ERGVWN=EERGVWN
@@ -601,7 +595,7 @@ C
          ERGLYP=EERGLYP
          ERGKT =EERGKT
          DO I=1,NBAST*NBAST*NXCMAT
-            EXCMAT(I)=WORK(I) 
+            EXCMAT(I)=WORK(I)
          ENDDO
       ENDIF
 #endif
@@ -610,28 +604,26 @@ C
 C
       SUBROUTINE UPDTGRD(WORK,LWORK)
 C
-C     Update gradient 
-C     Ach 
+C     Update gradient
+C     Ach
 C
-#include "implicit.h"       
-#if defined (VAR_MPI)
-      INCLUDE "mpif.h"
-#endif
-#include "maxorb.h" 
+      use dalton_mpi_interface
+#include "implicit.h"
+#include "maxorb.h"
 #include "mxcent.h"
 #include "nuclei.h"
 #include "energy.h"
 #include "infpar.h"
       DIMENSION WORK(LWORK)
-C     
-#if defined (VAR_MPI)      
+C
+#if defined (VAR_MPI)
       CALL MPI_REDUCE(GRADFT,WORK,MXCOOR,
      &     MPI_DOUBLE_PRECISION,MPI_SUM,
      &     0, MPI_COMM_WORLD, IERR)
       DO I=1,MXCOOR
-         GRADFT(I) = WORK(I) 
+         GRADFT(I) = WORK(I)
       ENDDO
 #endif
-      RETURN 
+      RETURN
       END
 #endif /* INCLUDE_DFTPAR */

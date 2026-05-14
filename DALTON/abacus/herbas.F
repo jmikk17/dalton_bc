@@ -104,6 +104,13 @@ C     from calling routine
       IPRINT = IPRBAS
       IF (BASNAM(1:1).eq.' ') IPRINT = 5
       INTQ   = NINT(Q)
+      IF (abs(Q-INTQ) .gt. 1.d-8) then
+         WRITE (lupri,*) 'BASLIB: Q, QEFF, INTQ',Q,QEFF,INTQ
+         WRITE (lupri,*) 'BASLIB: BASNAM ',BASNAM
+         write (lupri,*) 'Fatal error, nuclear charge Q must be'//
+     &      ' an integer when using a named basis set.'
+         CALL QUIT('BASLIB ERROR, nuclear charge not an integer')
+      end if
       IF (IPRINT .GE. 5) THEN
          WRITE (lupri,*) 'BASLIB: Q, QEFF, INTQ',Q,QEFF,INTQ
          WRITE (lupri,*) 'BASLIB: BASNAM ',BASNAM
@@ -393,7 +400,7 @@ C
 C
 C Finds the number of primitives and columns of contraction coefficients
 C
-         CALL FIND_POS ( NEWEL, INTEXP, INTORB, INTISG, LUBAS,
+         CALL FIND_POS ( NEWEL, INTEXP, INTORB, LUBAS,
      &      IPRINT, EMSL_TYPE)
 C
  10      CONTINUE
@@ -429,7 +436,7 @@ C
                IF (INTORB .EQ. 0) THEN
                   NBLOCK = NBLOCK - 1 ! why this? Can we imagine user wants 2 0 1, i.e. 2s 0p 1d ??????
                   CALL FIND_POS ( NEWEL, INTEXP, INTORB,
-     &                            INTISG, LUBAS, IPRINT, EMSL_TYPE)
+     &                            LUBAS, IPRINT, EMSL_TYPE)
                   GOTO 10
                END IF
             ELSE
@@ -474,7 +481,7 @@ C
 C
 C Define the type of the next relevant line in file
 C
-            CALL FIND_POS( NEWEL, INTEXP, INTORB, INTISG,
+            CALL FIND_POS( NEWEL, INTEXP, INTORB,
      &         LUBAS, IPRINT, EMSL_TYPE)
             GOTO 10
          END IF ! .not. NEWEL
@@ -711,7 +718,7 @@ C
 
 C
       RETURN
-      END
+      END ! subroutine READ_NU
 C/* Deck read_ano */
       SUBROUTINE READ_ANO(INTEXP, INTORB, NBLOCK, KAOVEC, CPRIMU, ALPHA,
      +                  KPRIM,ANO,SADLEJ,BASNAM,ISTART,POLFUN,IPOLST,
@@ -726,8 +733,8 @@ C
 C
 C Reading the exponents. Format from MOLCAS files
 C
-      LOGICAL ANO, SADLEJ, POLFUN, UNCONT
-      DIMENSION CPRIMU( KPRIM, KPRIM, KAOVEC), ALPHA(KPRIM, KAOVEC)
+      LOGICAL   ANO, SADLEJ, POLFUN, UNCONT
+      REAL*8    CPRIMU( KPRIM, KPRIM, KAOVEC), ALPHA(KPRIM, KAOVEC)
       CHARACTER BASNAM*(*)
 C
 C Determine number of contracted functions to be read
@@ -744,7 +751,7 @@ C             in ano-* files (for this consistency check).
      &      '- max number of contracted functions',INTORBMAX,
      &      '- you asked for                     ',INTORB
             CALL QUIT('BASLIB: '//
-     &         'You asked for too many contracted functions')
+     &         'You asked for too many contracted functions for ANO')
          END IF
       END IF
 C
@@ -1157,7 +1164,7 @@ C* Based on FIND_POS, LV, 14-5-2003                      *
 C*********************************************************
 #include "implicit.h"
 #include "priunit.h"
-      CHARACTER*80 LINE,BASREF(10), BASNAM
+      CHARACTER BASNAM*(*), BASREF(10)*80
 C*********************************************************
 C* Variable declarations:                                *
 C*     SIGN - The first sign in a sentence, to find out  *
@@ -1165,8 +1172,7 @@ C*            what kind of sentence it is.               *
 C*     STRING - A character string to help bulletproofing*
 C*              the subroutine.                          *
 C*********************************************************
-      CHARACTER SIGN
-      CHARACTER*100 STRING
+      CHARACTER SIGN, STRING*100
 C
       REWIND (LUBAS)
 C
@@ -1243,18 +1249,19 @@ C*                          coefficients                 *
 C*********************************************************
 C
 C/* Deck find_pos */
-      SUBROUTINE FIND_POS(NEWEL, INTEXP, INTORB, INTISG,
+      SUBROUTINE FIND_POS(NEWEL, INTEXP, INTORB,
      &   LUBAS, IPRINT, EMSL_TYPE)
 #include "implicit.h"
 #include "priunit.h"
+      LOGICAL   NEWEL, EMSL_TYPE
+
 C*********************************************************
-C* Variable declarations:                                *
+C* Local variable declarations:                          *
 C*     SIGN - The first sign in a sentence, to find out  *
 C*            what kind of sentence it is.               *
 C*     STRING - A character string to help bulletproofing*
 C*              the subroutine.                          *
 C*********************************************************
-      LOGICAL   NEWEL, EMSL_TYPE
       CHARACTER SIGN
       CHARACTER*300 STRING
 
@@ -1270,13 +1277,11 @@ C
       IF (len_STRING .eq. 0) GOTO 20
       SIGN = STRING(1:1)
 C
-C
-      IF (SIGN .EQ. 'H' .OR. SIGN .EQ. 'h') THEN
-!        this is presumably a basis set from EMSL library, no INTISG
+      IF (SIGN .EQ. 'H' .OR. SIGN .EQ. 'h' !        H or h: this is presumably a basis set from EMSL library
+     &   .OR. SIGN .EQ. ' ' ) THEN
          READ (STRING(2:len_STRING),*,IOSTAT=IOS) INTEXP, INTORB
-         INTISG = 0
-      ELSE IF (SIGN .EQ. ' ') THEN
-         READ (STRING, '(BN,3I5)',IOSTAT=IOS) INTEXP, INTORB, INTISG
+         ! in many old basis set files 3 variables: INTEXP, INTORB, INTISG
+         ! but INTISG is never used and is always zero, so it has been removed from herbas.F /Jan. 2025 hjaaj
       ELSE IF ((SIGN .EQ. 'a') .OR. (SIGN .EQ. 'A') .OR.                ! <- traditional Dalton basis set file
      &         (EMSL_TYPE .AND. INDEX(STRING,'->') .GT. 0) ) THEN       ! <- basis set file made by EMSL without "a" or "A"
          NEWEL = .TRUE.
@@ -1288,12 +1293,12 @@ C
       END IF
       IF (IOS.NE.0) GO TO 2000
       IF (IPRINT.GE.10) WRITE(lupri,'(/2X,A,3I10)')
-     &     'Output from FIND_POS... read INTEXP, INTORB, INTISG',
-     &       INTEXP, INTORB, INTISG
+     &     'Output from FIND_POS... read INTEXP, INTORB',
+     &       INTEXP, INTORB
       RETURN
 C
 C No more orbitals when end of file, so the orbitals for the last element
-C are read
+C have been read
 C
  200  CONTINUE
       NEWEL = .TRUE.
@@ -1310,7 +1315,7 @@ C
      &     'your basis is not complete. IOSTAT code:',IOERR
       CALL QUIT('BASLIB FIND_POS: Incomplete basis set file')
  2000 CONTINUE
-      WRITE (LUPRI,'(/A,I5//A/3A)')
+      WRITE (LUPRI,'(/A,I5/3A)')
      &     'ERROR in searching basis set file,'//
      &     ' your basis is not complete. IOSTAT code:',IOS,
      &     'Last line read: "',STRING(1:len_STRING),'"'
@@ -1567,7 +1572,7 @@ C        only s, p. d, f (never g, h, ... core orbitals)
          IF (MOD(IQCORE,2) .NE. 0) THEN
             WRITE(LUPRI,'(/A,I5)')
      &      'ECP_LCORE ECP: odd number of core electrons',IQCORE
-            CALL QUIT('BASLIB ECP_LCORE ECP: '//
+            CALL QUIT('BASLIB ECP_LCORE ECP error: '//
      &         'odd number of core electrons')
          END IF
          DO I = 1, 4

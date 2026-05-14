@@ -225,6 +225,13 @@ C PART 5 : **** MISCELLANEOUS ******************************************
 C
 C     Define PHP parameters for diagonals
 C
+      IF (ISPIN .GT. 3 .AND. MAXPHP .GT. 0) THEN
+      ! hjaaj 17.apr.2025: a calculation with ISPIN = 4 and MAXPHP = 100 failed
+      ! with segmentation fault in DIHDJ in ciham.F
+         write(lupri,'(A)') '.MAXPHP reset to zero, because not '//
+     &   'working for quartet and higher spin multiplicities.'
+         MAXPHP = 0
+      END IF
       CALL PHPINI(LPHPMX,NCONF,NWOPT,MAXPHP)
 C
 C     Test for inconsistencies:

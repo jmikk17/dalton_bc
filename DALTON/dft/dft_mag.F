@@ -20,7 +20,7 @@ C
 c /* Deck dftlnd */
       SUBROUTINE DFTBRHS(FD,WORK,LWORK,IPRINT)
 C
-C     T. Helgaker Jan 2004 
+C     T. Helgaker Jan 2004
 C
 #include "implicit.h"
 #include "priunit.h"
@@ -43,11 +43,11 @@ C
 C
 C      DOVB = DFT_ISGGA() .AND. .NOT.DFTPOT
 C
-      DOVB = DFT_ISGGA() 
+      DOVB = DFT_ISGGA()
 
       KDMAT = 1
-      KFMAT = KDMAT +   N2BASX 
-      KLAST = KFMAT + 3*N2BASX 
+      KFMAT = KDMAT +   N2BASX
+      KLAST = KFMAT + 3*N2BASX
       LWRK  = LWORK - KLAST + 1
       IF(KLAST.GT.LWORK) CALL QUIT('NOMEM IN DFTBRHS')
       CALL DFTDNS(WORK(KDMAT),WORK(KLAST),LWRK,0)
@@ -140,8 +140,8 @@ C
      &          RHOA(NBLEN), GRADA(3,NBLEN),
      &          NBLCNT(8),NBLOCKS(2,LDAIB,8),
      &          FMAT(NBAST,NBAST,3)
-      DIMENSION GAO(NBLEN,NBAST), GAO1(NBLEN,NBAST,3), 
-     &          GAB1(NBLEN,NBAST,3), GAB2(NBLEN,NBAST,3,3) 
+      DIMENSION GAO(NBLEN,NBAST), GAO1(NBLEN,NBAST,3),
+     &          GAB1(NBLEN,NBAST,3), GAB2(NBLEN,NBAST,3,3)
       DIMENSION VXC(NBLEN), VXB(NBLEN), VX(5), GRAVB(3)
 C
       IF (.NOT.DOVB) THEN
@@ -160,11 +160,11 @@ C
                ELSE
                   KY = 1
                   KZ = 2
-               END IF 
+               END IF
                G10Z = VXC(N)*(COORD(KY,N) - ORIGIN(KY))
                G10Y = VXC(N)*(COORD(KZ,N) - ORIGIN(KZ))
                DO JSYM = 1, NSYM
-                  ISYM = MULD2H(JSYM,ISYMAX(K,2) + 1) 
+                  ISYM = MULD2H(JSYM,ISYMAX(K,2) + 1)
                   DO JBLB = 1, NBLCNT(JSYM)
                   DO JB = NBLOCKS(1,JBLB,JSYM), NBLOCKS(2,JBLB,JSYM)
                      FYZ = G10Y*GAB1(N,JB,KY) - G10Z*GAB1(N,JB,KZ)
@@ -199,7 +199,7 @@ C
                ELSE
                   KY = 1
                   KZ = 2
-               END IF 
+               END IF
                PY = COORD(KY,N) - ORIGIN(KY)
                PZ = COORD(KZ,N) - ORIGIN(KZ)
                G10Z = VXC(N)*PY + GRAVB(KY)
@@ -218,14 +218,14 @@ C
      &                   + G21Y*GAB2(N,JB,1,KY) - G21Z*GAB2(N,JB,1,KZ)
      &                   + G22Y*GAB2(N,JB,2,KY) - G22Z*GAB2(N,JB,2,KZ)
      &                   + G23Y*GAB2(N,JB,3,KY) - G23Z*GAB2(N,JB,3,KZ)
-                     GD = GRAVB(1)*GAO1(N,JB,1) + GRAVB(2)*GAO1(N,JB,2) 
+                     GD = GRAVB(1)*GAO1(N,JB,1) + GRAVB(2)*GAO1(N,JB,2)
      &                                          + GRAVB(3)*GAO1(N,JB,3)
                      FY = PY*GD
                      FZ = PZ*GD
                      DO IBLB = 1, NBLCNT(ISYM)
                      DO IB = NBLOCKS(1,IBLB,ISYM), NBLOCKS(2,IBLB,ISYM)
                         FMAT(IB,JB,K) = FMAT(IB,JB,K) + FYZ*GAO(N,IB)
-     &                                                + FY*GAB1(N,IB,KZ) 
+     &                                                + FY*GAB1(N,IB,KZ)
      &                                                - FZ*GAB1(N,IB,KY)
                      END DO
                      END DO
@@ -264,8 +264,8 @@ C
 #include "symmet.h"
 C
       LOGICAL FROMVX, DOGGA
-      DIMENSION GAO(NBAST), GAO1(NBAST,3), 
-     &          GAB1(NBAST,3), GAB2(NBAST,3,3), 
+      DIMENSION GAO(NBAST), GAO1(NBAST,3),
+     &          GAB1(NBAST,3), GAB2(NBAST,3,3),
      &          EXCMAT(NBAST,NBAST,3), RH(3)
 C
       POX = COORX - ORIGIN(1)
@@ -295,12 +295,12 @@ C
             PZ = POY
             RY = RH(1)
             RZ = RH(2)
-         END IF 
+         END IF
          IF (.NOT.(DOGGA .AND. .NOT.FROMVX)) THEN
             G10Z = D2*VXC*PY
             G10Y = D2*VXC*PZ
             DO JSYM = 1, NSYM
-               ISYM = MULD2H(JSYM,KSYM) 
+               ISYM = MULD2H(JSYM,KSYM)
                JSTR = IBAS(JSYM) + 1
                JEND = IBAS(JSYM) + NBAS(JSYM)
                ISTR = IBAS(ISYM) + 1
@@ -312,7 +312,7 @@ C
                   END DO
                END DO
             END DO
-         ELSE 
+         ELSE
             G10Z = D2*VXC*PY + VXB*RY
             G10Y = D2*VXC*PZ + VXB*RZ
             G21Z = VXB*PY*RH(1)
@@ -331,14 +331,14 @@ C
      $                 +RH(3)*GAO1(J,3))
                   FY = PY*GD
                   FZ = PZ*GD
-                  DO I = 1, NBAST 
+                  DO I = 1, NBAST
                      EXCMAT(I,J,K) = EXCMAT(I,J,K) + FYZ*GAO(I)
      &                             + FY*GAB1(I,KZ) - FZ*GAB1(I,KY)
                   END DO
                END DO
             ELSE
                DO JSYM = 1, NSYM
-                  ISYM = MULD2H(JSYM,KSYM) 
+                  ISYM = MULD2H(JSYM,KSYM)
                   JSTR = IBAS(JSYM) + 1
                   JEND = IBAS(JSYM) + NBAS(JSYM)
                   ISTR = IBAS(ISYM) + 1
@@ -348,11 +348,11 @@ C
      &                   + G21Y*GAB2(J,1,KY) - G21Z*GAB2(J,1,KZ)
      &                   + G22Y*GAB2(J,2,KY) - G22Z*GAB2(J,2,KZ)
      &                   + G23Y*GAB2(J,3,KY) - G23Z*GAB2(J,3,KZ)
-                     GD = VXB*(RH(1)*GAO1(J,1) + RH(2)*GAO1(J,2) 
+                     GD = VXB*(RH(1)*GAO1(J,1) + RH(2)*GAO1(J,2)
      &                                       + RH(3)*GAO1(J,3))
                      FY = PY*GD
                      FZ = PZ*GD
-                     DO I = ISTR, IEND 
+                     DO I = ISTR, IEND
                         EXCMAT(I,J,K) = EXCMAT(I,J,K) + FYZ*GAO(I)
      &                                + FY*GAB1(I,KZ) - FZ*GAB1(I,KY)
                      END DO
@@ -370,9 +370,9 @@ C /* Deck dftbhes */
 C     This subroutine calculates the static DFT contributions
 C     to the magnetizability (second derivative of the energy
 C     with respect to the magnetic field).
-C     
+C
 C     D.J. Wilson, T. Helgaker  May 2004
-C     
+C
 #include "implicit.h"
       DIMENSION SUSCP(3,3)
 #include "priunit.h"
@@ -387,10 +387,10 @@ C
       END IF
 C
       IF (IPRINT.GE.5) CALL TITLER('Output from DFTBHES','*',103)
-C     
-      KDMAT  = 1 
+C
+      KDMAT  = 1
       KSUSDF = KDMAT  +  N2BASX
-      KLAST  = KSUSDF +  9 
+      KLAST  = KSUSDF +  9
       LWRK   = LWORK  -  KLAST + 1
       IF (KLAST .GT. LWORK) CALL STOPIT('DFTBHES',' ',KLAST,LWORK)
       CALL DFTDNS(WORK(KDMAT),WORK(KLAST),LWRK,0)
@@ -399,9 +399,9 @@ C
       CALL DFTINT(WORK(KDMAT),1,0,.TRUE.,WORK(KLAST),LWRK,DFTBHES1,
      &            WORK(KDMAT),ELE)
       CALL DFT_SUSCEP_COLLECT(WORK(KSUSDF),WORK(KLAST),LWRK)
-C     
+C
 C add dft contribution to the result (SUSCP=SUSDFT probably) and print
-C     
+C
       DO I = 1, 3
       DO J = 1, 3
          SUSCP(J,I) = WORK(KSUSDF + (I-1)*3 + J - 1)
@@ -472,18 +472,18 @@ C
       DO I = 1, NBAST
          ACTIVE(I) = .FALSE.
       END DO
-      DO ISYM = 1, NSYM 
+      DO ISYM = 1, NSYM
          DO IBLA = 1, NBLCNT(ISYM)
          DO I = NBLOCKS(1,IBLA,ISYM), NBLOCKS(2,IBLA,ISYM)
             ACTIVE(I) = .TRUE.
          END DO
          END DO
       END DO
-C     
+C
       CALL DZERO(DENS,5)
       CALL DZERO(VX,9)
       IF (DOGGA) THEN
-         DO I = 1, NBLEN  
+         DO I = 1, NBLEN
             GRDNRM = SQRT(GRADA(1,I)**2+GRADA(2,I)**2+GRADA(3,I)**2)
             DENS(1) = DP5*RHOA(I)
             DENS(2) = DP5*RHOA(I)
@@ -502,9 +502,9 @@ C
             VXC(I) = DP25*VX(1)
          END DO
       END IF
-C 
-      DO ISYM = 1, NSYM 
-         IORBA = 0        
+C
+      DO ISYM = 1, NSYM
+         IORBA = 0
          DO ISHELA = 1, KMAX
             CORAX  = CENT(ISHELA,1,1)
             CORAY  = CENT(ISHELA,2,1)
@@ -572,13 +572,13 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_BRHS(NGEODRV,DOVB,NBAST,DMAT,IPRINT)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "priunit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 C
       LOGICAL DOVB
@@ -603,6 +603,7 @@ C
 C
 #if defined (VAR_MPI)
       SUBROUTINE DFT_BRHS_SLAVE(WORK,LWORK,IPRINT)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -613,7 +614,6 @@ C
 C
       DIMENSION WORK(LWORK)
 #include "dftcom.h"
-#include "mpif.h"
       EXTERNAL DFTBRHS1
       LOGICAL DFT_ISGGA
       EXTERNAL DFT_ISGGA
@@ -637,10 +637,10 @@ C
 #endif
 C
       SUBROUTINE DFT_BRHS_COLLECT(FMAT,N2BASX,WORK,LWORK)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "mxcent.h"
-#include "mpif.h"
       DIMENSION FMAT(3*N2BASX), WORK(LWORK)
       CALL DCOPY(3*N2BASX,FMAT,1,WORK,1)
       CALL MPI_REDUCE(WORK,FMAT,3*N2BASX,MPI_DOUBLE_PRECISION,
@@ -650,12 +650,12 @@ C
       END
 C
       SUBROUTINE KICK_SLAVES_SUSCEP(N2BASX,DMAT,IPRINT)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
 #include "maxorb.h"
 #include "infpar.h"
-#include "mpif.h"
-C defined parallel calculation types  
+C defined parallel calculation types
 #include "iprtyp.h"
 C
       DIMENSION DMAT(N2BASX)
@@ -683,9 +683,9 @@ C
       DIMENSION WORK(LWORK)
       EXTERNAL DFTBHES1
 C
-      KDMAT  = 1 
+      KDMAT  = 1
       KSUSDF = KDMAT  +  N2BASX
-      KLAST  = KSUSDF +  9 
+      KLAST  = KSUSDF +  9
       LWRK   = LWORK  -  KLAST + 1
       IF (KLAST .GT. LWORK) CALL STOPIT('DFT_SUSCEP_SLAVE',' ',
      &                                  KLAST,LWORK)
@@ -700,9 +700,9 @@ C
 #endif
 C
       SUBROUTINE DFT_SUSCEP_COLLECT(SUSCEP,WORK,LWORK)
+      use dalton_mpi_interface
 #if defined (VAR_MPI)
 #include "implicit.h"
-#include "mpif.h"
       DIMENSION SUSCEP(3,3), WORK(LWORK)
       CALL DCOPY(9,SUSCEP,1,WORK,1)
       CALL MPI_REDUCE(WORK,SUSCEP,9,MPI_DOUBLE_PRECISION,MPI_SUM,0,

@@ -155,7 +155,7 @@ C
       NOAUX  = .FALSE.
       NODIHE = .FALSE.
       NOADDA = .FALSE.
-      IF (USE_PELIB()) THEN 
+      IF (USE_PELIB()) THEN
          PRJTRO = .FALSE.  ! no translation and rotation invariance when classical sites are fixed
          CARTCO = .TRUE.   ! force geometry optimization to be in Cartesian coordinates
          IF (EVLINI .LE. 0.0D0) EVLINI = 8.0D0
@@ -379,7 +379,7 @@ C&&&&: 2NDORD:  Use detault 2nd order method
 C&&&&: GRDINI:  Reinitialization of Hessian when increased gradient norm
  41         GRDINI = .TRUE.
             GOTO 100
-C&&&&: 
+C&&&&:
  42         CONTINUE
             GOTO 100
 C&&&&: CONSTR:  Constrained coordinates
@@ -1374,6 +1374,7 @@ C
 
 C  /* Deck optmin */
       SUBROUTINE OPTMIN(WORK,LWORK,WRKDLM)
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mxcent.h"
@@ -1381,9 +1382,6 @@ C  /* Deck optmin */
 #include "infpar.h"
 #include "inftap.h"
 #include "nuclei.h"
-#if defined (VAR_MPI)
-#include "mpif.h"
-#endif
 #include "gnrinf.h"
 #include "cbirea.h"
 #include "optinf.h"
@@ -1424,6 +1422,11 @@ C        Third parameter .FALSE. in call indicates that LUONEL will NOT be writt
          IPRUSR = IPRUSR_SAV
          IPREAD = IPREAD_SAV
          HRINPC = .FALSE.
+      END IF
+
+      IF (NFLOAT .GT. 0 .OR. NGHOST .GT. 0) THEN
+         CALL QUIT('ERROR: Geometry optimization with .OPTIMI cannot'//
+     &      ' be done with floating or ghost orbital centers')
       END IF
 C
       IF (FINDRE .OR. DELINT .OR. REDINT .OR. INRDHS .OR. INMDHS) THEN
@@ -1906,7 +1909,7 @@ C
  10   CONTINUE
       IF ((ITRNMR .LT. ITRMAX) .AND. (.NOT. GECONV)) THEN
          ITRNMR = ITRNMR + 1
-         IF ((ITRFRZ .GT. 0) .AND. (ITRNMR .GT. ITRFRZ) .AND. 
+         IF ((ITRFRZ .GT. 0) .AND. (ITRNMR .GT. ITRFRZ) .AND.
      &       (IFREEZ(0) .GT. 0)) THEN
             WRITE(LUPRI,'(//A/)')
      &      '@ No atoms frozen from this geometry iteration,'//
@@ -2174,7 +2177,7 @@ C
 C     Final results are printed, partially through PRIINF.
 C
          IF (MOLDEN) CALL MOLDEN_GECON(.TRUE.,DUMMY)
-         CALL TITLER(' End of Optimization ','<',120)
+         CALL TITLER(' End of Geometry Optimization ','<',120)
          CALL PRIINF(GEINFO,WORK(2),LWORK)
          IF (CONOPT) THEN
             WRITE(LUPRI,'(/A,I3,A)')
@@ -2240,7 +2243,7 @@ Chj aug 99: reset IPRUSR to original level
 
 C        Computation of numerical Hessian NHL 10/13
          CALL FNDANA(IORDR)
-         IF (IORDR .LT. 2 .AND. VIB) THEN 
+         IF (IORDR .LT. 2 .AND. VIB) THEN
             CALL TITLER(
      &            'Calculate numerical Hessian',
      &            ' ',200)
@@ -2286,7 +2289,7 @@ C
       ELSE
          TMPLOG = DOSPE
          DOSPE = .FALSE.
-         CALL TITLER('Optimization Control Center','<',120)
+         CALL TITLER('Geometry Optimization Control Center','<',120)
          CALL PRIINF(GEINFO,WORK(2),LWORK)
          DOSPE = TMPLOG
          WRITE(LUPRI,'(/A/A,I3,A/A/)')
@@ -2336,7 +2339,7 @@ C
  20      CONTINUE
  10   CONTINUE
 C
-      CALL TITLER('Optimization Control Center',':',115)
+      CALL TITLER('Geometry Optimization Control Center',':',115)
       IF (.NOT. GECONV) THEN
          CALL HEADER('Next geometry (au)',-1)
          CALL PRIGEO(CORDNW)
@@ -2556,10 +2559,8 @@ C     CALL CLEAR_INCOREMEM()
       END IF
 Cef end
 C ach 
-      IF (DFTRUN .OR. SRDFTRUN) THEN
-         DFTGRID_DONE = .FALSE.
-         DFTGRID_DONE_OLD = .FALSE.
-      END IF
+      DFTGRID_DONE = .FALSE.   ! new grid needed if DFT
+      srDFTGRID_DONE = .FALSE. ! new grid needed if srDFT
       IF (.NOT. EXSIR) THEN
 C
 C        *** For numerical derivatives we might need to  ***
@@ -2833,8 +2834,8 @@ C
       CALL DZERO(EHESS,MXCOOR*MXCOOR)
       CALL GTNRGY(EXHER,EXSIR,EXABA,.FALSE.,WORK,LWORK,WRKDLM)
 C
-C     Using FNDANA to find highest order of analytical 
-C     derivatives (NAORDR). If this is 0, we use numerical 
+C     Using FNDANA to find highest order of analytical
+C     derivatives (NAORDR). If this is 0, we use numerical
 C     gradients.
 C         NAORDR = 0; Only energies available
 C         NAORDR = 1; Analytical gradients available
@@ -6408,7 +6409,7 @@ C
             STPDIA(I) = -GRDDIA(I)/EVAL_EFF
          END DO
          IF (INDTOT .NE. INDHES(0) .AND. .NOT. NOBRKS) THEN
-            ! Do not reset INDTOT because we probably want to break 
+            ! Do not reset INDTOT because we probably want to break
             ! symmetry. Instead we reset INDTOT_eff because it is used
             ! below
             INDTOT_eff = INDTOT
@@ -7240,13 +7241,14 @@ C
          CALL PNCMOL(ITRNMR,IPRINT)
          ITRNMR = ITRNMR + 1
       ELSE
-         DOPRE = .FALSE.
          WRITE(LUPRI,'(/A/A/)')
-     &      '*** WARNING! *** '//
+     &      '*** ERROR! *** '//
      &      'Preoptimization can only be done when ' //
      &        'basis set library is used.',
-     &      '*** WARNING! *** '//
+     &      '*** ERROR! *** '//
      &      'Preoptimization has been turned off!'
+         CALL QUIT(
+     &   'ERROR: .PREOPT only if BASIS in line 1 in .mol file')
       END IF
       RDINPC = .FALSE.
       RDMLIN = .FALSE.
@@ -8216,6 +8218,7 @@ C     analytical implementations, K.Ruud, Feb.-6 1997
 C
 C     Modified in august of 2000 to use the new numerical derivative routines
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "dummy.h"
 #include "priunit.h"
@@ -8233,9 +8236,6 @@ C
 #include "numder.h"
 #include "symmet.h"
 #include "infpar.h"
-#if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
-#endif
 #include "nuclei.h"
 #include "pgroup.h"
 #include "fcsym.h"
@@ -8348,7 +8348,7 @@ C
 C
 C     Nanna H. List Oct. 2013
 C
-C     Get numerical Hessian after optimization if  
+C     Get numerical Hessian after optimization if
 C     **PROPER .VIBANA has been requested.
 C
 #include "implicit.h"

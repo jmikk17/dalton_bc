@@ -495,7 +495,7 @@ cfrj-end
      &                  ITYPE,MAXDIF,IATOM,NODV,NOPV,NOCONT,TKTIME,
      &                  RETUR,IPRINT,IPRTYP,
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &                  DUMMY,LDUMMY)
+     &                  DUMMY)
             HFXMU = HFXM0
             IF (HFXMU.NE.D0) THEN
 !           IF (SRDFTRUN .OR. HFXMU.NE.D0) THEN <-- TODO to implement PARHER here
@@ -521,7 +521,7 @@ cfrj-end
      &              ITYPE,MAXDIF,IATOM,NODV,NOPV,NOCONT,TKTIME,
      &              RETUR,IPRINT,IPRTYP,
      &              IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &              DUMMY,LDUMMY)
+     &              DUMMY)
 cfrj-st camb3lyp looses the 1e-contribution during the second call to pardrv, reason unknown, kludge fix by zeroing array above and manually adding it again
                CALL DAXPY(MXPRIM,1.0D0,ALPGR1,1,ALPGRD,1)
                CALL DAXPY(MXCOOR,1.0D0,GRADEE_copy,1,GRADEE,1)
@@ -557,7 +557,7 @@ cfrj-end
      &                     TKTIME,IPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                     RETUR,IDUMMY,I2TYP,WORK(KJSTRS),WORK(KNPRIM),
      &                     WORK(KNCONT),WORK(KIORBS),IDUMMY,IDUMMY,
-     &                     DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                     DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.)
                HFXMU = HFXM0
                IF (HFXMU.NE.D0) THEN
                   HFXFC0 = HFXFAC
@@ -568,7 +568,7 @@ cfrj-end
      &                     TKTIME,IPRINT,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                     RETUR,IDUMMY,I2TYP,WORK(KJSTRS),WORK(KNPRIM),
      &                     WORK(KNCONT),WORK(KIORBS),IDUMMY,IDUMMY,
-     &                     DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                     DUMMY,DUMMY,DUMMY,DUMMY,.FALSE.)
                   HFXFAC = HFXFC0
                END IF
                IF (IPRINT .GE. 2)

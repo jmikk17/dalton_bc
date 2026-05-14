@@ -17,17 +17,12 @@
 !
 C FILE    : hersym.F
 C
-#ifdef OLD_LOG
-========================================================================
-950522-kenneth
-Added solvent in FIND_SYMMETRY,
-as well as using NUCIND instead ATMARR in loops
-950208-vebjorn
-SYMADD: Completely new module to determine molecular symmetry, find the
-        symmetry elements, remove symmetry-dependent atoms and finally
-        return a string containing the full point group.
-========================================================================
-#endif
+
+!950208-vebjorn
+!SYMADD: Completely new module to determine molecular symmetry, find the
+!        symmetry elements, remove symmetry-dependent atoms and finally
+!        return a string containing the full point group.
+
 C  /* Deck symadd */
       SUBROUTINE SYMADD(WORK,LWORK,NONTYP,NSYMOP,NONT,KATOM,KASYM,
      &                  CLASS,TOLLRN_INPUT,IPRSYM_INPUT)
@@ -46,7 +41,9 @@ C*****************************************************************************
       CHARACTER KASYM(3,3)*1, CLASS*15
 
 C optinf.h : VRML_SYM
+C infpar.h : MYNUM, MASTER
 #include "optinf.h"
+#include "infpar.h"
 
       CALL QENTER('SYMADD')
 
@@ -62,7 +59,6 @@ C     Set control variables in "mxsymm.h"
       MAXMIR = 25
       IPRSYM = IPRSYM_INPUT
 
-CSK   only MASTER needs to print the information
       IF( MYNUM .eq. MASTER )THEN
         CALL HEADER('SYMADD: Addition of symmetry requested',-1)
         WRITE(LUPRI,'(A,1P,G9.2)') ' Symmetry test threshold: ', TOLLRN

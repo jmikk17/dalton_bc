@@ -126,66 +126,68 @@ C   (comment added Nov. 2002 / HJAaJ)
 C
       IF (ABS(INTTYP) .EQ. 1 .OR. INTTYP .EQ. 45 .OR.
      &    INTTYP .EQ. 1001) THEN
+      ! OVERLAP/HUCKEL or SQOVLAP or HJPOPOVL
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 2) THEN
+      ELSE IF (INTTYP .EQ. 2) THEN ! DIPLEN
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 3) THEN
+      ELSE IF (INTTYP .EQ. 3) THEN ! DIPVEL
          JMAXD  = 1
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 4) THEN
+      ELSE IF (INTTYP .EQ. 4) THEN ! QUADRUP
          JMAXD  = 0
          JMAXM  = 2
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 5) THEN
+      ELSE IF (INTTYP .EQ. 5) THEN ! SPNORB
          JMAXD  = 1
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 6) THEN
+      ELSE IF (INTTYP .EQ. 6) THEN ! SECMOM
          JMAXD  = 0
          JMAXM  = 2
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 7) THEN
+      ELSE IF (INTTYP .EQ. 7) THEN ! THETA
          JMAXD  = 0
          JMAXM  = 2
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
       ELSE IF (INTTYP .EQ. 8 .OR. INTTYP .EQ. 108) THEN
+         ! CARMOM/SPHMOM/SOLVENT or  R2/R4
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ. 9) THEN
+      ELSE IF (INTTYP .EQ. 9) THEN ! FERMI C
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.10) THEN
+      ELSE IF (INTTYP .EQ.10) THEN ! PSO
          JMAXD  = 1
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.11) THEN
+      ELSE IF (INTTYP .EQ.11) THEN ! SPIN-DI
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.12) THEN
+      ELSE IF (INTTYP .EQ.12) THEN ! DSO
          JMAXD  = 1
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.13) THEN
+      ELSE IF (INTTYP .EQ.13) THEN ! SDFC
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .TRUE.
@@ -195,32 +197,32 @@ C
          JMAXM  = 0
          DONUC1 = .TRUE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.15) THEN
+      ELSE IF (INTTYP .EQ.15) THEN ! S1MAG
          JMAXD  = 0
          JMAXM  = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.16) THEN
+      ELSE IF (INTTYP .EQ.16) THEN ! S2MAG
          JMAXD  = 0
          JMAXM  = 2
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.17) THEN
+      ELSE IF (INTTYP .EQ.17) THEN ! ANGLON
          JMAXD  = 1
          JMAXM  = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.18) THEN
+      ELSE IF (INTTYP .EQ.18) THEN ! ANGMOM
          JMAXD  = 1
          JMAXM  = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.19) THEN
+      ELSE IF (INTTYP .EQ.19) THEN ! LONMOM
          JMAXD  = 2
          JMAXM  = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.20) THEN
+      ELSE IF (INTTYP .EQ.20) THEN ! MAGMOM
          JMAXD  = 2
          JMAXM  = 1
          DONUC1 = .FALSE.
@@ -231,72 +233,72 @@ C
          JMAXM  = 0
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.22) THEN
+      ELSE IF (INTTYP .EQ.22) THEN ! DSUSNOL
          JMAXD = 0
          JMAXM = 2
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.23) THEN
+      ELSE IF (INTTYP .EQ.23) THEN ! DSUSLAN
          JMAXD = 1
          JMAXM = 1
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.24) THEN
+      ELSE IF (INTTYP .EQ.24) THEN ! DSUSLH
          JMAXD = 2
          JMAXM = 2
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.25) THEN
+      ELSE IF (INTTYP .EQ.25) THEN ! DIASUS
          JMAXD = 2
          JMAXM = 2
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.26) THEN
+      ELSE IF (INTTYP .EQ.26) THEN ! NUCSNLO
          JMAXD = 0
          JMAXM = 1
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.27) THEN
+      ELSE IF (INTTYP .EQ.27) THEN ! NUCSLO
          JMAXD = 1
          JMAXM = 1
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.28) THEN
+      ELSE IF (INTTYP .EQ.28) THEN ! NUCSHI
          JMAXD = 1
          JMAXM = 1
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.29) THEN
+      ELSE IF (INTTYP .EQ.29) THEN ! NEFIELD
          JMAXD = 0
          JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.30) THEN
+      ELSE IF (INTTYP .EQ.30) THEN ! ELFGRDC
          JMAXD = 0
          JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.31) THEN
+      ELSE IF (INTTYP .EQ.31) THEN ! ELFGRDS
          JMAXD = 0
          JMAXM = 0
          DONUC1= .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.32) THEN
+      ELSE IF (INTTYP .EQ.32) THEN ! S1MAGL
          JMAXD = 0
          JMAXM = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.33) THEN
+      ELSE IF (INTTYP .EQ.33) THEN ! S1MAGR
          JMAXD = 0
          JMAXM = 1
          DONUC1 = .FALSE.
          DOMOM1 = .TRUE.
-      ELSE IF (INTTYP .EQ.34) THEN
+      ELSE IF (INTTYP .EQ.34) THEN ! HDOBR
          JMAXD = 1
          JMAXM = 1
          DONUC1 = .TRUE.
          DOMOM1 = .FALSE.
-      ELSE IF (INTTYP .EQ.35) THEN
+      ELSE IF (INTTYP .EQ.35) THEN ! NUCPOT
          JMAXD = 0
          JMAXM = 0
          DONUC1 = .FALSE.
@@ -477,7 +479,7 @@ C     type 45 already defined together with type 1
          JMAXM  = 1
          DONUC1 = .FALSE.
          DOMOM1 = .FALSE.
-      ELSE IF (INTTYP .EQ.75) THEN
+      ELSE IF (INTTYP .EQ.75) THEN ! NPETES
          JMAXD  = 0
          JMAXM  = 0
          DONUC1 = .FALSE.
@@ -936,7 +938,7 @@ cLig <> added JMAX adjustment  for INTTYP = 82
      &                    .OR. (INTTYP .EQ. 72)
      &                    .OR. (INTTYP .EQ. 73)
      &                    .OR. (INTTYP .EQ. 74)
-     &                    .OR. (INTTYP .EQ. 75)
+     &                    .OR. (INTTYP .EQ. 75) ! NPETES
      &                    .OR. (INTTYP .EQ. 80)
      &                    .OR. (INTTYP .EQ. 82)
      &                    .OR. (INTTYP .EQ. 92)
@@ -983,7 +985,7 @@ cLig <> added JMAX adjustment  for INTTYP = 82
          IF (INTTYP .EQ. 72) JMAX = JMAX + 2
          IF (INTTYP .EQ. 73) JMAX = JMAX + 2
          IF (INTTYP .EQ. 74) JMAX = JMAX + 2
-         IF (INTTYP .EQ. 75) JMAX = JMAX + 1
+         IF (INTTYP .EQ. 75) JMAX = JMAX + 1 ! NPETES
          IF (INTTYP .EQ. 80) JMAX = JMAX + 3
 cLig <> added JMAX = JMAX+2 for INTTYP = 82
          IF (INTTYP .EQ. 82) JMAX = JMAX + 2
@@ -1010,7 +1012,7 @@ cLig <> added JMAX = JMAX+2 for INTTYP = 82
          ISTEPV = ISTEPU*ISTEPU
          NAHGTF = ISTEPU*ISTEPV
 C
-         IF (      INTTYP .EQ. 75 .OR. INTTYP .EQ. 66
+         IF (      INTTYP .EQ. 75 .OR. INTTYP .EQ. 66 ! NPETES, 
      &        .OR. INTTYP .EQ. 67 .OR. INTTYP .EQ. 99
      &        .OR. INTTYP .EQ. 100
      &        .OR. ( (INTTYP .EQ. 29) .AND. RUNQM3 )
@@ -1211,7 +1213,7 @@ C
                CALL EFTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NATOMC,
      &                    ISYMOP,NELMNT,NOPTYP,ANTI,INTADR,IPRINT,
      &                    MULTA,MULTB,EXPVAL,DENMAT,EXP1EL)
-            ELSE IF (INTTYP .EQ. 75) THEN
+            ELSE IF (INTTYP .EQ. 75) THEN ! NPETES
                CALL TESTRA(SHLINT,EXPVAL,FACINT,JSYMC,JCENTC,NATOMC,
      &                     ISYMOP,1,NOPTYP,ANTI,EXP1EL,DENMAT,MULTA,
      &                     MULTB,IPRINT)
@@ -1313,7 +1315,7 @@ c     &                  INTADR,IPRINT)
          ELSE IF (INTTYP .EQ. 70) THEN
             CALL G1HTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NCENTC,NATOMC,
      &                  ISYMOP,NELMNT,NOPTYP,ANTI,INTADR,IPRINT)
-         ELSE IF (INTTYP .EQ. 75) THEN
+         ELSE IF (INTTYP .EQ. 75) THEN ! NPETES
             CALL TESTRA(SHLINT,SOINT,FACINT,JSYMC,JCENTC,NATOMC,ISYMOP,
      &                  NELMNT,NOPTYP,ANTI,EXP1EL,DUMMY,MULTA,MULTB,
      &                  IPRINT)
@@ -1610,7 +1612,7 @@ cLig <> added the call to DZERO also for INTTYP = 82
      &                       .OR. (INTTYP .EQ. 72)
      &                       .OR. (INTTYP .EQ. 73)
      &                       .OR. (INTTYP .EQ. 74)
-     &                       .OR. (INTTYP .EQ. 75)
+     &                       .OR. (INTTYP .EQ. 75) ! NPETES
      &                       .OR. (INTTYP .EQ. 80)
      &                       .OR. (INTTYP .EQ. 82)
      &                       .OR. (INTTYP .EQ. 92)
@@ -1967,7 +1969,7 @@ C
 C        Potential energy from each individual nucleus
 C        ---------------------------------------------
 C
-         ELSE IF (INTTYP .EQ. 35 .OR. INTTYP .EQ. 75) THEN
+         ELSE IF (INTTYP .EQ. 35 .OR. INTTYP .EQ. 75) THEN ! NUCPOT or NPETES
             CALL NPEINT(ODC,JMAXA,JMAXB,JMAXT,JMAXD,JMAXM,AHGTF,
      &                  SHLINT,NOPTYP,NATOMC)
 C

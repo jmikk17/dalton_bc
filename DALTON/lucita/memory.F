@@ -47,9 +47,7 @@
 *           Fall 97 (KPGINT1 added )
 
 *. Input
-#ifdef MOD_SRDFT
       use lucita_mcscf_srdftci_cfg
-#endif
       IMPLICIT REAL*8(A-H,O-Z)
 #include "priunit.h"
 #include "mxpdim.inc"

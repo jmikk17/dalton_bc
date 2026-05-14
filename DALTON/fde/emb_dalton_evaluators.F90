@@ -146,7 +146,7 @@ module fde_evaluators_dalton
       INTEGER :: NDIMENSION
       INTEGER :: NDER=0, DOLND=0
 
-      REAL(KIND=8),ALLOCATABLE :: GAO(:), GAO1(:),GAO2(:),BUF(:),NCNT(:)
+      REAL(KIND=8),ALLOCATABLE :: GAO(:), GAO1(:),GAO2(:),BUF(:)
       REAL(KIND=8),ALLOCATABLE :: GAB1(:)
 
       real(kind=8), allocatable :: dmat(:)
@@ -171,7 +171,6 @@ hjaaj 19-Mar-2020:
       allocate(gao1( 3*ndimension))
       allocate(gao2( 6*ndimension))
       allocate(gab1( 3*ndimension))
-      allocate(ncnt(   ndimension))
       allocate(buf ( 4*ndimension))
 
 !     Initialize the matrices to zero.
@@ -180,7 +179,6 @@ hjaaj 19-Mar-2020:
       GAO1 = 0.0d0
       GAO2 = 0.0d0
       BUF  = 0.0d0
-      NCNT = 0.0d0
       GAB1 = 0.0d0
 
       WRITE(*,*) 'Calculating the density and its derivatives.'
@@ -190,7 +188,7 @@ hjaaj 19-Mar-2020:
       do i = 1, size(grid%r,2)
 
 #ifdef FIXME
-        CALL GETSOS(GAO,GAO1,GAO2,GAB1,NCNT,  &
+        CALL GETSOS(GAO,GAO1,GAO2,GAB1,  &
                 grid%r(1,i), grid%r(2,i), grid%r(3,i), &
                     BUF,NDIMENSION,2,DOLND,0)
         CALL GETRHO(gf%n(i),0,GAO,DMAT,BUF)
@@ -207,7 +205,6 @@ hjaaj 19-Mar-2020:
       deallocate (gao1)
       deallocate (gao2)
       deallocate (gab1)
-      deallocate (ncnt) 
       deallocate (dmat)
 #endif
 
@@ -226,7 +223,6 @@ hjaaj 19-Mar-2020:
          integer        :: iprdfe
          real(kind=8)   :: gamma_pq, ep_pq_update 
          real(kind=8), allocatable :: gao(:), buffer(:)
-         integer, allocatable :: ncnt(:)
 
 !        write (*,*) 'dimension: ',mat_dim,'  bla: ',fmat(1:5)
          call setupsos(0,.false.,idum1,idum2)
@@ -237,7 +233,6 @@ hjaaj 19-Mar-2020:
          nbuffer      = nr_irreps*nr_irreps*ndimension*nr_type_so 
 
          allocate(gao(ndimension*nr_type_so))
-         allocate(ncnt(ndimension))
          allocate(buffer(nbuffer))
 
          nder   = 0
@@ -248,7 +243,7 @@ hjaaj 19-Mar-2020:
 !       getsos_fde is a simplification of getsos for our case. if there was
 !       no symmetry, getaos could have been used directly... 
 !
-            call fde_getsos(gao, ncnt, fde_grid_sv%r(:,i), buffer, nbuffer,    &
+            call fde_getsos(gao, fde_grid_sv%r(:,i), buffer, nbuffer,    &
                             ndimension,.false.,.false.,dft_hri, iprdfe)
 
 !         in order to treat the symmetry blocking with packed storage, 
@@ -296,7 +291,6 @@ hjaaj 19-Mar-2020:
 !        call flush()
 
          deallocate(gao)
-         deallocate(ncnt)
          deallocate(buffer)
 
       end subroutine fde_dalton_embpot_via_oneelectron
@@ -365,7 +359,7 @@ hjaaj 19-Mar-2020:
       end subroutine fde_dalton_data_interface
 
 
-      SUBROUTINE FDE_GETSOS(GSO,NCNT,COR,WORK,LWORK,NBAST,              &
+      SUBROUTINE FDE_GETSOS(GSO,COR,WORK,LWORK,NBAST,              &
                         DOLND,DOGGA,DFTHRI,IPRINT)
 !
 !     original implementation of getsos: T. Helgaker feb 01
@@ -377,23 +371,23 @@ hjaaj 19-Mar-2020:
 #include "mxcent.h"
 !
       LOGICAL DOLND, DOGGA
-      DIMENSION GSO(NBAST*NTYPSO), WORK(LWORK), NCNT(NBAST),COR(3)
+      DIMENSION GSO(NBAST*NTYPSO), WORK(LWORK), COR(3)
 !
 #include "dftinf.h"
 #include "symmet.h"
 !
       IF (MAXREP.EQ.0) THEN
          CALL DFTAOS(GSO(KSO0),GSO(KSO1),GSO(KSO2),GSO(KSOB),GSO(KSOB1), &
-     &               NCNT,COR(1),COR(2),COR(3),NBAST,                    &
+     &               COR(1),COR(2),COR(3),NBAST,                    &
      &               DOLND,DOGGA,DFTHRI,IPRINT)
       ELSE
          KGAO = 1
          KLST = KGAO + NTYPSO*NBAST
          IF (KLST.GT.LWORK) CALL STOPIT('DFTAOS','LWORK',KLST,LWORK)
          CALL DFTAOS(WORK(KSO0),WORK(KSO1),WORK(KSO2),WORK(KSOB),        &
-     &               WORK(KSOB1),NCNT,COR(1),COR(2),COR(3),              &
+     &               WORK(KSOB1),COR(1),COR(2),COR(3),              &
      &               NBAST,DOLND,DOGGA,DFTHRI,IPRINT)
-         CALL DFTSOS(WORK(KSO0),GSO,NBAST,NTYPSO,NCNT,IPRINT)
+         CALL DFTSOS(WORK(KSO0),GSO,NBAST,NTYPSO,IPRINT)
       END IF
 
       END SUBROUTINE FDE_GETSOS

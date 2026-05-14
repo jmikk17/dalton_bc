@@ -48,7 +48,7 @@ C------------------------------------------------------------------------------
 c     LEBMIN is in the common block but is used only internally in make_dftgrid
       DFTADD = .FALSE.
       DFTGRID_DONE = .FALSE.
-      DFTGRID_DONE_OLD = .FALSE.
+      srDFTGRID_DONE = .FALSE.
       DFTRUN = .FALSE.
       DFTPOT = .FALSE.
       DFTORD = .FALSE.
@@ -358,8 +358,8 @@ c
       END
 #ifdef VAR_MPI
       SUBROUTINE DFTLRSYNC
+      use dalton_mpi_interface
 #include "implicit.h"
-#include "mpif.h"
 #include "maxorb.h"
 #include "infpar.h"
 #include "inforb.h"

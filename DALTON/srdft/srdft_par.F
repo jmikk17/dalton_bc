@@ -36,6 +36,7 @@ C  Parameter list same as for subroutine SRDFT,
 C  see SRDFT for an explanation of the parameters.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
       implicit none
       logical :: DOERG,DO_MOLGRAD,DOATR,TRIPLET
       integer :: ND_SIM, LWORK, IPRINT_in
@@ -44,8 +45,6 @@ C*****************************************************************************
 
 #include "priunit.h"
 
-!  mpif.h   : for MPI
-#include "mpif.h"
 
 
 ! Used from include files:
@@ -53,6 +52,7 @@ C*****************************************************************************
 !  infinp.h : /LOGINP/ for DOHFSRDFT, SRHYBR, ?
 !  infvar.h : JWOPSY
 !  inforb.h : N2BASX, ?
+!  inftap.h : LUQUAD
 !  infpar.h : MYNUM, MASTER
 !  dftcom.h : /DFTCOM/ transferred to slaves
 !  iprtyp.h : PAR_SRDFT_INTEGRATION
@@ -63,6 +63,7 @@ C*****************************************************************************
 #include "infinp.h"
 #include "infvar.h"
 #include "inforb.h"
+#include "inftap.h"
 #include "infpar.h"
 #include "dftcom.h"
 #include "iprtyp.h"
@@ -73,7 +74,7 @@ C     variables for SRCPBERI
 
       integer IPRTYP, IPRINT, IPRINT_slaves, IWHO, NWHO
       integer KFREE, LFREE
-      integer NDMAT, NEXCMAT
+      integer NDMAT, NEXCMAT, LUQUAD
 
       integer(mpi_integer_kind) :: bytesize_mpi, ierr_mpi
 
@@ -145,6 +146,15 @@ C     variables for SRCPBERI
       CALL MPI_BCAST(DMAT,NDMAT*N2BASX,MPI_DOUBLE_PRECISION,
      &     MASTER,MPI_COMM_WORLD,ierr_mpi)
 
+!     7) finally, transfer the srDFT integration grid
+      open(newunit=LUQUAD,file='DALTON.QUAD',status='OLD',
+     &     access='SEQUENTIAL',form='UNFORMATTED')
+      CALL GET_srDFTGRID_XYZW_old(WORK,LUQUAD,NTOT_DFTGRID)
+!     CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NTOT_DFTGRID)
+      close(LUQUAD)
+      CALL MPI_BCAST(WORK,4*NTOT_DFTGRID,MPI_DOUBLE_PRECISION,
+     &     MASTER,MPI_COMM_WORLD,ierr_mpi)
+
       IF (iprint .gt. 5) then
       write (*,*) 'SRDFT_PAR_MASTER has started slaves, lupri', lupri
       write (lupri,*) 'SRDFT_PAR_MASTER has started slaves'
@@ -166,12 +176,11 @@ C
 C  Node (slave) driver for parallel integration over srdft functional.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
       implicit none
       integer :: LWORK, IPRINT_in
       real*8 :: WORK(LWORK)
 
-!  mpif.h   : for MPI
-#include "mpif.h"
 
       logical :: DOERG,DO_MOLGRAD,DOATR,TRIPLET
       integer :: ND_SIM, NDMAT, NEXCMAT, NDMAT_in, IPRINT
@@ -235,13 +244,6 @@ C     variables for SRCPBERI
       call getbytespan(HFXFAC, DFTCOMlast, bytesize_mpi)
       call mpi_bcast(HFXFAC, bytesize_mpi, mpi_byte,
      &   MASTER, mpi_comm_world, ierr_mpi)
-      ! master does not know if the grid file
-      ! DALTON.QUAD has been generated for this node or not
-      if (first_call .or. NEWGEO .or. NEWBAS) then
-         DFTGRID_DONE_OLD = .FALSE.
-      else
-         DFTGRID_DONE_OLD = .TRUE.
-      end if
 
 !     4) Make sure /LOGINP/ in infinp.h is known to nodes
 !        (need at least DOHFSRDFT and SRHYBR)
@@ -313,7 +315,7 @@ C     variables for SRCPBERI
 !     and transfer results to master in SRDFT
 !     ==================
 
-      ND_SIM = 1 
+      ND_SIM = 1
       EDFT(1:3)  = 0.0D0
       CALL DZERO(WORK(KEXCMAT),NEXCMAT*N2BASX)
       CALL SRDFT(

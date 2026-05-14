@@ -29,8 +29,8 @@ C  /* Deck erifck */
 #include "maxorb.h"
       PARAMETER (D1 = 1.0D0, D2 = 2.0D0)
 C
-C	I don't know if IFCTYP and ISYMDM is used properly in this 
-C	routine at the current stage, K.Ruud-jan96
+C  I don't know if IFCTYP and ISYMDM is used properly in this 
+C  routine at the current stage, K.Ruud-jan96
 C
 #include "ccom.h"
 #include "cbieri.h"
@@ -44,7 +44,7 @@ C
 #include "infpar.h"
       DIMENSION FMAT(*), DMAT(*), WORK(LWORK),
      &          IFCTYP(NDMT), ISYMDM(NDMT), CCFBT(*), INDXBT(*), 
-     &	        FCKTMP(*)
+     &          FCKTMP(*)
 C
       CALL QENTER('ERIFCK')
 C
@@ -140,7 +140,7 @@ C
      &               WORK(KODPP1),WORK(KODPP2),
      &               WORK(KRDPP1),WORK(KRDPP2),
      &               FCKTMP,DMAT,NDMT,IFCTYP,DUMMY,IDUMMY,CCFBT,
-     &	             INDXBT,WORK(KLAST),LWRK,IPRINT)
+     &               INDXBT,WORK(KLAST),LWRK,IPRINT)
 #else
          CALL ODCDRV(WORK(KODCL1),WORK(KODCL2),
      &               WORK(KODBC1),WORK(KODBC2),
@@ -159,7 +159,7 @@ C
      &                  WORK(KODPP1),WORK(KODPP2),
      &                  WORK(KRDPP1),WORK(KRDPP2),
      &                  FCKTMP,DMAT,NDMT,IFCTYP,DUMMY,IDUMMY,CCFBT,
-     &	                INDXBT,WORK(KLAST),LWRK,IPRINT)
+     &                  INDXBT,WORK(KLAST),LWRK,IPRINT)
 #else
             CALL ODCDRV(WORK(KODCL1),WORK(KODCL2),
      &                  WORK(KODBC1),WORK(KODBC2),
@@ -550,18 +550,18 @@ C
      &          BUF(LBIN), IBUF(LBIN,4), IFCTYP(NDMT)
 C
       DO I = 1, NDMT
-	 IX = IFCTYP(I) / 10
-	 IY = MOD (IFCTYP(I),10)
+         IX = IFCTYP(I) / 10
+         IY = MOD (IFCTYP(I),10)
 C   FAC account for the different integrals in eri and twoint.
 C   twoint are 4times larger, but FAC seems only to be 2(?), at least for
 C   IFCTYP = 13
-	 IF      (IFCTYP(I).EQ.13) THEN
+         IF      (IFCTYP(I).EQ.13) THEN
 C NECgh980505  We adjust the FAC, since we do not symmetrize/scal anymore.
 C NECgh980505  FAC = D2
-	       FAC = D4
+               FAC = D4
          ELSE IF (IFCTYP(I).EQ.3)  THEN
 C NECgh980505  FAC = DP5 
- 	       FAC = D1
+               FAC = D1
          ELSE
             FAC = D1
              WRITE(LUPRI,*) '*** WARNING!!! This value for IFCTYP is '//

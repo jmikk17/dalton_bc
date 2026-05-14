@@ -132,13 +132,13 @@ C Cut string SRFTMP
             SRDFT_SPINDNS   = .TRUE.
             write (lupri,*) 'SRDFT_LOCALSPIN activated! ',SRLOCALSPIN
             ! Do not quit if field 3 not used here.
-            ! field 3 might be mu_0 for SRCPBERI below 
+            ! field 3 might be mu_0 for SRCPBERI below
             ! 160523-hjaaj
          ELSE IF (SRLOCALSPIN .EQ. 'NO_SPINDENSITY') THEN
             SRDFT_SPINDNS = .FALSE.
          END IF
       END IF
-      
+
       DO I = 1, NXCTABLE
         IF (XCTABLE(I) .EQ. SRXCFUN) THEN
           GO TO (301, 302, 303, 304, 305, 306, 307),I
@@ -246,7 +246,7 @@ C  based on DOSRX_LDA_S of JT for mu=0
 115   DOLAX_LDAS = .TRUE.
       ISJT    = .TRUE.
       GO TO 15
-C  based on standard dalton DOSRX_LDA for mu=0 (KS 2011) 
+C  based on standard dalton DOSRX_LDA for mu=0 (KS 2011)
 116   DOLAX_LDA = .TRUE.
       GO TO 15
 C  Complement exchange PBE functional (KS 08-08-11)
@@ -283,11 +283,11 @@ C Short-range wPBE exchange functional (erk 27 feb. 19)
       GO TO 20
 
 C     No correlation functional
-201   ISJT      = .TRUE. 
+201   ISJT      = .TRUE.
       GO TO 20 ! NULL
 C     No description
 202   DOSRC_LDA = .TRUE.
-      ISJT      = .TRUE. 
+      ISJT      = .TRUE.
       GO TO 20
 C     No description
 203   DOSRC_GGA = .TRUE.
@@ -326,7 +326,7 @@ C     Short-range correlation PBE TCS J functional
 C     Rational interpolation
 212   DOSRC_PBERI = .TRUE.
       ISJT    = .TRUE.
-      IF (nfld .ge. 3 .AND. .NOT.SRDFT_LOCALSPIN .AND. 
+      IF (nfld .ge. 3 .AND. .NOT.SRDFT_LOCALSPIN .AND.
      &   (.NOT. SRLOCALSPIN .EQ. 'NO_SPINDENSITY')) THEN
          read (fields(3),*) MU_0
          mu_0_m4 = mu_0 ** (-4)
@@ -346,16 +346,16 @@ C     Weighted interpolation
       GO TO 20
 C Short-range correlation PBE function of GWS (JT 11-08-09)
 215   DOSRC_PBEGWS = .TRUE.
-      ISJT         = .TRUE. 
+      ISJT         = .TRUE.
       GO TO 20
 C Short-range spin-dependent correlation LDA function (JT 18-08-09)
 216   DOSRC_LDA = .TRUE.
-      ISJT    = .TRUE. 
+      ISJT    = .TRUE.
       GO TO 20
 C     SRCMULO_B :
 C Short-range LDA type correlation functional with lokal mu value
 C of mu=2*sqrt(alpha/pi)/sqrt(r_s)
-217   DOSRC_MULOCAL(0) = .TRUE.   
+217   DOSRC_MULOCAL(0) = .TRUE.
       DOSRC_MULOCAL(2) = .TRUE.
       GO TO 20
 C     SRCMULO_C :
@@ -374,7 +374,7 @@ C Extension of the SRCMULO_A functional: XMULFAC depends on grd/rho
       ISJT = .TRUE.
       GO TO 20
 C Short-range correlation LDA function with multideterminant reference (for OEP) (JT 26-08-11)
-C ... or for RSDHf calculations (Manu 06-12-2012) 
+C ... or for RSDHf calculations (Manu 06-12-2012)
 221   DOSRC_MD_LDA = .TRUE.
 !     IF(DOSRX_OEP) THEN
 !      DOSRXC_NOLRSYS=.TRUE.
@@ -405,7 +405,7 @@ C Non-scaled Complement correlation LYP functional (KS 08-08-11)
 C Scaled complement correlation LYP functional (KS 08-08-11)
 228   DOLASC_GGALYP = .TRUE.
       GO TO 20
-C Rational interpolation LYP functional                             
+C Rational interpolation LYP functional
 229   DOSRC_LYPRI = .TRUE.
       ISJT    = .TRUE.
       GO TO 20
@@ -518,14 +518,13 @@ C    Created: Jesper Kielberg Pedersen, Mar. 2003
 C    Modified: 17-08-09, J. Toulouse, add spin density matrix
 C*****************************************************************************
       use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 
 #ifdef VAR_MPI
-!  mpif.h   : for MPI
-#include "mpif.h"
       integer(kind=MPI_INTEGER_KIND) :: my_MPI_REAL8 = MPI_REAL8
-      integer(kind=MPI_INTEGER_KIND) :: my_MPI_SUM   = MPI_SUM  
+      integer(kind=MPI_INTEGER_KIND) :: my_MPI_SUM   = MPI_SUM
       integer(kind=MPI_INTEGER_KIND) :: ierr_mpi, len_mpi
 #endif
 
@@ -551,6 +550,10 @@ C*****************************************************************************
       CALL QENTER('SRDFT')
       CALL TIMER('START ',TIMSTR,TIMEND)
       RESULTS(:) = 0.0D0
+
+      KFRSAV = 1
+      KFREE  = KFRSAV
+      LFREE  = LWORK
 
       IF (TRIPLET) THEN
 #if SRDFT_DEBUG > 4
@@ -598,6 +601,18 @@ C*****************************************************************************
         CALL OUTPUT(EXCMAT(1,1,2),1,NBAST,1,NBAST,NBAST,NBAST,1,LUPRI)
       END IF
 #endif
+
+C     =============================
+C     Calculate srDFT grid, if not already done
+C     (NTOT_DFTGRID is the total number of grid points)
+C     (only on master, if MPI copy to slaves)
+C     =============================
+      IF (MYNUM .EQ. MASTER .AND. .NOT.srDFTGRID_done) THEN
+         CALL MAKE_srDFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
+         CALL CONDFT ! define constants for LYP
+         srDFTGRID_done = .TRUE.
+      END IF
+
 !     Shall we go in MPI parallel mode for srdft ?
 
 #ifdef VAR_MPI
@@ -682,39 +697,35 @@ C
 C     =============================
 C     Allocations
 C     =============================
-      NBUF   = 1 000 000
-      KX     = 1
-      KY     = KX    + NBUF
-      KZ     = KY    + NBUF
-      KW     = KZ    + NBUF
-      KGSO   = KW    + NBUF
-      KCNT   = KGSO  + NTYPSO*NBAST
-      KDGASR = KCNT  + NBAST
+      IF (NTOT_DFTGRID .LE. 0) THEN
+         CALL QUIT('NTOT_DFTGRID .le. 0 in SRDFT')
+      END IF
+      CALL MEMGET2('REAL','XYZW',KXYZW,4*NTOT_DFTGRID,WORK,KFREE,LFREE)
+      CALL MEMGET2('REAL','GSO ',KGSO ,NTYPSO*NBAST  ,WORK,KFREE,LFREE)
       IF (SRDFT_SPINDNS) THEN
-         KDGAT = KDGASR + 2*NBAST
+         CALL MEMGET2('REAL','DGASR',KDGASR, 2*NBAST  ,WORK,KFREE,LFREE)
       ELSE
-         KDGAT = KDGASR + NBAST
+         CALL MEMGET2('REAL','DGASR',KDGASR,   NBAST  ,WORK,KFREE,LFREE)
       END IF
       IF (LSRHYBR) THEN
-         KWRK  = KDGAT  + NBAST
+         CALL MEMGET2('REAL','DGAT ',KDGAT ,   NBAST  ,WORK,KFREE,LFREE)
       ELSE
-         KWRK  = KDGAT
+         CALL MEMGET2('REAL','DGAT ',KDGAT ,     0    ,WORK,KFREE,LFREE)
       END IF
-      LWRK  = LWORK + 1 - KWRK
-      IF (KWRK .GT. LWORK) CALL ERRWRK('SRDFT',-KWRK,LWORK)
 
       IF(ISJT) THEN
-        CALL SRDFT1JT(ND_SIM,EXCMAT,DMAT,DOLND,WORK(KX),WORK(KY),
-     &            WORK(KZ),WORK(KW),NBUF,WORK(KGSO),WORK(KCNT),
+        CALL SRDFT1JT(ND_SIM,EXCMAT,DMAT,DOLND,WORK(KXYZW),
+     &            NTOT_DFTGRID,WORK(KGSO),
      &            WORK(KDGASR),DOGGA,DOERG,DO_MOLGRAD,DOATR,TRIPLET,
      &            do_metagga,
-     &            RESULTS,WORK(KWRK),LWRK,IPRINT)
+     &            RESULTS,WORK(KFREE),LFREE,IPRINT)
       ELSE
-        CALL SRDFT1(ND_SIM,EXCMAT,DMAT,DOLND,WORK(KX),WORK(KY),
-     &            WORK(KZ),WORK(KW),NBUF,WORK(KGSO),WORK(KCNT),
+        CALL SRDFT1(ND_SIM,EXCMAT,DMAT,DOLND,WORK(KXYZW),
+     &            NTOT_DFTGRID,WORK(KGSO),
      &            WORK(KDGASR),WORK(KDGAT),DOGGA,DOERG,DO_MOLGRAD,DOATR,
-     &            TRIPLET,RESULTS,WORK(KWRK),LWRK,IPRINT)
+     &            TRIPLET,RESULTS,WORK(KFREE),LFREE,IPRINT)
       ENDIF
+      CALL MEMREL('SRDFT',WORK,KFRSAV,KFRSAV,KFREE,LFREE)
 
 C
  8000 CONTINUE
@@ -877,8 +888,8 @@ C
 
 
 C*****************************************************************************
-      SUBROUTINE SRDFT1(ND_SIM,EXCMAT,DMAT,DOLND,CORX,CORY,CORZ,
-     &                  WEIGHT,NBUF,GSO,NCNT,DMATGAOSR,DMATGAOT,DOGGA,
+      SUBROUTINE SRDFT1(ND_SIM,EXCMAT,DMAT,DOLND,XYZW,
+     &                  NBUF,GSO,DMATGAOSR,DMATGAOT,DOGGA,
      &                  DOERG,DO_MOLGRAD,DOATR,TRIPLET,RESULTS,
      &                  WORK,LWORK,IPRINT)
 C*****************************************************************************
@@ -889,11 +900,17 @@ C     Purpose : Calculate DFT-energy and potential contribution for
 C               SR-DFT hybrid methods.
 C
 C*****************************************************************************
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
+
+#ifdef VAR_MPI
+      integer(mpi_integer_kind) :: ierr_mpi
+#endif
+
 #include "mxcent.h"
 #include "dummy.h"
-! infpar.h : MYNUM, NODTOT
+! infpar.h : MYNUM, MASTER, NODTOT
 #include "maxorb.h"
 #include "gnrinf.h"
 #include "infpar.h"
@@ -911,16 +928,22 @@ C*****************************************************************************
 
       LOGICAL   DOLND,DOGGA,DOERG,DO_MOLGRAD,DOATR,TRIPLET
       LOGICAL   LDOGGA,LSRHYBR,RTEST,ldebug
+      REAL*8    XYZW(NBUF,4)
       REAL*8    EXCMAT(NBAST,NBAST,*), DMAT(N2BASX,*),
-     &          CORX(NBUF),CORY(NBUF),CORZ(NBUF),WEIGHT(NBUF),
-     &          GSO(NBAST*NTYPSO),NCNT(NBAST),
+     &          GSO(NBAST*NTYPSO),
      &          DMATGAOSR(NBAST),DMATGAOT(NBAST),RESULTS(11),
      &          WORK(LWORK),
      &          RHGT(3),RHGSR(3),ZKSR(3,3),XKSR(3,3), COR(3)
 
+!    &          CORX(NBUF),CORY(NBUF),CORZ(NBUF),WEIGHT(NBUF),
+
       CHARACTER*17 QUADNAME
 
-      INTEGER, SAVE :: NTOT_DFTGRID_save = -1
+!     statement functions (because the four vectors now are in one array XYZW )
+      CORX(i)   = XYZW(i,1)
+      CORY(i)   = XYZW(i,2)
+      CORZ(i)   = XYZW(i,3)
+      WEIGHT(i) = XYZW(i,4)
 
 #if SRDFT_DEBUG > 0
       write(lupri,*) 'Entered SRDFT1, SRDFT_DEBUG defined =',SRDFT_DEBUG
@@ -932,6 +955,9 @@ C*****************************************************************************
       WRITE(LUPRI,*) 'SRDFT1: ERFEXP(0:2) =',ERFEXP(0:2)
 #endif
 
+      IF (NBUF .NE. NTOT_DFTGRID) THEN
+         CALL QUIT('SRDFT1 error: NBUF .ne. NTOT_DFTGRID')
+      END IF
       IF (ND_SIM .NE. 1) THEN
          WRITE(LUPRI,*) 'SRDFT1: illegal ND_SIM ',ND_SIM
          CALL QUIT('SRDFT1: illegal ND_SIM value')
@@ -963,20 +989,6 @@ C*****************************************************************************
 C     IPNTend   = 10210
       IPNTend   = SRDFT_DEBUG
 #endif
-C     =============================
-C     Calculate DFT grid
-C     (NTOT_DFTGRID is the total number of grid points)
-C     =============================
-
-      IF (.NOT.DFTGRID_DONE_OLD .OR. NTOT_DFTGRID_save .LE. 0) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
-         CALL CONDFT
-         NTOT_DFTGRID_save = NTOT_DFTGRID
-         DFTGRID_DONE_OLD = .TRUE.
-      ELSE
-         NTOT_DFTGRID = NTOT_DFTGRID_save
-         ! because wrong NTOT_DFTGRID has been transferred from master in SRDFT_PAR_NODE
-      END IF
 
       LDOGGA = DOGGA .OR. LSRHYBR
 
@@ -1028,25 +1040,19 @@ C     HJAaJ: skip eval. of neighbour points with same RHO
       NSKIP1 = 0
       NSKIP2 = 0
 
-C     Make quadname: Can take 9999 procs
-
-      IF (MYNUM .EQ. 0) THEN
+      IF (MYNUM .EQ. MASTER) THEN ! this is not a parallel run
          QUADNAME = 'DALTON.QUAD'
-      ELSE
-         QUADNAME = 'DALTON.QUAD.n'//chrnos(mynum/1000)
-     &     //chrnos((mynum-(mynum/1000)*1000)/100)
-     &     //chrnos((mynum-(mynum/100)*100)/10)
-     &     //chrnos(mynum-(mynum/10)*10)
-      END IF
-
-      LUQUAD = -1
-      CALL GPOPEN(LUQUAD,QUADNAME,'OLD','SEQUENTIAL',
-     &     'UNFORMATTED',IDUMMY,LDUMMY)
-
-      IF (MYNUM .EQ. 0) THEN
+         open(newunit=LUQUAD,file=QUADNAME,status='OLD',
+     &      access='SEQUENTIAL',form='UNFORMATTED')
+         CALL GET_srDFTGRID_XYZW_old(XYZW,LUQUAD,NBUF)
+         close(LUQUAD)
          my_first_point = 1
          my_last_point  = NTOT_DFTGRID
-      ELSE
+      ELSE ! recieve grid points from master
+#ifdef VAR_MPI
+         CALL MPI_BCAST(XYZW,4*NTOT_DFTGRID,MPI_DOUBLE_PRECISION,
+     &     MASTER,MPI_COMM_WORLD,ierr_mpi)
+#endif
          NPNTS_PER_NODE = (NTOT_DFTGRID-1)/NODTOT + 1
          my_first_point = NPNTS_PER_NODE*(MYNUM-1) + 1
          my_last_point  = MIN(NPNTS_PER_NODE*MYNUM, NTOT_DFTGRID)
@@ -1055,24 +1061,16 @@ C     Make quadname: Can take 9999 procs
      &       MYNUM,NPNTS_PER_NODE,my_first_point,my_last_point
       END IF
       NPNTS = 0
-  200 CONTINUE
-      READ(LUQUAD) NPOINT
-CDBG  kpoint = npoint/10
+CDBG  kpoint = ntot_dftgrid/10
 
-      IF (NPOINT.GT.0) THEN
-         NPNT1 = NPNTS + 1       ! first integration point from this record
-         NPNTS = NPNTS + NPOINT  ! last  integration point from this record
-         IPNT_ST  = max(NPNT1,my_first_point) + 1 - NPNT1
-         IPNT_END = min(NPNTS,my_last_point) + 1 - NPNT1
-         if (iprint .gt. 5) write(lupri,*)
-     &      'MYNUM,IPNT_ST,IPNT_END', MYNUM,IPNT_ST,IPNT_END
-         IF (IPNT_ST .GT. IPNT_END) THEN
-            READ (LUQUAD) ! skip this record
-            GO TO 200
-         END IF
-         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
-C   Loop over grid points -----------------------------------------------
-         DO 300 IPNT = IPNT_ST, IPNT_END
+      IF (ntot_dftgrid.LE.0) THEN
+         CALL QUIT('ERROR: not DFT integration points found')
+      END IF
+
+C   ***************************
+C   * Loop over grid points     -----------------------------------------------
+C   ***************************
+         DO IPNT = my_first_point, my_last_point
             IF (IPRINT .GT. 100) THEN
 C              Print grid information
                WRITE (LUPRI,'(I8,4F12.6)')
@@ -1088,7 +1086,7 @@ C           ===
             COR(1) = CORX(IPNT)
             COR(2) = CORY(IPNT)
             COR(3) = CORZ(IPNT)
-            CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
+            CALL GETSOS(GSO,COR,WORK,LWORK,
      &                  NBAST,DOLND,LDOGGA,THRINT,IPRINT)
 C           =============================
 C           Density
@@ -1284,15 +1282,8 @@ C                    matrix 2 is DXTAO
                END IF
             ENDIF
 
-  300    CONTINUE
-C End of loop over points ------------------------------------------------
-C
-         GO TO 200
-      ELSE IF (NPOINT .EQ.0 ) THEN
-         GO TO 200
-      END IF
-
- 1000 CALL GPCLOSE(LUQUAD,'KEEP')
+         END DO !IPNT = my_first_point, my_last_point
+C End of loop over grid points ------------------------------------------------
 
       RESULTS(1) = ELCTRN
       RESULTS(2) = ELCTRSKIP
@@ -1356,7 +1347,7 @@ C     -------------------------------------------------------
       IF (DOSRX_GGA) THEN
           CALL VXSRGGA(XKSR,RHO,RHO13,RHOGRD,RHOLAP,RHOGHG,
      &                 CHIVAL,ERFEXP)
-      END IF 
+      END IF
 
       IF (DOLAX_GGABCK) THEN
           CALL VLAXBEK(XKSR,RHO,RHO13,RHOGRD,RHOLAP,RHOGHG,
@@ -1439,7 +1430,7 @@ C  NON-SCALED
           CALL VNCLALYP(ZKSR,RHO,RHO13,RHOGRD,RHOLAP,VLAMBDA)
       END IF
 
-C SCALED 
+C SCALED
 
       IF (DOLASC_GGALYP) THEN
           CALL VSCLALYP(ZKSR,RHO,RHO13,RHOGRD,RHOLAP,VLAMBDA)
@@ -1450,7 +1441,7 @@ C SCALED
           CALL VLYP(ZKSR(2,1),RHO,RHO13,RHOGRD,RHOLAP)
           IF (IWINT.EQ.1) THEN
              CALL VCSRLDA(ZMU,RHO,RHO13,CHIVAL,DOSRC_MULOCAL,1,ERFEXP)
-  
+
              CALL WVWN(VLDA,RHO,RHO13,ELDA,.TRUE.,.TRUE.)
              ZKSR(1,1) = ZKSR(1,1) - ELDA*RHO
              ZKSR(2,1) = ZKSR(2,1) - VLDA
@@ -1483,284 +1474,9 @@ C SCALED
           ZKSR(1,2) = EL
           ZKSR(2,2) = VL
       ENDIF
-      
+
       RETURN
       END
-
-
-#ifdef JKP_DEBUG
-C*****************************************************************************
-      SUBROUTINE MCRHO(CMO,INDXCI,WORK,LWORK,IPRINT)
-C*****************************************************************************
-C
-C     Written by Jesper Kielberg Pedersen, Jan. 2003
-C
-C     Purpose : Generate active density from multiconfigurationel
-C               wavefunction on a grid.
-C
-C*****************************************************************************
-#include "implicit.h"
-#include "priunit.h"
-#include "maxorb.h"
-#include "inforb.h"
-#include "infvar.h"
-#include "dftinf.h"
-#include "dftcom.h"
-
-      LOGICAL DOGGA,DOBCK,DOLYP,DOLND,DO_MOLGRAD,DODCAO
-      DIMENSION CMO(*),WORK(LWORK)
-C
-      CALL TIMER('START ',TIMSTR,TIMEND)
-C     =================================
-C     Initializations :
-C     Number of AOs and their addresses
-C     =================================
-      DOLND = .FALSE.
-      DOBCK = .FALSE.
-      DOLYP = .FALSE.
-      DO_MOLGRAD = .FALSE.
-      DOGGA = DOBCK .OR. DOLYP
-      
-      NDER  = 0
-      IF (DO_MOLGRAD) NDER = 1
-      IF (DOGGA) THEN
-         NDER = NDER + 1
-         IF (DFTPOT) NDER = NDER + 1
-      END IF
-
-      IF (NDER.EQ.0) NTYPSO =  1
-      IF (NDER.EQ.1) NTYPSO =  4
-      IF (NDER.EQ.2) NTYPSO = 10
-      NSO0 = 1
-      NSO1 = 2
-      NSO2 = 5
-      IF (DOLND) THEN
-         NTYPSO = NTYPSO + 3
-         NSOB   = NTYPSO - 2
-         IF (DOGGA) THEN
-            NTYPSO = NTYPSO + 9
-            NSOB1  = NTYPSO - 8
-         END IF
-      END IF
-      KSO0 = (NSO0-1)*NBAST + 1
-      KSO1 = (NSO1-1)*NBAST + 1
-      KSO2 = (NSO2-1)*NBAST + 1
-      KSOB = (NSOB-1)*NBAST + 1
-      KSOB1= (NSOB1-1)*NBAST + 1
-C     =============================
-C     Allocations
-C     =============================
-      DODCAO = (NISHT.GT.0)
-      NBUF   = 1000000
-      KCREF  = 1
-      KX     = KCREF + NCONF
-      KY     = KX    + NBUF
-      KZ     = KY    + NBUF
-      KW     = KZ    + NBUF
-      KGSO   = KW    + NBUF
-      KCNT   = KGSO  + NTYPSO*NBAST
-      KDGA   = KCNT  + NBAST
-      KDV    = KDGA  + NBAST
-      KDVAO  = KDV   + NNASHX
-      KDCAO  = KDVAO + N2BASX
-      IF (DODCAO) THEN
-          KWRK  = KDCAO  + N2BASX
-      ELSE
-          KWRK  = KDCAO
-      ENDIF
-      LWRK  = LWORK + 1 - KWRK
-      CALL MCRHO1(CMO,WORK(KDV),DOLND,WORK(KX),WORK(KY),
-     &            WORK(KZ),WORK(KW),NBUF,WORK(KGSO),WORK(KCNT),
-     &            WORK(KDGA),DOGGA,WORK(KCREF),INDXCI,DODCAO,
-     &            WORK(KDCAO),WORK(KDVAO),WORK(KWRK),LWRK,IPRINT)
-
-      CALL TIMER('MCRHO',TIMSTR,TIMEND)
-      RETURN
-      END
-
-
-C*****************************************************************************
-      SUBROUTINE MCRHO1(CMO,DV,DOLND,CORX,CORY,CORZ,WEIGHT,NBUF,GSO,
-     &                  NCNT,DMATGAO,DOGGA,CREF,INDXCI,DODCAO,DCAO,DVAO,
-     &                  WORK,LWORK,IPRINT)
-C*****************************************************************************
-C
-C     Written by Jesper Kielberg Pedersen, Jan. 2003
-C
-C     Purpose : Generate density from multiconfigurationel
-C               wavefunction on a grid.
-C
-C*****************************************************************************
-#include "implicit.h"
-#include "priunit.h"
-#include "mxcent.h"
-#include "pi.h"
-#include "dummy.h"
-      PARAMETER (D0 = 0.0D0, DP5 = 0.5D0)
-#include "maxorb.h"
-#include "infinp.h"
-#include "inforb.h"
-#include "infvar.h"
-#include "inftap.h"
-#include "infpar.h"
-#include "nuclei.h"
-#include "dftinf.h"
-#include "dftcom.h"
-      LOGICAL   DOLND,DOGGA,DODCAO
-      DIMENSION CMO(*),DV(NNASHX),CORX(NBUF),CORY(NBUF),
-     &          CORZ(NBUF),WEIGHT(NBUF),GSO(NBAST*NTYPSO),
-     &          NCNT(NBAST),DMATGAO(NBAST),CREF(NCONF),
-     &          DCAO(NBAST,NBAST),DVAO(NBAST,NBAST),WORK(LWORK), COR(3)
-      CHARACTER*17 QUADNAME
-#include "chrnos.h"
-
-C     =============================
-C     Open file for dumping density
-C     =============================
-      CALL GPOPEN(LUDDUMP,'DENSITY.GRID','UNKNOWN',
-     &                ' ','FORMATTED',IDUMMY,.FALSE.)
-
-C     =============================
-C     Retrieve CREF
-C     =============================
-C
-      REWIND LUIT1
-      CALL MOLLAB('STARTVEC ',LUIT1,LUERR)
-      DO 100 I = 1, (ISTACI-1)
-         READ (LUIT1)
-  100 CONTINUE
-      CALL READT(LUIT1,NCONF,CREF)
-
-C     =============================
-C     Calculate DV
-C     =============================
-C
-      CALL MAKDV(CREF,DV,INDXCI,WORK,LWORK)
-
-C     =============================
-C     Calculate inactive and active
-C     density matrises in AO-basis
-C     =============================
-C
-      CALL FCKDEN(DODCAO,.TRUE.,DCAO,DVAO,CMO,DV,WORK,LWORK)
-C
-C     =============================
-C     Calculate grid
-C     =============================
-
-      IF (.NOT.DFTGRID_DONE_OLD) THEN
-         CALL MAKE_DFTGRID(WORK,LWORK,NTOT_DFTGRID,1,.FALSE.)
-         CALL CONDFT
-         DFTGRID_DONE_OLD = .TRUE.
-      END IF
-
-      CELCTRN = D0
-      VELCTRN = D0
-
-      LUQUAD = -1
-
-C     Make quadname: Can take 10000 procs
-
-      IF (MYNUM .GT. 0) THEN
-         QUADNAME = 'DALTON.QUAD.n'//chrnos(mynum/1000)
-     &     //chrnos((mynum-(mynum/1000)*1000)/100)
-     &     //chrnos((mynum-(mynum/100)*100)/10)
-     &     //chrnos(mynum-(mynum/10)*10)
-C
-         CALL GPOPEN(LUQUAD,QUADNAME,'OLD','SEQUENTIAL',
-     &     'UNFORMATTED',IDUMMY,LDUMMY)
-      ELSE
-         CALL GPOPEN(LUQUAD,'DALTON.QUAD','OLD','SEQUENTIAL',
-     &     'UNFORMATTED',IDUMMY,.FALSE.)
-      END IF
-
-      NPNTS = 0
-  200 CONTINUE
-      READ(LUQUAD) NPOINT
-      IF (NPOINT.GT.0) THEN
-         NPNTS = NPNTS + NPOINT
-         CALL REAQUA_srdft(CORX,CORY,CORZ,WEIGHT,LUQUAD,NPOINT)
-#if defined (VAR_SRDFT_MPI)
-         DO 300 IPNT = 1+MYNUM, NPOINT, NODTOT+1
-#else
-         DO 300 IPNT = 1, NPOINT
-#endif
-            IF (IPRINT .GT. 100) THEN
-               WRITE (LUPRI,'(2X,I6,4F12.6)')
-     &            IPNT,CORX(IPNT),CORY(IPNT),CORZ(IPNT),WEIGHT(IPNT)
-            END IF
-
-            WGHT = WEIGHT(IPNT)
-
-C           AOs
-C           ===
-
-            THRINT = DFTHRI/WGHT
-            COR(1) = CORX(IPNT)
-            COR(2) = CORY(IPNT)
-            COR(3) = CORZ(IPNT)
-            CALL GETSOS(GSO,NCNT,COR,WORK,LWORK,
-     &                  NBAST,DOLND,DOGGA,THRINT,IPRINT)
-
-C           Density & Number of electrons
-C           =============================
-
-C           ... inactive part
-            IF (DODCAO) THEN
-               CALL GETRHO_srdft(DCAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
-               CELCTRN = CELCTRN + WGHT*RHO
-            ENDIF
-C           ... active part
-            CALL GETRHO_srdft(DVAO,GSO,RHO,DMATGAO,THRINT,IPRINT)
-            VELCTRN = VELCTRN + WGHT*RHO
-
-C           Dump active density to file
-C           =============================
-
-            WRITE(LUDDUMP,'(4F25.13)') CORX(IPNT),CORY(IPNT),
-     &           CORZ(IPNT),RHO
-
-  300    CONTINUE
-
-         GO TO 200
-      ELSE IF (NPOINT .EQ.0 ) THEN
-         GO TO 200
-      END IF
-
-      CALL GPCLOSE(LUQUAD,'KEEP')
-
-C     Test on the number of electrons
-
-      ELCTRX = FLOAT(2*NRHFT)
-      ELCTRN = CELCTRN + VELCTRN
-      ERROR  = ELCTRN - ELCTRX
-
-C     Print section
-
-      WRITE (LUPRI,'(3(/2X,A,F14.6))')
-     &' Nr. of inactive electrons from numerical integration :',CELCTRN,
-     &' Nr. of active electrons from numerical integration   :',VELCTRN,
-     &' Total nr. of electrons from numerical integration    :',ELCTRN
-      WRITE (LUPRI,'(2(/2X,A,F14.6))')
-     &' Number of electrons from orbial occupations          :',ELCTRX,
-     &' Error in the number of electrons                     :',ERROR
-      IF (ABS(ERROR) .GT. DFTELS) THEN
-         WRITE (LUPRI,'(/2X,A,F14.6,/2X,A)')
-     &' Error larger than DFTELS (set input)                 :',DFTELS,
-     &   ' Calculation aborted.'
-         CALL QUIT
-     &    ('Wrong number of electrons in DFTDRV. Calculation aborted.')
-      END IF
-
-      IF (IPRINT .GT. 5) THEN
-         WRITE (LUPRI,'(/2X,A,F14.7,6X,D8.2,I14)')
-     &      ' Number of electrons/abscissas:  ',
-     &        ELCTRN,ELCTRN-ELCTRX,NPNTS
-      END IF
-      RETURN
-      END
-#endif  /* JKP_DEBUG */
-
 
 C*****************************************************************************
       SUBROUTINE SRDFTLTR(KSYMOP,DTRMAT,EXCMAT,WGHT,GAO,GAO1,CHIVAL,
@@ -2114,16 +1830,16 @@ C
 C     EJCSR =  0.5 * Tr (D^c . J^sr . D^c)
 C     EJVSR = -0.5 * Tr (D^{v,ref} . J^sr . D^{v,ref})
 C     EDSR  = -1.0 * Tr (V^{sr,ref}_{xc} . D^{v,ref})
-C     ESRDFT  = E^{sr}_{xc} [D^c+D^{v,ref}] 
+C     ESRDFT  = E^{sr}_{xc} [D^c+D^{v,ref}]
 C
-C     23-Aug-2012 modified by Manu 
-C   
+C     23-Aug-2012 modified by Manu
+C
 C     * added a new argument, EMYDFTAUX, that contains the inactive
 C       short-range contributions to auxiliary energy:
 C
 C       EMYDFTAUX = 1.0 * Tr (D^c . J^sr . D^c)
 C                  +1.0 * Tr (D^{v,ref} . J^sr . D^c)
-C                  +1.0 * Tr (V^{sr,ref}_{xc} . D^c) 
+C                  +1.0 * Tr (V^{sr,ref}_{xc} . D^c)
 C       UEJCVSR   = 1.0 * Tr (D^{v,updated} . J^sr . D^c)
 C
 C     * Note that for ensemble CI-srDFT, D^{v,ref} should be, here, equal to the
@@ -2193,11 +1909,11 @@ C        only Coulomb (Hartree) term
       EJCSR   =  DP5*DDOT(N2BASX,WRK(KDCAO),1,WRK(KFCAO),1)
       EJVSR   = -DP5*DDOT(N2BASX,WRK(KDVAO),1,WRK(KFVAO),1)
       UEJCVSR =      DDOT(N2BASX,WRK(KDCAO),1,WRK(KFVAO),1)
-     
+
 C Manu: compute first and second terms in EMYDFTAUX
 
-      EMYDFTAUX = 2.0D0*EJCSR 
-      EMYDFTAUX = EMYDFTAUX 
+      EMYDFTAUX = 2.0D0*EJCSR
+      EMYDFTAUX = EMYDFTAUX
      &         +DDOT(N2BASX,WRK(KDCAO),1,WRK(KFVAO),1)
 
       IF (IPRINT.GT.9) THEN
@@ -2292,7 +2008,7 @@ C*****************************************************************************
 C
 C     !> brief: calculate various terms needed to make a variational ensemble energy
 C     !> author: S. Knecht and E. Fromager based on the routine by J. K. Pedersen
-C     
+C
 C     EJCSR =  0.5 * Tr (D^c . J^sr . D^c)
 C     EJVSR = -0.5 * Tr (D^{v,ref} . J^sr . D^{v,ref})
 C     EDSR  = -1.0 * Tr (V^{sr,ref}_{xc} . D^{v,ref})
@@ -2301,7 +2017,7 @@ C     uEDFT(2:3) = exchange and correlation contributions, respectively
 C
 C     !> input: ensemble density matrices D^{v,ref}, D^{v,upd} and D^{v,diff} = D^{v,upd}-D^{v,ref}
 C*****************************************************************************
- 
+
 #include "implicit.h"
       REAL*8    FMAT(*),CMO(*),UDVREF(*),DVREF(*),DIFFDVREF(*),WRK(*)
       REAL*8    uEDFT(3)

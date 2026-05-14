@@ -73,7 +73,7 @@ c     compute contributions.
                DO IY=1,3
                   IDL = 3*(IL-1)+IY
 c                 VERIFY ME: IY should go with IL but it does not
-c                 if one wants to generate same numbers as the 
+c                 if one wants to generate same numbers as the
 c                 analytical version.
                   IF(IX.NE.IY) THEN
                      DO K = 1, NBLLEN
@@ -114,8 +114,8 @@ c      CALL OUTPUT(SPNDSO,1,NUCIND*3,1,NUCIND*3,MXCOOR,MXCOOR,1,2)
       END
 #ifdef VAR_MPI
       SUBROUTINE dsosyncslaves(dmat,nind,work,lwork)
+      use dalton_mpi_interface
 #include "implicit.h"
-#include "mpif.h"
 #include "codata.h"
 #include "mxcent.h"
 #include "maxorb.h"

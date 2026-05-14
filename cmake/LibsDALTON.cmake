@@ -48,7 +48,8 @@ endif()
 
 include(LibsPElib)
 
-include(LibsQFITlib)
+# qfitlib is now included directly in Dalton /14.Feb.2025, hjaaj
+# include(LibsQFITlib)
 
 if(NOT ENABLE_CHEMSHELL)
     add_executable(

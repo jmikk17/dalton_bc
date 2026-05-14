@@ -356,6 +356,7 @@ C-841209-hj: force beta positive
      *    BETMIN .GT. BETMAX) BETMIN = D1
       IF (BETMAX .LT. D1)     BETMAX = D1
 C
+      RTRUST_save = RTRUST
 C
       IF (IPRI6 .GT. 0) THEN
          CALL GETTIM(T_1,W_1)
@@ -565,7 +566,7 @@ C
       END IF
 C
 C----------------
-      EMCSCF = POTNUC + EMY + EACTIV + ESOLT + EQM3
+      EMCSCF = POTNUC + EMY + EACTIV + ESOLT + EQM3 + ESRDFTY + EDFTY
 C----------------
 C
       IF (ITABS .GT. 0) THEN
@@ -577,18 +578,13 @@ C
          IF (LUPRI.NE.LUW4)
      &   WRITE (LUPRI,1010) WF_TYPE(1:len_WF_TYPE),EMCSCF,ITMAC
       END IF
-      IF (DOHFSRDFT.OR.DOMCSRDFT) THEN
-         EMYTMP = EMY - ESRDFTY
-      ELSE
-         EMYTMP = EMY
-      ENDIF
       IF (P4FLAG(2)) THEN
-         WRITE (LUW4,1015) POTNUC,EMYTMP,EACTIV
+         WRITE (LUW4,1015) POTNUC,EMY,EACTIV
          IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUW4,1018) ESRDFTY
       END IF
 chj   IF (P6FLAG(1)) THEN
          IF (LUPRI.NE.LUW4 .OR. .NOT.P4FLAG(2)) THEN
-            WRITE (LUPRI,1015) POTNUC,EMYTMP,EACTIV
+            WRITE (LUPRI,1015) POTNUC,EMY,EACTIV
             IF (DOHFSRDFT.OR.DOMCSRDFT) WRITE(LUPRI,1018) ESRDFTY
          END IF
 chj   END IF
@@ -1293,6 +1289,9 @@ C
 C write timing information for optimization to LUSTAT
 C
       IF (IPRSTAT.GT.0) CALL TIMOPT('END',LUSTAT,WRK,LFREE)
+C     restore RTRUST to original value for next 2. order optimization
+C     (e.g. MCSCF after QCHF or geometry optimization)
+      RTRUST = RTRUST_save
 C *** end of subroutine SIROPT
       CALL QEXIT('SIROPT')
       RETURN
@@ -1671,6 +1670,7 @@ C
          ICSTRT   = MOD(ICSTRT,100)
       ELSE
          TRCNO  = .FALSE.
+         CNOLBL = '      '
       END IF
 C
 C *** ICSTRT < 0 ***
@@ -1765,7 +1765,7 @@ C
          IF (LW22 .LT. 0) CALL ERRWRK('OPTST.CICTL',-KW22,LFREE)
 C
 C      A  single configuration will already have natural orbitals
-         IF (MAXCIT .LE. 0) THEN
+         IF (MAXCIT .EQ. 0) THEN
             IF (CNOLBL .EQ. 'ONLYNO') THEN
                TRCNO  = .FALSE.
             ELSE IF (CNOLBL .NE. 'TRTOFC') THEN
@@ -2050,7 +2050,7 @@ C
 C
  9000 CONTINUE
       REWIND LUIT1
-      IF ( .NOT.FNDLAB(TABLE(6),LUIT1) ) THEN
+      IF ( .NOT.FNDLAB(TABLE(6),LUIT1) ) THEN ! NEWORB
          CALL READMO(WRK,7)
          CALL NEWORB(LBLDAT(2),WRK,.FALSE.)
       END IF
@@ -2155,7 +2155,7 @@ C        write the natural orbitals to LUIT1 label NEWORB
          END IF
          IF (.NOT.FLAG(34)) FLAG(14) = .FALSE.
 C        if (int.transf. needed in optimization)
-      END IF
+      END IF ! (TRCNO)
 C
 C *** Append label EODATA, if not already there
 C
@@ -2285,7 +2285,7 @@ C
          ISTEP = -1
       END IF
  1100 FORMAT (/' (SIRSTP) Energy difference;',
-     *        /' actual, predicted and ratio:',2F20.15,F12.6)
+     *         ' actual, predicted and ratio:',2F20.15,F12.6)
  1110 FORMAT (/' (SIRSTP) Close to convergence, ratio set to one.',
      *        /' Energy difference; actual and predicted:',1P,2D15.5)
 C
@@ -2873,7 +2873,7 @@ C
       k_ekt_ev = kend-1 + j_ekt_ev
       k_ekt_ez = kend-1 + j_ekt_ez
 
-      CALL SIREKT(wrk(kfock),dv,wrk(k_ekt_EV),wrk(k_ekt_EZ),ipri6)
+      CALL SIREKT(wrk(kfock),dv,wrk(k_ekt_EV),wrk(k_ekt_EZ),iprsir)
       !    SIREKT(V, S, EV, EZ, IPRINT)
 
       call memrel('after SIREKT',wrk(kend),1,1,kfree,lfree)
@@ -3373,11 +3373,11 @@ C
 !         2 - Alpha is complex and beta is zero
 !
 !
-! Author:    Martin Johannes Rønnekjær Jensen
+! Author:    Martin Johannes R. Jensen
 !            University of Southern Denmark
 !            Version = 18/12/20
 !
-! Project:  Calculation of ionization energy using Extended Koopmans’ Theorem (EKT)
+! Project:  Calculation of ionization energy using Extended Koopmans' Theorem (EKT)
 
 ! 20dec2020: Hans Joergen Aagaard: integrated in Sirius,added ekt_type descriptor,
 !            Dyson vectors, pole strengths, sorting of principals IPx,
@@ -3418,13 +3418,13 @@ C
       INTEGER, PARAMETER :: K_STEP = 5
       INTEGER :: I_ASYM, J_ASYM
       INTEGER :: V_INDEX, S_INDEX, E_INDEX, Z_INDEX
-      INTEGER :: NORBI  ! debug defs.
-      LOGICAL :: TEST
+      LOGICAL :: dyson_print
       CHARACTER*15 :: EKT_TYPE
 
       CALL QENTER('SIREKT')
 
       IPRINT  = max( SIROPT_DEBUG ,IPRINT_in)
+      dyson_print = iprint .ge. 2 .or. nocct .le. 10
 
       IF (NASHT .EQ. 0) THEN
          IF (DODFT) THEN
@@ -3462,6 +3462,10 @@ C
       IF (NASHT.GT.0) THEN
          CALL TITLER( EKT_TYPE(1:l_wt)//
      &  ' IPs [a.u. & eV], pole strengths, and Dyson orbitals ',' ',204)
+         if (.not.dyson_print) then
+            write(lupri,'(a/)') ' Info: increase wave function '//
+     &         'print level to 2 to print Dyson coefficients.'
+         end if
       ELSE ! SCF
          CALL TITLER( EKT_TYPE(1:l_wt)//
      &  " IPs [a.u. & eV] from Koopmans' theorem",' ',204)
@@ -3585,8 +3589,8 @@ C
      &            'Error: EKT diagonalization failed IERR: ', IERR
 
             ! Unnormalized Dyson orbitals g(i,k) for IP # k:
-            !    g(i,k) = sum(j) c∗(j,k)) gamma(j,i)
-            !           = sum(j) gamma(i,j) c(j,k) ! "c" real and "gamma" symmetric
+            !    g(i,k) = sum(j) gamma(i,j) c(j,k)
+            ! "c" real and "gamma" symmetric
 
             ! Unnormalized Dyson orbitals in UV: UV(i,k) = 0.5 sum(j) US_COPY(i,j) UZ(j,k)
             !    ( factor 0.5 because density matrix is normalized for 2 electrons)
@@ -3727,12 +3731,14 @@ C
             ! print Dyson orbital coefficients
             IF (NASHT .GT. 0) THEN ! do not print the trivial Dyson coefficients for SCF
                DO I = 1, MATRIX_SIZE
-                  WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
+                  if (dyson_print)
+     &               WRITE(lupri,'(1X,10F14.6)') UZ(I,K:K_END)
                   DO J = K, K_END
                      EZ(Z_INDEX+(J-1)*MATRIX_SIZE+I) = UZ(I,J)
                   END DO
                END DO ! I
-               WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
+               if (dyson_print)
+     &            WRITE(lupri,'(1X,10A)') ('  ============',i=k,k_end)
             END IF
 
             END DO ! K = 1, MATRIX_SIZE, K_STEP

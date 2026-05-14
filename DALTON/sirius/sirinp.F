@@ -251,17 +251,11 @@ C     Several common block are restored
 C     (MUST be called before NEWSYM reset to false)
 C
          CALL SRESTR
-         IF (RNRESP .OR. RNABAC) THEN
-C           ... write SIRIFC and calculate WOP of all symmetries
-C               for RESPONS and/or ABACUS
-            FLAG(25) = .TRUE.
-            FLAG(11) = .TRUE.
-         END IF
-         IF (WESTA) THEN
-C           ... write SIRIFC and CI info for WESTA program
-            FLAG(25) = .TRUE.
-            FLAG(26) = .TRUE.
-         END IF
+
+         FLAG(25) = .TRUE. ! always write SIRIFC in this version
+
+         IF (WESTA) FLAG(26) = .TRUE.
+C        ... write CI string info for WESTA program
 C
 C     We obviously have MO's from previous iteration
 C     (.MOSTART NEWORB because abawlk.F(WLKSAV) saves
@@ -456,9 +450,10 @@ C
 C********** Default values section MP2INP *****
 C
       MP2_LSHIFT      = D0
-      MP2_SCALEFAC(1) =  D2 ! scale factor on (ij|ab)
-      MP2_SCALEFAC(2) = -D1 ! scale factor on <ij|ab> = (ia|jb)
+      MP2_SCALEFAC(1) =  D2 ! scale factor on (ia|jb)**2
+      MP2_SCALEFAC(2) = -D1 ! scale factor on (ia|jb)*(ib|ja)
       LAMSR           = D0
+      THRP_MP2        = -1.0d0 ! accuracy of 2-el MO integrals
       MP2_SCALED   = .FALSE.
       MP2_SCS      = .FALSE.
       MP2_SOS      = .FALSE.
@@ -544,7 +539,6 @@ C MAXRC : Max dimension of reduced CI matrix
 C     ... do not converge to a specific state.
       NROOCI = 1
       MXCIMA = 25
-      ICICNO = 0
 C
 C********** Default values section SCFINP *****
 C           and common scbrhf.h
@@ -734,7 +728,7 @@ C     LUW*     Output units for print output (now defined in SIRSET)
       IPRRHF = IPRUSR - 1
       IPRMP2 = IPRUSR + 4
       IPRSOL = IPRUSR + 4
-      IPRCNO = IPRUSR + 1
+      IPRCNO = IPRUSR
       IPRFCK = IPRUSR
       CMOPRI = .FALSE.
 C     set limit for POPPRI in each DIIS/QCHF/MCSCF iter to 30 nuclei
@@ -801,19 +795,9 @@ c        NINFO = NINFO + 1
 c        WRITE (LUPRI,'(/A)') ' INFO: SUPSYM disabled'//
 c    &      ' because SUPSYM not implemented in MP2 and CC'
 c     END IF
-      IF (DOCCSD) THEN
-         FLAG(11) = .TRUE.
-         IF (DOSCF) FLAG(25) = .TRUE.
-      END IF
-      IF (RNRESP .OR. RNABAC) THEN
-         FLAG(25) = .TRUE.
-         FLAG(11) = .TRUE.
-      END IF
-      IF (WESTA) THEN
-C        ... write SIRIFC and CI info for WESTA program
-         FLAG(25) = .TRUE.
-         FLAG(26) = .TRUE.
-      END IF
+      FLAG(25) = .TRUE. ! always write SIRIFC in this version
+      IF (WESTA) FLAG(26) = .TRUE.
+C     ... write CI string info for WESTA program
       IF (BOYORB .OR. PIPORB .OR. BOYSEL) THEN
          IF (SUPSYM) THEN
             WRITE(LUPRI,'(/A)')
@@ -831,8 +815,6 @@ C        ... write SIRIFC and CI info for WESTA program
 C...     the orbital gradient may be non-zero without SUPSYM
 C        and the WF is then not variational in abacus
       END IF
-      IF (FLAG(21)) FLAG(2) = .TRUE.
-C     ... qc-scf needs flag(2) for file opening
       IF (SUPSYM .AND. NWOPT.GT.0) THEN
          SUPSYM = .FALSE.
          NWARN = NWARN + 1
@@ -1214,7 +1196,7 @@ C    *               ISTATE,ISPIN,NACTEL,LSYM,MS2
              IF (INIOCC .EQ. 0 .AND. MACTEL .LE. 1) THEN
 C              ... 081205 hjaaj: not for INIOCC .lt. 0, because we
 C                  may restart with old orbitals, but new charge.
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,64),
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,64),
      &            NRHF,(IDUM,I=1,24),NORB,MBAS
                IF (MACTEL .EQ. 1) THEN
                   IOPRHF = LXSYM
@@ -1223,7 +1205,7 @@ C                  may restart with old orbitals, but new charge.
                END IF
                INIOCC = 3
              ELSE
-               READ (LUSIFC) (IDUM,I=1,13),MSYM,(IDUM,I=1,96),NORB,MBAS
+               READ (LUSIFC) (IDUM,I=1,14),MSYM,(IDUM,I=1,96),NORB,MBAS
 C              READ (LUSIFC) NISHT,NASHT,NOCCT,NORBT,NBAST,NCONF,NWOPT,
 C    *               NWOPH,NCMOT,NNASHX,NNASHY,NNORBT,N2ORBT,
 C    *               NSYM,MULD2H, NRHF,NFRO,
@@ -1691,9 +1673,6 @@ C
       IF (QMMM .AND. DOCI) THEN
          CALL QUIT('QMMM is currently not compatible with .CI')
       END IF
-      IF (USE_PELIB() .AND. DOCI) THEN
-         CALL QUIT('.PELIB is currently not compatible with .CI')
-      END IF
       EMBEDDING = FLAG(16) .or. PCM .or. QM3 .or. QMMM .OR. QMNPMM
      &            .OR. USE_PELIB()
 C
@@ -1762,14 +1741,6 @@ C
      *       /' (Only inactive orbitals can be frozen with ".FROZEN",',
      *        ' use ".FREEZE" instead)')
 C
-C Population analysis (flag(6)) requires natural/canonical orbitals
-C
-      IF (FLAG(6)) THEN
-         RHFCAN = .TRUE.
-         ICICNO = 1
-         IMCCNO = 1
-      END IF
-C
 C If (SOLVNT) check epsilon, cavity radius, and lmax
 C
       IF (FLAG(16)) THEN
@@ -1818,8 +1789,8 @@ C
          IF (NERROR.GT.0) CALL ERRINP(12,INPERR)
       END IF
 C
-      IF (FLAG(2) .AND. .NOT. FLAG(4)) THEN
-C        ... if not ci calculation then
+      IF (FLAG(2)) THEN
+C        ... if MCSCF
          IF (NROOTS.LT.1.OR.NROOTS.GT.MAXRTS)
      *                                CALL ERRINP(13,INPERR)
          DO 36 I=1,NROOTS
@@ -2010,7 +1981,7 @@ C 32 SIRINP  NEG: Gram-Schmidt; POS: sym. orbital orthog.  ORB ORTHGR..
 C 33 SIRINP  Delete orbitals based on AO overlap matrix    ORB : AODEL
 C 34 intern. MO integrals not needed in MCSCF optimization
 C 35 SIRSTP  tight step control for ground state also      STP : TIGHT
-C 36 SIRNEO  Dont use additional termination tests.        STP : NO TER
+C 36 SIRNEO  Dont use additional termination tests.        STP : NO EXT
 C 37 SIROPT  Dont switch to Broydn update in local region. UPD : genera
 C 38 SIROPT  Dont switch from NEO to NR in local region.   OPT : NEO AL
 C 39 SIROPT  Only NR local optimization, no NEO steps.     OPT : NR ALW
@@ -2170,7 +2141,7 @@ C *AUXILIARY (and misspelled *AUXILLIARY for backwards compatibility)
      &       'CC_INPUT ERROR: NSYM from SIRIFC .ne. NSYM in this run')
        END IF
        GOTO 910
- 2900  CALL DFTINP(WORD,INPERR,ALLOPT)
+ 2900  CALL DFTINP(WORD,ALLOPT)
        GO TO 910
  3000  CALL NEVPT2INP(WORD,INPERR,ALLOPT)
        GO TO 910
@@ -2247,7 +2218,7 @@ C
 C 1-Oct 1987 Hans Agren
 C
 #include "implicit.h"
-      PARAMETER (NTABLE = 42)
+      PARAMETER (NTABLE = 43)
       CHARACTER WORD*7, WORD1*7, PROMPT*1, TABLE(NTABLE)*7,
      &          REWORD*20, TITLIN*80, SR_FUNCS*80
       LOGICAL ALLOPT
@@ -2262,6 +2233,7 @@ C  INFORB : NSYM
 C  INFPRI : P6FLAG,
 C  INFTAP : LUSUPM
 C  GNRINF : DOCCSD,
+C  infinp.h : options for .MP2special
 C  CBIHER : SUPMAT,
 C
 #include "maxorb.h"
@@ -2271,6 +2243,7 @@ C
 #include "infpri.h"
 #include "inftap.h"
 #include "gnrinf.h"
+#include "infmp2.h"
 #include "inftra.h"
 #include "dftcom.h"
 #include "stex.h"
@@ -2286,7 +2259,7 @@ C
      *            '.CISRDF','.HFSRDF','.MCSRDF','.SRLDA ','.SRFUN ',  ! 26:30
      *            '.SRHYBR','.COPFAC','.STEX  ','.APSG  ','.VIRTRU',  ! 31:35
      *            '.MULOFA','.DSFAC ','.PVALUE','.HFXFAC','.ERF   ',  ! 36:40
-     *            '.MP2SRD','.MINCHA'/                                ! 41:42
+     *            '.MP2SRD','.MINCHA','.MP2SPE'/                      ! 41:43
 C
       functional_line_read = .false.
 C
@@ -2308,7 +2281,7 @@ C
      &                   111,112,113,114,115,106,117,118,119,120,
      &                   121,122,123,124,125,126,127,128,129,130,
      &                   131,132,133,134,135,136,137,138,139,140,
-     &                   141,142), II
+     &                   141,142,143), II
                END IF
  1102       CONTINUE
             IF (WORD .EQ. '.OPTION' .OR. WORD .EQ. '.ALLOPT') THEN
@@ -2386,7 +2359,7 @@ C *** Option 4 >CC< We want to do a subsequent Coupled Cluster calculation
             DOSCF  = .TRUE.
             NUMRUN = NUMRUN + 1
          END IF
-         FLAG(21) = .TRUE.
+         FLAG(21) = .TRUE. ! QC-SCF
       GO TO 100
 C
 C *** Option 5 >RESTAR< restart SIRIUS, SIRIUS.RST (LUIT1) must be available
@@ -2399,7 +2372,7 @@ C *** Option 6 >HF    <  Restricted Hartree-Fock SCF (alias: .SCF)
          IF (.NOT.DOSCF) THEN
 C           ... DOSCF may also be set with .CC
             DOSCF    = .TRUE.
-            FLAG(21) = .TRUE.
+            FLAG(21) = .TRUE. ! QC-SCF
 C           ... flag for QCSCF -- quadratically convergent HF or DFT
             NUMRUN = NUMRUN + 1
          END IF
@@ -2512,7 +2485,7 @@ C           ... DOSCF may also be set with .CC
          END IF
          DODFT    = .TRUE.
          DOSCF    = .TRUE.
-         FLAG(21) = .TRUE.
+         FLAG(21) = .TRUE. ! QC-SCF
 C        ... flag for QCSCF -- quadratically convergent HF or DFT
 
 c     dodft should be enough but it is sometimes necessary to have also dftrun set.
@@ -2603,7 +2576,7 @@ C     ... .HFSRDFT  Hartree-Fock srDFT hybrid
          DOSCF     = .TRUE.
          DOHFSRDFT = .TRUE.
          ADDSRI    = .TRUE.
-         FLAG(21)  = .TRUE.
+         FLAG(21)  = .TRUE. ! QC-SCF
 C        ... flag for QCHF -- quadratically convergent Hartree-Fock
          LUSUPM = -1
 C        ... Disable use of super-matrix integrals,
@@ -2695,11 +2668,20 @@ C *** Option  41 >MP2SRD<  srDFT Moeller-Plesset PT2 calculation
      &   'User input .MINCHA: molecular charge down to ',MIN_MOL_CHARGE,
      &   ' allowed.'
       GO TO 100
+  143 CONTINUE ! .MP2special - cheaper SOSMP2+no_occvir for MCSCF initial orbitals
+        NUMRUN  = NUMRUN + 1
+        DOMP2   = .TRUE.
+        FLAG(3) = .FALSE. ! do NOT call sircan for HF canonical orbitals
+        MP2_SCALEFAC(1) = 1.3d0 ! choose cheaper SOSMP2
+        MP2_SCALEFAC(2) = 0.0d0 ! corresponding to p_S = 1.3D0, p_T = 0.0d0
+        MP2_SCALED = .TRUE.
+        MP2_NO_OCCVIR = .TRUE.  !Do not add occ-virt mp2 part to density matrix
+        THRP_MP2   = 1.0D-7
+      GO TO 100
 C
  8000 CONTINUE
 
 !     if long-range WFT short-range DFT, process functional keywords :
-#ifdef MOD_SRDFT
       IF (ADDSRI) THEN
         IF (SRFUN_set) THEN
           CALL SRFUN_INPUT(SR_FUNCS)
@@ -2726,9 +2708,6 @@ C
         END IF
       END IF
 
-#else
-      IF (ADDSRI) CALL QUIT('srDFT is not available in this version')
-#endif
 
       ! here we parse the functional
       if (functional_line_read) then
@@ -3068,7 +3047,6 @@ C INFINP : FLAG(*),DIRFCK
 C INFORB : NRHF(8)
 C INFTAP : LUSUPM
 C INFPRI : IPRSIR,IPRRHF
-C DFTACB : DFTIPT, DFTBR1, DFTBR2
 C
 #include "priunit.h"
 #include "mxcent.h"
@@ -3082,7 +3060,6 @@ C
 #include "infpri.h"
 #include "dftcom.h"
 #include "dfterg.h"
-#include "dftacb.h"
 C
       LOGICAL NODIIS,SET,ELECTR
       SAVE SET,ELECTR
@@ -3177,7 +3154,7 @@ C *** Option 4 >H1VIRT<  Virtual orbitals that diagonalize 1-el. H
       GO TO 100
 C
 C *** Option 5 >NOQCSCF<  No quadratically convergent SCF
-  105 FLAG(21) = .FALSE.
+  105 FLAG(21) = .FALSE. ! QC-SCF
       GO TO 100
 C
 C *** Option 6 >PRINT <  General print level in Hartree-Fock
@@ -3291,7 +3268,9 @@ C                        with given inital occ. from user input or file
 C
 C *** Option 23 >FC MVO<  Modified virtual orbitals from FC from NMVO
 C     Reference: C.W. Bauschlicher, JCP 72 (1980) 880.
-  123 READ (LUCMD,*) (NMVO(I), I = 1,NSYM)
+  123 READ (LUCMD,*,IOSTAT=IOerr) (NMVO(I), I = 1,NSYM)
+      if (IOerr .ne. 0) call quit(
+     &   'Error reading number of core orbitals after .FC MVO input')
       NMVOT = ISUM(8,NMVO,1)
       IF (FCVORB) THEN
          NINFO = NINFO + 1
@@ -4431,7 +4410,7 @@ C *** Option 3 >MIN DA<  Minimum damping value
   103 READ(LUCMD,*) BETMIN
       GO TO 100
 C
-C *** Option 4 >NO TER<  Skip extra termination tests
+C *** Option 4 >NO EXT<  Skip extra termination tests
   104 FLAG(36) = .TRUE.
       GO TO 100
 C
@@ -4515,7 +4494,7 @@ C
 C
       DATA TABLE /'.ALL   ','.DIPMOM','.GROSSA','.GROSSM','.MULLIK',
      *            '.NETALL','.NETMO ','.QUADRP','.VIRIAL','.PRINT ',
-     &            '.HJAAJP'/
+     &            '.HJPOP '/
 C
 C External flags
       FLAG( 6) = .TRUE.
@@ -4610,7 +4589,7 @@ C *** Option 10 >PRINT <  Print level
       if (iprxxx .eq. 7) IPOPTYP = 2
       GO TO 100
 C
-C *** Option 11 >HJAAJP<  HJAaJ population analysis
+C *** Option 11 >HJPOP <  HJAaJ population analysis
   111 FLAG(73) = .FALSE.
       IPOPTYP = 3
       GO TO 100
@@ -5328,7 +5307,6 @@ C   INFDIM : MAXPHP
 C   SCBRHF : IOPRHF,NFRRHF(*),MAXFCK
 C   INFMP2 : NFRMP2(*)
 C   DFTCOM : DODFT, DOSRBCK, ...
-C   DFTACB : DFTIPT, DFTBR1, DFTBR2
 C   gnrinf : NEWSYM,SIR_INPPRC,EMBEDDING,QM3,QMMM,?
 C   infpar.h : PARHER
 C   pgroup : GROUP, REP
@@ -5352,7 +5330,6 @@ C
 #include "huckel.h"
 #include "dftcom.h"
 #include "dfterg.h"
-#include "dftacb.h"
 #include "infpar.h"
 #include "pgroup.h"
 #include "pcmlog.h"
@@ -6120,7 +6097,7 @@ C
 #include "infpri.h"
 #include "infpt2.h"
 C
-      DATA TABLE /'.FROZEN','.THRESH','.STATE'/
+      DATA TABLE /'.FROZEN','.THRESH','.STATE '/
 C
 C     ***** PROCESS INPUT FOR NEVPT2INP *****
 C
@@ -6161,7 +6138,7 @@ C
          CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
          CALL QUIT('Illegal keyword for "*NEVPT2"')
 C
-C *** Option 1 >NEVPT2 FROZEN<   Frozen NEVPT2 orbitals
+C *** Option 1 >FROZEN<   Frozen NEVPT2 orbitals
   101 CONTINUE
          READ(LUCMD,*) (NFRNEVPT2(I),I=1,NSYM)
       GO TO 100
@@ -6171,7 +6148,7 @@ C                           the calculation of density matrices in koopro4
   102 READ(LUCMD,*) THRNEVPT
       GO TO 100
 C
-C *** Option 3 >ISTNEVCI < If .CI, state considered for NEVPT2
+C *** Option 3 >STATE    < If .CI, the CI state considered for NEVPT2
 C
   103 READ(LUCMD,*) ISTNEVCI
       GO TO 100

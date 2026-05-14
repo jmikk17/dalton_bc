@@ -133,7 +133,6 @@ C  /* Deck r12wrt */
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
       DIMENSION BUF(LBUF,5)
 #include "twosta.h"
 #include "r12int.h"
@@ -652,7 +651,6 @@ C  /* Deck un2wru */
 #include "maxorb.h"
 #include "mxcent.h"
 #include "maxaqn.h"
-#include "ibtpar.h"
 #include "eritap.h"
 #include "eribuf.h"
       DIMENSION BUF(LBUF), CUF(LBUF)

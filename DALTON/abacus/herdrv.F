@@ -190,6 +190,9 @@ C
          IF (LUSUPM .LE. 0) CALL GPOPEN(LUSUPM,'AOSUPINT',
      &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
          CALL GPCLOSE(LUSUPM,'DELETE')
+         IF (LU_GAB  .LE. 0) CALL GPOPEN(LU_GAB,'AOGABINT',
+     &        'UNKNOWN',' ',' ',IDUMMY,.FALSE.)
+         CALL GPCLOSE(LU_GAB,'DELETE')
       END IF ! RMAOTWO
 
       ! Postpone calculation of two-electron integrals;
@@ -322,6 +325,7 @@ C
 C     950602-vebjorn:
 C     Added flag HRINPC to ensure that HERMIT input processing is done only once.
 C
+      USE lrescinf_module
 #include "implicit.h"
 #include "priunit.h"
 #include "iratdef.h"
@@ -330,7 +334,7 @@ C
 #include "maxaqn.h"
 C
 C     NTABLE has been increased 118 (WK/UniKA/07-25-2005).
-      PARAMETER (NDIR = 9, NTABLE = 149)
+      PARAMETER (NDIR = 10, NTABLE = 149)
       PARAMETER (D0 = 0.0D0, D1 = 1.0D0, D4 = 4.0D0, D10 = 1.0D1)
       CHARACTER WORD*7, PROMPT*1, TABDIR(NDIR)*7, TABLE(NTABLE)*7,
      &          WORD1*7
@@ -376,7 +380,7 @@ cLig <> added RANGMO and RPSO
 C Bin Gao, December 17, 2009; adds integrals S2MBRA, S2MKET, and S2MMIX
       DATA TABDIR /'*END OF', '*READIN', '*ONEINT', '*TWOINT',
      &             '*SUPINT', '*ER2INT', '*SORINT', '*DENFIT',
-     &             '*QM3INP'/
+     &             '*QM3INP', '*LR-SHI'/
 C     adds test suite of Gen1Int interface as term 239
 C     Bin Gao, Oct. 3, 2011
 !                    101        102        103        104
@@ -637,13 +641,19 @@ C
   119    CONTINUE
             READ (LUCMD,*) NPQUAD
             GO TO 100
-  120    CONTINUE
+  120    CONTINUE ! .SELECT
             READ (LUCMD, *) NPATOM
             IF (NPATOM .GT. MXCENT) THEN
                WRITE (LUPRI,'(//2A/A,I8/A,I6)')
      &             'ERROR: Too many atoms selected under ',WORD,
      &             'ERROR: Number of atoms selected:',NPATOM,
      &             'ERROR: Number of atoms allowed: ',MXCENT
+               CALL QUIT('Error in '//WORD1)
+            ELSE IF (NPATOM .GT. NUCIND) THEN
+               WRITE (LUPRI,'(//2A/A,I8/A,I6)')
+     &             'ERROR: Too many atoms selected under ',WORD,
+     &             'ERROR: Number of atoms selected:',NPATOM,
+     &             'ERROR: Number of independent atoms: ',NUCIND
                CALL QUIT('Error in '//WORD1)
             END IF
             READ (LUCMD, *) (IPATOM(I),I=1,NPATOM)
@@ -800,11 +810,11 @@ C
             S1MAGR = .TRUE.
             ONEPRP = .TRUE.
             GOTO 100
-  155    CONTINUE
+  155    CONTINUE ! .NUCPOT
             NUCPOT = .TRUE.
             ONEPRP = .TRUE.
             GOTO 100
-  156    CONTINUE
+  156    CONTINUE ! .NPOTST
             NUCPOT = .TRUE.
             HAMILT = .TRUE.
             NPOTST = .TRUE.
@@ -1275,6 +1285,7 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
 c jim-dbg : setting all integrals for LRESC module
             IF (MAXREP.NE.0)
      &      CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_SHIELDING')
+            LRINTS = .TRUE.
             ONEPRP = .TRUE.
             FERMI = .TRUE.  ! 115.Fermi 
             KINENE = .TRUE. ! 133.Kinenerg
@@ -1292,34 +1303,28 @@ c jim-dbg : setting all integrals for LRESC module
             DNSKE  = .TRUE. ! 217.DiaKin
             PSOOZ  = .TRUE. ! 221. PSO-OZ for AngPso
             SPNORB = .TRUE. ! 104 Spin-Orbit
-Cxx  el problema es que el origen de gauge debe estar en el atomo q elegimos, LRATOM. 
-c       1 - Leer INP file y buscar LRATOM 
-c       2 - hacer que GAGORG = CORD(LRATOM)
-c Por ahora GAGORG = (0.0 0.0 0.0)
-c  ACLARADO EN OUT (buscar "Remember to set GAUGEO" en abadrv.F)
-cx            write(lupri,*)' At INTEGRAL SECT to do GAUGEO on LRATOM' 
-cx            write(lupri,*)' Calling lrscinp for SELECT' 
-cx            CALL LRSCINP('.SELECT')
-cx            write(lupri,*)' Despues. LRATOM ', LRATOM 
-cx            GAGORG(1) = 0.000000
-cx            GAGORG(2) = 0.000000
-cx            GAGORG(3) = 0.000000
-c =================================================
-c -------------------------------------------------
-css           x    READ (LUCMD,*) (LRGAUG(IS), IS = 1, 3)
-css           x    DO ICENT = 1, NUCIND
-c             x     NAME =  NAMEX(3*ICENT)(1:4)
-css           x       WRITE (LUPRI,'(2X,A,3X," : ",3(A1,2X,A,F15.10))')
-css     &     x       NAME, '1' , 'x' , CORD(1,ICENT),
-css     &     x             '2' , 'y' , CORD(2,ICENT),
-css     &     x             '3' , 'z' , CORD(3,ICENT)
-css           x    ENDDO
-cs            READ (LUCMD, *, IOSTAT=IOS) (GAGORG(I),I=1,3)
-cs            IF (IOS.NE.0) THEN
-cs              WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
-cs              WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
-cs              CALL QUIT('Error in reading (GAGORG(I),I=1,3)!')
-cs            ENDIF
+            NO2SO  = .TRUE.  ! Do not calculate 2e spin-orbit
+
+!           Takes the list introduced if calling to .SELECT
+            IF (NPATOM.EQ.1) THEN
+               NLRATOMS = 1
+               LRATOM = IPATOM(1)
+               CALL DCOPY(3,CORD(:,LRATOM),1,GAGORG,1) !GAUGE in the nucleus position
+               LRATOM_changed = .TRUE.
+            ELSE IF (NPATOM.EQ.0) THEN
+               CALL QUIT('RELSHI: select a nucleus under **INTEGRALS.')
+               LRATOM_changed = .FALSE.
+               NLRATOMS = NUCIND
+            ELSE
+               CALL QUIT
+     &         ('RELSHI: select only one nucleus under **INTEGRALS.')
+               CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
+               NLRATOMS = NPATOM
+               LRATOM_changed = .TRUE.
+               DO I = 1, NPATOM
+                  LRATOMSS(I) = IPATOM(I)
+               END DO
+            END IF
             GO TO 100
   244    CONTINUE   ! .NORMAOtwo
             RMAOTWO = .FALSE.
@@ -1347,18 +1352,19 @@ cs            ENDIF
 c Setting all integrals for LRESC-EFG module
             IF (MAXREP.NE.0)
      &         CALL QUIT('NO SYMMETRY SHOULD BE USED FOR LRESC_EFG')
-            ONEPRP = .TRUE.
-            KINENE = .TRUE. ! 133.Kinenerg
-            DARWIN = .TRUE. ! 164
-            MASSVL = .TRUE. ! 163
-            DIPVEL = .TRUE. ! 108.DipVel
-            NELFLD = .TRUE.
-            DIPLEN = .TRUE.
-            GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
-            LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
-            SPNORB = .TRUE. ! 104 Spin-Orbit
-            EFGCAR = .TRUE. ! 147 Cartesian EFG components
-            GO TO 100
+               ONEPRP = .TRUE.
+               KINENE = .TRUE. ! 133.Kinenerg
+               DARWIN = .TRUE. ! 164
+               MASSVL = .TRUE. ! 163
+               DIPVEL = .TRUE. ! 108.DipVel
+               NELFLD = .TRUE.
+               DIPLEN = .TRUE.
+               GZZEFG = .TRUE. ! 247 gradient of EFG (qzz)
+               LAPEFG = .TRUE. ! 248 laplacian of EFG (qxx,qyy and qzz)
+               SPNORB = .TRUE. ! 104 Spin-Orbit
+               EFGCAR = .TRUE. ! 147 Cartesian EFG components
+               NO2SO  = .TRUE. ! Do not calculate 2e spin-orbit
+         GO TO 100
       ELSE IF (PROMPT .EQ. '*') THEN
          GO TO 300
       ELSE
@@ -1568,7 +1574,7 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
          IF (NSTTST) WRITE (LUPRI,'(10X,A)')
      &     '- Test of nuclear shielding tensor integrals'
          IF (EFGCAR) WRITE (LUPRI,'(10X,A)')
-     &            '- Cartesien electric field gradient integrals'
+     &            '- Cartesian electric field gradient integrals'
          IF (EFGSPH) WRITE (LUPRI,'(10X,A)')
      &            '- Spherical electric field gradient integrals'
          IF (S1MAGL) WRITE (LUPRI,'(10X,A)')
@@ -1586,9 +1592,9 @@ C copied from linsca abacus/herdrv.F, Bin Gao, December 17, 2009
          IF (HDOBRT) WRITE (LUPRI,'(10X,A)')
      &        '- Test of ket-diff. hdo-integrals with respect to B'
          IF (SQHDOL) WRITE (LUPRI,'(10X,A)')
-     &      '- Bra differentiated half-derivative overlap matrix'
+     &        '- Bra differentiated half-derivative overlap matrix'
          IF (SQHDOR) WRITE (LUPRI,'(10X,A)')
-     &      '- Ket differentiated half-derivative overlap matrix'
+     &        '- Ket differentiated half-derivative overlap matrix'
          IF (SQHD2O) WRITE (LUPRI,'(10X,A)')
      &      '- Ket second differentiated half-derivative overlap matrix'
          IF (NUCPOT) WRITE (LUPRI,'(10X,A)')
@@ -1767,7 +1773,7 @@ C
          CALL UPCASE(WORD)
          DO I = 1, NDIR
             IF (WORD .EQ. TABDIR(I)) THEN
-               GO TO (399,302,303,304,305,306,307,308,309), I
+               GO TO (399,302,303,304,305,306,307,308,309,310), I
             END IF
          END DO
          WRITE (LUPRI,'(/3A/)') ' Input module ',WORD,' nonexistent.'
@@ -1803,6 +1809,8 @@ C 302   CALL REAINP(WORD,RELCAL)
       GO TO 301
   309   CALL QUIT('ERROR, *QM3 has been moved to **DALTON section')
       GO TO 301
+  310   CALL LRSHIINP(WORD)
+      GO TO 301
 C
   399 CONTINUE
 C
@@ -1817,7 +1825,6 @@ C
 
       CALL SETDCH
       CALL GPCLOSE(LUCMD,'KEEP')
-      IF (THRSUP .LT. 0.0D0) THRSUP = THRS
 C
       IF (DORLM .AND. .NOT. CAVUSR)
      &   WRITE(LUPRI,'(/A,3F12.6)') ' Cavity center (center of mass):',
@@ -2421,6 +2428,8 @@ C
 #include "efield.h"
 #include "r12int.h"
 #include "drw2el.h"
+! blocks.h : MAXSHL
+#include "blocks.h"
 #include "qm3.h"
 #include "pcmlog.h"
 C
@@ -2428,7 +2437,9 @@ C
       CHARACTER*8 LABELT(3), LABELS(6)
 C
       DIMENSION WORK(LWORK)
-#include "memint.h"
+      KWORK = 1
+      KFREE = KWORK
+      LFREE = LWORK
 C
 C     Control routine for calculation of undifferentiated one- and
 C     two-electron Hamiltonian integrals and transformation of
@@ -2899,7 +2910,7 @@ C
                LABELT(1) = 'XDIPVEL '
                LABELT(2) = 'YDIPVEL '
                LABELT(3) = 'ZDIPVEL '
-               CALL HDBTST(WORK,LWORK,IPRINT,LABELT,NATOM,ORIGIN)
+               CALL HDBTST(WORK,LWORK,IPRONE,LABELT,NATOM,ORIGIN)
             END IF
 C
 C           ***** Test of first magnetic derivative of overlap integrals *****
@@ -3310,19 +3321,19 @@ C
 C     ***** Test of London orbital contribution to nuclear shieldings *****
 C
             IF (NSNLTS) THEN
-               CALL NS1TST(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NS1TST(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C     ***** Test of non-London orbital contribution to nuclear shieldings *****
 C
             IF (NSLTST) THEN
-               CALL NSTST2(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NSTST2(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C     ***** Test of nuclear shielding tensor integrals *****
 C
             IF (NSTTST) THEN
-               CALL NSTST3(WORK,LWORK,IPRINT,DOATOM,NATOM)
+               CALL NSTST3(WORK,LWORK,IPRONE,DOATOM,NATOM)
             END IF
 C
 C           ***** Cosine and sine integrals *****
@@ -3701,7 +3712,7 @@ C     **********************************
 C     ***** Two-Electron Integrals *****
 C     **********************************
 C
-C     Cauchy-Scwartz integrals for screening 
+C     Cauchy-Scwarz integrals for screening 
 C
       IF(DIRCAL) THEN
         CALL TIMER('START ',TIMSTR,TIMEND)
@@ -3751,15 +3762,32 @@ C
                CALL MEMREL('HERINT.PAOVEC',WORK,KWORK,KJORBS,KFREE,
      &                     LFREE)
                CALL TIMER('START ',TIMSTR,TIMEND)
-               IRNTYP = 0
+               IRNTYP = 0 ! undifferentiated integrals to file
+
+C      *** Screening matrix for Cauchy-Schwarz screening
+
+               N2GAB = MAXSHL*MAXSHL ! GAB-matrix in SO-basis; MAXSHL calculated in PAOVEC
+               CALL MEMGET2('REAL','GABRSO',KGAB,N2GAB,WORK,KFREE,LFREE)
+               IF (.NOT.DPTINT .AND. .NOT.FINDPT .AND. ! only screening if no DPT options set
+     &             .NOT.R12INT .AND. .NOT.U12INT .AND. ! only screening if no R12 options set
+     &             .NOT.R12EIN .AND. .NOT.U21INT) THEN
+                  CALL GETGAB(WORK(KGAB),
+     &              'GABSO---',N2GAB,WORK(KFREE),LFREE)
+                  if (IPRDEF .gt. 1) then
+                     WRITE(LUPRI,*) 'GABSO--- matrix'
+                     call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
+     &                  MAXSHL,MAXSHL,-1,LUPRI)
+                  end if
+               END IF
+
                CALL TWOINT(WORK(KFREE),LFREE,DUMMY,DUMMY,DUMMY,1,IDUMMY,
      &                     IDUMMY,DUMMY,IDUMMY,NUMDIS,1,IRNTYP,0,0,
      &                     .TRUE.,.TRUE.,.FALSE.,TKTIME,
      &                     IPRTWO,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                     RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                     WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &                     IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                     .FALSE.,.false.)
+     &                     IDUMMY,IDUMMY,WORK(KGAB),DUMMY,DUMMY,DUMMY,
+     &                     .FALSE.)
                CALL TIMER('TWOINT',TIMSTR,TIMEND)
                CALL FLSHFO(LUPRI)
                CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3771,7 +3799,7 @@ C        *********************************************************
 C        ***** Short-range two-electron integrals (MC-srDFT) *****
 C        *********************************************************
 C
-         IF(DOSRIN) THEN
+         IF(RUNTWO .AND. DOSRIN) THEN
             IF (CHIVAL .EQ. -1.d0) 
      &      CALL QUIT('FATAL ERROR : Short-range 2e integrals '//
      &           'requested, but mu is not specified!')
@@ -3790,14 +3818,26 @@ C
      &                  LFREE)
             CALL TIMER('START ',TIMSTR,TIMEND)
             IRNTYP = 0
+
+C      *** Screening matrix for Cauchy-Schwarz screening
+
+            N2GAB = MAXSHL*MAXSHL ! GAB-matrix in SO-basis; MAXSHL calculated in PAOVEC
+            CALL MEMGET2('REAL','GABRSO',KGAB,N2GAB,WORK,KFREE,LFREE)
+            CALL GETGAB(WORK(KGAB),'GABSOSR-',N2GAB,WORK(KFREE),LFREE)
+            if (IPRDEF .gt. 1) then
+               WRITE(LUPRI,*) 'GABSOSR- matrix'
+               call output(WORK(KGAB),1,MAXSHL,1,MAXSHL,
+     &            MAXSHL,MAXSHL,-1,LUPRI)
+            end if
+
             CALL TWOINT(WORK(KFREE),LFREE,DUMMY,DUMMY,DUMMY,1,IDUMMY,
      &                  IDUMMY,DUMMY,IDUMMY,NUMDIS,1,IRNTYP,0,0,
      &                  .TRUE.,.TRUE.,.FALSE.,TKTIME,
      &                  IPRTWO,IPRNTA,IPRNTB,IPRNTC,IPRNTD,
      &                  RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
-     &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  IDUMMY,IDUMMY,WORK(KGAB),DUMMY,DUMMY,DUMMY,
+     &                  .FALSE.)
             CALL TIMER('TWOINT short-range',TIMSTR,TIMEND)
             CALL FLSHFO(LUPRI)
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3830,7 +3870,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
             CALL GETTIM(SO2CPU,SO2WAL)
             SOCPU=SO2CPU-SO1CPU
@@ -3874,7 +3914,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             DO2DAR = .FALSE.
             IF (LUINTA .GT. 0) CALL GPCLOSE(LUINTA,'KEEP')
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3920,7 +3960,7 @@ C
      &                  IPRNTD,RTNTWO,IDUMMY,I2TYP,WORK(KJSTRS),
      &                  WORK(KNPRIM),WORK(KNCONT),WORK(KIORBS),
      &                  IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,DUMMY,
-     &                  .FALSE.,.false.)
+     &                  .FALSE.)
             BPH2OO = .FALSE.
             IF (LUINTA .GT. 0) CALL GPCLOSE(LUINTA,'KEEP')
             CALL MEMREL('HERINT.TWOINT',WORK,KWORK,KWORK,KFREE,LFREE)
@@ -3950,7 +3990,7 @@ C        ***** Test of two-electron part of magnetic moment *****
 C        ********************************************************
 C
          IF (MGMO2T) THEN
-            CALL MM2TST(WORK,LWORK,PRTHRS,IPRINT)
+            CALL MM2TST(WORK,LWORK,PRTHRS,IPRDEF)
          END IF
       END IF
 C
@@ -3970,7 +4010,7 @@ C
 C
 C Used from common blocks:
 C  GNRINF: DIRCAL, DOSRIN
-C  CBIHER: ONEPRP
+C  CBIHER: ONEPRP, HAMILT
 C  CBIHR1: RUNONE
 C  CBIHR2: RUNTWO
 C  INFTAP: LUINTA, LUINTA_SR
@@ -3983,6 +4023,7 @@ C  INFTAP: LUINTA, LUINTA_SR
 C
       LOGICAL AOEXIST, SREXIST
       LOGICAL DIRCAL_SAV, RUNONE_SAV, ONEPRP_SAV, RUNTWO_SAV
+      LOGICAL HAMILT_save, DOSRIN_save
 C
       CALL QENTER('MAKE_AOTWOINT')
       CALL GPINQ('AOTWOINT','EXIST',AOEXIST)
@@ -3996,10 +4037,14 @@ C
          ONEPRP_SAV = ONEPRP
          RUNTWO_SAV = RUNTWO
          DIRCAL_SAV = DIRCAL
+         HAMILT_save = HAMILT
+         DOSRIN_save = DOSRIN
          RUNONE = .FALSE.
          ONEPRP = .FALSE.
          RUNTWO = .TRUE.
          DIRCAL = .FALSE.
+         HAMILT = .NOT. AOEXIST
+         DOSRIN = .NOT. SREXIST
 C        Open LUINTA/LUINTA_SR for new integrals
          WRITE (LUPRI,'(/A)') '---> (Re)generating AOTWOINT'
          CALL GPOPEN(LUINTA,'AOTWOINT','UNKNOWN',' ',' ',IDUMMY,.FALSE.)
@@ -4015,6 +4060,8 @@ C        Open LUINTA/LUINTA_SR for new integrals
          ONEPRP = ONEPRP_SAV
          RUNTWO = RUNTWO_SAV
          DIRCAL = DIRCAL_SAV
+         HAMILT = HAMILT_save
+         DOSRIN = DOSRIN_save
       END IF
 
       CALL QEXIT('MAKE_AOTWOINT')
@@ -4163,6 +4210,128 @@ C
       END IF
       RETURN
       END
+C  /* Deck lrshiinp */
+      SUBROUTINE LRSHIINP(WORD)
+      USE lrescinf_module
+#include "implicit.h"
+#include "priunit.h"
+#include "mxcent.h"
+#include "nuclei.h"
+#include "orgcom.h"
+      PARAMETER (NTABLE = 4)
+C
+      LOGICAL SET, NEWDEF
+      CHARACTER PROMPT*1, WORD*7, TABLE(NTABLE)*7, WORD1*7
+C
+      SAVE SET
+      DATA TABLE /'.ATOM  ', '.LRGAUGE', '.LRCMG  ','.LRGATM'/
+      DATA SET/.FALSE./
+      REAL*8 LRATMG
+C
+      CALL QENTER('LRSHIINP')
+      IF (SET) THEN
+         IF (WORD .NE. '*END OF' .AND. WORD(1:2) .NE. '**') THEN
+ 969        READ (LUCMD, '(A7)') WORD
+            CALL UPCASE(WORD)
+            PROMPT = WORD(1:1)
+            IF (PROMPT .NE. '*') GO TO 969
+         END IF
+         GOTO 199
+      END IF
+C
+      SET = .TRUE.
+C
+C     Initialize /LRSHIINP/
+C
+C
+      NEWDEF = WORD .EQ. '*LR-SHI'
+      GAUCHANG = .FALSE.
+      ICHANG = 0
+      IF (NEWDEF) THEN
+         WORD1 = WORD
+  100    CONTINUE
+            READ (LUCMD, '(A7)') WORD
+            CALL UPCASE(WORD)
+            PROMPT = WORD(1:1)
+            IF (PROMPT .EQ. '!' .OR. PROMPT .EQ. '#') THEN
+               GO TO 100
+            ELSE IF (PROMPT .EQ. '.') THEN
+               ICHANG = ICHANG + 1
+               DO 200 I = 1, NTABLE
+                  IF (TABLE(I) .EQ. WORD) THEN
+                     GO TO (1,2,3,4), I
+                  END IF
+  200          CONTINUE
+               WRITE (LUPRI,'(/,3A,/)') ' Keyword "',WORD,
+     *            '" not recognized in LR-SHI.'
+               CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+               CALL QUIT('Illegal keyword in LR-SHI.')
+    1          CONTINUE !.ATOM
+               CALL QUIT('Deprecated option. Use .SELECT under'//
+     &                   ' **INTEGRALS instead')
+c Leavint this here in case we return to calculate shielding in all atoms by default.
+                  READ (LUCMD,*) LRATOM
+                  LRATOM_changed = .TRUE.
+                  IF (LRATOM.GT.NATOMS)THEN
+                     write(lupri,*) 'Input Error on *LR-SHI'
+                     write(lupri,*) 'Your selection exceeds total ',
+     &                    'number of atoms on input file'
+                     CALL QUIT('LRATOM greater than NATOMS, LRSHIINP')
+                  END IF
+              DO i=1, 3
+                 GAGORG(i) = CORD(i,LRATOM)
+              END DO
+
+               GO TO 100
+
+    2         CONTINUE !.LRGAUGE
+              READ (LUCMD, *, IOSTAT=IOS) (GAGORG(I),I=1,3)
+              IF (IOS.NE.0) THEN
+                 WRITE(LUPRI,*) 'Error in reading (GAGORG(I),I=1,3)!'
+                 WRITE(LUPRI,*) '(GAGORG(I),I=1,3):', (GAGORG(I),I=1,3)
+                 CALL QUIT('Error in reading (GAGORG(I),I=1,3) LR-SHI!')
+              ENDIF
+              GAUCHANG = .TRUE.
+              GO TO 100
+
+    3         CONTINUE !LRCMG
+              CALL DCOPY(3,CMXYZ,1,GAGORG,1) !GAUGE in the CM
+              GAUCHANG = .TRUE.
+              GO TO 100
+
+    4          CONTINUE !.LRGATM
+                  READ (LUCMD,*) LRATMG
+                  IF (LRATMG.GT.NATOMS)THEN
+                     write(lupri,*) 'Input Error on *LR-SHI'
+                     write(lupri,*) 'Your selection exceeds total ',
+     &                    'number of atoms on input file'
+                     CALL QUIT('LRATMG greater than NATOMS, LRSHIINP')
+                  END IF
+              DO i=1, 3
+                 GAGORG(i) = CORD(i,LRATMG)
+              END DO
+              GAUCHANG = .TRUE.
+               GO TO 100
+
+           ELSE IF (PROMPT .EQ. '*') THEN
+               GO TO 300
+            ELSE
+               WRITE (LUPRI,'(/,3A,/)') ' Prompt "',WORD,
+     *            '" not recognized in LR-SHI.'
+               CALL PRTAB(NTABLE,TABLE,WORD1//' input keywords',LUPRI)
+               CALL QUIT('Illegal prompt in LR-SHI.')
+            END IF
+      END IF
+  300 CONTINUE
+      IF (ICHANG .EQ. 0) GOTO 199
+      IF (NEWDEF) THEN
+         CALL HEADER('Changes of defaults for LRSHIINP:',1)
+         WRITE (LUPRI,'(1(/A,3F20.12))')
+     &    ' Gauge origin    (bohr):', (GAGORG(I),I=1,3)
+      END IF
+ 199  CALL QEXIT('LRSHIINP')
+      RETURN
+      END
 C/* Deck herini */
       SUBROUTINE HERINI
 #include "implicit.h"
@@ -4194,25 +4363,21 @@ C
 C
 C     Initialize /CBIHER/
 C
-      USE_INTSORT = .FALSE. ! in inftra.h
+      USE_INTSORT = .FALSE. ! in inftra.h, for NEWTRA
       IF(RELCAL) THEN
         HAMILT = .FALSE.
-        ONEPRP = .FALSE.
-        DIPVEL = .FALSE.
         DIRAC_HER = .TRUE.
         SUPMAT = .FALSE.
       ELSE
         HAMILT = .TRUE.
-        ONEPRP = .FALSE.
-        DIPVEL = .FALSE.
         DIRAC_HER = .FALSE.
-        SUPMAT = .NOT. DIRCAL .AND. .NOT. USE_INTSORT
+        SUPMAT = .NOT. DIRCAL
       ENDIF
       SKIP   = .FALSE.
       TSTINP = .FALSE.
       ONEPRP = .FALSE.
-      HAMILT = .TRUE.
       DIPLEN = .FALSE.
+      DIPVEL = .FALSE.
       QUADRU = .FALSE.
       SPNORB = .FALSE.
       no2so  = .false.

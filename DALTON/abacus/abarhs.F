@@ -831,7 +831,7 @@ C
      &                        LWRK,ITYPE,MAXDIF,IATOM,NODV,NOPV,.FALSE.,
      &                        TKTIME,RETUR,IPRINT,IPRTYP,
      &                        IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &                        DUMMY,LDUMMY)
+     &                        DUMMY)
                   HFXMU = HFXM0
                   IF (HFXMU.NE.D0) THEN
                      KFCTMP = KLAST
@@ -849,7 +849,7 @@ C
      &                    LWRK,ITYPE,MAXDIF,IATOM,NODV,NOPV,.FALSE.,
      &                    TKTIME,RETUR,IPRINT,IPRTYP,
      &                    IDUMMY,IDUMMY,DUMMY,DUMMY,DUMMY,
-     &                    DUMMY,LDUMMY)
+     &                    DUMMY)
                      CALL DAXPY(NFMAT*N2BASX,1D0,WORK(KFCTMP),1,
      &                    WORK(KFMAT),1)
                      HFXFAC = HFXFC0
@@ -872,7 +872,7 @@ C                IF (.NOT.DOERIP) THEN
      &                          RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &                          WORK(KNPRIM),WORK(KNCONT),
      &                          WORK(KIORBS),IDUMMY,IDUMMY,DUMMY,
-     &                          DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                          DUMMY,DUMMY,DUMMY,.FALSE.)
                     HFXMU = HFXM0
                     IF (HFXMU.NE.D0) THEN
                        HFXFC0 = HFXFAC
@@ -885,7 +885,7 @@ C                IF (.NOT.DOERIP) THEN
      &                             RETUR,IDUMMY,I2TYP,WORK(KJSTRS),
      &                             WORK(KNPRIM),WORK(KNCONT),
      &                             WORK(KIORBS),IDUMMY,IDUMMY,DUMMY,
-     &                             DUMMY,DUMMY,DUMMY,.FALSE.,.false.)
+     &                             DUMMY,DUMMY,DUMMY,.FALSE.)
                        HFXFAC = HFXFC0
                     END IF
 C                ELSE
@@ -3409,7 +3409,7 @@ C  /* Deck psorh1 */
 #include "mxcent.h"
       PARAMETER (DM2 = -2.D0)
       INTEGER X
-      LOGICAL NODV, PSOTST, DOSHI, RALLCO
+      LOGICAL NODV, PSOTST, DOSHI, RALLCO, FOUND
       CHARACTER LABINT(*)*8, LABTMP(3*MXCOOR)*8
       DIMENSION WMAT(*), INTREP(*), INTADR(*), WORK(LWORK),
      &          CMO(*), UDV(*), PVX(*), XINDX(*)
@@ -3430,23 +3430,18 @@ C  /* Deck psorh1 */
 C
       IPRRSP = IPRALL - 2
 C
-      REWIND LUSIFC
-      CALL MOLLAB(LBSIFC,LUSIFC,LUPRI)
-      READ (LUSIFC)
-      READ (LUSIFC)
-      CALL READI(LUSIFC,IRAT*NCMOT,CMO)
-      READ (LUSIFC)
+      CALL RD_SIRIFC('CMO',FOUND,CMO)
+      IF (.NOT.FOUND)
+     &   CALL QUIT('PSORHS error: CMO not found on SIRIFC')
       IF (NASHT .GT. 0) THEN
          IF (NODV) THEN
-            READ (LUSIFC)
             CALL DZERO(UDV,N2ASHX)
          ELSE
-            IF (LWORK.LT.NNASHX)CALL STOPIT('PSORH1','UDV',LWORK,NNASHX)
-            CALL READI(LUSIFC,IRAT*NNASHX,WORK)
+            CALL RD_SIRIFC('DV',FOUND,WORK)
+            IF (.NOT.FOUND)
+     &            CALL QUIT('PSORHS error: DV not found on SIRIFC')
             CALL DSPTSI(NASHT,WORK,UDV)
          END IF
-      ELSE
-         READ (LUSIFC)
       END IF
 C
       KSYMOP = LSYMRF
@@ -3470,6 +3465,7 @@ C
      *                 XINDX(KIJ1AD),XINDX(KIJ2AD),
      *                 XINDX(KIJ3AD),XINDX(KIADR1))
 C
+        REWIND (LUSIFC)
         IF (CCPPA) THEN
           CALL MOLLAB('CCSDINFO',LUSIFC,LUPRI)
         ELSE
@@ -3482,11 +3478,11 @@ C
 C
         IF (IPRINT.GT.10) THEN
           IF (CCPPA) THEN
-            WRITE(LUPRI,'(/A)')' PSORH1 : CCSD correlation ',
-     &                         'coefficients'
+            WRITE(LUPRI,'(/A)')
+     &         ' PSORHS : CCSD correlation coefficients'
           ELSE
-            WRITE(LUPRI,'(/A,A)')' PSORH1 :',
-     &                           ' MP2 correlation coefficients'
+            WRITE(LUPRI,'(/A)')
+     &         ' PSORHS : MP2 correlation coefficients'
           ENDIF
           CALL OUTPUT(PVX,1,LPVMAT,1,1,LPVMAT,1,1,LUPRI)
         END IF
@@ -3500,9 +3496,9 @@ C       contribution from the zeroth order. (Added in MP2FAC)
 C
         IF (IPRINT.GT.10) THEN
           IF (CCPPA) THEN
-            WRITE(LUPRI,'(/A)')' PSORH1 : CCSD density'
+            WRITE(LUPRI,'(/A)')' PSORHS : CCSD density'
           ELSE
-            WRITE(LUPRI,'(/A)')' PSORH1 : MP2 density'
+            WRITE(LUPRI,'(/A)')' PSORHS : MP2 density'
           END IF
           CALL OUTPUT(UDV,1,NORBT*NORBT,1,1,NORBT*NORBT,1,1,
      &                  LUPRI)

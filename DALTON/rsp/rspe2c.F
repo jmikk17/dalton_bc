@@ -1161,7 +1161,7 @@ C
 #include "ibndxdef.h"
 C
 C Used from common blocks:
-C   INFRSP : ???,SOPPA, CISRPA, TDA$
+C   INFRSP : ???,SOPPA, CISRPA, TDA
 C
 #include "priunit.h"
 #include "wrkrsp.h"
@@ -1224,8 +1224,8 @@ C
   51     CONTINUE
          IF (JZDIM .LT. KZDIM) THEN
             WRITE (LUPRI,'(/A/A,I5,A,I5/A)')
-     *      ' --- Restart in LRST ---',
-     *      ' Half-dimnsion of reduced space reduced from',KZDIM,
+     *      ' --- INFO: Restart in LRST ---',
+     *      ' Half-dimension of reduced space reduced from',KZDIM,
      *      ' to',JZDIM,
      *      ' because that was the number of sigma vectors on LURSP5'
          END IF
@@ -2979,8 +2979,8 @@ C           (LINEAR DEPENDENCE BETWEEN NEW TRIAL VECTOR )
      *          '     OF LINEAR DEPENDENCE BETWEEN NEW TRIAL VECTORS'
          ELSE IF(KCONV.GT.0)THEN
 C           (CONVERGED)
-            IF (IPRRSP .GE. 0)
-     &      WRITE(LUPRI,'(/A)')' *** RSPCTL MICROITERATIONS CONVERGED'
+            IF (IPRRSP .GE. 0) WRITE(LUPRI,'(/A,I0)')
+     &         ' *** RSPCTL MICROITERATIONS CONVERGED SYMMETRY ',KSYMOP
          ELSE
 C           (NOT CONVERGED)
             IF (ITMIC.GE.MAXIT) THEN
@@ -3673,7 +3673,7 @@ C
 #include "dummy.h"
       DIMENSION CMO(*),UDV(*),PV(*),FC(*),FV(*),FCAC(*),H2AC(*)
       DIMENSION XINDX(*),WRK(*)
-      CHARACTER BLANK*8, PRI_LINE*90, LBLPP_1*1
+      CHARACTER BLANK*8, PRI_LINE*90, LBLPP_1*1, CALC_TYPE*30
 C
       PARAMETER ( MAXSIM = 15, LMXFR = 1000, BLANK = '        ' )
       PARAMETER ( TOLRTT = 1.0D-12)
@@ -4123,22 +4123,30 @@ C ---------------------------- not non-adiabatic coupling:
  550           CONTINUE ! DO 550 INUM = 1, NBX
  600        CONTINUE  ! go to 600 if non-adiabatic coupling ("HDO" in label)
          END IF
+
          PRI_LINE = ' '
          WRITE (PRI_LINE,'(3(A,I2),3A)')
      &   '@ Excit. operator sym',KSYMOP,' & ref. state sym',IREFSY,
      &   ' => excited state symmetry',KSYMST,'  ( ',REP(KSYMST-1),')'
          CALL TITLER(PRI_LINE,'*',103)
+         IF (TRPLET) THEN
+            CALC_TYPE = '- triplet excitation'
+         ELSE
+            CALC_TYPE = '- singlet excitation'
+         END IF
+         IF (TDA) THEN
+            IF (NCONF .gt. 1) THEN
+               CALC_TYPE = CALC_TYPE(1:20) // ' (gTDA)'
+            ELSE
+               CALC_TYPE = CALC_TYPE(1:20) // ' (TDA)'
+            END IF
+         END IF
+
          DO 555 INUM = 1,NBX
             PRI_LINE = ' '
-            IF (TRPLET) THEN
-               WRITE (PRI_LINE,'(A,I5,A,I2,3A)')
+            WRITE (PRI_LINE,'(A,I5,A,I2,4A)')
      &      '@ Excited state no:',(ISIM-1+INUM),' in symmetry',KSYMST,
-     &      '  ( ',REP(KSYMST-1),') - triplet excitation'
-            ELSE
-               WRITE (PRI_LINE,'(A,I5,A,I2,3A)')
-     &      '@ Excited state no:',(ISIM-1+INUM),' in symmetry',KSYMST,
-     &      '  ( ',REP(KSYMST-1),') - singlet excitation'
-            END IF
+     &      '  ( ',REP(KSYMST-1),') ',CALC_TYPE
             CALL HEADER(PRI_LINE,0)
             IF (KZCONF .GT. 1 .AND. KZWOPT .GT. 0) THEN
                EXCIT_TEST =
@@ -5222,30 +5230,33 @@ C
       IF (KZCONF.GT.0 .AND. KOFFTY.EQ.1) THEN
          CALL GETREF(WRK(KCREF),KZCONF)
       END IF
-      CALL DZERO(WRK(KBVEC),KZYVAR)
+      I = 2*KZYVAR*KZYVAR + KZYVAR
+      CALL DZERO(WRK(KE2),I)
+
       DO 100 I = 1,KZYVAR
-         IF (I.LE.KZCONF) THEN
+         IF (I.LE.KZCONF) THEN ! Z_c trial vector
             NCSIM = 1
             NOSIM = 0
             IOFF  = I
-         ELSE IF (I.LE.KZVAR) THEN
+         ELSE IF (I.LE.KZVAR) THEN ! Z_o trial vector
             NCSIM = 0
             NOSIM = 1
             IOFF  = I - KZCONF
-         ELSE IF (I.LE.KZVAR+KZCONF) THEN
-            GO TO 100
-         ELSE
+         ELSE IF (I.LE.KZVAR+KZCONF) THEN ! Y_c trial vector
+            GO TO 100 ! skip, result obtained from Z_c trial vector
+         ELSE ! Y_o trial vector
             NCSIM = 0
             NOSIM = 1
             IOFF  = I - KZVAR - KZCONF + KZWOPT
          ENDIF
          WRK(KBVEC-1+IOFF) = D1
          IF (( NCSIM.GT.0 ).AND.( KOFFTY.EQ.1)) THEN
-            IBOFF = 0
-            ICREF  = IOFF
-            IF (IOFF.GT.KZCONF) THEN
+            IF (IOFF.GT.KZCONF) THEN ! Y_c trial vector
                IBOFF = KZCONF
-               ICREF = ICREF - KZCONF
+               ICREF = IOFF - KZCONF
+            ELSE                     ! Z_c trial vector
+               IBOFF = 0
+               ICREF = IOFF
             END IF
             CALL DAXPY(KZCONF,-WRK(KCREF+ICREF-1),WRK(KCREF),1,
      *                 WRK(KBVEC+IBOFF),1)
@@ -5293,12 +5304,15 @@ C
             WRK(KBVEC-1+IOFF) = D0
          END IF
  100  CONTINUE
+
+C     Copy Z_c block to Y_c block
       KTOT = KZVAR * KZYVAR
       DO 105 J = 1,KZCONF
          JTOT = (J-1)*KZYVAR
          CALL DCOPY(KZVAR,WRK(KE2+JTOT),1,WRK(KE2+JTOT+KTOT+KZVAR),1)
          CALL DCOPY(KZVAR,WRK(KE2+JTOT+KZVAR),1,WRK(KE2+JTOT+KTOT),1)
          CALL DCOPY(KZVAR,WRK(KS2+JTOT),1,WRK(KS2+JTOT+KTOT+KZVAR),1)
+         CALL DSCAL(KZVAR,-1.0d0,WRK(KS2+JTOT+KTOT+KZVAR),1)
  105  CONTINUE
       WRITE(LUPRI,'(/A,I8)')' E(2) MATRIX : DIMENSION ',KZYVAR
       CALL OUTPUT(WRK(KE2),1,KZYVAR,1,KZYVAR,KZYVAR,KZYVAR,-1,LUPRI)

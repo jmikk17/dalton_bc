@@ -4,8 +4,11 @@
      *************** Dalton - An Electronic Structure Program ***************
      ************************************************************************
 
-    This is output from DALTON (Release Dalton2013 patch 0)
+    This is output from DALTON release Dalton2025.0-dev (2025)
+         ( Web site: http://daltonprogram.org )
+
    ----------------------------------------------------------------------------
+
     NOTE:
      
     Dalton is an experimental code for the evaluation of molecular
@@ -22,222 +25,261 @@
     If results obtained with this code are published,
     the appropriate citations would be both of:
      
-       K. Aidas, C. Angeli, K. L. Bak, V. Bakken, R. Bast,
-       L. Boman, O. Christiansen, R. Cimiraglia, S. Coriani,
-       P. Dahle, E. K. Dalskov, U. Ekstroem, T. Enevoldsen,
-       J. J. Eriksen, P. Ettenhuber, B. Fernandez, L. Ferrighi,
-       H. Fliegl, L. Frediani, K. Hald, A. Halkier, C. Haettig,
-       H. Heiberg, T. Helgaker, A. C. Hennum, H. Hettema,
-       E. Hjertenaes, S. Hoest, I.-M. Hoeyvik, M. F. Iozzi,
-       B. Jansik, H. J. Aa. Jensen, D. Jonsson, P. Joergensen,
-       J. Kauczor, S. Kirpekar, T. Kjaergaard, W. Klopper,
-       S. Knecht, R. Kobayashi, H. Koch, J. Kongsted, A. Krapp,
-       K. Kristensen, A. Ligabue, O. B. Lutnaes, J. I. Melo,
-       K. V. Mikkelsen, R. H. Myhre, C. Neiss, C. B. Nielsen,
-       P. Norman, J. Olsen, J. M. H. Olsen, A. Osted,
-       M. J. Packer, F. Pawlowski, T. B. Pedersen, P. F. Provasi,
-       S. Reine, Z. Rinkevicius, T. A. Ruden, K. Ruud, V. Rybkin,
-       P. Salek, C. C. M. Samson, A. Sanchez de Meras, T. Saue,
-       S. P. A. Sauer, B. Schimmelpfennig, K. Sneskov,
-       A. H. Steindal, K. O. Sylvester-Hvid, P. R. Taylor,
-       A. M. Teale, E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen,
-       L. Thoegersen, O. Vahtras, M. A. Watson, D. J. D. Wilson,
-       M. Ziolkowski and H. Agren.
-       The Dalton quantum chemistry program system.
-       WIREs Comput. Mol. Sci. 2013. doi: 10.1002/wcms.1172
-    
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
+     
     and
-    
-       Dalton, a Molecular Electronic Structure Program,
-       Release DALTON2013.0 (2013), see http://daltonprogram.org
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2025.0-dev (2025), see http://daltonprogram.org
    ----------------------------------------------------------------------------
 
-    Authors in alphabetical order (major contribution(s) in parenthesis):
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
 
-  Kestutis Aidas,           Vilnius University,           Lithuania   (QM/MM)
-  Celestino Angeli,         University of Ferrara,        Italy       (NEVPT2)
-  Keld L. Bak,              UNI-C,                        Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
-  Vebjoern Bakken,          University of Oslo,           Norway      (DALTON; geometry optimizer, symmetry detection)
-  Radovan Bast,             KTH Stockholm                 Sweden      (DALTON installation and execution frameworks)
-  Linus Boman,              NTNU,                         Norway      (Cholesky decomposition and subsystems)
-  Ove Christiansen,         Aarhus University,            Denmark     (CC module)
-  Renzo Cimiraglia,         University of Ferrara,        Italy       (NEVPT2)
-  Sonia Coriani,            University of Trieste,        Italy       (CC module, MCD in RESPONS)
-  Paal Dahle,               University of Oslo,           Norway      (Parallelization)
-  Erik K. Dalskov,          UNI-C,                        Denmark     (SOPPA)
-  Thomas Enevoldsen,        Univ. of Southern Denmark,    Denmark     (SOPPA)
-  Janus J. Eriksen,         Aarhus University,            Denmark     (PE-MP2/SOPPA, TDA)
-  Berta Fernandez,          U. of Santiago de Compostela, Spain       (doublet spin, ESR in RESPONS)
-  Lara Ferrighi,            Aarhus University,            Denmark     (PCM Cubic response)
-  Heike Fliegl,             University of Oslo,           Norway      (CCSD(R12))
-  Luca Frediani,            UiT The Arctic U. of Norway,  Norway      (PCM)
-  Bin Gao,                  UiT The Arctic U. of Norway,  Norway      (Gen1Int library)
-  Christof Haettig,         Ruhr-University Bochum,       Germany     (CC module)
-  Kasper Hald,              Aarhus University,            Denmark     (CC module)
-  Asger Halkier,            Aarhus University,            Denmark     (CC module)
-  Hanne Heiberg,            University of Oslo,           Norway      (geometry analysis, selected one-electron integrals)
-  Trygve Helgaker,          University of Oslo,           Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
-  Alf Christian Hennum,     University of Oslo,           Norway      (Parity violation)
-  Hinne Hettema,            University of Auckland,       New Zealand (quadratic response in RESPONS; SIRIUS supersymmetry)
-  Eirik Hjertenaes,         NTNU,                         Norway      (Cholesky decomposition)
-  Maria Francesca Iozzi,    University of Oslo,           Norway      (RPA)
-  Brano Jansik              Technical Univ. of Ostrava    Czech Rep.  (DFT cubic response)
-  Hans Joergen Aa. Jensen,  Univ. of Southern Denmark,    Denmark     (DALTON; SIRIUS, RESPONS, ABACUS modules, London, and much more)
-  Dan Jonsson,              UiT The Arctic U. of Norway,  Norway      (cubic response in RESPONS module)
-  Poul Joergensen,          Aarhus University,            Denmark     (RESPONS, ABACUS, and CC modules)
-  Joanna Kauczor,           Linkoeping University,        Sweden      (Complex polarization propagator (CPP) module)
-  Sheela Kirpekar,          Univ. of Southern Denmark,    Denmark     (Mass-velocity & Darwin integrals)
-  Wim Klopper,              KIT Karlsruhe,                Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
-  Stefan Knecht,            ETH Zurich,                   Switzerland (Parallel CI and MCSCF)
-  Rika Kobayashi,           Australian National Univ.,    Australia   (DIIS in CC, London in MCSCF)
-  Henrik Koch,              NTNU,                         Norway      (CC module, Cholesky decomposition)
-  Jacob Kongsted,           Univ. of Southern Denmark,    Denmark     (Polarizable embedding, QM/MM)
-  Andrea Ligabue,           University of Modena,         Italy       (CTOCD, AOSOPPA)
-  Ola B. Lutnaes,           University of Oslo,           Norway      (DFT Hessian)
-  Juan I. Melo,             University of Buenos Aires,   Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
-  Kurt V. Mikkelsen,        University of Copenhagen,     Denmark     (MC-SCRF and QM/MM)
-  Rolf H. Myhre,            NTNU,                         Norway      (Cholesky, subsystems and ECC2)
-  Christian Neiss,          Univ. Erlangen-Nuernberg,     Germany     (CCSD(R12))
-  Christian B. Nielsen,     University of Copenhagen,     Denmark     (QM/MM)
-  Patrick Norman,           Linkoeping University,        Sweden      (Cubic response and complex response in RESPONS)
-  Jeppe Olsen,              Aarhus University,            Denmark     (SIRIUS CI/density modules)
-  Jogvan Magnus H. Olsen,   Univ. of Southern Denmark,    Denmark     (Polarizable embedding, PE library, QM/MM)
-  Anders Osted,             Copenhagen University,        Denmark     (QM/MM)
-  Martin J. Packer,         University of Sheffield,      UK          (SOPPA)
-  Filip Pawlowski,          Kazimierz Wielki University   Poland      (CC3)
-  Thomas B. Pedersen,       University of Oslo,           Norway      (Cholesky decomposition)
-  Patricio F. Provasi,      University of Northeastern,   Argentina   (Analysis of coupling constants in localized orbitals)
-  Zilvinas Rinkevicius,     KTH Stockholm,                Sweden      (open-shell DFT, ESR)
-  Elias Rudberg,            KTH Stockholm,                Sweden      (DFT grid and basis info)
-  Torgeir A. Ruden,         University of Oslo,           Norway      (Numerical derivatives in ABACUS)
-  Kenneth Ruud,             UiT The Arctic U. of Norway,  Norway      (DALTON; ABACUS magnetic properties and  much more)
-  Pawel Salek,              KTH Stockholm,                Sweden      (DALTON; DFT code)
-  Claire C. M. Samson       University of Karlsruhe       Germany     (Boys localization, r12 integrals in ERI)
-  Alfredo Sanchez de Meras, University of Valencia,       Spain       (CC module, Cholesky decomposition)
-  Trond Saue,               Paul Sabatier University,     France      (direct Fock matrix construction)
-  Stephan P. A. Sauer,      University of Copenhagen,     Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
-  Bernd Schimmelpfennig,    Forschungszentrum Karlsruhe,  Germany     (AMFI module)
-  Kristian Sneskov,         Aarhus University,            Denmark     (QM/MM, PE-CC)
-  Arnfinn H. Steindal,      UiT The Arctic U. of Norway,  Norway      (parallel QM/MM)
-  K. O. Sylvester-Hvid,     University of Copenhagen,     Denmark     (MC-SCRF)
-  Peter R. Taylor,          VLSCI/Univ. of Melbourne,     Australia   (Symmetry handling ABACUS, integral transformation)
-  Andrew M. Teale,          University of Nottingham,     England     (DFT-AC, DFT-D)
-  David P. Tew,             University of Bristol,        England     (CCSD(R12))
-  Olav Vahtras,             KTH Stockholm,                Sweden      (triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
-  David J. Wilson,          La Trobe University,          Australia   (DFT Hessian and DFT magnetizabilities)
-  Hans Agren,               KTH Stockholm,                Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation model)
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
  --------------------------------------------------------------------------------
 
-     Date and time (Linux)  : Sun Sep  8 20:40:09 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
+     Date and time (Linux)  : Fri May  9 10:28:20 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
  * Work memory size             :    64000000 =  488.28 megabytes.
 
  * Directories for basis set searches:
-   1) /home/bast/DALTON-2013.0-Source/build/test_hfmmpcm_1
-   2) /home/bast/DALTON-2013.0-Source/build/basis
+   1) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/test/hfmmpcm_1
+   2) /home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis
 
 
 Compilation information
 -----------------------
 
- Who compiled             | bast
- Host                     | lpqlx131.ups-tlse.fr
- System                   | Linux-3.8.5-201.fc18.x86_64
+ Who compiled             | hjj
+ Host                     | adm-110765.pc.sdu.dk
+ System                   | Linux-6.11.0-25-generic
  CMake generator          | Unix Makefiles
  Processor                | x86_64
  64-bit integers          | OFF
  MPI                      | OFF
- Fortran compiler         | /usr/bin/gfortran
- Fortran compiler version | GNU Fortran (GCC) 4.7.2 20121109 (Red Hat 4.7.2-8)
- C compiler               | /usr/bin/gcc
- C compiler version       | gcc (GCC) 4.7.2 20121109 (Red Hat 4.7.2-8)
- C++ compiler             | /usr/bin/g++
- C++ compiler version     | g++ (GCC) 4.7.2 20121109 (Red Hat 4.7.2-8)
+ Fortran compiler         | /opt/intel/oneapi/2025.1/bin/ifx
+ Fortran compiler version | ifx (IFX) 2025.1.1 20250418
+ C compiler               | /opt/intel/oneapi/2025.1/bin/icx
+ C compiler version       | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ C++ compiler             | /opt/intel/oneapi/2025.1/bin/icpx
+ C++ compiler version     | Intel(R) oneAPI DPC++/C++ Compiler 2025.1.1 (2025.
+                          | 1.1.20250418)
+ BLAS                     | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_intel_
+                          | lp64.so;/opt/intel/oneapi/2025.1/lib/intel64/libmk
+                          | l_sequential.so;/opt/intel/oneapi/2025.1/lib/intel
+                          | 64/libmkl_core.so;/usr/lib/x86_64-linux-gnu/libpth
+                          | read.a;/usr/lib/x86_64-linux-gnu/libm.so
+ LAPACK                   | /opt/intel/oneapi/2025.1/lib/intel64/libmkl_lapack
+                          | 95_lp64.a;/opt/intel/oneapi/2025.1/lib/intel64/lib
+                          | mkl_intel_lp64.so
  Static linking           | OFF
- Last Git revision        | f34203295a86316e27f9e7b44f9b6769c4a046c0
- Configuration time       | 2013-09-08 20:31:27.952056
+ Last Git revision        | d7b65be647c556da3ad56bf6498d867e1336e077
+ Git branch               | hjaaj-mcapsg
+ Configuration time       | 2025-05-09 10:12:19.645684
+
+ * Sequential calculation.
 
 
    Content of the .dal input file
  ----------------------------------
 
-**DALTON                                          
-.RUN PROPERTIES                                   
-*PCM                                              
-.SOLVNT                                           
-WATER                                             
-.NPCMMT                                           
-0                                                 
-.NESFP                                            
-4                                                 
-.ICESPH                                           
-1                                                 
-*PCMCAV                                           
-.CENTER                                           
--1.588367    -.770650     .029109                 
--1.657083     .436069    -.009750                 
-.975536    1.507219    -.082590                   
-1.633705   -1.233280    -.078786                  
-.RIN                                              
-2.325                                             
-1.750                                             
-1.950                                             
-1.950                                             
-*QM3                                              
-.QM3                                              
-.PRINT                                            
- 1                                                
-.THRDIP                                           
- 1.0D-12                                          
-.MAXDIP                                           
- 180                                              
-.MMPCM                                            
-.INTDIR                                           
-**INTEGRALS                                       
-.DIPLEN                                           
-.NOSUP                                            
-.PRINT                                            
- 2                                                
-**WAVE FUNCTIONS                                  
-.HF                                               
-*SCF INPUT                                        
-.THRESHOLD                                        
- 1.0D-08                                          
-**PROPERTIES                                      
-.EXCITA                                           
-*EXCITA                                           
-.NEXCIT                                           
- 4                                                
-.THRESH                                           
- 1.0D-05                                          
-.PRINT                                            
-10                                                
-**END OF DALTON INPUT                             
+**DALTON
+.RUN PROPERTIES
+*PCM
+.SOLVNT
+WATER
+.NPCMMT
+0
+.NESFP
+4
+.ICESPH
+1
+*PCMCAV
+.CENTER
+-1.588367    -.770650     .029109
+-1.657083     .436069    -.009750
+.975536    1.507219    -.082590
+1.633705   -1.233280    -.078786
+.RIN
+2.325
+1.750
+1.950
+1.950
+*QM3
+.QM3
+.PRINT
+ 1
+.THRDIP
+ 1.0D-12
+.MAXDIP
+ 180
+.MMPCM
+.INTDIR
+**INTEGRALS
+.DIPLEN
+.NOSUP
+.PRINT
+ 2
+**WAVE FUNCTIONS
+.HF
+*SCF INPUT
+.THRESHOLD
+ 1.0D-08
+**PROPERTIES
+.EXCITA
+*EXCITA
+.NEXCIT
+ 4
+.THRESH
+ 1.0D-05
+.PRINT
+10
+**END OF DALTON INPUT
 
 
    Content of the .mol file
  ----------------------------
 
-ATOMBASIS                                                                      
-CH2O PLUS 2 WATERS                                                             
-------------------------                                                       
-    5    0         1 1.00D-12                                                  
-        6.0   1    Basis=STO-3G                                                
-C           -1.588367    -.770650     .029109 0 1                              
-        8.0   1    Basis=STO-3G                                                
-O           -1.657083     .436069    -.009750 0 2                              
-        1.0   2    Basis=STO-3G                                                
-H           -.620668   -1.294822      .054251 0 3                              
-H           -2.508043   -1.382001     .040282 0 4                              
-   -0.669     2   Basis=MM                                                     
-O             .975536    1.507219    -.082590 1 1                              
-O            1.633705   -1.233280    -.078786 2 1                              
-    0.3345    4   Basis=MM                                                     
-H             .023200    1.300096    -.088063 1 2                              
-H            1.113831    2.040431     .704778 1 3                              
-H            1.600739    -.258639    -.086953 2 2                              
-H            2.303878   -1.461228     .570065 2 3                              
+ATOMBASIS
+CH2O PLUS 2 WATERS
+------------------------
+    5    0         1 1.00D-12
+        6.0   1    Basis=STO-3G
+C           -1.588367    -.770650     .029109 0 1
+        8.0   1    Basis=STO-3G
+O           -1.657083     .436069    -.009750 0 2
+        1.0   2    Basis=STO-3G
+H           -.620668   -1.294822      .054251 0 3
+H           -2.508043   -1.382001     .040282 0 4
+   -0.669     2   Basis=MM
+O             .975536    1.507219    -.082590 1 1
+O            1.633705   -1.233280    -.078786 2 1
+    0.3345    4   Basis=MM
+H             .023200    1.300096    -.088063 1 2
+H            1.113831    2.040431     .704778 1 3
+H            1.600739    -.258639    -.086953 2 2
+H            2.303878   -1.461228     .570065 2 3
 
 
        *******************************************************************
@@ -257,7 +299,7 @@ H            2.303878   -1.461228     .570065 2 3
  ** LOOKING UP INTERNALLY STORED DATA FOR SOLVENT = WATER    **
  Optical and physical constants:
  EPS= 78.390; EPSINF=  1.776; RSOLV=  1.385 A; VMOL=  18.070 ML/MOL;
- TCE=2.57000D-04 1/K; STEN= 71.810 DYN/CM;  DSTEN=  0.6500; CMF=  1.2770
+ TCE= 2.57000D-04 1/K; STEN= 71.810 DYN/CM;  DSTEN=  0.6500; CMF=  1.2770
 
 
      -----------------------------------
@@ -290,7 +332,7 @@ H            2.303878   -1.461228     .570065 2 3
  |  WORD: | CHANGE: |
  +------------------+
  |    QM3 |       T |
- | THDISC | 1.0D-12 |
+ | THDISC |  1.0D-12 |
  | MXDIIT |     180 |
  |  PRINT |       1 |
  +------------------+
@@ -329,10 +371,10 @@ H            2.303878   -1.461228     .570065 2 3
 
 
     The two title cards from your ".mol" input:
-    ------------------------------------------------------------------------
- 1: CH2O PLUS 2 WATERS                                                      
- 2: ------------------------                                                
-    ------------------------------------------------------------------------
+    --------------------------------------------------------------------------------
+ 1: CH2O PLUS 2 WATERS
+ 2: ------------------------
+    --------------------------------------------------------------------------------
 
   Coordinates are entered in Angstrom and converted to atomic units.
           - Conversion factor : 1 bohr = 0.52917721 A
@@ -344,7 +386,7 @@ H            2.303878   -1.461228     .570065 2 3
   Number of basis sets to read;    2
   The basis set is "STO-3G" from the basis set library.
   Basis set file used for this atomic type with Z =   6 :
-     "/home/bast/DALTON-2013.0-Source/build/basis/STO-3G"
+     "/home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis/STO-3G"
 
   Atomic type no.    2
   --------------------
@@ -353,7 +395,7 @@ H            2.303878   -1.461228     .570065 2 3
   Number of basis sets to read;    2
   The basis set is "STO-3G" from the basis set library.
   Basis set file used for this atomic type with Z =   8 :
-     "/home/bast/DALTON-2013.0-Source/build/basis/STO-3G"
+     "/home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis/STO-3G"
 
   Atomic type no.    3
   --------------------
@@ -362,7 +404,7 @@ H            2.303878   -1.461228     .570065 2 3
   Number of basis sets to read;    2
   The basis set is "STO-3G" from the basis set library.
   Basis set file used for this atomic type with Z =   1 :
-     "/home/bast/DALTON-2013.0-Source/build/basis/STO-3G"
+     "/home/hjj/progs/gitDalton_hjaaj-apsg/build_mcapsg_intel/basis/STO-3G"
 
   Atomic type no.    4
   --------------------
@@ -382,9 +424,10 @@ H            2.303878   -1.461228     .570065 2 3
                          SYMGRP: Point group information
                          -------------------------------
 
-Point group: C1 
+@    Point group: C1 
 PCMSPHGEN: SPHERE CENTERS FROM INPUT
- ********SPHERES IN PCMSPHGEN************
+
+********SPHERES IN PCMSPHGEN************
  INDEX        X        Y         Z        R
    1   -3.0015783979D+00   -1.4563173324D+00    5.5008033777D-02    2.3250000000D+00
    2   -3.1314328089D+00    8.2405092174D-01   -1.8424828380D-02    1.7500000000D+00
@@ -404,6 +447,7 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
                        Natural abundance:  98.633 %
 
  Center-of-mass coordinates (a.u.):   -3.067740   -0.312997    0.018175
+ Center-of-mass coordinates (Angs):   -1.623378   -0.165631    0.009618
 
 
   Atoms and basis sets
@@ -489,7 +533,7 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  Rotational constants
  --------------------
 
- The molecule is planar.
+@    The molecule is planar.
 
                A                   B                   C
 
@@ -540,14 +584,18 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
 
 
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
     *************************************************************************
     ****************** Output from HERMIT input processing ******************
     *************************************************************************
 
 
  Default print level:        2
-
- * Nuclear model: Point charge
 
  Calculation of one- and two-electron Hamiltonian integrals.
 
@@ -560,6 +608,8 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
  Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
 
+Calculation of 2-electron integrals are postponed until they are needed.
+
 
      ************************************************************************
      ************************** Output from HERONE **************************
@@ -567,18 +617,23 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
 
 
-     ************************************************************************
-     ************************** Output from TWOINT **************************
-     ************************************************************************
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x    -48.97334290      -124.47781350      -415.21329231
+      y     -7.20395913       -18.31063652       -61.07770905
+      z      0.36129107         0.91831024         3.06315324
 
 
- Threshold for neglecting two-electron integrals:  1.00D-12
- Number of two-electron integrals written:        2907 ( 94.4% )
- Megabytes written:                              0.034
 
+ MEMORY USED TO GENERATE CAVITY =    432802
 
- MEMORY USED TO GENERATE CAVITY =    432202
-
+ in pcmtns, vmat is
+ -5.682660645149729E-002  0.997867115120820      -3.212409313363758E-002
+  0.998344744053647       5.708050403819188E-002  7.041880374160803E-003
+ -8.860520281827614E-003  3.167075337275597E-002  0.999459080983878     
  Tessera cut in pieces and removed.
 
  Total number of spheres =    4
@@ -591,14 +646,16 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  Total number of tesserae =     554
  Surface area =  166.14136473 (A^2)    Cavity volume =  171.52410842 (A^3)
 
+ Surface area =  593.30158062199473 (AU^2)    Cavity volume = 1157.50201667047600 (AU^3)
+
           THE SOLUTE IS ENCLOSED IN ONE CAVITY
 
  ..... DONE GENERATION CAVITY .....
-
+ 
   ..... DONE GENERATING -Q-  MATRIX .....
- >>>  Time used in Q-MAT      is   1.70 seconds
- >>>> Total CPU  time used in HERMIT:   1.74 seconds
- >>>> Total wall time used in HERMIT:   1.75 seconds
+  Time used in Q-MAT      is       0.30 seconds
+  Total CPU  time used in HERMIT:   0.31 seconds
+  Total wall time used in HERMIT:   0.31 seconds
 
 
                         .----------------------------------.
@@ -628,17 +685,19 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  **********************************************************************
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:10 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
+     Date and time (Linux)  : Fri May  9 10:28:20 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
  Title lines from ".mol" input file:
-     CH2O PLUS 2 WATERS                                                      
-     ------------------------                                                
+     CH2O PLUS 2 WATERS
+     ------------------------
 
  Print level on unit LUPRI =   2 is   0
  Print level on unit LUW4  =   2 is   5
 
 @    Restricted, closed shell Hartree-Fock calculation.
+
+@    Time-dependent Hartree-Fock calculation (random phase approximation).
 
  Initial molecular orbitals are obtained according to
  ".MOSTART EHT   " input option
@@ -651,23 +710,24 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
      Wave function specification
      ============================
-@    For the wave function of type :      >>> HF <<<
+@    Wave function type        --- HF ---
 @    Number of closed shell electrons          16
 @    Number of electrons in active shells       0
 @    Total charge of the molecule               0
 
 @    Spin multiplicity and 2 M_S                1         0
-     Total number of symmetries                 1
-@    Reference state symmetry                   1
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
 
      Orbital specifications
      ======================
-     Abelian symmetry species          All |    1
+@    Abelian symmetry species          All |    1
+@                                          |  A  
                                        --- |  ---
 @    Occupied SCF orbitals               8 |    8
-     Secondary orbitals                  4 |    4
-     Total number of orbitals           12 |   12
-     Number of basis functions          12 |   12
+@    Secondary orbitals                  4 |    4
+@    Total number of orbitals           12 |   12
+@    Number of basis functions          12 |   12
 
      Optimization information
      ========================
@@ -693,223 +753,290 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  ..... DONE WITH INDUCED NUCLEAR CHARGES .....
 
 
- >>>>> DIIS optimization of Hartree-Fock <<<<<
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
 
- C1-DIIS algorithm; max error vectors =   10
+ C1-DIIS algorithm; max error vectors =    8
 
  Iter      Total energy       Solvation energy    Error norm    Delta(E)
  -----------------------------------------------------------------------------
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from TWOINT **************************
+     ************************************************************************
+
+
+***  INFO  GETGAB: GABSO--- not found on AOGABINT. Regenerating.
+
+
+                            **************************
+                            *** Output from GABDRV ***
+                            **************************
+
+ GABSO--- matrix
+
+               Column   1     Column   2     Column   3     Column   4     Column   5     Column   6
+       1       1.88200641     0.37147850     0.30176011     0.30488598     0.38015300     0.37844154
+       2       0.37147850     0.82026381     0.39371626     0.35833823     0.37832252     0.35971394
+       3       0.30176011     0.39371626     2.18747924     0.42487456     0.05708650     0.05835420
+       4       0.30488598     0.35833823     0.42487456     0.93816795     0.05993411     0.06421234
+       5       0.38015300     0.37832252     0.05708650     0.05993411     0.88011700     0.10331921
+       6       0.37844154     0.35971394     0.05835420     0.06421234     0.10331921     0.88011700
+    ==== End of matrix output ====
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:        2907 ( 94.4% )
+ HERMIT - Megabytes written:                              0.137
+
       QM3 induced Dipole vector converged in  14 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    5.412042470973047
+      Final norm2 of QM3 induced dipole moment vector:    5.412042470973105
       QM3 induced Dipole vector converged in  14 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.150551645812677
+      Final norm2 of QM3 induced dipole moment vector:    0.150551645812679
       QM3 induced Dipole vector converged in  13 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.075813565725633
+      Final norm2 of QM3 induced dipole moment vector:    0.075813565725634
       QM3 induced Dipole vector converged in  12 iterations.
       Final norm2 of QM3 induced dipole moment vector:    0.072542605833626
       QM3 induced Dipole vector converged in  10 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.072254407724905
+      Final norm2 of QM3 induced dipole moment vector:    0.072254407724906
  MMPCM converged for given density
  No. of iterations:            5
-@  1  -112.136086570     -2.738743233740E-02    2.28648D+00   -1.12D+02
+@  1  -112.136086570     -2.738743233739E-02    2.28648D+00   -1.12D+02
       Virial theorem: -V/T =      2.000081
-@      MULPOP C       0.99; O      -0.72; H      -0.14; H      -0.14; 
+@    MULPOP   C       0.99; O      -0.72; H      -0.14; H      -0.14; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in  13 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.030266857804541
+      Final norm2 of QM3 induced dipole moment vector:    0.037816374585346
       QM3 induced Dipole vector converged in  13 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.050112803523036
+      Final norm2 of QM3 induced dipole moment vector:    0.054645971600005
+      QM3 induced Dipole vector converged in  11 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.056055013453334
+ MMPCM converged for given density
+ No. of iterations:            3
+@  2  -112.352786327     -1.192466693293E-02    4.95083D-01   -2.17D-01
+      Virial theorem: -V/T =      2.010217
+@    MULPOP   C      -0.14; O      -0.03; H       0.09; H       0.08; 
+   2  Level shift: doubly occupied orbital energies shifted by -5.00D-02
+ -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in  12 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.051861493492665
+      Final norm2 of QM3 induced dipole moment vector:    0.067711198866715
+      QM3 induced Dipole vector converged in  12 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.061910147185442
+      QM3 induced Dipole vector converged in  11 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.061485820528421
+ MMPCM converged for given density
+ No. of iterations:            3
+@  3  -112.366301237     -1.565334366071E-02    1.07732D-01   -1.35D-02
+      Virial theorem: -V/T =      2.008130
+@    MULPOP   C       0.13; O      -0.27; H       0.08; H       0.06; 
+   3  Level shift: doubly occupied orbital energies shifted by -1.25D-02
+ -----------------------------------------------------------------------------
+      QM3 induced Dipole vector converged in  12 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.058098448193963
+      QM3 induced Dipole vector converged in  12 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059811490627064
       QM3 induced Dipole vector converged in  10 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.052001478920042
- MMPCM converged for given density
- No. of iterations:            4
-@  2  -112.324249034     -9.222059414906E-03    8.20732D-01   -1.88D-01
-      Virial theorem: -V/T =      2.010892
-@      MULPOP C      -0.36; O       0.14; H       0.12; H       0.10; 
- -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in  13 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.076625718625914
-      QM3 induced Dipole vector converged in  12 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.063387238255147
-      QM3 induced Dipole vector converged in  11 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.062450594641350
+      Final norm2 of QM3 induced dipole moment vector:    0.059941055009540
  MMPCM converged for given density
  No. of iterations:            3
-@  3  -112.364682950     -1.636277228594E-02    1.85912D-01   -4.04D-02
-      Virial theorem: -V/T =      2.007797
-@      MULPOP C       0.18; O      -0.31; H       0.08; H       0.05; 
+@  4  -112.367385154     -1.449314081897E-02    3.08322D-02   -1.08D-03
+      Virial theorem: -V/T =      2.008339
+@    MULPOP   C       0.06; O      -0.22; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in  12 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.057132369398727
-      QM3 induced Dipole vector converged in  12 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059765845454907
-      QM3 induced Dipole vector converged in  11 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059966148238755
- MMPCM converged for given density
- No. of iterations:            3
-@  4  -112.367430321     -1.451520471122E-02    1.96606D-02   -2.75D-03
-      Virial theorem: -V/T =      2.008330
-@      MULPOP C       0.07; O      -0.22; H       0.09; H       0.06; 
- -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in   9 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059994444277197
-      QM3 induced Dipole vector converged in   8 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059990813195095
+      QM3 induced Dipole vector converged in  10 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.060085218867542
+      QM3 induced Dipole vector converged in  10 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.060019769756833
  MMPCM converged for given density
  No. of iterations:            2
-@  5  -112.367461386     -1.452342835774E-02    2.27134D-03   -3.11D-05
-      Virial theorem: -V/T =      2.008256
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@  5  -112.367456176     -1.454134511825E-02    5.68229D-03   -7.10D-05
+      Virial theorem: -V/T =      2.008246
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in   9 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059969787270604
-      QM3 induced Dipole vector converged in   9 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059980524640454
+      QM3 induced Dipole vector converged in  10 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059944920885481
+      QM3 induced Dipole vector converged in  10 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059979784752199
  MMPCM converged for given density
  No. of iterations:            2
-@  6  -112.367462168     -1.451688071216E-02    6.86425D-04   -7.83D-07
-      Virial theorem: -V/T =      2.008257
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@  6  -112.367461873     -1.451807125442E-02    1.43208D-03   -5.70D-06
+      Virial theorem: -V/T =      2.008255
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   8 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059974604260305
+      Final norm2 of QM3 induced dipole moment vector:    0.059971155897208
       QM3 induced Dipole vector converged in   9 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059978211842337
+      Final norm2 of QM3 induced dipole moment vector:    0.059977408690670
  MMPCM converged for given density
  No. of iterations:            2
-@  7  -112.367462255     -1.451462993156E-02    2.28531D-04   -8.72D-08
-      Virial theorem: -V/T =      2.008258
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
- -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in   7 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059976764925095
-      QM3 induced Dipole vector converged in   8 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977647695200
- MMPCM converged for given density
- No. of iterations:            2
-@  8  -112.367462264     -1.451402558677E-02    1.47097D-05   -8.30D-09
+@  7  -112.367462255     -1.451415962146E-02    1.90718D-04   -3.81D-07
       Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
+ -----------------------------------------------------------------------------
+      QM3 induced Dipole vector converged in   8 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977582621979
+      QM3 induced Dipole vector converged in   7 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977678010095
+ MMPCM converged for given density
+ No. of iterations:            2
+@  8  -112.367462263     -1.451401901143E-02    1.78532D-05   -8.22D-09
+      Virial theorem: -V/T =      2.008259
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   6 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977623367323
-      QM3 induced Dipole vector converged in   7 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977669911930
+      Final norm2 of QM3 induced dipole moment vector:    0.059977610177754
+      QM3 induced Dipole vector converged in   6 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977647818405
  MMPCM converged for given density
  No. of iterations:            2
-@  9  -112.367462265     -1.451398727582E-02    4.58769D-06   -8.25D-10
+@  9  -112.367462264     -1.451398153046E-02    8.33893D-06   -8.77D-10
       Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   6 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977685458895
-      QM3 induced Dipole vector converged in   4 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977683182312
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693885865
+      QM3 induced Dipole vector converged in   6 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977680398066
  MMPCM converged for given density
  No. of iterations:            2
-@ 10  -112.367462265     -1.451398816177E-02    2.55815D-06   -3.74D-10
+@ 10  -112.367462265     -1.451398878343E-02    4.19048D-06   -9.12D-10
       Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   5 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977696276541
-      QM3 induced Dipole vector converged in   4 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977692720823
+      Final norm2 of QM3 induced dipole moment vector:    0.059977696875418
+      QM3 induced Dipole vector converged in   5 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977692739701
  MMPCM converged for given density
  No. of iterations:            2
-@ 11  -112.367462265     -1.451398949856E-02    3.28831D-07   -4.63D-10
+@ 11  -112.367462265     -1.451398919207E-02    3.45709D-07   -8.20D-10
       Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
- -----------------------------------------------------------------------------
-      QM3 induced Dipole vector converged in   3 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977693238063
-      QM3 induced Dipole vector converged in   3 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977692969081
- MMPCM converged for given density
- No. of iterations:            2
-@ 12  -112.367462265     -1.451398940471E-02    3.16133D-08   -4.76D-11
-      Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   4 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977693329602
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693584678
       QM3 induced Dipole vector converged in   4 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977693154316
+      Final norm2 of QM3 induced dipole moment vector:    0.059977692999161
  MMPCM converged for given density
  No. of iterations:            2
-@ 13  -112.367462265     -1.451398951911E-02    1.22711D-08   -9.52D-13
+@ 12  -112.367462265     -1.451398937464E-02    5.46103D-08   -2.79D-11
       Virial theorem: -V/T =      2.008259
-@      MULPOP C       0.08; O      -0.23; H       0.09; H       0.06; 
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
+ -----------------------------------------------------------------------------
+      QM3 induced Dipole vector converged in   4 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693452744
+      QM3 induced Dipole vector converged in   4 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693222865
+ MMPCM converged for given density
+ No. of iterations:            2
+@ 13  -112.367462265     -1.451398954531E-02    2.03295D-08    4.69D-13
+      Virial theorem: -V/T =      2.008259
+@    MULPOP   C       0.08; O      -0.23; H       0.09; H       0.06; 
  -----------------------------------------------------------------------------
       QM3 induced Dipole vector converged in   3 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977693196321
-      QM3 induced Dipole vector converged in   2 iterations.
-      Final norm2 of QM3 induced dipole moment vector:    0.059977693175072
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693146717
+      QM3 induced Dipole vector converged in   3 iterations.
+      Final norm2 of QM3 induced dipole moment vector:    0.059977693183253
  MMPCM converged for given density
  No. of iterations:            2
-@ 14  -112.367462265     -1.451398952346E-02    3.22752D-09   -1.45D-12
+@ 14  -112.367462265     -1.451398953190E-02    5.01815D-09    6.54D-13
 
 @ *** DIIS converged in  14 iterations !
-@     Converged SCF energy, gradient:   -112.367462265439    3.23D-09
+@     Converged SCF energy, gradient:   -112.367462265440    5.02D-09
     - total time used in SIRFCK :              0.00 seconds
 
 
  *** SCF orbital energy analysis ***
     (incl. solvent contribution)
 
- Only the five lowest virtual orbital energies printed in each symmetry.
-
- Number of electrons :   16
- Orbital occupations :    8
+ Number of electrons        :   16
+ Closed shell orbitals      :    8
 
  Sym       Hartree-Fock orbital energies
 
-  1    -20.30528845   -11.12705574    -1.34663542    -0.80263229    -0.63925268
-        -0.55094727    -0.45086311    -0.35712770     0.28278697     0.62777662
-         0.74965834     0.91959341
+1 A     -20.30528845   -11.12705574    -1.34663542    -0.80263229    -0.63925268
+         -0.55094727    -0.45086311    -0.35712770     0.28278697     0.62777662
+          0.74965834     0.91959341
 
     E(LUMO) :     0.28278697 au (symmetry 1)
   - E(HOMO) :    -0.35712770 au (symmetry 1)
   ------------------------------------------
     gap     :     0.63991467 au
 
- >>> Writing SIRIFC interface file <<<
+ --- Writing SIRIFC interface file
 
- >>>> CPU and wall time for SCF :      17.726      18.247
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 8 principal poles with pole strength 1
+
+   ============  ============  ============  ============  ============
+      20.305288     11.127056      1.346635      0.802632      0.639253
+     552.535006    302.782589     36.643814     21.840735     17.394950
+   ============  ============  ============  ============  ============
+
+   ============  ============  ============
+       0.550947      0.450863      0.357128
+      14.992038     12.268609      9.717939
+   ============  ============  ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A  ) :   552.535     302.783      36.644      21.841      17.395
+@                       14.992      12.269       9.718
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       6.982       6.983
 
 
                        .-----------------------------------.
-                       | >>> Final results from SIRIUS <<< |
+                       | --- Final results from SIRIUS --- |
                        `-----------------------------------'
 
 
 @    Spin multiplicity:           1
-@    Spatial symmetry:            1
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
 @    Total charge of molecule:    0
 
      QM/MM/PCM calculation converged :
 
-        Electrostatic energy:      -0.008690488440
-        Polarization energy:       -0.000706367084
+        Electrostatic energy:      -0.008690488453
+        Polarization energy:       -0.000706367085
         van der Waals energy:       0.000000000000
-        QM/MM/PCM energy:          -0.014513989523
+        QM/MM/PCM energy:          -0.014513989532
 
-@    Final HF energy:            -112.367462265439                 
+@    Final HF energy:            -112.367462265440                 
 @    Nuclear repulsion:            31.249215315972
-@    Electronic energy:          -143.602163591888
+@    Electronic energy:          -143.602163591880
 
-@    Final gradient norm:           0.000000003228
+@    Final gradient norm:           0.000000005018
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:29 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
+     Date and time (Linux)  : Fri May  9 10:28:27 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
- (Only coefficients >0.0100 are printed.)
+ ------------------------------------
+ Printout of final molecular orbitals
+ ------------------------------------
 
- Molecular orbitals for symmetry species  1
- ------------------------------------------
+ File label for these MO orbitals:   9May25   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
 
     Orbital         1        2        3        4        5        6        7
    1 C   :1s     0.0005   0.9926  -0.1229  -0.1876  -0.0031   0.0254   0.0001
@@ -925,31 +1052,26 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
   11 H   :1s     0.0002  -0.0065   0.0305   0.2518   0.2884   0.1549  -0.0001
   12 H   :1s     0.0003  -0.0065   0.0310   0.2624  -0.2854   0.1745  -0.0001
 
-    Orbital         8        9       10
-   1 C   :1s     0.0007  -0.0000   0.2014
-   2 C   :1s    -0.0041   0.0001  -1.2617
-   3 C   :2px   -0.2012  -0.0075   0.0292
-   4 C   :2py   -0.0027   0.0264   0.4871
-   5 C   :2pz   -0.0016   0.8299  -0.0150
-   6 O   :1s     0.0028   0.0000  -0.0222
-   7 O   :1s    -0.0132  -0.0001   0.1203
-   8 O   :2px    0.8639   0.0069  -0.0047
-   9 O   :2py    0.0401  -0.0240  -0.1933
-  10 O   :2pz    0.0070  -0.7599   0.0060
-  11 H   :1s    -0.3534  -0.0004   0.8633
-  12 H   :1s     0.3609   0.0000   0.9247
+    Orbital         8        9       10       11       12
+   1 C   :1s     0.0007  -0.0000   0.2014  -0.0122  -0.1064
+   2 C   :1s    -0.0041   0.0001  -1.2617   0.0807   0.7195
+   3 C   :2px   -0.2012  -0.0075   0.0292   1.1515  -0.1065
+   4 C   :2py   -0.0027   0.0264   0.4871   0.0778   1.1468
+   5 C   :2pz   -0.0016   0.8299  -0.0150   0.0077  -0.0374
+   6 O   :1s     0.0028   0.0000  -0.0222   0.0048   0.1184
+   7 O   :1s    -0.0132  -0.0001   0.1203  -0.0337  -0.8874
+   8 O   :2px    0.8639   0.0069  -0.0047  -0.3155  -0.0429
+   9 O   :2py    0.0401  -0.0240  -0.1933   0.0239   0.9353
+  10 O   :2pz    0.0070  -0.7599   0.0060  -0.0035  -0.0300
+  11 H   :1s    -0.3534  -0.0004   0.8633  -0.8825   0.1307
+  12 H   :1s     0.3609   0.0000   0.9247   0.8103   0.0607
 
-
-
- >>>> Total CPU  time used in SIRIUS :     17.73 seconds
- >>>> Total wall time used in SIRIUS :     18.25 seconds
+  Total CPU  time used in SIRIUS :   6.99 seconds
+  Total wall time used in SIRIUS :   6.99 seconds
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:29 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
-
- NOTE:    1 warnings have been issued.
- Check output, result, and error files for "WARNING".
+     Date and time (Linux)  : Fri May  9 10:28:27 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                      .---------------------------------------.
@@ -977,10 +1099,10 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  Changes of defaults for .EXCITA:
  --------------------------------
 
- Number of excitation energies:    4    0    0    0    0    0    0    0
+ Number of excitation energies:    4
  Print level          :   10
  Integral print level :    0
- Threshold            : 1.00E-05
+ Convergence threshold: 1.00E-05
  Maximum iterations   :   60
 
  Center of mass dipole origin  :   -3.067740   -0.312997    0.018175
@@ -994,9 +1116,14 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:29 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
-  <<<<<<<<<< Output from EXCITA >>>>>>>>>> 
+     Date and time (Linux)  : Fri May  9 10:28:27 2025
+     Host name              : adm-110765.pc.sdu.dk                    
+
+
+
+                  **********************************************
+                  *** ABACUS - Excitation energies (.EXCITA) ***
+                  **********************************************
 
 
 
@@ -1015,87 +1142,92 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
   THIS IS OUTPUT FROM THE MCSCF AND SOPPA RESPONSE SOLVER
  ---------------------------------------------------------
 
- Symmetry of excitation operator     1
- Number of excitations:     4
+ Symmetry of singlet excitation operator     1
+ Number of singlet excitations:     4
  Convergence threshold:     1.00D-05
 
- Integral transformation: Total CPU and WALL times (sec)       0.002       0.002
+ 2-el. integral transformation level 4: Total CPU and WALL times (sec)       0.002       0.002
+
+ Sorting integrals to Dirac format: Total CPU and WALL times (sec)       0.000       0.001
 
 
-   SCF energy         :     -112.367462265438732
- -- inactive part     :     -143.744198394210457
+   SCF energy         :     -112.367462265439869
+ -- inactive part     :     -143.744198394216141
  -- nuclear repulsion :       31.249215315972382
 
 
- >>>>>>>>>> Symmetry of excitation/property operator    1
+ ---------- Symmetry of excitation/property operator    1
 
  Number of excitations:     4
 
+ Orbital rotation list JWOP for symmetry1
+    1 :     1    9
+    2 :     1   10
+    3 :     1   11
+    4 :     1   12
+    5 :     2    9
+    6 :     2   10
+    7 :     2   11
+    8 :     2   12
+    9 :     3    9
+   10 :     3   10
+   11 :     3   11
+   12 :     3   12
+   13 :     4    9
+   14 :     4   10
+   15 :     4   11
+   16 :     4   12
+   17 :     5    9
+   18 :     5   10
+   19 :     5   11
+   20 :     5   12
+   21 :     6    9
+   22 :     6   10
+   23 :     6   11
+   24 :     6   12
+   25 :     7    9
+   26 :     7   10
+   27 :     7   11
+   28 :     7   12
+   29 :     8    9
+   30 :     8   10
+   31 :     8   11
+   32 :     8   12
 
- Perturbation symmetry.     KSYMOP:       1
- Perturbation spin symmetry.TRPLET:       F
- Orbital variables.         KZWOPT:      32
- Configuration variables.   KZCONF:       0
- Total number of variables. KZVAR :      32
+
+ Perturbation symmetry.     KSYMOP:           1
+ Perturbation spin symmetry.TRPLET:           F
+ Orbital variables.         KZWOPT:          32
+ Configuration variables.   KZCONF:           0
+ Total number of variables. KZVAR :          32
   IN RSPLEX: MAXRM               400
-  IN RSPLEX: LWRK ,LWRK1    63998662    63517462
-  IN RSPLEX: THCPP         1.0000000000000001E-005
+  IN RSPLEX: LWRK ,LWRK1    63998659    63517459
+  IN RSPLEX: THCPP        1.000000000000000E-005
 
 
 
- <<< EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) >>>
+ --- EXCITATION ENERGIES AND TRANSITION MOMENT CALCULATION (MCTDHF) ---
 
- Operator symmetry =  1; triplet =   F
+ Operator symmetry = 1  ( A  ); triplet =   F
 
- KEXST2,JEXST2 :          28           4
- (I,(ISTART(I),STVAL(I)),I=1,KEXST2)
-           1          29  0.64138898837128389     
-           2          25  0.73512440223631803     
-           3          21  0.83520855912367586     
-           4          17  0.92351397358598486     
-           5          30  0.98298318866617984     
-           6          26   1.0767186025312141     
-           7          13   1.0868935776563979     
-           8          31   1.1058281641406826     
-           9          22   1.1768027594185722     
-          10          27   1.1995635780057168     
-          11          18   1.2651081738808811     
-          12          32   1.2781762068357181     
-          13          23   1.2996477348930748     
-          14          28   1.3719116207007522     
-          15          19   1.3879531493553838     
-          16          14   1.4284877779512939     
-          17          24   1.4719957775881103     
-          18          15   1.5513327534257966     
-          19          20   1.5603011920504193     
-          20           9   1.6308967140807320     
-          21          16   1.7236807961208320     
-          22          10   1.9724909143756280     
-          23          11   2.0953358898501304     
-          24          12   2.2676839325451659     
-          25           5   11.411317029364254     
-          26           6   11.752911229659150     
-          27           7   11.875756205133651     
-          28           8   12.048104247828688     
- KEXSTV,JEXSTV :           4           4
- (I, IEQUAL(I), I = 1,JEXSTV)
-           1           1
-           2           1
-           3           1
-           4           1
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     3 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     4     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     4 1.00000D+00
            0  START configuration VECTORS USING LOWEST DIAGONAL HESSIAN ELEMENTS
            4  START orbital VECTORS
  AFTER START ROUTINE BINMEM T
 
  ** RSPCTL MICROITERATION NUMBER    1
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         4
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
 
  TRIAL VECTORS FOR RESTART:    4
 
@@ -1111,27 +1243,32 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  ROOT:  4 RESIDUAL TOT: 4.78728D-01 CONF: 0.00000D+00 ORB: 4.78728D-01
           BNORM: 7.29198D-01 EIVAL: 5.11099D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 5.95658D-04
+ RSPORT: b-vector, norm**2:     1 5.95658D-04
 
- RSPORT: b-vector, root no., norm**2:     2     1 3.72891D-03
+ RSPORT: b-vector, norm**2:     2 3.72891D-03
 
- RSPORT: b-vector, root no., norm**2:     3     1 2.05225D-06
+ RSPORT: b-vector, norm**2:     3 2.05225D-06
 
- RSPORT: b-vector, root no., norm**2:     4     1 2.51434D-02
+ RSPORT: b-vector, norm**2:     4 2.51434D-02
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     3 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     4     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     4 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     4 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    4
     4 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
 
  ** RSPCTL MICROITERATION NUMBER    2
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         4
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
 
  TRIAL VECTORS FOR RESTART:    8
 
@@ -1147,27 +1284,32 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  ROOT:  4 RESIDUAL TOT: 1.29587D-03 CONF: 0.00000D+00 ORB: 1.29587D-03
           BNORM: 7.07618D-01 EIVAL: 4.93521D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 2.65787D-08
+ RSPORT: b-vector, norm**2:     1 2.65787D-08
 
- RSPORT: b-vector, root no., norm**2:     2     1 2.12518D-06
+ RSPORT: b-vector, norm**2:     2 2.12518D-06
 
- RSPORT: b-vector, root no., norm**2:     3     1 4.12584D-04
+ RSPORT: b-vector, norm**2:     3 4.12584D-04
 
- RSPORT: b-vector, root no., norm**2:     4     1 4.21667D-08
+ RSPORT: b-vector, norm**2:     4 4.21667D-08
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     3 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     4     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     4 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     4 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    4
     4 LINEAR INDEPENDENT TRIAL VECTORS ADDED TO PREVIOUS    0
 
  ** RSPCTL MICROITERATION NUMBER    3
+
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         4
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
 
  TRIAL VECTORS FOR RESTART:   12
 
@@ -1183,21 +1325,21 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  ROOT:  4 RESIDUAL TOT: 6.27451D-04 CONF: 0.00000D+00 ORB: 6.27451D-04
           BNORM: 7.07618D-01 EIVAL: 4.93520D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 2.39293D-11
+ RSPORT: b-vector, norm**2:     1 2.39293D-11
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.23484D-08
+ RSPORT: b-vector, norm**2:     2 1.23482D-08
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.25252D-05
+ RSPORT: b-vector, norm**2:     3 1.25252D-05
 
- RSPORT: b-vector, root no., norm**2:     4     1 8.30597D-11
+ RSPORT: b-vector, norm**2:     4 8.30594D-11
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     3 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     4     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     4 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     4 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    4
@@ -1205,12 +1347,17 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  ** RSPCTL MICROITERATION NUMBER    4
 
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         4
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
+
  TRIAL VECTORS FOR RESTART:   16
 
- ROOT:  1 RESIDUAL TOT: 6.76030D-07 CONF: 0.00000D+00 ORB: 6.76030D-07
+ ROOT:  1 RESIDUAL TOT: 6.76019D-07 CONF: 0.00000D+00 ORB: 6.76019D-07
           BNORM: 7.11573D-01 EIVAL: 1.58663D-01
 
- ROOT:  2 RESIDUAL TOT: 7.16598D-05 CONF: 0.00000D+00 ORB: 7.16598D-05
+ ROOT:  2 RESIDUAL TOT: 7.16596D-05 CONF: 0.00000D+00 ORB: 7.16596D-05
           BNORM: 7.13671D-01 EIVAL: 3.41714D-01
 
  ROOT:  3 RESIDUAL TOT: 2.26418D-03 CONF: 0.00000D+00 ORB: 2.26418D-03
@@ -1219,17 +1366,17 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  ROOT:  4 RESIDUAL TOT: 1.01950D-05 CONF: 0.00000D+00 ORB: 1.01950D-05
           BNORM: 7.07618D-01 EIVAL: 4.93520D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 4.23581D-10
+ RSPORT: b-vector, norm**2:     1 4.23544D-10
 
- RSPORT: b-vector, root no., norm**2:     2     1 8.85158D-08
+ RSPORT: b-vector, norm**2:     2 8.85149D-08
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.89187D-12
+ RSPORT: b-vector, norm**2:     3 1.89192D-12
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     3     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     3 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     3 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    3
@@ -1237,27 +1384,32 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  ** RSPCTL MICROITERATION NUMBER    5
 
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         3
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
+
  TRIAL VECTORS FOR RESTART:   19
 
- ROOT:  1 RESIDUAL TOT: 4.12822D-07 CONF: 0.00000D+00 ORB: 4.12822D-07
+ ROOT:  1 RESIDUAL TOT: 4.12805D-07 CONF: 0.00000D+00 ORB: 4.12805D-07
           BNORM: 7.11573D-01 EIVAL: 1.58663D-01
 
- ROOT:  2 RESIDUAL TOT: 9.04485D-06 CONF: 0.00000D+00 ORB: 9.04485D-06
+ ROOT:  2 RESIDUAL TOT: 9.04483D-06 CONF: 0.00000D+00 ORB: 9.04483D-06
           BNORM: 7.13671D-01 EIVAL: 3.41714D-01
 
- ROOT:  3 RESIDUAL TOT: 2.77946D-04 CONF: 0.00000D+00 ORB: 2.77946D-04
+ ROOT:  3 RESIDUAL TOT: 2.77944D-04 CONF: 0.00000D+00 ORB: 2.77944D-04
           BNORM: 7.20555D-01 EIVAL: 4.20647D-01
 
- ROOT:  4 RESIDUAL TOT: 1.79973D-06 CONF: 0.00000D+00 ORB: 1.79973D-06
+ ROOT:  4 RESIDUAL TOT: 1.79970D-06 CONF: 0.00000D+00 ORB: 1.79970D-06
           BNORM: 7.07618D-01 EIVAL: 4.93520D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 5.94589D-12
+ RSPORT: b-vector, norm**2:     1 5.94559D-12
 
- RSPORT: b-vector, root no., norm**2:     2     1 6.10922D-10
+ RSPORT: b-vector, norm**2:     2 6.10918D-10
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
- RSPORT: b-vector, root no., norm**2:     2     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     2 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     2 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    2
@@ -1265,23 +1417,28 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  ** RSPCTL MICROITERATION NUMBER    6
 
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         2
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
+
  TRIAL VECTORS FOR RESTART:   21
 
- ROOT:  1 RESIDUAL TOT: 3.80485D-07 CONF: 0.00000D+00 ORB: 3.80485D-07
+ ROOT:  1 RESIDUAL TOT: 3.80487D-07 CONF: 0.00000D+00 ORB: 3.80487D-07
           BNORM: 7.11573D-01 EIVAL: 1.58663D-01
 
- ROOT:  2 RESIDUAL TOT: 1.66192D-06 CONF: 0.00000D+00 ORB: 1.66192D-06
+ ROOT:  2 RESIDUAL TOT: 1.66201D-06 CONF: 0.00000D+00 ORB: 1.66201D-06
           BNORM: 7.13671D-01 EIVAL: 3.41714D-01
 
- ROOT:  3 RESIDUAL TOT: 1.66787D-05 CONF: 0.00000D+00 ORB: 1.66787D-05
+ ROOT:  3 RESIDUAL TOT: 1.66786D-05 CONF: 0.00000D+00 ORB: 1.66786D-05
           BNORM: 7.20555D-01 EIVAL: 4.20647D-01
 
- ROOT:  4 RESIDUAL TOT: 1.98574D-06 CONF: 0.00000D+00 ORB: 1.98574D-06
+ ROOT:  4 RESIDUAL TOT: 1.98589D-06 CONF: 0.00000D+00 ORB: 1.98589D-06
           BNORM: 7.07618D-01 EIVAL: 4.93520D-01
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.20772D-11
+ RSPORT: b-vector, norm**2:     1 1.20770D-11
 
- RSPORT: b-vector, root no., norm**2:     1     1 1.00000D+00
+ RSPORT: b-vector, norm**2:     1 1.00000D+00
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
     1 NON-CONVERGED SOLUTION VECTORS THIS LOAD, TOTAL:    1
@@ -1289,18 +1446,23 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  ** RSPCTL MICROITERATION NUMBER    7
 
+
+Output from "RSPOLI". NCSIM,NOSIM=         0         1
+TRPLET,HSROHF,DOHFSRDFT,DOMCSRDFT,DFTADD         F         F         F         F         F
+TDHF,NASHT         T         0
+
  TRIAL VECTORS FOR RESTART:   22
 
- ROOT:  1 RESIDUAL TOT: 3.37019D-07 CONF: 0.00000D+00 ORB: 3.37019D-07
+ ROOT:  1 RESIDUAL TOT: 3.37024D-07 CONF: 0.00000D+00 ORB: 3.37024D-07
           BNORM: 7.11573D-01 EIVAL: 1.58663D-01
 
- ROOT:  2 RESIDUAL TOT: 1.63855D-06 CONF: 0.00000D+00 ORB: 1.63855D-06
+ ROOT:  2 RESIDUAL TOT: 1.63865D-06 CONF: 0.00000D+00 ORB: 1.63865D-06
           BNORM: 7.13671D-01 EIVAL: 3.41714D-01
 
- ROOT:  3 RESIDUAL TOT: 4.62265D-06 CONF: 0.00000D+00 ORB: 4.62265D-06
+ ROOT:  3 RESIDUAL TOT: 4.62257D-06 CONF: 0.00000D+00 ORB: 4.62257D-06
           BNORM: 7.20555D-01 EIVAL: 4.20647D-01
 
- ROOT:  4 RESIDUAL TOT: 2.05227D-06 CONF: 0.00000D+00 ORB: 2.05227D-06
+ ROOT:  4 RESIDUAL TOT: 2.05243D-06 CONF: 0.00000D+00 ORB: 2.05243D-06
           BNORM: 7.07618D-01 EIVAL: 4.93520D-01
 
  NUMBER OF TRIAL VECTORS IN THIS LOAD    4   OFFSET FOR THIS LOAD    0
@@ -1317,7 +1479,7 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
  RSP solution vector no.    3; norm of residual   6.42D-06
  RSP solution vector no.    4; norm of residual   2.90D-06
 
- *** RSPCTL MICROITERATIONS CONVERGED
+ *** RSPCTL MICROITERATIONS CONVERGED SYMMETRY 1
 
  STATE NO:    1
 
@@ -1329,20 +1491,17 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  EIGENVECTOR FOR STATE NO.  1
 
-     Orbital operator symmetry = 1
-     (only elements abs greater than   10.00 % of max abs value)
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
 
-      Index(r,s)      r      s        (r s) operator      (s r) operator
-      ----------    -----  -----      --------------      --------------
-          17         5(1)   9(1)       -0.1377024536       -0.0124028670
-          29         8(1)   9(1)       -0.6958249574       -0.0424329648
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          17         5(1)   9(1)       -0.1377024540       -0.0124028670       -0.1947406780       -0.0175403027
+          29         8(1)   9(1)       -0.6958249573       -0.0424329648       -0.9840450916       -0.0600092743
 
-       30 elements with absolute value less than 6.96D-02 not printed.
+       30 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
-
-     Configuration operator symmetry = 1
-     >> NO ELEMENTS <<
 
  STATE NO:    2
 
@@ -1354,19 +1513,16 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  EIGENVECTOR FOR STATE NO.  2
 
-     Orbital operator symmetry = 1
-     (only elements abs greater than   10.00 % of max abs value)
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
 
-      Index(r,s)      r      s        (r s) operator      (s r) operator
-      ----------    -----  -----      --------------      --------------
-          21         6(1)   9(1)        0.7063982339        0.0286789154
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          21         6(1)   9(1)        0.7063982339        0.0286789154        0.9989979628        0.0405581112
 
-       31 elements with absolute value less than 7.06D-02 not printed.
+       31 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
-
-     Configuration operator symmetry = 1
-     >> NO ELEMENTS <<
 
  STATE NO:    3
 
@@ -1378,21 +1534,18 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  EIGENVECTOR FOR STATE NO.  3
 
-     Orbital operator symmetry = 1
-     (only elements abs greater than   10.00 % of max abs value)
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
 
-      Index(r,s)      r      s        (r s) operator      (s r) operator
-      ----------    -----  -----      --------------      --------------
-          24         6(1)  12(1)       -0.1517921763        0.0627691030
-          25         7(1)   9(1)       -0.6867397502       -0.0534413763
-          31         8(1)  11(1)        0.0819739461       -0.0255314527
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          24         6(1)  12(1)       -0.1517921763        0.0627691030       -0.2146665544        0.0887689167
+          25         7(1)   9(1)       -0.6867397502       -0.0534413763       -0.9711966686       -0.0755775192
+          31         8(1)  11(1)        0.0819739462       -0.0255314527        0.1159286664       -0.0361069267
 
-       29 elements with absolute value less than 6.87D-02 not printed.
+       29 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
-
-     Configuration operator symmetry = 1
-     >> NO ELEMENTS <<
 
  STATE NO:    4
 
@@ -1404,26 +1557,23 @@ PCMSPHGEN: SPHERE CENTERS FROM INPUT
 
  EIGENVECTOR FOR STATE NO.  4
 
-     Orbital operator symmetry = 1
-     (only elements abs greater than   10.00 % of max abs value)
+     Response orbital operator symmetry = 1
+     (only scaled elements abs greater than   10.00 % of max abs value)
 
-      Index(r,s)      r      s        (r s) operator      (s r) operator
-      ----------    -----  -----      --------------      --------------
-          17         5(1)   9(1)       -0.6935923240       -0.0115526232
-          29         8(1)   9(1)        0.1363425342       -0.0029061561
+      Index(r,s)      r      s        (r s) operator      (s r) operator      (r s) scaled        (s r) scaled
+      ----------    -----  -----      --------------      --------------      --------------      --------------
+          17         5(1)   9(1)       -0.6935923239       -0.0115526233       -0.9808876712       -0.0163378765
+          29         8(1)   9(1)        0.1363425346       -0.0029061561        0.1928174616       -0.0041099254
 
-       30 elements with absolute value less than 6.94D-02 not printed.
+       30 elements with absolute value ≤ 1.00D-01 not printed.
 
  The numbers in parenthesis give the orbital symmetry.
 
-     Configuration operator symmetry = 1
-     >> NO ELEMENTS <<
 
+Time used in polarization propagator calculation is      1.51 CPU seconds for symmetry 1
 
-Time used in polarization propagator calculation is      4.06 CPU seconds for symmetry 1
-
- >>> Total time used in response solver is         4.06 CPU seconds.
- >>>  Time used in EXCITA     is   4.06 seconds
+ Total time used in response solver is         1.51 CPU seconds.
+  Time used in EXCITA     is       1.51 seconds
 
 
    ***************************************************************************
@@ -1432,8 +1582,8 @@ Time used in polarization propagator calculation is      4.06 CPU seconds for sy
 
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:33 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
+     Date and time (Linux)  : Fri May  9 10:28:29 2025
+     Host name              : adm-110765.pc.sdu.dk                    
 
 
                              Molecular geometry (au)
@@ -1451,23 +1601,30 @@ Time used in polarization propagator calculation is      4.06 CPU seconds for sy
                         Molecular wave function and energy
                         ----------------------------------
 
-     Spin multiplicity  1     State number       1     Total charge       0
+     Spatial symmetry   1 ( A   )
+     Spin multiplicity  1
+     2 * M_S            0
+     State number       1
+     Total charge       0
 
      Total energy       -112.3674622654 au (Hartrees)
                          -3057.67418840 eV
                            -295020.7267 kJ/mol
+                            -70511.6460 kcal/mol
 
 
-                             Relativistic corrections
-                             ------------------------
+                   Scalar Breit-Pauli relativistic corrections
+                   -------------------------------------------
 
      Darwin correction:                          0.1684631456 au
      Mass-velocity correction:                  -0.2161962799 au
 
-     Total relativistic correction:             -0.0477331343 au (0.0425%)
+     Total relativistic correction:             -0.0477331343 au ( 0.0425%)
      Non-relativistic + relativistic energy:  -112.4151953997 au
 
 
+
+      (Note that these corrections are NOT included in the results below.)
 
 
                                   Dipole moment
@@ -1483,8 +1640,8 @@ Time used in polarization propagator calculation is      4.06 CPU seconds for sy
                  au               Debye          C m (/(10**-30)
 
       x      0.07564743         0.19227657         0.64136561
-      y     -0.70924195        -1.80271310        -6.01320363
-      z      0.02264347         0.05755394         0.19197929
+      y     -0.70924195        -1.80271310        -6.01320364
+      z      0.02264346         0.05755394         0.19197927
 
 
    Units:   1 a.u. =   2.54175 Debye 
@@ -1493,13 +1650,14 @@ Time used in polarization propagator calculation is      4.06 CPU seconds for sy
 
 
 
-                Singlet electronic excitation energies
+@               Singlet electronic excitation energies
                 --------------------------------------
 
+ Convergence threshold: 1.00E-05
                ========================================
                  Sym.   Mode   Frequency    Frequency
                 ex. st.  No.      (au)         (eV)
-               ----------------------------------------
+               --------------------------------------- A  
                    1      1     0.158663     4.317437
                    1      2     0.341714     9.298520
                    1      3     0.420647    11.446383
@@ -1551,22 +1709,25 @@ Time used in polarization propagator calculation is      4.06 CPU seconds for sy
  CPU time statistics for ABACUS
  ------------------------------
 
- EXCITA     00:00:04     100 %
+ EXCITA     00:00:02     100 %
 
- TOTAL      00:00:04     100 %
+ TOTAL      00:00:02     100 %
 
 
- >>>> Total CPU  time used in ABACUS:   4.06 seconds
- >>>> Total wall time used in ABACUS:   4.08 seconds
+  Total CPU  time used in ABACUS:   1.52 seconds
+  Total wall time used in ABACUS:   1.51 seconds
 
 
                    .-------------------------------------------.
                    | End of Static Property Section (ABACUS) - |
                    `-------------------------------------------'
 
- >>>> Total CPU  time used in DALTON:  23.53 seconds
- >>>> Total wall time used in DALTON:  24.09 seconds
+  Total CPU  time used in DALTON:   8.82 seconds
+  Total wall time used in DALTON:   8.82 seconds
+
+ NOTE:    1 warnings have been issued.
+ Check output, result, and error files for "WARNING".
 
  
-     Date and time (Linux)  : Sun Sep  8 20:40:33 2013
-     Host name              : lpqlx131.ups-tlse.fr                    
+     Date and time (Linux)  : Fri May  9 10:28:29 2025
+     Host name              : adm-110765.pc.sdu.dk                    

@@ -750,9 +750,6 @@ C
 C     ***************** ADD SR-DFT contribution if MCSCF-DFT or if HF-SRDFT
 C
       IF (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF)) THEN
-#ifndef MOD_SRDFT
-         call quit('srdft not included in this version')
-#else
 #if SIRFCK_DEBUG > 4
          if (DOATR) then
             n = ndmat+1 ! todo: find out how many extra dmat's
@@ -1044,13 +1041,12 @@ C
      &   ' SIRFCK: CPU and WALL time used for srDFT terms             ',
      &      T2-T1,W2-W1
          END IF
-#if SIRFCK_DEBUG > 2
+#if SIRFCK_DEBUG > 3
        do i = 1,NDCandDV
          write(lupri,*) 'SIRFCK: Final FMAT no.',i
          call output(FMAT(1,i),1,nbast,1,nbast,nbast,nbast,-1,lupri)
        end do
 #endif
-#endif  /* MOD_SRDFT */
       END IF ! (ADDSRI.AND.(DOHFSRDFT.OR.DOMCSRDFT).AND.(.NOT.PREHF))
 C
       IF (NODDYDF) THEN
@@ -1169,6 +1165,8 @@ C
 C for HFXFAC:
 #include "dftcom.h"
 
+      INTEGER*8 NINTS_TOT
+
 
       CALL QENTER('SIRFCK2')
 
@@ -1219,8 +1217,8 @@ C
       CALL MOLLAB('BASINFO ',LU2INT,LUPRI)
       READ (LU2INT) MSYM, MBAS, LBUF, NIBUF, NBITS, LENINT4
       IF (IPRFCK .GE. 2) THEN
-         WRITE(LUPRI,'(/3A,3I5)')
-     &   'SIRFCK2: File "',FN2INT,'" opened. LBUF,NIBUF,NBITS:',
+         WRITE(LUPRI,'(/3A,I0,2I5)')
+     &   'SIRFCK2: File "',FN2INT,'" opened. LBUF,NIBUF,NBITS: ',
      &   LBUF,NIBUF,NBITS
       END IF
       IF (MSYM .NE. NSYM) THEN

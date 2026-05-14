@@ -1,0 +1,9 @@
+ATOMBASIS
+Larger basis sets should be used for production calculations.
+Bond distance is enlarged to raise warnings.
+Angstrom Atomtypes=2 Generators=0
+Charge=17.0 Atoms=1 Basis=STO-3G
+Cl     0.0000000000       0.0000000000     0.0000000000
+Charge= 1.0 Atoms=1 Basis=STO-3G
+H      0.0000000000       0.0000000000    10.0000000000
+FINISH

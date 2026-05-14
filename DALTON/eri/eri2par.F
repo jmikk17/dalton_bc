@@ -323,14 +323,12 @@ C     /* Deck dopar */
 Cef begin
       SUBROUTINE DOPAR(INDEX,MXBTCH,NBATCH,NSTAT,IPRINT)
 C
+      use dalton_mpi_interface
 #include "implicit.h"
 #include "priunit.h"
 #include "mtags.h"
 #include "incore.h"
 C
-#if defined (VAR_MPI)
-      INCLUDE 'mpif.h'
-#endif
 C
 C
       LOGICAL DONE, TDONE

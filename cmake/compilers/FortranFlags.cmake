@@ -1,6 +1,6 @@
 if(CMAKE_Fortran_COMPILER_ID MATCHES GNU) # this is gfortran
     add_definitions(-DVAR_GFORTRAN)
-    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffloat-store -fcray-pointer -std=legacy")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffloat-store -fcray-pointer -fdec -std=legacy")
     if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER 10.0.0)
         set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-invalid-boz -fallow-argument-mismatch")
     endif()

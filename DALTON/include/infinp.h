@@ -1,10 +1,12 @@
 ! File : infinp.h
 !
 !  -*- mode:fortran; fortran-continuation-string: "&" -*-
-!     this common block contains general Sirius input read in sirius/sirinp.F
+!     This common block contains general Sirius input read in sirius/sirinp.F
 !     (specified under **WAVE FUNCTION).  /hjaaj Oct 2003
 !     - SCF specific input is in scbrhf.h
 !     - orbital specifications are in inforb.h
+!
+!  FLAG(:) : See definition of internal control flags in sirinp.F(SIR_NEWINP)
 !
 !  MCTYPE     Calculation Type
 !   -1     HSROHF
@@ -23,7 +25,7 @@
      &                IORTO,ICI0,KDEL,ICHECK,NTIT,                      &
      &                MAXMAC,MAXMIC,MAXJT,MAXCIT,MAXUIT,MAXAPM,MAXABS,  &
      &                ITRLVL,ITRFIN,JCHSYM,JCHORB,                      &
-     &                NROOCI,ISTACI, MXCIMA, ICICNO,IMCCNO, N_in_RN,    &
+     &                NROOCI,ISTACI, MXCIMA,        IMCCNO, N_in_RN,    &
      &                SPINDENS_lvl, MIN_MOL_CHARGE
       COMMON /INTINP/ NFIELD, ISPIN,NMCAVER,ISTATE,LSYM,NACTEL, MCTYPE, &
      &                LSOLMX,NLMSOL,NELMN1,NELMX1,NELMN3,NELMX3,        &
@@ -32,7 +34,7 @@
      &                IORTO,ICI0,KDEL,ICHECK,NTIT,                      &
      &                MAXMAC,MAXMIC,MAXJT,MAXCIT,MAXUIT,MAXAPM,MAXABS,  &
      &                ITRLVL,ITRFIN,JCHSYM,JCHORB,                      &
-     &                NROOCI,ISTACI, MXCIMA, ICICNO,IMCCNO, N_in_RN,    &
+     &                NROOCI,ISTACI, MXCIMA,        IMCCNO, N_in_RN,    &
      &                SPINDENS_lvl, MIN_MOL_CHARGE
 !
       LOGICAL         FLAG,        DOSCF,DOMP2,DOCINO,DOCI,DOMC,DORSP,  &

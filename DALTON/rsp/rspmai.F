@@ -1069,6 +1069,8 @@ C
     3          CONTINUE ! .SOPPA
                   IF (EMBEDDING) THEN
 cjje: change this if full solvent soppa is ever implemented
+                    write(lupri,'(/A)')
+     &              '@ INFO: .SOPPA is interpreted as .SOPRPA'
                     GO TO 24 ! go to .SOPRPA option
                   END IF
 C                  IF (DIRCAL) AOSOP = .TRUE. 
@@ -3020,6 +3022,7 @@ C
 #include "infcr.h"
 C
       LOGICAL FNDLAB
+      LOGICAL, SAVE :: FIRST = .TRUE.
 
       IF (.NOT.DIRFCK) DIRFCK = DIRCAL
       IF (DOHFSRDFT .OR. DOMCSRDFT) THEN
@@ -3063,15 +3066,16 @@ C
       REWIND LUSIFC
       IF (FNDLAB('CIRESPON',LUSIFC)) THEN
          RSPCI = .TRUE.
-         WRITE(LUPRI,'(/A/A)')
-     *     ' This is a configuration interaction response calculation.',
-     *     '   Note: this is equivalent to a CI sum-over-states'//
+         IF (FIRST) THEN ! else we can get many copies of this from ABARSPN calls
+            FIRST = .FALSE.
+            WRITE(LUPRI,'(/A/A)')
+     *    '@ This is a configuration interaction response calculation.',
+     *    '@ Note: this is equivalent to a CI sum-over-states'//
      *     ' calculation of response properties.'
+         END IF
       ELSE
          RSPCI = .FALSE.
       END IF
-Clilli Closing LUSIFC
-C      CALL GPCLOSE(LUSIFC,'KEEP')
 C
       NPRLBL = 0
       DO 100 I = 1,MAXLBL
@@ -4357,6 +4361,7 @@ C
 C WORK SPACE ALLOCATION
 C
          IF (KZCONF.GT.0) THEN
+            IF (ispin .gt. 3) MAXPHP = 0 ! 18.apr.2025 hjaaj: segmentation fault in ciham.F for ispin=4
             CALL PHPINI(LPHPMX,KZCONF,KZWOPT,MAXPHP)
             KDIAE  = 1
             KTOT   = KDIAE  + LPHPMX

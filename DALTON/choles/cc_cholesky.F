@@ -1054,7 +1054,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
 #include "mxcent.h"
 #include "eribuf.h"
       DIMENSION XINT(*)
@@ -1988,9 +1987,6 @@ C
 #include "inftap.h"
 #include "priunit.h"
 C
-C      INDEX(I,J) = MAX(I,J)*(MAX(I,J) - 3)/2 + I + J
-C
-C
 C-------------
 C     ccorb.h
 C-------------
@@ -2093,9 +2089,6 @@ C
 #else
       IGB = 16
 #endif
-#if defined (VAR_CHO2)
-      IGB = 2
-#endif
 C
 C     maxlen (wrd) = N Gb * 1073741824 wrd/Gb
 C     (minus security margin, probably not needed)
@@ -2136,10 +2129,10 @@ C
 C
          CALL AROUND('Information from CHO_INDEX')
 C
-	 WRITE(LUPRI,1) 'NBAST  :',NBAST
-	 WRITE(LUPRI,1) 'N2BAST :',N2BAST
-	 WRITE(LUPRI,1) 'N2BASX :',N2BASX
-	 WRITE(LUPRI,1) 'NNBASX :',NNBASX
+         WRITE(LUPRI,1) 'NBAST  :',NBAST
+         WRITE(LUPRI,1) 'N2BAST :',N2BAST
+         WRITE(LUPRI,1) 'N2BASX :',N2BASX
+         WRITE(LUPRI,1) 'NNBASX :',NNBASX
 C
          WRITE(LUPRI,*)
          WRITE(LUPRI,1) 'NBAS   :',(NBAS(I),   I=1,NSYM)
@@ -3062,7 +3055,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
       DIMENSION XINT(*)
       DIMENSION KADR2(NBAST,NBAST)
       DIMENSION RBUF(LBUF)
@@ -4347,7 +4339,6 @@ C
 C     Written by Henrik Koch 25-Sep-1993
 C
 #include "implicit.h"
-#include "ibtpar.h"
 #include "priunit.h"
 #include "mxcent.h"
 #include "eribuf.h"

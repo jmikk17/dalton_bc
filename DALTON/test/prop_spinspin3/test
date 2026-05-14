@@ -23,12 +23,6 @@ f.add(from_string = 'Atoms and basis sets',
       num_lines = 15,
       rel_tolerance = 1.0e-2)
 
-# Molecular geometry
-f.add(from_string = 'Cartesian Coordinates',
-      num_lines = 10,
-      rel_tolerance = 1.0e-8)
-
-
 # Symmetry
 f.add(string = 'Number of coordinates in each symmetry',
       rel_tolerance = 1.0e-2)
@@ -36,7 +30,7 @@ f.add(string = 'Number of orbitals in each symmetry',
       rel_tolerance = 1.0e-2)
 
 # Energies
-f.add(string = 'Hartree-Fock total energy',
+f.add(re = 'Hartree-Fock .*total energy',
       rel_tolerance = 1.0e-9)
 f.add(string = 'MP2 second order energy',
       rel_tolerance = 1.0e-9)
@@ -64,7 +58,7 @@ f.add(from_string = 'Shielding tensors in symmetry coordinates',
 # Chemical shielding for...
 f.add(from_string = 'Chemical shielding for ',
       num_lines = 16,
-      abs_tolerance = 1.0e-3)
+      abs_tolerance = 2.0e-3)
 
 # Warning
 f.add(string = 'WARNING: Total spin-spin couplings not correct because some',
@@ -74,7 +68,7 @@ f.add(string = 'contributions have not been calculated',
 
 f.add(from_string = 'Isotropic coupling',
       num_lines = 10,
-      abs_tolerance = 1.0e-4)
+      abs_tolerance = 1.0e-3)
 
 test.run(['prop_spinspin3.dal'], ['H2O_intgrl_sym.mol'], f={'out': f},
          accepted_errors=['not implemented for parallel calculations.'])

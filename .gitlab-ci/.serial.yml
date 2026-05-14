@@ -1,0 +1,143 @@
+gcc-9:
+  image: fedora:31
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-9-int64:
+  image: fedora:31
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - dnf install -y -q lapack64 lapack64-devel
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-10:
+  image: fedora:32
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-10-int64:
+  image: fedora:32
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - dnf install -y -q lapack64 lapack64-devel
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64_" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-11:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-11-int64:
+  image: fedora:35
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - dnf install -y -q lapack64
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=release
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12-debug:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --blas=none --lapack=none --explicit-libs="-lopenblas -llapack" --type=debug
+                   -DENABLE_PDE=ON
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true
+
+gcc-12-int64:
+  image: fedora:37
+  variables:
+    DALTON_LAUNCHER: ""
+    OMP_NUM_THREADS: "1"
+  rules: !reference [.define-build-rules, rules]
+  script:
+    - !reference [.define-cores, script]
+    - dnf install -y -q lapack64
+    - export FFLAGS="-I/usr/lib64/gfortran/modules"
+    - python setup --int64 --blas=none --lapack=none --explicit-libs="-lopenblas64 -llapack64" --type=release
+    - cd build
+    - make -j $N_PROC
+    - ctest -j $N_PROC --timeout 120 --output-on-failure -L essential
+  interruptible: true

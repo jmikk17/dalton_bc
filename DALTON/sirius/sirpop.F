@@ -17,7 +17,7 @@ C File: sirius/sirpop.F
 C
 C
 C  /* Deck sirpop */
-      SUBROUTINE SIRPOP(INP_POPKEY,DV,WRK,LFREE_INPUT)
+      SUBROUTINE SIRPOP(INP_POPKEY,DV_in,WRK,LFREE_INPUT)
 C
 C Major revision March 2011 Hans Joergen Aa. Jensen
 C Old version: Nov-10-85 Hans Agren, revised 910708-hjaaj/0710-hjaaj
@@ -30,7 +30,7 @@ C            Documentation of MOTECC-90.
 C
 #include "implicit.h"
       CHARACTER*(*)  INP_POPKEY
-      DIMENSION      DV(*), WRK(*)
+      REAL*8         DV_in(*), WRK(*)
 C
 C   INFINP : FLAG(*)
 C   INFIND : ISX()
@@ -52,9 +52,10 @@ C
 #include "nuclei.h"
 C
 C
-      LOGICAL DIPOLM, QUADRM, MULLKM
+      LOGICAL DIPOLM, QUADRM, MULLKM, FOUND
       LOGICAL FNDLAB
       CHARACTER*(6) POPKEY
+      REAL*8 :: DV(NNASHX), AOCC(NASHT), OCCUP(NORBT) ! automatic arrays
 
 #ifdef SIRPOP_DEBUG
       logical first_call
@@ -106,16 +107,14 @@ C
 C     The structure of the working area will be
 C
 C       1) CMO      MO coefficients
-C       2) OCCUP    occupation numbers
-C       3) T or S   kinetic energy matrix, overlap matrix
-C       4) CMOCGT   MO coefficients in cgto basis
-C       5) SS       overlap matrix in cgto basis
+C       2) T or S   kinetic energy matrix, overlap matrix
+C       3) CMOCGT   MO coefficients in cgto basis
+C       4) SS       overlap matrix in cgto basis
 C
       KFREE_INPUT = 1
       KFREE = KFREE_INPUT
       LFREE = LFREE_INPUT
       CALL MEMGET('REAL',KCMO  ,NCMOT ,WRK,KFREE,LFREE)
-      CALL MEMGET('REAL',KOCCUP,NORBT ,WRK,KFREE,LFREE)
 C
       CALL MEMGET('REAL',KOVLP ,N2BASX,WRK,KFREE,LFREE)
       CALL MEMGET('REAL',KCMOCG,NBAST*NOCCT,WRK,KFREE,LFREE)
@@ -137,49 +136,61 @@ C     ***** Get the MO coefficients and NO occupation numbers
 C
       REWIND LUIT1
       CALL READMO (WRK(KCMO),9)
-      REWIND LUIT1
-      IF ( FNDLAB('NATOCC  ',LUIT1) ) THEN
-         CALL READT(LUIT1,NORBT,WRK(KOCCUP))
-!        IF (INDEX(WFTYPE,'MP2') .GT. 0) THEN
-! hjaaj: NOCCT should be NORBT for MP2 !!! TODO /aug2013
-!        END IF
-      ELSE IF (HSROHF .OR. NASHT .LE. 1) THEN
-         CALL DZERO(WRK(KOCCUP),NORBT)
-         DO I = 1, NISHT
-            IX = ISX(I)
-            WRK(KOCCUP-1+IX) = 2.0D0
-         END DO
+      OCCUP(1:NORBT) = 0.0D0
+      DO I = 1, NISHT
+         IX = ISX(I)
+         OCCUP(IX) = 2.0D0
+      END DO
+
+      IF (HSROHF .OR. NASHT .LE. 1) THEN
          IF (HSROHF) THEN
             DO I = NISHT+1, NOCCT
                IX = ISX(I)
-               WRK(KOCCUP-1+IX) = 1.0D0
+               OCCUP(IX) = 1.0D0
             END DO
          ELSE IF (NASHT .EQ. 1) THEN
             IX = ISX(NISHT+1)
-            WRK(KOCCUP-1+IX) = NACTEL
+            OCCUP(IX) = NACTEL
          END IF
       ELSE
-         NWARN = NWARN + 1
-         WRITE (LUPRI,'(//A//A/A/A/)')
-     &      ' *** Label "NATOCC  " not found on SIRIUS.RST in SIRPOP',
-     &      ' WARNING, occupation of active orbitals not available',
-     &      '          population analysis aborted.',
-     &      '          Use ".TRACI" option.'
-         GO TO 9999
+         IF (POPKEY(1:6) .EQ. 'MCITER') THEN ! for 'MCITER', DV is transferred in call
+            DV(1:NNASHX) = DV_in(1:NNASHX)
+         ELSE IF (POPKEY(1:5) .EQ. 'FINAL') THEN
+            CALL RD_SIRIFC('DV',FOUND,DV)
+            IF (.NOT.FOUND) THEN
+               NWARN = NWARN + 1
+               WRITE (LUPRI,'(//A/)')
+     &        ' WARNING, occupation of active orbitals not available,'//
+     &        ' population analysis aborted. Use ".TRACI" option.'
+               GO TO 9999
+            END IF
+         ELSE
+            NWARN = NWARN + 1
+            WRITE (LUPRI,'(//3A/)') ' WARNING: '//
+     &     ' Population analysis internal keyword "',POPKEY,
+     &     '" undefined, population analysis aborted.'
+            GO TO 9999
+         END IF
+
+         CALL TRA_MO_TO_NO(DV,WRK(KFREE),WRK(KCMO),AOCC) ! NO or diagonalizing FDAC
+C        CALL TRA_MO_TO_NO(DV,UNO,CMO,AOCC)
+
+         write(lupri,'(/A)') 'POPANA: Occupation of active orbitals:'
+         write(lupri,'(10F10.6)') AOCC(1:NASHT)
+
+         DO I = 1, NASHT
+            IX = ISX(NISHT+I)
+            OCCUP(IX) = AOCC(I)
+         END DO
       END IF
-      IF (MCTYPE .EQ. 2) THEN
-         NINFO = NINFO + 1
-         WRITE (LUPRI,'(/A/A/A)')
-     &       ' INFO, population analysis for RAS wave functions'//
-     &       ' uses pseudo-natural orbitals,',
-     &       '          that is, all off-diagonal elements of the'//
-     &       ' one-electron density matrix which',
-     &       '          couple different RAS spaces are ignored.'
+      IF (IPRMUL .GT. 10) THEN
+         write(lupri,'(/A)') 'POPANA: Occupation of all orbitals:'
+         write(lupri,'(10F10.6)') OCCUP(1:NORBT)
       END IF
 C
 C     *****     Perform energy analysis
 C
-      CALL VIRIAL (WRK(KCMO),WRK(KOCCUP),WRK(KOVLP))
+      CALL VIRIAL (WRK(KCMO),OCCUP,WRK(KOVLP))
 C
 C     *****     Transform from symmetry orbital basis to cgto basis
 C
@@ -197,7 +208,7 @@ C
 C     *****     Perform Mulliken-type population analysis
 C
       IF (MULLKM) THEN
-         CALL MULLIKEN (WRK(KOCCUP), WRK(KPOPNAB),WRK(KPOPABI),
+         CALL MULLIKEN (OCCUP, WRK(KPOPNAB),WRK(KPOPABI),
      *                  WRK(KPOPCG),WRK(KPOPC),WRK(KCMOCG),WRK(KSS),
      *                  WRK(KPOPNET))
       END IF
@@ -209,7 +220,7 @@ C
      &     'INFO: dipole moment not implemented in this version'
 c        KDIPM  = KFREE
 c        KWRK3D = KDIPM  + NNBAST*3
-c        CALL POP_DIPMOM (NNBAST,WRK(KCMO),WRK(KOCCUP),WRK(KDIPM))
+c        CALL POP_DIPMOM (NNBAST,WRK(KCMO),OCCUP,WRK(KDIPM))
       END IF
 C
 C     *****     Quadrupole moments  *****
@@ -219,7 +230,7 @@ C
      &     'INFO: quadrupole moment not implemented in this version'
 c        KQUMAT = KFREE
 c        KWRK3Q = KQUMAT + NNBAST*6
-c        CALL QUADRP (NNBAST,WRK(KCMO),WRK(KOCCUP),WRK(KQUMAT))
+c        CALL QUADRP (NNBAST,WRK(KCMO),OCCUP,WRK(KQUMAT))
       END IF
 C
  9999 CONTINUE
@@ -241,7 +252,6 @@ C
       DIMENSION CMO(NCMOT),OCCUP(NORBT),T(NNBAST)
 C
 C   INFINP : POTNUC,
-C   INFIND : ISX()
 C   INFORB : NBAST,
 C   INFOPT : EMCSCF,
 C
@@ -251,7 +261,6 @@ C
 #include "priunit.h"
 #include "infpop.h"
 #include "infinp.h"
-#include "infind.h"
 #include "inforb.h"
 #include "infopt.h"
 #include "infpri.h"
@@ -291,24 +300,25 @@ C
       DO 50 ISYM = 1,NSYM
          NBASI = NBAS(ISYM)
          NOCCI = NOCC(ISYM)
+         IORBI = IORB(ISYM)
          IPSTRT = ICMO(ISYM)
 C
          DO 40 ICC = 1,NOCCI
             IP  = IP + 1
+            OCCUP_I = OCCUP(IORBI+ICC)
             IST = MATBLK
 C
             DO 30 J = 1,NBASI
                JORB = IPSTRT + J
 C
-               IPX = ISX(IP)
-               FAC = 2.0D0*CMO(JORB)*OCCUP(IPX)
+               FAC = 2.0D0*CMO(JORB)*OCCUP_I
                DO 20 K = 1,J-1
                   TK = TK + FAC*CMO(IPSTRT+K)*T(IST+K)
    20          CONTINUE
 C
 C              Take care of the case j = k
 C
-               TK = TK + CMO(JORB)*CMO(JORB)*OCCUP(IPX)*T(IST+J)
+               TK = TK + CMO(JORB)*CMO(JORB)*OCCUP_I*T(IST+J)
                IST = IST + J
    30       CONTINUE
 C
@@ -384,7 +394,7 @@ C     *****   Read in overlap integrals from AOPROPER (unit LUPROP)
          POPANA_TYPE = '   MULPOP x '
       ELSE IF (IPOPTYP .EQ. 3) THEN
          CALL RDPROP('HJPOPOVL',S,FOUND)
-         POPANA_TYPE = '   HJAAJPOP '
+         POPANA_TYPE = '   HJPOP    '
       ELSE
          call quit('POPTRA: unknown IPOPTYP')
       END IF
@@ -410,32 +420,34 @@ C     where p indicates the mo and k the symmetry orbital. a indexes
 C     the cgto's. For each k, all values of a as found in ITRAN are
 C     examined.
 C
-      KSTART = 0
-      IPSTC  = 0
-C
       CALL DZERO(CMOCGT,NOCCT*NBAST)
 
       DO 60 ISYM = 1,NSYM
          NBASI = NBAS(ISYM)
          NOCCI = NOCC(ISYM)
-         IPSTS = ICMO(ISYM)
-C
-         IOCCI = IOCC(ISYM)
-         DO 50 ICC = IOCCI+1,IOCCI+NOCCI
-C
+
+         ICMOI = ICMO(ISYM)
+         IBASI = IBAS(ISYM)
+         NISHI = NISH(ISYM)
+         DO 50 ICC = 1,NOCCI
+            ! find JCC corresponding to standard order: first all inactive, then the active
+            IF (ICC .LE. NISHI) THEN
+               JCC = IISH(ISYM) + ICC
+            ELSE
+               JCC = NISHT + IASH(ISYM) + ICC - NISHI
+            END IF
+
             DO 40 K = 1,NBASI
-               KK = KSTART + K
+               KK = IBASI + K
                J  = JTRAN(KK)
-C
                DO 30 JJ = 1,J
                   IA = ITRAN(KK,JJ)
-                  CMOCGT(IA,ICC) =
-     1               CMO(IPSTS+K)*CTRAN(KK,JJ)
+                  CMOCGT(IA,JCC) =
+     &               CMO(ICMOI+K)*CTRAN(KK,JJ)
    30          CONTINUE
    40       CONTINUE
-            IPSTS = IPSTS + NBASI
+            ICMOI = ICMOI + NBASI
    50    CONTINUE
-         KSTART = KSTART + NBASI
    60 CONTINUE
 C
 C     *****     Transform the integrals
@@ -532,11 +544,11 @@ C
       REAL*8      POPTSM(MXCENT,2), DIPTOT(3)
       CHARACTER*1 SPDCAR
 
-      IF (IPRMUL.GE.20) THEN
+      IF (IPRMUL.GE.10) THEN
          WRITE(LUPRI,'(//A/)')
      &      ' IAOINFO(1:NBAST,1:3) (shell, center, type)'
          DO IA = 1,NBAST
-            WRITE(LUPRI,'(3I20)') IAOINFO(IA,1:3)
+            WRITE(LUPRI,'(I10," : ",3I10)') IA,IAOINFO(IA,1:3)
          END DO
       END IF
 C
@@ -570,10 +582,11 @@ C
       END IF
       DO 80 IP = 1,NOCCT
          IPX = ISX(IP)
+         OCCUP_I = OCCUP(IPX)
          CALL DZERO(POPABI,N2_POPNAB)
 C
          DO 75 IA = 1,NBAST
-            POPAB_FAC = CMOCGT(IA,IP)*OCCUP(IPX)
+            POPAB_FAC = CMOCGT(IA,IP)*OCCUP_I
             NUCA = IAOINFO(IA,2)
          IF (NUCA .GT. NATOMS) GO TO 75 ! skip auxilliary basis centers
          IF (ABS(POPAB_FAC) .LT. 1.0D-14) GO TO 75
@@ -1006,12 +1019,13 @@ C
 C
       DO 50 ISYM = 1,NSYM
          NBASI = NBAS(ISYM)
-         NOCCI = NISH(ISYM) + NASH(ISYM)
+         NOCCI = NOCC(ISYM)
+         IORBI = IORB(ISYM)
 C
          DO 40 ICC = 1,NOCCI
             IP = IP + 1
-            IPX = ISX(IP)
             IST = MATBLK
+            OCCUP_I = OCCUP(IORBI+ICC)
             DX = 0.0D0
             DY = 0.0D0
             DZ = 0.0D0
@@ -1020,7 +1034,7 @@ C
                JORB = IPSTRT + J
 C
                DO 20 K = 1,(J-1)
-                  DENS = 2.0D0*CMO(JORB)*CMO(IPSTRT+K)*OCCUP(IPX)
+                  DENS = 2.0D0*CMO(JORB)*CMO(IPSTRT+K)*OCCUP_I
                   DX = DX + DENS*DIPMAT(IST+K,1)
                   DY = DY + DENS*DIPMAT(IST+K,2)
                   DZ = DZ + DENS*DIPMAT(IST+K,3)
@@ -1029,7 +1043,7 @@ C
 C              Case j = k, divide by two
 C              because no (j,k) permutation exist
 C
-               DENS = CMO(JORB)*CMO(JORB)*OCCUP(IPX)
+               DENS = CMO(JORB)*CMO(JORB)*OCCUP_I
                DX = DX + DENS*DIPMAT(IST+J,1)
                DY = DY + DENS*DIPMAT(IST+J,2)
                DZ = DZ + DENS*DIPMAT(IST+J,3)
@@ -1045,7 +1059,7 @@ C
             DIPOL(2) = DIPOL(2) - DY
             DIPOL(3) = DIPOL(3) - DZ
             IF (IPRMUL .GE. 3) THEN
-               WRITE (LUPRI,1003) IP,DX,DY,DZ,OCCUP(IPX)
+               WRITE (LUPRI,1003) IP,DX,DY,DZ,OCCUP_I
  1003          FORMAT(10X,I4,7X,4F12.6)
             END IF
 C
@@ -1143,20 +1157,17 @@ C
       IP = 0
       IPSTRT = 0
       MATBLK = 0
-      DO 20 ICOMP = 1,6
-         ELQPOL(ICOMP) = 0.0D0
-   20 CONTINUE
+      ELQPOL(1:6) = 0.0D0
 C
       DO 90 ISYM = 1,NSYM
          NBASI = NBAS(ISYM)
          NOCCI = NISH(ISYM) + NASH(ISYM)
+         IORBI = IORB(ISYM)
 C
          DO 80 ICC = 1,NOCCI
             IP = IP + 1
-            IPX = ISX(IP)
-            DO 30 ICOMP = 1,6
-               QUPOL(ICOMP) = 0.0D0
-   30       CONTINUE
+            OCCUP_I = OCCUP(IORBI+ICC)
+            QUPOL(1:6) = 0.0D0
             IST = MATBLK
 C
             DO 60 J=1,NBASI
@@ -1185,7 +1196,7 @@ C           R2 = < r**2 > for this orbital
             R2 = QUPOL(1) + QUPOL(2) + QUPOL(3)
 C
             DO 70 ICOMP = 1,6
-               QUPOL(ICOMP)  = QUPOL(ICOMP)*OCCUP(IPX)
+               QUPOL(ICOMP)  = QUPOL(ICOMP)*OCCUP_I
                ELQPOL(ICOMP) = ELQPOL(ICOMP) - QUPOL(ICOMP)
    70       CONTINUE
             RR = QUPOL(1) + QUPOL(2) + QUPOL(3)

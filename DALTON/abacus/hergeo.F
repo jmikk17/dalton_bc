@@ -615,31 +615,34 @@ C
 C  /* Deck radius */
       REAL*8 FUNCTION RADIUS(NCHARGE)
 C
+C     Returns an atomic radius in Angstrom;
 C     Based on covalent radii and metallic radii in Angstrom.
-C     Returns -1 where data is inavailable
+C     Returns -1 if NCHARGE < 1
+C     Returns 300 pm for heavy elements beyond end of COVRAD table.
 C     Oct 2006 hjaaj: changed Hydrogen from 30 to 40 pm,
 C              such that H2 is printed as bonded ;-) .
-C
-      INTEGER NCHARGE
-      REAL*8, SAVE ::  COVRAD(83)
-      DATA (COVRAD(I), I = 1, 83)/
-     &        40.,  155.,  160.,  110.,
-     & 90.,   80.,   70.,   68.,   65.,
-     &154.,  190.,  160.,  140.,  110.,
-     &110.,  105.,  105.,  190.,  238.,
-     &200.,  165.,  145.,  135.,  130.,
-     &125.,  125.,  125.,  125.,  125.,
-     &140.,  140.,  130.,  120.,  120.,
-     &120.,  200.,  255.,  215.,  180.,
-     &160.,  145.,  140.,  135.,  130.,
-     &130.,  135.,  140.,  155.,  160.,
-     &160.,  140.,  140.,  140.,  220.,
-     &270.,  220.,  185.,  180.,  180.,
-     &180.,  180.,  180.,  200.,  180.,
-     &175.,  175.,  175.,  175.,  170.,
-     &170.,  170.,  155.,  145.,  140.,
-     &135.,  135.,  135.,  135.,  145.,
-     &155.,  170.,  175.,  170./
+      INTEGER :: NCHARGE
+      INTEGER, PARAMETER :: MAX_CHARGE = 83
+      REAL*8,  SAVE      ::  COVRAD(MAX_CHARGE)
+      DATA (COVRAD(I), I = 1, MAX_CHARGE)/ ! in pm
+     & 40.D0,  155.D0,  160.D0,  110.D0,   90.D0,
+     & 80.D0,   70.D0,   68.D0,   65.D0,  154.D0,
+     &190.D0,  160.D0,  140.D0,  110.D0,  110.D0,
+     &105.D0,  105.D0,  190.D0,  238.D0,  200.D0,
+     &165.D0,  145.D0,  135.D0,  130.D0,  125.D0,
+     &125.D0,  125.D0,  125.D0,  125.D0,  140.D0,
+     &140.D0,  130.D0,  120.D0,  120.D0,  120.D0,
+     &200.D0,  255.D0,  215.D0,  180.D0,  160.D0,
+     &145.D0,  140.D0,  135.D0,  130.D0,  130.D0,
+     &135.D0,  140.D0,  155.D0,  160.D0,  160.D0,
+     &140.D0,  140.D0,  140.D0,  220.D0,  270.D0,
+     &220.D0,  185.D0,  180.D0,  180.D0,  180.D0,
+     &180.D0,  180.D0,  200.D0,  180.D0,  175.D0,
+     &175.D0,  175.D0,  175.D0,  170.D0,  170.D0,
+     &170.D0,  155.D0,  145.D0,  140.D0,  135.D0,
+     &135.D0,  135.D0,  135.D0,  145.D0,  155.D0,
+     &170.D0,  175.D0,  170.D0/
+
 C
       IF (NCHARGE .LE. 0) THEN
 Chj      =  0: solvent cavity center or floating orbital
@@ -647,60 +650,45 @@ Chj      = -Z: multiple basis for r12 methods for nuclear charge Z
 Chj      = -1234567890: point charges
 C
          RADIUS = -1.0D0
-      ELSE IF (NCHARGE .GT. 83) THEN
-      ! undefined
-         RADIUS = -1.0D0
+      ELSE IF (NCHARGE .GT. MAX_CHARGE) THEN
+      ! no data available, but the heavy elements are quite big,
+      ! so I arbitrarily chose 300 pm, which is greater than 270 pm
+      ! the largest value in COVRAD table /hjaaj
+        RADIUS = 3.0d0 ! 3 Angstrom = 1.0d-2*300.D0
       ELSE
-         RADIUS = 0.01D0 * COVRAD(NCHARGE)
-      END IF
+        RADIUS = 1.0d-2*COVRAD(NCHARGE) ! in Angstrom
+      ENDIF
       RETURN
       END
 C  /* Deck vdwrad */
-      FUNCTION VDWRAD(NCHARGE)
+      REAL*8 FUNCTION VDWRAD(NCHARGE)
+C     Based on van der Waals radii in Angstrom.
+C     If no table value, use covalent radius plus 0.65 AA /Dec. 2006, hjaaj
+C     Returns -1 if NCHARGE < 1
 #include "implicit.h"
 #include "priunit.h"
-C     Based on van der Waals radii in Angstrom.
-C     Returns -1 where data is inavailable
-      DIMENSION RAD(100)
-      DATA (RAD(I), I = 1, 100)/
-     &       110.,  220.,  122.,   63.,
-     &155.,  155.,  140.,  135.,  130.,
-     &154.,  190.,  160.,  140.,  110.,
-     &202.,  220.,  150.,  150.,  220.,
-     &188.,  181.,  175.,  277.,  239.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100.,   -100.,   -100.,   -100.,   -100.,
-     & -100./
+      PARAMETER ( DPH = 1.0D-02, MAX_charge=24)
+      REAL*8  RAD(MAX_charge)
+      DATA (RAD(I), I = 1, MAX_charge)/   ! in pm
+     & 110.,  220.,  122.,   63.,  155.,
+     & 155.,  140.,  135.,  130.,  154.,
+     & 190.,  160.,  140.,  110.,  202.,
+     & 220.,  150.,  150.,  220.,  188.,
+     & 181.,  175.,  277.,  239./
 C
+
       IF (NCHARGE .LE. 0) THEN
 Chj      =  0: solvent cavity center or floating orbital
 Chj      = -Z: multiple basis for r12 methods for nuclear charge Z
 Chj      = -1234567890: point charges
 C
          VDWRAD = -1.0D0
-      ELSE IF (NCHARGE .GT. 100) THEN
-         VDWRAD = -1.0D0
-      ELSE
-         VDWRAD = 0.01D0 * RAD(NCHARGE)
-         IF (VDWRAD .LT. 0.0D0) THEN
+      ELSE IF (NCHARGE .GT. MAX_charge) THEN
 C           if no table value, use covalent radius plus 0.65 AA
 C           (as for B-F above) /Dec. 2006, hjaaj
-            WDWRAD = RADIUS(NCHARGE) 
-            IF (VDWRAD .GT. 0.0D0) VDWRAD = VDWRAD + 0.65D0
-         END IF
+         WDWRAD = RADIUS(NCHARGE) + 0.65D0
+      ELSE
+         VDWRAD = DPH*RAD(NCHARGE)
       END IF
       RETURN
       END

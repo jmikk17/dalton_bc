@@ -302,7 +302,6 @@ C
 #include "inttra.h"
 #include "inftra.h"
 #include "inftap.h"
-#include "ibtdef.h"
 C
       CALL QENTER('SORTA ')
 C
@@ -1791,7 +1790,9 @@ C     ***********       AND THRESHOLD USED IN SORTA FOR INTEGRALS (PQ/RS)
       END IF
 C
       IF (FCKTRA_TYPE .gt. 0) THEN
-         IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
+         IF (ITRLVL .EQ. 15) THEN ! special code for only <ij|ab> Dirac integrals for MP2
+            NEWTRA_USEDRC = .TRUE.
+         ELSE IF (ITRLVL .EQ. 0 .OR. ITRLVL .GE. 5) THEN ! first, third or fourth order transformation
             NEWTRA_USEDRC = .FALSE. ! if USEDRC true, then use DRCCTL and not Dirac integrals from SIR_FCKTRA
             ! because a lot of MO integrals are calculated twice in FCKTRA if ITRLVL .ge. 5
          ELSE
@@ -1800,14 +1801,30 @@ C
 #if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling FCKTRA COUL, ktrlvl', KTRLVL
 #endif
-         CALL SIR_FCKTRA_DRIVER('COUL',KTRLVL,THRP,CMO,
+         IF (ITRLVL .LE. 10) THEN
+            CALL SIR_FCKTRA_DRIVER('COUL',KTRLVL,THRP,CMO,
      &         WORK,KWORK)
+            IF (NEWTRA_USEDRC) THEN ! get timing for COUL step
+               CALL GETTIM(TCPU1,TWALL1)
+               TCPU  = TCPU1 -TCPU0
+               TWALL = TWALL1-TWALL0
+               WRITE(LUPRI,'(T21,A,2F12.3)')
+     &          'CPU and WALL times (sec)',TCPU, TWALL
+            END IF
+         END IF
          IF (NEWTRA_USEDRC) THEN
 #if SIRTRA_DEBUG > 0
          write(lupri,*) 'calling FCKTRA EXCH, ktrlvl', KTRLVL
 #endif
             CALL SIR_FCKTRA_DRIVER('EXCH',KTRLVL,THRP,CMO,
      &         WORK,KWORK,IPRTRA)
+            IF (ITRLVL .LE. 10) THEN ! get timing for EXCH step
+               CALL GETTIM(TCPU2,TWALL2)
+               TCPU  = TCPU2 -TCPU1
+               TWALL = TWALL2-TWALL1
+               WRITE(LUPRI,'(T21,A,2F12.3)')
+     &          'CPU and WALL times (sec)',TCPU, TWALL
+            END IF
          END IF
          ITRLVL_LAST = ITRLVL
       ELSE IF (NEWTRA) THEN
@@ -3039,8 +3056,6 @@ C
       INTEGER*2 INDCD2(2)
       EQUIVALENCE (INDCD, INDCD2)
       SAVE INDCDN, LENGTH
-C
-#include "ibtdef.h"
 C
 C ****************************************************************
 C
