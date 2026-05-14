@@ -253,6 +253,17 @@ the next subsection describes the keywords for excitation properties.
 
 \begin{description}
 
+\item{\Key{ATMMOM}}\\
+\verb|READ (LUCMD,*) IORATM|\\
+Add atomic moment operators using MBIS (Minimum Basis Iterative Stockholder) population analysis to both the $A$ and $B$ operator lists.
+The integer \verb|IORATM| sets the multipole order included:
+\begin{itemize}
+  \item \verb|IORATM = 0|: monopole only
+  \item \verb|IORATM = 1|: monopole and dipole 
+\end{itemize}
+Requires \verb|NoSymmetry| in the molecule input.
+\index{atom-atom polarizability}\index{MBIS population analysis}
+
 \item{\Key{DIPLEN}}
 Add the three dipole component operators to both the $A$ and $B$ operator lists, also known as dipole length operators.\index{dipole length}
 
@@ -348,6 +359,12 @@ Restart\index{restart!linear response} of response calculation. This
 can only be used if the
 operator specified is the same which was used \textit{last} in the previous
 response calculation.
+
+\item{\Key{SELATM}}\\
+\verb|READ (LUCMD,*) NATM|\\
+\verb|READ (LUCMD,*) (ATMIND(I), I=1, NATM)|\\
+Restrict atomic moment calculations to a subset of \verb|NATM| atoms given by their indices. Must be combined with \Key{ATMMOM}.
+\index{atom-atom polarizability}
 
 \item{\Key{SPIN-D}} Sets $A$ and $B$ to be all spin-dipole operators
   found on the file \verb|AOPROPER|, {\it i.e.\/} all spin-dipole
@@ -1446,6 +1463,17 @@ Threshold for convergence of excitation eigenvectors, default value is $10^{-3}$
 
 \begin{description}
 
+\item{\Key{ATMMOM}}\\
+\verb|READ (LUCMD,*) IORATM|\\
+Calculates Cauchy moments and the atom-atom polarizabilities at the default/specified grid points.
+The integer \verb|IORATM| controls the multipole order:
+\begin{itemize}
+  \item \verb|IORATM = 0|: monopole only
+  \item \verb|IORATM = 1|: monopole and dipole 
+\end{itemize}
+Requires \verb|NoSymmetry| in the molecule input.
+\index{atom-atom polarizability}\index{MBIS population analysis}
+
 \item{\Key{C6ATM}, \Key{C8ATM}, \Key{C10ATM}}
 \Key{C6ATM}, \Key{C8ATM}, \Key{C10ATM} do the same as \Key{C6SPH} etc. for
 atoms. Only $M_L=0$ is
@@ -1531,6 +1559,12 @@ Sets $A$ and $B$ to a given operator with label; LABEL.
 (The calculation of the operator must be specified to the integral
 module, see section \ref{ch:hermit}.)
 This keyword may be repeated for different properties.
+
+\item{\Key{SELATM}}\\
+\verb|READ (LUCMD,*) NATM|\\
+\verb|READ (LUCMD,*) (ATMIND(I), I=1, NATM)|\\
+Restrict atomic moment calculations to a subset of \verb|NATM| atoms given by their indices. Must be combined with \Key{ATMMOM}.
+\index{atom-atom polarizability}
 
 \item{\Key{THCC6}}\\
 \verb|READ *, THCC6|\\

@@ -458,7 +458,7 @@ C     Bin Gao, Oct. 3, 2011
 !                    245        246        247		  248
      &             '.TWOBYT', '.LFDIPL', '.GZZEFG', '.LAPEFG',
 !                    249
-     &             '.LR-EFG' /
+     &             '.LR-EFG'/
 C
 C
       CALL QENTER('HERINP')

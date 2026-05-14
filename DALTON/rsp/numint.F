@@ -152,7 +152,7 @@
       call mbis_pop(work(kx),work(ky),work(kz),work(kw),
      &   work(krho),work(kw_mbis),
      &   max_pnt,max_atm,luwdump,old_grid)
-      call newtimer('mbis')
+      call newtimer('MBIS')
 
       call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
 ! allocate for and calculate ao integrals, memory saving version
@@ -1178,7 +1178,6 @@
       rtnlbl(2) = 'SYMMETRI'
 
       do k=1,natmlbl
-         write(lupri,*) 'Writing lbl:', prplbl_atm(k)
          ao_test = ao_int(1:nnbasx,k)
          call wrtpro(ao_test,nnbasx,prplbl_atm(k),rtnlbl,iprlr)
       enddo

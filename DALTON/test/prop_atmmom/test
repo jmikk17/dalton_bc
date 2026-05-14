@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+#    prop_atmmom
+#    --------
+#    Molecule:         H2O
+#    Wave Function:    SCF, MCSCF and CC / STO-3G
+#    Test Purpose:     Single-point calculation of atom-atom polarizabilities
+#                      and Cauchy moments
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from runtest_dalton import Filter, TestRun
+
+test = TestRun(__file__, sys.argv)
+
+
+# --- HF / Atom-atom dispersion ---
+
+f = Filter()
+
+f.add(string = '@    Final HF energy:',
+      rel_tolerance = 1.0e-9)
+
+f.add(string = 'MBIS converged!',
+      rel_tolerance = 1.0e-2)
+
+f.add(from_string = 'Static polarisabilities (length)',
+      num_lines = 64,
+      abs_tolerance = 1.0e-4)
+
+test.run(['prop_atmmomc6_hf.dal'], ['H2O_STO3G_nosym.mol'], f={'out': f},
+         accepted_errors=['not implemented for parallel calculations.'])
+
+
+# --- CC2 / Atom-atom dispersion ---
+
+f2 = Filter()
+
+f2.add(string = 'MBIS converged!',
+       rel_tolerance = 1.0e-2)
+
+f2.add(from_string = 'FINAL CC2 RESULTS FOR THE SECOND-ORDER PROPERTIES',
+       num_lines = 22,
+       abs_tolerance = 1.0e-5)
+
+test.run(['prop_atmmomc6_cc2.dal'], ['H2O_STO3G_nosym.mol'], f={'out': f2},
+         accepted_errors=['not implemented for parallel calculations.'])
+
+
+# --- CCSD / Atom-atom pol. ---
+
+f3 = Filter()
+
+f3.add(string = 'MBIS converged!',
+       rel_tolerance = 1.0e-2)
+
+f3.add(from_string = 'FINAL CCSD RESULTS FOR THE SECOND-ORDER PROPERTIES',
+       num_lines = 22,
+       abs_tolerance = 1.0e-5)
+
+f3.add(from_string = 'SUMMARY OF COUPLED CLUSTER CALCULATION',
+       num_lines = 14,
+       rel_tolerance = 1.0e-9)
+
+test.run(['prop_atmmom_ccsd.dal'], ['H2O_STO3G_nosym.mol'], f={'out': f3},
+         accepted_errors=['not implemented for parallel calculations.'])
+
+
+# --- MCSCF / Atom-atom pol. ---
+
+f4 = Filter()
+
+f4.add(string = '@    Final MCSCF energy:',
+       rel_tolerance = 1.0e-9)
+
+f4.add(string = 'MBIS converged!',
+       rel_tolerance = 1.0e-2)
+
+f4.add(from_string = 'FREQUENCY INDEPENDENT SECOND ORDER PROPERTIES',
+       num_lines = 38,
+       abs_tolerance = 1.0e-5)
+
+test.run(['prop_atmmom_mcscf.dal'], ['H2O_STO3G_nosym.mol'], f={'out': f4},
+         accepted_errors=['not implemented for parallel calculations.'])
+
+
+sys.exit(test.return_code)

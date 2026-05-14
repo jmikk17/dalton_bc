@@ -1,0 +1,10 @@
+BASIS
+STO-3G
+Water (H2O)
+Testing atmmom
+Atomtypes=2 NoSymmetry Angstrom
+Charge=8.0 Atoms=1
+O   0.000000  0.000000  0.118534
+Charge=1.0 Atoms=2
+H1  0.000000  0.759623 -0.474135
+H2  0.000000 -0.759623 -0.474135

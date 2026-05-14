@@ -94,9 +94,21 @@ group symmetry from geometry input).
 Integrals needed for operator DIPLEN.
 \index{dipole polarizability}
 
+\item[\Key{ATMMOM}] \verb| |\newline
+   \verb|READ (LUCMD,*) IORATM|
+
+Add atomic moment operators using MBIS (Minimum Basis Iterative Stockholder) population analysis to the operator lists.
+The integer \verb|IORATM| sets the highest multipole order:
+\begin{itemize}
+  \item \verb|IORATM = 0|: monopole only 
+  \item \verb|IORATM = 1|: monopole and dipole 
+\end{itemize}
+Requires \verb|NoSymmetry| in the molecule input.
+\index{atom-atom polarizability}\index{MBIS population analysis}
+
 \item[\Key{CTOSHI}]
-Determine the CTOCD-DZ\index{CTOCD-DZ} magnetic shielding tensors. Integrals 
-needed for computation are DIPVEL, ANGMOM, RPSO, and PSO. Specific atoms can 
+Determine the CTOCD-DZ\index{CTOCD-DZ} magnetic shielding tensors. Integrals
+needed for computation are DIPVEL, ANGMOM, RPSO, and PSO. Specific atoms can
 be selected by using the option \Key{SELECT} in the \Sec{*INTEGRAL} input 
 module.
 \index{nuclear shielding!Coupled Cluster}
@@ -193,6 +205,13 @@ Integrals needed for operators DIPLEN, DIPVEL, and ANGMOM.
    \verb|READ (LUCMD,*) IPRSOP|
 
 Set print level for linear response output.
+
+\item[\Key{SELATM}] \verb| |\newline
+   \verb|READ (LUCMD,*) NATM|\newline
+   \verb|READ (LUCMD,*) (ATMIND(I), I=1, NATM)|
+
+Restrict atomic moment calculations to a subset of \verb|NATM| atoms given by their indices. Must be combined with \Key{ATMMOM}.
+\index{atom-atom polarizability}
 
 \item[\Key{STATIC}]
 Evaluate the linear response functions at zero frequency.

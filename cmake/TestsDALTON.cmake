@@ -195,6 +195,8 @@ add_dalton_runtest(prop_nucquad                  "dalton;serial;runtest;mcscf;pr
 add_dalton_runtest(prop_roa                      "dalton;runtest;prop;long")
 add_dalton_test(prop_exci_morpa_trip             "dalton;prop;short;essential")
 
+add_dalton_runtest(prop_atmmom                   "dalton;runtest;prop;short")
+
 add_dalton_runtest(rsp_cpp_mcd                   "dalton;runtest;rsp;dft;short")
 add_dalton_runtest(rsp_cpp_nscd                  "dalton;runtest;rsp;dft;short")
 add_dalton_runtest(rsp_cpp_mchd                  "dalton;runtest;rsp;short")

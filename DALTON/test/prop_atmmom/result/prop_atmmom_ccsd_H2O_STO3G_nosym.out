@@ -1,0 +1,1880 @@
+
+
+     ************************************************************************
+     *************** Dalton - An Electronic Structure Program ***************
+     ************************************************************************
+
+    This is output from DALTON release Dalton2025.0-dev (2025)
+         ( Web site: http://daltonprogram.org )
+
+   ----------------------------------------------------------------------------
+
+    NOTE:
+     
+    Dalton is an experimental code for the evaluation of molecular
+    properties using (MC)SCF, DFT, CI, and CC wave functions.
+    The authors accept no responsibility for the performance of
+    the code or for the correctness of the results.
+     
+    The code (in whole or part) is provided under a licence and
+    is not to be reproduced for further distribution without
+    the written permission of the authors or their representatives.
+     
+    See the home page "http://daltonprogram.org" for further information.
+     
+    If results obtained with this code are published,
+    the appropriate citations would be both of:
+     
+       K. Aidas, C. Angeli, K. L. Bak, V. Bakken,
+       R. Bast, L. Boman, O. Christiansen, R. Cimiraglia,
+       S. Coriani, P. Dahle, E. K. Dalskov, U. Ekstroem,
+       T. Enevoldsen, J. J. Eriksen, P. Ettenhuber, B. Fernandez,
+       L. Ferrighi, H. Fliegl, L. Frediani, K. Hald, A. Halkier,
+       C. Haettig, H. Heiberg, T. Helgaker, A. C. Hennum,
+       H. Hettema, E. Hjertenaes, S. Hoest, I.-M. Hoeyvik,
+       M. F. Iozzi, B. Jansik, H. J. Aa. Jensen, D. Jonsson,
+       P. Joergensen, J. Kauczor, S. Kirpekar,
+       T. Kjaergaard, W. Klopper, S. Knecht, R. Kobayashi, H. Koch,
+       J. Kongsted, A. Krapp, K. Kristensen, A. Ligabue,
+       O. B. Lutnaes, J. I. Melo, K. V. Mikkelsen, R. H. Myhre,
+       C. Neiss, C. B. Nielsen, P. Norman, J. Olsen,
+       J. M. H. Olsen, A. Osted, M. J. Packer, F. Pawlowski,
+       T. B. Pedersen, P. F. Provasi, S. Reine, Z. Rinkevicius,
+       T. A. Ruden, K. Ruud, V. Rybkin, P. Salek, C. C. M. Samson,
+       A. Sanchez de Meras, T. Saue, S. P. A. Sauer,
+       B. Schimmelpfennig, K. Sneskov, A. H. Steindal,
+       K. O. Sylvester-Hvid, P. R. Taylor, A. M. Teale,
+       E. I. Tellgren, D. P. Tew, A. J. Thorvaldsen, L. Thoegersen,
+       O. Vahtras, M. A. Watson, D. J. D. Wilson, M. Ziolkowski
+       and H. Agren,
+       "The Dalton quantum chemistry program system",
+       WIREs Comput. Mol. Sci. 2014, 4:269-284 (doi: 10.1002/wcms.1172)
+     
+    and
+     
+       Dalton, a molecular electronic structure program,
+       Release Dalton2025.0-dev (2025), see http://daltonprogram.org
+   ----------------------------------------------------------------------------
+
+    Authors in alphabetical order (Major contribution(s) in parenthesis):
+
+  Kestutis Aidas,              Vilnius University,        Lithuania   (QM/MM)
+  Celestino Angeli,            University of Ferrara,     Italy       (NEVPT2)
+  Juan J. Aucar,               Northeast National UniversiArgentina   (LRESC, Relativistic Effects on NMR Shieldings and EFG)
+  Keld L. Bak,                 UNI-C,                     Denmark     (AOSOPPA, non-adiabatic coupling, magnetic properties)
+  Vebjoern Bakken,             University of Oslo,        Norway      (DALTON; geometry optimizer, symmetry detection)
+  Radovan Bast,                UiT The Arctic U. of NorwayNorway      (DALTON installation and execution frameworks)
+  Pablo Baudin,                University of Valencia,    Spain       (Cholesky excitation energies)
+  Linus Boman,                 NTNU,                      Norway      (Cholesky decomposition and subsystems)
+  Bruno N. Cabral Tenorio,     Technical Univ. of Denmark,Denmark     (Lanczos-based CC methods)
+  Ove Christiansen,            Aarhus University,         Denmark     (CC module)
+  Renzo Cimiraglia,            University of Ferrara,     Italy       (NEVPT2)
+  Sonia Coriani,               Technical Univ. of Denmark,Denmark     (CC and RESPONS modules)
+  Janusz Cukras,               University of Warsaw,      Poland      (MChD in RESPONS)
+  Paal Dahle,                  University of Oslo,        Norway      (Parallelization)
+  Erik K. Dalskov,             UNI-C,                     Denmark     (SOPPA)
+  Thomas Enevoldsen,           Univ. of Southern Denmark, Denmark     (SOPPA)
+  Janus J. Eriksen,            Aarhus University,         Denmark     (Polarizable embedding, TDA)
+  Rasmus Faber,                Technical Univ. of Denmark,Denmark     (Vib.avg. NMR w. SOPPA, parallel AO-SOPPA, CVS-CC and EOMCC)
+  Tobias Fahleson,             KTH Stockholm,             Sweden      (Damped cubic response)
+  Berta Fernandez,             U. of Santiago de CompostelSpain       (Doublet spin, ESR in RESPONS)
+  Lara Ferrighi,               Aarhus University,         Denmark     (PCM Cubic response)
+  Heike Fliegl,                University of Oslo,        Norway      (CCSD(R12))
+  Luca Frediani,               UiT The Arctic U. of NorwayNorway      (PCM)
+  Emmanuel Fromager,           Univ. Strasbourg,          France      (MC-srDFT)
+  Bin Gao,                     UiT The Arctic U. of NorwayNorway      (Gen1Int library)
+  Andre S. P. Gomes,           CNRS/Universite de Lille,  France      (Frozen density embedding)
+  Christof Haettig,            Ruhr-University Bochum,    Germany     (CC module)
+  Kasper Hald,                 Aarhus University,         Denmark     (CC module)
+  Asger Halkier,               Aarhus University,         Denmark     (CC module)
+  Frederik Beyer Hansen,       University of Copenhagen,  Denmark     (Parallel AO-SOPPA)
+  Erik D. Hedegaard,           Univ. of Southern Denmark, Denmark     (Polarizable embedding, QM/MM, and MC-srDFT)
+  Hanne Heiberg,               University of Oslo,        Norway      (Geometry analysis, selected one-electron integrals)
+  Trygve Helgaker,             University of Oslo,        Norway      (DALTON; ABACUS, ERI, DFT modules, London, and much more)
+  Alf Christian Hennum,        University of Oslo,        Norway      (Parity violation)
+  Hinne Hettema,               University of Auckland,    New Zealand (Quadratic response in RESPONS; SIRIUS supersymmetry)
+  Andreas E. Hillers-Bendtsen, University of Copenhagen,  Denmark     (MP3)
+  Eirik Hjertenaes,            NTNU,                      Norway      (Cholesky decomposition)
+  Nicolai Machholdt Hoeyer,    Aarhus University,         Denmark     (MP3)
+  Pi A. B. Haase,              University of Copenhagen,  Denmark     (Triplet AO-SOPPA)
+  Maria Francesca Iozzi,       University of Oslo,        Norway      (RPA)
+  Christoph Jacob,             TU Braunschweig            Germany     (Frozen density embedding)
+  Brano Jansik,                Technical Univ. of Ostrava Czech Rep.  (DFT cubic response)
+  Hans Joergen Aa. Jensen,     Univ. of Southern Denmark, Denmark     (DALTON; SIRIUS, RESPONS, ABACUS, MC-srDFT, and much more)
+  Dan Jonsson,                 UiT The Arctic U. of NorwayNorway      (Cubic response in RESPONS module)
+  Poul Joergensen,             Aarhus University,         Denmark     (RESPONS, ABACUS, and CC modules)
+  Maciej Kaminski,             University of Warsaw,      Poland      (CPPh in RESPONS)
+  Joanna Kauczor,              Linkoeping University,     Sweden      (Complex polarization propagator (CPP) module)
+  Sheela Kirpekar,             Univ. of Southern Denmark, Denmark     (Mass-velocity & Darwin integrals)
+  Frederik Oersted Kjeldal,    Technical Univ. of Denmark,Denmark     (MP3)
+  Erik Kjellgren,              Univ. of Southern Denmark, Denmark     (MC-srDFT)
+  Wim Klopper,                 KIT Karlsruhe,             Germany     (R12 code in CC, SIRIUS, and ABACUS modules)
+  Stefan Knecht,               ETH Zurich,                Switzerland (Parallel CI and MCSCF, MC-srDFT)
+  Rika Kobayashi,              Australian National Univ., Australia   (DIIS in CC, London in MCSCF)
+  Henrik Koch,                 NTNU,                      Norway      (CC module, Cholesky decomposition)
+  Jacob Kongsted,              Univ. of Southern Denmark, Denmark     (Polarizable embedding, polarizable density embedding, QM/MM)
+  Andrea Ligabue,              University of Modena,      Italy       (CTOCD, AOSOPPA)
+  Nanna H. List,               Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Ola B. Lutnaes,              University of Oslo,        Norway      (DFT Hessian)
+  Juan I. Melo,                University of Buenos Aires,Argentina   (LRESC, Relativistic Effects on NMR Shieldings)
+  Kurt V. Mikkelsen,           University of Copenhagen,  Denmark     (MC-SCRF, QM/MM, and MP3)
+  Rolf H. Myhre,               NTNU,                      Norway      (Subsystems and CC3)
+  Christian Neiss,             Univ. Erlangen-Nuernberg,  Germany     (CCSD(R12))
+  Christian B. Nielsen,        University of Copenhagen,  Denmark     (QM/MM)
+  Patrick Norman,              KTH Stockholm,             Sweden      (Cubic response and complex frequency response in RESPONS)
+  Jeppe Olsen,                 Aarhus University,         Denmark     (SIRIUS CI/density modules)
+  Jogvan Magnus H. Olsen,      Aarhus University,         Denmark     (Polarizable embedding and polarizable density embedding)
+  Anders Osted,                Copenhagen University,     Denmark     (QM/MM)
+  Martin J. Packer,            University of Sheffield,   UK          (SOPPA)
+  Filip Pawlowski,             Kazimierz Wielki UniversityPoland      (CC3)
+  Morten N. Pedersen,          Univ. of Southern Denmark, Denmark     (Polarizable embedding)
+  Thomas B. Pedersen,          University of Oslo,        Norway      (Cholesky decomposition)
+  Patricio F. Provasi,         University of Northeastern,Argentina   (Analysis of coupling constants in localized orbitals)
+  Peter Reinholdt,             Univ. of Southern Denmark, Denmark     (Polarizable embedding and polarizable density embedding)
+  Zilvinas Rinkevicius,        KTH Stockholm,             Sweden      (open-shell DFT, ESR)
+  Elias Rudberg,               KTH Stockholm,             Sweden      (DFT grid and basis info)
+  Torgeir A. Ruden,            University of Oslo,        Norway      (Numerical derivatives in ABACUS)
+  Kenneth Ruud,                UiT The Arctic U. of NorwayNorway      (DALTON; ABACUS magnetic properties and much more)
+  Pawel Salek,                 KTH Stockholm,             Sweden      (DALTON; DFT code)
+  Claire C. M. Samson,         University of Karlsruhe    Germany     (Boys localization, r12 integrals in ERI)
+  Alfredo Sanchez de Meras,    University of Valencia,    Spain       (CC module, Cholesky decomposition)
+  Trond Saue,                  Paul Sabatier University,  France      (direct Fock matrix construction)
+  Stephan P. A. Sauer,         University of Copenhagen,  Denmark     (SOPPA(CCSD), SOPPA prop., AOSOPPA, vibrational g-factors)
+  Bernd Schimmelpfennig,       Forschungszentrum KarlsruheGermany     (AMFI module)
+  Anna K. Schnack-Petersen,    University of Copenhagen,  Denmark     (RPA(D) and HRPA(D) properties in AOSOPPA)
+  Kristian Sneskov,            Aarhus University,         Denmark     (Polarizable embedding, QM/MM)
+  Arnfinn H. Steindal,         UiT The Arctic U. of NorwayNorway      (parallel QM/MM, polarizable embedding)
+  Casper Steinmann,            Aalborg University,        Denmark     (QFIT, polarizable embedding)
+  K. O. Sylvester-Hvid,        University of Copenhagen,  Denmark     (MC-SCRF)
+  Peter R. Taylor,             VLSCI/Univ. of Melbourne,  Australia   (Symmetry handling ABACUS, integral transformation)
+  Andrew M. Teale,             University of Nottingham,  England     (DFT-AC, DFT-D)
+  David P. Tew,                University of Bristol,     England     (CCSD(R12))
+  Julien Toulouse,             Sorbonne Univ.,            France      (MC-srDFT)
+  Olav Vahtras,                KTH Stockholm,             Sweden      (Triplet response, spin-orbit, ESR, TDDFT, open-shell DFT)
+  Lucas Visscher,              Vrije Universiteit AmsterdaNetherlands (Frozen density embedding)
+  David J. Wilson,             La Trobe University,       Australia   (DFT Hessian and DFT magnetizabilities)
+  Luna Zamok,                  University of Copenhagen,  Denmark     (Block Lanczos RPA solver in SOPPA module)
+  Hans Agren,                  KTH Stockholm,             Sweden      (SIRIUS module, RESPONS, MC-SCRF solvation)
+ --------------------------------------------------------------------------------
+
+     Date and time (Linux)  : Thu May 14 22:28:39 2026
+     Host name              : Jonas-Desktop                           
+
+ * Work memory size             :    64000000 =  488.28 megabytes.
+
+ * Directories for basis set searches:
+   1) /home/jmikk/progs/dalton-oslo/DALTON/test/prop_atmmom
+   2) /home/jmikk/progs/dalton-oslo/build/basis
+
+
+Compilation information
+-----------------------
+
+ Who compiled             | jmikk
+ Host                     | Jonas-Desktop
+ System                   | Linux-5.15.167.4-microsoft-standard-WSL2
+ CMake generator          | Unix Makefiles
+ Processor                | x86_64
+ 64-bit integers          | OFF
+ MPI                      | OFF
+ Fortran compiler         | /usr/bin/gfortran
+ Fortran compiler version | GNU Fortran (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.
+                          | 0
+ C compiler               | /usr/bin/gcc
+ C compiler version       | gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+ C++ compiler             | /usr/bin/g++
+ C++ compiler version     | g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+ Static linking           | OFF
+ Last Git revision        | b78f531760d6555be379dd3a16fed1ac3d453b81
+ Git branch               | crk-oslo
+ Configuration time       | 2026-05-14 22:27:52.971980
+
+ * Sequential calculation.
+
+
+   Content of the .dal input file
+ ----------------------------------
+
+**DALTON INPUT
+.RUN WAVE FUNCTIONS
+**INTEGRALS
+.DIPLEN
+**WAVE FUNCTIONS
+.CC
+*CC INPUT
+.CCSD
+*CCLR
+.ATMMOM
+ 0
+.FREQUE
+ 3
+ 0.0 0.1 0.3
+.SELATM
+ 2
+ 1 3
+**END OF DALTON INPUT
+
+
+   Content of the .mol file
+ ----------------------------
+
+BASIS
+STO-3G
+Water (H2O)
+Testing atmmom
+Atomtypes=2 NoSymmetry Angstrom
+Charge=8.0 Atoms=1
+O   0.000000  0.000000  0.118534
+Charge=1.0 Atoms=2
+H1  0.000000  0.759623 -0.474135
+H2  0.000000 -0.759623 -0.474135
+
+
+       *******************************************************************
+       *********** Output from DALTON general input processing ***********
+       *******************************************************************
+
+ --------------------------------------------------------------------------------
+   Overall default print level:    0
+   Print level for DALTON.STAT:    1
+
+    HERMIT 1- and 2-electron integral sections will be executed
+    "Old" integral transformation used (limited to max 255 basis functions)
+    Wave function sections will be executed (SIRIUS module)
+ --------------------------------------------------------------------------------
+
+
+   ****************************************************************************
+   *************** Output of molecule and basis set information ***************
+   ****************************************************************************
+
+
+    The two title cards from your ".mol" input:
+    --------------------------------------------------------------------------------
+ 1: Water (H2O)
+ 2: Testing atmmom
+    --------------------------------------------------------------------------------
+
+  Coordinates are entered in Angstrom and converted to atomic units.
+          - Conversion factor : 1 bohr = 0.52917721080 A
+
+  Atomic type no.    1
+  --------------------
+  Nuclear charge:   8.00000
+  Number of symmetry independent centers:    1
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   8 :
+     "/home/jmikk/progs/dalton-oslo/build/basis/STO-3G"
+
+  Atomic type no.    2
+  --------------------
+  Nuclear charge:   1.00000
+  Number of symmetry independent centers:    2
+  Number of basis sets to read;    2
+  Basis set file used for this atomic type with Z =   1 :
+     "/home/jmikk/progs/dalton-oslo/build/basis/STO-3G"
+
+
+                         SYMGRP: Point group information
+                         -------------------------------
+
+@    Point group: C1 
+
+
+                                 Isotopic Masses
+                                 ---------------
+
+                           O          15.994915
+                           H1          1.007825
+                           H2          1.007825
+
+                       Total mass:    18.010565 amu
+                       Natural abundance:  99.730 %
+
+ Center-of-mass coordinates (a.u.):    0.000000    0.000000    0.098654
+ Center-of-mass coordinates (Angs):    0.000000    0.000000    0.052206
+
+
+  Atoms and basis sets
+  --------------------
+
+  Number of atom types :    2
+  Total number of atoms:    3
+
+  Basis set used is "STO-3G" from the basis set library.
+
+  label    atoms   charge   prim   cont     basis
+  ----------------------------------------------------------------------
+  O           1    8.0000    15     5      [6s3p|2s1p]                                        
+  H2          2    1.0000     3     1      [3s|1s]                                            
+  ----------------------------------------------------------------------
+  total:      3   10.0000    21     7
+  ----------------------------------------------------------------------
+
+  Threshold for neglecting AO integrals:  1.00D-12
+
+
+  Cartesian Coordinates (bohr)
+  ----------------------------
+
+  Total number of coordinates:    9
+  O       :     1  x   0.0000000000    2  y   0.0000000000    3  z   0.2239967965
+  H1      :     4  x   0.0000000000    5  y   1.4354794282    6  z  -0.8959852963
+  H2      :     7  x   0.0000000000    8  y  -1.4354794282    9  z  -0.8959852963
+
+
+  Cartesian Coordinates (xyz format; angstrom)
+  --------------------------------------------
+
+    3
+
+  O        0.0000000000            0.0000000000            0.1185340000
+  H        0.0000000000            0.7596230000           -0.4741350000
+  H        0.0000000000           -0.7596230000           -0.4741350000
+
+
+   Interatomic separations (in Angstrom):
+   --------------------------------------
+
+            O           H1          H2    
+            ------      ------      ------
+ O     :    0.000000
+ H1    :    0.963475    0.000000
+ H2    :    0.963475    1.519246    0.000000
+
+
+  Max    interatomic separation is    1.5192 Angstrom (    2.8710 Bohr)
+  between atoms    3 and    2, "H2    " and "H1    ".
+
+  Min HX interatomic separation is    0.9635 Angstrom (    1.8207 Bohr)
+
+
+  Bond distances (Angstrom):
+  --------------------------
+
+                  atom 1     atom 2       distance
+                  ------     ------       --------
+  bond distance:  H1         O            0.963475
+  bond distance:  H2         O            0.963475
+
+
+  Bond angles (degrees):
+  ----------------------
+
+                  atom 1     atom 2     atom 3         angle
+                  ------     ------     ------         -----
+  bond angle:     H1         O          H2           104.076
+
+
+
+
+ Principal moments of inertia (u*A**2) and principal axes
+ --------------------------------------------------------
+
+   IA       0.628773          0.000000    1.000000    0.000000
+   IB       1.163085          0.000000    0.000000    1.000000
+   IC       1.791858          1.000000    0.000000    0.000000
+
+
+ Rotational constants
+ --------------------
+
+@    The molecule is planar.
+
+               A                   B                   C
+
+         803753.8221         434516.0894         282041.8750 MHz
+           26.810342           14.493897            9.407904 cm-1
+
+
+@  Nuclear repulsion energy :    9.136127857887 Hartree
+
+
+                     .---------------------------------------.
+                     | Starting in Integral Section (HERMIT) |
+                     `---------------------------------------'
+
+
+
+ ***************************************************************************************
+ ****************** Output from **INTEGRALS input processing (HERMIT) ******************
+ ***************************************************************************************
+
+
+
+    *************************************************************************
+    ****************** Output from HERMIT input processing ******************
+    *************************************************************************
+
+
+ Default print level:        1
+
+ Calculation of one- and two-electron Hamiltonian integrals.
+
+ The following one-electron property integrals are calculated as requested:
+          - overlap integrals
+          - dipole length integrals
+
+ Center of mass  (bohr):      0.000000000000      0.000000000000      0.098654148710
+ Operator center (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Gauge origin    (bohr):      0.000000000000      0.000000000000      0.000000000000
+ Dipole origin   (bohr):      0.000000000000      0.000000000000      0.000000000000
+
+Calculation of 2-electron integrals are postponed until they are needed.
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+
+                      Nuclear contribution to dipole moments
+                      --------------------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x      0.00000000         0.00000000         0.00000000
+      y      0.00000000         0.00000000         0.00000000
+      z      0.00000378         0.00000961         0.00003204
+
+
+  Total CPU  time used in HERMIT:   0.00 seconds
+  Total wall time used in HERMIT:   0.00 seconds
+
+
+                        .----------------------------------.
+                        | End of Integral Section (HERMIT) |
+                        `----------------------------------'
+
+
+
+                   .--------------------------------------------.
+                   | Starting in Wave Function Section (SIRIUS) |
+                   `--------------------------------------------'
+
+ ntot           4           2           2
+
+ *** Output from Huckel module :
+
+     Using EWMO model:          T
+     Using EHT  model:          F
+     Number of Huckel orbitals each symmetry:    7
+
+ EWMO - Energy Weighted Maximum Overlap - is a Huckel type method,
+        which normally is better than Extended Huckel Theory.
+ Reference: Linderberg and Ohrn, Propagators in Quantum Chemistry (Wiley, 1973)
+
+ Huckel EWMO eigenvalues for symmetry :  1
+          -20.684868      -1.607823      -0.777199      -0.689369      -0.616200
+           -0.234224      -0.170216
+
+ **********************************************************************
+ *SIRIUS* a direct, restricted step, second order MCSCF program       *
+ **********************************************************************
+
+ 
+     Date and time (Linux)  : Thu May 14 22:28:39 2026
+     Host name              : Jonas-Desktop                           
+
+ Title lines from ".mol" input file:
+     Water (H2O)
+     Testing atmmom
+
+ Print level on unit LUPRI =   2 is   0
+ Print level on unit LUW4  =   2 is   5
+
+@    (Integral direct) CC calculation.
+
+@    This is a combination run starting with
+@              a restricted, closed shell Hartree-Fock calculation
+
+
+ Initial molecular orbitals are obtained according to
+ ".MOSTART EWMO  " input option
+
+     Wave function specification
+     ============================
+
+     For the specification of the Coupled Cluster: see below.
+
+@    Wave function type        --- CC ---
+@    Number of closed shell electrons          10
+@    Number of electrons in active shells       0
+@    Total charge of the molecule               0
+
+@    Spin multiplicity and 2 M_S                1         0
+@    Total number of symmetries                 1 (point group: C1 )
+@    Reference state symmetry                   1 (irrep name : A  )
+
+     Orbital specifications
+     ======================
+@    Abelian symmetry species          All |    1
+@                                          |  A  
+                                       --- |  ---
+@    Occupied SCF orbitals               5 |    5
+@    Secondary orbitals                  2 |    2
+@    Total number of orbitals            7 |    7
+@    Number of basis functions           7 |    7
+
+     Optimization information
+     ========================
+@    Number of configurations                 1
+@    Number of orbital rotations             10
+     ------------------------------------------
+@    Total number of variables               11
+
+     Maximum number of Fock   iterations      0
+     Maximum number of DIIS   iterations     60
+     Maximum number of QC-SCF iterations     60
+     Threshold for SCF convergence     1.00D-06
+
+
+ Changes of defaults for CC:
+ ---------------------------
+
+ -Linear response properties calculated
+ -Dipole moment calculated
+  
+
+
+ ***********************************************
+ ***** DIIS acceleration of SCF iterations *****
+ ***********************************************
+
+ C1-DIIS algorithm; max error vectors =    8
+
+ Iter      Total energy        Error norm    Delta(E)  DIIS dim.
+ -----------------------------------------------------------------------------
+
+Calculating AOSUPINT
+
+---> (Re)generating AOTWOINT
+
+
+     ************************************************************************
+     ************************** Output from HERINT **************************
+     ************************************************************************
+
+
+***  INFO  GETGAB: GABSO--- not found on AOGABINT. Regenerating.
+
+ Threshold for neglecting two-electron integrals:  1.00D-12
+ HERMIT - Number of two-electron integrals written:         228 ( 56.2% )
+ HERMIT - Megabytes written:                              0.137
+
+     (Precalculated AO two-electron integrals are transformed to P-supermatrix elements.
+      Threshold for discarding integrals :  1.00D-12 )
+
+@  1    -74.9111031595        7.65050D-01   -7.49D+01    1
+      Virial theorem: -V/T =      2.004212
+@    MULPOP   O      -0.45; H1      0.23; H2      0.23; 
+   1  Level shift: doubly occupied orbital energies shifted by -2.00D-01
+ -----------------------------------------------------------------------------
+@  2    -74.9585548528        2.29576D-01   -4.75D-02    2
+      Virial theorem: -V/T =      2.006196
+@    MULPOP   O      -0.37; H1      0.18; H2      0.18; 
+   2  Level shift: doubly occupied orbital energies shifted by -1.00D-01
+ -----------------------------------------------------------------------------
+@  3    -74.9637487010        3.52060D-02   -5.19D-03    3
+      Virial theorem: -V/T =      2.005402
+@    MULPOP   O      -0.36; H1      0.18; H2      0.18; 
+   3  Level shift: doubly occupied orbital energies shifted by -2.50D-02
+ -----------------------------------------------------------------------------
+@  4    -74.9638704398        8.78822D-04   -1.22D-04    4
+      Virial theorem: -V/T =      2.005230
+@    MULPOP   O      -0.36; H1      0.18; H2      0.18; 
+ -----------------------------------------------------------------------------
+@  5    -74.9638705494        2.70871D-04   -1.10D-07    5
+      Virial theorem: -V/T =      2.005225
+@    MULPOP   O      -0.36; H1      0.18; H2      0.18; 
+ -----------------------------------------------------------------------------
+@  6    -74.9638705641        4.97203D-06   -1.46D-08    6
+      Virial theorem: -V/T =      2.005224
+@    MULPOP   O      -0.36; H1      0.18; H2      0.18; 
+ -----------------------------------------------------------------------------
+@  7    -74.9638705641        1.72624D-07   -3.78D-12    7
+
+@ *** DIIS converged in   7 iterations !
+@     Converged SCF energy, gradient:    -74.963870564055    1.73D-07
+    - total time used in SIRFCK :              0.00 seconds
+
+
+ *** SCF orbital energy analysis ***
+
+ Number of electrons        :   10
+ Closed shell orbitals      :    5
+
+ Sym       Hartree-Fock orbital energies
+
+1 A     -20.24310508    -1.26574125    -0.61390839    -0.45330460    -0.39117346
+          0.60023383     0.73368416
+
+    E(LUMO) :     0.60023383 au (symmetry 1)
+  - E(HOMO) :    -0.39117346 au (symmetry 1)
+  ------------------------------------------
+    gap     :     0.99140729 au
+
+ --- Writing SIRIFC interface file
+
+--------------------------------------------------------------------------------
+
+
+     .--------------------------------------------------.
+     | HF-SCF KT IPs [a.u. & eV] from Koopmans' theorem |
+     `--------------------------------------------------'
+
+
+     HF-SCF KT symmetry 1 ( A  ) in point group C1  -- 5 principal poles with pole strength 1
+
+   ============  ============  ============  ============  ============
+      20.243105      1.265741      0.613908      0.453305      0.391173
+     550.842910     34.442571     16.705297     12.335046     10.644371
+   ============  ============  ============  ============  ============
+
+@ Summary of HF-SCF KT ionization potentials [eV]:
+
+@ Symmetry 1 (A  ) :   550.843      34.443      16.705      12.335      10.644
+
+  === End of HF-SCF KT output ===
+--------------------------------------------------------------------------------
+
+
+ CPU and wall time for SCF :       0.003       0.002
+
+
+                       .-----------------------------------.
+                       | --- Final results from SIRIUS --- |
+                       `-----------------------------------'
+
+
+@    Spin multiplicity:           1
+@    Spatial symmetry:            1 ( irrep  A   in C1  )
+@    Total charge of molecule:    0
+
+@    Final HF energy:             -74.963870564055                 
+@    Nuclear repulsion:             9.136127857887
+@    Electronic energy:           -84.099998421942
+
+@    Final gradient norm:           0.000000172624
+
+ 
+     Date and time (Linux)  : Thu May 14 22:28:39 2026
+     Host name              : Jonas-Desktop                           
+
+File label for MO orbitals:  14May26   FOCKDIIS
+
+ (Only coefficients > 0.0100 are printed.)
+
+ Molecular orbitals for symmetry species 1  (A  )
+ ------------------------------------------------
+
+    Orbital         1        2        3        4        5        6        7
+   1 O   :1s    -0.9941   0.2330   0.0000   0.1031   0.0000   0.1313  -0.0000
+   2 O   :1s    -0.0264  -0.8357  -0.0000  -0.5361  -0.0000  -0.8728   0.0000
+   3 O   :2px   -0.0000  -0.0000   0.0000  -0.0000   1.0000  -0.0000  -0.0000
+   4 O   :2py    0.0000   0.0000  -0.6069   0.0000   0.0000  -0.0000  -0.9857
+   5 O   :2pz    0.0043   0.1279  -0.0000  -0.7740  -0.0000   0.7443  -0.0000
+   6 H1  :1s     0.0059  -0.1582  -0.4457   0.2808   0.0000   0.7921   0.8333
+   7 H2  :1s     0.0059  -0.1582   0.4457   0.2808   0.0000   0.7921  -0.8333
+
+  Total CPU  time used in SIRIUS :   0.01 seconds
+  Total wall time used in SIRIUS :   0.01 seconds
+
+ 
+     Date and time (Linux)  : Thu May 14 22:28:39 2026
+     Host name              : Jonas-Desktop                           
+
+
+                     .---------------------------------------.
+                     | End of Wave Function Section (SIRIUS) |
+                     `---------------------------------------'
+
+
+
+                    .------------------------------------------.
+                    | Starting in Coupled Cluster Section (CC) |
+                    `------------------------------------------'
+
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                    START OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+   
+
+ *******************************************************************
+ *                                                                 *
+ *----------                                             >---------*
+ *---------- OUTPUT FROM COUPLED CLUSTER ENERGY PROGRAM  >---------*
+ *----------                                             >---------*
+ *                                                                 *
+ *******************************************************************
+
+
+             The Direct Coupled Cluster Energy Program
+             -----------------------------------------
+
+
+          Number of t1 amplitudes                 :        10
+          Number of t2 amplitudes                 :        55
+          Total number of amplitudes in ccsd      :        65
+
+ Iter.  1: Coupled cluster MP2   energy :     -74.9999460048699262
+ Time for start-up - cpu wall:   3.1999999999997308E-005   0.0000000000000000     
+ Iter.  1: Coupled cluster CCSD  energy :     -75.0094559147768649
+ Time for iteration - cpu wall :   5.9900000000000231E-004   1.0000467300415039E-003
+ Iter.  2: Coupled cluster CCSD  energy :     -75.0139392240100022
+ Time for iteration - cpu wall :   3.9499999999999952E-004   0.0000000000000000     
+ Iter.  3: Coupled cluster CCSD  energy :     -75.0140994114949393
+ Time for iteration - cpu wall :   3.4100000000000102E-004   0.0000000000000000     
+ Iter.  4: Coupled cluster CCSD  energy :     -75.0141074570160811
+ Time for iteration - cpu wall :   3.4499999999999809E-004   1.0000467300415039E-003
+ Iter.  5: Coupled cluster CCSD  energy :     -75.0141026522315286
+ Time for iteration - cpu wall :   4.4200000000000489E-004   0.0000000000000000     
+ Iter.  6: Coupled cluster CCSD  energy :     -75.0141031648483931
+ Time for iteration - cpu wall :   4.3499999999999789E-004   9.9992752075195312E-004
+ Iter.  7: Coupled cluster CCSD  energy :     -75.0141029667950363
+ Time for iteration - cpu wall :   3.4099999999999409E-004   0.0000000000000000     
+ Iter.  8: Coupled cluster CCSD  energy :     -75.0141030046936521
+ Time for iteration - cpu wall :   3.3700000000000396E-004   0.0000000000000000     
+ Iter.  9: Coupled cluster CCSD  energy :     -75.0141030018689321
+ Time for iteration - cpu wall :   3.3100000000000490E-004   1.0000467300415039E-003
+
+ CCSD  energy converged to within   0.10D-07 is          -75.014103001869
+ Final 2-norm of the CC vector function:  2.06321518D-07
+
+
+
+
+
+             +-------------------------------------------------------+
+             ! Final results from the Coupled Cluster energy program !
+             +-------------------------------------------------------+
+
+
+
+            Total SCF   energy:                   -74.9638705641
+
+            Total MP2   energy:                   -74.9999460049
+
+            Total CCSD  energy:                   -75.0141030019
+
+
+
+
+                   +--------------------------------------------+
+                   ! Calculating singlet intermediates for CCLR !
+                   +--------------------------------------------+
+
+
+
+            E-intermediates calculated 
+            Fock-intermediate calculated 
+            Gamma-intermediate calculated 
+            BF-intermediate calculated 
+            C-intermediate calculated 
+            D-intermediate calculated 
+
+
+   
+
+ *******************************************************************
+ *                                                                 *
+ *---- OUTPUT FROM COUPLED CLUSTER RESPONSE  -------------*
+ *                                                                 *
+ *******************************************************************
+
+
+
+                         +--------------------------------+
+                         ! Coupled Cluster model is: CCSD !
+                         +--------------------------------+
+
+
+
+                            +--------------------------+
+                            ! CCSD Natural Occupations !
+                            +--------------------------+
+
+  
+   Symmetry block number:  1
+   ---------------------
+  
+   1.99999779   1.99843317   1.99798683   1.97647765   1.97347937
+   0.02711736   0.02650784
+  
+   Sum in this symmetry class:  10.000000
+  
+  
+   Total Sum of natural occupation numbers:  10.000000
+  
+   Dynamical correlation move: 0.053625 electrons
+  
+
+
+             +--------------------------------------------------------+
+             ! Unrelaxed CCSD    First-order one-electron properties: !
+             +--------------------------------------------------------+
+
+
+
+                            +-------------------------+
+                            !  Electric Dipole Moment !
+                            +-------------------------+
+
+
+
+                          Total Molecular Dipole Moment
+                          -----------------------------
+
+                 au               Debye          C m (/(10**-30)
+
+      x     -0.00000000        -0.00000000        -0.00000000
+      y     -0.00000000        -0.00000000        -0.00000000
+      z     -0.63181284        -1.60590794        -5.35673230
+
+
+Total grid points:             54904
+Total elec. from num int:   10.00000
+  
+ Alpha initial val. (1/sigma)
+    1    2     16.0000      2.0000
+    2    1      2.0000
+    3    1      2.0000
+ Population initial val.
+    1    2      2.0000      6.0000
+    2    1      1.0000
+    3    1      1.0000
+  
+  Iteration            1
+  Qshell
+    1    1     2.00000000     1.91411654    -0.08588346
+    1    2     6.00000000     6.49608959     0.49608959
+    2    1     1.00000000     0.79489706    -0.20510294
+    3    1     1.00000000     0.79489706    -0.20510294
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000253290969     
+  Qatom
+    1     0.00000000    -0.41020613    -0.41020613
+    2     0.00000000     0.20510294     0.20510294
+    3     0.00000000     0.20510294     0.20510294
+ RMS-dQ , Qele, Qtot, Qxs     0.50239775    10.00000025    -0.00000025    -0.00000000
+  Zshell
+    1    1    16.00000000    16.11562352     0.11562352
+    1    2     2.00000000     2.41361525     0.41361525
+    2    1     2.00000000     2.95539549     0.95539549
+    3    1     2.00000000     2.95539549     0.95539549
+  
+  
+  Iteration            2
+  Qshell
+    1    1     1.91411654     1.74873179    -0.16538475
+    1    2     6.49608959     6.81221312     0.31612353
+    2    1     0.79489706     0.71952768    -0.07536938
+    3    1     0.79489706     0.71952768    -0.07536938
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000270328526     
+  Qatom
+    1    -0.41020613    -0.56094491    -0.15073878
+    2     0.20510294     0.28047232     0.07536938
+    3     0.20510294     0.28047232     0.07536938
+ RMS-dQ , Qele, Qtot, Qxs     0.18461654    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    16.11562352    17.27073337     1.15510985
+    1    2     2.41361525     2.53057208     0.11695683
+    2    1     2.95539549     3.10133783     0.14594234
+    3    1     2.95539549     3.10133783     0.14594234
+  
+  
+  Iteration            3
+  Qshell
+    1    1     1.74873179     1.63502000    -0.11371178
+    1    2     6.81221312     6.98810751     0.17589439
+    2    1     0.71952768     0.68843638    -0.03109130
+    3    1     0.71952768     0.68843638    -0.03109130
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000272275276     
+  Qatom
+    1    -0.56094491    -0.62312752    -0.06218261
+    2     0.28047232     0.31156362     0.03109130
+    3     0.28047232     0.31156362     0.03109130
+ RMS-dQ , Qele, Qtot, Qxs     0.07615783    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    17.27073337    18.06542417     0.79469080
+    1    2     2.53057208     2.58208699     0.05151491
+    2    1     3.10133783     3.04533740    -0.05600043
+    3    1     3.10133783     3.04533740    -0.05600043
+  
+  
+  Iteration            4
+  Qshell
+    1    1     1.63502000     1.56911460    -0.06590540
+    1    2     6.98810751     7.06612911     0.07802160
+    2    1     0.68843638     0.68237828    -0.00605810
+    3    1     0.68843638     0.68237828    -0.00605810
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000270957036     
+  Qatom
+    1    -0.62312752    -0.63524372    -0.01211620
+    2     0.31156362     0.31762172     0.00605810
+    3     0.31156362     0.31762172     0.00605810
+ RMS-dQ , Qele, Qtot, Qxs     0.01483926    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.06542417    18.46486082     0.39943665
+    1    2     2.58208699     2.61985657     0.03776958
+    2    1     3.04533740     2.94917505    -0.09616235
+    3    1     3.04533740     2.94917505    -0.09616235
+  
+  
+  Iteration            5
+  Qshell
+    1    1     1.56911460     1.53174409    -0.03737051
+    1    2     7.06612911     7.08932162     0.02319251
+    2    1     0.68237828     0.68946728     0.00708900
+    3    1     0.68237828     0.68946728     0.00708900
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000270114127     
+  Qatom
+    1    -0.63524372    -0.62106572     0.01417800
+    2     0.31762172     0.31053272    -0.00708900
+    3     0.31762172     0.31053272    -0.00708900
+ RMS-dQ , Qele, Qtot, Qxs     0.01736443    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.46486082    18.65871861     0.19385779
+    1    2     2.61985657     2.64848784     0.02863128
+    2    1     2.94917505     2.86458186    -0.08459318
+    3    1     2.94917505     2.86458186    -0.08459318
+  
+  
+  Iteration            6
+  Qshell
+    1    1     1.53174409     1.51032437    -0.02141973
+    1    2     7.08932162     7.08730763    -0.00201399
+    2    1     0.68946728     0.70118414     0.01171686
+    3    1     0.68946728     0.70118414     0.01171686
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266508120     
+  Qatom
+    1    -0.62106572    -0.59763200     0.02343372
+    2     0.31053272     0.29881586    -0.01171686
+    3     0.31053272     0.29881586    -0.01171686
+ RMS-dQ , Qele, Qtot, Qxs     0.02870033    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.65871861    18.76101165     0.10229303
+    1    2     2.64848784     2.66832496     0.01983712
+    2    1     2.86458186     2.80726189    -0.05731997
+    3    1     2.86458186     2.80726189    -0.05731997
+  
+  
+  Iteration            7
+  Qshell
+    1    1     1.51032437     1.49797660    -0.01234776
+    1    2     7.08730763     7.07710308    -0.01020454
+    2    1     0.70118414     0.71246029     0.01127615
+    3    1     0.70118414     0.71246029     0.01127615
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000263686958     
+  Qatom
+    1    -0.59763200    -0.57507969     0.02255231
+    2     0.29881586     0.28753971    -0.01127615
+    3     0.29881586     0.28753971    -0.01127615
+ RMS-dQ , Qele, Qtot, Qxs     0.02762082    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.76101165    18.82065811     0.05964646
+    1    2     2.66832496     2.68058276     0.01225780
+    2    1     2.80726189     2.77550272    -0.03175918
+    3    1     2.80726189     2.77550272    -0.03175918
+  
+  
+  Iteration            8
+  Qshell
+    1    1     1.49797660     1.49100250    -0.00697410
+    1    2     7.07710308     7.06675840    -0.01034468
+    2    1     0.71246029     0.72111968     0.00865939
+    3    1     0.71246029     0.72111968     0.00865939
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000261226610     
+  Qatom
+    1    -0.57507969    -0.55776090     0.01731879
+    2     0.28753971     0.27888032    -0.00865939
+    3     0.28753971     0.27888032    -0.00865939
+ RMS-dQ , Qele, Qtot, Qxs     0.02121109    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.82065811    18.85660811     0.03595001
+    1    2     2.68058276     2.68727024     0.00668748
+    2    1     2.77550272     2.76153224    -0.01397048
+    3    1     2.77550272     2.76153224    -0.01397048
+  
+  
+  Iteration            9
+  Qshell
+    1    1     1.49100250     1.48726907    -0.00373343
+    1    2     7.06675840     7.05907179    -0.00768661
+    2    1     0.72111968     0.72682970     0.00571002
+    3    1     0.72111968     0.72682970     0.00571002
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000262753941     
+  Qatom
+    1    -0.55776090    -0.54634086     0.01142004
+    2     0.27888032     0.27317030    -0.00571002
+    3     0.27888032     0.27317030    -0.00571002
+ RMS-dQ , Qele, Qtot, Qxs     0.01398664    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.85660811    18.87740094     0.02079283
+    1    2     2.68727024     2.69039858     0.00312834
+    2    1     2.76153224     2.75769681    -0.00383543
+    3    1     2.76153224     2.75769681    -0.00383543
+  
+  
+  Iteration           10
+  Qshell
+    1    1     1.48726907     1.48544838    -0.00182070
+    1    2     7.05907179     7.05430455    -0.00476723
+    2    1     0.72682970     0.73012367     0.00329397
+    3    1     0.72682970     0.73012367     0.00329397
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000263864862     
+  Qatom
+    1    -0.54634086    -0.53975293     0.00658793
+    2     0.27317030     0.26987633    -0.00329397
+    3     0.27317030     0.26987633    -0.00329397
+ RMS-dQ , Qele, Qtot, Qxs     0.00806853    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.87740094    18.88831485     0.01091390
+    1    2     2.69039858     2.69152568     0.00112710
+    2    1     2.75769681     2.75856854     0.00087174
+    3    1     2.75769681     2.75856854     0.00087174
+  
+  
+  Iteration           11
+  Qshell
+    1    1     1.48544838     1.48469422    -0.00075415
+    1    2     7.05430455     7.05178632    -0.00251823
+    2    1     0.73012367     0.73175986     0.00163619
+    3    1     0.73012367     0.73175986     0.00163619
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000263864939     
+  Qatom
+    1    -0.53975293    -0.53648055     0.00327238
+    2     0.26987633     0.26824014    -0.00163619
+    3     0.26987633     0.26824014    -0.00163619
+ RMS-dQ , Qele, Qtot, Qxs     0.00400783    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.88831485    18.89317474     0.00485990
+    1    2     2.69152568     2.69167773     0.00015205
+    2    1     2.75856854     2.76097950     0.00241095
+    3    1     2.75856854     2.76097950     0.00241095
+  
+  
+  Iteration           12
+  Qshell
+    1    1     1.48469422     1.48448298    -0.00021124
+    1    2     7.05178632     7.05070415    -0.00108217
+    2    1     0.73175986     0.73240657     0.00064671
+    3    1     0.73175986     0.73240657     0.00064671
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000263864825     
+  Qatom
+    1    -0.53648055    -0.53518713     0.00129341
+    2     0.26824014     0.26759343    -0.00064671
+    3     0.26824014     0.26759343    -0.00064671
+ RMS-dQ , Qele, Qtot, Qxs     0.00158410    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.89317474    18.89469042     0.00151567
+    1    2     2.69167773     2.69144897    -0.00022876
+    2    1     2.76097950     2.76338954     0.00241004
+    3    1     2.76097950     2.76338954     0.00241004
+  
+  
+  Iteration           13
+  Qshell
+    1    1     1.48448298     1.48451049     0.00002751
+    1    2     7.05070415     7.05040670    -0.00029745
+    2    1     0.73240657     0.73254154     0.00013497
+    3    1     0.73240657     0.73254154     0.00013497
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000264091202     
+  Qatom
+    1    -0.53518713    -0.53491719     0.00026995
+    2     0.26759343     0.26745846    -0.00013497
+    3     0.26759343     0.26745846    -0.00013497
+ RMS-dQ , Qele, Qtot, Qxs     0.00033062    10.00000026    -0.00000026     0.00000000
+  Zshell
+    1    1    18.89469042    18.89461675    -0.00007367
+    1    2     2.69144897     2.69114026    -0.00030871
+    2    1     2.76338954     2.76523160     0.00184206
+    3    1     2.76338954     2.76523160     0.00184206
+  
+  
+  Iteration           14
+  Qshell
+    1    1     1.48451049     1.48461540     0.00010491
+    1    2     7.05040670     7.05046564     0.00005895
+    2    1     0.73254154     0.73245961    -0.00008193
+    3    1     0.73254154     0.73245961    -0.00008193
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000263725743     
+  Qatom
+    1    -0.53491719    -0.53508104    -0.00016386
+    2     0.26745846     0.26754039     0.00008193
+    3     0.26745846     0.26754039     0.00008193
+ RMS-dQ , Qele, Qtot, Qxs     0.00020068    10.00000026    -0.00000026    -0.00000000
+  Zshell
+    1    1    18.89461675    18.89396924    -0.00064751
+    1    2     2.69114026     2.69087734    -0.00026292
+    2    1     2.76523160     2.76643171     0.00120011
+    3    1     2.76523160     2.76643171     0.00120011
+  
+  
+  Iteration           15
+  Qshell
+    1    1     1.48461540     1.48472286     0.00010745
+    1    2     7.05046564     7.05063934     0.00017370
+    2    1     0.73245961     0.73231903    -0.00014058
+    3    1     0.73245961     0.73231903    -0.00014058
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624941     
+  Qatom
+    1    -0.53508104    -0.53536220    -0.00028115
+    2     0.26754039     0.26768097     0.00014058
+    3     0.26754039     0.26768097     0.00014058
+ RMS-dQ , Qele, Qtot, Qxs     0.00034434    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89396924    18.89325795    -0.00071129
+    1    2     2.69087734     2.69069396    -0.00018338
+    2    1     2.76643171     2.76711442     0.00068271
+    3    1     2.76643171     2.76711442     0.00068271
+  
+  
+  Iteration           16
+  Qshell
+    1    1     1.48472286     1.48480571     0.00008285
+    1    2     7.05063934     7.05081271     0.00017337
+    2    1     0.73231903     0.73219092    -0.00012811
+    3    1     0.73231903     0.73219092    -0.00012811
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624896     
+  Qatom
+    1    -0.53536220    -0.53561842    -0.00025622
+    2     0.26768097     0.26780908     0.00012811
+    3     0.26768097     0.26780908     0.00012811
+ RMS-dQ , Qele, Qtot, Qxs     0.00031381    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89325795    18.89268738    -0.00057057
+    1    2     2.69069396     2.69058308    -0.00011088
+    2    1     2.76711442     2.76744754     0.00033313
+    3    1     2.76711442     2.76744754     0.00033313
+  
+  
+  Iteration           17
+  Qshell
+    1    1     1.48480571     1.48486010     0.00005439
+    1    2     7.05081271     7.05094428     0.00013157
+    2    1     0.73219092     0.73209794    -0.00009298
+    3    1     0.73219092     0.73209794    -0.00009298
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266625042     
+  Qatom
+    1    -0.53561842    -0.53580438    -0.00018596
+    2     0.26780908     0.26790206     0.00009298
+    3     0.26780908     0.26790206     0.00009298
+ RMS-dQ , Qele, Qtot, Qxs     0.00022775    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89268738    18.89230090    -0.00038649
+    1    2     2.69058308     2.69052479    -0.00005828
+    2    1     2.76744754     2.76757499     0.00012745
+    3    1     2.76744754     2.76757499     0.00012745
+  
+  
+  Iteration           18
+  Qshell
+    1    1     1.48486010     1.48489136     0.00003126
+    1    2     7.05094428     7.05102918     0.00008489
+    2    1     0.73209794     0.73203986    -0.00005808
+    3    1     0.73209794     0.73203986    -0.00005808
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266240795     
+  Qatom
+    1    -0.53580438    -0.53592054    -0.00011616
+    2     0.26790206     0.26796014     0.00005808
+    3     0.26790206     0.26796014     0.00005808
+ RMS-dQ , Qele, Qtot, Qxs     0.00014226    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89230090    18.89207183    -0.00022907
+    1    2     2.69052479     2.69049936    -0.00002543
+    2    1     2.76757499     2.76759782     0.00002283
+    3    1     2.76757499     2.76759782     0.00002283
+  
+  
+  Iteration           19
+  Qshell
+    1    1     1.48489136     1.48490690     0.00001554
+    1    2     7.05102918     7.05107686     0.00004768
+    2    1     0.73203986     0.73200825    -0.00003161
+    3    1     0.73203986     0.73200825    -0.00003161
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266240823     
+  Qatom
+    1    -0.53592054    -0.53598376    -0.00006322
+    2     0.26796014     0.26799175     0.00003161
+    3     0.26796014     0.26799175     0.00003161
+ RMS-dQ , Qele, Qtot, Qxs     0.00007743    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89207183    18.89195374    -0.00011809
+    1    2     2.69049936     2.69049182    -0.00000754
+    2    1     2.76759782     2.76757749    -0.00002033
+    3    1     2.76759782     2.76757749    -0.00002033
+  
+  
+  Iteration           20
+  Qshell
+    1    1     1.48490690     1.48491309     0.00000620
+    1    2     7.05107686     7.05109970     0.00002283
+    2    1     0.73200825     0.73199374    -0.00001451
+    3    1     0.73200825     0.73199374    -0.00001451
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266240971     
+  Qatom
+    1    -0.53598376    -0.53601279    -0.00002903
+    2     0.26799175     0.26800626     0.00001451
+    3     0.26799175     0.26800626     0.00001451
+ RMS-dQ , Qele, Qtot, Qxs     0.00003555    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89195374    18.89190368    -0.00005006
+    1    2     2.69049182     2.69049251     0.00000069
+    2    1     2.76757749     2.76754649    -0.00003100
+    3    1     2.76757749     2.76754649    -0.00003100
+  
+  
+  Iteration           21
+  Qshell
+    1    1     1.48491309     1.48491446     0.00000137
+    1    2     7.05109970     7.05110810     0.00000840
+    2    1     0.73199374     0.73198885    -0.00000489
+    3    1     0.73199374     0.73198885    -0.00000489
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266240818     
+  Qatom
+    1    -0.53601279    -0.53602256    -0.00000977
+    2     0.26800626     0.26801115     0.00000489
+    3     0.26800626     0.26801115     0.00000489
+ RMS-dQ , Qele, Qtot, Qxs     0.00001197    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89190368    18.89189003    -0.00001365
+    1    2     2.69049251     2.69049599     0.00000348
+    2    1     2.76754649     2.76751908    -0.00002741
+    3    1     2.76754649     2.76751908    -0.00002741
+  
+  
+  Iteration           22
+  Qshell
+    1    1     1.48491446     1.48491377    -0.00000069
+    1    2     7.05110810     7.05110929     0.00000119
+    2    1     0.73198885     0.73198860    -0.00000025
+    3    1     0.73198885     0.73198860    -0.00000025
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266240825     
+  Qatom
+    1    -0.53602256    -0.53602306    -0.00000050
+    2     0.26801115     0.26801140     0.00000025
+    3     0.26801115     0.26801140     0.00000025
+ RMS-dQ , Qele, Qtot, Qxs     0.00000062    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89189003    18.89189274     0.00000271
+    1    2     2.69049599     2.69049963     0.00000364
+    2    1     2.76751908     2.76749954    -0.00001954
+    3    1     2.76751908     2.76749954    -0.00001954
+  
+  
+  Iteration           23
+  Qshell
+    1    1     1.48491377     1.48491251    -0.00000126
+    1    2     7.05110929     7.05110760    -0.00000169
+    2    1     0.73198860     0.73199008     0.00000147
+    3    1     0.73198860     0.73199008     0.00000147
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266625037     
+  Qatom
+    1    -0.53602306    -0.53602012     0.00000295
+    2     0.26801140     0.26800992    -0.00000147
+    3     0.26801140     0.26800992    -0.00000147
+ RMS-dQ , Qele, Qtot, Qxs     0.00000361    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89189274    18.89190069     0.00000794
+    1    2     2.69049963     2.69050246     0.00000283
+    2    1     2.76749954     2.76748751    -0.00001203
+    3    1     2.76749954     2.76748751    -0.00001203
+  
+  
+  Iteration           24
+  Qshell
+    1    1     1.48491251     1.48491135    -0.00000116
+    1    2     7.05110760     7.05110528    -0.00000232
+    2    1     0.73199008     0.73199182     0.00000174
+    3    1     0.73199008     0.73199182     0.00000174
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624959     
+  Qatom
+    1    -0.53602012    -0.53601663     0.00000348
+    2     0.26800992     0.26800818    -0.00000174
+    3     0.26800992     0.26800818    -0.00000174
+ RMS-dQ , Qele, Qtot, Qxs     0.00000426    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89190069    18.89190861     0.00000792
+    1    2     2.69050246     2.69050431     0.00000185
+    2    1     2.76748751     2.76748107    -0.00000644
+    3    1     2.76748751     2.76748107    -0.00000644
+  
+  
+  Iteration           25
+  Qshell
+    1    1     1.48491135     1.48491050    -0.00000085
+    1    2     7.05110528     7.05110329    -0.00000199
+    2    1     0.73199182     0.73199324     0.00000142
+    3    1     0.73199182     0.73199324     0.00000142
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624923     
+  Qatom
+    1    -0.53601663    -0.53601380     0.00000284
+    2     0.26800818     0.26800676    -0.00000142
+    3     0.26800818     0.26800676    -0.00000142
+ RMS-dQ , Qele, Qtot, Qxs     0.00000348    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89190861    18.89191462     0.00000601
+    1    2     2.69050431     2.69050537     0.00000106
+    2    1     2.76748107     2.76747819    -0.00000288
+    3    1     2.76748107     2.76747819    -0.00000288
+  
+  
+  Iteration           26
+  Qshell
+    1    1     1.48491050     1.48490997    -0.00000053
+    1    2     7.05110329     7.05110190    -0.00000139
+    2    1     0.73199324     0.73199420     0.00000096
+    3    1     0.73199324     0.73199420     0.00000096
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624900     
+  Qatom
+    1    -0.53601380    -0.53601187     0.00000192
+    2     0.26800676     0.26800580    -0.00000096
+    3     0.26800676     0.26800580    -0.00000096
+ RMS-dQ , Qele, Qtot, Qxs     0.00000236    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89191462    18.89191851     0.00000389
+    1    2     2.69050537     2.69050589     0.00000052
+    2    1     2.76747819     2.76747727    -0.00000091
+    3    1     2.76747819     2.76747727    -0.00000091
+  
+  
+  Iteration           27
+  Qshell
+    1    1     1.48490997     1.48490968    -0.00000029
+    1    2     7.05110190     7.05110105    -0.00000084
+    2    1     0.73199420     0.73199476     0.00000057
+    3    1     0.73199420     0.73199476     0.00000057
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624973     
+  Qatom
+    1    -0.53601187    -0.53601074     0.00000113
+    2     0.26800580     0.26800524    -0.00000057
+    3     0.26800580     0.26800524    -0.00000057
+ RMS-dQ , Qele, Qtot, Qxs     0.00000139    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89191851    18.89192070     0.00000219
+    1    2     2.69050589     2.69050609     0.00000020
+    2    1     2.76747727     2.76747729     0.00000002
+    3    1     2.76747727     2.76747729     0.00000002
+  
+  
+  Iteration           28
+  Qshell
+    1    1     1.48490968     1.48490955    -0.00000013
+    1    2     7.05110105     7.05110061    -0.00000044
+    2    1     0.73199476     0.73199505     0.00000029
+    3    1     0.73199476     0.73199505     0.00000029
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624943     
+  Qatom
+    1    -0.53601074    -0.53601016     0.00000058
+    2     0.26800524     0.26800495    -0.00000029
+    3     0.26800524     0.26800495    -0.00000029
+ RMS-dQ , Qele, Qtot, Qxs     0.00000071    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192070    18.89192175     0.00000105
+    1    2     2.69050609     2.69050613     0.00000004
+    2    1     2.76747729     2.76747763     0.00000034
+    3    1     2.76747729     2.76747763     0.00000034
+  
+  
+  Iteration           29
+  Qshell
+    1    1     1.48490955     1.48490951    -0.00000005
+    1    2     7.05110061     7.05110041    -0.00000019
+    2    1     0.73199505     0.73199517     0.00000012
+    3    1     0.73199505     0.73199517     0.00000012
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624719     
+  Qatom
+    1    -0.53601016    -0.53600992     0.00000024
+    2     0.26800495     0.26800483    -0.00000012
+    3     0.26800495     0.26800483    -0.00000012
+ RMS-dQ , Qele, Qtot, Qxs     0.00000029    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192175    18.89192215     0.00000039
+    1    2     2.69050613     2.69050610    -0.00000003
+    2    1     2.76747763     2.76747801     0.00000038
+    3    1     2.76747763     2.76747801     0.00000038
+  
+  
+  Iteration           30
+  Qshell
+    1    1     1.48490951     1.48490950    -0.00000000
+    1    2     7.05110041     7.05110036    -0.00000006
+    2    1     0.73199517     0.73199520     0.00000003
+    3    1     0.73199517     0.73199520     0.00000003
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624948     
+  Qatom
+    1    -0.53600992    -0.53600986     0.00000006
+    2     0.26800483     0.26800480    -0.00000003
+    3     0.26800483     0.26800480    -0.00000003
+ RMS-dQ , Qele, Qtot, Qxs     0.00000007    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192215    18.89192221     0.00000006
+    1    2     2.69050610     2.69050605    -0.00000005
+    2    1     2.76747801     2.76747832     0.00000030
+    3    1     2.76747801     2.76747832     0.00000030
+  
+  
+  Iteration           31
+  Qshell
+    1    1     1.48490950     1.48490952     0.00000001
+    1    2     7.05110036     7.05110036     0.00000001
+    2    1     0.73199520     0.73199519    -0.00000001
+    3    1     0.73199520     0.73199519    -0.00000001
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624967     
+  Qatom
+    1    -0.53600986    -0.53600988    -0.00000002
+    2     0.26800480     0.26800481     0.00000001
+    3     0.26800480     0.26800481     0.00000001
+ RMS-dQ , Qele, Qtot, Qxs     0.00000002    10.00000027    -0.00000027    -0.00000000
+  Zshell
+    1    1    18.89192221    18.89192213    -0.00000007
+    1    2     2.69050605     2.69050601    -0.00000004
+    2    1     2.76747832     2.76747852     0.00000020
+    3    1     2.76747832     2.76747852     0.00000020
+  
+  
+  Iteration           32
+  Qshell
+    1    1     1.48490952     1.48490953     0.00000002
+    1    2     7.05110036     7.05110039     0.00000003
+    2    1     0.73199519     0.73199517    -0.00000002
+    3    1     0.73199519     0.73199517    -0.00000002
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624831     
+  Qatom
+    1    -0.53600988    -0.53600992    -0.00000004
+    2     0.26800481     0.26800483     0.00000002
+    3     0.26800481     0.26800483     0.00000002
+ RMS-dQ , Qele, Qtot, Qxs     0.00000005    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192213    18.89192203    -0.00000010
+    1    2     2.69050601     2.69050598    -0.00000003
+    2    1     2.76747852     2.76747863     0.00000012
+    3    1     2.76747852     2.76747863     0.00000012
+  
+  
+  Iteration           33
+  Qshell
+    1    1     1.48490953     1.48490954     0.00000001
+    1    2     7.05110039     7.05110042     0.00000003
+    2    1     0.73199517     0.73199515    -0.00000002
+    3    1     0.73199517     0.73199515    -0.00000002
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624911     
+  Qatom
+    1    -0.53600992    -0.53600996    -0.00000004
+    2     0.26800483     0.26800485     0.00000002
+    3     0.26800483     0.26800485     0.00000002
+ RMS-dQ , Qele, Qtot, Qxs     0.00000005    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192203    18.89192194    -0.00000009
+    1    2     2.69050598     2.69050596    -0.00000002
+    2    1     2.76747863     2.76747869     0.00000006
+    3    1     2.76747863     2.76747869     0.00000006
+  
+  
+  Iteration           34
+  Qshell
+    1    1     1.48490954     1.48490955     0.00000001
+    1    2     7.05110042     7.05110044     0.00000002
+    2    1     0.73199515     0.73199514    -0.00000002
+    3    1     0.73199515     0.73199514    -0.00000002
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624962     
+  Qatom
+    1    -0.53600996    -0.53600999    -0.00000003
+    2     0.26800485     0.26800486     0.00000002
+    3     0.26800485     0.26800486     0.00000002
+ RMS-dQ , Qele, Qtot, Qxs     0.00000004    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192194    18.89192188    -0.00000006
+    1    2     2.69050596     2.69050595    -0.00000001
+    2    1     2.76747869     2.76747872     0.00000002
+    3    1     2.76747869     2.76747872     0.00000002
+  
+  
+  Iteration           35
+  Qshell
+    1    1     1.48490955     1.48490956     0.00000001
+    1    2     7.05110044     7.05110045     0.00000001
+    2    1     0.73199514     0.73199513    -0.00000001
+    3    1     0.73199514     0.73199513    -0.00000001
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624982     
+  Qatom
+    1    -0.53600999    -0.53601001    -0.00000002
+    2     0.26800486     0.26800487     0.00000001
+    3     0.26800486     0.26800487     0.00000001
+ RMS-dQ , Qele, Qtot, Qxs     0.00000002    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192188    18.89192184    -0.00000004
+    1    2     2.69050595     2.69050595    -0.00000000
+    2    1     2.76747872     2.76747872     0.00000001
+    3    1     2.76747872     2.76747872     0.00000001
+  
+  
+  Iteration           36
+  Qshell
+    1    1     1.48490956     1.48490956     0.00000000
+    1    2     7.05110045     7.05110046     0.00000001
+    2    1     0.73199513     0.73199512    -0.00000001
+    3    1     0.73199513     0.73199512    -0.00000001
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624983     
+  Qatom
+    1    -0.53601001    -0.53601002    -0.00000001
+    2     0.26800487     0.26800488     0.00000001
+    3     0.26800487     0.26800488     0.00000001
+ RMS-dQ , Qele, Qtot, Qxs     0.00000001    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192184    18.89192182    -0.00000002
+    1    2     2.69050595     2.69050595    -0.00000000
+    2    1     2.76747872     2.76747872    -0.00000000
+    3    1     2.76747872     2.76747872    -0.00000000
+  
+  
+  Iteration           37
+  Qshell
+    1    1     1.48490956     1.48490956     0.00000000
+    1    2     7.05110046     7.05110047     0.00000000
+    2    1     0.73199512     0.73199512    -0.00000000
+    3    1     0.73199512     0.73199512    -0.00000000
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624923     
+  Qatom
+    1    -0.53601002    -0.53601003    -0.00000001
+    2     0.26800488     0.26800488     0.00000000
+    3     0.26800488     0.26800488     0.00000000
+ RMS-dQ , Qele, Qtot, Qxs     0.00000001    10.00000027    -0.00000027     0.00000000
+  Zshell
+    1    1    18.89192182    18.89192181    -0.00000001
+    1    2     2.69050595     2.69050595     0.00000000
+    2    1     2.76747872     2.76747871    -0.00000000
+    3    1     2.76747872     2.76747871    -0.00000000
+  
+  
+  Iteration           38
+  Qshell
+    1    1     1.48490956     1.48490956     0.00000000
+    1    2     7.05110047     7.05110047     0.00000000
+    2    1     0.73199512     0.73199512    -0.00000000
+    3    1     0.73199512     0.73199512    -0.00000000
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266625051     
+  Qatom
+    1    -0.53601003    -0.53601003    -0.00000000
+    2     0.26800488     0.26800488     0.00000000
+    3     0.26800488     0.26800488     0.00000000
+ RMS-dQ , Qele, Qtot, Qxs     0.00000000    10.00000027    -0.00000027    -0.00000000
+  Zshell
+    1    1    18.89192181    18.89192181    -0.00000000
+    1    2     2.69050595     2.69050595     0.00000000
+    2    1     2.76747871     2.76747871    -0.00000000
+    3    1     2.76747871     2.76747871    -0.00000000
+  
+  
+  Iteration           39
+  Qshell
+    1    1     1.48490956     1.48490956    -0.00000000
+    1    2     7.05110047     7.05110047     0.00000000
+    2    1     0.73199512     0.73199512    -0.00000000
+    3    1     0.73199512     0.73199512    -0.00000000
+  Electrons from integration:   10.000000314082477     
+  Electrons from MBIS       :   10.000000266624811     
+  Qatom
+    1    -0.53601003    -0.53601003    -0.00000000
+    2     0.26800488     0.26800488     0.00000000
+    3     0.26800488     0.26800488     0.00000000
+ RMS-dQ , Qele, Qtot, Qxs     0.00000000    10.00000027    -0.00000027     0.00000000
+  MBIS converged!
+  
+  Final converged results
+  Qatom
+    1    -0.53601003
+    2     0.26800488
+    3     0.26800488
+  CPU  time used in MBIS       is   0.33 seconds
+  WALL time used in MBIS       is   0.34 seconds
+     
+
+   *******************************************************************
+   *                                                                 *
+   *--------   OUTPUT FROM PROPERTY AND SYMMETRY ANALYSIS   ---------*
+   *                                                                 *
+   *******************************************************************
+
+
+
+                         +-------------------------------+
+                         ! REQUESTED PROPERTY OPERATORS: !
+                         +-------------------------------+
+
+             Index   Oper. Label  Symmetry  Transp.  PDBS  Atom
+             --------------------------------------------------
+                1     AM010800        1        1      F      0
+                2     AM030100        1        1      F      0
+                3     HAM0            1        1      T      0
+             --------------------------------------------------
+
+
+
+
+                         +-------------------------------+
+                         ! REQUESTED EXPECTATION VALUES: !
+                         +-------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                       +------------------------------------+
+                       ! REQUESTED EFFECTIVE FOCK MATRICES: !
+                       +------------------------------------+
+
+                       Index   Oper. Label  Symmetry
+                       -----------------------------
+                       -----------------------------
+
+
+
+
+                       +-----------------------------------+
+                       ! REQUESTED FIRST ORDER XI VECTORS: !
+                       +-----------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      AM010800       F     1      0.000000D+00
+                2      AM030100       F     1      0.000000D+00
+             --------------------------------------------------
+
+
+
+
+                        +----------------------------------+
+                        ! REQUESTED FIRST ORDER T VECTORS: !
+                        +----------------------------------+
+
+             Index   Oper. Label  relaxed  Sym.     Frequency
+             --------------------------------------------------
+                1      AM010800       F     1     -3.000000D-01
+                2      AM010800       F     1     -1.000000D-01
+                3      AM010800       F     1      0.000000D+00
+                4      AM010800       F     1      1.000000D-01
+                5      AM010800       F     1      3.000000D-01
+                6      AM030100       F     1     -3.000000D-01
+                7      AM030100       F     1     -1.000000D-01
+                8      AM030100       F     1      0.000000D+00
+                9      AM030100       F     1      1.000000D-01
+               10      AM030100       F     1      3.000000D-01
+             --------------------------------------------------
+
+
+      
+
+    *******************************************************************
+    *          SOLVING COUPLED CLUSTER RESPONSE EQUATIONS             *
+    *******************************************************************
+
+
+
+ 
+ +======================================================================+
+ !                     RHS & ETA VECTORS TO COMPUTE:                    !
+ +======================================================================+
+ | TYPE | # VEC. |  NEEDED FOR:                                         |
+ +----------------------------------------------------------------------+
+ |  O1  |    2   |  first-order amplitude equations                     |
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                       LINEAR EQUATIONS TO SOLVE:                     !
+ +======================================================================+
+ | TYPE | # VEC. |  EQUATION:                                           |
+ +----------------------------------------------------------------------+
+ |  R1  |   10   |  first-order amplitude response                      |
+ +======================================================================+
+
+
+
+ +======================================================================+
+ !                F MATRIX TRANSFORMATIONS TO COMPUTE:                  !
+ +======================================================================+
+ | TYPE | # VEC. |  TRANSFORMED:                                        |
+ +----------------------------------------------------------------------+
+ |  F1  |   10   |  first-order amplitude response (R1) vector          |
+ +======================================================================+
+
+
+
+
+ -------------------------------------------------------------------
+ |          OUTPUT FROM AMPLITUDE RHS VECTOR SECTION               |
+ -------------------------------------------------------------------
+
+@ WARNING: ETA1 VECTOR FOR AM010800( F, 0.00000D+00) IS NOT AVAILABLE.
+@ WARNING: ETA1 VECTOR FOR AM030100( F, 0.00000D+00) IS NOT AVAILABLE.
+
+
+   For the requested  2 1th.-order amplitude rhs vectors "O1 ".
+         -   0 D matrix transformations 
+         -   0 C matrix transformations 
+         -   0 B matrix transformations 
+         -   0 C{O} matrix transformations 
+         -   0 B{O} matrix transformations 
+         -   0 A{O} matrix transformations 
+         -   2Xi{O} vector calculations    
+   will be performed.
+
+
+
+ Solution of CC response equations completed.
+
+
+ *******************************************************************
+ *                                                                 *
+ *--------  OUTPUT FROM COUPLED CLUSTER LINEAR RESPONSE   ---------*
+ *                                                                 *
+ *--------     CALCULATION OF SECOND ORDER PROPERTIES     ---------*
+ *                                                                 *
+ *******************************************************************
+
+ 
+
+
+   For the requested 12 second-order properties
+         -   8 F matrix transformations with R1 vectors
+         -   0 J matrix transformations with L1 vectors
+         -   2 ETA and XKSI vector calculations 
+         -   0 X intermediate calculations 
+         -   0 2. order reortho./relax. contributions
+   will be performed.
+
+
+
+ Time used for    8 F matrix transformations:        0.01 seconds.
+
+ Time used for    2 O1/X1 vector calculation:        0.00 seconds.
+
+ Total time for  12 linear response function:        0.01 seconds.
+
+
+            +---------------------------------------------------------+
+            !      FINAL CCSD RESULTS FOR THE SECOND-ORDER PROPERTIES !
+            +---------------------------------------------------------+
+
+
+  A operator                  B operator                     property 
+------------------------------------------------------------------------
+
+ AM010800 (unrel.) -0.0000   AM010800 (unrel.)  0.0000     0.50889859    
+                   -0.1000                      0.1000     0.51458653    
+                   -0.3000                      0.3000     0.56871676    
+
+ AM010800 (unrel.) -0.0000   AM030100 (unrel.)  0.0000    -0.25444930    
+                   -0.1000                      0.1000    -0.25729327    
+                   -0.3000                      0.3000    -0.28435839    
+
+ AM030100 (unrel.) -0.0000   AM010800 (unrel.)  0.0000    -0.25444930    
+                   -0.1000                      0.1000    -0.25729327    
+                   -0.3000                      0.3000    -0.28435839    
+
+ AM030100 (unrel.) -0.0000   AM030100 (unrel.)  0.0000     0.32631097    
+                   -0.1000                      0.1000     0.33056308    
+                   -0.3000                      0.3000     0.37022412    
+------------------------------------------------------------------------
+
+
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                   SUMMARY OF COUPLED CLUSTER CALCULATION                    *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+                                                                                
+                                                                                
+            Total SCF   energy:                   -74.9638705641                
+            Total MP2   energy:                   -74.9999460049                
+            Total CCSD  energy:                   -75.0141030019                
+  
+
+ *******************************************************************************
+ *******************************************************************************
+ *                                                                             *
+ *                                                                             *
+ *                      END OF COUPLED CLUSTER CALCULATION                     *
+ *                                                                             *
+ *                                                                             *
+ *******************************************************************************
+ *******************************************************************************
+
+
+ CPU and wall time for CC :       0.422       0.585
+
+ 
+     Date and time (Linux)  : Thu May 14 22:28:40 2026
+     Host name              : Jonas-Desktop                           
+
+
+                      .-------------------------------------.
+                      | End of Coupled Cluster Section (CC) |
+                      `-------------------------------------'
+
+  Total CPU  time used in DALTON:   0.44 seconds
+  Total wall time used in DALTON:   0.60 seconds
+
+ 
+     Date and time (Linux)  : Thu May 14 22:28:40 2026
+     Host name              : Jonas-Desktop                           

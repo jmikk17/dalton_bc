@@ -827,8 +827,6 @@ C
      &                  ' ','UNFORMATTED',IDUMMY,.false.)
             REWIND(LUDMATAO)
             READ(LUDMATAO) (WORK(KDENS+J-1),J=1,N2BST(ISYMOP))
-            write(*,*) 'kdens in cc_drv'
-            write(*,*) (work(kdens+j-1),j=1,n2bst(isymop))
             CALL GPCLOSE(LUDMATAO,'KEEP')
             CALL NUMINT_DRIVER(WORK(KDENS),WORK(KFREE),LFREE,.TRUE.)
          END IF

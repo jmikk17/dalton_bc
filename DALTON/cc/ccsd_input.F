@@ -4448,7 +4448,6 @@ Cholesky
 CTOCD  
 #include "ctocdcc.h"
 CTOCD  
-!#include "ccorb.h" for sym?
 #include "ccfop.h" ! for setting dipmom = true in atmmom response
 
 
@@ -4457,7 +4456,7 @@ CTOCD
       PARAMETER (SECNAM='CC_LRINP')
 
       INTEGER NTABLE
-      PARAMETER (NTABLE = 25)
+      PARAMETER (NTABLE = 26)
 
       DOUBLE PRECISION ZERO, TOLFRQ
       PARAMETER (ZERO = 0.0d00)
@@ -4493,7 +4492,8 @@ CTOCD
      *            '.OLD_LR','.ASYMSD','.DISPCF','.OPERAT','.AVERAG',
      *            '.PRINT ','.STATIC','.DIPGRA','.OR LEN','.OR VEL', 
      *            '.OR    ','.OR MVE','.ORGANL','.ORIGIN','.WAVELE', 
-     *            '.INCLRL','.EXCLRL','.CTOSUS','.CTOSHI','.ATMMOM'/ 
+     *            '.INCLRL','.EXCLRL','.CTOSUS','.CTOSHI','.ATMMOM',
+     *            '.SELATM'/ 
 
 *---------------------------------------------------------------------*
 * begin:
@@ -4575,7 +4575,7 @@ c         jump to the appropriate input section:
           IF (IJUMP .LE. NTABLE) THEN
             ICHANG = ICHANG + 1
             GOTO (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
-     &            21,22,23,24,25), IJUMP
+     &            21,22,23,24,25,26), IJUMP
             CALL QUIT('Illegal address in computed GOTO in CC_LRINP.')
 C
 C-----------------------
@@ -5030,15 +5030,14 @@ C
               CTOSHI = .TRUE.
             GO TO 100
 C
-C           -------------------------------------------------
+C-------------------------------------------------
 C           '.ATMMOM': atomic moment integrals
-C           -------------------------------------------------
+C-------------------------------------------------
 C
 25          CONTINUE
-
-!              IF (NSYM.NE.1)
+!              IF (MSYM.NE.1)
 !    &            CALL QUIT('SYMMETRY NOT TESTED YET')
-                  ! nsym is always zero here??
+                  ! nsym is always zero here?
                   ! is it msym? see call to cc_input
 
                ATMMOM = .TRUE.
@@ -5046,69 +5045,20 @@ C
                ! Dipmom is set so we enter a density calculation
                ! LTBAR0 is set automaticly by having CCLR = True
 
-               ! Read in order of multipole integrals
+               ! Read order of multipole integrals
                READ (LUCMD,*) IORATM 
                IF (IORATM .GT. 1) 
      &            CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
                IF (IORATM .LT. -1) 
      &            CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
-
-               ! Make a symmetry-proof charge array
-               K = 0
-               DO I = 1,NUCIND 
-                  DO J = 1,NUCDEG(I)
-                     K = K + 1
-                     ATMCHG(K) = CHARGE(I) 
-                  END DO
-               END DO
-
-               ! Look for atom selection input
-               READ (LUCMD,*) WORD
-               CALL UPCASE(WORD)
-               IF (WORD(1:7) .EQ. '.SELATM') THEN
-                  ATMSEL = .TRUE.
-                  READ (LUCMD,*) NATM
-                  DO I=1,NATM
-                     READ (LUCMD,*) ATMIND(I) 
-                     ! hardcoded to length of 100 in infrsp.h
-                  END DO
-               ELSE
-                  ATMSEL = .FALSE.
-                  NATM = NUCDEP
-                  DO I=1,NATM
-                     ATMIND(I) = I
-                  END DO
-                  BACKSPACE (LUCMD)
-               END IF                
-
-               ! Create labels
-               ISTR = 0
-               K = 0
-               IF (IORATM .LT. 0) ISTR = ABS(IORATM)
-               DO IORDER = ISTR, ABS(IORATM)
-                  DO I=1,NATM
-                     J = ATMIND(I)
-                     WRITE(IND2,'(I2.2)') J
-                     ICHG = ATMCHG(J) 
-                     WRITE(CHG2,'(I2.2)') ICHG
-                     IF (IORDER .EQ. 0) THEN
-                        K = K + 1
-                        LABATM(K) = 'AM'// IND2 // CHG2 // '00'
-                     ELSE IF (IORDER .EQ. 1) THEN
-                        K = K + 1
-                        LABATM(K) = 'AM'// IND2 // CHG2 // '0x'
-                        K = K + 1
-                        LABATM(K) = 'AM'// IND2 // CHG2 // '0y'
-                        K = K + 1
-                        LABATM(K) = 'AM'// IND2 // CHG2 // '0z'
-                     ELSE
-                        CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
-                     ENDIF
-                  END DO
-               END DO
-               CALL CC_LRINPREQ(LABATM,LABATM,K,K,.FALSE.,LRELAX)
-
             GO TO 100
+
+26          CONTINUE
+            ATMSEL = .TRUE.
+               READ (LUCMD,*) NATM
+               READ (LUCMD,*) (ATMIND(I),I=1,NATM)
+            GO TO 100 
+
 C
           ELSE
            WRITE (LUPRI,'(/5A/)') ' Prompt "',WORD,
@@ -5130,6 +5080,41 @@ C
       END IF
 
 200   CONTINUE
+C
+C------------------------------------------------
+C     Setup of labels for atomic moments
+C------------------------------------------------
+C
+      if (atmmom) then
+         if (.not. atmsel) then
+            natm = nucdep
+            do i=1,natm
+               atmind(i) = i
+            end do
+         end if
+         istr = 0
+         if (ioratm .lt. 0) istr = abs(ioratm)
+         do iorder = istr, abs(ioratm)
+            do i=1,natm
+               j = atmind(i)
+               write(ind2,'(I2.2)') j
+               ichg = charge(j) 
+               write(chg2,'(I2.2)') ichg
+               if (iorder .eq. 0) then
+                  k = k + 1
+                  labatm(k) = 'AM'// ind2 // chg2 // '00'
+               else if (iorder .eq. 1) then
+                  k = k + 1
+                  labatm(k) = 'AM'// ind2 // chg2 // '0x'
+                  k = k + 1
+                  labatm(k) = 'AM'// ind2 // chg2 // '0y'
+                  k = k + 1
+                  labatm(k) = 'AM'// ind2 // chg2 // '0z'
+               endif
+            end do
+         end do
+         call cc_lrinpreq(labatm,labatm,k,k,.false.,lrelax)
+      end if
 C
 C------------------------------------------------
 C     Do some checking for Cholesky calculations:
@@ -5277,7 +5262,6 @@ C
       ELSE
 
          NTOT = NA*NB
-         write(lupri,*) 'ntot', ntot, na,nb
 
          IF (NLROP+NTOT .GT. MXLROP) THEN
              WRITE(LUPRI,'(2(/A,I5))')

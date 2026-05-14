@@ -28,6 +28,8 @@
 - Polarizable embedding (PE) with periodic boundary conditions (PBC)
   - S. Kvedaraviciute, D. Carrasco-Busturia, K. B. Møller, and J. M. H. Olsen, ChemRxiv, (2022), https://doi.org/10.26434/chemrxiv-2023-fc0gk
 - Print total oscillator strengths when calculating excitations using \*\*RESPONS (H. J. Aa. Jensen)
+- Static and dynamic distributed polarizabilities using the minimal basis itterative stockholder definition of atoms
+  - J. E. S. Mikkelsen, S. Reine, T. B. Pedersen, F. Jensen, ChemRxiv (2026) https://doi.org/10.26434/chemrxiv.15002905/v1
 
 ### Technical improvements
 - Rewritten srDFT integration -- now grid points are read once from file and broadcasted to any MPI workers.

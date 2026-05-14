@@ -2437,25 +2437,23 @@ C     .VIRTUAL
                READ (LUCMD,*) (CHANNEL_VIRT(I),I=1,NSYM)
                GO TO 100
 
- 48            CONTINUE ! ATMMOM input. 
+ 48            CONTINUE 
                ATMMOM = .TRUE.
                IF (NSYM.NE.1)
      &            CALL QUIT('SYMMETRY NOT SUPORTED')
-
                ! Read in order of multipole integrals
                READ (LUCMD,*) IORATM 
                IF (IORATM .GT. 1) 
      &            CALL QUIT('IORATM > 1 NOT IMPLEMENTED')
                IF (IORATM .LT. -1) 
      &            CALL QUIT('IORATM < -1 NOT IMPLEMENTED')
-
                GO TO 100 
+
    49          CONTINUE ! SELATM - only calc. ATMMOM for specific atoms.
                ATMSEL = .TRUE.
                READ (LUCMD,*) NATM
-               DO I=1,NATM
-                  READ (LUCMD,*) ATMIND(I)
-               END DO
+               READ (LUCMD,*) (ATMIND(I),I=1,NATM)
+               GO TO 100 
 
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300
@@ -2919,9 +2917,7 @@ C     .C10LMO
    44          CONTINUE
                   ATMSEL = .TRUE.
                   READ (LUCMD,*) NATM
-                  DO I=1,NATM
-                     READ (LUCMD,*) ATMIND(I)
-                  END DO
+                  READ (LUCMD,*) (ATMIND(I),I=1,NATM)
                GO TO 100
             ELSE IF (PROMPT .EQ. '*') THEN
                GO TO 300

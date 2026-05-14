@@ -200,7 +200,7 @@ C
 C     WRITE(2,*) ' node ', mynum,' knows of ', electrons
       CALL  DFTINTCOLLECT(ELECTRONS)
       IF (MYNUM.EQ.0) THEN
-        ELCTRX = FLOAT(2*NISHT + NASHT)
+        ELCTRX = FLOAT(2*NRHFT)
         ERROR  = ELECTRONS - ELCTRX
         IF (ABS(ERROR) .GT. DFTELS*ELCTRX) THEN
           WRITE (LUPRI,'(4(/2X,A,F14.6),/2X,A)')
@@ -209,8 +209,8 @@ C     WRITE(2,*) ' node ', mynum,' knows of ', electrons
      &    ' Error in the number of electrons:              ',ERROR,
      &    ' Error larger than DFTELS (set input):          ',DFTELS,
      &    ' Calculation aborted.'
-!         CALL QUIT
-!    &    ('Wrong number of electrons in DFTINT. Calculation aborted.')
+          CALL QUIT
+     &    ('Wrong number of electrons in DFTINT. Calculation aborted.')
         END IF
       END IF
       RETURN
