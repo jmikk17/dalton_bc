@@ -103,7 +103,7 @@
          call memrel('numint',work,kfrsav,kfrsav,kfree,lfree)
          ntot_dftgrid = ntot_screened
 
-      else ! blocked grid from regular DFT calculations
+      else ! use blocked grid from regular DFT code 
 
          dogga = dft_isgga()
          ntot_dftgrid = 0
@@ -435,7 +435,7 @@
       end if
 
       if (atm_points .ne. -1) then
-         write(*,*) 'Error in reading, footer is', atm_points 
+         write(lupri,*) 'Error in reading, footer is', atm_points 
          call quit("Error reading file in evaluate_grid")
       end if
 
@@ -582,26 +582,26 @@
 
 ! tot grid points = ipt-1 due to the way the initial reading was constructed
       ipt=ipt-1
-      write(*,'(a, i10)') 'Total grid points:        ', ipt
-      write(*,'(a, f10.5)') 'Total elec. from num int: ', suma
-      write(*,*)' '
+      write(lupri,'(a, i10)') 'Total grid points:        ', ipt
+      write(lupri,'(a, f10.5)') 'Total elec. from num int: ', suma
+      write(lupri,*)' '
 30    format(2i5,5f12.4)
       
 ! guess initial parameters for pro-atomic density 
       call zeffini(kpar,nat,zan,zeff,qshell,lmax)
-      write(*,*)'Alpha initial val. (1/sigma)'
+      write(lupri,*)'Alpha initial val. (1/sigma)'
       do i=1,nat
-        write(*,30)i,lmax(i),(zeff(j,i),j=1,lmax(i))
+        write(lupri,30)i,lmax(i),(zeff(j,i),j=1,lmax(i))
       enddo
-      write(*,*)'Population initial val.' ! N_Ai 
+      write(lupri,*)'Population initial val.' ! N_Ai 
       do i=1,nat
-        write(*,30)i,lmax(i),(qshell(j,i),j=1,lmax(i))
+        write(lupri,30)i,lmax(i),(qshell(j,i),j=1,lmax(i))
       enddo
 
 ! iterate until MBIS charges are converged
       do kiter=1,kmax
-         write(*,*)' '
-         write(*,*)' Iteration ',kiter
+         write(lupri,*)' '
+         write(lupri,*)' Iteration ',kiter
 
 ! in the first part of the itteration we calculate the population of the pro-atomic densities
          do n=1,nat
@@ -654,21 +654,21 @@
          enddo
 !        end ipt loop
 
-         write(*,*)' Qshell'
+         write(lupri,*)' Qshell'
          tote=d0
          do n=1,nat
             do l=1,lmax(n)
                tote = tote + qstmp(l,n)
                tmp = qstmp(l,n)-qshell(l,n)
-               write(*,21)n,l,qshell(l,n),qstmp(l,n),tmp 
+               write(lupri,21)n,l,qshell(l,n),qstmp(l,n),tmp 
             enddo
          enddo
-         write(*,*)' Electrons from integration:', suma
-         write(*,*)' Electrons from MBIS       :', tote
+         write(lupri,*)' Electrons from integration:', suma
+         write(lupri,*)' Electrons from MBIS       :', tote
          rmsq=d0
          qtot=d0
          qele=d0
-         write(*,*)' Qatom'
+         write(lupri,*)' Qatom'
          do n=1,nat
             qtmp(n)=d0
             do l=1,lmax(n)
@@ -679,12 +679,12 @@
             tmp = qtmp(n)-qatm(n) 
             rmsq = rmsq + tmp*tmp 
             qtot = qtot + qtmp(n)
-            write(*,20)n,qatm(n),qtmp(n),tmp
+            write(lupri,20)n,qatm(n),qtmp(n),tmp
          enddo
          qxs=nint(qele)
          qxs=qele+qtot-qxs
          rmsq=sqrt(rmsq)
-         write(*,22)rmsq,qele,qtot,qxs
+         write(lupri,22)rmsq,qele,qtot,qxs
          if (rmsq.lt.qconv) goto 900
          do n=1,nat
             qatm(n) = qtmp(n) !N(A) saved for next iteration (for eq 20)
@@ -750,8 +750,7 @@
             endif
          enddo
 
-         write(*,*)' Zshell'
-!        write(lupri,*)' Zshell'
+         write(lupri,*)' Zshell'
          do n=1,nat
             do l=1,lmax(n)
                if (abs(zstmp(l,n)).gt.eps) then ! 10^-14
@@ -760,13 +759,12 @@
                   zstmp(l,n) = (3.0d0*qshell(l,n))/sign(eps,zstmp(l,n))
                endif
                tmp = zstmp(l,n)-zeff(l,n)
-               write(*,21)n,l,zeff(l,n),zstmp(l,n),tmp
-!              write(lupri,21)n,l,zeff(l,n),zstmp(l,n),tmp
+               write(lupri,21)n,l,zeff(l,n),zstmp(l,n),tmp
                zeff(l,n) = zstmp(l,n)
             enddo
          enddo
 
-        write(*,*)' '
+        write(lupri,*)' '
       enddo 
 
 20    format(i5,3f15.8)
@@ -774,11 +772,6 @@
 22    format(' RMS-dQ , Qele, Qtot, Qxs',4f15.8)
 
 900   continue
-
-      write(*,*) ' MBIS converged!'
-      write(*,*)' '
-      write(*,*)' Final converged results'
-      write(*,*)' Qatom'
 
       write(lupri,*) ' MBIS converged!'
       write(lupri,*)' '
@@ -791,7 +784,6 @@
           qtmp(n)=qtmp(n)+qstmp(l,n)
         enddo
         qtmp(n) = nint(zan(n)) - qtmp(n)
-        write(*,20)n,qtmp(n)
         write(lupri,20)n,qtmp(n)
       enddo
 
@@ -977,7 +969,7 @@
          case ('0z')
             cor_idx = 3
          case default
-            write(*,*) 'Label', integral_type, 'not reognized'
+            write(lupri,*) 'Label', integral_type, 'not reognized'
      &         // 'or implemented yet'
             call quit("Label not recognized in numint_write")
          end select
@@ -1112,7 +1104,7 @@
                else if (label(7:8) .eq. '0z') then
                   cor_idx(lbl_idx) = 3
                else
-                  write(*,*) 'Label ', label, ' not recognized'
+                  write(lupri,*) 'Label ', label, ' not recognized'
                   call quit("Label not recognized in numint_write")
                end if
             endif
@@ -1134,7 +1126,7 @@
                else if (label(7:8) .eq. '0z') then
                   cor_idx(lbl_idx) = 3
                else
-                  write(*,*) 'Label ', label, ' not recognized'
+                  write(lupri,*) 'Label ', label, ' not recognized'
                   call quit("Label not recognized in numint_write")
                end if
             endif
@@ -1149,8 +1141,6 @@
 
       points_read = 0
       block_size = 0
-
-      write(*,*) 'tot pnts', npoints, ntot_dftgrid
 
       ao_test = d0
 
@@ -1180,7 +1170,7 @@
 
       read(luwdump) footer
       if (footer .ne. -1) then
-         write(*,*) 'Error in reading, footer is', footer
+         write(lupri,*) 'Error in reading, footer is', footer
          call quit("Error reading file in num_aoint")
       end if
 
@@ -1188,7 +1178,7 @@
       rtnlbl(2) = 'SYMMETRI'
 
       do k=1,natmlbl
-         write(*,*) 'Writing lbl:', prplbl_atm(k)
+         write(lupri,*) 'Writing lbl:', prplbl_atm(k)
          ao_test = ao_int(1:nnbasx,k)
          call wrtpro(ao_test,nnbasx,prplbl_atm(k),rtnlbl,iprlr)
       enddo

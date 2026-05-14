@@ -2477,7 +2477,7 @@ C
          DO 500 I = 1,NPRLBL
             IF (LLROP(I)) NLRTOT = NLRTOT + 1
  500     CONTINUE
-         IF (NLRTOT .EQ. 0) THEN
+         IF (NLRTOT .EQ. 0 .AND. .NOT. ATMMOM) THEN
             NINFO = NINFO + 1
             WRITE (LUPRI,'(/3A)') '@INFO: ',WORD1,
      *      ' input ignored because no operators requested.'
