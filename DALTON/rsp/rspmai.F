@@ -2945,7 +2945,7 @@ C
          DO 500 I = 1,NPRLBL
             IF (LC6OP(I)) NC6TOT = NC6TOT + 1
  500     CONTINUE
-         IF (NC6TOT .EQ. 0) WRITE (LUPRI,'(/A)')
+         IF (NC6TOT .EQ. 0 .AND. .NOT. ATMMOMC6) WRITE (LUPRI,'(/A)')
      *      '@ *RSPC6 input ignored because no operators requested.'
       END IF
       IF (NC6TOT .GT. 0) THEN

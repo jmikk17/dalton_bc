@@ -19,7 +19,7 @@
 #include "priunit.h"
 #include "infpar.h"
 ! Used from include:
-! dftcom.h:       dftgrid_done_old, mxbllen
+! dftcom.h:       srDFTGRID_done, mxbllen
 ! inforb.h:       nbast, nnbasx, n2basx, nisht, nasht
 ! dummy.h:        idummy
 ! mxcent.h:       MXCENT, needed for nuclei.h
@@ -76,9 +76,9 @@
 
          ! set up dft orbital common block and grid
          call setupsos(0,.false.,idum1,idum2)
-         if (.not. dftgrid_done_old) then
+         if (.not. srDFTGRID_done) then
             call make_dftgrid(work,lwork,ntot_dftgrid,iprlr,.false.)
-            dftgrid_done_old = .true.
+            srDFTGRID_done = .true.
          end if
 
          ! make_dftgrid routine limits points per atom to 1.0d6,
