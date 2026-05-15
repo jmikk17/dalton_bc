@@ -1,5 +1,5 @@
       INTEGER MXLROP, MBLRFR, MORGIN
-      PARAMETER ( MXLROP = 1024 , MBLRFR = 60, MORGIN = 50)
+      PARAMETER ( MXLROP = 100 , MBLRFR = 60, MORGIN = 50)
 
       INTEGER NBLRFR, NLRDISP, IPRSOP, NORGIN
 
@@ -14,7 +14,7 @@
 
       CHARACTER*(8) CSYM
 
-      REAL*8  ALRFR, BLRFR, ORGIN, ATMCHG
+      REAL*8  ALRFR, BLRFR, ORGIN
 
       COMMON /INFPOL/ ALRFR(MBLRFR), BLRFR(MBLRFR), ORGIN(3,0:MORGIN),
      *                IALROP(MXLROP),IBLROP(MXLROP),
@@ -26,6 +26,6 @@
      *                NLROP, IPRSOP, OFFALPHA,
      *                ALPHA_ISO, ALPHA_ANI, DIPGRA,
      *                CSYM, IORATM, NATM, ATMIND(MXLROP),
-     *                ATMMOM, ATMSEL, ATMCHG(MXLROP)
+     *                ATMMOM, ATMSEL
 
 
